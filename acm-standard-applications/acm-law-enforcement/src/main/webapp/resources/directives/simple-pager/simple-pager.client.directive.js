@@ -51,8 +51,6 @@ angular.module('directives').directive('simplePager', function() {
         },
 
         link : function(scope) { //dom operations
-            scope.currentPage = 1;
-
             scope.$watchCollection('pagerData.totalItems', function(totalItems, oldValue) {
                 if (totalItems && totalItems != oldValue) {
                     recalculatePagerNumbers();
@@ -61,18 +59,17 @@ angular.module('directives').directive('simplePager', function() {
 
             scope.pageChanged = function(currentPage) {
                 if (currentPage) {
-                    scope.currentPage = currentPage;
+                    scope.pagerData.currentPage = currentPage;
                 } else {
-                    scope.currentPage = 1;
+                    scope.pagerData.currentPage = 1;
                 }
-                scope.reloadPage(scope.currentPage, scope.pagerData.pageSize);
+                scope.reloadPage(scope.pagerData.currentPage, scope.pagerData.pageSize);
                 recalculatePagerNumbers();
             };
 
             function recalculatePagerNumbers() {
-                scope.showingLow = (scope.currentPage - 1) * scope.pagerData.pageSize + 1;
-                var max = scope.currentPage * scope.pagerData.pageSize;
-                scope.showingHigh = max < scope.pagerData.totalItems ? max : scope.pagerData.totalItems;
+                var max = scope.pagerData.currentPage * scope.pagerData.pageSize;
+                scope.currentItems = scope.pagerData.totalItems < max ? scope.pagerData.totalItems : max;
                 var num = parseInt(scope.pagerData.totalItems / scope.pagerData.pageSize);
                 scope.totalPages = scope.pagerData.totalItems % scope.pagerData.pageSize > 0 ? num + 1 : num;
             }
