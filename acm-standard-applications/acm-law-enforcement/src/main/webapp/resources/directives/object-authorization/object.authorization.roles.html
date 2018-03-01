@@ -9,8 +9,8 @@
         <object-authorization-roles-filter ng-show="showFilter" filter="filterDataControl.objectsFilter(data)" />
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.not_authorized' | translate}}</label>
-        <select ng-model="selectedNotAuthorized" ng-options="na[roleDisplayName] for na in notAuthorized" name=""
-                size="15" multiple class="form-control" pagination-on-scroll
+        <select ng-model="selectedNotAuthorized" ng-options="na[roleDisplayName] for na in data.selectedNotAuthorized"
+                name="" size="15" multiple class="form-control" pagination-on-scroll
                 load-more="paginationDataControl.loadUnauthorizedScroll()">
         </select>
         <object-authorization-roles-filter ng-show="showFilter" filter="filterDataControl.unauthorizedFilter(data)" />
@@ -28,8 +28,9 @@
         <br /><br /><br /><br /><br />
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.authorized' | translate}}</label>
-        <select ng-model="selectedAuthorized" ng-options="a[roleDisplayName] for a in authorized" size="15" multiple
-                class="form-control" pagination-on-scroll load-more="paginationDataControl.loadAuthorizedScroll()">
+        <select ng-model="selectedAuthorized" ng-options="a[roleDisplayName] for a in data.selectedAuthorized" size="15"
+                multiple class="form-control" pagination-on-scroll
+                load-more="paginationDataControl.loadAuthorizedScroll()">
         </select>
         <object-authorization-roles-filter ng-show="showFilter" filter="filterDataControl.authorizedFilter(data)" />
     </div>

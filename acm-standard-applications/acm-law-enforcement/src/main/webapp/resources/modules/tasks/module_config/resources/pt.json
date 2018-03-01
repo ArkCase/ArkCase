@@ -22,7 +22,7 @@
         "dueDate.label": "Data de vencimento",
         "state.label": "Estado",
         "overdue.tooltip": "Tarefa está atrasada",
-        "deadline.tooltip": "Pt_Deadline is Approaching",
+        "deadline.tooltip": "O prazo está se aproximando",
         "owningGroup.label": "O grupo pertence a"
     },
     "tasks.comp.parentinfo": {
@@ -66,7 +66,7 @@
         "error.outcomeFieldMissing": "Não é possível concluir a tarefa por falta do valor necessário",
         "modal": {
             "errorHeaderText": "Erro",
-            "btnOk.text": "OK",
+            "btnOk.text": "Está bem",
             "btnClose.text": "Fechar"
         }
     },
@@ -171,24 +171,24 @@
     "tasks.comp.tags": {
         "title": "Etiquetas",
         "table.columns": {
-            "tag": "Tag",
+            "tag": "Etiqueta",
             "created": "Criada",
             "createdBy": "Criado por"
         },
         "modal": {
-            "title": "Tag",
-            "search": "Pesquisar Tag",
+            "title": "Etiqueta",
+            "search": "Pesquisar etiqueta",
             "buttons": {
                 "cancel": "Cancelar",
                 "ok": "Adicionar etiqueta"
             }
         },
         "message": {
-            "tagExists": "Tag com esse nome ou descrição ou texto já existe",
+            "tagExists": "Etiqueta com esse nome ou descrição ou texto já existe",
             "tagAssociated": "Já associado",
             "delete": {
-                "success": "Tag excluído com sucesso",
-                "error": "Erro ao excluir a tag"
+                "success": "Etiqueta excluído com sucesso",
+                "error": "Erro ao excluir a etiqueta"
             }
         }
     },
@@ -223,7 +223,7 @@
         "noSelectedDocsErrorMsg": "Selecione pelo menos um documento a ser revisado."
     },
     "tasks.userOrGroupSearch": {
-        "id": "UserSearch",
+        "id": "PesquisaDeUsuários",
         "title": "Pesquisa de usuário / grupo",
         "search": {
             "btn": "Pesquisa",
@@ -257,7 +257,7 @@
         }
     },
     "tasks.objectSearch": {
-        "id": "ObjectSearch",
+        "id": "BuscaDeObjeto",
         "title": "Busca de objeto",
         "search": {
             "btn": "Pesquisa",
@@ -321,14 +321,14 @@
         "title": "Alterar Assignee",
         "assigneeNamelabel": "Nome do Assignee",
         "btnCancelText": "Cancelar",
-        "btnSaveText": "Salve ",
-        "searchAssigneeHeader": "Search Assignee"
+        "btnSaveText": "Salve",
+        "searchAssigneeHeader": "Pesquisa Assignee"
     },
     "tasks.comp.groupPickerModal": {
         "title": "Grupo de mudança",
         "groupNamelabel": "Nome do grupo",
         "btnCancelText": "Cancelar",
-        "btnSaveText": "Salve ",
+        "btnSaveText": "Salve",
         "searchGroupHeader": "Grupo de pesquisa"
     },
     "tasks.comp.approvalRouting": {

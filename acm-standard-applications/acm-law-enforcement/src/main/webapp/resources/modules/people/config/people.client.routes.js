@@ -12,6 +12,7 @@ angular.module('people').config([ '$stateProvider', function($stateProvider) {
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('dashboard');
                 $translatePartialLoader.addPart('people');
+                $translatePartialLoader.addPart('preference');
                 return $translate.refresh();
             } ]
         }

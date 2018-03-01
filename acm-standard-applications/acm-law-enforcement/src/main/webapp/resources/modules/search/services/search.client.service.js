@@ -69,7 +69,7 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
          */
         queryFilteredSearch : {
             method : 'GET',
-            url : "api/v1/plugin/search/facetedSearch?q=:query",
+            url : "api/v2/plugin/search/facetedSearch?q=:query",
             cache : false,
             isArray : false,
             transformResponse : Util.transformSearchResponse
@@ -93,7 +93,7 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
             isArray : false,
             transformResponse : Util.transformSearchResponse
         },
-        
+
         /**
          * @ngdoc method
          * @name queryAutoSuggestSearch
@@ -184,7 +184,7 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
      * @returns {String} The export URL
      */
     Service.exportUrl = function(query, exportType, reportName, fields, titles) {
-        var url = "api/v1/plugin/search/facetedSearch?q=" + query;
+        var url = "api/v2/plugin/search/facetedSearch?q=" + query;
         if (fields instanceof Array && fields.length > 0) {
             url += "&fields=" + fields.join(',');
             url += "&titles=" + encodeURI(titles.join(','));

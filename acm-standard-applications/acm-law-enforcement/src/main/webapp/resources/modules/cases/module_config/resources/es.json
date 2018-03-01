@@ -333,7 +333,7 @@
             "status": "Estado",
             "addedBy": "Añadido por"
         },
-        "assigne.none": "es_None",
+        "assigne.none": "Ninguna",
         "assignee.label": "Cesionario",
         "owningGroup.label": "Poseer grupo",
         "priority.label": "Prioridad",
