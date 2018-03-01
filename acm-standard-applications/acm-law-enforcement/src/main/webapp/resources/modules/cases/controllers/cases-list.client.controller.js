@@ -14,9 +14,9 @@ angular.module('cases').controller(
                 'Helper.ObjectBrowserService',
                 'ServCommService',
                 'MessageService',
-                'Admin.CalendarConfigurationService',
+                'Object.CalendarService',
                 function($scope, $state, $stateParams, $translate, Util, ObjectService, CaseListService, CaseInfoService,
-                        HelperObjectBrowserService, ServCommService, MessageService, CalendarConfigurationService) {
+                        HelperObjectBrowserService, ServCommService, MessageService, CalendarService) {
 
                     /*//
                      // Check to see if complaint page is shown as a result returned by Frevvo
@@ -67,7 +67,7 @@ angular.module('cases').controller(
                             return CaseListService.updateCasesTreeData(start, n, sort, filters, query, nodeData);
                         },
                         getTreeData : function(start, n, sort, filters, query) {
-                            checkCalendarConfiguration();
+                            CalendarService.checkCalendarConfiguration('CASE_FILE');
                             return CaseListService.queryCasesTreeData(start, n, sort, filters, query);
                         },
                         getNodeData : function(caseId) {
@@ -82,16 +82,5 @@ angular.module('cases').controller(
                             };
                         }
                     });
-
-                    var checkCalendarConfiguration = function() {
-                        CalendarConfigurationService.getCurrentCalendarConfiguration().then(function(calendarAdminConfigRes) {
-                            if (calendarAdminConfigRes.data.configurationsByType['CASE_FILE'].integrationEnabled) {
-                                $scope.objectInfoRetrieved = true;
-                            } else {
-                                MessageService.info($translate.instant('dashboard.widgets.calendar.calendarIntegrationDisabledMessage'));
-                                $scope.objectInfoRetrieved = false;
-                            }
-                        });
-                    }
 
                 } ]);
