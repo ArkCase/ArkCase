@@ -242,7 +242,7 @@
                 "type": "Tipo",
                 "supervisorName": "Nombre del supervisor",
                 "actions": "Acciones"
-            }
+            },
 			"searchFilter.placeholder": "Búsqueda"
         },
         "security.selectPrivileges": "Crear funciones e instaurar privilegios",
@@ -446,40 +446,40 @@
                 "sync": "Sincronizar"
             },
 			"schedule": {
-                "title": "Reports Scheduling",
-                "selectReportType": "Select Report Type",
+                "title": "Programación de Informes",
+                "selectReportType": "Seleccionar tipo de informe",
                 "emailAddress": {
-                    "title": "Enter Email Addresses",
-                    "placeholder": "Please enter comma (,) separated email addresses"
+                    "title": "Introducir direcciones de correo electrónico",
+                    "placeholder": "Ingrese comas (,) direcciones de correo electrónico separadas"
                 },
                 "table": {
-                    "header": "Existing Schedules",
+                    "header": "Horario existente",
                     "startTimeFormat": "hh:mm a",
                     "columns": {
-                        "jobName": "Schedule Name",
-                        "recurrence": "Recurrence",
-                        "startTime": "Start Time",
-                        "startDate": "Start Date",
-                        "endDate": "End Date",
-                        "emailAddresses": "Email Addresses",
-                        "state": "Status"
+                        "jobName": "Nombre del horario",
+                        "recurrence": "Reaparición",
+                        "startTime": "Hora de inicio",
+                        "startDate": "Fecha de inicio",
+                        "endDate": "Fecha final",
+                        "emailAddresses": "Correos electrónicos",
+                        "state": "Estado"
                     }
                 },
                 "delete": {
-                    "success": "Schedule deleted successfully",
-                    "error": "Failed to delete schedule"
+                    "success": "Programa eliminado con éxito",
+                    "error": "Error al eliminar el programa"
                 },
-                "createScheduleSuccess": "Schedule created successfully",
-                "createScheduleFailure": "Failed to create schedule",
-                "enterFutureDate": "Enter a start time in the future",
-                "recurrence": "Recurrence (Enter future time)",
-                "time": "Time",
-                "startDate": "Start Date",
-                "endDate": "End Date",
-                "filterStartDate": "Result Filter Start Date",
-                "filterEndDate": "Result Filter End Date",
-                "outputFormat": "Select Output Format",
-                "submit": "Submit"
+                "createScheduleSuccess": "Programa creado con éxito",
+                "createScheduleFailure": "Error al crear el cronograma",
+                "enterFutureDate": "Ingrese una hora de inicio en el futuro",
+                "recurrence": "Recurrencia (Ingrese el tiempo futuro)",
+                "time": "Hora",
+                "startDate": "Fecha de inicio",
+                "endDate": "Fecha final",
+                "filterStartDate": "Fecha de inicio del filtro de resultados",
+                "filterEndDate": "Fecha final del filtro de resultados",
+                "outputFormat": "Seleccionar formato de salida",
+                "submit": "Enviar"
             }
         },
         "forms.title": "Formularios",
@@ -667,8 +667,8 @@
                 "creator": "Creador",
                 "modifier": "Modificado por",
                 "activated": "Estado",
-                "statusDeactivated": "es_Deactivated",
-                "statusActivated": "es_Activated",
+                "statusDeactivated": "Desactivado",
+                "statusActivated": "Activado",
                 "objectType": "Tipo de objeto",
                 "version": "Versión",
                 "templateVersionActive": "Activo"
@@ -685,7 +685,7 @@
                 }
             },
             "templates.modal": {
-                "objectTypes.selectedFiles": "es_No File Selected",
+                "objectTypes.selectedFiles": "No hay archivos seleccionados",
                 "objectTypes.label": "Tipos de objetos",
                 "querySelect.label": "Seleccionar consulta",
                 "label.label": "Nombre para mostrar",
