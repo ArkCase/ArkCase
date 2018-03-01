@@ -14,9 +14,9 @@ angular.module('complaints').controller(
                 'Helper.ObjectBrowserService',
                 'ServCommService',
                 'MessageService',
-                'Admin.CalendarConfigurationService',
+                'Object.CalendarService',
                 function($scope, $state, $stateParams, $translate, Util, ObjectService, ComplaintListService, ComplaintInfoService,
-                        HelperObjectBrowserService, ServCommService, MessageService, CalendarConfigurationService) {
+                        HelperObjectBrowserService, ServCommService, MessageService, CalendarService) {
 
                     // maybe optional listener for "close-complaint"?
                     var eventName = "object.inserted";
@@ -50,7 +50,7 @@ angular.module('complaints').controller(
                             return ComplaintListService.updateComplaintsTreeData(start, n, sort, filters, query, nodeData);
                         },
                         getTreeData : function(start, n, sort, filters, query) {
-                            checkCalendarConfiguration();
+                            CalendarService.checkCalendarConfiguration('COMPLAINT');
                             return ComplaintListService.queryComplaintsTreeData(start, n, sort, filters, query);
                         },
                         getNodeData : function(complaintId) {
@@ -65,16 +65,5 @@ angular.module('complaints').controller(
                             };
                         }
                     });
-
-                    var checkCalendarConfiguration = function() {
-                        CalendarConfigurationService.getCurrentCalendarConfiguration().then(function(calendarAdminConfigRes) {
-                            if (calendarAdminConfigRes.data.configurationsByType['COMPLAINT'].integrationEnabled) {
-                                $scope.objectInfoRetrieved = true;
-                            } else {
-                                MessageService.info($translate.instant('dashboard.widgets.calendar.calendarIntegrationDisabledMessage'));
-                                $scope.objectInfoRetrieved = false;
-                            }
-                        });
-                    }
 
                 } ]);

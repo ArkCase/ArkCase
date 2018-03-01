@@ -12,8 +12,19 @@
  */
 angular.module('services').factory(
         'Object.CalendarService',
-        [ '$resource', 'UtilService', 'Acm.StoreService', 'Upload', '$q', '$http', '$httpParamSerializer',
-                function($resource, Util, Store, Upload, $q, $http, $httpParamSerializer) {
+        [
+                '$resource',
+                'UtilService',
+                'Acm.StoreService',
+                'Upload',
+                '$q',
+                '$http',
+                '$httpParamSerializer',
+                'Admin.CalendarConfigurationService',
+                '$translate',
+                'MessageService',
+                function($resource, Util, Store, Upload, $q, $http, $httpParamSerializer, CalendarConfigurationService, $translate,
+                        MessageService) {
                     var Service = this;
                     Service.SessionCacheNames = {};
                     Service.CacheNames = {
@@ -312,5 +323,17 @@ angular.module('services').factory(
                             url : 'api/latest/service/calendar/calendars/' + objectType + '/' + objectId
                         });
                     };
+
+                    Service.checkCalendarConfiguration = function(objectType) {
+                        CalendarConfigurationService.getCurrentCalendarConfiguration().then(function(calendarAdminConfigRes) {
+                            if (calendarAdminConfigRes.data.configurationsByType[objectType].integrationEnabled) {
+                                return true;
+                            } else {
+                                MessageService.info($translate.instant('dashboard.widgets.calendar.calendarIntegrationDisabledMessage'));
+                                return false;
+                            }
+                        });
+                    };
+
                     return Service;
                 } ]);

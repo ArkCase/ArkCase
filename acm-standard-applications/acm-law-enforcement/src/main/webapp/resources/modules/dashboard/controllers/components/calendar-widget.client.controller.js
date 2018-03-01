@@ -72,6 +72,8 @@ angular.module('dashboard.calendar', [ 'adf.provider' ]).config(function(dashboa
                             $scope.eventSources = [];
                             if (calendarAdminConfigRes.data.configurationsByType[module.name].integrationEnabled) {
                                 $scope.objectInfoRetrieved = true;
+                            } else {
+                                $scope.objectInfoRetrieved = false;
                             }
                         });
                     };
