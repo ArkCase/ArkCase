@@ -212,6 +212,12 @@
                     "deleteBtn": "Löschen",
                     "headerText": "Sie sind dabei, member zu löschen:",
                     "bodyText": "Bist du sicher?"
+                },
+                "tableColumns": {
+                    "name": "de_Name",
+                    "type": "de_Type",
+                    "supervisorName": "de_Supervisor Name",
+                    "actions": "de_Actions"
                 }
             },
             "messages": {
@@ -356,9 +362,24 @@
                 "actions.label": "Maßnahmen",
                 "manual.label": "Handbuch",
                 "automated.label": "Automatisiert",
-                "browse": "Durchsuchen",
+                "choose.file": "de_Choose File",
+                "download": "de_Download",
                 "save": "Sparen",
-                "cancel": "Stornieren"
+                "cancel": "Stornieren",
+                "validationResponse": "de_Email Template already exists with selected parameters",
+                "uploadError": "de_File upload canceled due to incorrect type of file. You can only upload html file.",
+                "invalidTemplateName": "de_Template name must end on '.html', '.htm' or '.xhtml' and can only consist of characters, digits or underscores."
+            },
+            "objectTypes": {
+                "caseFile": "de_Case File",
+                "complaint": "de_Complaint",
+                "task": "de_Task",
+                "document": "de_Document"
+            },
+            "actions": {
+                "sendAsAttachments": "de_Send as Attachments",
+                "sendAsLinks": "de_Send as Links",
+                "sendAsAttachmentsAndLinks": "de_Send as Attachments and Links"
             }
         },
         "security.exchangeConfiguration": {
@@ -517,10 +538,22 @@
                     "inversevalue.placeholder": "Eingabe des inversen Wertes als Label-Schlüssel",
                     "btnCancel.text": "Stornieren",
                     "btnOk.text": "Eintrag speichern"
-                }
+                },
+                "addLookup": "de_Add Lookup",
+                "label": "de_Lookup Type",
+                "lookupName": "de_Lookup Name",
+                "placeholder": "de_Enter lookup name",
+                "btnSave.text": "de_Save",
+                "deleteLookupMsg": "de_Are you sure you want to delete this lookup?",
+                "deleteEntryMsg": "de_Are you sure you want to delete this entry?",
+                "delete.success": "de_Lookup is successfully deleted",
+                "delete.error": "de_Lookup can't be deleted",
+                "lookupExists.error": "de_Lookup with this name already exists"
             },
             "module.config": {
-                "title": "Modulkonfiguration"
+                "title": "Modulkonfiguration",
+                "btnDisabled": "de_Disabled",
+                "btnEnabled": "de_Enabled"
             },
             "userName.config": {
                 "title": "Konfiguration der Benutzernamenanzeige",
@@ -582,6 +615,8 @@
                 "creator": "Schöpfer",
                 "modifier": "Angepasst von",
                 "activated": "Status",
+                "statusDeactivated": "de_Deactivated",
+                "statusActivated": "de_Activated",
                 "objectType": "Objekttyp",
                 "version": "Version",
                 "templateVersionActive": "Aktiv"

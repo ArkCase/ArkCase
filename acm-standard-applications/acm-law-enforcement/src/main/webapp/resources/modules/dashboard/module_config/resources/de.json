@@ -44,7 +44,7 @@
                         "assignee": "Bevollmächtigter"
                     },
                     "overdue.tooltip": "Fall ist überfällig",
-                    "deadline.tooltip": "Deadline nähert sich"
+                    "deadline.tooltip": "Frist nähert sich"
                 },
                 "configDescription": "Beschreibung",
                 "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
@@ -64,7 +64,7 @@
                         "assignee": "Bevollmächtigter"
                     },
                     "overdue.tooltip": "Beschwerde ist überfällig",
-                    "deadline.tooltip": "Deadline ist Annäherung",
+                    "deadline.tooltip": "Frist ist Annäherung",
                     "noDataMessage": "Derzeit gibt es keine Beschwerden info"
                 },
                 "configDescription": "Beschreibung",
@@ -85,7 +85,7 @@
                         "objectId": "Objekt-ID"
                     },
                     "overdue.tooltip": "Aufgabe ist überfällig",
-                    "deadline.tooltip": "Deadline nähert sich"
+                    "deadline.tooltip": "Frist nähert sich"
                 },
                 "noDataMessage": "Derzeit gibt es keine Aufgaben info",
                 "configDescription": "Beschreibung",
@@ -97,7 +97,7 @@
                 "dueDate": {
                     "label": "Fälligkeitsdatum auswählen",
                     "pastDue": "Vergangenheit",
-                    "dueTomorrow": "Due Tomorrow",
+                    "dueTomorrow": "Bis morgen",
                     "dueWeek": "Fällig in 7 Tagen",
                     "DueMonth": "Fällig im Monat",
                     "all": "Alles"
@@ -154,8 +154,8 @@
                     "description": "Anzeige der aktuellen Temperatur einer Stadt",
                     "location": "Ort",
                     "insertLocationInConfiguration": "Bitte einen Ort in die Widget-Konfiguration einfügen",
-                    "zip": "de_Zip Code",
-                    "enterZip": "de_Enter Zip Code"
+                    "zip": "Postleitzahl",
+                    "enterZip": "Postleitzahl eingeben"
                 },
                 "title": "Wetter",
                 "noDataMessage": "Derzeit gibt es keine Wetterinfo",
@@ -167,7 +167,7 @@
                 "label": {
                     "enterFeedUrl": "Feed-URL eingeben",
                     "description": "Zeigt einen RSS / Atom-Feed",
-                    "feedUrl": "Feed Url",
+                    "feedUrl": "Feed-Url",
                     "insertUrl": "Bitte fügen Sie eine Feed-URL in die Widget-Konfiguration ein"
                 },
                 "title": "Nachrichten",
@@ -176,13 +176,13 @@
                 "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
             },
             "details": {
-                "title": "Details",
+                "title": "Einzelheiten",
                 "description": "Zeigt Falldetails",
-                "noDataMessage": "Derzeit gibt es keine Details"
+                "noDataMessage": "Derzeit gibt es keine Einzelheiten"
             },
             "people": {
                 "title": "Menschen",
-                "description": "Zeigt Personen Details",
+                "description": "Zeigt Personendetails an",
                 "noDataMessage": "Derzeit gibt es keine Personen zum Anzeigen"
             },
             "ids": {
@@ -203,7 +203,8 @@
             "documents": {
                 "title": "Dokumente",
                 "description": "Zeigt das Diagramm der Dokumente nach Ordner",
-                "noDataMessage": "Derzeit sind keine Dokumente vorhanden"
+                "noDataMessage": "Derzeit sind keine Dokumente vorhanden",
+                "series": "Anzahl der Dokumente"
             },
             "locations": {
                 "title": "Standorte",
@@ -222,7 +223,7 @@
             },
             "emails": {
                 "title": "E-Mail-Adresse",
-                "description": "Anzeigen von E-Mail-Details",
+                "description": "Zeigt E-Mail-Details an",
                 "noDataMessage": "Momentan gibt es keine E-Mail-Adressen zum Anzeigen"
             },
             "urls": {
@@ -273,7 +274,8 @@
             "cost": {
                 "title": "Kosten",
                 "description": "Zeigt Diagramm für Kosten pro Benutzer",
-                "noDataMessage": "Derzeit gibt es keine Kosteninformationen zur Anzeige"
+                "noDataMessage": "Derzeit gibt es keine Kosteninformationen zur Anzeige",
+                "calendarIntegrationDisabledMessage": "Die Kalenderintegration ist vom Administrator deaktiviert"
             },
             "calendar": {
                 "title": "Kalender",
@@ -307,7 +309,7 @@
             },
             "person": {
                 "title": "Person",
-                "description": "Person Widget für Kosten- und Zeitmodule",
+                "description": "Personen-Widget für Kosten- und Zeitmodule",
                 "noDataMessage": "Derzeit sind keine Personen zu sehen"
             },
             "hoursSummary": {
@@ -349,11 +351,16 @@
                 "title": "Verwandte Menschen",
                 "description": "Zeigt verwandte Personen",
                 "noDataMessage": "Derzeit keine verwandten Personen zum Anzeigen"
+			},	
+			"approvers": {
+                "title": "Genehmiger",
+                "description": "Zeigt Genehmiger an",
+                "noDataMessage": "Zurzeit sind keine Genehmigenden zum Anzeigen vorhanden"	
             }
         }
     },
     "dashboard.comp.news": {
-        "title": "News Widget"
+        "title": "Nachrichten Widget"
     },
     "dashboard.comp.weather": {
         "title": "Wetter Widget"
@@ -368,7 +375,7 @@
         "title": "Mein Beschwerden-Widget"
     },
     "dashboard.comp.workflowReport": {
-        "title": "Workflow-Bericht"
+        "title": "Arbeitsablaufbericht"
     },
     "dashboard.comp.newComplaints": {
         "title": "Neue Beschwerden"

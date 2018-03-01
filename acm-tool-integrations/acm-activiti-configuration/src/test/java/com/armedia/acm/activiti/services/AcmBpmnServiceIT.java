@@ -141,8 +141,8 @@ public class AcmBpmnServiceIT
         try
         {
             stream = new FileInputStream(processDefinitionFile);
-            String md5Hex = DigestUtils.md5Hex(stream);
-            return md5Hex;
+            String sha256Hex = DigestUtils.sha256Hex(stream);
+            return sha256Hex;
         }
         catch (IOException e)
         {

@@ -244,7 +244,8 @@
         }
     },
     "cases.comp.calendar": {
-        "title": "Календарь"
+        "title": "Календарь",
+        "message": "Интеграция календарей не включена"
     },
     "cases.comp.merge": {
         "title": "Сливаться",
@@ -321,7 +322,7 @@
             "withdraw.tooltip": "Снять задачу"
         },
         "checkbox": {
-            "nonConcurEndsApprovalCycle": "Non-concur завершает цикл утверждения"
+            "nonConcurEndsApprovalCycle": "Oтклонять завершает цикл утверждения"
         },
         "table.columns": {
             "assignee": "Правопреемник",
@@ -332,6 +333,7 @@
             "status": "Положение дел",
             "addedBy": "Добавлено"
         },
+        "assigne.none": "Никто",
         "assignee.label": "Правопреемник",
         "owningGroup.label": "Собственная группа",
         "priority.label": "Приоритет",
@@ -360,7 +362,7 @@
         }
     },
     "cases.userOrGroupSearch": {
-        "id": "UserSearch",
+        "id": "ПоискольПзователей",
         "title": "Поиск пользователей / групп",
         "search": {
             "btn": "Поиск",

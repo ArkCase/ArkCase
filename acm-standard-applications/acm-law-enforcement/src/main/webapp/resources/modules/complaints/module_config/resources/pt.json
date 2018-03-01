@@ -60,7 +60,7 @@
                 "clearanceGranted%": "Liquidação concedida",
                 "clearanceDenied%": "Liquidação negada",
                 "witnessInterview%": "Pedido de entrevista de testemunha",
-                "witnessInterview2%": "Witness Interview Request-2.0"
+                "witnessInterview2%": "Pedido de entrevista de testemunha-2.0"
             }
         },
         "newTask": "Nova tarefa"
@@ -232,6 +232,7 @@
         "modal": {
             "title": "Rótulo",
             "search": "À procura de um dia",
+            "placeholder": "Adicionar etiqueta",
             "buttons": {
                 "cancel": "Cancelar",
                 "ok": "Adicione uma etiqueta"
@@ -247,7 +248,8 @@
         }
     },
     "complaints.comp.calendar": {
-        "title": "Calendário"
+        "title": "Calendário",
+        "infoMessage": "Configuração de integração do calendário não ativada"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "Pesquisa de referência"
@@ -296,6 +298,7 @@
         "table.columns": {
             "fullName": "Nome completo"
         },
+        "assigne.none": "Nenhum",
         "assignee.label": "Receptor",
         "owningGroup.label": "Grupo de proprietários",
         "priority.label": "Prioridade",

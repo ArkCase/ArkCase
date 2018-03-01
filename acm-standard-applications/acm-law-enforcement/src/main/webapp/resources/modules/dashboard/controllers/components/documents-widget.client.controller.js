@@ -2,7 +2,7 @@
 
 angular.module('dashboard.documents', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('documents', {
-        title : 'dashboard.widgets.documents.title',
+        title : 'preference.overviewWidgets.documents.title',
         description : 'dashboard.widgets.documents.description',
         controller : 'Dashboard.DocumentsController',
         controllerAs : 'documents',
@@ -93,7 +93,7 @@ angular.module('dashboard.documents', [ 'adf.provider' ]).config(function(dashbo
                             vm.showChart = chartData.length > 0;
                             vm.data = [ chartData ];
                             vm.labels = labels;
-                            vm.series = [ "Number of Documents" ];
+                            vm.series = [ $translate.instant("dashboard.widgets.documents.series") ];
                         }, function(error) {
 
                         });

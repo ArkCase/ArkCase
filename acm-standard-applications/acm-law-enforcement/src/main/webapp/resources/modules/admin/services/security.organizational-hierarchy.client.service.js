@@ -120,10 +120,12 @@ angular.module('admin').service(
                     return ({
                         getGroups : getGroups,
                         getGroupsTopLevel : getGroupsTopLevel,
+                        getGroupsByName: getGroupsByName,
                         getSubGroupsForGroup : getSubGroupsForGroup,
                         getUsersForGroup : getUsersForGroup,
                         addAdHocGroup : addAdHocGroup,
                         addExistingAdHocSubGroup : addExistingAdHocSubGroup,
+                        addExistingAdHocSubGroups: addExistingAdHocSubGroups,
                         saveMembers : saveMembers,
                         removeMembers : removeMembers,
                         removeGroup : removeGroup,
@@ -182,6 +184,31 @@ angular.module('admin').service(
                             method : 'GET',
                             url : 'api/latest/users/group/get/toplevel?n=' + n + '&start=' + start + '&s=name asc' + '&groupSubtype='
                                     + groupSubtype
+                        });
+                    }
+
+                    /**
+                     * @ngdoc method
+                     * @name getGroupsByName
+                     * @methodOf admin.service:Admin.OrganizationalHierarchyService
+                     *
+                     * param {params} object for request params
+                     * {n: page size
+                     * start: start row
+                     * nameFq: search value for name filter
+                     * }
+                     *
+                     *
+                     * @description
+                     * Retrieve all groups by matching name
+                     *
+                     * @returns {HttpPromise} Future info about groups
+                     */
+                    function getGroupsByName(params) {
+                        return $http({
+                            method : 'GET',
+                            url : 'api/latest/groups',
+                            params: params
                         });
                     }
 
@@ -279,6 +306,33 @@ angular.module('admin').service(
                         return $http({
                             method : 'POST',
                             url : url,
+                            headers : {
+                                "Content-Type" : "application/json"
+                            }
+                        });
+                    }
+
+                    /**
+                     * @ngdoc method
+                     * @name addExistingAdHocSubGroups
+                     * @methodOf admin.service:Admin.OrganizationalHierarchyService
+                     *
+                     * @description
+                     * Adds an existing Ad Hoc groups as members to another Ad Hoc group
+                     *
+                     * param {String} parentId parent group
+                     *
+                     * param {array} memberIds array of member group names
+                     *
+                     * @returns {HttpPromise} Future info about list of ad hoc subgroups
+                     */
+                    function addExistingAdHocSubGroups(parentId, memberIds) {
+                        parentId = base64.urlencode(parentId);
+                        var url = 'api/latest/users/group/' + parentId;
+                        return $http({
+                            method : 'POST',
+                            url : url,
+                            data: memberIds,
                             headers : {
                                 "Content-Type" : "application/json"
                             }

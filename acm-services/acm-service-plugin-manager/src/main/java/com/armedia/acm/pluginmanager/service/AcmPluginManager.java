@@ -9,6 +9,7 @@ import com.armedia.acm.spring.events.AbstractContextHolderEvent;
 import com.armedia.acm.spring.events.ContextAddedEvent;
 import com.armedia.acm.spring.events.ContextRemovedEvent;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -139,7 +140,15 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
         }
         else
         {
-            return Collections.emptyList();
+            String wildCardRole = StringUtils.substringBeforeLast(role, "@") + "@*";
+            if (configurablePrivilegesByRole.containsKey(wildCardRole))
+            {
+                return Collections.unmodifiableList(configurablePrivilegesByRole.get(wildCardRole));
+            }
+            else
+            {
+                return Collections.emptyList();
+            }
         }
     }
 

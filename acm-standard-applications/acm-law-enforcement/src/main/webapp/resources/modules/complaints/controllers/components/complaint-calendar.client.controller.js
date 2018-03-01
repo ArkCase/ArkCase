@@ -34,7 +34,7 @@ angular.module('complaints').controller(
                             if (calendarAdminConfigRes.data.configurationsByType['COMPLAINT'].integrationEnabled) {
                                 $scope.objectInfoRetrieved = true;
                             } else {
-                                MessageService.info('Calendar Integration Configuration Not Enabled');
+                                MessageService.info($translate.instant("complaints.comp.calendar.infoMessage"));
                                 $scope.objectInfoRetrieved = false;
                             }
                         });

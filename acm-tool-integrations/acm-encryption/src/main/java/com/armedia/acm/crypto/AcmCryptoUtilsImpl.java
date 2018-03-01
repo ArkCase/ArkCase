@@ -3,6 +3,7 @@ package com.armedia.acm.crypto;
 import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 
+import org.apache.commons.codec.Charsets;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.CompressionAlgorithmTags;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -33,6 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -48,6 +50,8 @@ import java.util.UUID;
  */
 public class AcmCryptoUtilsImpl implements AcmCryptoUtils
 {
+    private SecureRandom secureRandom = new SecureRandom(UUID.randomUUID().toString().getBytes(Charsets.UTF_8));
+
     public AcmCryptoUtilsImpl()
     {
         Security.addProvider(new BouncyCastleProvider());
@@ -63,14 +67,27 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
         {
             data = addNonceToData(data);
         }
-        byte[] encryptedData = null;
+        byte[] encryptedData;
         try
         {
             Cipher c = Cipher.getInstance(CryptoConstants.ENCRYPTION_ALGORITHM);
-            SecretKeySpec k = new SecretKeySpec(passPhrase, CryptoConstants.ENCRYPTION_ALGORITHM);
-            c.init(Cipher.ENCRYPT_MODE, k);
+
+            // Generating IV.
+            byte[] iv = new byte[CryptoConstants.INITIALIZATION_VECTOR_SIZE];
+            secureRandom.nextBytes(iv);
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+
+            // encrypt
+            SecretKeySpec k = buildKey(passPhrase);
+            c.init(Cipher.ENCRYPT_MODE, k, ivParameterSpec);
             encryptedData = c.doFinal(data);
 
+            // Combine IV and encrypted part.
+            byte[] encryptedIVAndText = new byte[CryptoConstants.INITIALIZATION_VECTOR_SIZE + encryptedData.length];
+            System.arraycopy(iv, 0, encryptedIVAndText, 0, CryptoConstants.INITIALIZATION_VECTOR_SIZE);
+            System.arraycopy(encryptedData, 0, encryptedIVAndText, CryptoConstants.INITIALIZATION_VECTOR_SIZE, encryptedData.length);
+
+            return encryptedIVAndText;
         }
         catch (NoSuchAlgorithmException e)
         {
@@ -92,12 +109,28 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
         {
             throw new AcmEncryptionException("Bad padding ", e);
         }
-        return encryptedData;
+        catch (InvalidAlgorithmParameterException e)
+        {
+            throw new AcmEncryptionException("Invalid parameter", e);
+        }
+    }
+
+    private SecretKeySpec buildKey(byte[] passPhrase)
+    {
+        boolean truncate = passPhrase.length > 32;
+        int keySize = truncate ? 32 : passPhrase.length;
+        byte[] keyBytes = new byte[keySize];
+        if (truncate)
+        {
+            System.arraycopy(passPhrase, 0, keyBytes, 0, truncate ? keyBytes.length : passPhrase.length);
+        }
+
+        return new SecretKeySpec(keyBytes, CryptoConstants.KEY_ALGORITHM);
     }
 
     private byte[] addNonceToData(byte[] data)
     {
-        byte[] nounce = ("-" + UUID.randomUUID().toString()).getBytes();
+        byte[] nounce = ("-" + UUID.randomUUID().toString()).getBytes(Charsets.UTF_8);
         byte[] newData = new byte[data.length + nounce.length];
         System.arraycopy(data, 0, newData, 0, data.length);
         System.arraycopy(nounce, 0, newData, data.length, nounce.length);
@@ -110,14 +143,24 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
     @Override
     public byte[] decryptData(byte[] passPhrase, byte[] data, boolean hasNonce) throws AcmEncryptionException
     {
-        byte[] decryptedData = null;
+        byte[] decryptedData;
 
         try
         {
+            // Extract IV.
+            byte[] iv = new byte[CryptoConstants.INITIALIZATION_VECTOR_SIZE];
+            System.arraycopy(data, 0, iv, 0, iv.length);
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+
+            // Extract encrypted part.
+            int encryptedSize = data.length - CryptoConstants.INITIALIZATION_VECTOR_SIZE;
+            byte[] encryptedBytes = new byte[encryptedSize];
+            System.arraycopy(data, CryptoConstants.INITIALIZATION_VECTOR_SIZE, encryptedBytes, 0, encryptedSize);
+
             Cipher c = Cipher.getInstance(CryptoConstants.ENCRYPTION_ALGORITHM);
-            SecretKeySpec k = new SecretKeySpec(passPhrase, CryptoConstants.ENCRYPTION_ALGORITHM);
-            c.init(Cipher.DECRYPT_MODE, k);
-            decryptedData = c.doFinal(data);
+            SecretKeySpec k = buildKey(passPhrase);
+            c.init(Cipher.DECRYPT_MODE, k, ivParameterSpec);
+            decryptedData = c.doFinal(encryptedBytes);
             if (hasNonce)
             {
                 decryptedData = extractDataAndVerifyNounce(decryptedData);
@@ -142,6 +185,10 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
         catch (BadPaddingException e)
         {
             throw new AcmEncryptionBadKeyOrDataException("Bad padding ", e);
+        }
+        catch (InvalidAlgorithmParameterException e)
+        {
+            throw new AcmEncryptionBadKeyOrDataException("Bad initialization vector ", e);
         }
         return decryptedData;
     }
@@ -206,7 +253,7 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
             throw new AcmEncryptionBadKeyOrDataException("Bad key or data");
         }
 
-        return splitted[0].getBytes();
+        return splitted[0].getBytes(Charsets.UTF_8);
     }
 
     /**

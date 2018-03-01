@@ -154,8 +154,8 @@
                     "description": "都市の現在の温度を表示する",
                     "location": "場所",
                     "insertLocationInConfiguration": "ウィジェット設定に場所を挿入してください",
-                    "zip": "ja_Zip Code",
-                    "enterZip": "ja_Enter Zip Code"
+                    "zip": "郵便番号",
+                    "enterZip": "郵便番号を入力" 
                 },
                 "title": "天気",
                 "noDataMessage": "現在、天気情報はありません",
@@ -203,7 +203,8 @@
             "documents": {
                 "title": "文書",
                 "description": "フォルダごとの文書のチャートを表示する",
-                "noDataMessage": "現在表示する文書がありません"
+                "noDataMessage": "現在表示する文書がありません",
+                "series": "ドキュメントの数"
             },
             "locations": {
                 "title": "場所",
@@ -278,7 +279,8 @@
             "calendar": {
                 "title": "カレンダー",
                 "description": "1日にスケジュールされたイベントのチャートを表示する",
-                "noDataMessage": "現在、表示するイベントはありません"
+                "noDataMessage": "現在、表示するイベントはありません",
+				"calendarIntegrationDisabledMessage": "カレンダー統合を無効にする管理者"
             },
             "reworkDetails": {
                 "title": "リワークの詳細",
@@ -349,6 +351,11 @@
                 "title": "関連する人物",
                 "description": "関連する人々を表示する",
                 "noDataMessage": "現在表示する関連人はいません"
+			},
+            "approvers": {
+                "title": "承認者",
+                "description": "承認者を表示",
+                "noDataMessage": "現在、表示する承認者はありません"
             }
         }
     },

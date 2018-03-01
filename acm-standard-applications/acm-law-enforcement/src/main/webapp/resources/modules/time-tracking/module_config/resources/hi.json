@@ -71,11 +71,15 @@
             }
         }
     },
-    "timeTracking.comp.approvers": {
+    "timeTracking.comp.tasks": {
         "title": "",
         "table.columns": {
-            "fullName": "पूरा नाम",
-            "userId": "उपयोगकर्ता नाम"
+            "title": "Title",
+            "assignee": "Assignee",
+            "created": "Created",
+            "priority": "Priority",
+            "due": "Due Date",
+            "status": "Status"
         }
     },
     "timeTracking.tree": {
@@ -84,7 +88,7 @@
             "person.label": "व्यक्ति",
             "summary.label": "घंटे",
             "tags.label": "टैग",
-            "approvers.label": ""
+            "tasks.label": ""
         },
         "sorters": {
             "dateAsc": "दिनांक आरोही क्रमबद्ध करें",

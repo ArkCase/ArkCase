@@ -154,8 +154,8 @@
                     "description": "Exibe a temperatura atual de uma cidade",
                     "location": "Localização",
                     "insertLocationInConfiguration": "Insira um local na configuração do widget",
-                    "zip": "pt_Zip Code",
-                    "enterZip": "pt_Enter Zip Code"
+                    "zip": "Código Postal",
+                    "enterZip": "Digite o Código Postal"
                 },
                 "title": "Tempo",
                 "noDataMessage": "Atualmente não há informações meteorológicas",
@@ -203,7 +203,8 @@
             "documents": {
                 "title": "Documentos",
                 "description": "Exibe gráfico de documentos por pasta",
-                "noDataMessage": "Atualmente não há documentos para exibir"
+                "noDataMessage": "Atualmente não há documentos para exibir",
+                "series": "Número de documentos"
             },
             "locations": {
                 "title": "Localizações",
@@ -278,7 +279,8 @@
             "calendar": {
                 "title": "Calendário",
                 "description": "Exibe gráfico de eventos agendados por dia",
-                "noDataMessage": "Atualmente, não há eventos para exibir"
+                "noDataMessage": "Atualmente, não há eventos para exibir",
+				"calendarIntegrationDisabledMessage": "A integração do calendário é desabilitada pelo administrador"
             },
             "reworkDetails": {
                 "title": "Rework Details",
@@ -349,6 +351,11 @@
                 "title": "Pessoas relacionadas",
                 "description": "Exibir pessoas relacionadas",
                 "noDataMessage": "Atualmente, não há pessoas relacionadas para exibir"
+			},
+            "approvers": {
+                "title": "Aprovadores",
+                "description": "Exibe aprovadores",
+                "noDataMessage": "Atualmente não há aprovadores para exibir"
             }
         }
     },

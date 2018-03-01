@@ -53,7 +53,7 @@ public class FileUploadAPIController
     private final String uploadFileType = "attachment";
 
     // #parentObjectType == 'USER_ORG' applies to uploading profile picture
-    @PreAuthorize("(hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile') and hasPermission(#folderId, 'FOLDER', 'write|group-write')) or #parentObjectType == 'USER_ORG'")
+    @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile') or #parentObjectType == 'USER_ORG'")
     @RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<EcmFile> uploadFile(@RequestParam("parentObjectType") String parentObjectType,

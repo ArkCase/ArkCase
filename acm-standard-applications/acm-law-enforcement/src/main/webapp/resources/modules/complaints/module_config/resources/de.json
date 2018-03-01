@@ -232,6 +232,7 @@
         "modal": {
             "title": "Etikette",
             "search": "Auf der Suche nach einem Tag",
+            "placeholder": "Hinzufügen Etikett",
             "buttons": {
                 "cancel": "Stornieren",
                 "ok": "Füge einen Tag hinzu"
@@ -247,7 +248,8 @@
         }
     },
     "complaints.comp.calendar": {
-        "title": "Kalender"
+        "title": "Kalender",
+        "infoMessage": "Die Kalenderintegration Konfiguration ist nicht aktiviert"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "Referenzsuche"
@@ -296,6 +298,7 @@
         "table.columns": {
             "fullName": "Vollständiger Name"
         },
+        "assigne.none": "Keiner",
         "assignee.label": "Empfänger",
         "owningGroup.label": "Besitzergruppe",
         "priority.label": "Priorität",

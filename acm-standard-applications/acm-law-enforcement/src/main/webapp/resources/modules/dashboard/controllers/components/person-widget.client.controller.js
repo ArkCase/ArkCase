@@ -2,7 +2,7 @@
 
 angular.module('dashboard.person', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('person', {
-        title : 'dashboard.widgets.person.title',
+        title : 'preference.overviewWidgets.person.title',
         description : 'dashboard.widgets.person.description',
         controller : 'Dashboard.PersonController',
         reload : true,
