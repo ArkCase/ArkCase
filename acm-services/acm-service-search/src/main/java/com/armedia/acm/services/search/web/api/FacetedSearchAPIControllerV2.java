@@ -61,7 +61,7 @@ public class FacetedSearchAPIControllerV2
             @RequestParam(value = "titles", required = false) String[] exportTitles,
             Authentication authentication) throws MuleException, UnsupportedEncodingException
     {
-        log.debug("User '" + authentication.getName() + "' is performing facet search for the query: '" + q + "' ");
+        log.debug("User '{}' is performing facet search for the query: '{}' ", authentication.getName(), q);
         MultiValueMap<String, String> headers = new HttpHeaders();
 
         // decode query
