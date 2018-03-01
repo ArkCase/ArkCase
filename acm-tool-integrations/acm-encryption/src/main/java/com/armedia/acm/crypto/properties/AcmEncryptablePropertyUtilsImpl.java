@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -109,6 +110,10 @@ public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUt
                 encryptionProperties.getPropertiesEncryptionPassPhraseHashAlgorithm(),
                 encryptionProperties.getPropertiesEncryptionAlgorithm(), encryptionProperties.getPropertiesEncryptionBlockCipherMode(),
                 encryptionProperties.getPropertiesEncryptionPadding()), UTF8_CHARSET);
+
+        // with SHA256 padding, if the plaintext is long enough the decrypted version somehow ends up with a line
+        // return at the end...
+        decryptedValue = StringUtils.trimTrailingWhitespace(decryptedValue);
 
         return decryptedValue;
     }

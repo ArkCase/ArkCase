@@ -20,5 +20,10 @@
             "idlePull": 5000,
             "idleConfirm": 15000
         }
+    ],
+    "fullScreenPathExpressions": [
+        {
+            "expression": "/viewer/"
+        }
     ]
 }

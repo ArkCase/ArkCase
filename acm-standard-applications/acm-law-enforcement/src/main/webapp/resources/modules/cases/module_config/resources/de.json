@@ -57,7 +57,7 @@
             "newDrugFraud%": "Neue Drogenanwendung Betrug",
             "payoff%": "Auszahlung",
             "pensionWaiver%": "Pension Verzichtserklärung",
-            "pollution%": "Pollution",
+            "pollution%": "Verschmutzung",
             "productTampering%": "Produkt-Manipulation",
             "assetTheftMisuse%": "Diebstahl oder Missbrauch von Vermögenswert"
         }
@@ -245,7 +245,7 @@
     },
     "cases.comp.calendar": {
         "title": "Kalender",
-        "message": "de_Calendar Integration Configuration Not Enabled"
+        "message": "Die Kalenderintegrationskonfiguration ist nicht aktiviert"
     },
     "cases.comp.merge": {
         "title": "Verschmelzen",
