@@ -58,7 +58,7 @@ angular.module('admin').controller(
 
                     function initUser(userNumber) {
                         var userRequestInfo = {};
-                        userRequestInfo.n = Util.isEmpty(userNumber) ? 50 : userNumber;
+                        userRequestInfo.n = Util.isEmpty(userNumber) ? 18 : userNumber;
                         userRequestInfo.start = Util.isEmpty(userNumber) ? 0 : $scope.userData.chooseObject.length;
                         if (makePaginationRequest) {
                             LdapUserManagementService.getNUsers(userRequestInfo).then(function(response) {
@@ -81,7 +81,7 @@ angular.module('admin').controller(
 
                         if (!_.isEmpty($scope.userData.chooseObject)) {
                             var data = {};
-                            data.member_id = selectedObject;
+                            data.member = selectedObject;
                             $scope.lastSelectedUser = [];
                             $scope.lastSelectedUser = selectedObject;
                             selectedUser = selectedObject;
@@ -264,6 +264,7 @@ angular.module('admin').controller(
                                 return element.key === selectedUser.key;
                             });
 
+                            $scope.lastSelectedUser = $scope.userData.chooseObject[0];
                             MessageService.succsessAction();
                         }, function() {
                             MessageService.errorAction();
@@ -288,7 +289,7 @@ angular.module('admin').controller(
 
                     function unauthorizedScroll() {
                         var data = {};
-                        data.member_id = $scope.lastSelectedUser;
+                        data.member = $scope.lastSelectedUser;
                         data.start = $scope.userData.selectedNotAuthorized.length;
                         data.isAuthorized = false;
                         $scope.retrieveDataScroll(data, "getGroupsForUser", "selectedNotAuthorized");
@@ -296,7 +297,7 @@ angular.module('admin').controller(
 
                     function authorizedScroll() {
                         var data = {};
-                        data.member_id = $scope.lastSelectedUser;
+                        data.member = $scope.lastSelectedUser;
                         data.start = $scope.userData.selectedAuthorized.length;
                         data.isAuthorized = true;
                         $scope.retrieveDataScroll(data, "getGroupsForUser", "selectedAuthorized");
@@ -328,7 +329,7 @@ angular.module('admin').controller(
                     }
 
                     function userUnauthorizedFilter(data) {
-                        data.member_id = $scope.lastSelectedUser;
+                        data.member = $scope.lastSelectedUser;
                         data.isAuthorized = false;
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 50 : data.n;
@@ -339,7 +340,7 @@ angular.module('admin').controller(
                     }
 
                     function userAuthorizedFilter(data) {
-                        data.member_id = $scope.lastSelectedUser;
+                        data.member = $scope.lastSelectedUser;
                         data.isAuthorized = true;
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 50 : data.n;

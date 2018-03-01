@@ -130,7 +130,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      * List of N groups:
      *      Filtered by: filterWord
      *      Start position: 0
-     *      Member id key: member_id.key
+     *      Member id key: member.key
      *      End position: n
      *      Is the user part of the group: authorized/unauthorized
      *
@@ -139,10 +139,10 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
     function getGroupsFiltered(data) {
         return $http({
             method : 'GET',
-            url : 'api/latest/users/' + data.member_id.key + '/groups/',
+            url : 'api/latest/users/' + data.member.key + '/groups/',
             params : {
                 n : (data.n ? data.n : 50),
-                q : data.member_id.key,
+                q : data.member.key,
                 fq : data.filterWord,
                 start : (data.start ? data.start : 0),
                 authorized : data.isAuthorized
@@ -158,7 +158,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      * @description
      * List of N groups:
      *      Start position: 0
-     *      Member id key: member_id.key
+     *      Member id key: member.key
      *      End position: n
      *      Is the user part of the group: authorized/unauthorized
      *
@@ -167,9 +167,9 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
     function getGroupsForUser(data) {
         return $http({
             method : 'GET',
-            url : 'api/latest/users/' + data.member_id.key + '/groups/',
+            url : 'api/latest/users/' + data.member.key + '/groups/',
             params : {
-                n : (data.n ? data.n : 50),
+                n : (data.n ? data.n : 18),
                 start : (data.start ? data.start : 0),
                 authorized : data.isAuthorized
             }
