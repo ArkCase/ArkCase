@@ -9,8 +9,7 @@
             "menuItemTitle": "preference.menus.usermenu.item",
             "moduleId": "none",
             "iconClass": "glyphicon glyphicon-asterisk",
-            "position": 120,
-            "targetType": "_self"
+            "position": 120
         }
     ],
     "moduleWidgetPreferences": [

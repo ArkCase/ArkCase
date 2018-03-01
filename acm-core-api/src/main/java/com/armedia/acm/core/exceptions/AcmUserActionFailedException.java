@@ -64,4 +64,9 @@ public class AcmUserActionFailedException extends Exception
 
         return message;
     }
+
+    public String getShortMessage()
+    {
+        return super.getMessage();
+    }
 }
