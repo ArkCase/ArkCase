@@ -1,10 +1,18 @@
 package com.armedia.acm.plugins.admin.web.api;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.services.transcribe.exception.GetTranscribeConfigurationException;
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.model.TranscribeServiceProvider;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,13 +30,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/28/2018
@@ -76,10 +77,10 @@ public class GetTranscribeConfigurationAPIControllerTest extends EasyMockSupport
         when(mockArkCaseTranscribeService.getConfiguration()).thenReturn(configuration);
 
         MvcResult result = mockMvc.perform(get("/api/v1/plugin/admin/transcribe/configuration")
-                                    .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .principal(mockAuthentication))
-                                  .andReturn();
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .principal(mockAuthentication))
+                .andReturn();
 
         verify(mockAuthentication).getName();
         verify(mockArkCaseTranscribeService).getConfiguration();
@@ -93,7 +94,7 @@ public class GetTranscribeConfigurationAPIControllerTest extends EasyMockSupport
         TranscribeConfiguration responseConfiguration = objectMapper.readValue(responseString, TranscribeConfiguration.class);
 
         assertNotNull(responseConfiguration);
-        assertEquals(configuration.isEnabled(), responseConfiguration.isEnabled());
+        assertEquals(configuration, responseConfiguration);
     }
 
     @Test
