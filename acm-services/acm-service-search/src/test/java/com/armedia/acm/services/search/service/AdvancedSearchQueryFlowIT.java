@@ -94,7 +94,7 @@ public class AdvancedSearchQueryFlowIT
     }
 
     @Test
-    public void verifyDFHeadersSent() throws Exception
+    public void verifyDefaultFieldHeadersSent() throws Exception
     {
         String query = "test";
 
@@ -127,7 +127,7 @@ public class AdvancedSearchQueryFlowIT
     }
 
     @Test
-    public void verifyNoDFHeadersSent() throws Exception
+    public void verifyNoDefaultFieldHeadersSent() throws Exception
     {
         String query = "test";
 

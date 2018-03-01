@@ -12,26 +12,22 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -42,11 +38,6 @@ import java.util.stream.Collectors;
 @RequestMapping({ "/api/v2/plugin/search", "/api/latest/plugin/search" })
 public class FacetedSearchAPIControllerV2
 {
-    /**
-     * Pattern for matching words separated by white space, and also words which are quoted containing whitespace.
-     * Example: 'Lorem ipsum dolor sit "amet sollicitudin" id' -> Lorem, ipsum, dolor, sit, "amet sollicitudin", id
-     */
-    private Pattern termsPattern = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private SpringContextHolder springContextHolder;
@@ -57,7 +48,7 @@ public class FacetedSearchAPIControllerV2
     // For EXPORT, set parameter export =(eg. 'csv') & fields = [fields that should be exported]!
     @RequestMapping(value = "/facetedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public String mainNotFilteredFacetedSearch(
+    public ResponseEntity<String> mainNotFilteredFacetedSearch(
             @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "500") int maxRows,
@@ -68,13 +59,14 @@ public class FacetedSearchAPIControllerV2
             @RequestParam(value = "export", required = false) String export,
             @RequestParam(value = "reportName", required = false, defaultValue = "report") String reportName,
             @RequestParam(value = "titles", required = false) String[] exportTitles,
-            HttpServletResponse response,
             Authentication authentication) throws MuleException, UnsupportedEncodingException
     {
         log.debug("User '" + authentication.getName() + "' is performing facet search for the query: '" + q + "' ");
+        MultiValueMap<String, String> headers = new HttpHeaders();
 
+        // decode query
+        q = StringUtils.isNotEmpty(q) ? URLDecoder.decode(q, SearchConstants.FACETED_SEARCH_ENCODING) : q;
         String facetKeys = getFacetedSearchService().getFacetKeys();
-
         // true if the filter should check for parent object access
         boolean isParentRef = true;
         boolean isSubscriptionSearch = false;
@@ -99,28 +91,7 @@ public class FacetedSearchAPIControllerV2
         String rowQueryParameters = facetKeys + filterQueries;
         String sort = sortSpec == null ? "" : sortSpec.trim();
 
-        if (StringUtils.isNotEmpty(q))
-        {
-            q = URLDecoder.decode(q, SearchConstants.FACETED_SEARCH_ENCODING);
-        }
-
-        String query = "";
-
-        for (String term : getSearchTerms(q))
-        {
-            if (term.endsWith("\"") && term.startsWith("\""))
-            {
-                // already escaped with quotes, don't escape it
-                query += " " + term;
-            }
-            else
-            {
-                // it must be escaped because term can contain special character which can interfere constructing the
-                // query
-                query += " \"" + term + "\"";
-            }
-        }
-        query = query.trim();
+        String query = getFacetedSearchService().escapeTermsInQuery(q);
 
         query = getFacetedSearchService().updateQueryWithExcludedObjects(query, rowQueryParameters);
         query += getFacetedSearchService().buildHiddenDocumentsFilter();
@@ -158,47 +129,19 @@ public class FacetedSearchAPIControllerV2
                 ReportGenerator generator = springContextHolder.getBeanByName(String.format("%sReportGenerator",
                         export.toLowerCase()), ReportGenerator.class);
                 String content = generator.generateReport(exportFields, exportTitles, res);
-                export(generator, content, response, reportName);
+                headers.add("Content-Type", generator.getReportContentType());
+                headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)));
+
+                res = content;
             }
             catch (NoSuchBeanDefinitionException e)
             {
                 log.error(String.format("Bean of type: %sReportGenerator is not defined", export.toLowerCase()));
                 throw new IllegalStateException(String.format("Can not export to %s!", export));
             }
-
-            // The output stream is already closed as report is exported
-            return "";
         }
-        return res;
-    }
 
-    public void export(ReportGenerator generator, String content, HttpServletResponse response, String reportName)
-    {
-        try (PrintWriter writer = response.getWriter())
-        {
-            response.setContentType(generator.getReportContentType());
-            response.setHeader("Content-Disposition",
-                    String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)));
-            response.setContentLength(content.length());
-            writer.write(content);
-        }
-        catch (IOException e)
-        {
-            log.error("Unable to generate report document. Exception msg: '{}'", e.getMessage());
-        }
-    }
-
-    private List<String> getSearchTerms(String searchString)
-    {
-
-        Matcher m = termsPattern.matcher(searchString);
-
-        List<String> terms = new LinkedList<>();
-        while (m.find())
-        {
-            terms.add(m.group(1));
-        }
-        return terms;
+        return new ResponseEntity<>(res, headers, HttpStatus.OK);
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()
