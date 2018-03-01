@@ -1,8 +1,8 @@
 package com.armedia.acm.services.dataaccess.service;
 
-import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
+import com.armedia.acm.services.search.util.AcmSolrUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,10 +39,7 @@ public class SearchAccessControlFields
     private List<String> encode(List<String> toBeEncoded)
     {
         return toBeEncoded.stream()
-                .map(s -> s.replace(" ", DataAccessControlConstants.SPACE_REPLACE))
-                .map(s -> s.replace(",", DataAccessControlConstants.COMMA_REPLACE))
-                .map(s -> s.replace("(", DataAccessControlConstants.OPENING_PARENTHESIS_REPLACE))
-                .map(s -> s.replace(")", DataAccessControlConstants.CLOSING_PARENTHESIS_REPLACE))
+                .map(s -> AcmSolrUtil.encodeSpecialCharactersForACL(s))
                 .collect(Collectors.toList());
     }
 

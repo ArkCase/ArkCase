@@ -244,7 +244,8 @@
         }
     },
     "cases.comp.calendar": {
-        "title": "Calendario"
+        "title": "Calendario",
+        "message": "es_Calendar Integration Configuration Not Enabled"
     },
     "cases.comp.merge": {
         "title": "Unir",
@@ -332,6 +333,7 @@
             "status": "Estado",
             "addedBy": "Añadido por"
         },
+        "assigne.none": "Ninguna",
         "assignee.label": "Cesionario",
         "owningGroup.label": "Poseer grupo",
         "priority.label": "Prioridad",

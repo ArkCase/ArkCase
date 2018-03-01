@@ -522,5 +522,13 @@
             <column name="cm_case_title (128)"/>
         </createIndex>
     </changeSet>
+    
+    <changeSet id="32-add-external-flag-column" author="sasko.tanaskoski">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_case_external_flag" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

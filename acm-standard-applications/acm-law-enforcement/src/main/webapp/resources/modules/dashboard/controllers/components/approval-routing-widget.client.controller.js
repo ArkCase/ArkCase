@@ -4,7 +4,7 @@ angular
         .module('dashboard.approvalRouting', [ 'adf.provider' ])
         .config(function(dashboardProvider) {
             dashboardProvider.widget('approvalRouting', {
-                title : 'dashboard.widgets.approvalRouting.title',
+                title : 'preference.overviewWidgets.approvalRouting.title',
                 description : 'dashboard.widgets.approvalRouting.description',
                 controller : 'Dashboard.ApprovalRoutingController',
                 reload : true,

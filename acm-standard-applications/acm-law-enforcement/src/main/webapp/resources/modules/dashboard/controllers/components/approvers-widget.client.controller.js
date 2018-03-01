@@ -2,7 +2,7 @@
 
 angular.module('dashboard.approvers', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('approvers', {
-        title : 'dashboard.widgets.approvers.title',
+        title : 'preference.overviewWidgets.approvers.title',
         description : 'dashboard.widgets.approvers.description',
         controller : 'Dashboard.ApproversController',
         controllerAs : 'approvers',
@@ -87,7 +87,7 @@ angular.module('dashboard.approvers', [ 'adf.provider' ]).config(function(dashbo
 
                     var onConfigRetrieved = function(componentConfig) {
                         var widgetInfo = _.find(componentConfig.widgets, function(widget) {
-                            return widget.id === "approvers";
+                            return widget.id === "tasks";
                         });
                         gridHelper.setColumnDefs(widgetInfo);
                     };

@@ -8,7 +8,8 @@ angular.module('core').controller(
                 'Menus',
                 'Acm.LoginService',
                 'LookupService',
-                function($scope, UserInfoService, Menus, AcmLoginService, LookupService) {
+                'MessageService'
+                ,function($scope, UserInfoService, Menus, AcmLoginService, LookupService, MessageService) {
 
                     var appConfig = LookupService.getConfig('app').then(function(data) {
                         $scope.helpUrl = data.helpUrl;
@@ -36,4 +37,9 @@ angular.module('core').controller(
                         AcmLoginService.logout();
                     };
 
-                } ]);
+        $scope.$bus.subscribe('sync-progress', function (data) {
+            MessageService.info(data.message);
+        });
+
+    }
+]);

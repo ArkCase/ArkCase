@@ -232,6 +232,7 @@
         "modal": {
             "title": "Tag",
             "search": "Search for Tag",
+            "placeholder": "Add tag",
             "buttons": {
                 "cancel": "Cancel",
                 "ok": "Add Tag"
@@ -247,7 +248,8 @@
         }
     },
     "complaints.comp.calendar": {
-        "title": "Calendar"
+        "title": "Calendar",
+        "infoMessage": "Calendar Integration Configuration Not Enabled"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "Reference Search"
@@ -296,6 +298,7 @@
         "table.columns": {
             "fullName": "Full Name"
         },
+        "assigne.none": "None",
         "assignee.label": "Assignee",
         "owningGroup.label": "Owning Group",
         "priority.label": "Priority",

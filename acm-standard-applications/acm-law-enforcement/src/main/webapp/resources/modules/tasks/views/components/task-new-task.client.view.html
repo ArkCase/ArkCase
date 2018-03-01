@@ -140,7 +140,7 @@
                 ng-disabled="task.$invalid || saved || (taskType === 'REVIEW_DOCUMENT' && documentsToReview && documentsToReviewIds.length === 0)"
                 class="btn btn-primary btn-sm" data-toggle="tooltip" id="saveButton" data-title="Save">
             <i class="fa fa-floppy-o" ng-hide="loading"></i>
-            <i class="fa fa-circle-o-notch fa-spin" ng-show="loading"></i>
+            <i class="fa fa-circle-o-notch fa-spin" ng-if="loading"></i>
             <span translate> tasks.newTask.saveButton </span>
         </button>
     </div>
