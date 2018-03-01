@@ -29,10 +29,12 @@ public class BuckslipTaskHelper implements ApplicationEventPublisherAware
         String pastTasks = (String) pi.getProcessVariables().get("pastTasks");
         JSONArray futureTasks = new JSONArray(((String) pi.getProcessVariables().get("futureTasks")));
         String currentApprover = (String) pi.getProcessVariables().get("currentApprover");
+        String approverFullName = (String) pi.getProcessVariables().get("approverFullName");
         String currentTaskName = (String) pi.getProcessVariables().get("currentTaskName");
         String currentGroupName = (String) pi.getProcessVariables().get("currentGroup");
         String currentDetails = (String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_DETAILS);
         String currentAddedBy = (String) pi.getProcessVariables().get("addedBy");
+        String addedByFullName = (String) pi.getProcessVariables().get("addedByFullName");
         String taskDueDateExpression = (String) pi.getProcessVariables().get("taskDueDateExpression");
 
         JSONArray newFutureTasks = new JSONArray();
@@ -45,10 +47,12 @@ public class BuckslipTaskHelper implements ApplicationEventPublisherAware
         {
             JSONObject past = pastApproversJson.getJSONObject(i);
             String pastApproverId = past.getString("approverId");
+            String pastApproverFullName = past.getString("approverFullName");
             String pastTaskName = past.getString("taskName");
             String pastGroupName = past.getString("groupName");
             String pastDetails = past.getString("details");
             String pastAddedBy = past.getString("addedBy");
+            String pastAddedByFullName = past.getString("addedByFullName");
             int maxTaskDurationInDays = past.getInt("maxTaskDurationInDays");
             // account for possibly many withdrawal cycles; suppose the same tasks have already been recorded more
             // than once (e.g. Ann has completed her original task, then completed the same task after the first
@@ -70,10 +74,12 @@ public class BuckslipTaskHelper implements ApplicationEventPublisherAware
             {
                 JSONObject newFuture = new JSONObject();
                 newFuture.put("approverId", pastApproverId);
+                newFuture.put("approverFullName", pastApproverFullName);
                 newFuture.put("taskName", pastTaskName);
                 newFuture.put("groupName", pastGroupName);
                 newFuture.put("details", pastDetails);
                 newFuture.put("addedBy", pastAddedBy);
+                newFuture.put("addedByFullName", pastAddedByFullName);
                 newFuture.put("maxTaskDurationInDays", maxTaskDurationInDays);
                 newFutureTasks.put(newFuture);
             }
@@ -88,10 +94,12 @@ public class BuckslipTaskHelper implements ApplicationEventPublisherAware
         {
             JSONObject currentTask = new JSONObject();
             currentTask.put("approverId", currentApprover);
+            currentTask.put("approverFullName", approverFullName);
             currentTask.put("taskName", currentTaskName);
             currentTask.put("groupName", currentGroupName);
             currentTask.put("details", currentDetails);
             currentTask.put("addedBy", currentAddedBy);
+            currentTask.put("addedByFullName", addedByFullName);
             int maxTaskDurationInDays = getMaxTaskDurationInDays(taskDueDateExpression);
             currentTask.put("maxTaskDurationInDays", maxTaskDurationInDays);
             newFutureTasks.put(currentTask);

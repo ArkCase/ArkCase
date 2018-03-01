@@ -144,7 +144,7 @@
         "error.loading": "आरेख लोड नहीं किया जा सकता"
     },
     "tasks.comp.signatures": {
-        "title": "eSignatures",
+        "title": "ईहस्ताक्षर",
         "table.columns": {
             "signedDate": "तारीख",
             "signedBy": "द्वारा हस्ताक्षर किए"
@@ -223,7 +223,7 @@
         "noSelectedDocsErrorMsg": "कृपया समीक्षा के लिए कम से कम एक दस्तावेज़ का चयन करें"
     },
     "tasks.userOrGroupSearch": {
-        "id": "userSearch",
+        "id": "उपयोगकर्ताखोज",
         "title": "उपयोगकर्ता / समूह खोज",
         "search": {
             "btn": "खोज",
@@ -241,7 +241,7 @@
         }
     },
     "tasks.owningGroupSearch": {
-        "id": "owningGroupSearch",
+        "id": "समूहखोजस्वामी",
         "title": "इस उपयोगकर्ता के समूह के लिए खोजें",
         "search": {
             "btn": "खोज",
@@ -257,7 +257,7 @@
         }
     },
     "tasks.objectSearch": {
-        "id": "objectSearch",
+        "id": "ऑब्जेक्टखोज",
         "title": "वस्तु खोज",
         "search": {
             "btn": "खोज",
@@ -332,7 +332,7 @@
         "searchGroupHeader": "खोज समूह"
     },
     "tasks.comp.approvalRouting": {
-        "title": "भविष्य के Approvers",
+        "title": "भविष्य के अनुमोदक",
         "addNewTooltip": "नया अपवादक जोड़ें",
         "noBuckslipMessage": "कोई आकड़ा उपलब्ध नहीं है",
         "button": {
@@ -343,7 +343,7 @@
         }
     },
     "tasks.comp.pastApprovals": {
-        "title": "अतीत Approvers",
+        "title": "अतीत अनुमोदक",
         "noBuckslipMessage": "कोई आकड़ा उपलब्ध नहीं है",
         "table.columns": {
             "approvalDate": "स्वीकृति तिथि",

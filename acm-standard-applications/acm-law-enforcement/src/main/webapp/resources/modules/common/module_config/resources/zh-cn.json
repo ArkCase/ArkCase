@@ -620,6 +620,7 @@
         "DOC_REPO": "文档库",
         "ORGANIZATION": "组织",
         "PERSON": "人员",
+        "PERSON-ASSOCIATION": "zh-cn_Person-Association",
         "PARTICIPANT": "zh-cn_Participant",
         "NOTE": "zh-cn_Note",
         "PARTICIPANT-ASSOCIATION": "zh-cn_Participant-Association",

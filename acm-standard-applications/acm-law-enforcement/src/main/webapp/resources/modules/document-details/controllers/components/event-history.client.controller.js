@@ -40,6 +40,7 @@ angular.module('document-details').controller(
                                 $scope.gridOptions = $scope.gridOptions || {};
                                 $scope.gridOptions.data = auditData.resultPage;
                                 $scope.gridOptions.totalItems = auditData.totalCount;
+
                             });
                         }
                     };

@@ -366,7 +366,10 @@
                 "choose.file": "ja_Choose File",
                 "download": "ja_Download",
                 "save": "保存する",
-                "cancel": "キャンセル"
+                "cancel": "キャンセル",
+                "validationResponse": "ja_Email Template already exists with selected parameters",
+                "uploadError": "ja_File upload canceled due to incorrect type of file. You can only upload html file.",
+                "invalidTemplateName": "ja_Template name must end on '.html', '.htm' or '.xhtml' and can only consist of characters, digits or underscores."
             },
             "objectTypes": {
                 "caseFile": "ja_Case File",
