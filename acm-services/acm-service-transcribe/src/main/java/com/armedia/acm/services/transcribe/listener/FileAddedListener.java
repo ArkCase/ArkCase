@@ -1,9 +1,10 @@
 package com.armedia.acm.services.transcribe.listener;
 
-import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileCreatedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFilePersistenceEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileReplacedEvent;
+import com.armedia.acm.plugins.ecm.model.event.EcmFiledCopiedEvent;
+
 import org.springframework.context.ApplicationListener;
 
 /**
@@ -23,6 +24,7 @@ public class FileAddedListener implements ApplicationListener<EcmFilePersistence
     private boolean allow(EcmFilePersistenceEvent event)
     {
         // TODO: Restrict only for Case/Complaints?
-        return event != null && (event instanceof EcmFileCreatedEvent || event instanceof EcmFileReplacedEvent || event instanceof EcmFileCopiedEvent);
+        return event != null
+                && (event instanceof EcmFileCreatedEvent || event instanceof EcmFileReplacedEvent || event instanceof EcmFiledCopiedEvent);
     }
 }
