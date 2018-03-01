@@ -223,7 +223,7 @@
         "noSelectedDocsErrorMsg": "レビューする文書を少なくとも1つ選択してください。"
     },
     "tasks.userOrGroupSearch": {
-        "id": "userSearch",
+        "id": "ユーザー検索",
         "title": "ユーザー/グループ検索",
         "search": {
             "btn": "サーチ",
@@ -241,7 +241,7 @@
         }
     },
     "tasks.owningGroupSearch": {
-        "id": "owningGroupSearch",
+        "id": "グループの検索",
         "title": "このユーザーのグループを検索する",
         "search": {
             "btn": "サーチ",

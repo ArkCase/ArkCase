@@ -14,8 +14,10 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.report.model.PentahoFileProperties;
 import com.armedia.acm.plugins.report.model.PentahoReportScheduleConstants;
+import com.armedia.acm.web.api.MDCConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.TimeZone;
+import java.util.UUID;
 
 /**
  * Created by joseph.mcgrady on 6/13/2017.
@@ -49,8 +52,15 @@ public class PentahoUploadGeneratedReportService
         DocumentRepository documentRepository = getDocumentRepositoryDao().findByName(getReportDocumentRepository());
         if (documentRepository != null)
         {
-            Authentication auth = new UsernamePasswordAuthenticationToken(getUploadUserId(), "SYSTEM");
-            getAuditPropertyEntityAdapter().setUserId(getUploadUserId());
+            String uploadUserId = (getUploadUserId() == null) ? "admin" : getUploadUserId();
+            Authentication auth = new UsernamePasswordAuthenticationToken(uploadUserId, uploadUserId);
+            getAuditPropertyEntityAdapter().setUserId(uploadUserId);
+            if (MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY) == null)
+            {
+                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, uploadUserId);
+                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+            }
+
             AcmContainer container = documentRepository.getContainer();
             AcmFolder yearFolder = null;
             EcmFile ecmFile = null;
