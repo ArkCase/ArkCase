@@ -196,16 +196,21 @@ angular.module('admin').controller(
                             header : $translate.instant('admin.security.organizationalHierarchy.addMembers.group.title')
                         };
                         var modalInstance = openMembersPicker(params);
-                        modalInstance.result.then(function(group) {
-                            organizationalHierarchyService.addExistingAdHocSubGroup(group.object_id_s, parent.object_id_s).then(
-                                    function(payload) {
-                                        //added successfully
-                                        var subgroup = unmapGroupMember(payload.data, parent.object_id_s);
-                                        deferred.resolve(subgroup);
-                                    }, function() {
-                                        //error adding group
-                                        deferred.reject();
-                                    }).then(function() {
+                        modalInstance.result.then(function(groups) {
+                            var memberIds = _.map(groups, function(group) {
+                                return group.object_id_s;
+                            });
+                            organizationalHierarchyService.addExistingAdHocSubGroups(parent.object_id_s, memberIds).then(function(payload) {
+                                //added successfully
+                                var subgroups = _.map(payload.data, function(group) {
+                                    return unmapGroupMember(group, parent.object_id_s);
+                                });
+                                createTreeData(subgroups);
+                                deferred.resolve(subgroups);
+                            }, function() {
+                                //error adding group
+                                deferred.reject();
+                            }).then(function() {
                                 refreshPageData();
                             });
                         }, function() {
