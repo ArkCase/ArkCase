@@ -31,6 +31,7 @@
         <select ng-model="selectedAuthorized" ng-options="a[roleDisplayName] for a in data.selectedAuthorized" size="15"
                 multiple class="form-control" pagination-on-scroll
                 load-more="paginationDataControl.loadAuthorizedScroll()" reset-scroll-px="resetScrollOnSelect">
+                load-more="paginationDataControl.loadAuthorizedScroll()">
         </select>
         <object-authorization-roles-filter ng-show="showFilter" filter="filterDataControl.authorizedFilter(data)" />
     </div>
