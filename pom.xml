@@ -83,6 +83,7 @@
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
         <!--<mule-cmis-connector.version>2.0.0</mule-cmis-connector.version> -->
         <org.json.version>20140107</org.json.version>
+        <json-simple.version>1.1.1</json-simple.version>
         <org.mvel.version>2.2.1.Final</org.mvel.version>
         <rome.version>1.0</rome.version>
         <slf4j.version>1.7.7</slf4j.version>
@@ -1526,6 +1527,12 @@
                 <groupId>org.json</groupId>
                 <artifactId>json</artifactId>
                 <version>${org.json.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.googlecode.json-simple</groupId>
+                <artifactId>json-simple</artifactId>
+                <version>${json-simple.version}</version>
             </dependency>
 
             <dependency>

@@ -8,6 +8,7 @@ import com.armedia.acm.auth.okta.model.user.OktaUserCredentials;
 import com.armedia.acm.auth.okta.model.user.OktaUserProfile;
 import com.armedia.acm.auth.okta.model.user.OktaUserStatus;
 import com.armedia.acm.auth.okta.services.OktaUserService;
+import com.google.common.base.Preconditions;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +30,7 @@ public class OktaUserServiceImpl implements OktaUserService
     @Override
     public OktaUser createUser(OktaUser user) throws OktaException
     {
-        if (user == null)
-        {
-            throw new OktaException("User must not be null to create user");
-        }
+        Preconditions.checkNotNull(user, "User must not be null to create user");
 
         JSONObject userRequestBody = new JSONObject();
 
@@ -166,57 +164,43 @@ public class OktaUserServiceImpl implements OktaUserService
     }
 
     @Override
-    public OktaUser updateUser(Map<String, String> profile, String userId) throws OktaException
+    public OktaUser updateUser(Map<String, String> profile, String userId)
     {
-        if (profile == null)
-        {
-            throw new OktaException("User profile for update is null");
-        } else
-        {
-            JSONObject profileData = new JSONObject();
-            profileData.putAll(profile);
+        Preconditions.checkNotNull(profile, "User profile for update is null");
+        Preconditions.checkNotNull(userId, "To update a user, the userId can't be null");
 
-            JSONObject body = new JSONObject();
-            body.put("profile", profileData);
+        JSONObject profileData = new JSONObject();
+        profileData.putAll(profile);
 
-            String apiPath = String.format(OktaAPIConstants.USER_OPERATION, userId);
-            return simpleUserOperation(apiPath, HttpMethod.POST, body.toString());
-        }
+        JSONObject body = new JSONObject();
+        body.put("profile", profileData);
+
+        String apiPath = String.format(OktaAPIConstants.USER_OPERATION, userId);
+        return simpleUserOperation(apiPath, HttpMethod.POST, body.toString());
     }
 
     @Override
-    public OktaUser activateUser(String userId) throws OktaException
+    public OktaUser activateUser(String userId)
     {
-        if (userId == null)
-        {
-            throw new OktaException("To activate a user, the userId can't be null");
-        } else
-        {
-            String apiPath = String.format(OktaAPIConstants.ACTIVATE_USER, userId);
-            return simpleUserOperation(apiPath, HttpMethod.POST, "{}");
-        }
+        Preconditions.checkNotNull(userId, "To activate a user, the userId can't be null");
+
+        String apiPath = String.format(OktaAPIConstants.ACTIVATE_USER, userId);
+        return simpleUserOperation(apiPath, HttpMethod.POST, "{}");
     }
 
     @Override
-    public OktaUser getUser(String userId) throws OktaException
+    public OktaUser getUser(String userId)
     {
-        if (userId == null)
-        {
-            throw new OktaException("To get a user, the userId can't be null");
-        } else
-        {
-            String apiPath = String.format(OktaAPIConstants.USER_OPERATION, userId);
-            return simpleUserOperation(apiPath, HttpMethod.GET, "{}");
-        }
+        Preconditions.checkNotNull(userId, "To get a user, the userId can't be null");
+
+        String apiPath = String.format(OktaAPIConstants.USER_OPERATION, userId);
+        return simpleUserOperation(apiPath, HttpMethod.GET, "{}");
     }
 
     @Override
     public boolean deleteUser(String userId) throws OktaException
     {
-        if (userId == null)
-        {
-            throw new OktaException("UserId can't empty to delete user");
-        }
+        Preconditions.checkNotNull(userId, "UserId can't empty to delete user");
 
         OktaUser user = getUser(userId);
         if (user == null)
@@ -230,10 +214,8 @@ public class OktaUserServiceImpl implements OktaUserService
     @Override
     public boolean deleteUser(OktaUser user) throws OktaException
     {
-        if (user == null || user.getId() == null)
-        {
-            throw new OktaException("User is required to delete user");
-        }
+        Preconditions.checkNotNull(user, "User is required to delete user");
+        Preconditions.checkNotNull(user.getId(), "userId is null");
 
         String apiPath = String.format(OktaAPIConstants.USER_OPERATION, user.getId());
 

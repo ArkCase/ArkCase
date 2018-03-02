@@ -4,6 +4,7 @@ import com.armedia.acm.auth.okta.exceptions.OktaException;
 import com.armedia.acm.auth.okta.model.OktaAPIConstants;
 import com.armedia.acm.auth.okta.model.factor.FactorVerifyResult;
 import com.armedia.acm.auth.okta.services.FactorVerificationService;
+import com.google.common.base.Preconditions;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +23,8 @@ public class FactorVerificationServiceImpl implements FactorVerificationService
     @Override
     public FactorVerifyResult verify(String userId, String factorId, String passCode) throws OktaException
     {
-        if (userId == null || factorId == null)
-        {
-            throw new OktaException("To challenge factor, userId nor factorId can be null.");
-
-        }
+        Preconditions.checkNotNull(userId, "userId is null");
+        Preconditions.checkNotNull(factorId, "factorId is null");
 
         JSONObject passCodeBody = new JSONObject();
         passCodeBody.put(OktaAPIConstants.PASS_CODE, passCode);
@@ -42,25 +40,21 @@ public class FactorVerificationServiceImpl implements FactorVerificationService
     @Override
     public FactorVerifyResult challenge(String userId, String factorId) throws OktaException
     {
-        if (userId == null || factorId == null)
-        {
-            throw new OktaException("To verify factor, userId nor factorId can be null.");
+        Preconditions.checkNotNull(userId, "userId is null");
+        Preconditions.checkNotNull(factorId, "factorId is null");
 
-        } else
+        String apiPath = String.format(OktaAPIConstants.VERIFY_FACTOR, userId, factorId);
+        ResponseEntity<FactorVerifyResult> exchange = oktaRestService.doRestCall(apiPath, HttpMethod.POST, FactorVerifyResult.class, "{}");
+        System.out.println(exchange);
+        if (HttpStatus.OK.equals(exchange.getStatusCode()))
         {
-            String apiPath = String.format(OktaAPIConstants.VERIFY_FACTOR, userId, factorId);
-            ResponseEntity<FactorVerifyResult> exchange = oktaRestService.doRestCall(apiPath, HttpMethod.POST, FactorVerifyResult.class, "{}");
-            System.out.println(exchange);
-            if (HttpStatus.OK.equals(exchange.getStatusCode()))
-            {
-                return exchange.getBody();
-            } else if (exchange.getStatusCode().is4xxClientError())
-            {
-                LOGGER.warn("Too many challenges recently? [{}]", exchange.getBody());
-                return exchange.getBody();
-            }
-            return null;
+            return exchange.getBody();
+        } else if (exchange.getStatusCode().is4xxClientError())
+        {
+            LOGGER.warn("Too many challenges recently? [{}]", exchange.getBody());
+            return exchange.getBody();
         }
+        return null;
     }
 
     public OktaRestService getOktaRestService()
