@@ -26,7 +26,8 @@
         "zip": "郵政號碼",
         "mainPhone": "主辦公電話",
         "fax": "傳真",
-        "website": "網站"
+        "website": "網站",
+        "editEnabled": "zh-tw_Edit is enabled."
     },
     "profile.contact": {
         "title": "聯繫信息",

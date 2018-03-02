@@ -26,7 +26,8 @@
         "zip": "Code postal",
         "mainPhone": "Téléphone principal du bureau",
         "fax": "Fax",
-        "website": "Site Internet"
+        "website": "Site Internet",
+        "editEnabled": "fr_Edit is enabled."
     },
     "profile.contact": {
         "title": "Informations de contact",

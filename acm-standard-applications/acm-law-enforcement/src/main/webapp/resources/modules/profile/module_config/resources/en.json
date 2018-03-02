@@ -26,7 +26,8 @@
         "zip": "Zip",
         "mainPhone": "Main Office Phone",
         "fax": "Fax",
-        "website": "Website"
+        "website": "Website",
+        "editEnabled": "Edit is enabled."
     },
     "profile.contact": {
         "title": "Contact Information",
