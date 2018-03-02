@@ -157,7 +157,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
             throw new AcmUserActionFailedException("create LDAP user", null, null, "Creating LDAP user failed!", e);
         }
 
-        eventPublisher.publishEvent(new AcmLdapSyncEvent(acmUser));
+        eventPublisher.publishEvent(new AcmLdapSyncEvent(acmUser.getUserId()));
 
         return acmUser;
     }

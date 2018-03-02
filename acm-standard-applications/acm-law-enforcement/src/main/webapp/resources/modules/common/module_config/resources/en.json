@@ -194,7 +194,8 @@
         "edtPlaceholder": "Type in to search",
         "noData.text": "No Results",
         "pickUserLabel": "Pick Associated User",
-        "pickGroupLabel": "Pick Associated Group"
+        "pickGroupLabel": "Pick Associated Group",
+        "selectedItemsGrid.label": "Selected entries"
     },
     "common.directive.search": {
         "showMore.button.text": "Show More Values",

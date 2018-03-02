@@ -533,7 +533,7 @@
 
         <!-- custom cache currently used by block join -->
         <cache name="perSegFilter" class="solr.search.LRUCache" size="10" initialSize="0" autowarmCount="10"
-            regenerator="solr.NoOpRegenerator"/>
+               regenerator="solr.NoOpRegenerator"/>
 
         <!-- Field Value Cache
 
@@ -718,7 +718,7 @@
 
           -->
         <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="2048000" formdataUploadLimitInKB="2048"
-            addHttpRequestToContext="false"/>
+                        addHttpRequestToContext="false"/>
 
         <!-- HTTP Caching
 
@@ -810,7 +810,7 @@
         <lst name="defaults">
             <str name="echoParams">explicit</str>
             <int name="rows">10</int>
-            <str name="df">text</str>
+            <str name="df">catch_all</str>
         </lst>
         <!-- In addition to defaults, "appends" params can be specified
              to identify values which should be appended to the list of
@@ -1375,7 +1375,7 @@
     </searchComponent>
 
     <requestHandler name="/suggest"
-        class="org.apache.solr.handler.component.SearchHandler"> <!-- Custom request handler for autosuggestion only -->
+                    class="org.apache.solr.handler.component.SearchHandler"> <!-- Custom request handler for autosuggestion only -->
         <lst name="defaults">
             <str name="echoParams">none</str>
             <str name="wt">json</str>
@@ -1435,7 +1435,8 @@
          http://wiki.apache.org/solr/ClusteringComponent
          http://carrot2.github.io/solr-integration-strategies/
       -->
-    <searchComponent name="clustering" enable="${solr.clustering.enabled:false}" class="solr.clustering.ClusteringComponent">
+    <searchComponent name="clustering" enable="${solr.clustering.enabled:false}"
+                     class="solr.clustering.ClusteringComponent">
         <lst name="engine">
             <str name="name">lingo</str>
 
@@ -1488,7 +1489,8 @@
          In reality you will likely want to add the component to your
          already specified request handlers.
       -->
-    <requestHandler name="/clustering" startup="lazy" enable="${solr.clustering.enabled:false}" class="solr.SearchHandler">
+    <requestHandler name="/clustering" startup="lazy" enable="${solr.clustering.enabled:false}"
+                    class="solr.SearchHandler">
         <lst name="defaults">
             <bool name="clustering">true</bool>
             <bool name="clustering.results">true</bool>

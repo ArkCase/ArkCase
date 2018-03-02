@@ -185,6 +185,19 @@ public interface GroupService
     AcmGroup addGroupMember(String subGroupId, String parentId) throws AcmCreateObjectFailedException;
 
     /**
+     * Adds group as member to parent group
+     *
+     * @param parentId
+     *            parent group name
+     * @param memberIds
+     *            member groups names
+     * @return list of member groups
+     * @throws AcmCreateObjectFailedException
+     *             in case when subgroup or parent group are not found
+     */
+    List<AcmGroup> addGroupMembers(String parentId, List<String> memberIds) throws AcmCreateObjectFailedException;
+
+    /**
      * retrive groups for given parent group id
      *
      * @param groupId

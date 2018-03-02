@@ -16,7 +16,7 @@
 
             <ul class="dropdown-menu animated fadeInRight">
                 <li ng-repeat="item in menu.items  | orderBy: 'position' ">
-                    <a data-ui-sref="{{item.link}}" title="{{item.title | translate}}" target="{{item.targetType}}" class="auto" translate>
+                    <a data-ui-sref="{{item.link}}" title="{{item.title | translate}}" class="auto" translate>
                         {{item.title}}
                     </a>
                 </li>
