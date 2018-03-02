@@ -8,4 +8,5 @@ angular.module('complaints').controller(
                     $scope.extraFilter = $extraFilter;
                     $scope.modalInstance = $modalInstance;
                     $scope.config = $config;
+                    $scope.secondGrid = 'true';
                 } ]);

@@ -83,17 +83,17 @@
     },
     "profile.subscriptions": {
         "title": "Suscripciones",
-        "unsubscribeSelect": "Anular suscripción seleccionados",
+        "unsubscribeSelect": "Anular las suscripciones seleccionadas",
         "table.columns": {
             "title": "Título",
-            "created": "Creado",
+            "created": "Creado el",
             "parentId": "Identificación de los padres",
             "userId": "Identidad de usuario"
         }
     },
     "profile.company": {
-        "title": "Detalle de empresa",
-        "name": "nombre de empresa",
+        "title": "Detalles de la Empresa",
+        "name": "Nombre de la Empresa",
         "address1": "Dirección 1",
         "address2": "Dirección 2",
         "city": "Ciudad",
@@ -107,38 +107,38 @@
         "title": "Información del contacto",
         "location": "Ubicación",
         "im": "Cuenta IM",
-        "officePhone": "Telefono de oficina",
+        "officePhone": "Teléfono de oficina",
         "mobilePhone": "Teléfono móvil"
     },
     "profile.groups": {
         "title": "Grupos"
     },
     "profile.buttons": {
-        "save": "Guardar cambios",
+        "save": "Salvar los cambios",
         "message": "Introduzca su nueva contraseña.",
         "confirmation": "Ingrese su nueva contraseña nuevamente.",
         "cancel": "Cancelar",
-        "outlookPassword": "Almacenar la contraseña de Outlook",
-        "ldapPassword": "Cambia la contraseña"
+        "outlookPassword": "Salvar la contraseña de Outlook",
+        "ldapPassword": "Cambiar la contraseña"
     },
     "profile.picture": {
-        "title": "Cambiar imagen",
+        "title": "Cambiar fotografía",
         "email": "Dirección de correo electrónico",
-        "uploadImgError": "Has cargado un tipo de archivo de imagen no válido.",
+        "uploadImgError": "Tipo de archivo de imagen no válido",
         "uploadError": "No se pudo cargar la nueva imagen de perfil"
     },
     "profile.signature": {
         "title": "Cambiar Firma",
-        "uploadError": "No se pudo cargar la nueva firma"
+        "uploadError": "Se produjo un error al cambiar la nueva firma"
     },
     "profile.modal": {
         "title": "Info",
-        "emptyPassword": "La contraseña no puede estar vacía",
-        "confirmation": "Por favor re ingrese su contraseña.",
+        "emptyPassword": "El campo de la contraseña no se puede dejar en blanco",
+        "confirmation": "Por favor re-ingrese su contraseña.",
         "invalidPattern": "es_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters.",
-        "ok": "DE ACUERDO",
+        "ok": "ACCEPTAR",
         "success": "Contraseña modificada con éxito",
-        "changePassword.header": "Cambia la contraseña"
+        "changePassword.header": "Cambiar la contraseña"
     },
     "profile.comp.subscription": {
         "title": "Suscripción"

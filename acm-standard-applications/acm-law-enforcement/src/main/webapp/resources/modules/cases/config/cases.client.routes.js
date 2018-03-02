@@ -22,6 +22,7 @@ angular.module('cases').config(
                                                 $translatePartialLoader.addPart('dashboard');
                                                 $translatePartialLoader.addPart('cases');
                                                 $translatePartialLoader.addPart('document-details');
+                                                $translatePartialLoader.addPart('preference');
                                                 $translate.resetDataDict().addDataDictFromLabels(
                                                         LocaleService.getLabelResources([ "cases", "common" ], "en"))
                                                         .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("caseFileTypes"))
