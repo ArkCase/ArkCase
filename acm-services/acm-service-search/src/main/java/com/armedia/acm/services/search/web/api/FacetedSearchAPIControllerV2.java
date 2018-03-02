@@ -59,6 +59,8 @@ public class FacetedSearchAPIControllerV2
             @RequestParam(value = "export", required = false) String export,
             @RequestParam(value = "reportName", required = false, defaultValue = "report") String reportName,
             @RequestParam(value = "titles", required = false) String[] exportTitles,
+            // Part of the query to NOT ESCAPE
+            @RequestParam(value = "unescapedQuery", required = false, defaultValue = "") String unescapedQuery,
             Authentication authentication) throws MuleException, UnsupportedEncodingException
     {
         log.debug("User '{}' is performing facet search for the query: '{}' ", authentication.getName(), q);
@@ -92,6 +94,13 @@ public class FacetedSearchAPIControllerV2
         String sort = sortSpec == null ? "" : sortSpec.trim();
 
         String query = getFacetedSearchService().escapeTermsInQuery(q);
+
+        // Needed workaround for BACTES, since there needs unescaped additions to the query (Column Filtering related)
+        if (StringUtils.isNotEmpty(unescapedQuery))
+        {
+            unescapedQuery = URLDecoder.decode(unescapedQuery, SearchConstants.FACETED_SEARCH_ENCODING);
+            query = (query == null ? unescapedQuery : query + unescapedQuery);
+        }
 
         query = getFacetedSearchService().updateQueryWithExcludedObjects(query, rowQueryParameters);
         query += getFacetedSearchService().buildHiddenDocumentsFilter();
