@@ -8,6 +8,7 @@ angular.module('document-details').config([ '$stateProvider', function($statePro
             translatePartialLoader : [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
                 $translatePartialLoader.addPart('document-details');
                 $translatePartialLoader.addPart('common');
+                $translatePartialLoader.addPart('preference');
                 return $translate.refresh();
             } ]
         }
