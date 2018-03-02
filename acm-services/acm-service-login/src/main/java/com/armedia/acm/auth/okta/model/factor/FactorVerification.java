@@ -11,10 +11,6 @@ public class FactorVerification
     private String passCode;
     private String nextPassCode;
 
-    public FactorVerification()
-    {
-    }
-
     public String getPassCode()
     {
         return passCode;
