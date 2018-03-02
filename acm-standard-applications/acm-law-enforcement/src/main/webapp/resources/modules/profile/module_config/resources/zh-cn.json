@@ -26,7 +26,8 @@
         "zip": "邮政号码",
         "mainPhone": "主办公电话",
         "fax": "传真",
-        "website": "网站"
+        "website": "网站",
+        "editEnabled": "zh-cn_Edit is enabled."
     },
     "profile.contact": {
         "title": "联系信息",
