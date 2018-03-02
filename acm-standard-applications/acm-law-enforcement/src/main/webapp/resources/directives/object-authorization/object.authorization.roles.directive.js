@@ -119,7 +119,7 @@ angular.module('directives').directive(
                                 scope.data.selectedAuthorized = [];
                                 scope.data.selectedNotAuthorized = [];
                                 if (scope.selectedObject) {
-		                            scope.resetScrollOnSelect = true;
+                                    scope.resetScrollOnSelect = true;
                                     scope.onObjectSelected(scope.selectedObject, scope.data.selectedAuthorized,
                                             scope.data.selectedNotAuthorized);
                                 }

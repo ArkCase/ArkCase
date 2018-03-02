@@ -106,32 +106,17 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         return applicationRoles;
     }
 
-    private Boolean removeRoleToGroup(String group, List<String> roleToGroups)
-    {
-        for (String rg : roleToGroups)
-        {
-            if (rg.equals(group))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private List<String> findAuthorizedRoleToGroups(List<String> roleToGroupsMap, String sortDirection, Integer startRow, Integer maxRows)
     {
         List<String> roleToGroupsMapSorted = null;
         maxRows = maxRows > roleToGroupsMap.size() ? roleToGroupsMap.size() : maxRows;
         if (sortDirection.contains("ASC"))
         {
-            // TUKA SORTED PROVERI TOCNO DA RABOTI!!! ubo sortira samo ko ke se bukvi...
-            roleToGroupsMapSorted = roleToGroupsMap.stream().sorted(Comparator.<String, String> comparing(String::toLowerCase))
+            roleToGroupsMapSorted = roleToGroupsMap.stream().sorted()
                     .collect(Collectors.toList());
         }
         else
         {
-            // ignoreCase ???
-            // roleToGroupsMapSorted =
             roleToGroupsMap.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
         }
         if (startRow > roleToGroupsMap.size())
@@ -139,7 +124,6 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             return roleToGroupsMapSorted;
         }
 
-        // Return N groups with startRow and MaxRows
         return roleToGroupsMapSorted.subList(startRow, maxRows);
     }
 
@@ -168,7 +152,6 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             String sortDirection,
             Boolean authorized) throws MuleException
     {
-        // Specific role with all groups
         List<String> roleToGroupsMap = roleToGroupMapping.getRoleToGroupsMap().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, list -> new ArrayList<>(list.getValue()))).get(role);
 
