@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * Created by marjan.stefanoski on 17.12.2014.
  */
 @Controller
-@RequestMapping({ "/api/v1/plugin/search", "/api/latest/plugin/search" })
+@RequestMapping({ "/api/v1/plugin/search" })
 public class FacetedSearchAPIController
 {
 

@@ -23,6 +23,7 @@ angular.module('complaints').config(
                                                 $translatePartialLoader.addPart('dashboard');
                                                 $translatePartialLoader.addPart('complaints');
                                                 $translatePartialLoader.addPart('document-details');
+                                                $translatePartialLoader.addPart('preference');
                                                 $translate.resetDataDict().addDataDictFromLabels(
                                                         LocaleService.getLabelResources([ "complaints", "common" ], "en"))
                                                         .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("complaintTypes"))

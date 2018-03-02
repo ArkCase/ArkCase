@@ -86,9 +86,6 @@ angular.module('services').factory('Authentication', [ '$resource', 'Acm.StoreSe
         if (Util.isEmpty(data.fullName)) {
             return false;
         }
-        if (Util.isEmpty(data.mail)) {
-            return false;
-        }
         if (Util.isEmpty(data.firstName)) {
             return false;
         }
