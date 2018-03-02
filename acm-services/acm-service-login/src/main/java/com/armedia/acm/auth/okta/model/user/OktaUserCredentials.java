@@ -25,10 +25,6 @@ public class OktaUserCredentials
     @JsonProperty("provider.name")
     private String providerName;
 
-    public OktaUserCredentials()
-    {
-    }
-
     public String getPassword()
     {
         return password;

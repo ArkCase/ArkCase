@@ -15,10 +15,6 @@ public class FactorProfile
     private String credentialId;
     private String email;
 
-    public FactorProfile()
-    {
-    }
-
     public String getQuestion()
     {
         return question;
