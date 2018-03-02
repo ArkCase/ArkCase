@@ -22,6 +22,7 @@ angular.module('tasks').config(
                                                 $translatePartialLoader.addPart('common');
                                                 $translatePartialLoader.addPart('dashboard');
                                                 $translatePartialLoader.addPart('tasks');
+                                                $translatePartialLoader.addPart('preference');
                                                 $translate.resetDataDict().addDataDictFromLabels(
                                                         LocaleService.getLabelResources([ "tasks", "common" ], "en"))
                                                         .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("caseFileTypes"))

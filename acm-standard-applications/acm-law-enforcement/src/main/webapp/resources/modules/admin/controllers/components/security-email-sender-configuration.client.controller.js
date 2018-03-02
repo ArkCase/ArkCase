@@ -1,8 +1,8 @@
 'use strict';
 angular.module('admin').controller(
         'Admin.SecurityEmailSenderConfigurationController',
-        [ '$scope', 'Admin.EmailSenderConfigurationService', 'MessageService',
-                function($scope, EmailSenderConfigurationService, MessageService) {
+        [ '$scope', 'Admin.EmailSenderConfigurationService', 'MessageService', '$translate',
+                function($scope, EmailSenderConfigurationService, MessageService, $translate) {
                     $scope.emailSenderConfigDataModel = {};
                     $scope.isSmtpValid = null;
 
@@ -40,7 +40,7 @@ angular.module('admin').controller(
                         case 'starttls':
                             $scope.emailSenderConfigDataModel.port = 587;
                         }
-                    }
+                    };
 
                     $scope.validateSmtpConfiguration = function(smtpConfiguration) {
                         EmailSenderConfigurationService.validateSmtpConfiguration(smtpConfiguration).then(function(res) {

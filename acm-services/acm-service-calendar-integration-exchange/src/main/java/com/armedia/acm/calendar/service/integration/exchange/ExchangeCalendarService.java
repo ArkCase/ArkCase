@@ -310,7 +310,12 @@ public class ExchangeCalendarService
 
         try
         {
+            // issue with ews-java-api library. Workaround solution for creating calendar event with attachment.
+            // adding attachment successfully requires an update, by changing the subject, it will force an update
             appointment.save(folderId);
+            appointment.setSubject(calendarEvent.getSubject());
+            appointment.update(ConflictResolutionMode.AlwaysOverwrite);
+
         }
         catch (Exception e)
         {
@@ -375,6 +380,9 @@ public class ExchangeCalendarService
             processAttachmentsForRemoval(calendarEvent, appointment);
             processAttendeesForRemoval(calendarEvent, appointment);
 
+            // workaround solution for updating calendar event with attachment
+            appointment.update(ConflictResolutionMode.AlwaysOverwrite);
+            appointment.setSubject(calendarEvent.getSubject());
             appointment.update(ConflictResolutionMode.AlwaysOverwrite);
 
         }

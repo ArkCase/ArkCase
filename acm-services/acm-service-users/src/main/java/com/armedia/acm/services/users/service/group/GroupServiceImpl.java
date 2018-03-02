@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -447,8 +448,31 @@ public class GroupServiceImpl implements GroupService
         String ancestorsStringList = AcmGroupUtils.buildAncestorsStringForAcmGroup(subGroup);
         subGroup.setAscendantsList(ancestorsStringList);
         Set<AcmGroup> descendants = AcmGroupUtils.findDescendantsForAcmGroup(subGroup);
-        descendants.forEach(group -> group.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(group)));
+        descendants.forEach(group -> {
+            group.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(group));
+            groupDao.save(group);
+        });
         return subGroup;
+    }
+
+    @Override
+    @Transactional
+    public List<AcmGroup> addGroupMembers(String parentId, List<String> memberIds) throws AcmCreateObjectFailedException
+    {
+        List<AcmGroup> members = new ArrayList<>();
+        for (String groupId : memberIds)
+        {
+            AcmGroup acmGroup = groupDao.findByName(groupId);
+            if (acmGroup != null)
+            {
+                members.add(addGroupMember(groupId, parentId));
+            }
+            else
+            {
+                log.warn("Group with id [{}] not found", groupId);
+            }
+        }
+        return members;
     }
 
     @Override

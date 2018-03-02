@@ -71,11 +71,15 @@
             }
         }
     },
-    "timeTracking.comp.approvers": {
+    "timeTracking.comp.tasks": {
         "title": "審批",
         "table.columns": {
-            "fullName": "全名",
-            "userId": "用戶名"
+            "title": "Title",
+            "assignee": "Assignee",
+            "created": "Created",
+            "priority": "Priority",
+            "due": "Due Date",
+            "status": "Status"
         }
     },
     "timeTracking.tree": {
@@ -84,7 +88,7 @@
             "person.label": "成員",
             "summary.label": "時間小結",
             "tags.label": "標籤",
-            "approvers.label": "zh-cn_Approvers"
+            "tasks.label": "zh-cn_Approvers"
         },
         "sorters": {
             "dateAsc": "按日期排序",
