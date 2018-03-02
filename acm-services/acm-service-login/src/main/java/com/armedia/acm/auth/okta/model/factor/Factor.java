@@ -3,6 +3,7 @@ package com.armedia.acm.auth.okta.model.factor;
 import com.armedia.acm.auth.okta.model.ErrorResponse;
 import com.armedia.acm.auth.okta.model.ProviderType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -20,13 +21,14 @@ public class Factor extends ErrorResponse
     private Date created;
     private Date lastUpdated;
     private FactorProfile profile;
-    private Map _links;
-    private Map _embedded;
-    private String factorSummary;
 
-    public Factor()
-    {
-    }
+    @JsonProperty("_links")
+    private Map links;
+
+    @JsonProperty("_embedded")
+    private Map embedded;
+
+    private String factorSummary;
 
     public String getId()
     {
@@ -98,24 +100,24 @@ public class Factor extends ErrorResponse
         this.profile = profile;
     }
 
-    public Map get_links()
+    public Map getLinks()
     {
-        return _links;
+        return links;
     }
 
-    public void set_links(Map _links)
+    public void setLinks(Map links)
     {
-        this._links = _links;
+        this.links = links;
     }
 
-    public Map get_embedded()
+    public Map getEmbedded()
     {
-        return _embedded;
+        return embedded;
     }
 
-    public void set_embedded(Map _embedded)
+    public void setEmbedded(Map embedded)
     {
-        this._embedded = _embedded;
+        this.embedded = embedded;
     }
 
     public String getFactorSummary()
@@ -139,8 +141,8 @@ public class Factor extends ErrorResponse
                 .append("created", created)
                 .append("lastUpdated", lastUpdated)
                 .append("profile", profile)
-                .append("_links", _links)
-                .append("_embedded", _embedded)
+                .append("links", links)
+                .append("embedded", embedded)
                 .append("factorSummary", factorSummary)
                 .toString();
     }
@@ -162,8 +164,8 @@ public class Factor extends ErrorResponse
                 .append(created, factor.created)
                 .append(lastUpdated, factor.lastUpdated)
                 .append(profile, factor.profile)
-                .append(_links, factor._links)
-                .append(_embedded, factor._embedded)
+                .append(links, factor.links)
+                .append(embedded, factor.embedded)
                 .append(factorSummary, factor.factorSummary)
                 .isEquals();
     }
@@ -179,8 +181,8 @@ public class Factor extends ErrorResponse
                 .append(created)
                 .append(lastUpdated)
                 .append(profile)
-                .append(_links)
-                .append(_embedded)
+                .append(links)
+                .append(embedded)
                 .append(factorSummary)
                 .toHashCode();
     }

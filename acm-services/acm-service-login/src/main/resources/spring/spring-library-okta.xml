@@ -19,24 +19,6 @@
         <property name="alwaysUseDefaultTargetUrl" value="true"/>
         <property name="sessionRegistry" ref="sessionRegistry"/>
         <property name="sessionAuthenticationStrategy" ref="concurrentSessionControlAuthenticationStrategy"/>
-        <property name="ignoreSavedUrls">
-            <list value-type="java.lang.String">
-                <value>/stomp</value>
-                <value>/api</value>
-                <value>/views/loggedout.jsp</value>
-                <value>/VirtualViewerJavaHTML5</value>
-                <value>/pentaho</value>
-                <value>/frevvo</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="acmMultiFactorAuthenticationManager" class="com.armedia.acm.auth.okta.auth.AcmMultiFactorAuthenticationManager">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="authoritiesMapper" ref="acmAuthoritiesMapper"/>
-        <property name="authenticationEventPublisher" ref="ssAuthenticationEventPublisher"/>
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="groupService" ref="groupService"/>
     </bean>
 
     <bean id="acmMultiFactorConfig" class="com.armedia.acm.auth.okta.auth.AcmMultiFactorConfig">

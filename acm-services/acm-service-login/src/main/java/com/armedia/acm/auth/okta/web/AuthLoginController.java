@@ -72,6 +72,11 @@ public class AuthLoginController implements ApplicationEventPublisherAware
         {
             LOGGER.info("Looking up user and enrolled factors");
             AcmUser dbUser = getUserDao().findByUserId(authentication.getName());
+            if (dbUser == null)
+            {
+                throw new OktaException("Did not find user with name " + authentication.getName());
+            }
+
             OktaUser user = getOktaUserService().getUser(dbUser.getUserId());
             if (user == null)
             {
@@ -432,7 +437,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
 
     private void putSharedSecret(Factor enroll, Map<String, Object> model)
     {
-        LinkedHashMap<String, Object> activation = (LinkedHashMap<String, Object>) enroll.get_embedded().get("activation");
+        LinkedHashMap<String, Object> activation = (LinkedHashMap<String, Object>) enroll.getEmbedded().get("activation");
         String sharedSecret = String.class.cast(activation.get("sharedSecret"));
         model.put("embedded", sharedSecret);
     }
@@ -441,7 +446,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
     {
         Authentication contextAuth = SecurityContextHolder.getContext().getAuthentication();
         List<AcmGrantedAuthority> newAuthorities = contextAuth.getAuthorities().stream()
-                .filter(auth -> auth instanceof AcmGrantedAuthority && !"ROLE_PRE_AUTHENTICATED".equalsIgnoreCase(auth.getAuthority()))
+                .filter(auth -> auth instanceof AcmGrantedAuthority && !OktaAPIConstants.ROLE_PRE_AUTHENTICATED.equalsIgnoreCase(auth.getAuthority()))
                 .map(AcmGrantedAuthority.class::cast).collect(Collectors.toList());
         newAuthorities.add(new AcmGrantedAuthority("ROLE_AUTHENTICATED"));
         AcmAuthentication acmAuthentication = new AcmAuthentication(newAuthorities, contextAuth.getCredentials(), contextAuth.getDetails(), contextAuth.isAuthenticated(), contextAuth.getName());

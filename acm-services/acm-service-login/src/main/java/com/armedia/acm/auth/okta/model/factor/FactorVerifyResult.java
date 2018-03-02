@@ -2,6 +2,7 @@ package com.armedia.acm.auth.okta.model.factor;
 
 import com.armedia.acm.auth.okta.model.ErrorResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,11 +14,9 @@ public class FactorVerifyResult extends ErrorResponse
 {
     private FactorResult factorResult;
     private String factorMessage;
-    private Map _links;
 
-    public FactorVerifyResult()
-    {
-    }
+    @JsonProperty("_links")
+    private Map links;
 
     public FactorResult getFactorResult()
     {
@@ -39,14 +38,14 @@ public class FactorVerifyResult extends ErrorResponse
         this.factorMessage = factorMessage;
     }
 
-    public Map get_links()
+    public Map getLinks()
     {
-        return _links;
+        return links;
     }
 
-    public void set_links(Map _links)
+    public void setLinks(Map links)
     {
-        this._links = _links;
+        this.links = links;
     }
 
     @Override
@@ -55,7 +54,7 @@ public class FactorVerifyResult extends ErrorResponse
         return new ToStringBuilder(this)
                 .append("factorResult", factorResult)
                 .append("factorMessage", factorMessage)
-                .append("_links", _links)
+                .append("links", links)
                 .toString();
     }
 
@@ -71,7 +70,7 @@ public class FactorVerifyResult extends ErrorResponse
         return new EqualsBuilder()
                 .append(factorResult, that.factorResult)
                 .append(factorMessage, that.factorMessage)
-                .append(_links, that._links)
+                .append(links, that.links)
                 .isEquals();
     }
 
@@ -81,7 +80,7 @@ public class FactorVerifyResult extends ErrorResponse
         return new HashCodeBuilder(17, 37)
                 .append(factorResult)
                 .append(factorMessage)
-                .append(_links)
+                .append(links)
                 .toHashCode();
     }
 }

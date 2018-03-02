@@ -32,10 +32,6 @@ public class OktaUserProfile
     private String zipCode;
     private String countryCode;
 
-    public OktaUserProfile()
-    {
-    }
-
     public String getLogin()
     {
         return login;

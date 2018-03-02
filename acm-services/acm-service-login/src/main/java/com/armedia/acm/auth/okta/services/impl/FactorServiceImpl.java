@@ -8,6 +8,7 @@ import com.armedia.acm.auth.okta.model.factor.FactorType;
 import com.armedia.acm.auth.okta.model.factor.SecurityQuestion;
 import com.armedia.acm.auth.okta.model.user.OktaUser;
 import com.armedia.acm.auth.okta.services.FactorService;
+import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +26,7 @@ public class FactorServiceImpl implements FactorService
     @Override
     public Factor getFactor(String factorId, OktaUser user) throws OktaException
     {
-        if (StringUtils.isEmpty(factorId))
-        {
-            throw new OktaException("factorId is null or empty");
-        }
+        Preconditions.checkArgument(!StringUtils.isEmpty(factorId), "factorId is null or empty");
 
         if (user != null)
         {
@@ -47,10 +45,7 @@ public class FactorServiceImpl implements FactorService
     @Override
     public Factor getFactor(FactorType factorType, OktaUser user) throws OktaException
     {
-        if (factorType == null)
-        {
-            throw new OktaException("factorType is null");
-        }
+        Preconditions.checkNotNull(factorType, "factorType is null");
 
         Optional<Factor> factor = listEnrolledFactors(user).stream().filter(f -> factorType.equals(f.getFactorType())).findAny();
         if (user != null && factor.isPresent())
@@ -176,10 +171,7 @@ public class FactorServiceImpl implements FactorService
     @Override
     public void deleteFactor(String factorId, OktaUser user) throws OktaException
     {
-        if (StringUtils.isEmpty(factorId))
-        {
-            throw new OktaException("factorId is null or empty");
-        }
+        Preconditions.checkArgument(!StringUtils.isEmpty(factorId), "factorId is null or empty");
 
         if (user != null)
         {
@@ -195,10 +187,7 @@ public class FactorServiceImpl implements FactorService
     @Override
     public void deleteFactor(FactorType factorType, OktaUser user) throws OktaException
     {
-        if (factorType == null)
-        {
-            throw new OktaException("factorType is null");
-        }
+        Preconditions.checkNotNull(factorType, "factorType is null");
 
         Optional<Factor> factor = listEnrolledFactors(user).stream().filter(f -> factorType.equals(f.getFactorType())).findAny();
         if (user != null && factor.isPresent())

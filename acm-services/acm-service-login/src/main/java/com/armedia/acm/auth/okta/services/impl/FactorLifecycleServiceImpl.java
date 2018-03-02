@@ -10,6 +10,7 @@ import com.armedia.acm.auth.okta.model.factor.FactorType;
 import com.armedia.acm.auth.okta.model.user.OktaUser;
 import com.armedia.acm.auth.okta.services.FactorLifecycleService;
 import com.armedia.acm.auth.okta.services.FactorService;
+import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -30,14 +31,8 @@ public class FactorLifecycleServiceImpl implements FactorLifecycleService
     @Override
     public Factor enroll(FactorType factorType, ProviderType provider, FactorProfile profile, OktaUser user) throws OktaException
     {
-        if (factorType == null)
-        {
-            throw new OktaException("factorType is null");
-        }
-        if (provider == null)
-        {
-            throw new OktaException("provider is null");
-        }
+        Preconditions.checkNotNull(factorType, "factorType is null");
+        Preconditions.checkNotNull(provider, "provider is null");
 
         if (user != null)
         {
@@ -76,9 +71,9 @@ public class FactorLifecycleServiceImpl implements FactorLifecycleService
             {
                 Factor smsFactor = sms.get();
                 LOGGER.debug("Found previous sms device: [{}]", smsFactor);
-                if (smsFactor.get_embedded() != null)
+                if (smsFactor.getEmbedded() != null)
                 {
-                    Object phones = smsFactor.get_embedded().getOrDefault("phones", Collections.emptyList());
+                    Object phones = smsFactor.getEmbedded().getOrDefault("phones", Collections.emptyList());
                     if (!List.class.cast(phones).isEmpty())
                     {
                         apiPath = String.format(OktaAPIConstants.ENROLL_FACTOR_ACTIVATE_UPDATE_PHONE, user.getId());
@@ -92,14 +87,8 @@ public class FactorLifecycleServiceImpl implements FactorLifecycleService
     @Override
     public Factor activate(String factorId, String passCode, OktaUser user) throws OktaException
     {
-        if (StringUtils.isEmpty(factorId))
-        {
-            throw new OktaException("factorId is null or empty");
-        }
-        if (StringUtils.isEmpty(passCode))
-        {
-            throw new OktaException("passCode is null or empty");
-        }
+        Preconditions.checkArgument(!StringUtils.isEmpty(factorId), "factorId is null or empty");
+        Preconditions.checkArgument(!StringUtils.isEmpty(passCode), "passCode is null or empty");
 
         if (user != null)
         {
@@ -122,10 +111,9 @@ public class FactorLifecycleServiceImpl implements FactorLifecycleService
     @Override
     public Factor activate(String href, String passCode) throws OktaException
     {
-        if (href == null || passCode == null)
-        {
-            throw new OktaException("Missing activation link and/or passCode");
-        }
+        Preconditions.checkNotNull(href, "Missing activation link");
+        Preconditions.checkNotNull(passCode, "Missing passCode");
+
         // Builds activation request body
         JSONObject body = new JSONObject();
         body.put(OktaAPIConstants.PASS_CODE, passCode);
@@ -141,14 +129,8 @@ public class FactorLifecycleServiceImpl implements FactorLifecycleService
     @Override
     public Factor activate(FactorType factorType, String passCode, OktaUser user) throws OktaException
     {
-        if (factorType == null)
-        {
-            throw new OktaException("factorType is null");
-        }
-        if (StringUtils.isEmpty(passCode))
-        {
-            throw new OktaException("passCode is null or empty");
-        }
+        Preconditions.checkNotNull(factorType, "factorType is null");
+        Preconditions.checkArgument(!StringUtils.isEmpty(passCode), "passCode is null or empty");
 
         Optional<Factor> factor = factorService.listEnrolledFactors(user).stream().filter(f -> factorType.equals(f.getFactorType())).findAny();
         if (user != null && factor.isPresent())

@@ -12,7 +12,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 public class AcmMultiFactorLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler
 {
@@ -20,7 +19,6 @@ public class AcmMultiFactorLoginSuccessHandler extends SavedRequestAwareAuthenti
     private AcmMultiFactorConfig acmMultiFactorConfig;
     private SessionRegistry sessionRegistry;
     private SessionAuthenticationStrategy sessionAuthenticationStrategy;
-    private List<String> ignoreSavedUrls;
     private AcmLoginSuccessOperations loginSuccessOperations;
 
     @Override
@@ -74,16 +72,6 @@ public class AcmMultiFactorLoginSuccessHandler extends SavedRequestAwareAuthenti
     public void setSessionAuthenticationStrategy(SessionAuthenticationStrategy sessionAuthenticationStrategy)
     {
         this.sessionAuthenticationStrategy = sessionAuthenticationStrategy;
-    }
-
-    public List<String> getIgnoreSavedUrls()
-    {
-        return ignoreSavedUrls;
-    }
-
-    public void setIgnoreSavedUrls(List<String> ignoreSavedUrls)
-    {
-        this.ignoreSavedUrls = ignoreSavedUrls;
     }
 
     public AcmLoginSuccessOperations getLoginSuccessOperations()

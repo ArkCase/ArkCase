@@ -12,11 +12,11 @@ public interface OktaUserService
 
     OktaUser createUser(OktaUserProfile oktaUserProfile) throws OktaException;
 
-    OktaUser updateUser(Map<String, String> profile, String userId) throws OktaException;
+    OktaUser updateUser(Map<String, String> profile, String userId);
 
-    OktaUser activateUser(String userId) throws OktaException;
+    OktaUser activateUser(String userId);
 
-    OktaUser getUser(String userId) throws OktaException;
+    OktaUser getUser(String userId);
 
     boolean deleteUser(OktaUser oktaUser) throws OktaException;
 

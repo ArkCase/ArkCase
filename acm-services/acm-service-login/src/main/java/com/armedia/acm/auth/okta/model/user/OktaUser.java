@@ -2,6 +2,7 @@ package com.armedia.acm.auth.okta.model.user;
 
 import com.armedia.acm.auth.okta.model.ErrorResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -23,13 +24,12 @@ public class OktaUser extends ErrorResponse
     private OktaUserStatus transitioningToStatus;
     private OktaUserProfile profile;
     private OktaUserCredentials credentials;
-    private Map _embedded;
-    private Map _links;
 
+    @JsonProperty("_embedded")
+    private Map embedded;
 
-    public OktaUser()
-    {
-    }
+    @JsonProperty("_links")
+    private Map links;
 
     public String getId()
     {
@@ -141,24 +141,24 @@ public class OktaUser extends ErrorResponse
         this.credentials = credentials;
     }
 
-    public Map get_embedded()
+    public Map getEmbedded()
     {
-        return _embedded;
+        return embedded;
     }
 
-    public void set_embedded(Map _embedded)
+    public void setEmbedded(Map embedded)
     {
-        this._embedded = _embedded;
+        this.embedded = embedded;
     }
 
-    public Map get_links()
+    public Map getLinks()
     {
-        return _links;
+        return links;
     }
 
-    public void set_links(Map _links)
+    public void setLinks(Map links)
     {
-        this._links = _links;
+        this.links = links;
     }
 
     @Override
@@ -176,8 +176,8 @@ public class OktaUser extends ErrorResponse
                 .append("transitioningToStatus", transitioningToStatus)
                 .append("profile", profile)
                 .append("credentials", credentials)
-                .append("_embedded", _embedded)
-                .append("_links", _links)
+                .append("embedded", embedded)
+                .append("links", links)
                 .toString();
     }
 
@@ -202,8 +202,8 @@ public class OktaUser extends ErrorResponse
                 .append(transitioningToStatus, oktaUser.transitioningToStatus)
                 .append(profile, oktaUser.profile)
                 .append(credentials, oktaUser.credentials)
-                .append(_embedded, oktaUser._embedded)
-                .append(_links, oktaUser._links)
+                .append(embedded, oktaUser.embedded)
+                .append(links, oktaUser.links)
                 .isEquals();
     }
 
@@ -222,8 +222,8 @@ public class OktaUser extends ErrorResponse
                 .append(transitioningToStatus)
                 .append(profile)
                 .append(credentials)
-                .append(_embedded)
-                .append(_links)
+                .append(embedded)
+                .append(links)
                 .toHashCode();
     }
 }

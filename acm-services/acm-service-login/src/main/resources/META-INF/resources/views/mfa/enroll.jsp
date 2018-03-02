@@ -115,7 +115,7 @@
                             name="factorHref"
                             class="form-control no-border">
                         <c:forEach items="${factors}" var="factor">
-                            <option value="${factor._links.activate.href}">${fn:toUpperCase(factor.factorType)}</option>
+                            <option value="${factor.links.activate.href}">${fn:toUpperCase(factor.factorType)}</option>
                         </c:forEach>
                     </select>
                 </div>
