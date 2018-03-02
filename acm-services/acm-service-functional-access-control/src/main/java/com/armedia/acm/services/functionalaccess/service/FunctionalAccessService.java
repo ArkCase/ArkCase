@@ -17,6 +17,10 @@ public interface FunctionalAccessService
 
     public List<String> getApplicationRoles();
 
+    public List<String> findApplicationGroupsByRole(Authentication auth, String role, Integer startRow, Integer maxRows,
+            String sortDirection,
+            Boolean authorized) throws MuleException;
+
     public Map<String, List<String>> getApplicationRolesToGroups();
 
     public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, Authentication auth);

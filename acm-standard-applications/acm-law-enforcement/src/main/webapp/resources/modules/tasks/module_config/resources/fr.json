@@ -223,7 +223,7 @@
         "noSelectedDocsErrorMsg": "Veuillez sélectionner au moins un document à examiner."
     },
     "tasks.userOrGroupSearch": {
-        "id": "UserSearch",
+        "id": "RechercheD'utilisateur",
         "title": "Recherche d'utilisateur / groupe",
         "search": {
             "btn": "Chercher",
@@ -241,7 +241,7 @@
         }
     },
     "tasks.owningGroupSearch": {
-        "id": "OwningGroupSearch",
+        "id": "PosséderUneRechercheDeGroupe",
         "title": "Rechercher le (s) groupe (s) de cet utilisateur",
         "search": {
             "btn": "Chercher",
@@ -257,7 +257,7 @@
         }
     },
     "tasks.objectSearch": {
-        "id": "ObjectSearch",
+        "id": "RechercheD'objet",
         "title": "Recherche d'objet",
         "search": {
             "btn": "Chercher",

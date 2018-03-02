@@ -697,6 +697,10 @@ span.fancytree-title {
     background-color: #ddd;
 }
 
+.div-mt {
+    margin-top: 20px;
+}
+
 .expandableRow .panel-body {
     padding: 0px;
 }

@@ -223,7 +223,7 @@
         "noSelectedDocsErrorMsg": "Seleccione al menos un documento para ser revisado."
     },
     "tasks.userOrGroupSearch": {
-        "id": "UserSearch",
+        "id": "BúsquedaDeUsuario",
         "title": "Búsqueda de usuario / grupo",
         "search": {
             "btn": "Buscar",
@@ -241,7 +241,7 @@
         }
     },
     "tasks.owningGroupSearch": {
-        "id": "OwningGroupSearch",
+        "id": "PoseerBúsquedaGrupal",
         "title": "Buscar este (s) grupo (s) de usuario",
         "search": {
             "btn": "Buscar",
@@ -257,7 +257,7 @@
         }
     },
     "tasks.objectSearch": {
-        "id": "ObjectSearch",
+        "id": "BusquedaDeObjetos",
         "title": "Búsqueda de objetos",
         "search": {
             "btn": "Buscar",

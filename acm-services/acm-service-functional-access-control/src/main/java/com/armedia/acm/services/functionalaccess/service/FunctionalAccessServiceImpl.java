@@ -2,8 +2,10 @@ package com.armedia.acm.services.functionalaccess.service;
 
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
@@ -11,6 +13,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +49,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     private AcmGroupDao acmGroupDao;
     private UserDao userDao;
     private ExecuteSolrQuery executeSolrQuery;
+    private MuleContextManager muleContextManager;
 
     @Override
     public void onApplicationEvent(ConfigurationFileChangedEvent configurationFileChangedEvent)
@@ -99,6 +104,76 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         }
 
         return applicationRoles;
+    }
+
+    private Boolean removeRoleToGroup(String group, List<String> roleToGroups)
+    {
+        for (String rg : roleToGroups)
+        {
+            if (rg.equals(group))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private List<String> findAuthorizedRoleToGroups(List<String> roleToGroupsMap, String sortDirection, Integer startRow, Integer maxRows)
+    {
+        List<String> roleToGroupsMapSorted = null;
+        maxRows = maxRows > roleToGroupsMap.size() ? roleToGroupsMap.size() : maxRows;
+        if (sortDirection.contains("ASC"))
+        {
+            // TUKA SORTED PROVERI TOCNO DA RABOTI!!! ubo sortira samo ko ke se bukvi...
+            roleToGroupsMapSorted = roleToGroupsMap.stream().sorted(Comparator.<String, String> comparing(String::toLowerCase))
+                    .collect(Collectors.toList());
+        }
+        else
+        {
+            // ignoreCase ???
+            // roleToGroupsMapSorted =
+            roleToGroupsMap.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        }
+        if (startRow > roleToGroupsMap.size())
+        {
+            return roleToGroupsMapSorted;
+        }
+
+        // Return N groups with startRow and MaxRows
+        return roleToGroupsMapSorted.subList(startRow, maxRows);
+    }
+
+    private List<String> findNotAuthorizedRoleToGroups(Authentication auth, List<String> roleToGroupsMap, String sortDirection,
+            Integer startRow,
+            Integer maxRows) throws MuleException
+    {
+        List<String> result = new ArrayList<>();
+        String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
+                + roleToGroupsMap.stream().collect(Collectors.joining(" AND -name_lcs:", "-name_lcs:", ""));
+
+        String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                sortDirection);
+        SearchResults searchResults = new SearchResults();
+        JSONArray docs = searchResults.getDocuments(solrResponse);
+
+        for (int i = 0; i < docs.length(); i++)
+        {
+            result.add((String) docs.getJSONObject(i).get("name"));
+        }
+        return result;
+    }
+
+    @Override
+    public List<String> findApplicationGroupsByRole(Authentication auth, String role, Integer startRow, Integer maxRows,
+            String sortDirection,
+            Boolean authorized) throws MuleException
+    {
+        // Specific role with all groups
+        List<String> roleToGroupsMap = roleToGroupMapping.getRoleToGroupsMap().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, list -> new ArrayList<>(list.getValue()))).get(role);
+
+        return authorized ? findAuthorizedRoleToGroups(roleToGroupsMap, sortDirection, startRow, maxRows)
+                : findNotAuthorizedRoleToGroups(auth, roleToGroupsMap, sortDirection, startRow, maxRows);
     }
 
     @Override
@@ -343,4 +418,13 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         this.executeSolrQuery = executeSolrQuery;
     }
 
+    public MuleContextManager getMuleContextManager()
+    {
+        return muleContextManager;
+    }
+
+    public void setMuleContextManager(MuleContextManager muleContextManager)
+    {
+        this.muleContextManager = muleContextManager;
+    }
 }

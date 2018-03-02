@@ -232,7 +232,7 @@
         "modal": {
             "title": "लेबल",
             "search": "एक दिन की तलाश",
-            "placeholder": "hi_Add tag",
+            "placeholder": "टैग जोड़ो",
             "buttons": {
                 "cancel": "रद्द करना",
                 "ok": "एक टैग जोड़ना"
@@ -249,7 +249,7 @@
     },
     "complaints.comp.calendar": {
         "title": "कैलेंडर",
-        "infoMessage": "hi_Calendar Integration Configuration Not Enabled"
+        "infoMessage": "कैलेंडर एकीकरण कॉन्फ़िगरेशन सक्षम नहीं है"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "संदर्भ खोज"
@@ -298,7 +298,7 @@
         "table.columns": {
             "fullName": "पूरा नाम"
         },
-        "assigne.none": "hi_None",
+        "assigne.none": "कोई नहीं",
         "assignee.label": "रिसीवर",
         "owningGroup.label": "मालिक समूह",
         "priority.label": "प्राथमिकता",
