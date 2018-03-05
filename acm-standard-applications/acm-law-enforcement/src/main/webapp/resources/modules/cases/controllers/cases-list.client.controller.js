@@ -67,7 +67,13 @@ angular.module('cases').controller(
                             return CaseListService.updateCasesTreeData(start, n, sort, filters, query, nodeData);
                         },
                         getTreeData : function(start, n, sort, filters, query) {
-                            CalendarService.checkCalendarConfiguration('CASE_FILE');
+                            CalendarService.isCalendarConfigurationEnabled('CASE_FILE').then(
+                                    function(data) {
+                                        if (!data) {
+                                            MessageService.info($translate
+                                                    .instant('dashboard.widgets.calendar.calendarIntegrationDisabledMessage'));
+                                        }
+                                    });
                             return CaseListService.queryCasesTreeData(start, n, sort, filters, query);
                         },
                         getNodeData : function(caseId) {
