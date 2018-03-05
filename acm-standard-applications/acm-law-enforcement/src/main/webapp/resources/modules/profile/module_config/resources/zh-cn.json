@@ -27,7 +27,7 @@
         "mainPhone": "主办公电话",
         "fax": "传真",
         "website": "网站",
-        "editEnabled": "zh-cn_Edit is enabled."
+        "websiteTitle": "zh-cn_Enable edit"
     },
     "profile.contact": {
         "title": "联系信息",

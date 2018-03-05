@@ -27,7 +27,7 @@
         "mainPhone": "मुख्य कार्यालय फोन",
         "fax": "फैक्स",
         "website": "वेबसाइट",
-        "editEnabled": "hi_Edit is enabled."
+        "websiteTitle": "hi_Enable edit"
     },
     "profile.contact": {
         "title": "संपर्क जानकारी",

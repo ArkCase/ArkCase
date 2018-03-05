@@ -27,7 +27,7 @@
         "mainPhone": "メインオフィス電話",
         "fax": "ファックス",
         "website": "ウェブサイト",
-        "editEnabled": "ja_Edit is enabled."
+        "websiteTitle": "ja_Enable edit"
     },
     "profile.contact": {
         "title": "連絡先",
