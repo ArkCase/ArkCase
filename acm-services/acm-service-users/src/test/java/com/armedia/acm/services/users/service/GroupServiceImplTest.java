@@ -1,8 +1,14 @@
 package com.armedia.acm.services.users.service;
 
+import static junit.framework.Assert.assertEquals;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.service.group.GroupServiceImpl;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -11,11 +17,6 @@ import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
-
-import static junit.framework.Assert.assertEquals;
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
 
 public class GroupServiceImplTest extends EasyMockSupport
 {

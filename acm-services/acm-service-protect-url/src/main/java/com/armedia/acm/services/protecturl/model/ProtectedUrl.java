@@ -5,7 +5,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.LocalDateTimeConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
-import org.apache.commons.beanutils.BeanUtils;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import javax.persistence.Column;
@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -32,10 +33,7 @@ import java.util.Date;
 public class ProtectedUrl implements AcmObject, AcmEntity
 {
     @Id
-    @TableGenerator(name = "acm_protected_url_gen", table = "acm_protected_url_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_protected_url", initialValue = 100, allocationSize = 1)
+    @TableGenerator(name = "acm_protected_url_gen", table = "acm_protected_url_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_protected_url", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_protected_url_gen")
     @Column(name = "cm_id")
     private Long id;
@@ -69,7 +67,7 @@ public class ProtectedUrl implements AcmObject, AcmEntity
     private Date created;
 
     @Column(name = "cm_object_type")
-    private String objectType= "PROTECTED_URL";
+    private String objectType = "PROTECTED_URL";
 
     public String getOriginalUrl()
     {

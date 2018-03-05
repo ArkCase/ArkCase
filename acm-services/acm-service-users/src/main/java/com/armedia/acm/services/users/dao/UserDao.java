@@ -1,10 +1,23 @@
 package com.armedia.acm.services.users.dao;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.services.config.model.AcmConfig;
+import com.armedia.acm.services.users.model.AcmRole;
+import com.armedia.acm.services.users.model.AcmRoleType;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
+import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
+import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.Cache;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -14,25 +27,11 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.Cache;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.services.config.model.AcmConfig;
-import com.armedia.acm.services.users.model.AcmRole;
-import com.armedia.acm.services.users.model.AcmRoleType;
-import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserRoleState;
-import com.armedia.acm.services.users.model.AcmUserState;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
-import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
-import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 public class UserDao extends AcmAbstractDao<AcmUser>
 {
@@ -174,35 +173,12 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return retval;
     }
 
-    public List<AcmUser> findUsersWithRoles(List<String> roles)
-    {
-        Query usersWithRole = getEntityManager().createQuery("SELECT user FROM AcmUser user, AcmUserRole role "
-                + "WHERE user.userId = role.userId " + "AND user.userState = :userState " + "AND role.userRoleState = :userRoleState "
-                + "AND role.roleName IN :roleNames " + "ORDER BY user.lastName, user.firstName");
-        usersWithRole.setParameter("userState", AcmUserState.VALID);
-        usersWithRole.setParameter("roleNames", roles);
-        usersWithRole.setParameter("userRoleState", AcmUserRoleState.VALID);
-
-        List<AcmUser> retval = usersWithRole.getResultList();
-
-        return retval;
-    }
-
     public void markAllUsersInvalid(String directoryName)
     {
         Query markInvalid = getEntityManager()
                 .createQuery("UPDATE AcmUser au set au.userState = :state, au.modified = :now WHERE au.userDirectoryName = :directoryName");
         markInvalid.setParameter("state", AcmUserState.INVALID);
         markInvalid.setParameter("now", new Date());
-        markInvalid.setParameter("directoryName", directoryName);
-        markInvalid.executeUpdate();
-    }
-
-    public void markAllRolesInvalid(String directoryName)
-    {
-        Query markInvalid = getEntityManager().createQuery("UPDATE AcmUserRole aur set aur.userRoleState = :state WHERE aur.userId IN "
-                + "( SELECT au.userId FROM AcmUser au WHERE au.userDirectoryName = :directoryName )");
-        markInvalid.setParameter("state", AcmUserRoleState.INVALID);
         markInvalid.setParameter("directoryName", directoryName);
         markInvalid.executeUpdate();
     }

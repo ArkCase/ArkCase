@@ -3,57 +3,66 @@
  */
 package com.armedia.acm.form.config.xml;
 
-import javax.xml.bind.annotation.XmlElement;
-
 import com.armedia.acm.form.config.Item;
+
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * @author riste.tutureski
  *
  */
-public class ParticipantItem  extends Item{
-	
-	private String type;
-	private String name;
+public class ParticipantItem extends Item
+{
 
-	@XmlElement(name="participantId")
-	@Override
-	public Long getId() {
-		return super.getId();
-	}
+    private String type;
+    private String name;
 
-	@Override
-	public void setId(Long id) {
-		super.setId(id);
-	}
-	
-	@XmlElement(name="participant")
-	@Override
-	public String getValue() {
-		return super.getValue();
-	}
+    @XmlElement(name = "participantId")
+    @Override
+    public Long getId()
+    {
+        return super.getId();
+    }
 
-	@Override
-	public void setValue(String value) {
-		super.setValue(value);
-	}
-	
-	@XmlElement(name="participantType")
-	public String getType() {
-		return type;
-	}
-	
-	public void setType(String type) {
-		this.type = type;
-	}
+    @Override
+    public void setId(Long id)
+    {
+        super.setId(id);
+    }
 
-	@XmlElement(name="participantName")
-	public String getName() {
-		return name;
-	}
+    @XmlElement(name = "participant")
+    @Override
+    public String getValue()
+    {
+        return super.getValue();
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public void setValue(String value)
+    {
+        super.setValue(value);
+    }
+
+    @XmlElement(name = "participantType")
+    public String getType()
+    {
+        return type;
+    }
+
+    public void setType(String type)
+    {
+        this.type = type;
+    }
+
+    @XmlElement(name = "participantName")
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
 }

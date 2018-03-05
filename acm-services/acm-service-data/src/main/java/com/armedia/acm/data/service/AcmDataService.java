@@ -8,9 +8,9 @@ import com.armedia.acm.data.AcmNotificationDao;
  * @author riste.tutureski
  *
  */
-public interface AcmDataService 
+public interface AcmDataService
 {
-	AcmAbstractDao<AcmStatefulEntity> getDaoByObjectType(String objectType);
+    AcmAbstractDao<AcmStatefulEntity> getDaoByObjectType(String objectType);
 
-	AcmNotificationDao getNotificationDaoByObjectType(String objectType);
+    AcmNotificationDao getNotificationDaoByObjectType(String objectType);
 }

@@ -1,13 +1,13 @@
 package com.armedia.acm.services.dataupdate.service;
 
 import com.armedia.acm.services.dataupdate.model.AcmDataUpdateExecutorLog;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -34,7 +34,6 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
     private static final Logger log = LoggerFactory.getLogger(AcmDataUpdateManager.class);
 
     @Override
-    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event)
     {
         boolean isRootContext = ((ApplicationContext) event.getSource()).getParent() == null;
@@ -45,8 +44,7 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
                     .map(AcmDataUpdateExecutorLog::getExecutorId)
                     .collect(Collectors.toSet());
 
-            Predicate<AcmDataUpdateExecutor> updatesNotExecuted =
-                    service -> !executedExecutorIds.contains(service.getUpdateId());
+            Predicate<AcmDataUpdateExecutor> updatesNotExecuted = service -> !executedExecutorIds.contains(service.getUpdateId());
 
             log.info("Starting [{}] core data update executors...", dataUpdateExecutors.size());
             dataUpdateExecutors.stream()

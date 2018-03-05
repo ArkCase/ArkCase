@@ -6,6 +6,7 @@ import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapGroupNode;
 import com.armedia.acm.services.users.service.group.AcmGroupUtils;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,15 +98,15 @@ public class AcmGroupsSyncResult
                         ldapGroup.addMemberGroup(memberGroup);
                         log.trace("Found member group [{}] with dn [{}] for ldap group [{}] with dn [{}]",
                                 memberGroup.getName(), dn, ldapGroup.getName(), ldapGroup.getDistinguishedName());
-                    } else if (syncedUsersByDn.containsKey(dn))
+                    }
+                    else if (syncedUsersByDn.containsKey(dn))
                     {
                         AcmUser acmUser = syncedUsersByDn.get(dn);
                         ldapGroup.addUserMember(acmUser.getDistinguishedName());
                         log.trace("Found user member [{}] with dn [{}] for ldap group [{}] with dn [{}]",
                                 acmUser.getUserId(), dn, ldapGroup.getName(), ldapGroup.getDistinguishedName());
                     }
-                })
-        );
+                }));
     }
 
     public Map<String, AcmGroup> getGroupsByNameMap(List<AcmGroup> groups)
@@ -121,7 +122,7 @@ public class AcmGroupsSyncResult
     }
 
     private void addGroupMembershipForNewGroups(Map<String, LdapGroup> ldapGroups, Map<String, AcmGroup> acmGroupsByName,
-                                                Map<String, AcmGroup> modifiedGroupsByName)
+            Map<String, AcmGroup> modifiedGroupsByName)
     {
         Map<String, AcmGroup> newGroupsByName = getGroupsByNameMap(newGroups);
 
@@ -140,13 +141,15 @@ public class AcmGroupsSyncResult
                                 {
                                     AcmGroup descendantGroup = newGroupsByName.get(descGroupName);
                                     descendantGroup.setAscendantsList(ldapDescendantGroup.getAscendantsAsString());
-                                } else
+                                }
+                                else
                                 {
                                     AcmGroup descendantGroup = getAcmGroupToUpdate(modifiedGroupsByName, acmGroupsByName, descGroupName);
                                     descendantGroup.setAscendantsList(ldapDescendantGroup.getAscendantsAsString());
                                     modifiedGroupsByName.put(descendantGroup.getName(), descendantGroup);
                                 }
-                            } else
+                            }
+                            else
                             {
                                 log.warn("Group [{}] not found in LDAP", it.getName());
                             }
@@ -158,8 +161,8 @@ public class AcmGroupsSyncResult
     }
 
     private void addAndRemoveGroupMembershipForExistingGroups(Map<String, LdapGroup> ldapGroups,
-                                                              Map<String, AcmGroup> acmGroups,
-                                                              Map<String, AcmGroup> updatedGroups)
+            Map<String, AcmGroup> acmGroups,
+            Map<String, AcmGroup> updatedGroups)
     {
         Predicate<LdapGroup> groupExists = it -> acmGroups.containsKey(it.getName());
 
@@ -194,7 +197,7 @@ public class AcmGroupsSyncResult
     }
 
     private void setGroupAscendants(AcmGroup acmGroup, Map<String, AcmGroup> updatedGroups,
-                                    Map<String, AcmGroup> acmGroups, Map<String, LdapGroup> ldapGroupByName)
+            Map<String, AcmGroup> acmGroups, Map<String, LdapGroup> ldapGroupByName)
     {
         Set<AcmGroup> descendantsForMemberGroup = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
         descendantsForMemberGroup.forEach(descendantGroup -> {
@@ -209,7 +212,7 @@ public class AcmGroupsSyncResult
     }
 
     private void addAndRemoveUserMembershipForExistingGroups(List<LdapGroup> ldapGroups, Map<String, AcmUser> syncedUsersByDn,
-                                                             Map<String, AcmGroup> acmGroups, Map<String, AcmGroup> updatedGroups)
+            Map<String, AcmGroup> acmGroups, Map<String, AcmGroup> updatedGroups)
     {
         Predicate<LdapGroup> groupExists = it -> acmGroups.containsKey(it.getName());
 
@@ -249,8 +252,7 @@ public class AcmGroupsSyncResult
     private List<AcmGroup> findAndUpdateModifiedGroups(List<LdapGroup> ldapGroups, Map<String, AcmGroup> acmGroups)
     {
         Predicate<LdapGroup> groupExists = ldapGroup -> acmGroups.containsKey(ldapGroup.getName());
-        Predicate<ImmutablePair<LdapGroup, AcmGroup>> groupIsModified =
-                it -> it.left.isChanged(it.right);
+        Predicate<ImmutablePair<LdapGroup, AcmGroup>> groupIsModified = it -> it.left.isChanged(it.right);
         return ldapGroups.stream()
                 .filter(groupExists)
                 .map(ldapGroup -> new ImmutablePair<>(ldapGroup, acmGroups.get(ldapGroup.getName())))
@@ -317,9 +319,9 @@ public class AcmGroupsSyncResult
     }
 
     private void removeDeletedGroupsGroupMembership(List<AcmGroup> deletedGroups,
-                                                    Map<String, AcmGroup> modifiedGroupsByName,
-                                                    Map<String, AcmGroup> acmGroupsByName,
-                                                    Map<String, LdapGroup> ldapGroupMap)
+            Map<String, AcmGroup> modifiedGroupsByName,
+            Map<String, AcmGroup> acmGroupsByName,
+            Map<String, LdapGroup> ldapGroupMap)
     {
         deletedGroups.forEach(group -> {
             setGroupAscendants(group, modifiedGroupsByName, acmGroupsByName, ldapGroupMap);
@@ -331,7 +333,7 @@ public class AcmGroupsSyncResult
 
     private AcmGroup getAcmGroupToUpdate(Map<String, AcmGroup> updatedGroups, Map<String, AcmGroup> acmGroups, String groupName)
     {
-        //group can already be updated, so check in updated groups to make further changes
+        // group can already be updated, so check in updated groups to make further changes
         if (updatedGroups.containsKey(groupName))
         {
             return updatedGroups.get(groupName);

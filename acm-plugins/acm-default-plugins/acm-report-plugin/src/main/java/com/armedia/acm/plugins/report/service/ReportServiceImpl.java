@@ -10,8 +10,11 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang.StringUtils;
+import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
+import com.armedia.acm.services.users.model.group.AcmGroup;
+
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -29,6 +32,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -59,14 +63,16 @@ public class ReportServiceImpl implements ReportService
     private PentahoReportUrl reportUrl;
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
+    private AcmGroupDao groupDao;
 
     @Override
-    public List<Report> getPentahoReports() throws Exception, MuleException
+    public List<Report> getPentahoReports() throws Exception
     {
         Reports reports = null;
 
         String username = "";
-        Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() : null;
+        Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
+                : null;
         if (authentication != null)
         {
             username = StringUtils.substringBeforeLast(authentication.getName(), "@");
@@ -77,7 +83,7 @@ public class ReportServiceImpl implements ReportService
 
         String muleEndPoint = fullReportUrl.startsWith("http://") ? "vm://getPentahoReports.in" : "vm://getPentahoReportsSecure.in";
 
-        Map<String, Object> properties = new HashedMap();
+        Map<String, Object> properties = new HashMap<>();
         properties.put("username", username);
         MuleMessage received = getMuleContextManager().send(muleEndPoint, reportListUrl, properties);
 
@@ -98,7 +104,8 @@ public class ReportServiceImpl implements ReportService
             {
                 throw new RuntimeException(xml);
             }
-        } else
+        }
+        else
         {
             throw new RuntimeException("Taking Pentaho reports failed.");
         }
@@ -109,11 +116,10 @@ public class ReportServiceImpl implements ReportService
     @Override
     public List<Report> getAcmReports()
     {
-        List<Report> reports = new ArrayList<Report>();
+        List<Report> reports = new ArrayList<>();
         if (getReportPluginProperties() != null)
         {
-            reports.addAll(getReportPluginProperties().entrySet().stream().map(entry ->
-            {
+            reports.addAll(getReportPluginProperties().entrySet().stream().map(entry -> {
                 Report report = new Report();
                 report.setPropertyName(entry.getKey());
                 report.setPropertyPath(entry.getValue());
@@ -132,11 +138,8 @@ public class ReportServiceImpl implements ReportService
         if (key != null && !key.isEmpty())
         {
             String[] keyArray = key.split("_");
-            if (keyArray != null)
-            {
-                List<String> keyList = Arrays.asList(keyArray);
-                retval = keyList.stream().map(element -> StringUtils.capitalize(element.toLowerCase())).collect(Collectors.joining(" "));
-            }
+            List<String> keyList = Arrays.asList(keyArray);
+            retval = keyList.stream().map(element -> StringUtils.capitalize(element.toLowerCase())).collect(Collectors.joining(" "));
         }
 
         return retval;
@@ -145,7 +148,7 @@ public class ReportServiceImpl implements ReportService
     @Override
     public List<Report> getAcmReports(String userId)
     {
-        List<Report> userReports = new ArrayList<Report>();
+        List<Report> userReports = new ArrayList<>();
         if (userId != null && !userId.isEmpty())
         {
             List<Report> reports = getAcmReports();
@@ -162,14 +165,11 @@ public class ReportServiceImpl implements ReportService
     @Override
     public Map<String, String> getAcmReportsAsMap(List<Report> reports)
     {
-        Map<String, String> retval = new HashMap<String, String>();
+        Map<String, String> retval = new HashMap<>();
 
         if (reports != null)
         {
-            reports.stream().forEach(report ->
-            {
-                retval.put(report.getTitle(), getReportUrl().getReportUrlPath(report.getPropertyName()));
-            });
+            reports.forEach(report -> retval.put(report.getTitle(), getReportUrl().getReportUrlPath(report.getPropertyName())));
         }
 
         return retval;
@@ -195,7 +195,8 @@ public class ReportServiceImpl implements ReportService
                                 .findAny();
 
                         authorized = optional.isPresent();
-                    } catch (Exception e)
+                    }
+                    catch (Exception e)
                     {
                         LOG.warn("Element found is null. Proceed with execution.");
                     }
@@ -209,7 +210,7 @@ public class ReportServiceImpl implements ReportService
 
     private List<String> getUserGroups(String userId)
     {
-        List<String> retval = new ArrayList<String>();
+        List<String> retval = new ArrayList<>();
 
         try
         {
@@ -230,7 +231,8 @@ public class ReportServiceImpl implements ReportService
                     retval = getSearchResults().extractStringList(doc, SearchConstants.PROPERTY_GROUPS_ID_SS);
                 }
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot retrieve User information from Solr for userId={}", userId, e);
         }
@@ -249,7 +251,8 @@ public class ReportServiceImpl implements ReportService
                     getReportToGroupsMapPropertiesFileLocation(), true);
             setReportToGroupsMapProperties(prepared);
             success = true;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot save report to groups map", e);
             success = false;
@@ -295,8 +298,8 @@ public class ReportServiceImpl implements ReportService
 
         if (reports != null && reports.size() > 0)
         {
-            Map<String, String> propertiesToUpdate = new HashMap<String, String>();
-            List<String> propertiesToDelete = new ArrayList<String>();
+            Map<String, String> propertiesToUpdate = new HashMap<>();
+            List<String> propertiesToDelete = new ArrayList<>();
             for (Report report : reports)
             {
                 String key = report.getPropertyName();
@@ -306,7 +309,8 @@ public class ReportServiceImpl implements ReportService
                     String value = createPentahoReportUri(report);
                     propertiesToUpdate.put(key, value);
                     reportPluginProperties.put(key, value);
-                } else
+                }
+                else
                 {
                     propertiesToDelete.add(key);
                     reportPluginProperties.remove(key);
@@ -359,7 +363,8 @@ public class ReportServiceImpl implements ReportService
             Unmarshaller unmarshaller = context.createUnmarshaller();
             JAXBElement<?> jaxbElement = unmarshaller.unmarshal(element, c);
             obj = jaxbElement.getValue();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Error while creating Object from XML. ", e);
         }
@@ -369,7 +374,7 @@ public class ReportServiceImpl implements ReportService
 
     private Map<String, String> prepareReportToGroupsMapForSaving(Map<String, List<String>> reportsToGroupsMap)
     {
-        Map<String, String> retval = new HashMap<String, String>();
+        Map<String, String> retval = new HashMap<>();
 
         if (reportsToGroupsMap != null && reportsToGroupsMap.size() > 0)
         {
@@ -383,11 +388,18 @@ public class ReportServiceImpl implements ReportService
     {
         if (reportsToGroupsMap != null && reportsToGroupsMap.size() > 0)
         {
-            return reportsToGroupsMap.entrySet().stream().filter(entry -> !"".equals(entry.getValue()) && entry.getValue() != null)
-                    .collect(Collectors.toMap(Entry::getKey, entry -> Arrays.<String> asList(entry.getValue().split(","))));
+            Map<String, List<AcmGroup>> groupsCache = new HashMap<>();
+
+            return reportsToGroupsMap.entrySet().stream()
+                    .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
+                    .collect(Collectors.toMap(Entry::getKey,
+                            entry -> Arrays.stream(entry.getValue().split(","))
+                                    .flatMap(AcmRoleToGroupMapping.mapGroupsString(
+                                            name -> groupsCache.computeIfAbsent(name, it -> groupDao.findByMatchingName(it))))
+                                    .collect(Collectors.toList())));
         }
 
-        return new HashMap<String, List<String>>();
+        return new HashMap<>();
     }
 
     public MuleContextManager getMuleContextManager()
@@ -488,5 +500,10 @@ public class ReportServiceImpl implements ReportService
     public void setSearchResults(SearchResults searchResults)
     {
         this.searchResults = searchResults;
+    }
+
+    public void setGroupDao(AcmGroupDao groupDao)
+    {
+        this.groupDao = groupDao;
     }
 }

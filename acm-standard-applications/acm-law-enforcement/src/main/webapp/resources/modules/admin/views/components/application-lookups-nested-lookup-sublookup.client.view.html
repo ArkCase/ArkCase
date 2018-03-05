@@ -6,17 +6,13 @@
                 <span>{{ selectedParentLookupValue.key ? "Sub lookup for key: " + selectedParentLookupValue.key : "&ltSelect key from the parent lookup&gt"}}</span>
                 <div class="pull-right">
                     <div class="pull-right">
-                        <button ng-hide="!selectedParentLookupValue.value" class="btn btn-default btn-xs" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
+                        <button ng-hide="!selectedParentLookupValue.value" class="btn btn-default btn-xs" ng-click="addNew()"><i
+                                class="fa fa-lg fa-plus"></i></button>
                     </div>
                 </div>
             </div>
         </div>
-	    <div ui-grid="gridOptions"
-	         ui-grid-resize-columns
-	         ui-grid-selection
-	         adjust-table-height="gridOptions.data.length"
-	         ui-grid-auto-resize
-	         class="grid">
-	    </div>
+        <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-selection ui-grid-draggable-rows
+                adjust-table-height="gridOptions.data.length" ui-grid-auto-resize class="grid"></div>
     </div>
 </div>

@@ -1,11 +1,8 @@
-<databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="document-repository-01-acm-document-repository-table" author="ncuculova"
-               dbms="oracle,postgresql,mssql,mysql">
+    <changeSet id="document-repository-01-acm-document-repository-table" author="ncuculova" dbms="oracle,postgresql,mssql,mysql">
         <createTable tableName="acm_document_repository">
             <column name="cm_doc_repo_id" type="${idType}">
                 <constraints primaryKeyName="pk_acm_document_repository" primaryKey="true"/>
@@ -67,7 +64,8 @@
 
     <changeSet id="04-add-discriminator-column-extensibility" author="alex.mo">
         <addColumn tableName="acm_document_repository">
-            <column name="cm_class_name" type="VARCHAR(1024)" defaultValue="com.armedia.acm.plugins.documentrepository.model.DocumentRepository">
+            <column name="cm_class_name" type="VARCHAR(1024)"
+                defaultValue="com.armedia.acm.plugins.documentrepository.model.DocumentRepository">
                 <constraints nullable="false"/>
             </column>
         </addColumn>

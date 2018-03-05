@@ -1,6 +1,11 @@
 package com.armedia.acm.services.users.web.api;
 
+import static junit.framework.Assert.assertEquals;
+import static org.easymock.EasyMock.expect;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.services.users.service.group.GroupServiceImpl;
+
 import org.apache.commons.httpclient.HttpStatus;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -15,10 +20,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Base64;
 import java.util.Optional;
-
-import static junit.framework.Assert.assertEquals;
-import static org.easymock.EasyMock.expect;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * Created by armdev on 5/28/14.
@@ -54,12 +55,13 @@ public class GetUsersByGroupAPIControllerTest extends EasyMockSupport
 
         replayAll();
 
-        MvcResult result =
-                mockMvc.perform(get("/api/latest/users/by-group/{group}", Base64.getUrlEncoder().encodeToString(group.getBytes()))
+        MvcResult result = mockMvc
+                .perform(get("/api/latest/users/by-group/{group}", Base64.getUrlEncoder().encodeToString(group.getBytes()))
                         .param("status", "VALID")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .principal(mockAuthentication)
-                        .contentType(MediaType.APPLICATION_JSON)).andReturn();
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
         log.info("results: [{}]", result.getResponse().getContentAsString());
 
@@ -78,11 +80,12 @@ public class GetUsersByGroupAPIControllerTest extends EasyMockSupport
 
         replayAll();
 
-        MvcResult result =
-                mockMvc.perform(get("/api/latest/users/by-group/{group}", Base64.getUrlEncoder().encodeToString(group.getBytes()))
+        MvcResult result = mockMvc
+                .perform(get("/api/latest/users/by-group/{group}", Base64.getUrlEncoder().encodeToString(group.getBytes()))
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .principal(mockAuthentication)
-                        .contentType(MediaType.APPLICATION_JSON)).andReturn();
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
         log.info("results: [{}]", result.getResponse().getContentAsString());
 

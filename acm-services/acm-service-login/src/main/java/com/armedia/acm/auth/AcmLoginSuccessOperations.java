@@ -1,5 +1,7 @@
 package com.armedia.acm.auth;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -7,6 +9,7 @@ import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -15,13 +18,12 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * Created by armdev on 6/3/14.
@@ -45,6 +47,8 @@ public class AcmLoginSuccessOperations
 
         addAlfrescoUserIdToSession(request);
 
+        addAlfrescoUserIdToAuthenticationDetails(authentication);
+
         addPrivilegesToSession(request, authentication);
 
         addIpAddressToSession(request, authentication);
@@ -54,6 +58,17 @@ public class AcmLoginSuccessOperations
         recordAuditPropertyUser(internalUserId);
 
         setPasswordExpirationSessionAttribute(request);
+    }
+
+    private void addAlfrescoUserIdToAuthenticationDetails(Authentication authentication)
+    {
+        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+        {
+            String cmisUserId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY);
+            ((AcmAuthenticationDetails) authentication.getDetails()).setCmisUserId(cmisUserId);
+
+            log.debug("Set authentication details CMIS user id to {}", cmisUserId);
+        }
     }
 
     protected void setPasswordExpirationSessionAttribute(HttpServletRequest request)
@@ -108,17 +123,17 @@ public class AcmLoginSuccessOperations
     {
         switch (getAcmApplication().getAlfrescoUserIdLdapAttribute().toLowerCase())
         {
-            case "samaccountname":
-                return acmUser.getsAMAccountName();
-            case "userprincipalname":
-                return acmUser.getUserPrincipalName();
-            case "uid":
-                return acmUser.getUid();
-            case "dn":
-            case "distinguishedname":
-                return acmUser.getDistinguishedName();
-            default:
-                return acmUser.getsAMAccountName();
+        case "samaccountname":
+            return acmUser.getsAMAccountName();
+        case "userprincipalname":
+            return acmUser.getUserPrincipalName();
+        case "uid":
+            return acmUser.getUid();
+        case "dn":
+        case "distinguishedname":
+            return acmUser.getDistinguishedName();
+        default:
+            return acmUser.getsAMAccountName();
         }
     }
 

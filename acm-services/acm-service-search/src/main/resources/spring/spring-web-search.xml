@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="searchUiController" class="com.armedia.acm.services.search.web.SearchUiController">
@@ -33,8 +32,7 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
-    <bean id="searchUsersAPIController"
-          class="com.armedia.acm.services.search.web.api.SearchUsersAPIController">
+    <bean id="searchUsersAPIController" class="com.armedia.acm.services.search.web.api.SearchUsersAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
@@ -55,6 +53,12 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
     <bean id="facetedSearchAPIController" class="com.armedia.acm.services.search.web.api.FacetedSearchAPIController">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="facetedSearchService" ref="facetedSearchService"/>
+    </bean>
+    <bean id="facetedSearchAPIControllerV2"
+          class="com.armedia.acm.services.search.web.api.FacetedSearchAPIControllerV2">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="facetedSearchService" ref="facetedSearchService"/>

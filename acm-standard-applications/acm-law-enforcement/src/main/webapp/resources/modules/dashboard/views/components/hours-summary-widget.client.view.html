@@ -1,17 +1,11 @@
 <div>
-    <div ng-if="hoursSummary.showChart">
+    <div ng-if="data.length > 0">
         <div class="panel-body">
-            </br>
-            <div class="chart-container">
-                <canvas id="bar" class="chart chart-bar" chart-data="hoursSummary.data"
-                        chart-labels="hoursSummary.labels"
-                        chart-series="hoursSummary.series"
-                        chart-responsive="true"
-                        chart-legend="true"></canvas>
-            </div>
+            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
+                    adjust-table-height="gridOptions.data.length" class="grid"></div>
         </div>
     </div>
-    <div class="alert" ng-if="!hoursSummary.showChart">
+    <div class="alert" ng-if="data.length <= 0">
         <p class="text-center">
             <span translate>dashboard.widgets.hoursSummary.noDataMessage</span>
         </p>

@@ -3,6 +3,10 @@
  */
 package com.armedi.acm.services.timesheet.web;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
@@ -10,6 +14,7 @@ import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.timesheet.web.GetTimesheetsForObjectIdAndTypeAPIController;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,10 +35,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * @author riste.tutureski
@@ -109,9 +110,10 @@ public class GetTimesheetsForObjectIdAndTypeAPIControllerTest extends EasyMockSu
         LOG.info("Results: " + result.getResponse().getContentAsString());
 
         ObjectMapper mapper = new ObjectMapper();
-        List<AcmTimesheet> response = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ArrayList<AcmTimesheet>>()
-        {
-        });
+        List<AcmTimesheet> response = mapper.readValue(result.getResponse().getContentAsString(),
+                new TypeReference<ArrayList<AcmTimesheet>>()
+                {
+                });
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         assertEquals(1, response.size());

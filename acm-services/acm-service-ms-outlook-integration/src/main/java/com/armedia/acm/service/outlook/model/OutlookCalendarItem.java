@@ -83,56 +83,68 @@ public class OutlookCalendarItem extends OutlookItem
         return endDate;
     }
 
-    public Date getRecurringEndDate() {
+    public Date getRecurringEndDate()
+    {
         return recurringEndDate;
     }
 
-    public void setRecurringEndDate(Date recurringEndDate) {
+    public void setRecurringEndDate(Date recurringEndDate)
+    {
         this.recurringEndDate = recurringEndDate;
     }
 
-    public TimeZone getTimeZone() {
+    public TimeZone getTimeZone()
+    {
         return timeZone;
     }
 
-    public void setTimeZone(TimeZone timeZone) {
+    public void setTimeZone(TimeZone timeZone)
+    {
         this.timeZone = timeZone;
     }
 
-    public int getRecurringInterval() {
+    public int getRecurringInterval()
+    {
         return recurringInterval;
     }
 
-    public void setRecurringInterval(int recurringInterval) {
+    public void setRecurringInterval(int recurringInterval)
+    {
         this.recurringInterval = recurringInterval;
     }
 
-    public String getFolderId() {
+    public String getFolderId()
+    {
         return folderId;
     }
 
-    public void setFolderId(String folderId) {
+    public void setFolderId(String folderId)
+    {
         this.folderId = folderId;
     }
 
-	public ExtendedPropertyDefinition getExtendedPropertyDefinition() {
-		return extendedPropertyDefinition;
-	}
+    public ExtendedPropertyDefinition getExtendedPropertyDefinition()
+    {
+        return extendedPropertyDefinition;
+    }
 
-	public void setExtendedPropertyDefinition(
-			ExtendedPropertyDefinition extendedPropertyDefinition) {
-		this.extendedPropertyDefinition = extendedPropertyDefinition;
-	}
+    public void setExtendedPropertyDefinition(
+            ExtendedPropertyDefinition extendedPropertyDefinition)
+    {
+        this.extendedPropertyDefinition = extendedPropertyDefinition;
+    }
 
-	public Object getExtendedPropertyValue() {
-		return extendedPropertyValue;
-	}
+    public Object getExtendedPropertyValue()
+    {
+        return extendedPropertyValue;
+    }
 
-	public void setExtendedPropertyValue(Object extendedPropertyValue) {
-		this.extendedPropertyValue = extendedPropertyValue;
-	}
+    public void setExtendedPropertyValue(Object extendedPropertyValue)
+    {
+        this.extendedPropertyValue = extendedPropertyValue;
+    }
 
-	@Override
+    @Override
     public String toString()
     {
         return "OutlookCalendarItem{" +

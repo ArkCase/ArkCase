@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="reportUiController" class="com.armedia.acm.plugins.report.web.ReportUiController">
-		<property name="reportService" ref="reportService" />		
+        <property name="reportService" ref="reportService"/>
     </bean>
-    
+
     <bean id="getPentahoReportsAPIController" class="com.armedia.acm.plugins.report.web.api.GetPentahoReportsAPIController">
-    	<property name="reportService" ref="reportService"/>
+        <property name="reportService" ref="reportService"/>
     </bean>
-    
+
     <bean id="saveReportsAPIController" class="com.armedia.acm.plugins.report.web.api.SaveReportsAPIController">
-    	<property name="reportService" ref="reportService"/>
+        <property name="reportService" ref="reportService"/>
     </bean>
 
     <bean id="getReportsToGroupsAPIController" class="com.armedia.acm.plugins.report.web.api.GetReportToGroupsMapAPIController">
@@ -29,6 +28,12 @@
 
     <bean id="syncReportsAPIController" class="com.armedia.acm.plugins.report.web.api.SyncReportsAPIController">
         <property name="reportService" ref="reportService"/>
+    </bean>
+
+    <bean id="scheduleReportAPIController" class="com.armedia.acm.plugins.report.web.api.ScheduleReportAPIController">
+        <property name="scheduleReportService" ref="scheduleReportRestService"/>
+        <property name="scheduleInputFolder" value="${PENTAHO_SCHEDULE_INPUT_FOLDER}"/>
+        <property name="scheduleOutputFolder" value="${PENTAHO_SCHEDULE_OUTPUT_FOLDER}"/>
     </bean>
 </beans>
 

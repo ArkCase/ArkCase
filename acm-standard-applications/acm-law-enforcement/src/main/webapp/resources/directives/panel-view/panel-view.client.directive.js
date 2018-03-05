@@ -16,50 +16,31 @@
  * @param {boolean} collapsed Defines default panel state for collapsible panel.
  *
  * @example
-    <example>
-        <file name="index.html">
-            <panel-view header="Panel header text" collapsible="true" "collapsed="false">
-                <h3>This is panel body</h3>
-            </panel-view>
-        </file>
-    </example>
+ <example>
+ <file name="index.html">
+ <panel-view header="Panel header text" collapsible="true" "collapsed="false">
+ <h3>This is panel body</h3>
+ </panel-view>
+ </file>
+ </example>
  */
-angular.module('directives').directive('panelView', ['$q',
-    function ($q) {
-        return {
-            restrict: 'E',
-            transclude: true,
-            scope: {
-                header: '@',
-                collapsible: '@',
-                collapsed: '@'
-            },
+angular.module('directives').directive('panelView', [ '$q', function($q) {
+    return {
+        restrict : 'E',
+        transclude : true,
+        scope : {
+            header : '@',
+            collapsible : '=',
+            collapsed : '='
+        },
 
-            link: function (scope, element, attrs) {
-                if (!attrs.collapsible) {
-                    attrs.collapsible = 'true';
-                }
+        link : function(scope, element, attrs) {
+            scope.onCollapseIconClick = function($event) {
+                $event.preventDefault();
+                scope.collapsed = !scope.collapsed;
+            };
+        },
 
-                if (attrs.collapsed == 'true') {
-                    scope.isCollapsed = true;
-                }
-
-                attrs.$observe('collapsed', function (collapsedVal) {
-                    if (collapsedVal == 'true') {
-                        scope.isCollapsed = true;
-                    }
-                    else {
-                        scope.isCollapsed = false;
-                    }
-                });
-
-                scope.onCollapseIconClick = function($event) {
-                    $event.preventDefault();
-                    scope.isCollapsed = !scope.isCollapsed
-                };
-            },
-
-            templateUrl: 'directives/panel-view/panel-view.client.view.html'
-        };
-    }
-]);
+        templateUrl : 'directives/panel-view/panel-view.client.view.html'
+    };
+} ]);

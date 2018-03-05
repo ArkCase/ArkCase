@@ -20,15 +20,14 @@
  </file>
  </example>
  */
-angular.module('core').directive('acmLogin', ['$stateParams', function ($stateParams) {
-        return {
-            scope: {}
-            , bindToController: {}
-            //, templateUrl: 'modules/core/components/acm-login/acm-login.client.view.html'
-            , template: ''
-            , controller: AcmLoginController
-            , controllerAs: 'ctrl'
-        }
+angular.module('core').directive('acmLogin', [ '$stateParams', function($stateParams) {
+    return {
+        scope : {},
+        bindToController : {}
+        //, templateUrl: 'modules/core/components/acm-login/acm-login.client.view.html'
+        ,
+        template : '',
+        controller : AcmLoginController,
+        controllerAs : 'ctrl'
     }
-]);
-
+} ]);

@@ -1,8 +1,11 @@
 package com.armedia.acm.services.note;
 
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,21 +19,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations =
-        {
-                "/spring/spring-library-note.xml",
-                "/spring/spring-library-data-source.xml",
-                "/spring/spring-library-context-holder.xml",
-                "/spring/spring-library-property-file-manager.xml",
-                "/spring/spring-library-acm-encryption.xml",
-                "/spring/spring-library-user-service.xml",
-                "/spring/spring-library-mule-context-manager.xml",
-                "/spring/spring-library-search.xml",
-                "/spring/spring-library-note-plugin-test.xml"
-        })
+@ContextConfiguration(locations = {
+        "/spring/spring-library-note.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-mule-context-manager.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-note-plugin-test.xml"
+})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NoteIT
 {
@@ -47,7 +47,6 @@ public class NoteIT
     {
         auditAdapter.setUserId("auditUser");
     }
-
 
     @Test
     @Transactional
@@ -66,6 +65,5 @@ public class NoteIT
 
         log.info("Note ID: " + saved.getId());
     }
-
 
 }

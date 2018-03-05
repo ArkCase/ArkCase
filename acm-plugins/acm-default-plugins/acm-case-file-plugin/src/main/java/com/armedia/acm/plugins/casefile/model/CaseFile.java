@@ -13,7 +13,6 @@ import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
-import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -26,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.CascadeType;
@@ -54,8 +54,9 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.CaseFile")
-@JsonPropertyOrder(value = {"id", "personAssociations", "originator"})
+@JsonPropertyOrder(value = { "id", "personAssociations", "originator" })
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity
@@ -94,7 +95,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     private String caseType;
 
     @Column(name = "cm_case_title")
-    @Size(min=1)
+    @Size(min = 1)
     private String title;
 
     @Column(name = "cm_case_status")
@@ -133,6 +134,9 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @Column(name = "cm_case_priority")
     private String priority;
 
+    @Column(name = "cm_case_external_flag")
+    private boolean external = false;
+
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = CaseFileConstants.OBJECT_TYPE;
 
@@ -140,7 +144,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     private String className = this.getClass().getName();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({@JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
+    @JoinColumns({ @JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_due_date")
@@ -165,12 +169,14 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     private String ecmFolderPath;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({@JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_case_id"), @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
+    @JoinColumns({ @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_case_id"),
+            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type") })
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({@JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_case_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
+    @JoinColumns({ @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_case_id"),
+            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
     @OrderBy("created ASC")
     private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
 
@@ -185,8 +191,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumns({@JoinColumn(name = "cm_parent_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @JoinColumns({ @JoinColumn(name = "cm_parent_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     /**
@@ -207,8 +213,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     private Date nextCourtDate;
 
     @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumns({@JoinColumn(name = "cm_case_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
-            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false)})
+    @JoinColumns({ @JoinColumn(name = "cm_case_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false) })
     private AcmObjectLock lock;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -299,7 +305,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
             personAssoc.getPerson().getAssociationsFromObjects().add(personAssoc);
         }
 
-
     }
 
     @Override
@@ -336,7 +341,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
             return null;
         }
 
-        Optional<PersonAssociation> found = getPersonAssociations().stream().filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
+        Optional<PersonAssociation> found = getPersonAssociations().stream()
+                .filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
         if (found != null && found.isPresent())
         {
@@ -357,7 +363,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         if (originator != null)
         {
 
-            Optional<PersonAssociation> found = getPersonAssociations().stream().filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
+            Optional<PersonAssociation> found = getPersonAssociations().stream()
+                    .filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
             if (found == null || !found.isPresent())
             {
@@ -415,6 +422,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         return status;
     }
 
+    @Override
     public void setStatus(String status)
     {
         this.status = status;
@@ -506,6 +514,23 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     public void setPriority(String priority)
     {
         this.priority = priority;
+    }
+
+    /**
+     * @return the external
+     */
+    public boolean isExternal()
+    {
+        return external;
+    }
+
+    /**
+     * @param external
+     *            the external to set
+     */
+    public void setExternal(boolean external)
+    {
+        this.external = external;
     }
 
     public String getDetails()
@@ -608,6 +633,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         this.milestones = milestones;
     }
 
+    @Override
     public Boolean getRestricted()
     {
         return restricted;

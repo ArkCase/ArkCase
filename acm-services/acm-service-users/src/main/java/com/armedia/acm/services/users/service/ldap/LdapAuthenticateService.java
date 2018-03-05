@@ -1,21 +1,24 @@
 package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
-import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.LdapTemplate;
 
-
 /**
- * Authenticates a user id and password against LDAP directory.  To support multiple LDAP configurations, create multiple Spring
+ * Authenticates a user id and password against LDAP directory. To support multiple LDAP configurations, create multiple
+ * Spring
  * beans, each with its own LdapAuthenticateService.
  */
 public class LdapAuthenticateService
@@ -37,6 +40,7 @@ public class LdapAuthenticateService
         String userIdAttributeName = getLdapAuthenticateConfig().getUserIdAttributeName();
         String searchBase = getLdapAuthenticateConfig().getSearchBase();
 
+        userName = StringUtils.substringBeforeLast(userName, "@");
         String filter = "(" + userIdAttributeName + "=" + userName + ")";
         boolean authenticated = template.authenticate(searchBase, filter, password);
 
@@ -48,38 +52,55 @@ public class LdapAuthenticateService
     public void changeUserPassword(String userName, String currentPassword, String newPassword) throws AcmUserActionFailedException
     {
         log.debug("Changing password for user:{}", userName);
-        LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig);
         AcmUser acmUser = userDao.findByUserId(userName);
+        LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig, acmUser.getDistinguishedName(), currentPassword);
         try
         {
             ldapUserDao.changeUserPassword(acmUser.getDistinguishedName(), currentPassword, newPassword, ldapTemplate,
                     ldapAuthenticateConfig);
             log.debug("Password changed successfully for User: {}", userName);
-            savePasswordExpirationDate(acmUser, ldapTemplate);
-        } catch (AcmLdapActionFailedException e)
+        }
+        catch (AcmLdapActionFailedException e)
         {
             throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", null);
+        }
+        try
+        {
+            ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig, acmUser.getDistinguishedName(), newPassword);
+            savePasswordExpirationDate(acmUser, ldapTemplate);
+        }
+        catch (Exception e)
+        {
+            log.warn("Password expiration date was not set for user [{}]", acmUser.getUserId(), e);
         }
     }
 
     public void resetUserPassword(String token, String password) throws AcmUserActionFailedException
     {
+        AcmUser user = userDao.findByPasswordResetToken(token);
+        if (user == null)
+        {
+            throw new AcmUserActionFailedException("reset password", "USER", null, "User not found!", null);
+        }
+        LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig);
         try
         {
-            AcmUser user = userDao.findByPasswordResetToken(token);
-            if (user == null)
-            {
-                throw new AcmUserActionFailedException("reset password", "USER", null, "User not found!", null);
-            }
             log.debug("Changing password for user: [{}]", user.getUserId());
 
-            LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig);
             ldapUserDao.changeUserPasswordWithAdministrator(user.getDistinguishedName(), password, ldapTemplate, ldapAuthenticateConfig);
-            savePasswordExpirationDate(user, ldapTemplate);
-            invalidateToken(user);
-        } catch (AcmLdapActionFailedException e)
+        }
+        catch (AcmLdapActionFailedException e)
         {
             throw new AcmUserActionFailedException("reset password", "USER", null, "Change password action failed!", e);
+        }
+        try
+        {
+            savePasswordExpirationDate(user, ldapTemplate);
+            invalidateToken(user);
+        }
+        catch (AuthenticationException e)
+        {
+            log.warn("Password expiration date was not set for user [{}]", user.getUserId(), e);
         }
     }
 

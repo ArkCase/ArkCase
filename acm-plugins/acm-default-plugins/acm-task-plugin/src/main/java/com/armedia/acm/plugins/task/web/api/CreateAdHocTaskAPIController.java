@@ -13,6 +13,7 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpSession;
 
@@ -57,7 +57,7 @@ public class CreateAdHocTaskAPIController
 
             String parentObjectType = null;
             Long objectId = null;
-            if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(attachedToObjectType) )
+            if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(attachedToObjectType))
             {
                 // find the associated object (CASE/COMPLAINT) id by it's name
                 String obj = getObjectsFromSolr(attachedToObjectType, attachedToObjectName, authentication, 0, 10, "", null);
@@ -67,7 +67,8 @@ public class CreateAdHocTaskAPIController
                     JSONObject result = results.getJSONObject(0);
                     objectId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
                     parentObjectType = getSearchResults().extractString(result, SearchConstants.PROPERTY_OBJECT_TYPE_S);
-                } else
+                }
+                else
                 {
                     throw new AcmAppErrorJsonMsg(
                             String.format("Task failed to create. Associated object" + " with name [%s] not found.", attachedToObjectName),
@@ -83,7 +84,8 @@ public class CreateAdHocTaskAPIController
                 in.setParentObjectId(objectId);
                 in.setParentObjectType(parentObjectType);
                 in.setParentObjectName(attachedToObjectName);
-            } else
+            }
+            else
             {
                 in.setAttachedToObjectId(null);
                 in.setAttachedToObjectType(null);
@@ -91,10 +93,12 @@ public class CreateAdHocTaskAPIController
             }
 
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
+
             publishAdHocTaskCreatedEvent(authentication, httpSession, adHocTask, true);
 
             return adHocTask;
-        } catch (AcmTaskException e)
+        }
+        catch (AcmTaskException e)
         {
             // gen up a fake task so we can audit the failure
             AcmTask fakeTask = new AcmTask();
@@ -137,7 +141,8 @@ public class CreateAdHocTaskAPIController
                     sortParams);
 
             log.debug("Objects was retrieved.");
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Cannot retrieve objects from Solr.", e);
         }

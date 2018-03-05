@@ -14,35 +14,41 @@ public class JsonConfig implements AcmConfig, Serializable
     private String configDescription;
     private String json;
 
-
     @Override
-    public String getConfigAsJson() {
+    public String getConfigAsJson()
+    {
         return getJson();
     }
 
     @Override
-    public String getConfigName() {
+    public String getConfigName()
+    {
         return configName;
     }
 
-    public void setConfigName(String configName) {
+    public void setConfigName(String configName)
+    {
         this.configName = configName;
     }
 
     @Override
-    public String getConfigDescription() {
+    public String getConfigDescription()
+    {
         return configDescription;
     }
 
-    public void setConfigDescription(String configDescription) {
+    public void setConfigDescription(String configDescription)
+    {
         this.configDescription = configDescription;
     }
 
-    public String getJson() {
+    public String getJson()
+    {
         return json;
     }
 
-    public void setJson(String json) {
+    public void setJson(String json)
+    {
         this.json = json;
     }
 }

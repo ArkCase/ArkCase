@@ -9,57 +9,53 @@
                     <div class="form-check">
                         <label class="form-check-label">
                             <input type="checkbox" class="form-check-input" ng-model="docRepo.repositoryType"
-                                   ng-change="changeType(docRepo.repositoryType)"
-                                   ng-true-value="'PERSONAL'" ng-false-value="'GENERAL'">
+                                    ng-change="changeType(docRepo.repositoryType)" ng-true-value="'PERSONAL'" ng-false-value="'GENERAL'">
                             {{ 'document-repository.newRepository.personalRepository' | translate }}
                         </label>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-3 form-group">
+                <div class="col-sm-6 form-group">
                     <label for="assignee" translate>document-repository.newRepository.assigneeLabel</label>
                     <span class="required-asterisk">*</span>
                     <input type="text" id="assignee" class="input-md form-control"
-                           placeholder="{{ 'document-repository.newRepository.assignee.placeholder' | translate}}"
-                           style="background-color: white;" ng-model="assignee.name" ng-click="searchAssignee()"
-                           ng-disabled="isPersonalDocRepo()" required>
+                            placeholder="{{ 'document-repository.newRepository.assignee.placeholder' | translate}}"
+                            style="background-color: white;" ng-model="assignee.name" ng-click="userOrGroupSearch()"
+                            ng-disabled="isPersonalDocRepo()" required>
                 </div>
-                <div class="col-sm-3 form-group">
+                <div class="col-sm-6 form-group">
                     <label for="owningGroup" translate>document-repository.newRepository.owningGroupLabel</label>
                     <span ng-show="!isPersonalDocRepo()" class="required-asterisk">*</span>
-                    <select class="form-control" id="owningGroup" ng-model="owningGroup.participantLdapId"
-                            ng-options="group for group in userGroups"
-                            ng-disabled="isPersonalDocRepo()" ng-required="!isPersonalDocRepo()"></select>
+                    <input type="text" class="input-md form-control" id="owningGroup" ng-disabled="true" ng-model="owningGroup.name">
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 form-group" ng-class="{ 'has-error' : error }">
+                <div class="col-sm-12 form-group" ng-class="{ 'has-error' : error }">
                     <label for="name" translate>document-repository.newRepository.nameLabel</label>
                     <span class="required-asterisk">*</span>
                     <input type="text" id="name" ng-model="docRepo.name" class="input-md form-control"
-                           placeholder="{{ 'document-repository.newRepository.name.placeholder' | translate }}"
-                           required>
+                            placeholder="{{ 'document-repository.newRepository.name.placeholder' | translate }}" required>
                     <p class="help-block" ng-show="error">
-                        {{ error }}
-                    </p>
+                        {{ error }} </p>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 form-group">
+                <div class="col-sm-12 form-group">
                     <label translate>document-repository.newRepository.descriptionLabel</label>
                     <textarea class="form-control" rows="3" ng-model="docRepo.description"
-                              placeholder="{{ 'document-repository.newRepository.description.placeholder' | translate}}"></textarea>
+                            placeholder="{{ 'document-repository.newRepository.description.placeholder' | translate}}"></textarea>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary btn-sm" id="cancelButton" ng-click="cancelModal()">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" id="cancelButton"
+                ng-click="cancelModal()">
             <span translate>document-repository.newRepository.cancelButton</span>
         </button>
-        <button type="submit" ng-disabled="repository.$invalid || loading"
-                class="btn btn-primary btn-sm" id="saveButton">
+        <button type="submit" ng-disabled="repository.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+                data-title="Save" id="saveButton">
             <i class="fa fa-floppy-o" ng-hide="loading"></i>
             <i class="fa fa-circle-o-notch fa-spin" ng-show="loading"></i>
             <span translate>document-repository.newRepository.saveButton</span>

@@ -12,6 +12,7 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
@@ -43,60 +44,41 @@ public class ReplaceFileAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    // FIXME: no order id available
-    // @PreAuthorize("hasPermission(#orderid, 'CASE_FILE', 'uploadOrReplaceFile')")
+    @PreAuthorize("hasPermission(#fileToBeReplacedId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/replace/{fileToBeReplacedId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile replaceFile(@PathVariable("fileToBeReplacedId") Long fileToBeReplacedId, MultipartHttpServletRequest request,
             Authentication authentication, HttpSession session) throws AcmUserActionFailedException
     {
 
-        if (log.isInfoEnabled())
-            log.info("Replacing file, fileId: " + fileToBeReplacedId);
+        log.info("Replacing file, fileId: {}", fileToBeReplacedId);
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
 
         EcmFile fileToBeReplaced = getFileService().findById(fileToBeReplacedId);
         EcmFile replacedFile;
         if (fileToBeReplaced == null)
         {
-            if (log.isDebugEnabled())
-            {
-                log.debug("File, fileId: " + fileToBeReplacedId + " does not exists, and can not be replaced");
-            }
+            log.debug("File, fileId: {} does not exist, and can not be replaced", fileToBeReplacedId);
             getFileEventPublisher().publishFileReplacedEvent(null, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                     fileToBeReplacedId, "File not found.", null);
         }
-        InputStream replacementStream;
-        try
+
+        try (InputStream replacementStream = getInputStreamFromAttachment(request, fileToBeReplacedId))
         {
-            replacementStream = getInputStreamFromAttachment(request, fileToBeReplacedId);
             if (replacementStream == null)
             {
                 throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                         fileToBeReplacedId, "No stream found!.", null);
             }
-        } catch (IOException e)
-        {
-            if (log.isErrorEnabled())
-            {
-                log.error("IO exception occurred while reading the inputStream of the attachment " + e.getMessage(), e);
-            }
-            getFileEventPublisher().publishFileReplacedEvent(fileToBeReplaced, authentication, ipAddress, false);
-            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
-                    fileToBeReplacedId, e.getMessage(), e);
-        }
-        try
-        {
+
             replacedFile = getFileTransaction().updateFileTransactionEventAware(authentication, fileToBeReplaced, replacementStream);
             getFileEventPublisher().publishFileReplacedEvent(replacedFile, authentication, ipAddress, true);
-        } catch (MuleException | IOException e)
+        }
+        catch (MuleException | IOException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Exception occurred while trying to replace file  : " + fileToBeReplaced.getFileName() + "  " + e.getMessage(),
-                        e);
-            }
+            log.error("Exception occurred while trying to replace file: {}, {}", fileToBeReplaced.getFileName(), e.getMessage(),
+                    e);
             getFileEventPublisher().publishFileReplacedEvent(fileToBeReplaced, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                     fileToBeReplacedId, e.getMessage(), e);
@@ -120,10 +102,7 @@ public class ReplaceFileAPIController
                 }
             }
         }
-        if (log.isDebugEnabled())
-        {
-            log.debug("No File uploaded, nothing to be changed");
-        }
+        log.debug("No File uploaded, nothing to be changed");
         throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                 fileToBeReplacedId, "No file attached found.", null);
     }

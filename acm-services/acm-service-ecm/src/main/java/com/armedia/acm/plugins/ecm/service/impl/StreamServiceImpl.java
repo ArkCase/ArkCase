@@ -11,6 +11,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.StreamService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.collections.map.HashedMap;
@@ -20,7 +21,11 @@ import org.mule.api.MuleMessage;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +46,8 @@ public class StreamServiceImpl implements StreamService
     private EcmFileService ecmFileService;
 
     @Override
-    public void stream(Long id, String version, HttpServletRequest request, HttpServletResponse response) throws AcmUserActionFailedException, MuleException, AcmObjectNotFoundException, IOException
+    public void stream(Long id, String version, HttpServletRequest request, HttpServletResponse response)
+            throws AcmUserActionFailedException, MuleException, AcmObjectNotFoundException, IOException
     {
         EcmFile file = getEcmFileService().findById(id);
 
@@ -66,7 +72,8 @@ public class StreamServiceImpl implements StreamService
     }
 
     @Override
-    public void stream(Document payload, EcmFile file, String version, HttpServletRequest request, HttpServletResponse response) throws IOException
+    public void stream(Document payload, EcmFile file, String version, HttpServletRequest request, HttpServletResponse response)
+            throws IOException
     {
 
         if (payload == null || payload.getContentStream() == null)
@@ -85,7 +92,6 @@ public class StreamServiceImpl implements StreamService
             long lastModified = payload.getLastModificationDate().getTime().getTime();
             String eTag = fileName + "_" + total + "_" + lastModified;
             long expires = System.currentTimeMillis() + DEFAULT_EXPIRE_TIME;
-
 
             // If-None-Match header should contain "*" or ETag. If so, then return 304.
             String ifNoneMatch = request.getHeader("If-None-Match");
@@ -108,7 +114,6 @@ public class StreamServiceImpl implements StreamService
                 return;
             }
 
-
             // If-Match header should contain "*" or ETag. If not, then return 412.
             String ifMatch = request.getHeader("If-Match");
             if (ifMatch != null && !matches(ifMatch, eTag))
@@ -124,7 +129,6 @@ public class StreamServiceImpl implements StreamService
                 response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
                 return;
             }
-
 
             // Prepare some variables. The full Range represents the complete file.
             Range full = new Range(0, total - 1, total);
@@ -194,7 +198,6 @@ public class StreamServiceImpl implements StreamService
                     }
                 }
             }
-
 
             // Get content type
             String contentType = getMimeType(payload.getContentStream(), file, version);
@@ -281,8 +284,10 @@ public class StreamServiceImpl implements StreamService
     /**
      * Returns true if the given match header matches the given value.
      *
-     * @param header The match header.
-     * @param value  The value to be matched.
+     * @param header
+     *            The match header.
+     * @param value
+     *            The value to be matched.
      * @return True if the given match header matches the given value.
      */
     private boolean matches(String header, String value)
@@ -296,9 +301,12 @@ public class StreamServiceImpl implements StreamService
      * Returns a substring of the given string value from the given begin index to the given end
      * index as a long. If the substring is empty, then -1 will be returned
      *
-     * @param value      The string value to return a substring as long for.
-     * @param beginIndex The begin index of the substring to be returned as long.
-     * @param endIndex   The end index of the substring to be returned as long.
+     * @param value
+     *            The string value to return a substring as long for.
+     * @param beginIndex
+     *            The begin index of the substring to be returned as long.
+     * @param endIndex
+     *            The end index of the substring to be returned as long.
      * @return A substring of the given string value as long or -1 if substring is empty.
      */
     private long sublong(String value, int beginIndex, int endIndex)
@@ -310,8 +318,10 @@ public class StreamServiceImpl implements StreamService
     /**
      * Returns true if the given accept header accepts the given value.
      *
-     * @param header The accept header.
-     * @param value  The value to be accepted.
+     * @param header
+     *            The accept header.
+     * @param value
+     *            The value to be accepted.
      * @return True if the given accept header accepts the given value.
      */
     private boolean accepts(String header, String value)
@@ -326,12 +336,18 @@ public class StreamServiceImpl implements StreamService
     /**
      * Copy the given byte range of the given input to the given output.
      *
-     * @param input  The input to copy the given range to the given output for.
-     * @param output The output to copy the given range from the given input for.
-     * @param total  Full bytes of the input.
-     * @param start  Start of the byte range.
-     * @param length Length of the byte range.
-     * @throws IOException If something fails at I/O level.
+     * @param input
+     *            The input to copy the given range to the given output for.
+     * @param output
+     *            The output to copy the given range from the given input for.
+     * @param total
+     *            Full bytes of the input.
+     * @param start
+     *            Start of the byte range.
+     * @param length
+     *            Length of the byte range.
+     * @throws IOException
+     *             If something fails at I/O level.
      */
     private void copy(InputStream input, OutputStream output, long total, long start, long length) throws IOException
     {
@@ -368,7 +384,8 @@ public class StreamServiceImpl implements StreamService
     /**
      * Close the given resource.
      *
-     * @param resource The resource to be closed.
+     * @param resource
+     *            The resource to be closed.
      */
     private static void close(Closeable resource)
     {
@@ -388,9 +405,12 @@ public class StreamServiceImpl implements StreamService
     /**
      * Get MimeType for the requested file
      *
-     * @param payload The stream returned from the Mule flow
-     * @param ecmFile The EcmFile object
-     * @param version The version of the requested file
+     * @param payload
+     *            The stream returned from the Mule flow
+     * @param ecmFile
+     *            The EcmFile object
+     * @param version
+     *            The version of the requested file
      * @return MimeType of the file
      */
     private String getMimeType(ContentStream payload, EcmFile ecmFile, String version)

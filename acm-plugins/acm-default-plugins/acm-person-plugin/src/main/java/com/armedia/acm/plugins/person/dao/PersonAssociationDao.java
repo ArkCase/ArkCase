@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.person.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -12,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +36,8 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
     {
         if (toSave.getId() != null && toSave.getPerson() != null)
         {
-            Optional<PersonAssociation> found = toSave.getPerson().getAssociationsFromObjects().stream().filter(pa -> pa.getId().equals(toSave.getId())).findFirst();
+            Optional<PersonAssociation> found = toSave.getPerson().getAssociationsFromObjects().stream()
+                    .filter(pa -> pa.getId().equals(toSave.getId())).findFirst();
             if (found == null || !found.isPresent())
             {
                 toSave.getPerson().getAssociationsFromObjects().add(toSave);
@@ -50,12 +53,10 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
                 "SELECT person " + "FROM PersonAssociation personAssociation, " + "Person person " +
                         "WHERE personAssociation.parentType = :parentType " +
                         "AND personAssociation.parentId = :parentId " +
-                        "AND personAssociation.person.id = person.id"
-        );
+                        "AND personAssociation.person.id = person.id");
 
         personInAssociation.setParameter("parentType", parentType.toUpperCase());
         personInAssociation.setParameter("parentId", parentId);
-
 
         List<Person> retrival = (List<Person>) personInAssociation.getResultList();
 
@@ -68,7 +69,6 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
         return entityManager;
     }
 
-
     public Person findPersonByPersonAssociationId(Long personAssociationId)
     {
         Query personInAssociation = getEntityManager().createQuery(
@@ -76,8 +76,7 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
                         "FROM  PersonAssociation personAssociation, " +
                         "      Person person " +
                         "WHERE personAssociation.id = :personAssociationId " +
-                        "AND   personAssociation.person.id = person.id"
-        );
+                        "AND   personAssociation.person.id = person.id");
 
         personInAssociation.setParameter("personAssociationId", personAssociationId);
 
@@ -86,7 +85,8 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
         return found;
     }
 
-    public PersonAssociation findByPersonIdPersonTypeParentIdParentTypeSilent(Long personId, String personType, Long parentId, String parentType)
+    public PersonAssociation findByPersonIdPersonTypeParentIdParentTypeSilent(Long personId, String personType, Long parentId,
+            String parentType)
     {
         Query select = getEntityManager().createQuery(
                 "SELECT personAssociation " +
@@ -94,8 +94,7 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
                         "WHERE personAssociation.person.id = :personId " +
                         "AND personAssociation.personType = :personType " +
                         "AND personAssociation.parentId = :parentId " +
-                        "AND personAssociation.parentType = :parentType"
-        );
+                        "AND personAssociation.parentType = :parentType");
 
         select.setParameter("personId", personId);
         select.setParameter("personType", personType);
@@ -107,12 +106,16 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
         try
         {
             retval = (PersonAssociation) select.getSingleResult();
-        } catch (NoResultException e1)
+        }
+        catch (NoResultException e1)
         {
-            LOG.debug("There is no any PersonAssociation result for personId=" + personId + ", personType=" + personType + ", parentId=" + parentId + ", parentType=" + parentType);
-        } catch (Exception e2)
+            LOG.debug("There is no any PersonAssociation result for personId=" + personId + ", personType=" + personType + ", parentId="
+                    + parentId + ", parentType=" + parentType);
+        }
+        catch (Exception e2)
         {
-            LOG.debug("Cannot take PersonAssociation result for personId=" + personId + ", personType=" + personType + ", parentId=" + parentId + ", parentType=" + parentType);
+            LOG.debug("Cannot take PersonAssociation result for personId=" + personId + ", personType=" + personType + ", parentId="
+                    + parentId + ", parentType=" + parentType);
         }
 
         return retval;
@@ -132,5 +135,3 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
 
     }
 }
-
-

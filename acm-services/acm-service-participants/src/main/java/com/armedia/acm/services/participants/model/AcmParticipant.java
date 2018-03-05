@@ -2,6 +2,7 @@ package com.armedia.acm.services.participants.model;
 
 import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -9,6 +10,7 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
@@ -26,6 +28,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,13 +47,7 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     private static final long serialVersionUID = 5046781644315879063L;
 
     @Id
-    @TableGenerator(name = "acm_participant_gen",
-            table = "acm_participant_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_participant",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_participant_gen", table = "acm_participant_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_participant", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_participant_gen")
     @Column(name = "cm_participant_id")
     private Long id;
@@ -87,6 +84,12 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<AcmParticipantPrivilege> privileges = new ArrayList<>();
 
+    // this field should be @Transient, but EclipseLink removes the field value on merge()
+    // this way the field is effectively transient, although the column must exist in the database
+    @Column(name = "cm_replace_children_participant", insertable = false, updatable = false)
+    @Convert(converter = BooleanToStringConverter.class)
+    private boolean replaceChildrenParticipant;
+
     @PrePersist
     public void beforeInsert()
     {
@@ -109,7 +112,6 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
             }
         }
     }
-
 
     public Long getId()
     {
@@ -232,18 +234,9 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     @Override
     public String toString()
     {
-        return "AcmParticipant{" +
-                "id=" + id +
-                ", objectType='" + objectType + '\'' +
-                ", objectId=" + objectId +
-                ", participantType='" + participantType + '\'' +
-                ", participantLdapId='" + participantLdapId + '\'' +
-                ", created=" + created +
-                ", creator='" + creator + '\'' +
-                ", modified=" + modified +
-                ", modifier='" + modifier + '\'' +
-                ", privileges=" + privileges +
-                '}';
+        return "AcmParticipant{" + "id=" + id + ", objectType='" + objectType + '\'' + ", objectId=" + objectId + ", participantType='"
+                + participantType + '\'' + ", participantLdapId='" + participantLdapId + '\'' + ", created=" + created + ", creator='"
+                + creator + '\'' + ", modified=" + modified + ", modifier='" + modifier + '\'' + ", privileges=" + privileges + '}';
     }
 
     @Override
@@ -251,10 +244,14 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     {
         Objects.requireNonNull(obj, "Comparable object must not be null");
         if (!(obj instanceof AcmParticipant))
+        {
             return false;
+        }
         AcmParticipant other = (AcmParticipant) obj;
         if (this.getId() == null || other.getId() == null)
+        {
             return false;
+        }
         return getId().equals(other.getId());
     }
 
@@ -262,9 +259,13 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     public int hashCode()
     {
         if (getId() == null)
+        {
             return super.hashCode();
+        }
         else
+        {
             return getId().hashCode();
+        }
     }
 
     @Override
@@ -279,5 +280,15 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     public String getReceiverType()
     {
         return participantType;
+    }
+
+    public boolean isReplaceChildrenParticipant()
+    {
+        return replaceChildrenParticipant;
+    }
+
+    public void setReplaceChildrenParticipant(boolean replaceChildrenParticipant)
+    {
+        this.replaceChildrenParticipant = replaceChildrenParticipant;
     }
 }

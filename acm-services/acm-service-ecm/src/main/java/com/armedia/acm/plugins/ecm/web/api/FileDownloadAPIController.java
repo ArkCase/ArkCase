@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -49,12 +50,16 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
     private ObjectConverter objectConverter;
 
+    // #parentObjectType == 'USER_ORG' applies to uploading profile picture
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write') or #parentObjectType == 'USER_ORG'")
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     @ResponseBody
     public void downloadFileById(@RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
             @RequestParam(value = "ecmFileId", required = true, defaultValue = "0") Long fileId,
             @RequestParam(value = "acm_email_ticket", required = false, defaultValue = "") String acm_email_ticket,
-            @RequestParam(value = "version", required = false, defaultValue = "") String version, Authentication authentication,
+            @RequestParam(value = "version", required = false, defaultValue = "") String version,
+            @RequestParam(value = "parentObjectType", required = false, defaultValue = "") String parentObjectType,
+            Authentication authentication,
             HttpSession httpSession, HttpServletResponse response) throws IOException, MuleException, AcmObjectNotFoundException
     {
         log.info("Downloading file by ID '{}' for user '{}'", fileId, authentication.getName());

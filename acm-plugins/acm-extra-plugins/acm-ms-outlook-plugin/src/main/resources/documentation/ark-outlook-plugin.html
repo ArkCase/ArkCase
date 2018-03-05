@@ -1,147 +1,250 @@
-<!DOCTYPE HTML><html><head><title>ArkCase Outlook Integration Plugin API documentation</title><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="generator" content="https://github.com/kevinrenskers/raml2html 1.6.0"><link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css"><script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script><script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script><script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script><script type="text/javascript">
-        $(document).ready(function() {
-            $('.page-header pre code, .top-resource-description pre code').each(function(i, block) {
+<!DOCTYPE HTML>
+<html>
+<head><title>ArkCase Outlook Integration Plugin API documentation</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="generator" content="https://github.com/kevinrenskers/raml2html 1.6.0">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.page-header pre code, .top-resource-description pre code').each(function (i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        $('[data-toggle]').click(function () {
+            var selector = $(this).data('target') + ' pre code';
+            $(selector).each(function (i, block) {
                 hljs.highlightBlock(block);
             });
-
-            $('[data-toggle]').click(function() {
-                var selector = $(this).data('target') + ' pre code';
-                $(selector).each(function(i, block) {
-                    hljs.highlightBlock(block);
-                });
-            });
-            
-            
-            // open modal on hashes like #_action_get
-            $(window).bind('hashchange', function(e) {
-                var anchor_id = document.location.hash.substr(1); //strip #
-                var element = $('#' + anchor_id);
-
-                // do we have such element + is it a modal?  --> show it
-                if (element.length && element.hasClass('modal')) {
-                    element.modal('show');
-                }
-            });
-
-            // execute hashchange on first page load
-            $(window).trigger('hashchange');
-            
-            // remove url fragment on modal hide
-            $('.modal').on('hidden.bs.modal', function() {
-                if(history && history.replaceState) { 
-                    history.replaceState({}, '', '#');
-                }
-            });
         });
-    </script><style>
-        .hljs {
-            background: transparent;
-        }
-        .parent {
-            color: #999;
-        }
-        .list-group-item > .badge {
-            float: none;
-            margin-right: 6px;
-        }
-        .panel-title > .methods {
-            float: right;
-        }
-        .badge {
-            border-radius: 0;
-            text-transform: uppercase;
-            width: 70px;
-            font-weight: normal;
-            color: #f3f3f6;
-            line-height: normal;
-        }
-        .badge_get {
-            background-color: #63a8e2;
-        }
-        .badge_post {
-            background-color: #6cbd7d;
-        }
-        .badge_put {
-            background-color: #22bac4;
-        }
-        .badge_delete {
-            background-color: #d26460;
-        }
-        .badge_patch {
-            background-color: #ccc444;
-        }
-        .list-group, .panel-group {
-            margin-bottom: 0;
-        }
-        .panel-group .panel+.panel-white {
-            margin-top: 0;
-        }
-        .panel-group .panel-white {
-            border-bottom: 1px solid #F5F5F5;
-            border-radius: 0;
-        }
-        .panel-white:last-child {
-            border-bottom-color: white;
-            -webkit-box-shadow: none;
-            box-shadow: none;
-        }
-        .panel-white .panel-heading {
-            background: white;
-        }
-        .tab-pane ul {
-            padding-left: 2em;
-        }
-        .tab-pane h2 {
-            font-size: 1.2em;
-            padding-bottom: 4px;
-            border-bottom: 1px solid #ddd;
-        }
-        .tab-pane h3 {
-            font-size: 1.1em;
-        }
-        .tab-content {
-            border-left: 1px solid #ddd;
-            border-right: 1px solid #ddd;
-            border-bottom: 1px solid #ddd;
-            padding: 10px;
-        }
-        #sidebar {
-            margin-top: 30px;
-            padding-right: 5px;
-            overflow: auto;
-            height: 90%;
-        }
-        .top-resource-description {
-            border-bottom: 1px solid #ddd;
-            background: #fcfcfc;
-            padding: 15px 15px 0 15px;
-            margin: -15px -15px 10px -15px;
-        }
-        .resource-description {
-            border-bottom: 1px solid #fcfcfc;
-            background: #fcfcfc;
-            padding: 15px 15px 0 15px;
-            margin: -15px -15px 10px -15px;
-        }
-        .resource-description p:last-child {
-            margin: 0;
-        }
-        .list-group .badge {
-            float: left;
-        }
-        .method_description {
-            margin-left: 85px;
-        }
-        .method_description p:last-child {
-            margin: 0;
-        }
-        .list-group-item {
-            cursor: pointer;
-        }
-        .list-group-item:hover {
-            background-color: #f5f5f5;
-        }
-    </style></head><body data-spy="scroll" data-target="#sidebar"><div class="container"><div class="row"><div class="col-md-9" role="main"><div class="page-header"><h1>ArkCase Outlook Integration Plugin API documentation</h1><p></p></div><div class="panel panel-default"><div class="panel-heading"><h3 id="_api_v1_plugin_outlook" class="panel-title">/api/v1/plugin/outlook</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel__api_v1_plugin_outlook_inbox"><span class="parent">/api/v1/plugin/outlook</span>/inbox</a> <span class="methods"><a href="#_api_v1_plugin_outlook_inbox_get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel__api_v1_plugin_outlook_inbox" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Get a page of the user&#39;s e-mail items, from their Inbox.</p></div><div class="list-group"><div onclick="window.location.href = '#_api_v1_plugin_outlook_inbox_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_inbox_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/api/v1/plugin/outlook</span>/inbox</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#_api_v1_plugin_outlook_inbox_get_request" data-toggle="tab">Request</a></li><li><a href="#_api_v1_plugin_outlook_inbox_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="_api_v1_plugin_outlook_inbox_get_request"><h3>Query Parameters</h3><ul><li><strong>s</strong>: <em>(one of subject,dateTimeCreated,dateTimeReceived,dateTimeSent,hasAttachments,displayTo,size- default: dateTimeCreated )</em><p>Sort field</p></li><li><strong>sortDirection</strong>: <em>(one of ASC,DESC- default: ASC )</em><p>Sort ascending or descending</p></li><li><strong>start</strong>: <em>(integer )</em><p>Index of the first item to appear in the results</p></li><li><strong>n</strong>: <em>(integer- default: 50 - minimum: 1 )</em><p>Maximum items to include in the results</p></li></ul></div><div class="tab-pane" id="_api_v1_plugin_outlook_inbox_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><p>Outlook inbox successfully located and the requested page of results was returned</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+
+
+        // open modal on hashes like #_action_get
+        $(window).bind('hashchange', function (e) {
+            var anchor_id = document.location.hash.substr(1); //strip #
+            var element = $('#' + anchor_id);
+
+            // do we have such element + is it a modal?  --> show it
+            if (element.length && element.hasClass('modal')) {
+                element.modal('show');
+            }
+        });
+
+        // execute hashchange on first page load
+        $(window).trigger('hashchange');
+
+        // remove url fragment on modal hide
+        $('.modal').on('hidden.bs.modal', function () {
+            if (history && history.replaceState) {
+                history.replaceState({}, '', '#');
+            }
+        });
+    });
+</script>
+<style>
+    .hljs {
+        background: transparent;
+    }
+
+    .parent {
+        color: #999;
+    }
+
+    .list-group-item > .badge {
+        float: none;
+        margin-right: 6px;
+    }
+
+    .panel-title > .methods {
+        float: right;
+    }
+
+    .badge {
+        border-radius: 0;
+        text-transform: uppercase;
+        width: 70px;
+        font-weight: normal;
+        color: #f3f3f6;
+        line-height: normal;
+    }
+
+    .badge_get {
+        background-color: #63a8e2;
+    }
+
+    .badge_post {
+        background-color: #6cbd7d;
+    }
+
+    .badge_put {
+        background-color: #22bac4;
+    }
+
+    .badge_delete {
+        background-color: #d26460;
+    }
+
+    .badge_patch {
+        background-color: #ccc444;
+    }
+
+    .list-group, .panel-group {
+        margin-bottom: 0;
+    }
+
+    .panel-group .panel + .panel-white {
+        margin-top: 0;
+    }
+
+    .panel-group .panel-white {
+        border-bottom: 1px solid #F5F5F5;
+        border-radius: 0;
+    }
+
+    .panel-white:last-child {
+        border-bottom-color: white;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
+    .panel-white .panel-heading {
+        background: white;
+    }
+
+    .tab-pane ul {
+        padding-left: 2em;
+    }
+
+    .tab-pane h2 {
+        font-size: 1.2em;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .tab-pane h3 {
+        font-size: 1.1em;
+    }
+
+    .tab-content {
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    #sidebar {
+        margin-top: 30px;
+        padding-right: 5px;
+        overflow: auto;
+        height: 90%;
+    }
+
+    .top-resource-description {
+        border-bottom: 1px solid #ddd;
+        background: #fcfcfc;
+        padding: 15px 15px 0 15px;
+        margin: -15px -15px 10px -15px;
+    }
+
+    .resource-description {
+        border-bottom: 1px solid #fcfcfc;
+        background: #fcfcfc;
+        padding: 15px 15px 0 15px;
+        margin: -15px -15px 10px -15px;
+    }
+
+    .resource-description p:last-child {
+        margin: 0;
+    }
+
+    .list-group .badge {
+        float: left;
+    }
+
+    .method_description {
+        margin-left: 85px;
+    }
+
+    .method_description p:last-child {
+        margin: 0;
+    }
+
+    .list-group-item {
+        cursor: pointer;
+    }
+
+    .list-group-item:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+</head>
+<body data-spy="scroll" data-target="#sidebar">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9" role="main">
+                <div class="page-header"><h1>ArkCase Outlook Integration Plugin API documentation</h1>
+                    <p></p></div>
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 id="_api_v1_plugin_outlook" class="panel-title">/api/v1/plugin/outlook</h3></div>
+                    <div class="panel-body">
+                        <div class="panel-group">
+                            <div class="panel panel-white">
+                                <div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse"
+                                        href="#panel__api_v1_plugin_outlook_inbox"><span class="parent">/api/v1/plugin/outlook</span>/inbox</a>
+                                    <span class="methods"><a href="#_api_v1_plugin_outlook_inbox_get"><span
+                                            class="badge badge_get">get</span></a></span></h4></div>
+                                <div id="panel__api_v1_plugin_outlook_inbox" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="resource-description"><p>Get a page of the user&#39;s e-mail items, from their
+                                            Inbox.</p></div>
+                                        <div class="list-group">
+                                            <div onclick="window.location.href = '#_api_v1_plugin_outlook_inbox_get'"
+                                                    class="list-group-item"><span class="badge badge_get">get</span>
+                                                <div class="method_description"></div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_inbox_get">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span
+                                                        class="parent">/api/v1/plugin/outlook</span>/inbox</h4></div>
+                                            <div class="modal-body">
+                                                <ul class="nav nav-tabs"><li class="active"><a
+                                                        href="#_api_v1_plugin_outlook_inbox_get_request"
+                                                        data-toggle="tab">Request</a></li><li><a
+                                                        href="#_api_v1_plugin_outlook_inbox_get_response"
+                                                        data-toggle="tab">Response</a></li></ul>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="_api_v1_plugin_outlook_inbox_get_request"><h3>Query
+                                                        Parameters</h3>
+                                                        <ul><li><strong>s</strong>: <em>(one of
+                                                            subject,dateTimeCreated,dateTimeReceived,dateTimeSent,hasAttachments,displayTo,size-
+                                                            default: dateTimeCreated )</em>
+                                                            <p>Sort field</p></li><li><strong>sortDirection</strong>: <em>(one of ASC,DESC-
+                                                            default: ASC )</em>
+                                                            <p>Sort ascending or descending</p></li><li><strong>start</strong>: <em>(integer
+                                                            )</em>
+                                                            <p>Index of the first item to appear in the results</p>
+                                                        </li><li><strong>n</strong>: <em>(integer- default: 50 - minimum: 1 )</em>
+                                                            <p>Maximum items to include in the results</p></li></ul>
+                                                    </div>
+                                                    <div class="tab-pane" id="_api_v1_plugin_outlook_inbox_get_response"><h2>HTTP status
+                                                        code <a href="http://httpstatus.es/200" target="_blank">200</a></h2>
+                                                        <p>Outlook inbox successfully located and the requested page of results was
+                                                            returned</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: application/json</strong></p>
+                                                        <p><strong>Schema</strong>:</p>
+                                                        <pre><code>/**
  * Outlook Inbox
  */
 {
@@ -229,7 +332,9 @@
       }
     }
   }
-}</code></pre><p><strong>Example</strong>:</p><pre><code>{
+}</code></pre>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>{
   "totalItems" : 1221,
   "moreItemsAvailable" : true,
   "currentStartIndex" : 0,
@@ -250,8 +355,87 @@
     }
   ]
 }
-</code></pre><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><p>Outlook password should be updated</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Bad key or data   
-</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel__api_v1_plugin_outlook_calendar"><span class="parent">/api/v1/plugin/outlook</span>/calendar</a> <span class="methods"><a href="#_api_v1_plugin_outlook_calendar_get"><span class="badge badge_get">get</span></a> <a href="#_api_v1_plugin_outlook_calendar_post"><span class="badge badge_post">post</span></a></span></h4></div><div id="panel__api_v1_plugin_outlook_calendar" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Get a page of the user&#39;s calendar items, from their Calendar folder or shared caledendar folder.</p></div><div class="list-group"><div onclick="window.location.href = '#_api_v1_plugin_outlook_calendar_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div><div onclick="window.location.href = '#_api_v1_plugin_outlook_calendar_post'" class="list-group-item"><span class="badge badge_post">post</span><div class="method_description"><p>Create new appointment</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_calendar_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/api/v1/plugin/outlook</span>/calendar</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#_api_v1_plugin_outlook_calendar_get_request" data-toggle="tab">Request</a></li><li><a href="#_api_v1_plugin_outlook_calendar_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="_api_v1_plugin_outlook_calendar_get_request"><h3>Query Parameters</h3><ul><li><strong>folderId</strong>: <em>(string )</em><p>shared calendar folderId</p></li><li><strong>s</strong>: <em>(one of subject,dateTimeCreated,dateTimeReceived,dateTimeSent,hasAttachments,dateTimeStart- default: dateTimeStart )</em><p>Sort field</p></li><li><strong>sortDirection</strong>: <em>(one of ASC,DESC- default: ASC )</em><p>Sort ascending or descending</p></li><li><strong>start</strong>: <em>(integer )</em><p>Index of the first item to appear in the results</p></li><li><strong>n</strong>: <em>(integer- default: 50 - minimum: 1 )</em><p>Maximum items to include in the results</p></li><li><strong>startSearchStartDate</strong>: <em>(string )</em><p>Start Date for searcing calendar for appointment start date, date pattern ("yyyy-MM-dd&#39;T&#39;HH:mm:ss&#39;Z&#39;") as string</p></li><li><strong>endSearchStartDate</strong>: <em>(string )</em><p>End Date for searcing calendar for appointment start date, date pattern ("yyyy-MM-dd&#39;T&#39;HH:mm:ss&#39;Z&#39;") as string</p></li></ul></div><div class="tab-pane" id="_api_v1_plugin_outlook_calendar_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><p>Outlook calendar folder successfully located and the requested page of results was returned</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+</code></pre>
+                                                        <h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2>
+                                                        <p>Outlook password should be updated</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: text/plain</strong></p>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>Bad key or data
+</code></pre>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-white">
+                                <div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse"
+                                        href="#panel__api_v1_plugin_outlook_calendar"><span class="parent">/api/v1/plugin/outlook</span>/calendar</a>
+                                    <span class="methods"><a href="#_api_v1_plugin_outlook_calendar_get"><span
+                                            class="badge badge_get">get</span></a> <a href="#_api_v1_plugin_outlook_calendar_post"><span
+                                            class="badge badge_post">post</span></a></span></h4></div>
+                                <div id="panel__api_v1_plugin_outlook_calendar" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="resource-description"><p>Get a page of the user&#39;s calendar items, from their
+                                            Calendar folder or shared caledendar folder.</p></div>
+                                        <div class="list-group">
+                                            <div onclick="window.location.href = '#_api_v1_plugin_outlook_calendar_get'"
+                                                    class="list-group-item"><span class="badge badge_get">get</span>
+                                                <div class="method_description"></div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div onclick="window.location.href = '#_api_v1_plugin_outlook_calendar_post'"
+                                                    class="list-group-item"><span class="badge badge_post">post</span>
+                                                <div class="method_description"><p>Create new appointment</p></div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_calendar_get">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span
+                                                        class="parent">/api/v1/plugin/outlook</span>/calendar</h4></div>
+                                            <div class="modal-body">
+                                                <ul class="nav nav-tabs"><li class="active"><a
+                                                        href="#_api_v1_plugin_outlook_calendar_get_request"
+                                                        data-toggle="tab">Request</a></li><li><a
+                                                        href="#_api_v1_plugin_outlook_calendar_get_response" data-toggle="tab">Response</a></li>
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="_api_v1_plugin_outlook_calendar_get_request"><h3>Query
+                                                        Parameters</h3>
+                                                        <ul><li><strong>folderId</strong>: <em>(string )</em>
+                                                            <p>shared calendar folderId</p></li><li><strong>s</strong>: <em>(one of
+                                                            subject,dateTimeCreated,dateTimeReceived,dateTimeSent,hasAttachments,dateTimeStart-
+                                                            default: dateTimeStart )</em>
+                                                            <p>Sort field</p></li><li><strong>sortDirection</strong>: <em>(one of ASC,DESC-
+                                                            default: ASC )</em>
+                                                            <p>Sort ascending or descending</p></li><li><strong>start</strong>: <em>(integer
+                                                            )</em>
+                                                            <p>Index of the first item to appear in the results</p>
+                                                        </li><li><strong>n</strong>: <em>(integer- default: 50 - minimum: 1 )</em>
+                                                            <p>Maximum items to include in the results</p></li><li><strong>startSearchStartDate</strong>:
+                                                            <em>(string )</em>
+                                                            <p>Start Date for searcing calendar for appointment start date, date pattern
+                                                                ("yyyy-MM-dd&#39;T&#39;HH:mm:ss&#39;Z&#39;") as string</p></li><li><strong>endSearchStartDate</strong>:
+                                                            <em>(string )</em>
+                                                            <p>End Date for searcing calendar for appointment start date, date pattern
+                                                                ("yyyy-MM-dd&#39;T&#39;HH:mm:ss&#39;Z&#39;") as string</p></li></ul>
+                                                    </div>
+                                                    <div class="tab-pane" id="_api_v1_plugin_outlook_calendar_get_response"><h2>HTTP status
+                                                        code <a href="http://httpstatus.es/200" target="_blank">200</a></h2>
+                                                        <p>Outlook calendar folder successfully located and the requested page of results
+                                                            was returned</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: application/json</strong></p>
+                                                        <p><strong>Schema</strong>:</p>
+                                                        <pre><code>/**
  * Outlook Calendar
  */
 {
@@ -355,7 +539,9 @@
       }
     }
   }
-}</code></pre><p><strong>Example</strong>:</p><pre><code>{
+}</code></pre>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>{
   "totalItems" : 1,
   "moreItemsAvailable" : false,
   "currentStartIndex" : 0,
@@ -381,8 +567,40 @@
     }
   ]
 }
-</code></pre><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><p>Outlook password should be updated</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Bad key or data 
-</code></pre></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_calendar_post"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span class="parent">/api/v1/plugin/outlook</span>/calendar</h4></div><div class="modal-body"><div class="alert alert-info"><p>Create new appointment</p></div><ul class="nav nav-tabs"><li class="active"><a href="#_api_v1_plugin_outlook_calendar_post_request" data-toggle="tab">Request</a></li><li><a href="#_api_v1_plugin_outlook_calendar_post_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="_api_v1_plugin_outlook_calendar_post_request"><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+</code></pre>
+                                                        <h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2>
+                                                        <p>Outlook password should be updated</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: text/plain</strong></p>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>Bad key or data
+</code></pre>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_calendar_post">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span
+                                                        class="parent">/api/v1/plugin/outlook</span>/calendar</h4></div>
+                                            <div class="modal-body">
+                                                <div class="alert alert-info"><p>Create new appointment</p></div>
+                                                <ul class="nav nav-tabs"><li class="active"><a
+                                                        href="#_api_v1_plugin_outlook_calendar_post_request"
+                                                        data-toggle="tab">Request</a></li><li><a
+                                                        href="#_api_v1_plugin_outlook_calendar_post_response" data-toggle="tab">Response</a></li>
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="_api_v1_plugin_outlook_calendar_post_request"><h3>
+                                                        Body</h3>
+                                                        <p><strong>Type: application/json</strong></p>
+                                                        <p><strong>Schema</strong>:</p>
+                                                        <pre><code>/**
  * Outlook Calendar Appointment Schema
  */
 {
@@ -443,7 +661,9 @@
       "description": "shared folder id"
     }
   }
-}</code></pre><p><strong>Example</strong>:</p><pre><code>{
+}</code></pre>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>{
         "folderId" : "AAMkAGViZGY3MDgxLTVlNzctNGYxOC05NmNmLTE3ODU4MTUzZjVmYQBGAAAAAABpUanqXKTXRLK9dLKLqaekBwDV4qlLqpBoRJcWhdjfOX8rASgFlOzCAADV4qlLqpBoRJcWhdjfOX8rASgFlPkhAAA=",
         "subject" : "test appointment",
         "body" : "&lt;html&gt;\n&lt;head&gt;\n&lt;meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"&gt;\n&lt;meta name=\"Generator\" content=\"Microsoft Exchange Server\"&gt;\n&lt;!-- converted from rtf --&gt;\n&lt;style&gt;&lt;!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --&gt;&lt;/style&gt;\n&lt;/head&gt;\n&lt;body&gt;\n&lt;font face=\"Times New Roman\" size=\"3\"&gt;&lt;a name=\"BM_BEGIN\"&gt;&lt;/a&gt;\n&lt;div&gt;&lt;font face=\"Tahoma, sans-serif\" size=\"2\"&gt;The body&lt;/font&gt;&lt;/div&gt;\n&lt;/font&gt;\n&lt;/body&gt;\n&lt;/html&gt;\n",
@@ -455,7 +675,15 @@
         "startDate" : "2015-04-21T21:30:00.000+0000",
         "endDate" : "2015-04-21T22:30:00.000+0000"
 }
-</code></pre></div><div class="tab-pane" id="_api_v1_plugin_outlook_calendar_post_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><p>Outlook appointment successfully inserted</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+</code></pre>
+                                                    </div>
+                                                    <div class="tab-pane" id="_api_v1_plugin_outlook_calendar_post_response"><h2>HTTP status
+                                                        code <a href="http://httpstatus.es/200" target="_blank">200</a></h2>
+                                                        <p>Outlook appointment successfully inserted</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: application/json</strong></p>
+                                                        <p><strong>Schema</strong>:</p>
+                                                        <pre><code>/**
  * Outlook Calendar Appointment Schema
  */
 {
@@ -516,7 +744,9 @@
       "description": "shared folder id"
     }
   }
-}</code></pre><p><strong>Example</strong>:</p><pre><code>{
+}</code></pre>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>{
   "id" : "AAMkAGViZGY3MDgxLTVlNzctNGYxOC05NmNmLTE3ODU4MTUzZjVmYQBGAAAAAABpUanqXKTXRLK9dLKLqaekBwDV4qlLqpBoRJcWhdjfOX8rASgFlOzCAADV4qlLqpBoRJcWhdjfOX8rASgFlPkhAAA=",
   "subject" : "test appointment",
   "created" : "2015-04-21T21:20:16.000+0000",
@@ -532,8 +762,78 @@
   "startDate" : "2015-04-21T21:30:00.000+0000",
   "endDate" : "2015-04-21T22:30:00.000+0000"
 }
-</code></pre><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><p>Outlook password should be updated</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Bad key or data 
-</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel__api_v1_plugin_outlook_tasks"><span class="parent">/api/v1/plugin/outlook</span>/tasks</a> <span class="methods"><a href="#_api_v1_plugin_outlook_tasks_get"><span class="badge badge_get">get</span></a> <a href="#_api_v1_plugin_outlook_tasks_post"><span class="badge badge_post">post</span></a></span></h4></div><div id="panel__api_v1_plugin_outlook_tasks" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Get a page of the user&#39;s tasks.</p></div><div class="list-group"><div onclick="window.location.href = '#_api_v1_plugin_outlook_tasks_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div><div onclick="window.location.href = '#_api_v1_plugin_outlook_tasks_post'" class="list-group-item"><span class="badge badge_post">post</span><div class="method_description"><p>Create new task</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_tasks_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/api/v1/plugin/outlook</span>/tasks</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#_api_v1_plugin_outlook_tasks_get_request" data-toggle="tab">Request</a></li><li><a href="#_api_v1_plugin_outlook_tasks_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="_api_v1_plugin_outlook_tasks_get_request"><h3>Query Parameters</h3><ul><li><strong>s</strong>: <em>(one of dueDate,startDate,completeDate,complete,percentComplete- default: dueDate )</em><p>Sort field</p></li><li><strong>sortDirection</strong>: <em>(one of ASC,DESC- default: ASC )</em><p>Sort ascending or descending</p></li><li><strong>start</strong>: <em>(integer )</em><p>Index of the first item to appear in the results</p></li><li><strong>n</strong>: <em>(integer- default: 50 - minimum: 1 )</em><p>Maximum items to include in the results</p></li></ul></div><div class="tab-pane" id="_api_v1_plugin_outlook_tasks_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><p>Outlook tasks successfully located and the requested page of results was returned</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+</code></pre>
+                                                        <h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2>
+                                                        <p>Outlook password should be updated</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: text/plain</strong></p>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>Bad key or data
+</code></pre>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-white">
+                                <div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse"
+                                        href="#panel__api_v1_plugin_outlook_tasks"><span class="parent">/api/v1/plugin/outlook</span>/tasks</a>
+                                    <span class="methods"><a href="#_api_v1_plugin_outlook_tasks_get"><span
+                                            class="badge badge_get">get</span></a> <a href="#_api_v1_plugin_outlook_tasks_post"><span
+                                            class="badge badge_post">post</span></a></span></h4></div>
+                                <div id="panel__api_v1_plugin_outlook_tasks" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="resource-description"><p>Get a page of the user&#39;s tasks.</p></div>
+                                        <div class="list-group">
+                                            <div onclick="window.location.href = '#_api_v1_plugin_outlook_tasks_get'"
+                                                    class="list-group-item"><span class="badge badge_get">get</span>
+                                                <div class="method_description"></div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div onclick="window.location.href = '#_api_v1_plugin_outlook_tasks_post'"
+                                                    class="list-group-item"><span class="badge badge_post">post</span>
+                                                <div class="method_description"><p>Create new task</p></div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_tasks_get">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span
+                                                        class="parent">/api/v1/plugin/outlook</span>/tasks</h4></div>
+                                            <div class="modal-body">
+                                                <ul class="nav nav-tabs"><li class="active"><a
+                                                        href="#_api_v1_plugin_outlook_tasks_get_request"
+                                                        data-toggle="tab">Request</a></li><li><a
+                                                        href="#_api_v1_plugin_outlook_tasks_get_response"
+                                                        data-toggle="tab">Response</a></li></ul>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="_api_v1_plugin_outlook_tasks_get_request"><h3>Query
+                                                        Parameters</h3>
+                                                        <ul><li><strong>s</strong>: <em>(one of
+                                                            dueDate,startDate,completeDate,complete,percentComplete- default: dueDate )</em>
+                                                            <p>Sort field</p></li><li><strong>sortDirection</strong>: <em>(one of ASC,DESC-
+                                                            default: ASC )</em>
+                                                            <p>Sort ascending or descending</p></li><li><strong>start</strong>: <em>(integer
+                                                            )</em>
+                                                            <p>Index of the first item to appear in the results</p>
+                                                        </li><li><strong>n</strong>: <em>(integer- default: 50 - minimum: 1 )</em>
+                                                            <p>Maximum items to include in the results</p></li></ul>
+                                                    </div>
+                                                    <div class="tab-pane" id="_api_v1_plugin_outlook_tasks_get_response"><h2>HTTP status
+                                                        code <a href="http://httpstatus.es/200" target="_blank">200</a></h2>
+                                                        <p>Outlook tasks successfully located and the requested page of results was
+                                                            returned</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: application/json</strong></p>
+                                                        <p><strong>Schema</strong>:</p>
+                                                        <pre><code>/**
  * Outlook Task
  */
 {
@@ -637,7 +937,9 @@
       }
     }
   }
-}</code></pre><p><strong>Example</strong>:</p><pre><code>{
+}</code></pre>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>{
     "totalItems": 2,
     "moreItemsAvailable": false,
     "currentStartIndex": 0,
@@ -673,8 +975,39 @@
         "percentComplete": 0.0
     }],
 }
-</code></pre><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><p>Outlook password should be updated</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Bad key or data 
-</code></pre></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_tasks_post"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span class="parent">/api/v1/plugin/outlook</span>/tasks</h4></div><div class="modal-body"><div class="alert alert-info"><p>Create new task</p></div><ul class="nav nav-tabs"><li class="active"><a href="#_api_v1_plugin_outlook_tasks_post_request" data-toggle="tab">Request</a></li><li><a href="#_api_v1_plugin_outlook_tasks_post_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="_api_v1_plugin_outlook_tasks_post_request"><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+</code></pre>
+                                                        <h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2>
+                                                        <p>Outlook password should be updated</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: text/plain</strong></p>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>Bad key or data
+</code></pre>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_tasks_post">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span
+                                                        class="parent">/api/v1/plugin/outlook</span>/tasks</h4></div>
+                                            <div class="modal-body">
+                                                <div class="alert alert-info"><p>Create new task</p></div>
+                                                <ul class="nav nav-tabs"><li class="active"><a
+                                                        href="#_api_v1_plugin_outlook_tasks_post_request" data-toggle="tab">Request</a></li><li><a
+                                                        href="#_api_v1_plugin_outlook_tasks_post_response"
+                                                        data-toggle="tab">Response</a></li></ul>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="_api_v1_plugin_outlook_tasks_post_request"><h3>
+                                                        Body</h3>
+                                                        <p><strong>Type: application/json</strong></p>
+                                                        <p><strong>Schema</strong>:</p>
+                                                        <pre><code>/**
  * Outlook Task Schema
  */
 {
@@ -735,7 +1068,9 @@
       "description": "End date, in JSON date format"
     }
   }
-}</code></pre><p><strong>Example</strong>:</p><pre><code>{
+}</code></pre>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>{
   "subject": "Task 1",
   "body": "",
   "size": 310,
@@ -745,7 +1080,15 @@
   "complete": false,
   "percentComplete": 0.0
 }
-</code></pre></div><div class="tab-pane" id="_api_v1_plugin_outlook_tasks_post_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><p>Outlook contact successfully inserted</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+</code></pre>
+                                                    </div>
+                                                    <div class="tab-pane" id="_api_v1_plugin_outlook_tasks_post_response"><h2>HTTP status
+                                                        code <a href="http://httpstatus.es/200" target="_blank">200</a></h2>
+                                                        <p>Outlook contact successfully inserted</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: application/json</strong></p>
+                                                        <p><strong>Schema</strong>:</p>
+                                                        <pre><code>/**
  * Outlook Task Schema
  */
 {
@@ -806,7 +1149,9 @@
       "description": "End date, in JSON date format"
     }
   }
-}</code></pre><p><strong>Example</strong>:</p><pre><code>{
+}</code></pre>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>{
   "id": "AAMkADdiNmVmZjJmLTE1YWItNGM3Zi1hMWY3LTY4ZThlMGFhOWUwZgBGAAAAAADr6AFdn4/3TLul/2Xu/kMaBwDBgmTjYgBBT7sxwYCnuAMrAF4f4+p4AADqU67EGpNCTIx6ZCDGbZmMAF4w2hYBAAA=",
   "subject": "Task 1",
   "created": "2015-04-30T00:38:42.000+0000",
@@ -820,8 +1165,79 @@
   "complete": false,
   "percentComplete": 0.0
 }
-</code></pre><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><p>Outlook password should be updated</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Bad key or data 
-</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel__api_v1_plugin_outlook_contacts"><span class="parent">/api/v1/plugin/outlook</span>/contacts</a> <span class="methods"><a href="#_api_v1_plugin_outlook_contacts_get"><span class="badge badge_get">get</span></a> <a href="#_api_v1_plugin_outlook_contacts_post"><span class="badge badge_post">post</span></a></span></h4></div><div id="panel__api_v1_plugin_outlook_contacts" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Get a contacts items.</p></div><div class="list-group"><div onclick="window.location.href = '#_api_v1_plugin_outlook_contacts_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div><div onclick="window.location.href = '#_api_v1_plugin_outlook_contacts_post'" class="list-group-item"><span class="badge badge_post">post</span><div class="method_description"><p>Create new contact</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_contacts_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/api/v1/plugin/outlook</span>/contacts</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#_api_v1_plugin_outlook_contacts_get_request" data-toggle="tab">Request</a></li><li><a href="#_api_v1_plugin_outlook_contacts_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="_api_v1_plugin_outlook_contacts_get_request"><h3>Query Parameters</h3><ul><li><strong>s</strong>: <em>(one of surname,displayName,companyName,emailAddress1,primaryTelephone,emailAddress2,completeName- default: completeName )</em><p>Sort field</p></li><li><strong>sortDirection</strong>: <em>(one of ASC,DESC- default: ASC )</em><p>Sort ascending or descending</p></li><li><strong>start</strong>: <em>(integer )</em><p>Index of the first item to appear in the results</p></li><li><strong>n</strong>: <em>(integer- default: 50 - minimum: 1 )</em><p>Maximum items to include in the results</p></li></ul></div><div class="tab-pane" id="_api_v1_plugin_outlook_contacts_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><p>Outlook contacts successfully located and the requested page of results was returned</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>{
+</code></pre>
+                                                        <h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2>
+                                                        <p>Outlook password should be updated</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: text/plain</strong></p>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>Bad key or data
+</code></pre>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-white">
+                                <div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse"
+                                        href="#panel__api_v1_plugin_outlook_contacts"><span class="parent">/api/v1/plugin/outlook</span>/contacts</a>
+                                    <span class="methods"><a href="#_api_v1_plugin_outlook_contacts_get"><span
+                                            class="badge badge_get">get</span></a> <a href="#_api_v1_plugin_outlook_contacts_post"><span
+                                            class="badge badge_post">post</span></a></span></h4></div>
+                                <div id="panel__api_v1_plugin_outlook_contacts" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="resource-description"><p>Get a contacts items.</p></div>
+                                        <div class="list-group">
+                                            <div onclick="window.location.href = '#_api_v1_plugin_outlook_contacts_get'"
+                                                    class="list-group-item"><span class="badge badge_get">get</span>
+                                                <div class="method_description"></div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div onclick="window.location.href = '#_api_v1_plugin_outlook_contacts_post'"
+                                                    class="list-group-item"><span class="badge badge_post">post</span>
+                                                <div class="method_description"><p>Create new contact</p></div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_contacts_get">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span
+                                                        class="parent">/api/v1/plugin/outlook</span>/contacts</h4></div>
+                                            <div class="modal-body">
+                                                <ul class="nav nav-tabs"><li class="active"><a
+                                                        href="#_api_v1_plugin_outlook_contacts_get_request"
+                                                        data-toggle="tab">Request</a></li><li><a
+                                                        href="#_api_v1_plugin_outlook_contacts_get_response" data-toggle="tab">Response</a></li>
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="_api_v1_plugin_outlook_contacts_get_request"><h3>Query
+                                                        Parameters</h3>
+                                                        <ul><li><strong>s</strong>: <em>(one of
+                                                            surname,displayName,companyName,emailAddress1,primaryTelephone,emailAddress2,completeName-
+                                                            default: completeName )</em>
+                                                            <p>Sort field</p></li><li><strong>sortDirection</strong>: <em>(one of ASC,DESC-
+                                                            default: ASC )</em>
+                                                            <p>Sort ascending or descending</p></li><li><strong>start</strong>: <em>(integer
+                                                            )</em>
+                                                            <p>Index of the first item to appear in the results</p>
+                                                        </li><li><strong>n</strong>: <em>(integer- default: 50 - minimum: 1 )</em>
+                                                            <p>Maximum items to include in the results</p></li></ul>
+                                                    </div>
+                                                    <div class="tab-pane" id="_api_v1_plugin_outlook_contacts_get_response"><h2>HTTP status
+                                                        code <a href="http://httpstatus.es/200" target="_blank">200</a></h2>
+                                                        <p>Outlook contacts successfully located and the requested page of results was
+                                                            returned</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: application/json</strong></p>
+                                                        <p><strong>Schema</strong>:</p>
+                                                        <pre><code>{
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Outlook Contacts Schema",
     "type": "object",
@@ -917,7 +1333,9 @@
             }
         }
     }
-}</code></pre><p><strong>Example</strong>:</p><pre><code>{
+}</code></pre>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>{
    "totalItems": 1,
    "moreItemsAvailable": false,
    "currentStartIndex": 0,
@@ -944,8 +1362,40 @@
      }
    ]
  }
-</code></pre><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><p>Outlook password should be updated</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Bad key or data 
-</code></pre></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_contacts_post"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span class="parent">/api/v1/plugin/outlook</span>/contacts</h4></div><div class="modal-body"><div class="alert alert-info"><p>Create new contact</p></div><ul class="nav nav-tabs"><li class="active"><a href="#_api_v1_plugin_outlook_contacts_post_request" data-toggle="tab">Request</a></li><li><a href="#_api_v1_plugin_outlook_contacts_post_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="_api_v1_plugin_outlook_contacts_post_request"><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+</code></pre>
+                                                        <h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2>
+                                                        <p>Outlook password should be updated</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: text/plain</strong></p>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>Bad key or data
+</code></pre>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" tabindex="0" id="_api_v1_plugin_outlook_contacts_post">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span
+                                                        class="parent">/api/v1/plugin/outlook</span>/contacts</h4></div>
+                                            <div class="modal-body">
+                                                <div class="alert alert-info"><p>Create new contact</p></div>
+                                                <ul class="nav nav-tabs"><li class="active"><a
+                                                        href="#_api_v1_plugin_outlook_contacts_post_request"
+                                                        data-toggle="tab">Request</a></li><li><a
+                                                        href="#_api_v1_plugin_outlook_contacts_post_response" data-toggle="tab">Response</a></li>
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="_api_v1_plugin_outlook_contacts_post_request"><h3>
+                                                        Body</h3>
+                                                        <p><strong>Type: application/json</strong></p>
+                                                        <p><strong>Schema</strong>:</p>
+                                                        <pre><code>/**
  * Outlook Contact Schema
  */
 {
@@ -1003,7 +1453,9 @@
       "type": "string"
     }
   }
-}</code></pre><p><strong>Example</strong>:</p><pre><code>{  
+}</code></pre>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>{
   "subject":"Subject",
   "body":"Body",
   "surname":"Doe",
@@ -1013,7 +1465,15 @@
   "primaryTelephone":"+55555656456",
   "completeName":"John Doe"
 }
-</code></pre></div><div class="tab-pane" id="_api_v1_plugin_outlook_contacts_post_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><p>Outlook contact successfully inserted</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+</code></pre>
+                                                    </div>
+                                                    <div class="tab-pane" id="_api_v1_plugin_outlook_contacts_post_response"><h2>HTTP status
+                                                        code <a href="http://httpstatus.es/200" target="_blank">200</a></h2>
+                                                        <p>Outlook contact successfully inserted</p>
+                                                        <h3>Body</h3>
+                                                        <p><strong>Type: application/json</strong></p>
+                                                        <p><strong>Schema</strong>:</p>
+                                                        <pre><code>/**
  * Outlook Contact Schema
  */
 {
@@ -1071,7 +1531,9 @@
       "type": "string"
     }
   }
-}</code></pre><p><strong>Example</strong>:</p><pre><code>{
+}</code></pre>
+                                                        <p><strong>Example</strong>:</p>
+                                                        <pre><code>{
   "id": "EAMkADdiNmVmZjJmLTE2YWItNGM3Zi1hMWY3LTY4ZThlMGFhOWUwZgBGAAAAAADr6AFdn4/3TLul/2Xu/kMaBwDBgmTjYgBBT7sxwYCnuAMrAF4f4+p0AADqU67EGpNCTIx6ZCDGbZmMAF4w2ggDAAA=",
   "subject": "John Doe",
   "created": "2015-04-30T00:02:32.000+0000",
@@ -1086,4 +1548,24 @@
   "primaryTelephone": null,
   "emailAddress2": null,
   "completeName": "John Doe"
-}</code></pre></div></div></div></div></div></div></div></div></div></div></div><div class="col-md-3"><div id="sidebar" class="hidden-print affix" role="complementary"><ul class="nav nav-pills nav-stacked"><li><a href="#_api_v1_plugin_outlook">/api/v1/plugin/outlook</a></li></ul></div></div></div></div></body></html>
+}</code></pre>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div id="sidebar" class="hidden-print affix" role="complementary">
+                    <ul class="nav nav-pills nav-stacked"><li><a href="#_api_v1_plugin_outlook">/api/v1/plugin/outlook</a></li></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

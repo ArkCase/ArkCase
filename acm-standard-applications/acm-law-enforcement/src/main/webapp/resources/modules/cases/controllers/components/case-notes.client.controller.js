@@ -1,44 +1,52 @@
 'use strict';
 
-angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', 'ConfigService', 'ObjectService'
-    , 'Case.InfoService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, ConfigService, ObjectService, CaseInfoService, HelperObjectBrowserService) {
+angular.module('cases').controller(
+        'Cases.NotesController',
+        [ '$scope', '$stateParams', '$translate', 'ConfigService', 'ObjectService', 'Case.InfoService', 'Helper.ObjectBrowserService',
+                function($scope, $stateParams, $translate, ConfigService, ObjectService, CaseInfoService, HelperObjectBrowserService) {
 
-        var componentHelper = new HelperObjectBrowserService.Component(
-            {
-                scope : $scope,
-                stateParams : $stateParams,
-                moduleId : "cases",
-                componentId : "notes",
-                retrieveObjectInfo: CaseInfoService.getCaseInfo,
-                validateObjectInfo: CaseInfoService.validateCaseInfo,
-                onConfigRetrieved : function(
-                    componentConfig) {
-                    return onConfigRetrieved(componentConfig);
-                },
-                onObjectInfoRetrieved : function(objectInfo) {
-                    onObjectInfoRetrieved(objectInfo);
-                }
-            });
+                    var componentHelper = new HelperObjectBrowserService.Component({
+                        scope : $scope,
+                        stateParams : $stateParams,
+                        moduleId : "cases",
+                        componentId : "notes",
+                        retrieveObjectInfo : CaseInfoService.getCaseInfo,
+                        validateObjectInfo : CaseInfoService.validateCaseInfo,
+                        onConfigRetrieved : function(componentConfig) {
+                            return onConfigRetrieved(componentConfig);
+                        },
+                        onObjectInfoRetrieved : function(objectInfo) {
+                            onObjectInfoRetrieved(objectInfo);
+                        },
+                        onTranslateChangeSuccess : function(data) {
+                            onTranslateChangeSuccess(data);
+                        }
+                    });
 
-        var onConfigRetrieved = function(config) {
+                    var onConfigRetrieved = function(config) {
 
-            $scope.config = config;
+                        $scope.config = config;
 
-        };
+                    };
 
-        $scope.notesInit = {
-            noteTitle: "Notes",
-            objectType: ObjectService.ObjectTypes.CASE_FILE,
-            currentObjectId: $stateParams.id,
-            parentTitle: "",
-            noteType: "GENERAL"
-        };
+                    $scope.notesInit = {
+                        noteTitle : $translate.instant("cases.comp.notes.title"),
+                        objectType : ObjectService.ObjectTypes.CASE_FILE,
+                        currentObjectId : $stateParams.id,
+                        parentTitle : "",
+                        noteType : "GENERAL"
+                    };
 
-        var onObjectInfoRetrieved = function(objectInfo) {
-            $scope.objectInfo = objectInfo;
-            $scope.notesInit.parentTitle = $scope.objectInfo.caseNumber;
-        };
+                    var onObjectInfoRetrieved = function(objectInfo) {
+                        $scope.objectInfo = objectInfo;
+                        if ($scope.notesInit) {
+                            $scope.notesInit.parentTitle = $scope.objectInfo.caseNumber;
+                        }
+                    };
 
-    }
-]);
+                    var onTranslateChangeSuccess = function(data) {
+                        if ($scope.notesInit) {
+                            $scope.notesInit.noteTitle = $translate.instant("cases.comp.notes.title");
+                        }
+                    };
+                } ]);

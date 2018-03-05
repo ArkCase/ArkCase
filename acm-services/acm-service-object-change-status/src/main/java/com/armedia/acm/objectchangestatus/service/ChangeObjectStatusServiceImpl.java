@@ -7,6 +7,7 @@ import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,8 @@ public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
             try
             {
                 entity = dao.find(objectId);
-            } catch (EntityNotFoundException e)
+            }
+            catch (EntityNotFoundException e)
             {
                 // try and flush our SQL in case we are trying to operate on a brand new object
                 entityManager.flush();

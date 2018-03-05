@@ -6,6 +6,7 @@ import com.armedia.acm.services.users.model.ldap.Directory;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.SimpleAuthenticationSource;
+
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
@@ -20,20 +21,19 @@ public interface SpringLdapDao
      */
     default LdapTemplate buildLdapTemplate(final AcmLdapConfig syncConfig)
     {
-        AuthenticationSource authenticationSource = null;
+        return buildLdapTemplate(syncConfig, null, null);
+    }
 
-        if (syncConfig.getAuthUserDn() != null)
-        {
-            authenticationSource = new SimpleAuthenticationSource(syncConfig.getAuthUserDn(), syncConfig.getAuthUserPassword());
-        }
+    default LdapTemplate buildLdapTemplate(final AcmLdapConfig syncConfig, final String authUserDn, final String authUserPwd)
+    {
+        final String userDn = Optional.ofNullable(authUserDn).orElseGet(syncConfig::getAuthUserDn);
+        final String password = Optional.ofNullable(authUserPwd).orElseGet(syncConfig::getAuthUserPassword);
+        AuthenticationSource authenticationSource = new SimpleAuthenticationSource(userDn, password);
 
         LdapContextSource ldapContextSource = new LdapContextSource();
         ldapContextSource.setUrls(syncConfig.getLdapUrl());
         ldapContextSource.setBase(syncConfig.getBaseDC());
-        if (authenticationSource != null)
-        {
-            ldapContextSource.setAuthenticationSource(authenticationSource);
-        }
+        ldapContextSource.setAuthenticationSource(authenticationSource);
         ldapContextSource.setCacheEnvironmentProperties(false);
         ldapContextSource.setReferral(syncConfig.getReferral());
 

@@ -1,11 +1,11 @@
 package com.armedia.acm.plugins.audit.web.api;
 
-
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
 import com.armedia.acm.plugins.audit.model.AuditConstants;
 import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ import java.util.Map;
  * @author riste.tutureski
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/audit", "/api/latest/plugin/audit"})
+@RequestMapping({ "/api/v1/plugin/audit", "/api/latest/plugin/audit" })
 public class GetAuditByObjectTypeAndObjectIdAPIController
 {
 
@@ -36,7 +36,7 @@ public class GetAuditByObjectTypeAndObjectIdAPIController
     private Map<String, String> auditProperties;
     private ReplaceEventTypeNames replaceEventTypeNames;
 
-    @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public QueryResultPageWithTotalCount<AuditEvent> getEventsByObjectTypeAndObjectId(
             @PathVariable(value = "objectType") String objectType,
@@ -65,12 +65,14 @@ public class GetAuditByObjectTypeAndObjectIdAPIController
         if (sArray.length == 1)
         {
             sortBy = sArray[0];
-        } else if (sArray.length > 1)
+        }
+        else if (sArray.length > 1)
         {
             sortBy = sArray[0];
             direction = sArray[1];
         }
-        List<AuditEvent> pagedResult = getAuditDao().findPagedResults(objectId, objectType, startRow, maxRows, eventTypes, sortBy, direction);
+        List<AuditEvent> pagedResult = getAuditDao().findPagedResults(objectId, objectType, startRow, maxRows, eventTypes, sortBy,
+                direction);
 
         int totalCount = getAuditDao().countAll(objectId, objectType, eventTypes);
 
@@ -113,4 +115,3 @@ public class GetAuditByObjectTypeAndObjectIdAPIController
         this.replaceEventTypeNames = replaceEventTypeNames;
     }
 }
-

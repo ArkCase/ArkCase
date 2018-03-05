@@ -5,7 +5,6 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class ParticipantUtils
 {
 
@@ -22,11 +21,13 @@ public class ParticipantUtils
 
     public static String getAssigneeIdFromParticipants(List<AcmParticipant> participants)
     {
-        return participants.stream().filter(p -> ASSIGNEE.equals(p.getParticipantType())).findFirst().map(AcmParticipant::getParticipantLdapId).orElse(null);
+        return participants.stream().filter(p -> ASSIGNEE.equals(p.getParticipantType())).findFirst()
+                .map(AcmParticipant::getParticipantLdapId).orElse(null);
     }
 
     public static String getOwningGroupIdFromParticipants(List<AcmParticipant> participants)
     {
-        return participants.stream().filter(p -> OWNINGGROUP.equals(p.getParticipantType())).findFirst().map(AcmParticipant::getParticipantLdapId).orElse(null);
+        return participants.stream().filter(p -> OWNINGGROUP.equals(p.getParticipantType())).findFirst()
+                .map(AcmParticipant::getParticipantLdapId).orElse(null);
     }
 }

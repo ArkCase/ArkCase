@@ -6,6 +6,7 @@ import com.armedia.acm.objectdiff.service.AcmDiffService;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.OrganizationEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -37,7 +38,8 @@ public class OrganizationEventPublisher implements ApplicationEventPublisherAwar
         eventPublisher.publishEvent(event);
     }
 
-    public void publishOrganizationUpsertEvent(Organization updatedOrganization, Organization oldOrganization, boolean newOrganization, boolean succeeded)
+    public void publishOrganizationUpsertEvent(Organization updatedOrganization, Organization oldOrganization, boolean newOrganization,
+            boolean succeeded)
     {
         log.debug("Publishing a organization event.");
         String ipAddress = AuthenticationUtils.getUserIpAddress();
@@ -46,7 +48,8 @@ public class OrganizationEventPublisher implements ApplicationEventPublisherAwar
         if (newOrganization)
         {
             organizationEvent.setEventStatus("created");
-        } else
+        }
+        else
         {
             AcmDiff acmDiff = acmDiffService.compareObjects(oldOrganization, updatedOrganization);
             if (acmDiff != null)
@@ -54,7 +57,8 @@ public class OrganizationEventPublisher implements ApplicationEventPublisherAwar
                 try
                 {
                     organizationEvent.setDiffDetailsAsJson(acmDiff.getChangesAsListJson());
-                } catch (JsonProcessingException e)
+                }
+                catch (JsonProcessingException e)
                 {
                     log.warn("can't process diff details for [{}].", updatedOrganization, e);
                 }

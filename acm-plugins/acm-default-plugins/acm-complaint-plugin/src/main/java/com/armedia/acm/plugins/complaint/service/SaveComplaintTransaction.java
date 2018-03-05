@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.complaint.service;
 
-import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
@@ -37,9 +36,10 @@ public class SaveComplaintTransaction
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         pipelineContext.setIpAddress(ipAddress);
 
-        return pipelineManager.executeOperation(complaint, pipelineContext, () ->
-        {
+        return pipelineManager.executeOperation(complaint, pipelineContext, () -> {
+
             Complaint saved = complaintDao.save(complaint);
+
             log.info("Complaint saved '{}'", saved);
             return saved;
 

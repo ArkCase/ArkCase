@@ -1,98 +1,102 @@
 {
-  "timeTracking": {
-    "title": "Отслеживание времени",
-    "progressNoTimesheet": "[ Нет Время лист ]",
-    "progressLoading": "Загрузка Время лист",
-    "progressError": "Не удалось загрузить Время лист"
-  },
-  "timeTracking.menus": {
-    "leftnav.item": "Отслеживание времени",
-    "topbar.item": "Время лист"
-  },
-  "timeTracking.comp.main": {
-    "title": "Обзор"
-  },
-  "timeTracking.comp.info": {
-    "title": "Информация",
-    "lastModified.label": "Последнее изменение"
-  },
-  "timeTracking.comp.actions": {
-    "title": "Действия",
-    "new.button": "Новый Время лист",
-    "edit.button": "Редактировать Время лист"
-  },
-  "timeTracking.comp.details": {
-    "title": "Детали",
-    "informSaved": "Детали расписания сохранены",
-    "table.columns": {
-      "title": "Детали",
-      "modified": "Дата последнего изменения",
-      "modifier": "Последнее изменение пользователем"
-    }
-  },
-  "timeTracking.comp.person": {
-    "title": "Человек",
-    "table.columns": {
-      "fullName": "Полное имя",
-      "userId": "Имя пользователя"
-    }
-  },
-  "timeTracking.comp.summary": {
-    "title": "Обзор часов",
-    "table.columns": {
-      "code": "Идентификатор родителя",
-      "type": "Родительский тип",
-      "value": "Общее количество часов",
-      "date": "Дата зарядки",
-      "modified": "Измененная дата"
-    }
-  },
-  "timeTracking.comp.tags": {
-    "title": "Теги",
-    "table.columns": {
-      "tag": "Тег",
-      "created": "Созданный",
-      "createdBy": "Сделано"
+    "timeTracking": {
+        "title": "Отслеживание времени",
+        "progressNoTimesheet": "[ Нет Время лист ]",
+        "progressLoading": "Загрузка Время лист",
+        "progressError": "Не удалось загрузить Время лист"
     },
-    "modal": {
-      "title": "Тег",
-      "search": "Поиск тегов",
-      "buttons": {
-        "cancel": "Отмена",
-        "ok": "Добавить метку"
-      }
+    "timeTracking.menus": {
+        "leftnav.item": "Отслеживание времени",
+        "topbar.item": "Время лист"
     },
-    "message": {
-      "tagExists": "Тег с этим именем или описанием или текстом уже существует",
-      "tagAssociated": "Уже связанный",
-      "delete": {
-        "success": "Удаленный тег",
-        "error": "Ошибка удаления тега"
-      }
-    }
-  },
-  "timeTracking.comp.approvers": {
-    "title": "Утверждающие",
-    "table.columns": {
-      "fullName": "Полное имя",
-      "userId": "Имя пользователя"
-    }
-  },
-  "timeTracking.tree": {
-    "nodeTypes": {
-      "details.label": "Детали",
-      "person.label": "Люди",
-      "summary.label": "Часов",
-      "tags.label": "Теги",
-      "approvers.label": "Утверждающие"
+    "timeTracking.comp.main": {
+        "title": "Обзор"
     },
-    "sorters": {
-      "dateAsc": "Сортировка даты Asc",
-      "dateDesc": "Сортировка даты Desc",
-      "idAsc": "Сортировка расходы Asc",
-      "idDesc": "Сортировка расходы Desc",
-      "nameDesc": "Сортировать по имени",
-      "noSort": "(Нет Сортировать)"
+    "timeTracking.comp.info": {
+        "title": "Информация",
+        "lastModified.label": "Последнее изменение"
+    },
+    "timeTracking.comp.actions": {
+        "title": "Действия",
+        "new.button": "Новый Время лист",
+        "edit.button": "Редактировать Время лист"
+    },
+    "timeTracking.comp.details": {
+        "title": "Детали",
+        "informSaved": "Детали расписания сохранены",
+        "table.columns": {
+            "title": "Детали",
+            "modified": "Дата последнего изменения",
+            "modifier": "Последнее изменение пользователем"
+        }
+    },
+    "timeTracking.comp.person": {
+        "title": "Человек",
+        "table.columns": {
+            "fullName": "Полное имя",
+            "userId": "Имя пользователя"
+        }
+    },
+    "timeTracking.comp.summary": {
+        "title": "Обзор часов",
+        "table.columns": {
+            "code": "Идентификатор родителя",
+            "type": "Родительский тип",
+            "value": "Общее количество часов",
+            "date": "Дата зарядки",
+            "modified": "Измененная дата"
+        }
+    },
+    "timeTracking.comp.tags": {
+        "title": "Теги",
+        "table.columns": {
+            "tag": "Тег",
+            "created": "Созданный",
+            "createdBy": "Сделано"
+        },
+        "modal": {
+            "title": "Тег",
+            "search": "Поиск тегов",
+            "buttons": {
+                "cancel": "Отмена",
+                "ok": "Добавить метку"
+            }
+        },
+        "message": {
+            "tagExists": "Тег с этим именем или описанием или текстом уже существует",
+            "tagAssociated": "Уже связанный",
+            "delete": {
+                "success": "Удаленный тег",
+                "error": "Ошибка удаления тега"
+            }
+        }
+    },
+    "timeTracking.comp.tasks": {
+        "title": "Утверждающие",
+        "table.columns": {
+            "title": "Title",
+            "assignee": "Assignee",
+            "created": "Created",
+            "priority": "Priority",
+            "due": "Due Date",
+            "status": "Status"
+        }
+    },
+    "timeTracking.tree": {
+        "nodeTypes": {
+            "details.label": "Детали",
+            "person.label": "Люди",
+            "summary.label": "Часов",
+            "tags.label": "Теги",
+            "tasks.label": "Утверждающие"
+        },
+        "sorters": {
+            "dateAsc": "Сортировка даты Asc",
+            "dateDesc": "Сортировка даты Desc",
+            "idAsc": "Сортировка расходы Asc",
+            "idDesc": "Сортировка расходы Desc",
+            "nameDesc": "Сортировать по имени",
+            "noSort": "(Нет Сортировать)"
+        }
     }
-  }
 }

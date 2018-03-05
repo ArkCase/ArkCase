@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-tool-integrations</artifactId>
-        <version>3.2.2-SNAPSHOT</version>
+        <version>3.2.6-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -65,7 +65,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
-
 
         <!-- jpa -->
         <dependency>
@@ -139,6 +138,5 @@
             <artifactId>guava</artifactId>
         </dependency>
     </dependencies>
-
 
 </project>

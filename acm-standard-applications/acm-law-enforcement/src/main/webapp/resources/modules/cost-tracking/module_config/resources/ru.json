@@ -1,103 +1,103 @@
 {
-  "costTracking": {
-    "title": "Отслеживание затрат",
-    "progressNoCostsheet": "[ Нет Стоимость листы ]",
-    "progressLoading": "Загрузка Стоимость лист",
-    "progressError": "Не удалось загрузить Стоимость лист"
-  },
-  "costTracking.menus": {
-    "leftnav.item": "Отслеживание затрат",
-    "topbar.item": "Стоимость лист"
-  },
-  "costTracking.comp.main": {
-    "title": "Обзор"
-  },
-  "costTracking.comp.info": {
-    "title": "Информация",
-    "incidentDate": "Дата инцидента",
-    "priority": "Приоритет",
-    "assignedTo": "Назначено",
-    "subjectType": "Тип объекта",
-    "state": "Состояние"
-  },
-  "costTracking.comp.actions": {
-    "title": "Действия",
-    "new.button": "Новый cтоимость лист",
-    "edit.button": "Редактировать cтоимость лист"
-  },
-  "costTracking.comp.details": {
-    "title": "Детали",
-    "informSaved": "Детали из таблицы затрат сохранены",
-    "table.columns": {
-      "title": "Детали",
-      "modified": "Дата последнего изменения",
-      "modifier": "Последнее изменение пользователем"
-    }
-  },
-  "costTracking.comp.person": {
-    "title": "Люди",
-    "table.columns": {
-      "fullName": "Полное имя",
-      "userId": "Имя пользователя"
-    }
-  },
-  "costTracking.comp.summary": {
-    "title": "Стоимость",
-    "table.columns": {
-      "parentId": "Идентификация",
-      "parentNumber": "Идентификатор родителя",
-      "parentType": "Родительский тип",
-      "value": "Общая стоимость",
-      "title": "Заглавие",
-      "description": "Описание"
-    }
-  },
-  "costTracking.comp.tags": {
-    "title": "Теги",
-    "table.columns": {
-      "tag": "Тег",
-      "created": "Дата создания",
-      "createdBy": "Сделано"
+    "costTracking": {
+        "title": "Отслеживание затрат",
+        "progressNoCostsheet": "[ Нет Стоимость листы ]",
+        "progressLoading": "Загрузка Стоимость лист",
+        "progressError": "Не удалось загрузить Стоимость лист"
     },
-    "modal": {
-      "title": "Тег",
-      "search": "Поиск тегов",
-      "buttons": {
-        "cancel": "Отмена",
-        "ok": "Добавить метку"
-      }
+    "costTracking.menus": {
+        "leftnav.item": "Отслеживание затрат",
+        "topbar.item": "Стоимость лист"
     },
-    "message": {
-      "tagExists": "Тег с этим именем или описанием или текстом уже существует",
-      "tagAssociated": "Уже связанный",
-      "delete": {
-        "success": "Удаленный тег",
-        "error": "Ошибка удаления тега"
-      }
-    }
-  },
-  "costTracking.comp.approvers": {
-    "title": "Утверждающие",
-    "table.columns": {
-      "fullName": "Полное имя",
-      "userId": "Имя пользователя"
-    }
-  },
-  "costTracking.tree": {
-    "nodeTypes": {
-      "details.label": "Детали",
-      "person.label": "Человек",
-      "summary.label": "Затраты",
-      "tags.label": "Теги",
-      "approvers.label": "Утверждающие"
+    "costTracking.comp.main": {
+        "title": "Обзор"
     },
-    "sorters": {
-      "dateAsc": "Сортировка даты по возрастанию",
-      "dateDesc": "Сортировка даты по убыванию",
-      "idAsc": "Сортировка Стоимость по возрастанию",
-      "idDesc": "Сортировка Стоимость по убыванию",
-      "nameDesc": "Сортировать по имени",
-      "noSort": "(Нет Сортировать)"
+    "costTracking.comp.info": {
+        "title": "Информация",
+        "incidentDate": "Дата инцидента",
+        "priority": "Приоритет",
+        "assignedTo": "Назначено",
+        "subjectType": "Тип объекта",
+        "state": "Состояние"
+    },
+    "costTracking.comp.actions": {
+        "title": "Действия",
+        "new.button": "Новый cтоимость лист",
+        "edit.button": "Редактировать cтоимость лист"
+    },
+    "costTracking.comp.details": {
+        "title": "Детали",
+        "informSaved": "Детали из таблицы затрат сохранены",
+        "table.columns": {
+            "title": "Детали",
+            "modified": "Дата последнего изменения",
+            "modifier": "Последнее изменение пользователем"
+        }
+    },
+    "costTracking.comp.person": {
+        "title": "Люди",
+        "table.columns": {
+            "fullName": "Полное имя",
+            "userId": "Имя пользователя"
+        }
+    },
+    "costTracking.comp.summary": {
+        "title": "Стоимость",
+        "table.columns": {
+            "parentId": "Идентификация",
+            "parentNumber": "Идентификатор родителя",
+            "parentType": "Родительский тип",
+            "value": "Общая стоимость",
+            "title": "Заглавие",
+            "description": "Описание"
+        }
+    },
+    "costTracking.comp.tags": {
+        "title": "Теги",
+        "table.columns": {
+            "tag": "Тег",
+            "created": "Дата создания",
+            "createdBy": "Сделано"
+        },
+        "modal": {
+            "title": "Тег",
+            "search": "Поиск тегов",
+            "buttons": {
+                "cancel": "Отмена",
+                "ok": "Добавить метку"
+            }
+        },
+        "message": {
+            "tagExists": "Тег с этим именем или описанием или текстом уже существует",
+            "tagAssociated": "Уже связанный",
+            "delete": {
+                "success": "Удаленный тег",
+                "error": "Ошибка удаления тега"
+            }
+        }
+    },
+    "costTracking.comp.approvers": {
+        "title": "Утверждающие",
+        "table.columns": {
+            "fullName": "Полное имя",
+            "userId": "Имя пользователя"
+        }
+    },
+    "costTracking.tree": {
+        "nodeTypes": {
+            "details.label": "Детали",
+            "person.label": "Человек",
+            "summary.label": "Затраты",
+            "tags.label": "Теги",
+            "approvers.label": "Утверждающие"
+        },
+        "sorters": {
+            "dateAsc": "Сортировка даты по возрастанию",
+            "dateDesc": "Сортировка даты по убыванию",
+            "idAsc": "Сортировка Стоимость по возрастанию",
+            "idDesc": "Сортировка Стоимость по убыванию",
+            "nameDesc": "Сортировать по имени",
+            "noSort": "(Нет Сортировать)"
+        }
     }
-  }
 }

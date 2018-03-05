@@ -1,9 +1,6 @@
 
 package org.mule.module.cmis.processors;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Generated;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.config.ConfigurationException;
@@ -16,10 +13,15 @@ import org.mule.config.i18n.MessageFactory;
 import org.mule.transformer.TransformerTemplate;
 import org.mule.transport.NullPayload;
 
+import javax.annotation.Generated;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Generated(value = "Mule DevKit Version 3.4.0", date = "2014-05-13T04:20:32-03:00", comments = "Build 3.4.0.1555.8df15c1")
-public abstract class AbstractMessageProcessor<O >
-    extends AbstractConnectedProcessor
-    implements FlowConstructAware, MuleContextAware
+public abstract class AbstractMessageProcessor<O>
+        extends AbstractConnectedProcessor
+        implements FlowConstructAware, MuleContextAware
 {
 
     /**
@@ -41,9 +43,11 @@ public abstract class AbstractMessageProcessor<O >
     /**
      * Sets muleContext
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setMuleContext(MuleContext value) {
+    public void setMuleContext(MuleContext value)
+    {
         this.muleContext = value;
     }
 
@@ -51,16 +55,19 @@ public abstract class AbstractMessageProcessor<O >
      * Retrieves muleContext
      * 
      */
-    public MuleContext getMuleContext() {
+    public MuleContext getMuleContext()
+    {
         return this.muleContext;
     }
 
     /**
      * Sets flowConstruct
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setFlowConstruct(FlowConstruct value) {
+    public void setFlowConstruct(FlowConstruct value)
+    {
         this.flowConstruct = value;
     }
 
@@ -68,21 +75,25 @@ public abstract class AbstractMessageProcessor<O >
      * Retrieves flowConstruct
      * 
      */
-    public FlowConstruct getFlowConstruct() {
+    public FlowConstruct getFlowConstruct()
+    {
         return this.flowConstruct;
     }
 
     /**
      * Sets moduleObject
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setModuleObject(O value) {
+    public void setModuleObject(O value)
+    {
         this.moduleObject = value;
     }
 
     /**
-     * Obtains the expression manager from the Mule context and initialises the connector. If a target object  has not been set already it will search the Mule registry for a default one.
+     * Obtains the expression manager from the Mule context and initialises the connector. If a target object has not
+     * been set already it will search the Mule registry for a default one.
      * 
      * @throws InstantiationException
      * @throws ConfigurationException
@@ -90,23 +101,30 @@ public abstract class AbstractMessageProcessor<O >
      * @throws RegistrationException
      */
     protected O findOrCreate(Class moduleClass, boolean shouldAutoCreate, MuleEvent muleEvent)
-        throws IllegalAccessException, InstantiationException, ConfigurationException, RegistrationException
+            throws IllegalAccessException, InstantiationException, ConfigurationException, RegistrationException
     {
         Object temporaryObject = moduleObject;
-        if (temporaryObject == null) {
+        if (temporaryObject == null)
+        {
             temporaryObject = ((O) muleContext.getRegistry().lookupObject(moduleClass));
-            if (temporaryObject == null) {
-                if (shouldAutoCreate) {
+            if (temporaryObject == null)
+            {
+                if (shouldAutoCreate)
+                {
                     temporaryObject = ((O) moduleClass.newInstance());
                     muleContext.getRegistry().registerObject(moduleClass.getName(), temporaryObject);
-                } else {
+                }
+                else
+                {
                     throw new ConfigurationException(MessageFactory.createStaticMessage("Cannot find object"));
                 }
             }
         }
-        if (temporaryObject instanceof String) {
+        if (temporaryObject instanceof String)
+        {
             temporaryObject = ((O) muleContext.getExpressionManager().evaluate(((String) temporaryObject), muleEvent, true));
-            if (temporaryObject == null) {
+            if (temporaryObject == null)
+            {
                 throw new ConfigurationException(MessageFactory.createStaticMessage("Cannot find object by config name"));
             }
         }
@@ -118,12 +136,15 @@ public abstract class AbstractMessageProcessor<O >
      * 
      */
     public void overwritePayload(MuleEvent event, Object resultPayload)
-        throws Exception
+            throws Exception
     {
         TransformerTemplate.OverwitePayloadCallback overwritePayloadCallback = null;
-        if (resultPayload == null) {
+        if (resultPayload == null)
+        {
             overwritePayloadCallback = new TransformerTemplate.OverwitePayloadCallback(NullPayload.getInstance());
-        } else {
+        }
+        else
+        {
             overwritePayloadCallback = new TransformerTemplate.OverwitePayloadCallback(resultPayload);
         }
         List<Transformer> transformerList;

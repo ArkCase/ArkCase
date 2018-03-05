@@ -1,5 +1,6 @@
 package com.armedia.acm.services.email.config.web.api;
 
+import com.armedia.acm.services.email.model.EmailTemplateValidationResponse;
 import com.armedia.acm.services.email.service.AcmEmailConfigurationException;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper;
@@ -12,13 +13,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 28, 2017
@@ -46,12 +50,28 @@ public class AcmMailTemplateConfigurationServiceAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/{templateName}", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/validate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public EmailTemplateValidationResponse validateEmailTemplate(@RequestBody EmailTemplateConfiguration templateConfiguration)
+            throws AcmEmailConfigurationException
+    {
+        return mailService.validateEmailTemplate(templateConfiguration);
+    }
+
+    @RequestMapping(path = "/{templateName:.+}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteEmailTemplate(@PathVariable(value = "templateName") String templateName)
             throws AcmEmailConfigurationException
     {
         mailService.deleteTemplate(templateName);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/{templateName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, String> getEmailTemplate(@PathVariable(value = "templateName") String templateName)
+            throws AcmEmailConfigurationException
+    {
+        return Collections.singletonMap("content", mailService.getTemplate(templateName));
     }
 
     @ExceptionHandler(AcmEmailConfigurationException.class)
