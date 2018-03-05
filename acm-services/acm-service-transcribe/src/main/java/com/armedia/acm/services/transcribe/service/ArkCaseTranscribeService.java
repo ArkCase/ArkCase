@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
 {
+    private TranscribeConfigurationService transcribeConfigurationService;
+
     @Override
     public Transcribe create(Long mediaId, Long versionId) throws CreateTranscribeException
     {
@@ -93,13 +95,13 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     @Override
     public TranscribeConfiguration getConfiguration() throws GetTranscribeConfigurationException
     {
-        return null;
+        return getTranscribeConfigurationService().get();
     }
 
     @Override
     public TranscribeConfiguration saveConfiguration(TranscribeConfiguration configuration) throws SaveTranscribeConfigurationException
     {
-        return null;
+        return getTranscribeConfigurationService().save(configuration);
     }
 
     @Override
@@ -142,5 +144,15 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     public List<Transcribe> getPageByStatus(int start, int n, String status) throws GetTranscribeException
     {
         return null;
+    }
+
+    public TranscribeConfigurationService getTranscribeConfigurationService()
+    {
+        return transcribeConfigurationService;
+    }
+
+    public void setTranscribeConfigurationService(TranscribeConfigurationService transcribeConfigurationService)
+    {
+        this.transcribeConfigurationService = transcribeConfigurationService;
     }
 }

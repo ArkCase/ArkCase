@@ -30,6 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 /**
@@ -67,7 +68,7 @@ public class SaveTranscribeConfigurationAPIControllerTest extends EasyMockSuppor
         configuration.setAutomaticEnabled(true);
         configuration.setNewTranscriptionForNewVersion(false);
         configuration.setCopyTranscriptionForNewVersion(true);
-        configuration.setCost(0.001);
+        configuration.setCost(new BigDecimal("0.001"));
         configuration.setConfidence(80);
         configuration.setNumberOfFilesForProcessing(10);
         configuration.setWordCountPerItem(30);
@@ -108,7 +109,7 @@ public class SaveTranscribeConfigurationAPIControllerTest extends EasyMockSuppor
         configuration.setAutomaticEnabled(true);
         configuration.setNewTranscriptionForNewVersion(false);
         configuration.setCopyTranscriptionForNewVersion(true);
-        configuration.setCost(0.001);
+        configuration.setCost(new BigDecimal("0.001"));
         configuration.setConfidence(80);
         configuration.setNumberOfFilesForProcessing(10);
         configuration.setWordCountPerItem(30);
