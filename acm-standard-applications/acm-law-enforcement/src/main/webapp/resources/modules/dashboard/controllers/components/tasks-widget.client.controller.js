@@ -43,6 +43,11 @@ angular.module('dashboard.tasks', [ 'adf.provider' ]).config(function(dashboardP
                                 configName : "complaints",
                                 getInfo : ObjectTaskService.queryChildTasks,
                                 objectType : ObjectService.ObjectTypes.COMPLAINT
+                            }, {
+                                name : ObjectService.ObjectTypes.TIMESHEET,
+                                configName : "time-tracking",
+                                getInfo : ObjectTaskService.queryChildTasks,
+                                objectType : ObjectService.ObjectTypes.TIMESHEET
                             } ];
 
                             var module = _.find(modules, function(module) {

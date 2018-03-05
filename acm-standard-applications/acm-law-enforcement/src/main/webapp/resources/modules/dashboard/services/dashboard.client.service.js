@@ -103,6 +103,17 @@ angular.module('dashboard').factory(
                         saveConfig : {
                             method : 'POST',
                             url : 'api/v1/plugin/dashboard/set'
+                        },
+                        queryUserWebsites: {
+                            method: 'GET',
+                            url: 'api/v1/plugin/dashboard/widgets/site?user=:userId',
+                            cache: false,
+                            isArray: true
+                        },
+                        saveUserWebsites: {
+                            method: 'POST',
+                            url: 'api/v1/plugin/dashboard/widgets/site',
+                            cache: false
                         }
                     });
 
