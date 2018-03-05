@@ -5,6 +5,7 @@ angular.module('profile').controller(
         [ '$scope', 'Profile.UserInfoService', 'MessageService', '$translate',
                 function($scope, UserInfoService, MessageService, $translate) {
                     $scope.editDisabled = false;
+
                     $scope.update = function() {
                         var profileInfo;
                         UserInfoService.getUserInfo().then(function(infoData) {
@@ -26,7 +27,6 @@ angular.module('profile').controller(
 
                     $scope.enableEdit = function() {
                         $scope.editDisabled = true;
-                        MessageService.info($translate.instant('profile.company.editEnabled'));
                     };
 
                     $scope.disableEdit = function() {

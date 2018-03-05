@@ -27,7 +27,7 @@
         "mainPhone": "Main Office Phone",
         "fax": "Fax",
         "website": "Website",
-        "editEnabled": "Edit is enabled."
+        "websiteTitle": "Enable edit"
     },
     "profile.contact": {
         "title": "Contact Information",

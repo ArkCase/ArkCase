@@ -27,7 +27,7 @@
         "mainPhone": "Главный офисный телефон",
         "fax": "факс",
         "website": "Веб-сайт",
-        "editEnabled": "ru_Edit is enabled."
+        "websiteTitle": "ru_Enable edit"
     },
     "profile.contact": {
         "title": "Контактная информация",

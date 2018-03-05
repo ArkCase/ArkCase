@@ -27,7 +27,7 @@
         "mainPhone": "主辦公電話",
         "fax": "傳真",
         "website": "網站",
-        "editEnabled": "zh-tw_Edit is enabled."
+        "websiteTitle": "zh-tw_Enable edit"
     },
     "profile.contact": {
         "title": "聯繫信息",

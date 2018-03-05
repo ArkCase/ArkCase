@@ -27,7 +27,7 @@
         "mainPhone": "Teléfono de la oficina principal",
         "fax": "Fax",
         "website": "Sitio web",
-        "editEnabled": "es_Edit is enabled."
+        "websiteTitle": "es_Enable edit"
     },
     "profile.contact": {
         "title": "Información del contacto",
