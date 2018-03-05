@@ -3,6 +3,7 @@ package com.armedia.broker;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.BlobMessage;
+import org.apache.commons.io.FileUtils;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 
@@ -14,9 +15,7 @@ import javax.jms.Queue;
 import javax.jms.Session;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.UUID;
 
@@ -89,8 +88,7 @@ public class AcmFileBrokerClient implements IAcmFileBrokerClient
     @Override
     public void sendFile(File file, String queueName, Map<String, Object> properties) throws JMSException, IOException
     {
-        AcmFileBrokerClientExecutor<Void> executor = (ActiveMQSession session) -> 
-        {
+        AcmFileBrokerClientExecutor<Void> executor = (ActiveMQSession session) -> {
             Queue queue = session.createQueue(queueName);
             MessageProducer producer = session.createProducer(queue);
             BlobMessage message = session.createBlobMessage(file);
@@ -142,9 +140,7 @@ public class AcmFileBrokerClient implements IAcmFileBrokerClient
     @Override
     public File receiveFile(String queueName) throws JMSException, IOException
     {
-        AcmFileBrokerClientExecutor<File> executor = (ActiveMQSession session) -> 
-        {
-            File file = null;
+        AcmFileBrokerClientExecutor<File> executor = (ActiveMQSession session) -> {
             Queue queue = session.createQueue(queueName);
             MessageConsumer consumer = session.createConsumer(queue);
             BlobMessage message = (BlobMessage) consumer.receive(2000);
@@ -156,23 +152,11 @@ public class AcmFileBrokerClient implements IAcmFileBrokerClient
                 fileName = UUID.randomUUID().toString();
             }
             String[] fileNameParts = getFileNameParts(fileName);
-            file = File.createTempFile(fileNameParts[0], fileNameParts[1]);
+            File file = File.createTempFile(fileNameParts[0], fileNameParts[1]);
             file.setWritable(true);
             file.deleteOnExit();
-            try (FileOutputStream fos = new FileOutputStream(file))
-            {
-                InputStream in = message.getInputStream();
-                byte[] buffer = new byte[1024];
-                while (true)
-                {
-                    int bytesRead = in.read(buffer);
-                    if (bytesRead == -1)
-                    {
-                        break;
-                    }
-                    fos.write(buffer, 0, bytesRead);
-                }
-            }
+
+            FileUtils.copyInputStreamToFile(message.getInputStream(), file);
 
             return file;
         };
@@ -195,7 +179,8 @@ public class AcmFileBrokerClient implements IAcmFileBrokerClient
         {
             result[0] = fileName.substring(0, index);
             result[1] = fileName.substring(index, fileName.length());
-        } else
+        }
+        else
         {
             result[0] = fileName;
             result[1] = ".tmp";
@@ -238,7 +223,8 @@ public class AcmFileBrokerClient implements IAcmFileBrokerClient
             session.close();
             connection.close();
             return result;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             if (session != null)
             {

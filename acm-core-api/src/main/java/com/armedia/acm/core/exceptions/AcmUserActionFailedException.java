@@ -51,11 +51,11 @@ public class AcmUserActionFailedException extends Exception
     public String getMessage()
     {
         String message = "";
-        if ( getActionName() != null && getObjectId() != null && getObjectType() != null )
+        if (getActionName() != null && getObjectId() != null && getObjectType() != null)
         {
             message += "Could not " + getActionName() + " " + getObjectType() + " with ID = " + getObjectId() + ".\n";
         }
-        if ( super.getMessage() != null )
+        if (super.getMessage() != null)
         {
             message += "Server encountered exception: " + super.getMessage() + "\n";
         }
@@ -63,5 +63,10 @@ public class AcmUserActionFailedException extends Exception
         message += "Exception type was: '" + getClass().getName() + "'.";
 
         return message;
+    }
+
+    public String getShortMessage()
+    {
+        return super.getMessage();
     }
 }

@@ -21,7 +21,8 @@ public interface LookupDao
     /**
      * Returns {@link AcmLookup} with the given name. Returns null if no such lookup is defined.
      *
-     * @param name the name of the lookup to find
+     * @param name
+     *            the name of the lookup to find
      * @return the {@link AcmLookup} found
      */
     AcmLookup<?> getLookupByName(String name);
@@ -37,7 +38,7 @@ public interface LookupDao
      * @throws IOException
      *             when the underlying store cannot be accessed
      */
-    String saveLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException;
+    String saveLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException, AcmResourceNotModifiableException;
 
     /**
      * Delete lookup with given name.

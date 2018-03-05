@@ -12,6 +12,7 @@ import com.armedia.acm.services.search.service.SearchEventPublisher;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,12 +29,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/search", "/api/latest/plugin/search"})
+@RequestMapping({ "/api/v1/plugin/search", "/api/latest/plugin/search" })
 public class SearchObjectByTypeAPIController
 {
 
@@ -56,8 +58,7 @@ public class SearchObjectByTypeAPIController
             @RequestParam(value = "filters", required = false, defaultValue = "") String filters,
             @RequestParam(value = "searchQuery", required = false, defaultValue = "") String searchQuery,
             Authentication authentication,
-            HttpSession httpSession
-    ) throws MuleException
+            HttpSession httpSession) throws MuleException
     {
         String[] f = null;
         String sortParams = null;
@@ -81,7 +82,8 @@ public class SearchObjectByTypeAPIController
                         " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
             }
             log.debug("User [{}] is searching for [{}]", authentication.getName(), query);
-        } else
+        }
+        else
         {
             f = filters.split(",");
             List<String> testFilters;
@@ -98,7 +100,8 @@ public class SearchObjectByTypeAPIController
                     {
                         stringBuilder.append(SearchConstants.AND_SPLITTER);
                         stringBuilder.append(filter);
-                    } else
+                    }
+                    else
                     {
                         stringBuilder.append(filter);
                     }
@@ -140,8 +143,7 @@ public class SearchObjectByTypeAPIController
             @RequestParam(value = "assignee", required = false, defaultValue = "") String assignee,
             @RequestParam(value = "activeOnly", required = false, defaultValue = "true") boolean activeOnly,
             Authentication authentication,
-            HttpSession httpSession
-    ) throws MuleException
+            HttpSession httpSession) throws MuleException
     {
         String query = "object_type_s:" + objectType;
 
@@ -176,8 +178,7 @@ public class SearchObjectByTypeAPIController
             @RequestParam(value = "assignee", required = false, defaultValue = "") String assignee,
             @RequestParam(value = "activeOnly", required = false, defaultValue = "true") boolean activeOnly,
             Authentication authentication,
-            HttpSession httpSession
-    ) throws MuleException
+            HttpSession httpSession) throws MuleException
     {
         String query = "object_type_s:" + objectType;
 
@@ -225,8 +226,8 @@ public class SearchObjectByTypeAPIController
     }
 
     protected void publishSearchEvent(Authentication authentication,
-                                      HttpSession httpSession,
-                                      boolean succeeded, String jsonPayload)
+            HttpSession httpSession,
+            boolean succeeded, String jsonPayload)
     {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         SolrResponse solrResponse = gson.fromJson(jsonPayload, SolrResponse.class);
@@ -242,7 +243,8 @@ public class SearchObjectByTypeAPIController
                 try
                 {
                     objectId = Long.parseLong(doc.getObject_id_s());
-                } catch (NumberFormatException e)
+                }
+                catch (NumberFormatException e)
                 {
                     objectId = new Long(-1);
                 }
@@ -265,7 +267,8 @@ public class SearchObjectByTypeAPIController
             if (plugin.getSuportedObjectTypesNames() != null)
             {
                 suportedObjectTypes = plugin.getSuportedObjectTypesNames();
-            } else
+            }
+            else
             {
                 continue;
             }
@@ -286,7 +289,8 @@ public class SearchObjectByTypeAPIController
                                 {
                                     stringBuilder.append(jObj.getString("value").trim());
                                     isFirstSortArgument = false;
-                                } else
+                                }
+                                else
                                 {
                                     stringBuilder.append(", ");
                                     stringBuilder.append(jObj.getString("value").trim());
@@ -310,7 +314,8 @@ public class SearchObjectByTypeAPIController
             if (plugin.getSuportedObjectTypesNames() != null)
             {
                 suportedObjectTypes = plugin.getSuportedObjectTypesNames();
-            } else
+            }
+            else
             {
                 continue;
             }
@@ -346,7 +351,8 @@ public class SearchObjectByTypeAPIController
             if (plugin.getSuportedObjectTypesNames() != null)
             {
                 suportedObjectTypes = plugin.getSuportedObjectTypesNames();
-            } else
+            }
+            else
             {
                 continue;
             }
@@ -354,7 +360,8 @@ public class SearchObjectByTypeAPIController
             {
                 if (objectType.equals(objectTypeName))
                 {
-                    String searchQueryPropertiesAsString = (String) plugin.getPluginProperties().get(SearchConstants.SEARCH_QUERY_PROPERTIES_KEY);
+                    String searchQueryPropertiesAsString = (String) plugin.getPluginProperties()
+                            .get(SearchConstants.SEARCH_QUERY_PROPERTIES_KEY);
 
                     if (StringUtils.isNotEmpty(searchQueryPropertiesAsString))
                     {
@@ -380,7 +387,8 @@ public class SearchObjectByTypeAPIController
                     separator = " " + SearchConstants.OPERATOR_OR + " ";
                 }
 
-                // If the search keywords contains empty space, search for that particular phrase, otherwise find any objects that
+                // If the search keywords contains empty space, search for that particular phrase, otherwise find any
+                // objects that
                 // contains the characters in the searched properties
                 String value = searchQuery;
                 if (searchQuery.contains(" ") || searchQuery.contains("_"))

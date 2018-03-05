@@ -24,61 +24,56 @@
  </file>
  <file name="app.js">
  angular.module('ngAppDemo', []).controller('ngAppDemoController', function($scope, $log) {
-            $scope.pagerData = {
-                    pageSizes: [10, 20, 30, 40, 50],
-                    pageSize: 50,
-                    totalItems: 200
-                };
-            $scope.reloadPage = function (currentPage, pageSize) {
+ $scope.pagerData = {
+ pageSizes: [10, 20, 30, 40, 50],
+ pageSize: 50,
+ totalItems: 200
+ };
+ $scope.reloadPage = function (currentPage, pageSize) {
 
-                var promise = callServiceToGetData(currentPage, pageSize);
+ var promise = callServiceToGetData(currentPage, pageSize);
 
-                promise.then(function (payload) {
-                    var tempData = payload.data;
-                    $scope.pagerData.totalItems = payload.data.length;
-                });
-            }
+ promise.then(function (payload) {
+ var tempData = payload.data;
+ $scope.pagerData.totalItems = payload.data.length;
+ });
+ }
  });
  </file>
  </example>
  */
-angular.module('directives').directive('simplePager', function () {
-        return {
-            restrict: 'E',              //match only element name
-            scope: {
-                pagerData: '=',            //= : two way binding so that the data can be monitored for changes
-                reloadPage: '='
-            },
+angular.module('directives').directive('simplePager', function() {
+    return {
+        restrict : 'E', //match only element name
+        scope : {
+            pagerData : '=', //= : two way binding so that the data can be monitored for changes
+            reloadPage : '='
+        },
 
-            link: function (scope) {    //dom operations
-                scope.currentPage = 1;
-
-                scope.$watchCollection('pagerData.totalItems', function (totalItems, oldValue) {
-                    if (totalItems && totalItems != oldValue) {
-                        recalculatePagerNumbers();
-                    }
-                });
-
-                scope.pageChanged = function (currentPage) {
-                    if (currentPage) {
-                        scope.currentPage = currentPage;
-                    }
-                    else {
-                        scope.currentPage = 1;
-                    }
-                    scope.reloadPage(scope.currentPage, scope.pagerData.pageSize);
+        link : function(scope) { //dom operations
+            scope.$watchCollection('pagerData.totalItems', function(totalItems, oldValue) {
+                if (totalItems && totalItems != oldValue) {
                     recalculatePagerNumbers();
-                };
-
-                function recalculatePagerNumbers() {
-                    scope.showingLow = (scope.currentPage - 1) * scope.pagerData.pageSize + 1;
-                    var max = scope.currentPage * scope.pagerData.pageSize;
-                    scope.showingHigh = max < scope.pagerData.totalItems ? max : scope.pagerData.totalItems;
-                    var num = parseInt(scope.pagerData.totalItems / scope.pagerData.pageSize);
-                    scope.totalPages = scope.pagerData.totalItems % scope.pagerData.pageSize > 0 ? num + 1 : num;
                 }
-            },
-            templateUrl: 'directives/simple-pager/simple-pager.client.view.html'
-        };
-    }
-);
+            });
+
+            scope.pageChanged = function(currentPage) {
+                if (currentPage) {
+                    scope.pagerData.currentPage = currentPage;
+                } else {
+                    scope.pagerData.currentPage = 1;
+                }
+                scope.reloadPage(scope.pagerData.currentPage, scope.pagerData.pageSize);
+                recalculatePagerNumbers();
+            };
+
+            function recalculatePagerNumbers() {
+                var max = scope.pagerData.currentPage * scope.pagerData.pageSize;
+                scope.currentItems = scope.pagerData.totalItems < max ? scope.pagerData.totalItems : max;
+                var num = parseInt(scope.pagerData.totalItems / scope.pagerData.pageSize);
+                scope.totalPages = scope.pagerData.totalItems % scope.pagerData.pageSize > 0 ? num + 1 : num;
+            }
+        },
+        templateUrl : 'directives/simple-pager/simple-pager.client.view.html'
+    };
+});

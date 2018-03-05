@@ -37,9 +37,7 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 5, 2017
@@ -227,4 +225,26 @@ public class AcmMailTemplateConfigurationServiceAPIControllerTest
         return configuration;
     }
 
+    /**
+     * Test method for
+     * {@link com.armedia.acm.services.email.config.web.api.AcmMailTemplateConfigurationServiceAPIController#getEmailTemplate(String)}.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void getEmailTemplate() throws Exception {
+
+        // given
+        String contentOfTheTemplate = "Html - content";
+        String response = "{\"content\":\"Html - content\"}";
+        when(mailService.getTemplate("template_name")).thenReturn(contentOfTheTemplate);
+
+        // when
+        MvcResult result = mockMvc.perform(get(CONTROLLER_PATH + "/template_name").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .andReturn();
+
+        // then
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentAsString().equals(response));
+    }
 }

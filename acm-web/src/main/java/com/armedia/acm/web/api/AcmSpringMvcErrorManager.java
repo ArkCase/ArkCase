@@ -7,6 +7,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
+import com.armedia.acm.core.exceptions.AcmParticipantsException;
 import com.armedia.acm.core.exceptions.AcmResourceNotFoundException;
 import com.armedia.acm.core.exceptions.AcmResourceNotModifiableException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
@@ -33,6 +34,13 @@ import java.util.Map;
 public class AcmSpringMvcErrorManager
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    @ExceptionHandler(AcmParticipantsException.class)
+    public void handleException(HttpServletResponse response, AcmParticipantsException e)
+    {
+        log.error("Participants exception: " + e.getMessage(), e);
+        sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
+    }
 
     @ExceptionHandler(AcmObjectNotFoundException.class)
     public void handleException(HttpServletResponse response, AcmObjectNotFoundException e)
@@ -115,7 +123,7 @@ public class AcmSpringMvcErrorManager
     public void resourceNotModifiable(HttpServletResponse response, Exception e)
     {
         log.error("Resource cannot be modified: " + e.getMessage(), e);
-        sendResponse(HttpStatus.NOT_MODIFIED, response, e.getMessage());
+        sendResponse(HttpStatus.CONFLICT, response, e.getMessage());
     }
 
     @ExceptionHandler(InvalidLookupException.class)

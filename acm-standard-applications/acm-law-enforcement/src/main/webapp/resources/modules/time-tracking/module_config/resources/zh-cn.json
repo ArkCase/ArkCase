@@ -1,98 +1,102 @@
 {
-  "timeTracking": {
-    "title": "时间跟踪",
-    "progressNoTimesheet": "[ 无时间数据  ]",
-    "progressLoading": "加载时间数据",
-    "progressError": "无法加载时间数据"
-  },
-  "timeTracking.menus": {
-    "leftnav.item": "时间跟踪",
-    "topbar.item": "时间文表"
-  },
-  "timeTracking.comp.main": {
-    "title": "概述"
-  },
-  "timeTracking.comp.info": {
-    "title": "信息",
-    "lastModified.label": "上次更改时间"
-  },
-  "timeTracking.comp.actions": {
-    "title": "行动",
-    "new.button": "新时间项目",
-    "edit.button": "更改时间项目"
-  },
-  "timeTracking.comp.details": {
-    "title": "详情",
-    "informSaved": "时间表详情已保存",
-    "table.columns": {
-      "title": "详情",
-      "modified": "上次修改日期",
-      "modifier": "上次修改用户"
-    }
-  },
-  "timeTracking.comp.person": {
-    "title": "成员",
-    "table.columns": {
-      "fullName": "全名",
-      "userId": "用户名"
-    }
-  },
-  "timeTracking.comp.summary": {
-    "title": "时间总结",
-    "table.columns": {
-      "code": "原属识别号",
-      "type": "原属类型",
-      "value": "小时总数",
-      "date": "用费日期",
-      "modified": "更改日期"
-    }
-  },
-  "timeTracking.comp.tags": {
-    "title": "标签",
-    "table.columns": {
-      "tag": "标签",
-      "created": "创建日期",
-      "createdBy": "创建人"
+    "timeTracking": {
+        "title": "时间跟踪",
+        "progressNoTimesheet": "[ 无时间数据  ]",
+        "progressLoading": "加载时间数据",
+        "progressError": "无法加载时间数据"
     },
-    "modal": {
-      "title": "标签",
-      "search": "搜索标签",
-      "buttons": {
-        "cancel": "取消",
-        "ok": "添加标签"
-      }
+    "timeTracking.menus": {
+        "leftnav.item": "时间跟踪",
+        "topbar.item": "时间文表"
     },
-    "message": {
-      "tagExists": "具有该名称或说明或文本的标签已经存在",
-      "tagAssociated": "已经关联",
-      "delete": {
-        "success": "标记已成功删除",
-        "error": "删除标签时出错"
-      }
-    }
-  },
-  "timeTracking.comp.approvers": {
-    "title": "审批",
-    "table.columns": {
-      "fullName": "全名",
-      "userId": "用户名"
-    }
-  },
-  "timeTracking.tree": {
-    "nodeTypes": {
-      "details.label": "详情",
-      "person.label": "成员",
-      "summary.label": "时间小结",
-      "tags.label": "标签",
-      "approvers.label": "zh-cn_Approvers"
+    "timeTracking.comp.main": {
+        "title": "概述"
     },
-    "sorters": {
-      "dateAsc": "按日期排序",
-      "dateDesc": "按日期反排序",
-      "idAsc": "按时间表格号排序",
-      "idDesc": "按时间表格号反排序",
-      "nameDesc": "按名称排序",
-      "noSort": "(不排序)"
+    "timeTracking.comp.info": {
+        "title": "信息",
+        "lastModified.label": "上次更改时间"
+    },
+    "timeTracking.comp.actions": {
+        "title": "行动",
+        "new.button": "新时间项目",
+        "edit.button": "更改时间项目"
+    },
+    "timeTracking.comp.details": {
+        "title": "详情",
+        "informSaved": "时间表详情已保存",
+        "table.columns": {
+            "title": "详情",
+            "modified": "上次修改日期",
+            "modifier": "上次修改用户"
+        }
+    },
+    "timeTracking.comp.person": {
+        "title": "成员",
+        "table.columns": {
+            "fullName": "全名",
+            "userId": "用户名"
+        }
+    },
+    "timeTracking.comp.summary": {
+        "title": "时间总结",
+        "table.columns": {
+            "code": "原属识别号",
+            "type": "原属类型",
+            "value": "小时总数",
+            "date": "用费日期",
+            "modified": "更改日期"
+        }
+    },
+    "timeTracking.comp.tags": {
+        "title": "标签",
+        "table.columns": {
+            "tag": "标签",
+            "created": "创建日期",
+            "createdBy": "创建人"
+        },
+        "modal": {
+            "title": "标签",
+            "search": "搜索标签",
+            "buttons": {
+                "cancel": "取消",
+                "ok": "添加标签"
+            }
+        },
+        "message": {
+            "tagExists": "具有该名称或说明或文本的标签已经存在",
+            "tagAssociated": "已经关联",
+            "delete": {
+                "success": "标记已成功删除",
+                "error": "删除标签时出错"
+            }
+        }
+    },
+    "timeTracking.comp.tasks": {
+        "title": "审批",
+        "table.columns": {
+            "title": "Title",
+            "assignee": "Assignee",
+            "created": "Created",
+            "priority": "Priority",
+            "due": "Due Date",
+            "status": "Status"
+        }
+    },
+    "timeTracking.tree": {
+        "nodeTypes": {
+            "details.label": "详情",
+            "person.label": "成员",
+            "summary.label": "时间小结",
+            "tags.label": "标签",
+            "tasks.label": "zh-cn_Approvers"
+        },
+        "sorters": {
+            "dateAsc": "按日期排序",
+            "dateDesc": "按日期反排序",
+            "idAsc": "按时间表格号排序",
+            "idDesc": "按时间表格号反排序",
+            "nameDesc": "按名称排序",
+            "noSort": "(不排序)"
+        }
     }
-  }
 }

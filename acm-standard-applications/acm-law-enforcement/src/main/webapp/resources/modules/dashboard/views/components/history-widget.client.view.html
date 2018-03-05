@@ -1,15 +1,14 @@
 <div>
-    <div ng-if="history.showChart"><div class="panel-body">
-        <div>
-            <p class="text-center h2">{{history.chartTitle}}</p>
+    <div ng-if="history.showChart">
+        <div class="panel-body">
+            <div>
+                <p class="text-center h2">{{history.chartTitle | translate}}</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="pie" class="chart chart-pie" chart-data="history.data" chart-labels="history.labels" chart-responsive="true"
+                        chart-legend="true"></canvas>
+            </div>
         </div>
-        <div class="chart-container">
-            <canvas id="pie" class="chart chart-pie" chart-data="history.data"
-                    chart-labels="history.labels"
-                    chart-responsive="true"
-                    chart-legend="true"></canvas>
-        </div>
-    </div>
     </div>
     <div class="alert" ng-if="!history.showChart">
         <p class="text-center">

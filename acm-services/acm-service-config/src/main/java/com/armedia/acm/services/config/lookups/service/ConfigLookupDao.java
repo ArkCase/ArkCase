@@ -5,9 +5,16 @@ import com.armedia.acm.core.exceptions.AcmResourceNotModifiableException;
 import com.armedia.acm.core.exceptions.InvalidLookupException;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.config.lookups.model.AcmLookup;
+import com.armedia.acm.services.config.lookups.model.AcmLookupEntry;
+import com.armedia.acm.services.config.lookups.model.InverseValuesLookup;
+import com.armedia.acm.services.config.lookups.model.InverseValuesLookupEntry;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
 import com.armedia.acm.services.config.lookups.model.LookupType;
 import com.armedia.acm.services.config.lookups.model.LookupValidationResult;
+import com.armedia.acm.services.config.lookups.model.NestedLookup;
+import com.armedia.acm.services.config.lookups.model.NestedLookupEntry;
+import com.armedia.acm.services.config.lookups.model.StandardLookup;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -17,7 +24,8 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
-import org.apache.commons.collections.keyvalue.DefaultKeyValue;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -27,6 +35,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by bojan.milenkoski on 25.8.2017
@@ -85,8 +94,8 @@ public class ConfigLookupDao implements LookupDao
     {
         mergedLookups = lookups;
 
-        //merge both json files
-        for (LookupType lookupType : LookupType.values())  //get lookupType
+        // merge both json files
+        for (LookupType lookupType : LookupType.values()) // get lookupType
         {
             ArrayNode jsonArrayExt = JsonPath.using(configurationWithSuppressedExceptions).parse(lookupsExt)
                     .read("$." + lookupType.getTypeName());
@@ -128,7 +137,8 @@ public class ConfigLookupDao implements LookupDao
     }
 
     @Override
-    public synchronized String saveLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException
+    public synchronized String saveLookup(LookupDefinition lookupDefinition)
+            throws InvalidLookupException, IOException, AcmResourceNotModifiableException
     {
         // find lookup by name in lookups-ext.json
         boolean found = false;
@@ -171,12 +181,14 @@ public class ConfigLookupDao implements LookupDao
         return getMergedLookups();
     }
 
-    private synchronized String updateLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException
+    private synchronized void updateLookup(LookupDefinition lookupDefinition)
+            throws InvalidLookupException, IOException, AcmResourceNotModifiableException
     {
         // validate lookup
         AcmLookup<?> lookup = getObjectConverter().getJsonUnmarshaller().unmarshall(
                 "{\"name\" : \"" + lookupDefinition.getName() + "\", \"entries\" : " + lookupDefinition.getLookupEntriesAsJson()
-                        + ", \"readonly\": " + lookupDefinition.getReadonly() + "}", lookupDefinition.getLookupType().getLookupClass());
+                        + ", \"readonly\": " + lookupDefinition.getReadonly() + "}",
+                lookupDefinition.getLookupType().getLookupClass());
         if (lookup == null)
         {
             log.error("Unmarshalling lookup entries failed. Lookup name: '{}', lookupAsJson: '{}'", lookupDefinition.getName(),
@@ -192,13 +204,16 @@ public class ConfigLookupDao implements LookupDao
             throw new InvalidLookupException(lookupValidationResult.getErrorMessage());
         }
 
+        checkReadOnlyEntries(lookupDefinition);
+
         // replace the json content of the lookup to update
-        String updatedLookupsAsJson = null;
+        String updatedLookupsAsJson;
         try
         {
             updatedLookupsAsJson = JsonPath.using(configuration).parse(lookupsExt)
                     .set("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
-                            + "')].entries", lookup.getEntries()).jsonString();
+                            + "')].entries", lookup.getEntries())
+                    .jsonString();
         }
         catch (RuntimeException e)
         {
@@ -209,12 +224,115 @@ public class ConfigLookupDao implements LookupDao
 
         // save updated lookups to file
         saveLookupsExt(updatedLookupsAsJson);
-
-        return updatedLookupsAsJson;
     }
 
-    private String addNewLookup(LookupDefinition lookupDefinition) throws IOException
+    private void checkStandardLookupReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
     {
+
+        List<StandardLookupEntry> protectedEntries = ((StandardLookup) getLookupByName(lookupDefinition.getName()))
+                .getEntries().stream()
+                .filter(AcmLookupEntry::isReadonly)
+                .collect(Collectors.toList());
+
+        List<StandardLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, StandardLookupEntry.class);
+
+        for (StandardLookupEntry protectedEntry : protectedEntries)
+        {
+            if (entries.stream().noneMatch(entry -> entry.getKey().equals(protectedEntry.getKey())))
+            {
+                throw new AcmResourceNotModifiableException("Entry with key: " + protectedEntry.getKey() + " cannot be deleted");
+            }
+        }
+
+    }
+
+    private void checkInverseLookupReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
+    {
+
+        List<InverseValuesLookupEntry> protectedEntries = ((InverseValuesLookup) getLookupByName(lookupDefinition.getName()))
+                .getEntries().stream()
+                .filter(AcmLookupEntry::isReadonly)
+                .collect(Collectors.toList());
+
+        List<InverseValuesLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, InverseValuesLookupEntry.class);
+        for (InverseValuesLookupEntry protectedEntry : protectedEntries)
+        {
+            if (entries.stream().noneMatch(entry -> entry.getKey().equals(protectedEntry.getKey())))
+            {
+                throw new AcmResourceNotModifiableException("Entry with key: " + protectedEntry.getKey() +
+                        " cannot be deleted");
+            }
+        }
+
+    }
+
+    private void checkNestedLookupReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
+    {
+
+        List<NestedLookupEntry> protectedMainEntries = ((NestedLookup) getLookupByName(lookupDefinition.getName()))
+                .getEntries().stream()
+                .filter(AcmLookupEntry::isReadonly)
+                .collect(Collectors.toList());
+
+        List<NestedLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, NestedLookupEntry.class);
+
+        // we expect that a protected entry in sublookup must have a protected main entry
+        for (NestedLookupEntry protectedMainEntry : protectedMainEntries)
+        {
+            if (entries.stream().noneMatch(entry -> entry.getKey().equals(protectedMainEntry.getKey())))
+            {
+                throw new AcmResourceNotModifiableException("Entry with key: " + protectedMainEntry.getKey() +
+                        " cannot be deleted");
+            }
+
+            List<StandardLookupEntry> protectedSubEntries = protectedMainEntry.getSubLookup().stream()
+                    .filter(AcmLookupEntry::isReadonly)
+                    .collect(Collectors.toList());
+
+            List<StandardLookupEntry> subEntries = entries.stream().filter(entry -> entry.getKey().equals(protectedMainEntry.getKey()))
+                    .findFirst().get().getSubLookup();
+
+            for (StandardLookupEntry protectedSubEntry : protectedSubEntries)
+            {
+                if (subEntries.stream().noneMatch(entry -> entry.getKey().equals(protectedSubEntry.getKey())))
+                {
+                    throw new AcmResourceNotModifiableException("Entry with key: " + protectedSubEntry.getKey() +
+                            " cannot be deleted");
+                }
+            }
+        }
+
+    }
+
+    private void checkReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
+    {
+        if (LookupType.STANDARD_LOOKUP.equals(lookupDefinition.getLookupType()))
+        {
+            checkStandardLookupReadOnlyEntries(lookupDefinition);
+        }
+        else if (LookupType.INVERSE_VALUES_LOOKUP.equals(lookupDefinition.getLookupType()))
+        {
+            checkInverseLookupReadOnlyEntries(lookupDefinition);
+        }
+        else if (LookupType.NESTED_LOOKUP.equals(lookupDefinition.getLookupType()))
+        {
+            checkNestedLookupReadOnlyEntries(lookupDefinition);
+        }
+
+    }
+
+    private void addNewLookup(LookupDefinition lookupDefinition) throws IOException, AcmResourceNotModifiableException
+    {
+        // entriesArr is empty when adding new lookup
+        JSONArray entriesArr = new JSONArray(lookupDefinition.getLookupEntriesAsJson());
+        if (entriesArr.length() > 0)
+        {
+            checkReadOnlyEntries(lookupDefinition);
+        }
+
         // add lookupExt object to jsonArrayExt
         ArrayNode jsonArrayExt = JsonPath.using(configurationWithSuppressedExceptions).parse(lookupsExt)
                 .read("$." + lookupDefinition.getLookupType().getTypeName());
@@ -224,24 +342,67 @@ public class ConfigLookupDao implements LookupDao
         lookupExt.put("name", lookupDefinition.getName());
         lookupExt.put("readonly", lookupDefinition.getReadonly());
 
-        List<DefaultKeyValue> entries = getObjectConverter().getJsonUnmarshaller()
-                .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, DefaultKeyValue.class);
-
         ArrayNode entriesNode = lookupExt.putArray("entries");
-        entries.forEach(entry -> {
-            ObjectNode entryNode = new ObjectNode(new JsonNodeFactory(false));
-            entryNode.put("key", (String) entry.getKey());
-            entryNode.put("value", (String) entry.getValue());
-            entriesNode.add(entryNode);
-        });
+        if (LookupType.INVERSE_VALUES_LOOKUP.equals(lookupDefinition.getLookupType()))
+        {
+            List<InverseValuesLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                    .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, InverseValuesLookupEntry.class);
 
+            entries.forEach(entry -> {
+                ObjectNode entryNode = new ObjectNode(new JsonNodeFactory(false));
+                entryNode.put("key", entry.getKey());
+                entryNode.put("value", entry.getValue());
+                entryNode.put("inverseKey", entry.getInverseKey());
+                entryNode.put("inverseValue", entry.getInverseValue());
+                entryNode.put("readonly", entry.isReadonly());
+                entriesNode.add(entryNode);
+            });
+        }
+        else if (lookupDefinition.getLookupType().equals(LookupType.NESTED_LOOKUP))
+        {
+            List<NestedLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                    .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, NestedLookupEntry.class);
+
+            entries.forEach(entry -> {
+                ObjectNode entryNode = new ObjectNode(new JsonNodeFactory(false));
+                entryNode.put("key", entry.getKey());
+                entryNode.put("value", entry.getValue());
+                entryNode.put("readonly", entry.isReadonly());
+                ArrayNode sublookupNode = entryNode.putArray("subLookup");
+
+                entry.getSubLookup().forEach(sublookupEntry -> {
+                    ObjectNode subEntryNode = new ObjectNode(new JsonNodeFactory(false));
+                    subEntryNode.put("key", sublookupEntry.getKey());
+                    subEntryNode.put("value", sublookupEntry.getValue());
+                    subEntryNode.put("readonly", sublookupEntry.isReadonly());
+
+                    sublookupNode.add(subEntryNode);
+                });
+
+                entryNode.set("subLookup", sublookupNode);
+
+                entriesNode.add(entryNode);
+            });
+        }
+        else if (lookupDefinition.getLookupType().equals(LookupType.STANDARD_LOOKUP))
+        {
+            List<StandardLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                    .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, StandardLookupEntry.class);
+
+            entries.forEach(entry -> {
+                ObjectNode entryNode = new ObjectNode(new JsonNodeFactory(false));
+                entryNode.put("key", entry.getKey());
+                entryNode.put("value", entry.getValue());
+                entryNode.put("readonly", entry.isReadonly());
+                entriesNode.add(entryNode);
+            });
+        }
         jsonArrayExt.add(lookupExt);
 
         String updatedLookupsAsJson = JsonPath.using(configuration).parse(lookupsExt)
                 .set("$." + lookupDefinition.getLookupType().getTypeName(), jsonArrayExt).jsonString();
 
         saveLookupsExt(updatedLookupsAsJson);
-        return updatedLookupsAsJson;
     }
 
     private void deleteLookupFromExtLookups(String lookupName) throws IOException
@@ -254,7 +415,7 @@ public class ConfigLookupDao implements LookupDao
 
             if (jsonArrayExt != null)
             {
-                for (int i =0 ; i < jsonArrayExt.size(); i++ )
+                for (int i = 0; i < jsonArrayExt.size(); i++)
                 {
                     JsonNode node = jsonArrayExt.get(i);
                     if (lookupName.equals(node.get("name").asText()))
@@ -270,7 +431,7 @@ public class ConfigLookupDao implements LookupDao
         saveLookupsExt(updatedLookupsAsJson);
     }
 
-    public void saveLookupsExt(String updatedLookupsAsJson) throws JSONException, IOException
+    private void saveLookupsExt(String updatedLookupsAsJson) throws JSONException, IOException
     {
         Files.write(Paths.get(getLookupsExtFileLocation()), new JSONObject(updatedLookupsAsJson).toString(2).getBytes());
         lookupsExt = updatedLookupsAsJson;

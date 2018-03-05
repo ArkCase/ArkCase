@@ -5,7 +5,18 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,13 +28,7 @@ public class AcmParticipantPrivilege implements Serializable, AcmEntity
     private static final long serialVersionUID = -2774839599422346798L;
 
     @Id
-    @TableGenerator(name = "acm_participant_privilege_gen",
-            table = "acm_participant_privilege_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_participant_privilege",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_participant_privilege_gen", table = "acm_participant_privilege_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_participant_privilege", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_participant_privilege_gen")
     @Column(name = "cm_privilege_id")
     private Long id;

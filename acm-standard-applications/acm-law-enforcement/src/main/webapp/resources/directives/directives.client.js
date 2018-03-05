@@ -1,3 +1,3 @@
 'use strict';
 
-ApplicationConfiguration.registerModule('directives', ['services']);
+ApplicationConfiguration.registerModule('directives', [ 'services' ]);

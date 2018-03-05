@@ -27,7 +27,7 @@ public class LdapUser
     private String state;
     private LocalDate passwordExpirationDate;
 
-    public AcmUser toAcmUser()
+    public AcmUser toAcmUser(String defaultLang)
     {
         AcmUser acmUser = new AcmUser();
         acmUser.setUserId(userId.toLowerCase());
@@ -35,6 +35,7 @@ public class LdapUser
         acmUser.setUserPrincipalName(userPrincipalName);
         acmUser.setsAMAccountName(sAMAccountName);
         acmUser.setUserDirectoryName(directoryName);
+        acmUser.setLang(defaultLang);
         return setAcmUserEditableFields(acmUser);
     }
 
@@ -53,7 +54,8 @@ public class LdapUser
         return acmUser;
     }
 
-    private boolean objChanged(Object o1, Object o2) {
+    private boolean objChanged(Object o1, Object o2)
+    {
         return !Objects.equals(o1, o2);
     }
 
@@ -259,8 +261,10 @@ public class LdapUser
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         LdapUser ldapUser = (LdapUser) o;
         return Objects.equals(userId, ldapUser.userId);
     }

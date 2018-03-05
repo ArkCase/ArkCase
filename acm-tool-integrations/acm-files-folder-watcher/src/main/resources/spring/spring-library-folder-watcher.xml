@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="userHomeFolder" class="java.io.File">
         <constructor-arg value="${user.home}/.arkcase"/>
@@ -15,8 +14,7 @@
         <constructor-arg index="1" value="acm"/>
     </bean>
 
-    <bean id="configFileListener" class="com.armedia.acm.files.ConfigFileWatcher"
-          depends-on="springEntityListenerConfigurer">
+    <bean id="configFileListener" class="com.armedia.acm.files.ConfigFileWatcher" depends-on="springEntityListenerConfigurer">
         <property name="baseFolder" ref="configFolder"/>
         <property name="ignoreFolders">
             <list>
@@ -34,10 +32,8 @@
         <!--<property name="delay" value="3000"/>-->
     </bean>
 
-    <bean id="configMonitorController" class="com.armedia.acm.files.ConfigFileController"
-          init-method="initBean"
-          destroy-method="stopBean"
-          depends-on="activitiProcessEngineConfiguration">
+    <bean id="configMonitorController" class="com.armedia.acm.files.ConfigFileController" init-method="initBean" destroy-method="stopBean"
+        depends-on="activitiProcessEngineConfiguration">
         <property name="configFolder" ref="configFolder"/>
         <property name="configFolderMonitor" ref="configFileMonitor"/>
     </bean>
@@ -47,8 +43,7 @@
         <constructor-arg index="0" value="${capture.rootFolderToWatch}"/>
     </bean>
 
-    <bean id="captureFileListener" class="com.armedia.acm.files.FileWatcher"
-          depends-on="springEntityListenerConfigurer">
+    <bean id="captureFileListener" class="com.armedia.acm.files.FileWatcher" depends-on="springEntityListenerConfigurer">
         <property name="watchFolder" ref="captureFolder"/>
         <!-- Do not put a period before the extension -->
         <property name="allowedFileExtensions" value="${capture.fileExtensions}"/>
@@ -61,9 +56,7 @@
         <!--<property name="delay" value="3000"/>-->
     </bean>
 
-    <bean id="captureMonitorController" class="com.armedia.acm.files.FileController"
-          init-method="init"
-          destroy-method="destroy">
+    <bean id="captureMonitorController" class="com.armedia.acm.files.FileController" init-method="init" destroy-method="destroy">
         <property name="watchFolder" ref="captureFolder"/>
         <property name="fileMonitor" ref="captureFileMonitor"/>
     </bean>
@@ -73,8 +66,7 @@
         <constructor-arg index="0" value="${capture.convertedPdfsFolder}"/>
     </bean>
 
-    <bean id="convertedFileListener" class="com.armedia.acm.files.capture.ConvertedFileWatcher"
-          depends-on="springEntityListenerConfigurer">
+    <bean id="convertedFileListener" class="com.armedia.acm.files.capture.ConvertedFileWatcher" depends-on="springEntityListenerConfigurer">
         <property name="baseFolder" ref="convertedFilesFolder"/>
         <!-- since is called convertedPdfsFolder is logical that only pdf will need to be processed-->
         <property name="fileExtensions" value="pdf"/>
@@ -86,13 +78,11 @@
         <!--<property name="delay" value="3000"/>-->
     </bean>
 
-    <bean id="convertedMonitorController" class="com.armedia.acm.files.capture.ConvertedFileController"
-          init-method="initBean"
-          destroy-method="stopBean">
+    <bean id="convertedMonitorController" class="com.armedia.acm.files.capture.ConvertedFileController" init-method="initBean"
+        destroy-method="stopBean">
         <property name="convertedFolder" ref="convertedFilesFolder"/>
         <property name="convertedFileMonitor" ref="convertedFileMonitor"/>
     </bean>
-
 
     <!-- Working Folder -->
     <bean id="workingFolder" factory-bean="vfsManager" factory-method="resolveFile">

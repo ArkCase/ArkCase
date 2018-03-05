@@ -3,31 +3,30 @@
     <parent>
         <groupId>com.armedia.acm.acm-plugins</groupId>
         <artifactId>acm-default-plugins</artifactId>
-        <version>3.2.2-SNAPSHOT</version>
+        <version>3.2.6-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
     <artifactId>acm-addressable-plugin</artifactId>
     <name>ACM Default Plugin: Addressable</name>
-    <description>This plugin adds physical addresses and contact methods.  Both people and organizations
-        can have addresses and contact methods.  Contact methods include e-mail and telephone (including SMS).
+    <description>This plugin adds physical addresses and contact methods. Both people and organizations
+        can have addresses and contact methods. Contact methods include e-mail and telephone (including SMS).
     </description>
 
     <dependencies>
-    	<!-- acm -->
-    	<dependency>
+        <!-- acm -->
+        <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-object-converter</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-    		<artifactId>acm-service-users</artifactId>
-    		<version>${acm.version}</version>
+            <artifactId>acm-service-users</artifactId>
+            <version>${acm.version}</version>
         </dependency>
 
-    	
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -58,6 +57,5 @@
             <artifactId>jackson-jsog</artifactId>
         </dependency>
     </dependencies>
-
 
 </project>

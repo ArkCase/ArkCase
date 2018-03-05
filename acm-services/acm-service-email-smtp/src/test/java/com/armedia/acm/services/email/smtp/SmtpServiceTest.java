@@ -1,5 +1,15 @@
 package com.armedia.acm.services.email.smtp;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
@@ -13,6 +23,7 @@ import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,16 +46,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 5, 2017
@@ -135,7 +136,8 @@ public class SmtpServiceTest
 
         ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
 
-        when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), any(Map.class))).thenReturn(mockMuleMessage);
+        when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), any(Map.class)))
+                .thenReturn(mockMuleMessage);
 
         setSendExpectations(false);
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
@@ -529,7 +531,8 @@ public class SmtpServiceTest
         if (withEncription)
         {
             returnedValues.put(EmailSenderConfigurationConstants.ENCRYPTION, "starttls");
-        } else
+        }
+        else
         {
             returnedValues.put(EmailSenderConfigurationConstants.ENCRYPTION, "off");
         }

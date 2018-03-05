@@ -1,31 +1,29 @@
 package com.armedia.acm.pluginmanager.service;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivileges;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.armedia.acm.spring.events.ContextAddedEvent;
-import org.easymock.EasyMock;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /**
  * Created by dmiller on 3/18/14.
  */
 public class AcmPluginManagerTest extends EasyMockSupport
 {
-
 
     private AcmPluginManager unit;
 
@@ -40,6 +38,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
     private SpringContextHolder mockSpringContextHolder;
     private final String roleAdd = "role_add";
     private final String roleAdmin = "role_admin";
+    private final String wildCardRole = "ADMIN@*";
     private final String privilegeAdd = "add";
 
     @Before
@@ -62,7 +61,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
     public void setApplicationContext_registerAllPlugins()
     {
         List<AcmPlugin> plugins = Arrays.asList(pluginOne, pluginTwo, pluginThree);
-        List<AcmPluginPrivileges> pluginsPrivileges = Arrays.asList(pluginPrivilegesOne,pluginPrivilegesTwo,pluginPrivilegesThree);
+        List<AcmPluginPrivileges> pluginsPrivileges = Arrays.asList(pluginPrivilegesOne, pluginPrivilegesTwo, pluginPrivilegesThree);
         Map<String, AcmPlugin> beans = asMap(plugins);
         Map<String, AcmPluginPrivileges> acmPluginsPrivileges = asMapPrivileges(pluginsPrivileges);
         expect(mockSpringContextHolder.getAllBeansOfType(AcmPluginPrivileges.class)).andReturn(acmPluginsPrivileges);
@@ -80,7 +79,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
     }
 
     @Test
-    public void getPrivilegesForRole() throws Exception
+    public void getPrivilegesForRole()
     {
         AcmPlugin plugin = createPlugin("test plugin");
         unit.registerPlugin(plugin);
@@ -91,22 +90,36 @@ public class AcmPluginManagerTest extends EasyMockSupport
 
         assertEquals(privilegeAdd, privileges.get(0));
 
+    }
+
+    @Test
+    public void getPrivilegesForWildCardRole()
+    {
+        AcmPlugin plugin = createPlugin("test plugin");
+        unit.registerPlugin(plugin);
+
+        List<String> privileges = unit.getPrivilegesForRole("ADMIN@ARMEDIA.COM");
+
+        assertEquals(1, privileges.size());
+
+        assertEquals(privilegeAdd, privileges.get(0));
 
     }
 
     @Test
-    public void getRolesForPrivilege() throws Exception {
+    public void getRolesForPrivilege()
+    {
         AcmPlugin plugin = createPlugin("test plugin");
         unit.registerPlugin(plugin);
 
         List<String> roles = unit.getRolesForPrivilege(privilegeAdd);
 
-        assertEquals(2, roles.size());
+        assertEquals(3, roles.size());
 
     }
 
     @Test
-    public void getPrivilegesForRole_noPrivileges() throws Exception
+    public void getPrivilegesForRole_noPrivileges()
     {
         AcmPlugin plugin = createPlugin("test plugin");
         plugin.setPrivileges(null);
@@ -116,14 +129,12 @@ public class AcmPluginManagerTest extends EasyMockSupport
 
         assertEquals(0, privileges.size());
 
-
     }
-
 
     private Map<String, AcmPlugin> asMap(List<AcmPlugin> pluginList)
     {
         Map<String, AcmPlugin> beans = new HashMap<>();
-        for ( AcmPlugin plugin : pluginList )
+        for (AcmPlugin plugin : pluginList)
         {
             beans.put(plugin.getPluginName(), plugin);
         }
@@ -134,7 +145,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
     private Map<String, AcmPluginPrivileges> asMapPrivileges(List<AcmPluginPrivileges> pluginList)
     {
         Map<String, AcmPluginPrivileges> beans = new HashMap<>();
-        for ( AcmPluginPrivileges plugin : pluginList )
+        for (AcmPluginPrivileges plugin : pluginList)
         {
             beans.put(plugin.getPluginName(), plugin);
         }
@@ -150,7 +161,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
         AcmPluginPrivilege add = new AcmPluginPrivilege();
         add.setPrivilegeName(privilegeAdd);
 
-        add.setApplicationRolesWithPrivilege(Arrays.asList(roleAdd, roleAdmin));
+        add.setApplicationRolesWithPrivilege(Arrays.asList(roleAdd, roleAdmin, wildCardRole));
 
         retval.setPrivileges(Arrays.asList(add));
 
@@ -165,7 +176,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
         AcmPluginPrivilege add = new AcmPluginPrivilege();
         add.setPrivilegeName(privilegeAdd);
 
-        add.setApplicationRolesWithPrivilege(Arrays.asList(roleAdd, roleAdmin));
+        add.setApplicationRolesWithPrivilege(Arrays.asList(roleAdd, roleAdmin, wildCardRole));
 
         retval.setPrivileges(Arrays.asList(add));
 

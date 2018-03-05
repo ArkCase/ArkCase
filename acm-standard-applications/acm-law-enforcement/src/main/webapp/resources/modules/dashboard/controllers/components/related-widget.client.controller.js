@@ -1,91 +1,101 @@
 'use strict';
 
-angular.module('dashboard.related', ['adf.provider'])
-    .config(function (dashboardProvider) {
-        dashboardProvider
-            .widget('related', {
-                    title: 'dashboard.widgets.related.title',
-                    description: 'dashboard.widgets.related.description',
-                    controller: 'Dashboard.RelatedController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/related-widget.client.view.html',
-                    commonName: 'related'
-                }
-            );
-    })
-    .controller('Dashboard.RelatedController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'ObjectAssociation.Service', 'ObjectService', 'UtilService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.LookupService',
-        function ($scope, $stateParams, $translate,
-                  PersonInfoService, ObjectAssociationService, ObjectService, Util, HelperObjectBrowserService, HelperUiGridService, ObjectLookupService) {
+angular.module('dashboard.related', [ 'adf.provider' ]).config(function(dashboardProvider) {
+    dashboardProvider.widget('related', {
+        title : 'preference.overviewWidgets.related.title',
+        description : 'dashboard.widgets.related.description',
+        controller : 'Dashboard.RelatedController',
+        reload : true,
+        templateUrl : 'modules/dashboard/views/components/related-widget.client.view.html',
+        commonName : 'related'
+    });
+}).controller(
+        'Dashboard.RelatedController',
+        [
+                '$scope',
+                '$stateParams',
+                '$translate',
+                'Person.InfoService',
+                'ObjectAssociation.Service',
+                'ObjectService',
+                'UtilService',
+                'Helper.ObjectBrowserService',
+                'Helper.UiGridService',
+                'Object.LookupService',
+                function($scope, $stateParams, $translate, PersonInfoService, ObjectAssociationService, ObjectService, Util,
+                        HelperObjectBrowserService, HelperUiGridService, ObjectLookupService) {
 
-            var modules = [
-                {
-                    name: "PERSON",
-                    configName: "people",
-                    getInfo: PersonInfoService.getPersonInfo,
-                    validateInfo: PersonInfoService.validatePersonInfo
-                }
-            ];
+                    var modules = [ {
+                        name : "PERSON",
+                        configName : "people",
+                        getInfo : PersonInfoService.getPersonInfo,
+                        validateInfo : PersonInfoService.validatePersonInfo
+                    } ];
 
-            var module = _.find(modules, function (module) {
-                return module.name == $stateParams.type;
-            });
+                    var module = _.find(modules, function(module) {
+                        return module.name == $stateParams.type;
+                    });
 
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
+                    $scope.gridOptions = {
+                        enableColumnResizing : true,
+                        columnDefs : []
+                    };
 
-            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+                    var gridHelper = new HelperUiGridService.Grid({
+                        scope : $scope
+                    });
 
-            new HelperObjectBrowserService.Component({
-                scope: $scope
-                , stateParams: $stateParams
-                , moduleId: module.configName
-                , componentId: "main"
-                , retrieveObjectInfo: module.getInfo
-                , validateObjectInfo: module.validateInfo
-                , onObjectInfoRetrieved: function (objectInfo) {
-                    onObjectInfoRetrieved(objectInfo);
-                }
-                , onConfigRetrieved: function (componentConfig) {
-                    onConfigRetrieved(componentConfig);
-                }
-            });
+                    new HelperObjectBrowserService.Component({
+                        scope : $scope,
+                        stateParams : $stateParams,
+                        moduleId : module.configName,
+                        componentId : "main",
+                        retrieveObjectInfo : module.getInfo,
+                        validateObjectInfo : module.validateInfo,
+                        onObjectInfoRetrieved : function(objectInfo) {
+                            onObjectInfoRetrieved(objectInfo);
+                        },
+                        onConfigRetrieved : function(componentConfig) {
+                            onConfigRetrieved(componentConfig);
+                        }
+                    });
 
-            var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.objectInfo = objectInfo;
-                refreshGridData(objectInfo.id, objectInfo.objectType);
-            };
+                    var onObjectInfoRetrieved = function(objectInfo) {
+                        $scope.objectInfo = objectInfo;
+                        refreshGridData(objectInfo.id, objectInfo.objectType);
+                    };
 
-            function refreshGridData(objectId, objectType) {
-                ObjectAssociationService.getObjectAssociations(objectId, objectType, 'PERSON').then(function (data) {
-                    gridHelper.setWidgetsGridData(data.response.docs);
-                });
-            }
-
-            var onConfigRetrieved = function (componentConfig) {
-                var widgetInfo = _.find(componentConfig.widgets, function (widget) {
-                    return widget.id === "related";
-                });
-                gridHelper.setColumnDefs(widgetInfo);
-            };
-
-            $scope.onClickObjLink = function (event, rowEntity) {
-                event.preventDefault();
-                var targetType = ObjectService.ObjectTypes.PERSON;
-                var targetId = Util.goodMapValue(rowEntity, "target_object.object_id_s");
-                gridHelper.showObject(targetType, targetId);
-            };
-
-            $scope.relationshipTypes = [];
-            ObjectLookupService.getPersonRelationTypes().then(
-                function (relationshipTypes) {
-                    for (var i = 0; i < relationshipTypes.length; i++) {
-                        $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue, "inverseKey": relationshipTypes[i].key, "inverseValue": relationshipTypes[i].value});
+                    function refreshGridData(objectId, objectType) {
+                        ObjectAssociationService.getObjectAssociations(objectId, objectType, 'PERSON').then(function(data) {
+                            gridHelper.setWidgetsGridData(data.response.docs);
+                        });
                     }
 
-                    return relationshipTypes;
-                });
-        }
-    ]);
+                    var onConfigRetrieved = function(componentConfig) {
+                        var widgetInfo = _.find(componentConfig.widgets, function(widget) {
+                            return widget.id === "related";
+                        });
+                        gridHelper.setColumnDefs(widgetInfo);
+                    };
+
+                    $scope.onClickObjLink = function(event, rowEntity) {
+                        event.preventDefault();
+                        var targetType = ObjectService.ObjectTypes.PERSON;
+                        var targetId = Util.goodMapValue(rowEntity, "target_object.object_id_s");
+                        gridHelper.showObject(targetType, targetId);
+                    };
+
+                    $scope.relationshipTypes = [];
+                    ObjectLookupService.getPersonRelationTypes().then(function(relationshipTypes) {
+                        for (var i = 0; i < relationshipTypes.length; i++) {
+                            $scope.relationshipTypes.push({
+                                "key" : relationshipTypes[i].inverseKey,
+                                "value" : relationshipTypes[i].inverseValue,
+                                "inverseKey" : relationshipTypes[i].key,
+                                "inverseValue" : relationshipTypes[i].value
+                            });
+                        }
+
+                        return relationshipTypes;
+                    });
+                } ]);

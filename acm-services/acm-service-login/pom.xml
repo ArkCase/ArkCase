@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.2.2-SNAPSHOT</version>
+        <version>3.2.6-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -43,6 +43,11 @@
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-object-converter</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-ldap-syncer</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -115,7 +120,6 @@
             <artifactId>commons-lang</artifactId>
         </dependency>
 
-
         <!-- testing -->
         <dependency>
             <groupId>junit</groupId>
@@ -126,8 +130,6 @@
             <artifactId>easymock</artifactId>
         </dependency>
 
-
     </dependencies>
-
 
 </project>

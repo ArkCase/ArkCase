@@ -1,18 +1,23 @@
 package com.armedia.acm.plugins.task.listener;
 
+import com.armedia.acm.plugins.task.model.BuckslipProcessStateEvent;
 import com.armedia.acm.plugins.task.model.TaskConstants;
+
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 
 import java.util.Objects;
 
-public class BuckslipTaskHelper
+public class BuckslipTaskHelper implements ApplicationEventPublisherAware
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public void resetFutureApproversAfterWithdrawOrNonConcur(DelegateExecution delegateExecution)
     {
@@ -24,10 +29,12 @@ public class BuckslipTaskHelper
         String pastTasks = (String) pi.getProcessVariables().get("pastTasks");
         JSONArray futureTasks = new JSONArray(((String) pi.getProcessVariables().get("futureTasks")));
         String currentApprover = (String) pi.getProcessVariables().get("currentApprover");
+        String approverFullName = (String) pi.getProcessVariables().get("approverFullName");
         String currentTaskName = (String) pi.getProcessVariables().get("currentTaskName");
         String currentGroupName = (String) pi.getProcessVariables().get("currentGroup");
         String currentDetails = (String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_DETAILS);
         String currentAddedBy = (String) pi.getProcessVariables().get("addedBy");
+        String addedByFullName = (String) pi.getProcessVariables().get("addedByFullName");
         String taskDueDateExpression = (String) pi.getProcessVariables().get("taskDueDateExpression");
 
         JSONArray newFutureTasks = new JSONArray();
@@ -40,10 +47,12 @@ public class BuckslipTaskHelper
         {
             JSONObject past = pastApproversJson.getJSONObject(i);
             String pastApproverId = past.getString("approverId");
+            String pastApproverFullName = past.getString("approverFullName");
             String pastTaskName = past.getString("taskName");
             String pastGroupName = past.getString("groupName");
             String pastDetails = past.getString("details");
             String pastAddedBy = past.getString("addedBy");
+            String pastAddedByFullName = past.getString("addedByFullName");
             int maxTaskDurationInDays = past.getInt("maxTaskDurationInDays");
             // account for possibly many withdrawal cycles; suppose the same tasks have already been recorded more
             // than once (e.g. Ann has completed her original task, then completed the same task after the first
@@ -65,10 +74,12 @@ public class BuckslipTaskHelper
             {
                 JSONObject newFuture = new JSONObject();
                 newFuture.put("approverId", pastApproverId);
+                newFuture.put("approverFullName", pastApproverFullName);
                 newFuture.put("taskName", pastTaskName);
                 newFuture.put("groupName", pastGroupName);
                 newFuture.put("details", pastDetails);
                 newFuture.put("addedBy", pastAddedBy);
+                newFuture.put("addedByFullName", pastAddedByFullName);
                 newFuture.put("maxTaskDurationInDays", maxTaskDurationInDays);
                 newFutureTasks.put(newFuture);
             }
@@ -83,10 +94,12 @@ public class BuckslipTaskHelper
         {
             JSONObject currentTask = new JSONObject();
             currentTask.put("approverId", currentApprover);
+            currentTask.put("approverFullName", approverFullName);
             currentTask.put("taskName", currentTaskName);
             currentTask.put("groupName", currentGroupName);
             currentTask.put("details", currentDetails);
             currentTask.put("addedBy", currentAddedBy);
+            currentTask.put("addedByFullName", addedByFullName);
             int maxTaskDurationInDays = getMaxTaskDurationInDays(taskDueDateExpression);
             currentTask.put("maxTaskDurationInDays", maxTaskDurationInDays);
             newFutureTasks.put(currentTask);
@@ -100,7 +113,9 @@ public class BuckslipTaskHelper
         log.debug("past: {}, current: {}, future: {}", pastTasks, currentApprover, futureTasks);
 
         // when the approval cycle is restarted, everyone has to approve again
-        delegateExecution.getEngineServices().getRuntimeService().setVariable(pi.getProcessInstanceId(), "futureTasks", newFutureTasks.toString());
+        delegateExecution.getEngineServices().getRuntimeService().setVariable(pi.getProcessInstanceId(), "futureTasks",
+                newFutureTasks.toString());
+        notifyBuckslipProcessStateChanged(delegateExecution, BuckslipProcessStateEvent.BuckslipProcessState.WITHDRAWN);
     }
 
     public int getMaxTaskDurationInDays(String taskDueDateExpression)
@@ -111,5 +126,19 @@ public class BuckslipTaskHelper
         String lostSecondChar = lostFirstChar.substring(0, lostFirstChar.length() - 1);
         log.debug("max task duration in days: {}", lostSecondChar);
         return Integer.valueOf(lostSecondChar);
+    }
+
+    public void notifyBuckslipProcessStateChanged(DelegateExecution delegateExecution,
+            BuckslipProcessStateEvent.BuckslipProcessState buckslipProcessState)
+    {
+        BuckslipProcessStateEvent buckslipProcessStateEvent = new BuckslipProcessStateEvent(delegateExecution.getVariables());
+        buckslipProcessStateEvent.setBuckslipProcessState(buckslipProcessState);
+        applicationEventPublisher.publishEvent(buckslipProcessStateEvent);
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }

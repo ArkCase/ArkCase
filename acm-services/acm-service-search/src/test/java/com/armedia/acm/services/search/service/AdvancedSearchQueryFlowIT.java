@@ -1,7 +1,6 @@
 package com.armedia.acm.services.search.service;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 
@@ -58,7 +57,8 @@ public class AdvancedSearchQueryFlowIT
                 + "Dmodifier_lcs&facet.query=%7B%21key%3D%27Modify+Date%2C+Previous+Week%27%7Dmodified_date_tdt:%5BNOW"
                 + "%2FDAY-7DAY+TO+*%5D&facet.query=%7B%21key%3D%27Modify+Date%2C+Previous+Month%27%7Dmodified_date_tdt:"
                 + "%5BNOW%2FDAY-1MONTH+TO+*%5D&facet.query=%7B%21key%3D%27Modify+Date%2C+Previous+Year%27%7D"
-                + "modified_date_tdt:%5BNOW%2FDAY-1YEAR+TO+*%5D&facet.field=%7B%21key%3D%27Incident+Type%27%7D" + "incident_type_lcs&facet.field=%7B%21key%3D%27Status%27%7Dstatus_lcs";
+                + "modified_date_tdt:%5BNOW%2FDAY-1YEAR+TO+*%5D&facet.field=%7B%21key%3D%27Incident+Type%27%7D"
+                + "incident_type_lcs&facet.field=%7B%21key%3D%27Status%27%7Dstatus_lcs";
 
         // String query = "Grateful Dead";
 
@@ -91,5 +91,70 @@ public class AdvancedSearchQueryFlowIT
 
         log.debug("num found: " + numFound);
 
+    }
+
+    @Test
+    public void verifyDefaultFieldHeadersSent() throws Exception
+    {
+        String query = "test";
+
+        log.debug("query length: " + query.length());
+
+        List<SimpleGrantedAuthority> groups = new ArrayList<>();
+        groups.add(new SimpleGrantedAuthority("GROUP1"));
+        groups.add(new SimpleGrantedAuthority("GROUP WITH SPACE"));
+        Authentication authentication = new UsernamePasswordAuthenticationToken("jerry", "garcia", groups);
+
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("query", query);
+        headers.put("firstRow", 0);
+        headers.put("maxRows", 10);
+        headers.put("sort", "object_type_s asc");
+        headers.put("acmUser", authentication);
+        headers.put("df", "catch_all");
+
+        MuleMessage response = muleContextManager.send("vm://advancedSearchQuery.in", "", headers);
+
+        assertTrue(response.getPayload() != null && response.getPayload() instanceof String);
+
+        assertNull(response.getExceptionPayload());
+
+        log.debug("response: " + response.getPayloadAsString());
+
+        JSONObject json = new JSONObject(response.getPayloadAsString());
+
+        assertEquals("catch_all", json.getJSONObject("responseHeader").getJSONObject("params").get("df"));
+    }
+
+    @Test
+    public void verifyNoDefaultFieldHeadersSent() throws Exception
+    {
+        String query = "test";
+
+        log.debug("query length: " + query.length());
+
+        List<SimpleGrantedAuthority> groups = new ArrayList<>();
+        groups.add(new SimpleGrantedAuthority("GROUP1"));
+        groups.add(new SimpleGrantedAuthority("GROUP WITH SPACE"));
+        Authentication authentication = new UsernamePasswordAuthenticationToken("jerry", "garcia", groups);
+
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("query", query);
+        headers.put("firstRow", 0);
+        headers.put("maxRows", 10);
+        headers.put("sort", "object_type_s asc");
+        headers.put("acmUser", authentication);
+
+        MuleMessage response = muleContextManager.send("vm://advancedSearchQuery.in", "", headers);
+
+        assertTrue(response.getPayload() != null && response.getPayload() instanceof String);
+
+        assertNull(response.getExceptionPayload());
+
+        log.debug("response: " + response.getPayloadAsString());
+
+        JSONObject json = new JSONObject(response.getPayloadAsString());
+
+        assertFalse(json.getJSONObject("responseHeader").getJSONObject("params").has("df"));
     }
 }

@@ -36,7 +36,7 @@
                             {{option.label}}
                         </option>
                     </select>
-                </div>                                    
+                </div>
             </div>
             <div class="row">
                 <div class="col-lg-4">
@@ -55,7 +55,9 @@
                     <label for="clientAccessServer" translate>
                         admin.security.exchangeConfiguration.exchangeConfigForm.clientAccessServer.label
                     </label>
-                    <input name="clientAccessServer" type="text" placeholder="{{'admin.security.exchangeConfiguration.exchangeConfigForm.clientAccessServer.placeholder' | translate}}" ng-model="exchangeConfigDataModel.clientAccessServer" class="form-control" ng-required/>
+                    <input name="clientAccessServer" type="text"
+                            placeholder="{{'admin.security.exchangeConfiguration.exchangeConfigForm.clientAccessServer.placeholder' | translate}}"
+                            ng-model="exchangeConfigDataModel.clientAccessServer" class="form-control" ng-required />
                 </div>
             </div>
             <div class="row">
@@ -63,7 +65,8 @@
                     <label for="exchangeDefaultAccess" translate>
                         admin.security.exchangeConfiguration.exchangeConfigForm.exchangeDefaultAccess.label
                     </label>
-                    <select name="exchangeDefaultAccess" class="form-control" ng-model="exchangeConfigDataModel.defaultAccess" title="{{ 'admin.security.exchangeConfiguration.exchangeConfigForm.clientAccessServer.description' | translate }}">
+                    <select name="exchangeDefaultAccess" class="form-control" ng-model="exchangeConfigDataModel.defaultAccess"
+                            title="{{ 'admin.security.exchangeConfiguration.exchangeConfigForm.clientAccessServer.description' | translate }}">
                         <option value="" disabled selected hidden translate>
                             admin.security.exchangeConfiguration.exchangeConfigForm.exchangeDefaultAccess.placeholder
                         </option>
@@ -71,7 +74,7 @@
                             {{option.label}}
                         </option>
                     </select>
-                </div>                                    
+                </div>
             </div>
         </panel-view>
     </ng-form>

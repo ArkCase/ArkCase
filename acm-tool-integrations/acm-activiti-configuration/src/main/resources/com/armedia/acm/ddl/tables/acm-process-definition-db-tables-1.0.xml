@@ -1,15 +1,11 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-create-process-definitions-table" author="nebojsha.davidovikj" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_process_definition">
             <column name="cm_pd_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_process_definition"/>
+                <constraints primaryKey="true" primaryKeyName="pk_process_definition"/>
             </column>
             <column name="cm_pd_description" type="VARCHAR(1024)">
                 <constraints nullable="true"/>
@@ -52,9 +48,7 @@
     <changeSet id="01-create-process-definitions-table" author="nebojsha.davidovikj" dbms="mysql">
         <createTable tableName="acm_process_definition">
             <column name="cm_pd_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_process_definition"/>
+                <constraints primaryKey="true" primaryKeyName="pk_process_definition"/>
             </column>
             <column name="cm_pd_description" type="VARCHAR(1024)">
                 <constraints nullable="true"/>
@@ -103,6 +97,12 @@
             <column name="cm_seq_num" value="100"></column>
             <column name="cm_seq_name" value="acm_process_definition"></column>
         </insert>
+    </changeSet>
+    <changeSet id="02-change-columnName-cm_pd_md5_hex" author="jivanovski">
+        <renameColumn tableName="acm_process_definition" oldColumnName="cm_pd_md5_hex" newColumnName="cm_pd_sha256_hex" columnDataType="VARCHAR(32)"/>
+    </changeSet>
+    <changeSet id="03-widen-cm_pd_md5_hex" author="jivanovski">
+        <modifyDataType tableName="acm_process_definition" columnName="cm_pd_sha256_hex" newDataType="VARCHAR(256)"/>
     </changeSet>
 </databaseChangeLog>
 

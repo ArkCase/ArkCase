@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Watch for file events in the ACM configuration folder.  Raise application events for each such event.
+ * Watch for file events in the ACM configuration folder. Raise application events for each such event.
  */
 public class ConfigFileWatcher implements FileListener, ApplicationEventPublisherAware, ApplicationContextAware
 {
@@ -45,11 +45,10 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
             log.debug("Looking for files in: " + getBaseFolder().getName());
         }
 
-
-        // this event just tells us when the whole application context is ready.  we don't actually need the context.
+        // this event just tells us when the whole application context is ready. we don't actually need the context.
         try
         {
-            //all this because of FileTypeSelector(FileType.FILE_OR_FOLDER) returns 0 elements
+            // all this because of FileTypeSelector(FileType.FILE_OR_FOLDER) returns 0 elements
             FileObject[] existingFiles = getBaseFolder().findFiles(new FileTypeSelector(FileType.FILE));
             FileObject[] existingFolders = getBaseFolder().findFiles(new FileTypeSelector(FileType.FOLDER));
             FileObject[] existingFilesAndFolders = new FileObject[existingFiles.length + existingFolders.length];
@@ -61,7 +60,8 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
                 log.trace("Raising event for file [{}]", current.getName());
                 fileCreated(new FileChangeEvent(current));
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Could not find existing files: " + e.getMessage(), e);
             throw new BeanCreationException("Could not find existing files: " + e.getMessage(), e);
@@ -208,7 +208,8 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
                 File baseFile = new File(new URI(baseUrl.toString().replace(" ", "%20")));
                 setBaseFolderPath(baseFile.getCanonicalPath());
 
-            } catch (URISyntaxException | IOException e)
+            }
+            catch (URISyntaxException | IOException e)
             {
                 log.error("Something is wrong with the base folder url: " + e.getMessage(), e);
             }

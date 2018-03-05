@@ -6,6 +6,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.context.ServletContextAware;
 
 import javax.servlet.ServletContext;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -46,7 +47,8 @@ public class ApplicationMetaInfoService implements InitializingBean, ServletCont
         {
             prop.load(manifestStream);
             version = prop.getProperty("Implementation-Version", "");
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.warn("Could not open manifest file: {}", e.getMessage(), e);
         }

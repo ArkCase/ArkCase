@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="osProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="properties">
@@ -20,8 +18,7 @@
             </props>
         </property>
     </bean>
-    <bean id="angularResourceCopierProperties"
-          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <bean id="angularResourceCopierProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="properties" ref="osProperties"/>
     </bean>
 
@@ -40,9 +37,7 @@
         </property>
         <property name="frontEndCommandsToBeExecuted">
             <list>
-                <value>${frontEndCommandPrefix}npm${frontEndCommandSuffix} --no-color install</value>
-                <value>${frontEndCommandPrefix}${frontEndCommandPath}bower${frontEndCommandSuffix} --no-color -q
-                    --config.interactive=false install
+                <value>${frontEndCommandPrefix}yarn --no-progress --non-interactive install
                 </value>
                 <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} --no-color</value>
             </list>
@@ -73,11 +68,9 @@
         </property>
         <property name="filesToCopyFromArchive">
             <list>
-                <value>.bowerrc</value>
                 <value>.csslintrc</value>
                 <value>.jshintrc</value>
                 <value>application.js</value>
-                <value>bower.json</value>
                 <value>config.js</value>
                 <value>Gruntfile.js</value>
                 <value>package.json</value>
@@ -90,7 +83,6 @@
                 <value>config.js</value>
             </list>
         </property>
-
 
     </bean>
 </beans>

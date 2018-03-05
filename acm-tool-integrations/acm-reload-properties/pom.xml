@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-tool-integrations</artifactId>
-        <version>3.2.2-SNAPSHOT</version>
+        <version>3.2.6-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,14 +13,13 @@
     <description>Reloading properties fields when changed on the file system. This is fix for Spring version 4.x.x</description>
 
     <dependencies>
-    
-		<!-- spring utilities -->
+
+        <!-- spring utilities -->
         <dependency>
             <groupId>net.unicon.springframework</groupId>
             <artifactId>springframework-addons</artifactId>
         </dependency>
-            
-    </dependencies>
 
+    </dependencies>
 
 </project>

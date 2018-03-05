@@ -10,7 +10,8 @@ import java.util.Date;
 public class SubscriptionPersistenceEvent extends AcmEvent
 {
 
-    public SubscriptionPersistenceEvent(AcmSubscription source) {
+    public SubscriptionPersistenceEvent(AcmSubscription source)
+    {
 
         super(source);
         setObjectId(source.getSubscriptionId());

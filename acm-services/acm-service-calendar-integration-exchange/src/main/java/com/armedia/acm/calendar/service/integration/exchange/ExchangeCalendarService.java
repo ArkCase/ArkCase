@@ -4,24 +4,6 @@ import static com.armedia.acm.calendar.service.integration.exchange.CalendarEnti
 import static com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType.READ;
 import static com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType.WRITE;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.persistence.PersistenceException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationListener;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.armedia.acm.calendar.config.service.CalendarAdminService;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationEvent;
@@ -46,6 +28,24 @@ import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookFolderRecreator;
 import com.armedia.acm.services.users.model.AcmUser;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationListener;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.persistence.PersistenceException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
@@ -79,7 +79,6 @@ public class ExchangeCalendarService
 
         /*
          * (non-Javadoc)
-         *
          * @see com.armedia.acm.calendar.service.CalendarExceptionMapper#mapException(com.armedia.acm.calendar.service.
          * CalendarServiceException)
          */
@@ -100,6 +99,10 @@ public class ExchangeCalendarService
             {
                 errorDetails.put("error_cause", "INVALID_BIND_TO_SERVICE_CREDENTIALS");
             }
+            else if (exception instanceof CalendarObjectClosedException)
+            {
+                errorDetails.put("error_cause", "OBJECT_CLOSED");
+            }
             else
             {
                 errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
@@ -110,7 +113,6 @@ public class ExchangeCalendarService
 
         /*
          * (non-Javadoc)
-         *
          * @see com.armedia.acm.calendar.service.CalendarExceptionMapper#getStatusCode()
          */
         @Override
@@ -144,7 +146,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
      */
@@ -156,7 +157,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @Override
@@ -180,7 +180,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.calendar.service.CalendarService#retrieveCalendar(com.armedia.acm.services.users.model.AcmUser,
      * org.springframework.security.core.Authentication, java.lang.String, java.lang.String)
@@ -216,7 +215,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.CalendarService#listCalendars(com.armedia.acm.services.users.model.AcmUser,
      * org.springframework.security.core.Authentication, java.lang.String, java.lang.String, java.lang.String, int, int)
      */
@@ -254,7 +252,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.calendar.service.CalendarService#addCalendarEvent(com.armedia.acm.services.users.model.AcmUser,
      * org.springframework.security.core.Authentication, java.lang.String,
@@ -299,7 +296,10 @@ public class ExchangeCalendarService
         {
             appointment = new Appointment(exchangeService);
             ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments, true);
-            folderId = new FolderId(handler.getCalendarId(calendarEvent.getObjectId()));
+            String calendarId = handler.getCalendarId(calendarEvent.getObjectId())
+                    .orElseThrow(() -> new Exception(String.format("No outlook folder associated with object of type [%s] with id [%s].",
+                            calendarEvent.getObjectType(), calendarEvent.getObjectId())));
+            folderId = new FolderId(calendarId);
         }
         catch (Exception e)
         {
@@ -310,7 +310,12 @@ public class ExchangeCalendarService
 
         try
         {
+            // issue with ews-java-api library. Workaround solution for creating calendar event with attachment.
+            // adding attachment successfully requires an update, by changing the subject, it will force an update
             appointment.save(folderId);
+            appointment.setSubject(calendarEvent.getSubject());
+            appointment.update(ConflictResolutionMode.AlwaysOverwrite);
+
         }
         catch (Exception e)
         {
@@ -322,7 +327,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.CalendarService#updateCalendarEvent(com.armedia.acm.services.users.model.
      * AcmUser, org.springframework.security.core.Authentication, com.armedia.acm.calendar.service.AcmCalendarEvent,
      * org.springframework.web.multipart.MultipartFile[])
@@ -376,6 +380,9 @@ public class ExchangeCalendarService
             processAttachmentsForRemoval(calendarEvent, appointment);
             processAttendeesForRemoval(calendarEvent, appointment);
 
+            // workaround solution for updating calendar event with attachment
+            appointment.update(ConflictResolutionMode.AlwaysOverwrite);
+            appointment.setSubject(calendarEvent.getSubject());
             appointment.update(ConflictResolutionMode.AlwaysOverwrite);
 
         }
@@ -472,7 +479,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.CalendarService#deleteCalendarEvent(com.armedia.acm.services.users.model.
      * AcmUser, org.springframework.security.core.Authentication, java.lang.String)
      */
@@ -529,7 +535,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.CalendarService#purgeEvents(java.lang.String,
      * com.armedia.acm.calendar.config.service.CalendarConfiguration)
      */
@@ -568,7 +573,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.CalendarService#getExceptionMapper(com.armedia.acm.calendar.service.
      * CalendarServiceException)
      */
@@ -649,7 +653,9 @@ public class ExchangeCalendarService
         try
         {
             ExchangeService service = outlookDao.connect(user);
-            String calendarId = handler.getCalendarId(objectId.toString());
+            String calendarId = handler.getCalendarId(objectId.toString()).orElseThrow(() -> new Exception(
+                    String.format("No outlook folder associated with object of type [%s] with id [%s].", objectType, objectId)));
+
             CalendarFolder.bind(service, new FolderId(calendarId));
 
             AcmOutlookFolderCreator folderCreator = folderCreatorDao.getFolderCreator(configuration.getSystemEmail(),
@@ -670,6 +676,11 @@ public class ExchangeCalendarService
     {
         try
         {
+            CalendarEntityHandler handler = entityHandlers.get(objectType);
+            if (handler.isObjectClosed(objectId))
+            {
+                throw new CalendarObjectClosedException(String.format("Object of [%s] type and [%s] id is closed.", objectType, objectId));
+            }
             folderRecreator.recreateFolder(objectType, objectId, outlookUser);
             return outlookUser;
         }
@@ -684,7 +695,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.calendar.config.service.CalendarAdminService#verifyEmailCredentials(com.armedia.acm.calendar.
      * config.service.EmailCredentials)

@@ -23,8 +23,10 @@ public class PDFUtils
     /**
      * Merges together the two supplied PDF documents
      *
-     * @param originalFileStream - this PDF will be first in the combined document
-     * @param newFileStream      - this PDF will be appended to the end of the original document
+     * @param originalFileStream
+     *            - this PDF will be first in the combined document
+     * @param newFileStream
+     *            - this PDF will be appended to the end of the original document
      */
     public static byte[] mergeFiles(InputStream originalFileStream, InputStream newFileStream)
     {
@@ -48,7 +50,8 @@ public class PDFUtils
             mergedDocument = outputStreamBytes.toByteArray();
             log.debug("merged length: " + mergedDocument.length);
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("pdf merge failed: {}", e.getMessage(), e);
         }

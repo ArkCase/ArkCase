@@ -3,6 +3,7 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -33,10 +34,10 @@ public class AcmUsersSyncResult
         this.deletedUsers = new ArrayList<>();
     }
 
-    public Map<String, AcmUser> sync(List<LdapUser> ldapUsers, List<AcmUser> acmUsers)
+    public Map<String, AcmUser> sync(List<LdapUser> ldapUsers, List<AcmUser> acmUsers, String defaultLang)
     {
         Map<String, AcmUser> currentUsersMap = getUsersByIdMap(acmUsers);
-        newUsers = findNewUsers(ldapUsers, currentUsersMap);
+        newUsers = findNewUsers(ldapUsers, currentUsersMap, defaultLang);
         log.debug("[{}] new users to be synced", newUsers.size());
         modifiedUsers = findModifiedUsers(ldapUsers, currentUsersMap);
         log.debug("[{}] modified users to be synced", modifiedUsers.size());
@@ -55,13 +56,13 @@ public class AcmUsersSyncResult
                 .collect(Collectors.toMap(AcmUser::getUserId, Function.identity()));
     }
 
-    private List<AcmUser> findNewUsers(List<LdapUser> ldapUsers, Map<String, AcmUser> acmUsers)
+    private List<AcmUser> findNewUsers(List<LdapUser> ldapUsers, Map<String, AcmUser> acmUsers, String defaultLang)
     {
         Predicate<LdapUser> doesNotExist = it -> !acmUsers.containsKey(it.getUserId());
         return ldapUsers.stream()
                 .filter(doesNotExist)
                 .peek(it -> log.trace("New user [{}] with dn [{}] to be synced", it.getUserId(), it.getDistinguishedName()))
-                .map(LdapUser::toAcmUser)
+                .map(it -> it.toAcmUser(defaultLang))
                 .collect(Collectors.toList());
     }
 

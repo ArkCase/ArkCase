@@ -24,19 +24,23 @@ public interface AcmEncryptablePropertyUtils
     byte[] decryptSymmetricKey() throws AcmEncryptionException;
 
     /**
-     * Returns a decrypted property value if the original value is surrounded by <tt>ENC(...)</tt>. Otherwise returns the original value.
+     * Returns a decrypted property value if the original value is surrounded by <tt>ENC(...)</tt>. Otherwise returns
+     * the original value.
      *
-     * @param originalValue the encrypted value to decrypt
+     * @param originalValue
+     *            the encrypted value to decrypt
      * @return decrypted value
      * @throws AcmEncryptionException
      */
     String decryptPropertyValue(final String originalValue) throws AcmEncryptionException;
 
     /**
-     * Returns an encrypted property value for the given original value. The encrypted value is surrounded by <tt>ENC(...)</tt>. If the
+     * Returns an encrypted property value for the given original value. The encrypted value is surrounded by
+     * <tt>ENC(...)</tt>. If the
      * original value already is surrounded by <tt>ENC(...)</tt>, then the original value is returned.
      *
-     * @param originalValue the value to encrypt
+     * @param originalValue
+     *            the value to encrypt
      * @return encrypted value surrounded by <tt>ENC(...)</tt>
      * @throws AcmEncryptionException
      */

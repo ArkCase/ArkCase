@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
@@ -50,7 +51,8 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return results;
     }
 
-    public int changeContainer(AcmContainer containerFrom, AcmContainer containerTo, List<String> excludeDocumentTypes) {
+    public int changeContainer(AcmContainer containerFrom, AcmContainer containerTo, List<String> excludeDocumentTypes)
+    {
         if (excludeDocumentTypes == null)
             excludeDocumentTypes = new LinkedList<>();
         String jpql = "UPDATE EcmFile e SET e.container=:containerTo, e.modified=:modifiedDate " +
@@ -90,20 +92,20 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
 
         try
         {
-        	result = (EcmFile) query.getSingleResult();
+            result = (EcmFile) query.getSingleResult();
         }
-        catch(NoResultException e)
+        catch (NoResultException e)
         {
             LOG.debug("Cannot find EcmFile for containerId=[{}], folderId=[{}] and fileType=[{}]", containerId, folderId, fileType, e);
         }
         catch (NonUniqueResultException e1)
         {
-        	LOG.error("Cannot find unique EcmFile for containerId=" + containerId + ", folderId=" + folderId + " and fileType=" + fileType + ". Multiple files found ...", e1);
-		}
+            LOG.error("Cannot find unique EcmFile for containerId=[{}], folderId=[{}] and fileType=[{}]. Multiple files found ...",
+                    containerId, folderId, fileType, e1);
+        }
 
         return result;
     }
-
 
     public EcmFile findByCmisFileIdAndFolderId(String cmisFileId, Long folderId)
     {
@@ -134,11 +136,16 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
     @Transactional
     public void deleteFile(Long id)
     {
-        EcmFile file = getEm().find(getPersistenceClass(),id);
+        EcmFile file = getEm().find(getPersistenceClass(), id);
         getEm().remove(file);
     }
 
     public List<EcmFile> findByFolderId(Long folderId)
+    {
+        return findByFolderId(folderId, FlushModeType.AUTO);
+    }
+
+    public List<EcmFile> findByFolderId(Long folderId, FlushModeType flushModeType)
     {
         String jpql = "SELECT e FROM EcmFile e WHERE e.folder.id=:folderId";
 
@@ -146,7 +153,19 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
 
         query.setParameter("folderId", folderId);
 
+        query.setFlushMode(flushModeType);
+
         return query.getResultList();
 
+    }
+
+    public List<EcmFile> getFilesWithoutParticipants()
+    {
+        String jpql = "SELECT e FROM EcmFile e WHERE e.fileId  NOT IN " +
+                "(SELECT p.objectId FROM AcmParticipant p WHERE p.objectType ='FILE')";
+
+        TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
+
+        return query.getResultList();
     }
 }

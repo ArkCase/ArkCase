@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+    xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
              http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-    <bean id="buckslipTaskCompletedListener"
-          class="com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener">
+    <bean id="buckslipTaskHelper" class="com.armedia.acm.plugins.task.listener.BuckslipTaskHelper"/>
+
+    <bean id="buckslipTaskCompletedListener" class="com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener">
         <property name="userDao" ref="userJpaDao"/>
+        <property name="buckslipTaskHelper" ref="buckslipTaskHelper"/>
     </bean>
 
-    <bean id="buckslipWithdrawnListener" class="com.armedia.acm.plugins.task.listener.BuckslipWithdrawnListener"/>
+    <bean id="buckslipWithdrawnListener" class="com.armedia.acm.plugins.task.listener.BuckslipWithdrawnListener">
+        <property name="buckslipTaskHelper" ref="buckslipTaskHelper"/>
+    </bean>
 
-    <bean id="taskPluginProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="taskPluginProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -67,8 +68,8 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="priorityLevelToNumberMap" ref="priorityLevelToNumberMap"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
-        <property name="acmUserService" ref="acmUserService"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="requiredFieldsPerOutcomeMap">
             <map>
                 <entry key="APPROVE">
@@ -91,8 +92,7 @@
 
     <bean id="taskEventPublisher" class="com.armedia.acm.plugins.task.service.TaskEventPublisher"/>
 
-    <bean id="acmApplicationTaskEventListener"
-          class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventListener">
+    <bean id="acmApplicationTaskEventListener" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventListener">
         <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
         <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
@@ -110,8 +110,7 @@
         <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
     </bean>
 
-    <bean id="activitiTaskHistoryListener"
-          class="com.armedia.acm.plugins.task.service.ActivitiTaskHistoryListener">
+    <bean id="activitiTaskHistoryListener" class="com.armedia.acm.plugins.task.service.ActivitiTaskHistoryListener">
         <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
         <property name="activitiTaskDao" ref="acmTaskDao"/>
     </bean>
@@ -120,13 +119,12 @@
         <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
 
-    <bean id="taskDataAccessUpdateLocator"
-          class="com.armedia.acm.plugins.task.service.impl.TaskDataAccessUpdateLocator">
+    <bean id="taskDataAccessUpdateLocator" class="com.armedia.acm.plugins.task.service.impl.TaskDataAccessUpdateLocator">
         <property name="taskDao" ref="acmTaskDao"/>
     </bean>
 
     <bean id="taskBusinessRule" class="com.armedia.acm.plugins.task.service.impl.TaskBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-task-rules.xlsx"/>
     </bean>
 
@@ -140,13 +138,11 @@
         <property name="noteDao" ref="noteDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="objectAssociationService" ref="objectAssociationService"/>
-        <property name="objectAssociationEventPublisher" ref="objectAssociationEventPublisher"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
-    <bean id="acmApplicationTaskEventHandler"
-          class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">
+    <bean id="acmApplicationTaskEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
@@ -164,8 +160,7 @@
         </property>
     </bean>
 
-    <bean id="acmTaskActivitiEventHandler"
-          class="com.armedia.acm.plugins.task.service.impl.AcmTaskActivitiEventHandler">
+    <bean id="acmTaskActivitiEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmTaskActivitiEventHandler">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="dataAccessPrivilegeListener" ref="dataAccessPrivilegeListener"/>

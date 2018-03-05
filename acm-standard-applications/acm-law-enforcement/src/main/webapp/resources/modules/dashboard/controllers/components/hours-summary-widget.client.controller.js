@@ -1,62 +1,107 @@
 'use strict';
 
-angular.module('dashboard.hoursSummary', ['adf.provider'])
-    .config(function (dashboardProvider) {
-        dashboardProvider
-            .widget('hoursSummary', {
-                title: 'dashboard.widgets.hoursSummary.title',
-                description: 'dashboard.widgets.hoursSummary.description',
-                controller: 'Dashboard.HoursSummaryController',
-                controllerAs: 'hoursSummary',
-                reload: true,
-                templateUrl: 'modules/dashboard/views/components/hours-summary-widget.client.view.html',
-                commonName: 'hoursSummary'
-            });
-    })
-    .controller('Dashboard.HoursSummaryController', ['$scope', '$translate', '$stateParams', '$filter'
-        , 'UtilService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'moment'
-        , function ($scope, $translate, $stateParams, $filter
-            , Util, TimeTrackingInfoService, HelperObjectBrowserService, ConfigService, moment) {
+angular.module('dashboard.hoursSummary', [ 'adf.provider' ]).config(function(dashboardProvider) {
+    dashboardProvider.widget('hoursSummary', {
+        title : 'preference.overviewWidgets.hoursSummary.title',
+        description : 'dashboard.widgets.hoursSummary.description',
+        controller : 'Dashboard.HoursSummaryController',
+        controllerAs : 'hoursSummary',
+        reload : true,
+        templateUrl : 'modules/dashboard/views/components/hours-summary-widget.client.view.html',
+        commonName : 'hoursSummary'
+    });
+}).controller(
+        'Dashboard.HoursSummaryController',
+        [
+                '$scope',
+                '$translate',
+                '$stateParams',
+                '$filter',
+                'UtilService',
+                'TimeTracking.InfoService',
+                'Helper.ObjectBrowserService',
+                'ConfigService',
+                'moment',
+                'Helper.UiGridService',
+                'Case.InfoService',
+                'Helper.ModulesServicesStructure',
+                "ObjectService",
+                function($scope, $translate, $stateParams, $filter, Util, TimeTrackingInfoService, HelperObjectBrowserService,
+                        ConfigService, moment, HelperUiGridService, CaseInfoService, ModulesServicesStructure, ObjectService) {
 
-            var vm = this;
-            ConfigService.getModuleConfig("preference").then(function (preferences) {
-                var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-                if (Util.goodPositive(currentObjectId, false)) {
-                    TimeTrackingInfoService.getTimesheetInfo(currentObjectId).then(
-                        function (timesheetInfo) {
+                    var modules = ModulesServicesStructure.getModulesServiceStructure();
 
-                            var chartData = [];
-                            var labels = [];
+                    var module = _.find(modules, function(module) {
+                        return module.name == $stateParams.type;
+                    });
 
-                            var times = [];
-                            var i = 0;
-                            if (timesheetInfo.times.length > 7) {
-                                i = timesheetInfo.times.length - 7;
+                    $scope.gridOptions = {
+                        enableColumnResizing : true,
+                        columnDefs : []
+                    };
+
+                    var gridHelper = new HelperUiGridService.Grid({
+                        scope : $scope
+                    });
+
+                    var decorateObject = function(objectInfo) {
+                        if (objectInfo.type == ObjectService.ObjectTypes.CASE_FILE) {
+                            objectInfo.object.number = objectInfo.object.caseNumber;
+                        } else if (objectInfo.type == ObjectService.ObjectTypes.COMPLAINT) {
+                            objectInfo.object.number = objectInfo.object.complaintNumber;
+                            objectInfo.object.title = objectInfo.object.complaintTitle;
+                        } else {
+                            if (objectInfo.object == undefined) {
+                                objectInfo.object = {};
                             }
-                            for (i; i < timesheetInfo.times.length; i++) {
-                                times.push(timesheetInfo.times[i]);
-                            }
-
-                            _.forEach(times, function (timeIter) {
-
-                                // //reformat date to MM-DD-YYYY from (example) "2016-01-10T00:00:00.000-0500"
-                                // var date = new moment(timeIter.date);
-                                // var formattedDate = date.format(preferences.timeFormat);
-
-                                // Above code is not i18n compliant. `timeFormat` is removed from preferences.
-                                // Temporary quick fix for now:
-                                var formattedDate = $filter('date')(timeIter.date, "shortDate");
-
-                                labels.push(formattedDate);
-                                chartData.push(timeIter.value);
-                            });
-
-                            vm.showChart = chartData.length > 0;
-                            vm.data = [chartData];
-                            vm.labels = labels;
+                            objectInfo.object.title = objectInfo.code;
+                            objectInfo.object.number = "";
                         }
-                    );
-                }
-            });
-        }
-    ]);
+
+                        objectInfo.date = moment(new Date(objectInfo.date)).format($translate.instant('common.defaultDateFormat'));
+                        return objectInfo;
+                    };
+                    var onObjectInfoRetrieved = function(objectInfo) {
+                        $scope.data = objectInfo.times;
+
+                        _.forEach($scope.data, function(object) {
+                            var getAdditionalDataInfo = _.find(modules, function(module) {
+                                return module.name == object.type
+                            });
+                            if (getAdditionalDataInfo != undefined) {
+                                getAdditionalDataInfo.getInfo(object.objectId).then(function(res) {
+                                    object.object = res;
+                                    object = decorateObject(object);
+                                });
+                            } else {
+                                object = decorateObject(object);
+                            }
+                        });
+
+                        gridHelper.setWidgetsGridData($scope.data);
+                    };
+
+                    var onConfigRetrieved = function(componentConfig) {
+                        $scope.widgetInfo = _.find(componentConfig.widgets, function(widget) {
+                            return widget.id === "hoursSummary";
+                        });
+
+                        gridHelper.setColumnDefs($scope.widgetInfo);
+                    };
+
+                    var componentHelper = new HelperObjectBrowserService.Component({
+                        scope : $scope,
+                        stateParams : $stateParams,
+                        moduleId : module.configName,
+                        componentId : "main",
+                        retrieveObjectInfo : module.getInfo,
+                        validateObjectInfo : module.validateInfo,
+                        onObjectInfoRetrieved : function(objectInfo) {
+                            onObjectInfoRetrieved(objectInfo);
+                        },
+                        onConfigRetrieved : function(componentConfig) {
+                            onConfigRetrieved(componentConfig);
+                        }
+                    });
+
+                } ]);

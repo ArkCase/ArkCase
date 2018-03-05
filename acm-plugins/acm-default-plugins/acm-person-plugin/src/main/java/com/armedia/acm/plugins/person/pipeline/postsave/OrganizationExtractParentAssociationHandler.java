@@ -32,7 +32,6 @@ public class OrganizationExtractParentAssociationHandler implements PipelineHand
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.pipeline.handler.PipelineHandler#execute(java.lang.Object,
      * com.armedia.acm.services.pipeline.AbstractPipelineContext)
      */
@@ -70,7 +69,6 @@ public class OrganizationExtractParentAssociationHandler implements PipelineHand
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.pipeline.handler.PipelineHandler#rollback(java.lang.Object,
      * com.armedia.acm.services.pipeline.AbstractPipelineContext)
      */

@@ -14,4 +14,3 @@ public class UserOrgUpdateEvent extends UserOrgPersistentEvent
         return UserOrgConstants.EVENT_TYPE_USER_PROFILE_MODIFIED;
     }
 }
-

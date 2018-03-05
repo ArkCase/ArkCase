@@ -11,56 +11,57 @@
  * This service is used to make calculations for overdue or deadline information about tasks
  */
 
-angular.module('tasks').factory('Task.AlertsService', function () {
+angular.module('tasks').factory('Task.AlertsService', function() {
 
-        var Service = {
+    var Service = {
 
-            AlertsConfig: {
-                DEADLINE_ALERT_DAYS: 1
+        AlertsConfig : {
+            DEADLINE_ALERT_DAYS : 1
+        }
+
+        /**
+         * @ngdoc method
+         * @name calculateOverdue
+         * @methodOf services:Task.AlertsService
+         *
+         * @description
+         * Return if date is overdue.
+         */
+        ,
+        calculateOverdue : function(dueDate) {
+            //for all tasks that suspense date was before today we will show overdue alert
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (dueDate < today) {
+                return true;
             }
 
-            /**
-             * @ngdoc method
-             * @name calculateOverdue
-             * @methodOf services:Task.AlertsService
-             *
-             * @description
-             * Return if date is overdue.
-             */
-            , calculateOverdue: function (dueDate) {
-                //for all tasks that suspense date was before today we will show overdue alert
-                var today = new Date();
-                today.setHours(0, 0, 0, 0);
+            return false;
+        }
+        /**
+         * @ngdoc method
+         * @name calculateDeadline
+         * @methodOf services:Task.AlertsService
+         *
+         * @description
+         * Return if date is approaching deadline.
+         */
+        ,
+        calculateDeadline : function(dueDate) {
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            var deadline = new Date();
+            deadline.setDate(today.getDate() + Service.AlertsConfig.DEADLINE_ALERT_DAYS + 1);
+            deadline.setHours(0, 0, 0, 0);
 
-                if (dueDate < today) {
-                    return true;
-                }
-
-                return false;
+            if (dueDate >= today && dueDate < deadline) {
+                return true;
             }
-            /**
-             * @ngdoc method
-             * @name calculateDeadline
-             * @methodOf services:Task.AlertsService
-             *
-             * @description
-             * Return if date is approaching deadline.
-             */
-            , calculateDeadline: function (dueDate) {
-                var today = new Date();
-                today.setHours(0, 0, 0, 0);
-                var deadline = new Date();
-                deadline.setDate(today.getDate() + Service.AlertsConfig.DEADLINE_ALERT_DAYS + 1);
-                deadline.setHours(0, 0, 0, 0);
 
-                if (dueDate >= today && dueDate < deadline) {
-                    return true;
-                }
+            return false;
+        }
+    };
 
-                return false;
-            }
-        };
-
-        return Service;
-    }
-);
+    return Service;
+});

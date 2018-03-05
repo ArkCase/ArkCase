@@ -1,8 +1,17 @@
 package com.armedia.acm.service.outlook.dao.impl;
 
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Set;
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.AcmCryptoUtils;
+import com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties;
+import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
+import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
+import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
+import com.armedia.acm.service.outlook.model.AcmOutlookObjectReference;
+
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -11,18 +20,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
-import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.crypto.AcmCryptoUtils;
-import com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties;
-import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
-import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
-import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
-import com.armedia.acm.service.outlook.model.AcmOutlookObjectReference;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 8, 2017
@@ -44,7 +44,6 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#getOutlookObjectReferenct(java.lang.Long,
      * java.lang.String)
      */
@@ -75,7 +74,26 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
     /*
      * (non-Javadoc)
-     *
+     * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#deleteObjectReference(java.lang.Long,
+     * java.lang.String)
+     */
+    @Override
+    public void deleteObjectReference(Long objectId, String objectType)
+    {
+        try
+        {
+            AcmOutlookObjectReference reference = getOutlookObjectReference(objectId, objectType);
+            em.remove(reference);
+        }
+        catch (AcmOutlookFolderCreatorDaoException e)
+        {
+            log.warn(String.format("Error while deleting 'AcmOutlookObjectReference' instance for objectId [{}] and objectType [{}].",
+                    objectId, objectType));
+        }
+    }
+
+    /*
+     * (non-Javadoc)
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#getFolderCreatorForObject(java.lang.String,
      * java.lang.String)
      */
@@ -130,7 +148,6 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#getFolderCreatorForObject(java.lang.Long)
      */
     @Override
@@ -158,7 +175,6 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#getFolderCreatorForObject(java.lang.Long,
      * java.lang.String)
      */
@@ -192,7 +208,6 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#recordFolderCreator(com.armedia.acm.service.
      * outlook.model.AcmOutlookFolderCreator, java.lang.Long, java.lang.String)
      */
@@ -224,7 +239,6 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#checkFolderCreatorCredentials()
      */
     @Override
@@ -244,7 +258,6 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#updateFolderCreator(com.armedia.acm.service.
      * outlook.model.AcmOutlookFolderCreator, com.armedia.acm.service. outlook.model.AcmOutlookFolderCreator)
      */
@@ -275,7 +288,6 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#getObjectReferences(com.armedia.acm.service.
      * outlook.model.AcmOutlookFolderCreator)
      */

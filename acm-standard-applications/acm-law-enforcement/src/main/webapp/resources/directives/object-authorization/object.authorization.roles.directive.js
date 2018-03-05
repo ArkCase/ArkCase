@@ -17,6 +17,10 @@
  * @param {string} objectDisplayName name of the field which we want to display in the list.
  * @param {string} roleDisplayName name of the field which we want to display in the list.
  * @param {string} objectTitle value for the title Choose {{objectTitle}} in selecting objects.
+ * @param {boolean} showFilter true/false, on this variable depends the visibility of the directive "objectAuthorizationRolesFilter"
+ * @param {object} paginationDataControl - An object that contains functions for pagination
+ * @param {object} filterDataControl - An object that contains functions for search/filter
+ * @param {object} selectedObject - An object that has information for the pre-selected/selected user
  *
  * @scope
  *
@@ -31,141 +35,121 @@
  <file name="app.js">
  angular.module('ngAppDemo', [])
  .controller('ngAppDemoController', function ($scope) {
-         $scope.widgets = [{name:"widget Name1", widgetName:"widgetName1"}, {name:"widget Name2", widgetName:"widgetName2"}];
-         $scope.widgetsMap = [];
-        angular.forEach($scope.widgets, function (widget) {
-            var element = new Object;
-            element.name = widget.name;
-            element.key = widget.widgetName;
-            $scope.widgets.push(element);
-            $scope.widgetsMap[widget.widgetName] = widget;
-        });
+ $scope.widgets = [{name:"widget Name1", widgetName:"widgetName1"}, {name:"widget Name2", widgetName:"widgetName2"}];
+ $scope.widgetsMap = [];
+ angular.forEach($scope.widgets, function (widget) {
+ var element = new Object;
+ element.name = widget.name;
+ element.key = widget.widgetName;
+ $scope.widgets.push(element);
+ $scope.widgetsMap[widget.widgetName] = widget;
+ });
 
 
-        $scope.onObjSelect = function (selectedObject, authorized, notAuthorized) {
-            angular.forEach($scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles, function (element) {
-                authorized.push(element);
-            });
-            angular.forEach($scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles, function (element) {
-                notAuthorized.push(element);
-            });
-        };
+ $scope.onObjSelect = function (selectedObject, authorized, notAuthorized) {
+ angular.forEach($scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles, function (element) {
+ authorized.push(element);
+ });
+ angular.forEach($scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles, function (element) {
+ notAuthorized.push(element);
+ });
+ };
 
-        $scope.onAuthRoleSelected = function (selectedObject, authorized, notAuthorized) {
-            $scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles = authorized;
-            $scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles = notAuthorized;
-        };
-     });
+ $scope.onAuthRoleSelected = function (selectedObject, authorized, notAuthorized) {
+ $scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles = authorized;
+ $scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles = notAuthorized;
+ };
+ });
  </file>
  </example>
  */
-angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'MessageService',
-    function (Menus, messageService) {
-        return {
-            restrict: 'E',
-            scope: {
-                data: "=",
-                onObjectSelected: "=",
-                onAuthRoleChange: "=",
-                objectDisplayName: "@",
-                roleDisplayName: "@",
-                objectTitle: "@"
-            },
-            templateUrl: 'directives/object-authorization/object.authorization.roles.html',
-            link: function (scope) {
-                scope.$watch('data', function (newValue) {
-                    if (newValue && newValue.length > 0) {
-                        scope.selectedObject = scope.data[0];
-                        scope.selectObject();
-                    }
-                }, true);
+angular.module('directives').directive(
+        'objectAuthorizationRoles',
+        [
+                'Menus',
+                'MessageService',
+                '$http',
+                'UtilService',
+                '$injector',
+                function(Menus, messageService, $http, Util, $injector) {
+                    return {
+                        restrict : 'E',
+                        scope : {
+                            data : "=",
+                            onObjectSelected : "=",
+                            onAuthRoleChange : "=",
+                            objectDisplayName : "@",
+                            roleDisplayName : "@",
+                            objectTitle : "@",
+                            showFilter : "=?",
+                            paginationDataControl : "=?",
+                            filterDataControl : "=?",
+                            selectedObject : "=?"
+                        },
+                        templateUrl : 'directives/object-authorization/object.authorization.roles.html',
+                        link : function(scope) {
+                            //authorize button is clicked
+                            scope.authorize = function() {
+                                //don't do anything if array null or empty
+                                if (scope.selectedNotAuthorized && scope.selectedNotAuthorized.length > 0) {
+                                    angular.forEach(scope.selectedNotAuthorized, function(sel) {
+                                        var indexOf = scope.data.selectedNotAuthorized.indexOf(sel);
+                                        scope.data.selectedNotAuthorized.splice(indexOf, 1);
+                                        scope.data.selectedAuthorized.push(sel);
+                                    });
+                                    scope.authRoleChange();
+                                }
+                            };
 
-                //initial setup
-                scope.selectedNotAuthorized = "";
-                scope.selectedAuthorized = "";
-                scope.authorized = [];
-                scope.notAuthorized = [];
+                            //unauthorize button is clicked
+                            scope.unAuthorize = function() {
+                                //don't do anything if array null or empty
+                                if (scope.selectedAuthorized && scope.selectedAuthorized.length > 0) {
+                                    angular.forEach(scope.selectedAuthorized, function(sel) {
+                                        var indexOf = scope.data.selectedAuthorized.indexOf(sel);
+                                        scope.data.selectedAuthorized.splice(indexOf, 1);
+                                        scope.data.selectedNotAuthorized.push(sel);
+                                    });
+                                    scope.authRoleChange();
+                                }
+                            };
 
-                //authorize button is clicked
-                scope.authorize = function () {
-                    //don't do anything if array null or empty
-                    if (scope.selectedNotAuthorized && scope.selectedNotAuthorized.length > 0) {
-                        angular.forEach(scope.selectedNotAuthorized, function (sel) {
-                            var indexOf = scope.notAuthorized.indexOf(sel);
-                            scope.notAuthorized.splice(indexOf, 1);
-                            scope.authorized.push(sel);
-                        });
-                        scope.authRoleChange();
-                    }
-                };
+                            //object is selected event, call callback function
+                            scope.selectObject = function() {
+                                scope.data.selectedAuthorized = [];
+                                scope.data.selectedNotAuthorized = [];
+                                if (scope.selectedObject) {
+                                    scope.onObjectSelected(scope.selectedObject, scope.data.selectedAuthorized,
+                                            scope.data.selectedNotAuthorized);
+                                }
+                            };
 
-                //unauthorize button is clicked
-                scope.unAuthorize = function () {
-                    //don't do anything if array null or empty
-                    if (scope.selectedAuthorized && scope.selectedAuthorized.length > 0) {
-                        angular.forEach(scope.selectedAuthorized, function (sel) {
-                            var indexOf = scope.authorized.indexOf(sel);
-                            scope.authorized.splice(indexOf, 1);
-                            scope.notAuthorized.push(sel);
-                        });
-                        scope.authRoleChange();
-                    }
-                };
+                            //roles has been changed, call callback function with changed values
+                            scope.authRoleChange = function() {
+                                scope.onAuthRoleChange(scope.selectedObject, scope.data.selectedAuthorized,
+                                        scope.data.selectedNotAuthorized).then(function() {
+                                    //success save
+                                    messageService.succsessAction();
+                                }, function() {
+                                    //error save
+                                    messageService.errorAction();
+                                });
 
-
-                //object is selected event, call callback function
-                scope.selectObject = function () {
-                    scope.authorized = [];
-                    scope.notAuthorized = [];
-                    if (scope.selectedObject) {
-                        scope.onObjectSelected(scope.selectedObject, scope.authorized, scope.notAuthorized);
-                    }
-                };
-
-                //roles has been changed, call callback function with changed values
-                scope.authRoleChange = function () {
-                    scope.onAuthRoleChange(scope.selectedObject, scope.authorized, scope.notAuthorized).then(function () {
-                        //success save
-                        messageService.succsessAction();
-                    }, function () {
-                        //error save
-                        messageService.errorAction();
-                    });
-
-                    var allMenuObj = [];
-                    angular.forEach(Menus.allMenuObjects, function (menuO) {
-                        allMenuObj.push(menuO);
-                    });
-                    Menus.allMenuObjects.splice(0, Menus.allMenuObjects.length);
-                    Menus.menus.leftnav.items.splice(0, Menus.menus.leftnav.items.length);
-                    Menus.menus.topbar.items.splice(0, Menus.menus.topbar.items.length);
-                    Menus.menus.usermenu.items.splice(0, Menus.menus.usermenu.items.length);
-                    for (var i = 0; i < allMenuObj.length; i++) {
-                        var mO = [];
-                        mO.push(allMenuObj[i]);
-                        Menus.addMenuItems(mO);
-                    }
-                    scope.$bus.publish('refreshLeftMenu', null);
-                };
-            }
-        };
-    }
-]);
-
-angular.module('directives').filter('orderObjectBy', function () {
-    return function (input) {
-        if (!angular.isObject(input)) return input;
-
-        var array = [];
-        for (var objectKey in input) {
-            array.push(input[objectKey]);
-        }
-
-        array.sort(function (a, b) {
-            a = a["name"];
-            b = b["name"];
-            return a > b ? 1 : a < b ? -1 : 0;
-        });
-        return array;
-    }
-});
+                                var allMenuObj = [];
+                                angular.forEach(Menus.allMenuObjects, function(menuO) {
+                                    allMenuObj.push(menuO);
+                                });
+                                Menus.allMenuObjects.splice(0, Menus.allMenuObjects.length);
+                                Menus.menus.leftnav.items.splice(0, Menus.menus.leftnav.items.length);
+                                Menus.menus.topbar.items.splice(0, Menus.menus.topbar.items.length);
+                                Menus.menus.usermenu.items.splice(0, Menus.menus.usermenu.items.length);
+                                for (var i = 0; i < allMenuObj.length; i++) {
+                                    var mO = [];
+                                    mO.push(allMenuObj[i]);
+                                    Menus.addMenuItems(mO);
+                                }
+                                scope.$bus.publish('refreshLeftMenu', null);
+                            };
+                        }
+                    };
+                } ]);

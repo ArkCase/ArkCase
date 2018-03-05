@@ -1,16 +1,17 @@
 package com.armedia.acm.webdav;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.milton.http.exceptions.BadRequestException;
 import io.milton.http.exceptions.ConflictException;
 import io.milton.http.exceptions.NotAuthorizedException;
 import io.milton.resource.CollectionResource;
 import io.milton.resource.MakeCollectionableResource;
 import io.milton.resource.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by nebojsha on 13.08.2016.
@@ -35,11 +36,10 @@ public class AcmRootResource extends AcmAbstractResource implements MakeCollecti
     public List<? extends Resource> getChildren()
     {
         if (children == null)
-            children = new ArrayList<Resource>();
+            children = new ArrayList<>();
 
         return children;
     }
-
 
     @Override
     public Resource child(String childName)

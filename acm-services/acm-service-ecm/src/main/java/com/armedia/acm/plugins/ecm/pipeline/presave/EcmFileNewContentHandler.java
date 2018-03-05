@@ -5,11 +5,13 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  * Created by joseph.mcgrady on 9/28/2015.
@@ -33,25 +35,25 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
         if (!pipelineContext.getIsAppend() && !pipelineContext.isFileAlreadyInEcmSystem())
         {
 
-            try
+            try (InputStream fileInputStream = new FileInputStream(pipelineContext.getFileContents()))
             {
                 // Adds the file to the ECM content repository as a new document... using the context filename
                 // as the filename for the repository.
                 String arkcaseFilename = entity.getFileName();
                 entity.setFileName(pipelineContext.getOriginalFileName());
                 Document newDocument = ecmFileMuleUtils.addFile(entity, pipelineContext.getCmisFolderId(),
-                        new ByteArrayInputStream(pipelineContext.getFileByteArray()));
+                        fileInputStream);
                 // now, restore the ArkCase file name
                 entity.setFileName(arkcaseFilename);
                 pipelineContext.setCmisDocument(newDocument);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 log.error("mule pre save handler failed: {}", e.getMessage(), e);
                 throw new PipelineProcessException(e);
             }
 
         }
-
 
     }
 
@@ -75,7 +77,8 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
                 // Removes the document from the Alfresco content repository
                 ecmFileMuleUtils.deleteFile(entity, cmisDocument.getId());
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             { // since the rollback failed an orphan document will exist in Alfresco
                 log.error("rollback of file upload failed: {}", e.getMessage(), e);
                 throw new PipelineProcessException(e);

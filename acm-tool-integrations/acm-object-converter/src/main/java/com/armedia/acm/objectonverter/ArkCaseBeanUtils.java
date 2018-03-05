@@ -22,9 +22,12 @@ public class ArkCaseBeanUtils extends org.apache.commons.beanutils.BeanUtilsBean
      * This method overriding the superclass method. Skip "null" values and goes recursively if the field is
      * non-primitive and non-wrapped type.
      *
-     * @param bean  - the object that should receive the value
-     * @param name  - field name of the object
-     * @param value - the value that should be added to the "bean" for given field "name"
+     * @param bean
+     *            - the object that should receive the value
+     * @param name
+     *            - field name of the object
+     * @param value
+     *            - the value that should be added to the "bean" for given field "name"
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
@@ -54,7 +57,8 @@ public class ArkCaseBeanUtils extends org.apache.commons.beanutils.BeanUtilsBean
                 if (obj == null || ClassUtils.isPrimitiveOrWrapper(obj.getClass()) || obj instanceof String || obj instanceof List)
                 {
                     super.copyProperty(bean, name, value);
-                } else
+                }
+                else
                 {
                     // Recursive call to whole process
                     copyProperties(obj, value);
@@ -66,8 +70,10 @@ public class ArkCaseBeanUtils extends org.apache.commons.beanutils.BeanUtilsBean
     /**
      * Get field for given filed name from the class
      *
-     * @param c    - class from where we want to take the filed
-     * @param name - field name that we want to take
+     * @param c
+     *            - class from where we want to take the filed
+     * @param name
+     *            - field name that we want to take
      * @return - Field object for given filed name
      */
     private Field getField(Class<?> c, String name)
@@ -82,10 +88,11 @@ public class ArkCaseBeanUtils extends org.apache.commons.beanutils.BeanUtilsBean
             {
                 // Try to get field from the class for given name
                 field = c.getDeclaredField(name);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 // The filed is not found in the current class ... try to find it to superclass
-                LOG.warn("There is no field '{}' declared. Try to find in the superclass.", name);
+                LOG.trace("There is no field '{}' declared. Try to find in the superclass.", name);
                 return getField(c.getSuperclass(), name);
             }
         }

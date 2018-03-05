@@ -22,6 +22,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -62,12 +63,12 @@ public class ConfigurationComparator implements ApplicationContextAware
      */
     String customFolderPath;
 
-
     /**
      * Constructor.
      * Create XML document builder
      *
-     * @throws ParserConfigurationException on XML parser configuration error
+     * @throws ParserConfigurationException
+     *             on XML parser configuration error
      */
     public ConfigurationComparator() throws ParserConfigurationException
     {
@@ -80,8 +81,10 @@ public class ConfigurationComparator implements ApplicationContextAware
      * Foe each customized configuration file, make a comparison to appropriate built-in file and write the changes
      * to disk
      *
-     * @param applicationContext Spring application context, not used
-     * @throws BeansException on error
+     * @param applicationContext
+     *            Spring application context, not used
+     * @throws BeansException
+     *             on error
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
@@ -101,13 +104,15 @@ public class ConfigurationComparator implements ApplicationContextAware
                         NodeList customBeans = custom.getElementsByTagName("bean");
                         // compare it to built-in beans
                         compare(filePath + ".diff", customBeans, builtinBeans);
-                    } catch (SAXException | IOException e)
+                    }
+                    catch (SAXException | IOException e)
                     {
                         log.error("Unable to read and parse '{}'", filePath, e);
                     }
                 }
             });
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Unable to compare custom to built-in Spring configuration files", e);
         }
@@ -117,7 +122,8 @@ public class ConfigurationComparator implements ApplicationContextAware
      * Get the list of all beans defined in all built-in configuration files
      *
      * @return list of beans as NodeList
-     * @throws IOException on error listing files in folder
+     * @throws IOException
+     *             on error listing files in folder
      */
     private NodeList getBuiltinBeans() throws IOException
     {
@@ -141,7 +147,8 @@ public class ConfigurationComparator implements ApplicationContextAware
                         builtinBean = allBuiltinBeans.importNode(builtinBean, true);
                         beans.appendChild(builtinBean);
                     }
-                } catch (SAXException | IOException e)
+                }
+                catch (SAXException | IOException e)
                 {
                     log.error("Cannot parse configuration file '{}'", filePath, e);
                 }
@@ -156,9 +163,12 @@ public class ConfigurationComparator implements ApplicationContextAware
      * This will enable easier problem detection in case some desired built-in bean definition is accidentally
      * or deliberately modified and it causes malfunction.
      *
-     * @param diffFilename filename where to store the bean that's overridden (spring-custom-config.xml.diff)
-     * @param customBeans  list of custom beans defined in a custom Spring configuration (single file)
-     * @param builtinBeans list of built-in beans defined in all Spring configuration files
+     * @param diffFilename
+     *            filename where to store the bean that's overridden (spring-custom-config.xml.diff)
+     * @param customBeans
+     *            list of custom beans defined in a custom Spring configuration (single file)
+     * @param builtinBeans
+     *            list of built-in beans defined in all Spring configuration files
      */
     private void compare(String diffFilename, NodeList customBeans, NodeList builtinBeans)
     {
@@ -212,7 +222,8 @@ public class ConfigurationComparator implements ApplicationContextAware
                 DOMSource source = new DOMSource(diff);
                 Result result = new StreamResult(diffFile);
                 transformer.transform(source, result);
-            } catch (TransformerException e)
+            }
+            catch (TransformerException e)
             {
                 log.error("Unable to create diff file '{}'", diffFilename, e);
             }

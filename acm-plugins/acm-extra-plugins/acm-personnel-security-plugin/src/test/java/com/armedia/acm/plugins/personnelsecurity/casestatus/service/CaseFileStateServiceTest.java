@@ -1,15 +1,16 @@
 package com.armedia.acm.plugins.personnelsecurity.casestatus.service;
 
+import static org.easymock.EasyMock.expect;
+
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import static org.easymock.EasyMock.expect;
 
 /**
  * Created by armdev on 12/10/14.
@@ -55,7 +56,6 @@ public class CaseFileStateServiceTest extends EasyMockSupport
         unit.changeCaseFileState(caseId, newStatus);
 
         verifyAll();
-
 
     }
 }

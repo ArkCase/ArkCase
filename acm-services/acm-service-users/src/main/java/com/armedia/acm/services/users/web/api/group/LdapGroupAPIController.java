@@ -8,6 +8,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import com.armedia.acm.services.users.service.group.LdapGroupService;
 import com.armedia.acm.services.users.web.api.SecureLdapController;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,6 @@ import java.util.Base64;
 public class LdapGroupAPIController extends SecureLdapController
 {
     private LdapGroupService ldapGroupService;
-    private AcmGroupEventPublisher acmGroupEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -61,11 +61,10 @@ public class LdapGroupAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "/{directory:.+}/groups/{parentGroupName:.+}", method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{directory:.+}/groups/{parentGroupName:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmGroup createLdapSubgroup(@RequestBody AcmGroup group, @PathVariable String directory,
-                                       @PathVariable String parentGroupName)
+            @PathVariable String parentGroupName)
             throws AcmAppErrorJsonMsg
     {
 
@@ -96,15 +95,14 @@ public class LdapGroupAPIController extends SecureLdapController
 
     @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteLdapGroup(@PathVariable("directory") String directory,
-                                             @PathVariable("groupName") String groupName)
+            @PathVariable("groupName") String groupName)
             throws AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
         {
             groupName = new String(Base64.getUrlDecoder().decode(groupName.getBytes()));
-            AcmGroup source = ldapGroupService.deleteLdapGroup(groupName, directory);
-            getAcmGroupEventPublisher().publishLdapGroupDeletedEvent(source);
+            ldapGroupService.deleteLdapGroup(groupName, directory);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (AcmLdapActionFailedException e)
@@ -125,8 +123,8 @@ public class LdapGroupAPIController extends SecureLdapController
 
     @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}/parent/{parentName:.+}", method = RequestMethod.DELETE)
     public ResponseEntity<?> removeGroupMembership(@PathVariable("directory") String directory,
-                                                   @PathVariable("groupName") String groupName,
-                                                   @PathVariable("parentName") String parentName)
+            @PathVariable("groupName") String groupName,
+            @PathVariable("parentName") String parentName)
             throws AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
@@ -161,15 +159,5 @@ public class LdapGroupAPIController extends SecureLdapController
     public void setLdapGroupService(LdapGroupService ldapGroupService)
     {
         this.ldapGroupService = ldapGroupService;
-    }
-
-    public AcmGroupEventPublisher getAcmGroupEventPublisher()
-    {
-        return acmGroupEventPublisher;
-    }
-
-    public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher)
-    {
-        this.acmGroupEventPublisher = acmGroupEventPublisher;
     }
 }

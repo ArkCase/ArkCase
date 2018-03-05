@@ -1,6 +1,9 @@
 package com.armedia.acm.audit.dao;
 
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.audit.model.AuditEvent;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -10,8 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
-
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -34,14 +35,13 @@ public class AuditDaoIT
     public void findEvents() throws Exception
     {
         String objectType = "DASHBOARD";
-        Long dashboardId = 500L;   // just want to make sure the query executes, doesn't have to return data
+        Long dashboardId = 500L; // just want to make sure the query executes, doesn't have to return data
 
         List<AuditEvent> events = dao.findAuditsByEventPatternAndObjectId(objectType, dashboardId);
 
         assertNotNull(events);
 
         log.info("# of dashboard events: " + events.size());
-
 
     }
 
@@ -51,7 +51,7 @@ public class AuditDaoIT
         int maxRows = 10;
         int startRow = 0;
         String objectType = "TASK";
-        Long objectId = 100L;   // just want to make sure the query executes, doesn't have to return data
+        Long objectId = 100L; // just want to make sure the query executes, doesn't have to return data
         List<String> eventTypes = null;
         String sortBy = "eventDate";
         String sort = "DESC";

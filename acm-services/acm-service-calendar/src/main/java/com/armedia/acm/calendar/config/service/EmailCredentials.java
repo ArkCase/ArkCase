@@ -61,7 +61,6 @@ public class EmailCredentials
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -76,7 +75,6 @@ public class EmailCredentials
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -101,7 +99,8 @@ public class EmailCredentials
             {
                 return false;
             }
-        } else if (!email.equals(other.email))
+        }
+        else if (!email.equals(other.email))
         {
             return false;
         }
@@ -111,7 +110,8 @@ public class EmailCredentials
             {
                 return false;
             }
-        } else if (!password.equals(other.password))
+        }
+        else if (!password.equals(other.password))
         {
             return false;
         }

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="attachmentCaptureFileListener" class="com.armedia.acm.ephesoft.service.AttachmentCaptureFileListener">
         <property name="convertedFolder" ref="convertedFilesFolder"/>
         <property name="errorFolder" ref="errorFolder"/>
     </bean>
-
 
     <!-- need a bean named "springEntityListenerConfigurer" but it doesn't have to be a real bean -->
     <bean id="springEntityListenerConfigurer" class="java.lang.String">
@@ -47,6 +44,5 @@
     <bean id="errorFolder" factory-bean="vfsManager" factory-method="resolveFile">
         <constructor-arg index="0" value="${capture.error.folder}"/>
     </bean>
-
 
 </beans>

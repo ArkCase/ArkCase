@@ -11,9 +11,9 @@ import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule;
 import com.armedia.acm.services.users.service.RetryExecutor;
 import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.AuthenticationException;
@@ -27,6 +27,7 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
+
 import java.util.List;
 
 public class SpringLdapUserDao
@@ -57,30 +58,19 @@ public class SpringLdapUserDao
 
         if (CollectionUtils.isNotEmpty(results))
         {
-            // Return the first entity that will be found. The above search can return multiple results under one domain if
-            // "sAMAccountName" is the same for two users. This in theory should not be the case, but just in case, return only the first one.
-            LdapUser ldapUser = results.get(0);
-            ldapUser = appendDomainNameIfSet(ldapUser, config);
-            return ldapUser;
+            // Return the first entity that will be found. The above search can return multiple results under one domain
+            // if
+            // "sAMAccountName" is the same for two users. This in theory should not be the case, but just in case,
+            // return only the first one.
+            return results.get(0);
         }
 
         throw new UsernameNotFoundException("User with id [" + username + "] cannot be found");
     }
 
-    private LdapUser appendDomainNameIfSet(LdapUser ldapUser, AcmLdapSyncConfig config)
-    {
-        // append user domain name if set. Used in Single Sign-On scenario.
-        String userDomainSuffix = (StringUtils.isBlank(config.getUserDomain()) ? "" : "@" + config.getUserDomain());
-        log.debug("Adding user domain suffix to the username: [{}]", userDomainSuffix);
-        ldapUser.setUserId(ldapUser.getUserId() + userDomainSuffix);
-        return ldapUser;
-    }
-
     public LdapUser findUserByLookup(String dn, LdapTemplate template, AcmLdapSyncConfig config)
     {
-        LdapUser user = lookupUser(dn, template, config);
-        user = appendDomainNameIfSet(user, config);
-        return user;
+        return lookupUser(dn, template, config);
     }
 
     public LdapUser lookupUser(String dn, LdapTemplate template, AcmLdapSyncConfig config)
@@ -94,7 +84,8 @@ public class SpringLdapUserDao
         {
             String[] allAttributes = ArrayUtils.addAll(userSyncAttributes, config.getUserIdAttributeName(), config.getMailAttributeName());
             return (LdapUser) template.lookup(userDnStrippedBase, allAttributes, userGroupsContextMapper);
-        } else
+        }
+        else
         {
             return (LdapUser) template.lookup(userDnStrippedBase, userGroupsContextMapper);
         }
@@ -103,8 +94,6 @@ public class SpringLdapUserDao
     public void changeUserPassword(String dn, String password, String newPassword, LdapTemplate ldapTemplate, AcmLdapConfig config)
             throws AcmLdapActionFailedException
     {
-        String strippedBaseDn = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
-
         try
         {
             ContextSource contextSource = new RetryExecutor<ContextSource>().retryResult(ldapTemplate::getContextSource);
@@ -113,21 +102,20 @@ public class SpringLdapUserDao
             // set old/new password attributes
             ModificationItem[] mods = new ModificationItem[2];
             mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
-                    Directory.valueOf(config.getDirectoryType()).getPasswordAttribute(password));
+                    Directory.valueOf(config.getDirectoryType()).getCurrentPasswordAttribute(password));
             mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE,
                     Directory.valueOf(config.getDirectoryType()).getPasswordAttribute(newPassword));
             // Perform the update
+            String strippedBaseDn = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
             new RetryExecutor().retryChecked(() -> context.modifyAttributes(strippedBaseDn, mods));
             context.close();
         }
         catch (AuthenticationException e)
         {
-            log.warn("User: [{}] failed to authenticate. ", dn);
             throw e;
         }
         catch (Exception e)
         {
-            log.warn("Changing the password for User: [{}] failed. ", dn, e);
             throw new AcmLdapActionFailedException("LDAP action failed to execute", e);
         }
     }
