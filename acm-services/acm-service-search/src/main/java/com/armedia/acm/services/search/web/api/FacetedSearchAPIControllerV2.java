@@ -99,7 +99,7 @@ public class FacetedSearchAPIControllerV2
         if (StringUtils.isNotEmpty(unescapedQuery))
         {
             unescapedQuery = URLDecoder.decode(unescapedQuery, SearchConstants.FACETED_SEARCH_ENCODING);
-            query = (query == null ? unescapedQuery : query + unescapedQuery);
+            query = (query == null ? unescapedQuery : query + " " + unescapedQuery);
         }
 
         query = getFacetedSearchService().updateQueryWithExcludedObjects(query, rowQueryParameters);
