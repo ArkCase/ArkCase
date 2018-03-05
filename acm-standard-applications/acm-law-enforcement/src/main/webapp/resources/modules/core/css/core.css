@@ -130,10 +130,6 @@ body {
 	padding-right: 0px;
 }
 
-.page-content.detail-content .module-content .right-sidebar{
-	top: 132px;
-}
-
 /* Left Menu (Left Column) */
 
 .leftnav-menu {
@@ -408,6 +404,12 @@ body {
 
 /* Right Sidebar (Right Column) */
 
+.module-content .right-sidebar::after {
+    display: block;
+    content: '';
+    padding: 190px 0 0 0;
+}
+
 .module-content .right-sidebar {
     position: fixed;
     top: 0;
@@ -415,8 +417,7 @@ body {
     vertical-align: top;
     padding-left: 0px;
     padding-right: 0px;
-    top: 132px;
-    padding-bottom: 190px;
+    top: 111px;
     width: 500px;
     height: 100% !important;
     -webkit-overflow-scrolling: touch;
