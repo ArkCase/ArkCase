@@ -14,8 +14,9 @@ angular.module('cases').controller(
                 'Helper.ObjectBrowserService',
                 'ServCommService',
                 'MessageService',
+                'Object.CalendarService',
                 function($scope, $state, $stateParams, $translate, Util, ObjectService, CaseListService, CaseInfoService,
-                        HelperObjectBrowserService, ServCommService, MessageService) {
+                        HelperObjectBrowserService, ServCommService, MessageService, CalendarService) {
 
                     /*//
                      // Check to see if complaint page is shown as a result returned by Frevvo
@@ -66,6 +67,13 @@ angular.module('cases').controller(
                             return CaseListService.updateCasesTreeData(start, n, sort, filters, query, nodeData);
                         },
                         getTreeData : function(start, n, sort, filters, query) {
+                            CalendarService.isCalendarConfigurationEnabled('CASE_FILE').then(
+                                    function(data) {
+                                        if (!data) {
+                                            MessageService.info($translate
+                                                    .instant('dashboard.widgets.calendar.calendarIntegrationDisabledMessage'));
+                                        }
+                                    });
                             return CaseListService.queryCasesTreeData(start, n, sort, filters, query);
                         },
                         getNodeData : function(caseId) {
