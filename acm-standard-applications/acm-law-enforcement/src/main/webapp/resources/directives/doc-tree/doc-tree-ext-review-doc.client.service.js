@@ -40,29 +40,18 @@ angular.module('services').factory('DocTreeExt.ReviewDoc',
                 getCommandHandlers : function(DocTree) {
                     return [ {
                         name : 'reviewDocument',
-                        execute : function(nodes, args) {
-                            reviewDocument.openModal(DocTree, nodes);
+                        execute : function(nodes, args, config) {
+                            reviewDocument.openModal(DocTree, nodes, config);
                         }
                     } ];
                 },
-                openModal : function(DocTree, nodes) {
+                openModal : function(DocTree, nodes, config) {
                     var params = {};
-                    if (DocTree._objType === ObjectService.ObjectTypes.CASE_FILE) {
-                        params.parentType = DocTree._objType;
-                        params.parentId = DocTree._objId;
-                        params.parentObject = DocTree.objectInfo.caseNumber;
-                        params.parentTitle = DocTree.objectInfo.title;
-                    } else if (DocTree._objType === ObjectService.ObjectTypes.COMPLAINT) {
-                        params.parentType = DocTree._objType;
-                        params.parentId = DocTree._objId;
-                        params.parentObject = DocTree.objectInfo.complaintNumber;
-                        params.parentTitle = DocTree.objectInfo.complaintTitle;
-                    } else if (DocTree._objType === ObjectService.ObjectTypes.COSTSHEET) {
-                        params.parentType = DocTree._objType;
-                        params.parentId = DocTree._objId;
-                        params.parentObject = DocTree.objectInfo.costsheetNumber;
-                        params.parentTitle = DocTree.objectInfo.title;
-                    }
+                    params.parentType = DocTree._objType;
+                    params.parentId = DocTree._objId;
+                    params.parentObject = DocTree.objectInfo.number;
+                    params.parentTitle = DocTree.objectInfo.title;
+
                     params.documentsToReview = nodes;
                     params.taskType = 'REVIEW_DOCUMENT';
                     var modalMetadata = {

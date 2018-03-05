@@ -2,15 +2,17 @@
 
 /**
  * @ngdoc service
- * @name services:Helper.ObjectBrowserService
+ * @name services:Helper.TaskListParentNode
  *
  * @description
+ * Helper.TaskListParentNode provide common help for task listing grid. Uses the HelperObjectBrowserService Component.
+ * Helper.TaskListParentNode implements all the method needed for showing a functional task list table.
+ * Every function is overridable by the controller's scope if it's defined otherwise will just take the default helper function.
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-objbrowser.client.service.js services/helper/helper-objbrowser.client.service.js}
-
- * Helper.ObjectBrowserService provide help for common functions for an object page. It includes navigation (or tree) part and content part.
- * Content part consists list of Components.
- * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
+ * TaskTableComponent takes the same arguments as Helper.ObjectBrowserService component plus have additional:
+ * - enableNewTaskButton for enabling the new task button can also be enabled after initialization of the DocumentTreeComponent with enableNewTaskButton function.
+ * - Required commit function at the end after everything is defined from the scope and can send request for getting the object information and the config.
+ *
  */
 
 angular
