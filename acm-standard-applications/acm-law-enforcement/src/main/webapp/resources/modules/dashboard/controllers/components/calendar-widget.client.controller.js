@@ -66,15 +66,11 @@ angular.module('dashboard.calendar', [ 'adf.provider' ]).config(function(dashboa
                     });
 
                     var onObjectInfoRetrieved = function() {
-                        CalendarConfigurationService.getCurrentCalendarConfiguration().then(function(calendarAdminConfigRes) {
-                            $scope.objectType = HelperObjectBrowserService.getCurrentObjectType();
-                            $scope.objectId = componentHelper.currentObjectId;
-                            $scope.eventSources = [];
-                            if (calendarAdminConfigRes.data.configurationsByType[module.name].integrationEnabled) {
-                                $scope.objectInfoRetrieved = true;
-                            } else {
-                                $scope.objectInfoRetrieved = false;
-                            }
+                        $scope.objectType = HelperObjectBrowserService.getCurrentObjectType();
+                        $scope.objectId = componentHelper.currentObjectId;
+                        $scope.eventSources = [];
+                        CalendarService.isCalendarConfigurationEnabled($scope.objectType).then(function(data) {
+                            $scope.objectInfoRetrieved = data;
                         });
                     };
                 } ]);

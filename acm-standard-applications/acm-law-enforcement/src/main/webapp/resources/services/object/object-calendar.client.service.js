@@ -324,15 +324,12 @@ angular.module('services').factory(
                         });
                     };
 
-                    Service.checkCalendarConfiguration = function(objectType) {
+                    Service.isCalendarConfigurationEnabled = function(objectType) {
+                        var deferred = $q.defer();
                         CalendarConfigurationService.getCurrentCalendarConfiguration().then(function(calendarAdminConfigRes) {
-                            if (calendarAdminConfigRes.data.configurationsByType[objectType].integrationEnabled) {
-                                return true;
-                            } else {
-                                MessageService.info($translate.instant('dashboard.widgets.calendar.calendarIntegrationDisabledMessage'));
-                                return false;
-                            }
+                            deferred.resolve(calendarAdminConfigRes.data.configurationsByType[objectType].integrationEnabled);
                         });
+                        return deferred.promise;
                     };
 
                     return Service;

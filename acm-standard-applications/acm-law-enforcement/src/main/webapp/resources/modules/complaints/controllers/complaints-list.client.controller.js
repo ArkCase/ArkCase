@@ -50,7 +50,13 @@ angular.module('complaints').controller(
                             return ComplaintListService.updateComplaintsTreeData(start, n, sort, filters, query, nodeData);
                         },
                         getTreeData : function(start, n, sort, filters, query) {
-                            CalendarService.checkCalendarConfiguration('COMPLAINT');
+                            CalendarService.isCalendarConfigurationEnabled('COMPLAINT').then(
+                                    function(data) {
+                                        if (!data) {
+                                            MessageService.info($translate
+                                                    .instant('dashboard.widgets.calendar.calendarIntegrationDisabledMessage'));
+                                        }
+                                    });
                             return ComplaintListService.queryComplaintsTreeData(start, n, sort, filters, query);
                         },
                         getNodeData : function(complaintId) {
