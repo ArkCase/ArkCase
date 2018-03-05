@@ -2,18 +2,8 @@
 
 angular.module('cost-tracking').controller(
         'CostTracking.TasksController',
-        [
-                '$scope',
-                '$controller',
-                '$stateParams',
-                'Helper.ObjectBrowserService',
-                'CostTracking.InfoService',
-                'Helper.UiGridService',
-                'Object.TaskService',
-                'ObjectService',
-                'Helper.TaskListParentNode',
-                function($scope, $controller, $stateParams, HelperObjectBrowserService, CostTrackingInfoService, HelperUiGridService,
-                        ObjectTaskService, ObjectService, HelperTaskListParentNode) {
+        [ '$scope', '$stateParams', 'CostTracking.InfoService', 'ObjectService', 'Helper.TaskListParentNode',
+                function($scope, $stateParams, CostTrackingInfoService, ObjectService, HelperTaskListParentNode) {
 
                     new HelperTaskListParentNode.TaskTableComponent({
                         scope : $scope,

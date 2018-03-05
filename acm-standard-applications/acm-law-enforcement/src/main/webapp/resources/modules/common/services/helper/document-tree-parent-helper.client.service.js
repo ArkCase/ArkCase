@@ -2,15 +2,18 @@
 
 /**
  * @ngdoc service
- * @name services:Helper.ObjectBrowserService
+ * @name services:Helper.DocumentListTreeHelper
  *
  * @description
+ * Helper.DocumentListTreeHelper provide common help for 'doc-tree' directive. Uses the HelperObjectBrowserService Component.
+ * Helper.DocumentListTreeHelper uses all the method needed for showing a functional doc-tree component.
+ * Every function is overridable by the controller's scope if it's defined otherwise will just take the default helper function.
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-objbrowser.client.service.js services/helper/helper-objbrowser.client.service.js}
-
- * Helper.ObjectBrowserService provide help for common functions for an object page. It includes navigation (or tree) part and content part.
- * Content part consists list of Components.
- * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
+ * DocumentTreeComponent takes the same arguments as Helper.ObjectBrowserService component plus have additional:
+ * - enableEmailButton for enabling the email button can also be enabled after initialization of the DocumentTreeComponent with enableSendEmailButton function.
+ * - enableNewTaskButton for enabling the new task button can also be enabled after initialization of the DocumentTreeComponent with enableNewTaskButton function.
+ * - Required commit function at the end after everything is defined from the scope and can send request for getting the object information and the config.
+ *
  */
 
 angular
@@ -48,12 +51,16 @@ angular
                                     that.scope.enableNewTaskButton = arg.enableNewTaskButton || that.scope.enableNewTaskButton;
 
                                     that.scope.afterObjectInfo = that.scope.afterObjectInfo || function() {
-                                        if (that.objectType === ObjectService.ObjectTypes.COSTSHEET) {
+                                        if (that.scope.objectType === ObjectService.ObjectTypes.COSTSHEET) {
                                             that.scope.parentObject = that.scope.objectInfo.costsheetNumber;
-                                        } else if (that.objectType === ObjectService.ObjectTypes.CASE_FILE) {
+                                            that.scope.objectInfo.number = that.scope.objectInfo.costsheetNumber;
+                                        } else if (that.scope.objectType === ObjectService.ObjectTypes.CASE_FILE) {
+                                            that.scope.objectInfo.number = that.scope.objectInfo.caseNumber;
                                             that.scope.parentObject = that.scope.objectInfo.caseNumber;
-                                        } else if (that.objectType === ObjectService.ObjectTypes.COMPLAINT) {
+                                        } else if (that.scope.objectType === ObjectService.ObjectTypes.COMPLAINT) {
                                             that.scope.parentObject = that.scope.objectInfo.costsheetNumber;
+                                            that.scope.objectInfo.number = that.scope.objectInfo.complaintNumber;
+                                            that.scope.objectInfo.title = that.scope.objectInfo.complaintTitle;
                                         }
                                     };
 
