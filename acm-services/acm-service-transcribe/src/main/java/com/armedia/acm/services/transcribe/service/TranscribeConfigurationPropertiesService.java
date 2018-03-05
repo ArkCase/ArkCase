@@ -240,8 +240,8 @@ public class TranscribeConfigurationPropertiesService implements TranscribeConfi
 
     private String buildPath(String path)
     {
-        LOG.debug("Building Transcribe Configuration properties file path.", path);
-        LOG.debug("Before: ", path);
+        LOG.debug("Building Transcribe Configuration properties file path.");
+        LOG.debug("Before: {}", path);
 
         if (path != null)
         {
@@ -255,7 +255,7 @@ public class TranscribeConfigurationPropertiesService implements TranscribeConfi
             }
         }
 
-        LOG.debug("After: ", path);
+        LOG.debug("After: {}", path);
 
         return path;
     }
