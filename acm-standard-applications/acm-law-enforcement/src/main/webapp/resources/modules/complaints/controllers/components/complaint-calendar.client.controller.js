@@ -10,8 +10,9 @@ angular.module('complaints').controller(
                 'ObjectService',
                 'Admin.CalendarConfigurationService',
                 'MessageService',
+                'Object.CalendarService',
                 function($scope, $stateParams, ComplaintInfoService, HelperObjectBrowserService, ObjectService,
-                        CalendarConfigurationService, MessageService) {
+                        CalendarConfigurationService, MessageService, CalendarService) {
                     $scope.objectInfoRetrieved = false;
 
                     new HelperObjectBrowserService.Component({
@@ -27,16 +28,11 @@ angular.module('complaints').controller(
                     });
 
                     var onObjectInfoRetrieved = function(objectInfo) {
-                        CalendarConfigurationService.getCurrentCalendarConfiguration().then(function(calendarAdminConfigRes) {
-                            $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
-                            $scope.objectId = objectInfo.complaintId;
-                            $scope.eventSources = [];
-                            if (calendarAdminConfigRes.data.configurationsByType['COMPLAINT'].integrationEnabled) {
-                                $scope.objectInfoRetrieved = true;
-                            } else {
-                                MessageService.info($translate.instant("complaints.comp.calendar.infoMessage"));
-                                $scope.objectInfoRetrieved = false;
-                            }
+                        $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
+                        $scope.objectId = objectInfo.id;
+                        $scope.eventSources = [];
+                        CalendarService.isCalendarConfigurationEnabled('COMPLAINT').then(function(data) {
+                            $scope.objectInfoRetrieved = data;
                         });
                     };
                 } ]);

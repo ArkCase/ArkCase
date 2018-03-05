@@ -1,23 +1,47 @@
 package com.armedia.acm.services.transcribe.model;
 
+import com.armedia.acm.services.transcribe.annotation.TranscribeConfigurationProperties;
+import com.armedia.acm.services.transcribe.annotation.TranscribeConfigurationProperty;
+
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/28/2018
  */
+@TranscribeConfigurationProperties(path = "${user.home}/.arkcase/acm/transcribe.properties")
 public class TranscribeConfiguration implements Serializable
 {
+    @TranscribeConfigurationProperty(key = "transcribe.enabled")
     private boolean enabled;
+
+    @TranscribeConfigurationProperty(key = "transcribe.automatic.enabled")
     private boolean automaticEnabled;
+
+    @TranscribeConfigurationProperty(key = "transcribe.new.transcribe.for.new.version")
     private boolean newTranscriptionForNewVersion;
+
+    @TranscribeConfigurationProperty(key = "transcribe.copy.transcribe.for.new.version")
     private boolean copyTranscriptionForNewVersion;
-    private double cost;
+
+    @TranscribeConfigurationProperty(key = "transcribe.cost")
+    private BigDecimal cost;
+
+    @TranscribeConfigurationProperty(key = "transcribe.confidence")
     private int confidence;
+
+    @TranscribeConfigurationProperty(key = "transcribe.number.of.files.for.processing")
     private int numberOfFilesForProcessing;
+
+    @TranscribeConfigurationProperty(key = "transcribe.word.count.per.item")
     private int wordCountPerItem;
+
+    @TranscribeConfigurationProperty(key = "transcribe.provider")
     private TranscribeServiceProvider provider;
+
+    @TranscribeConfigurationProperty(key = "transcribe.providers", write = false)
     private List<TranscribeServiceProvider> providers;
 
     public boolean isEnabled()
@@ -68,12 +92,12 @@ public class TranscribeConfiguration implements Serializable
         this.copyTranscriptionForNewVersion = copyTranscriptionForNewVersion;
     }
 
-    public double getCost()
+    public BigDecimal getCost()
     {
         return cost;
     }
 
-    public void setCost(double cost)
+    public void setCost(BigDecimal cost)
     {
         this.cost = cost;
     }
@@ -140,7 +164,7 @@ public class TranscribeConfiguration implements Serializable
                 automaticEnabled == that.automaticEnabled &&
                 newTranscriptionForNewVersion == that.newTranscriptionForNewVersion &&
                 copyTranscriptionForNewVersion == that.copyTranscriptionForNewVersion &&
-                Double.compare(that.cost, cost) == 0 &&
+                that.cost != null ? that.cost.equals(cost) : cost == null &&
                 confidence == that.confidence &&
                 numberOfFilesForProcessing == that.numberOfFilesForProcessing &&
                 wordCountPerItem == that.wordCountPerItem &&
