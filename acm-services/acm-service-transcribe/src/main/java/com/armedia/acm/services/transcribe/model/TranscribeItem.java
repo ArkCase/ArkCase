@@ -2,6 +2,7 @@ package com.armedia.acm.services.transcribe.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.services.transcribe.converter.DurationConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
@@ -34,9 +35,11 @@ public class TranscribeItem implements AcmObject, AcmEntity, Serializable
     private Transcribe transcribe;
 
     @Column(name = "cm_transcribe_item_start_time")
+    @Convert(converter = DurationConverter.class)
     private Duration startTime;
 
     @Column(name = "cm_transcribe_item_end_time")
+    @Convert(converter = DurationConverter.class)
     private Duration endTime;
 
     @Column(name = "cm_transcribe_item_confidence")
