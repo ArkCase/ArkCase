@@ -36,6 +36,12 @@ angular.module('profile').factory('Profile.MfaService', ['$resource', '$translat
                 cache: false
             }
 
+            , _getAuthProfile: {
+                method: 'GET',
+                url: 'api/latest/plugin/okta/authprofile',
+                cache: false
+            }
+
         });
 
         Service.getAvailableFactors = function () {
@@ -92,6 +98,18 @@ angular.module('profile').factory('Profile.MfaService', ['$resource', '$translat
             return Util.serviceCall({
                 service: Service._deleteFactor,
                 param: {factorId: factorId},
+                onSuccess: function (data) {
+                    return data;
+                },
+                onError: function (error) {
+                    return error;
+                }
+            });
+        };
+
+        Service.getAuthProfile = function () {
+            return Util.serviceCall({
+                service: Service._getAuthProfile,
                 onSuccess: function (data) {
                     return data;
                 },
