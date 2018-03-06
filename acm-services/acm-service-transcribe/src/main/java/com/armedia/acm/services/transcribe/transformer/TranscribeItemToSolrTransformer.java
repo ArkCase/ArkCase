@@ -46,7 +46,7 @@ public class TranscribeItemToSolrTransformer implements AcmObjectToSolrDocTransf
 
         solr.setParent_id_s(String.valueOf(in.getTranscribe().getId()));
         solr.setParent_type_s(in.getTranscribe().getObjectType());
-        solr.setParent_name_t(in.getTranscribe().getMediaEcmFile().getFileName());
+        solr.setParent_name_t(in.getTranscribe().getMediaEcmFileVersion().getFile().getFileName());
         solr.setParent_ref_s(String.format("%d-%s", in.getTranscribe().getId(), in.getTranscribe().getObjectType()));
 
         solr.setAdditionalProperty("start_time_s", in.getStartTime().toString());

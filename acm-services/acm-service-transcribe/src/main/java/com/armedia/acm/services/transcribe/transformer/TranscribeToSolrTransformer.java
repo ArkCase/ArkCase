@@ -35,9 +35,9 @@ public class TranscribeToSolrTransformer implements AcmObjectToSolrDocTransforme
         solr.setId(String.format("%d-%s", in.getId(), in.getObjectType()));
         solr.setObject_id_s(String.valueOf(in.getId()));
         solr.setObject_type_s(in.getObjectType());
-        solr.setName(in.getMediaEcmFile().getFileName());
-        solr.setTitle_parseable(in.getMediaEcmFile().getFileName());
-        solr.setTitle_parseable_lcs(in.getMediaEcmFile().getFileName());
+        solr.setName(in.getMediaEcmFileVersion().getFile().getFileName());
+        solr.setTitle_parseable(in.getMediaEcmFileVersion().getFile().getFileName());
+        solr.setTitle_parseable_lcs(in.getMediaEcmFileVersion().getFile().getFileName());
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
         solr.setModified_date_tdt(in.getModified());
@@ -47,7 +47,6 @@ public class TranscribeToSolrTransformer implements AcmObjectToSolrDocTransforme
 
         solr.setAdditionalProperty("remote_id_l", in.getRemoteId());
         solr.setAdditionalProperty("language_s", in.getLanguage());
-        solr.setAdditionalProperty("media_file_id_l", in.getMediaEcmFile().getId());
         solr.setAdditionalProperty("media_file_version_id_l", in.getMediaEcmFileVersion().getId());
 
         if (in.getTranscribeEcmFile() != null)
@@ -80,11 +79,11 @@ public class TranscribeToSolrTransformer implements AcmObjectToSolrDocTransforme
         solr.setModifier_s(in.getModifier());
         solr.setLast_modified_tdt(in.getModified());
         solr.setStatus_s(in.getStatus());
-        solr.setName(in.getMediaEcmFile().getFileName());
-        solr.setName_lcs(in.getMediaEcmFile().getFileName());
-        solr.setTitle_parseable(in.getMediaEcmFile().getFileName());
-        solr.setTitle_parseable_lcs(in.getMediaEcmFile().getFileName());
-        solr.setTitle_t(in.getMediaEcmFile().getFileName());
+        solr.setName(in.getMediaEcmFileVersion().getFile().getFileName());
+        solr.setName_lcs(in.getMediaEcmFileVersion().getFile().getFileName());
+        solr.setTitle_parseable(in.getMediaEcmFileVersion().getFile().getFileName());
+        solr.setTitle_parseable_lcs(in.getMediaEcmFileVersion().getFile().getFileName());
+        solr.setTitle_t(in.getMediaEcmFileVersion().getFile().getFileName());
 
         return solr;
     }
