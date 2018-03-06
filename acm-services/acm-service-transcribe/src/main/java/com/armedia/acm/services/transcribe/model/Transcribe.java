@@ -5,6 +5,8 @@ import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
+import com.armedia.acm.services.transcribe.exception.SaveTranscribeException;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
@@ -13,6 +15,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/27/2018
@@ -44,7 +47,7 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transcribe", orphanRemoval = true)
     private List<TranscribeItem> transcribeItems;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "cm_transcribe_media_file_id")
     private EcmFile mediaEcmFile;
 
@@ -83,14 +86,22 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     private String className = this.getClass().getName();
 
     @PrePersist
-    protected void beforeInsert()
+    protected void beforeInsert() throws CreateTranscribeException
     {
+        if (!isMediaEcmFileVersionValid())
+        {
+            throw new CreateTranscribeException("Media File Version is not compatible with provided Media File");
+        }
         setUpTranscribeItems();
     }
 
     @PreUpdate
-    protected void beforeUpdate()
+    protected void beforeUpdate() throws SaveTranscribeException
     {
+        if (!isMediaEcmFileVersionValid())
+        {
+            throw new SaveTranscribeException("Media File Version is not compatible with provided Media File");
+        }
         setUpTranscribeItems();
     }
 
@@ -100,6 +111,16 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
         {
             getTranscribeItems().forEach(item -> item.setTranscribe(this));
         }
+    }
+
+    private boolean isMediaEcmFileVersionValid()
+    {
+        if (getMediaEcmFile() != null && getMediaEcmFileVersion() != null && getMediaEcmFileVersion().getFile() != null)
+        {
+            return Objects.equals(getMediaEcmFile().getId(), getMediaEcmFileVersion().getFile().getId());
+        }
+
+        return false;
     }
 
     @Override
