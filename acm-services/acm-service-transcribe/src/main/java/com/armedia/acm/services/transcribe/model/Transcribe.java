@@ -47,10 +47,6 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transcribe", orphanRemoval = true)
     private List<TranscribeItem> transcribeItems;
 
-    @ManyToOne
-    @JoinColumn(name = "cm_transcribe_media_file_id")
-    private EcmFile mediaEcmFile;
-
     @OneToOne
     @JoinColumn(name = "cm_transcribe_media_file_version_id")
     private EcmFileVersion mediaEcmFileVersion;
@@ -88,20 +84,12 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     @PrePersist
     protected void beforeInsert() throws CreateTranscribeException
     {
-        if (!isMediaEcmFileVersionValid())
-        {
-            throw new CreateTranscribeException("Media File Version is not compatible with provided Media File");
-        }
         setUpTranscribeItems();
     }
 
     @PreUpdate
     protected void beforeUpdate() throws SaveTranscribeException
     {
-        if (!isMediaEcmFileVersionValid())
-        {
-            throw new SaveTranscribeException("Media File Version is not compatible with provided Media File");
-        }
         setUpTranscribeItems();
     }
 
@@ -111,16 +99,6 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
         {
             getTranscribeItems().forEach(item -> item.setTranscribe(this));
         }
-    }
-
-    private boolean isMediaEcmFileVersionValid()
-    {
-        if (getMediaEcmFile() != null && getMediaEcmFileVersion() != null && getMediaEcmFileVersion().getFile() != null)
-        {
-            return Objects.equals(getMediaEcmFile().getId(), getMediaEcmFileVersion().getFile().getId());
-        }
-
-        return false;
     }
 
     @Override
@@ -172,16 +150,6 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     public void setTranscribeItems(List<TranscribeItem> transcribeItems)
     {
         this.transcribeItems = transcribeItems;
-    }
-
-    public EcmFile getMediaEcmFile()
-    {
-        return mediaEcmFile;
-    }
-
-    public void setMediaEcmFile(EcmFile mediaEcmFile)
-    {
-        this.mediaEcmFile = mediaEcmFile;
     }
 
     public EcmFileVersion getMediaEcmFileVersion()
