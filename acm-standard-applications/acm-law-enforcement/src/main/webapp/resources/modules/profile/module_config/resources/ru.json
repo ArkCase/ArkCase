@@ -26,7 +26,8 @@
         "zip": "Почтовый Индекс",
         "mainPhone": "Главный офисный телефон",
         "fax": "факс",
-        "website": "Веб-сайт"
+        "website": "Веб-сайт",
+        "websiteTitle": "ru_Enable edit"
     },
     "profile.contact": {
         "title": "Контактная информация",
