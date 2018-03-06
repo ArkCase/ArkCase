@@ -2,6 +2,7 @@ package com.armedia.acm.services.transcribe.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.services.transcribe.converter.DurationConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -46,6 +47,7 @@ public class TranscribeItem implements AcmObject, AcmEntity, Serializable
     private int confidence;
 
     @Column(name = "cm_transcribe_item_corrected")
+    @Convert(converter = BooleanToStringConverter.class)
     private Boolean corrected = Boolean.FALSE;
 
     @Lob
