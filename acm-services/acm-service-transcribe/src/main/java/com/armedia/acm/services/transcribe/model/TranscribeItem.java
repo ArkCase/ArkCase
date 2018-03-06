@@ -65,7 +65,7 @@ public class TranscribeItem implements AcmObject, AcmEntity, Serializable
     private Date modified;
 
     @Column(name = "cm_transcribe_item_class_name")
-    private String className = this.getClass().getName();;
+    private String className = this.getClass().getName();
 
     @Override
     public Long getId()

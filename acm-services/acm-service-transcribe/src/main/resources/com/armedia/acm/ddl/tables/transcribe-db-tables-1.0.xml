@@ -71,8 +71,8 @@
             <column name="cm_transcribe_id" type="${idType}">
                 <constraints nullable="false" foreignKeyName="fk_transcribe_id" referencedTableName="acm_transcribe" referencedColumnNames="cm_transcribe_id"/>
             </column>
-            <column name="cm_transcribe_item_start_time" type="VARCHAR(32)}">
-                <constraints nullable="true"/>
+            <column name="cm_transcribe_item_start_time" type="VARCHAR(32)">
+                <constraints nullable="false"/>
             </column>
             <column name="cm_transcribe_item_end_time" type="VARCHAR(32)">
                 <constraints nullable="false"/>
