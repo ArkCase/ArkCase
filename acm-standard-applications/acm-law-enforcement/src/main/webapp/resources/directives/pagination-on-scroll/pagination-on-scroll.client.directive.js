@@ -29,7 +29,7 @@ angular.module('directives').directive('paginationOnScroll', [ 'UtilService', fu
         },
         link : function(scope, elem, attr) {
             elem.bind("scroll", function() {
-                if (Util.isEmpty(scope.resetScrollPx)) {
+                if (Util.isEmpty(scope.resetScrollPx) || scope.resetScrollPx) {
                     var scrolledpx = 0;
                     scope.resetScrollPx = false;
                 } else {

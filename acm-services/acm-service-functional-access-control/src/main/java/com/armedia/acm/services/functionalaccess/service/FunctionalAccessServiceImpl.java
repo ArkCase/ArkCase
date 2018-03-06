@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -106,25 +105,22 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         return applicationRoles;
     }
 
-    private List<String> findAuthorizedRoleToGroups(List<String> roleToGroupsMap, String sortDirection, Integer startRow, Integer maxRows)
+    private List<String> findAuthorizedRoleToGroups(Authentication auth, List<String> roleToGroupsMap, String sortDirection,
+            Integer startRow, Integer maxRows) throws MuleException
     {
-        List<String> roleToGroupsMapSorted = null;
-        maxRows = maxRows > roleToGroupsMap.size() ? roleToGroupsMap.size() : maxRows;
-        if (sortDirection.contains("ASC"))
-        {
-            roleToGroupsMapSorted = roleToGroupsMap.stream().sorted()
-                    .collect(Collectors.toList());
-        }
-        else
-        {
-            roleToGroupsMap.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-        }
-        if (startRow > roleToGroupsMap.size())
-        {
-            return roleToGroupsMapSorted;
-        }
+        List<String> result = new ArrayList<>();
+        String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
+                + roleToGroupsMap.stream().collect(Collectors.joining(" OR name_lcs:", "(name_lcs:", ")"));
+        String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                sortDirection);
+        SearchResults searchResults = new SearchResults();
+        JSONArray docs = searchResults.getDocuments(solrResponse);
 
-        return roleToGroupsMapSorted.subList(startRow, maxRows);
+        for (int i = 0; i < docs.length(); i++)
+        {
+            result.add((String) docs.getJSONObject(i).get("name"));
+        }
+        return result;
     }
 
     private List<String> findNotAuthorizedRoleToGroups(Authentication auth, List<String> roleToGroupsMap, String sortDirection,
@@ -155,7 +151,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         List<String> roleToGroupsMap = roleToGroupMapping.getRoleToGroupsMap().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, list -> new ArrayList<>(list.getValue()))).get(role);
 
-        return authorized ? findAuthorizedRoleToGroups(roleToGroupsMap, sortDirection, startRow, maxRows)
+        return authorized ? findAuthorizedRoleToGroups(auth, roleToGroupsMap, sortDirection, startRow, maxRows)
                 : findNotAuthorizedRoleToGroups(auth, roleToGroupsMap, sortDirection, startRow, maxRows);
     }
 
