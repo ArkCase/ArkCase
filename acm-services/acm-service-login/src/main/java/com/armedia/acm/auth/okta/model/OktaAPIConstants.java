@@ -38,4 +38,6 @@ public interface OktaAPIConstants
     String LOGIN_NAME = "login";
     String MOBILE_PHONE = "mobilePhone";
     String ROLE_PRE_AUTHENTICATED = "ROLE_PRE_AUTHENTICATED";
+    String SPRING_PROFILES_ACTIVE = "spring.profiles.active";
+    String AUTH_DEFAULT_PROFILE = "ldap";
 }
