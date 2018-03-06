@@ -44,6 +44,11 @@ angular.module('dashboard.tasks', [ 'adf.provider' ]).config(function(dashboardP
                                 getInfo : ObjectTaskService.queryChildTasks,
                                 objectType : ObjectService.ObjectTypes.COMPLAINT
                             }, {
+                                name : ObjectService.ObjectTypes.TIMESHEET,
+                                configName : "time-tracking",
+                                getInfo : ObjectTaskService.queryChildTasks,
+                                objectType : ObjectService.ObjectTypes.TIMESHEET
+                            }, {
                                 name : ObjectService.ObjectTypes.COSTSHEET,
                                 configName : "cost-tracking",
                                 getInfo : ObjectTaskService.queryChildTasks,
@@ -66,21 +71,22 @@ angular.module('dashboard.tasks', [ 'adf.provider' ]).config(function(dashboardP
                             var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
                             if (module && Util.goodPositive(currentObjectId, false)) {
                                 promiseConfig = ConfigService.getModuleConfig(module.configName);
+                                promiseInfo = module.getInfo(module.objectType, currentObjectId, 0, 5);
                                 var promiseUsers = gridHelper.getUsers();
-                                $q.all([ promiseConfig, promiseUsers ]).then(function(data) {
+
+                                $q.all([ promiseConfig, promiseInfo, promiseUsers ]).then(function(data) {
                                     var config = _.find(data[0].components, {
                                         id : "main"
                                     });
+                                    var info = data[1];
                                     var widgetInfo = _.find(config.widgets, function(widget) {
                                         return widget.id === "tasks";
                                     });
+                                    var tasks = info.response.docs;
 
                                     gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                                     gridHelper.setColumnDefs(widgetInfo);
-                                    gridHelper.setBasicOptions(widgetInfo);
-                                    gridHelper.setExternalPaging(widgetInfo, populateGridData);
-                                    populateGridData();
-
+                                    gridHelper.setWidgetsGridData(tasks);
                                 }, function(err) {
 
                                 });
