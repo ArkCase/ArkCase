@@ -14,4 +14,12 @@
         <property name="transcribeConfigurationService" ref="transcribeConfigurationPropertiesService"/>
     </bean>
 
+    <bean id="transcribeToSolrTransformer" class="com.armedia.acm.services.transcribe.transformer.TranscribeToSolrTransformer">
+        <property name="transcribeDao" ref="transcribeDao"/>
+    </bean>
+
+    <bean id="transcribeItemToSolrTransformer" class="com.armedia.acm.services.transcribe.transformer.TranscribeItemToSolrTransformer">
+        <property name="transcribeItemDao" ref="transcribeItemDao"/>
+    </bean>
+
 </beans>
