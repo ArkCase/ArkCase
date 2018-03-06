@@ -25,19 +25,21 @@
                 <ref bean="fileFolderParticipantsUpdateExecutor"/>
                 <ref bean="triggerSolrUpdateExecutor"/>
                 <ref bean="userRootFolderAccessUpdateExecutor"/>
+                <ref bean="triggerCostsheetSolrUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
     </bean>
-    
+
     <bean id="userRootFolderAccessUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.UserRootFolderAccessUpdateExecutor">
         <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="containerDao" ref="acmContainerFolderDao"/>
         <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
-    
-    <bean id="fileFolderParticipantsUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.FileFolderParticipantsUpdateExecutor">
+
+    <bean id="fileFolderParticipantsUpdateExecutor"
+        class="com.armedia.acm.services.dataupdate.service.FileFolderParticipantsUpdateExecutor">
         <property name="contextHolder" ref="acmContextHolder"/>
         <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="fileDao" ref="ecmFileDao"/>
@@ -57,10 +59,17 @@
         <property name="uuidUpdateDao" ref="groupUuidUpdateDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
-
-    <bean id="triggerSolrUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TriggerSolrUpdateExecutor">
+    <bean id="solrReindexService" class="com.armedia.acm.services.dataupdate.service.SolrReindexService">
         <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.arkcase/acm/solrLastBatchUpdate.properties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
+    </bean>
+
+    <bean id="triggerSolrUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TriggerSolrUpdateExecutor">
+        <property name="solrReindexService" ref="solrReindexService"/>
+    </bean>
+
+    <bean id="triggerCostsheetSolrUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TriggerCostsheetSolrUpdateExecutor">
+        <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 
 </beans>
