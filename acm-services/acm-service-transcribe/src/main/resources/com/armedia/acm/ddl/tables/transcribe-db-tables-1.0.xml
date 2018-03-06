@@ -16,9 +16,6 @@
             <column name="cm_transcribe_language" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_transcribe_media_file_id" type="${idType}">
-                <constraints nullable="false"/>
-            </column>
             <column name="cm_transcribe_media_file_version_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
