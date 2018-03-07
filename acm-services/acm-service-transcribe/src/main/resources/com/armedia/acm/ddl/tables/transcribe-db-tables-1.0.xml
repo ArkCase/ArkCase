@@ -26,7 +26,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_transcribe_process_id" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="cm_transcribe_word_count" type="INTEGER">
                 <constraints nullable="true"/>
