@@ -12,9 +12,10 @@
  */
 angular.module('services').factory(
         'Organization.InfoService',
-        [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', 'MessageService', 'CacheFactory',
-                function($resource, $translate, Store, Util, MessageService, CacheFactory) {
-                    var organizationCache = CacheFactory('organizationCache', {
+        [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', 'MessageService', 'CacheFactory', 'ObjectService',
+                function($resource, $translate, Store, Util, MessageService, CacheFactory, ObjectService) {
+
+                    var organizationCache = CacheFactory(ObjectService.ObjectTypes.ORGANIZATION, {
                         maxAge : 1 * 60 * 1000, // Items added to this cache expire after 1 minute
                         cacheFlushInterval : 60 * 60 * 1000, // This cache will clear itself every hour
                         deleteOnExpire : 'aggressive', // Items will be deleted from this cache when they expire
