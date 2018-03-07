@@ -90,16 +90,23 @@ public class GroupServiceImpl implements GroupService
     @Override
     public String buildGroupsForUserByNameSolrQuery(Boolean authorized, String userId, String searchFilter)
     {
-        return buildGroupsForUserSolrQuery(authorized, userId) + " AND name_partial:" + searchFilter;
+        String query = buildGroupsForUserSolrQuery(authorized, userId);
+        return query.isEmpty() ? "" : query + " AND name_partial:" + searchFilter;
     }
 
     @Override
     public String buildGroupsForUserSolrQuery(Boolean authorized, String userId)
     {
-        String solrQuery = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED"
+        AcmUser user = userDao.findByUserId(userId);
+        if (user == null)
+        {
+            return "";
+        }
+        return "object_type_s:GROUP AND "
+                + "(object_sub_type_s:ADHOC_GROUP OR (object_sub_type_s:LDAP_GROUP AND directory_name_s:"
+                + user.getUserDirectoryName()
+                + ")) AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED"
                 + (authorized ? " AND member_id_ss:" : " AND -member_id_ss:") + userId;
-
-        return solrQuery;
     }
 
     @Override
