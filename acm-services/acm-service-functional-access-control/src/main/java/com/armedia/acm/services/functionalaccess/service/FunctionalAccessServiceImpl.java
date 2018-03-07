@@ -105,32 +105,11 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         return applicationRoles;
     }
 
-    private List<String> findAuthorizedRoleToGroups(Authentication auth, List<String> roleToGroupsMap, String sortDirection,
-            Integer startRow, Integer maxRows) throws MuleException
-    {
-        List<String> result = new ArrayList<>();
-        String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
-                + roleToGroupsMap.stream().collect(Collectors.joining(" OR name_lcs:", "(name_lcs:", ")"));
-        String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
-                sortDirection);
-        SearchResults searchResults = new SearchResults();
-        JSONArray docs = searchResults.getDocuments(solrResponse);
-
-        for (int i = 0; i < docs.length(); i++)
-        {
-            result.add((String) docs.getJSONObject(i).get("name"));
-        }
-        return result;
-    }
-
-    private List<String> findNotAuthorizedRoleToGroups(Authentication auth, List<String> roleToGroupsMap, String sortDirection,
+    private List<String> getGroupsByRoleBySolrQuery(Authentication auth, String sortDirection,
             Integer startRow,
-            Integer maxRows) throws MuleException
+            Integer maxRows, String query) throws MuleException
     {
         List<String> result = new ArrayList<>();
-        String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
-                + roleToGroupsMap.stream().collect(Collectors.joining(" AND -name_lcs:", "-name_lcs:", ""));
-
         String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                 sortDirection);
         SearchResults searchResults = new SearchResults();
@@ -144,15 +123,27 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     }
 
     @Override
-    public List<String> findApplicationGroupsByRole(Authentication auth, String role, Integer startRow, Integer maxRows,
+    public List<String> getGroupsByRole(Authentication auth, String roleName, Integer startRow, Integer maxRows,
             String sortDirection,
             Boolean authorized) throws MuleException
     {
-        List<String> roleToGroupsMap = roleToGroupMapping.getRoleToGroupsMap().entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, list -> new ArrayList<>(list.getValue()))).get(role);
+        List<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, list -> new ArrayList<>(list.getValue()))).get(roleName);
 
-        return authorized ? findAuthorizedRoleToGroups(auth, roleToGroupsMap, sortDirection, startRow, maxRows)
-                : findNotAuthorizedRoleToGroups(auth, roleToGroupsMap, sortDirection, startRow, maxRows);
+        if (authorized)
+        {
+            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
+                    + groupsByRole.stream().collect(Collectors.joining(" OR name_lcs:", "(name_lcs:", ")"));
+
+            return getGroupsByRoleBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+        }
+        else
+        {
+            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
+                    + groupsByRole.stream().collect(Collectors.joining(" AND -name_lcs:", "-name_lcs:", ""));
+
+            return getGroupsByRoleBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+        }
     }
 
     @Override
