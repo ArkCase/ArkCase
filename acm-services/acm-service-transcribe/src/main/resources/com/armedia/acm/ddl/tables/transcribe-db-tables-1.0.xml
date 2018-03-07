@@ -95,6 +95,9 @@
             <column name="cm_transcribe_item_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
+            <column name="cm_transcribe_item_class_name" type="VARCHAR(400)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 
