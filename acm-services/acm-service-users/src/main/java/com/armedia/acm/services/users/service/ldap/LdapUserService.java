@@ -99,7 +99,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
             user = userDto.updateAcmUser(user);
         }
 
-        String dn = buildDnForUser(userDto.getUserId(), ldapSyncConfig);
+        String dn = Directory.valueOf(ldapSyncConfig.getDirectoryType()).buildDnForUserEntry(userDto.getUserId(), ldapSyncConfig);
         user.setDistinguishedName(dn);
         user.setUserDirectoryName(directoryName);
         user.setUserState(AcmUserState.VALID);
@@ -301,12 +301,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
         ldapGroupDao.removeMemberFromGroups(user.getDistinguishedName(), groupsDnToUpdate, ldapSyncConfig);
 
         return user;
-    }
-
-    private String buildDnForUser(String userId, AcmLdapSyncConfig syncConfig)
-    {
-        String dnAttr = String.format("%s=%s", syncConfig.getUserIdAttributeName(), userId.toLowerCase());
-        return MapperUtils.appendToDn(dnAttr, syncConfig.getUserSearchBase(), syncConfig.getBaseDC());
     }
 
     public AcmUser findByPasswordResetToken(String token)
