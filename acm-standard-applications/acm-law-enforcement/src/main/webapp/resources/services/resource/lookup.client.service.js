@@ -408,9 +408,13 @@ angular.module('services').factory(
                      * @returns {Object} Promise
                      */
                     Service.getLookups = function() {
+                        var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
+                        var configMap = cacheConfigMap.get();
+                        var lookups = Util.goodMapValue(configMap, 'lookups', null);
                         return Util.serviceCall({
-                            service: Service._getLookups
-                            , onSuccess: handleSaveLookupSuccess
+                            service : Service._getLookups,
+                            result : lookups,
+                            onSuccess : handleSaveLookupSuccess
                         });
                     };
 
