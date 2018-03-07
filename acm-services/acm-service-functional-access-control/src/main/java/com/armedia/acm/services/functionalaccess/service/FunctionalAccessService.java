@@ -17,7 +17,7 @@ public interface FunctionalAccessService
 
     public List<String> getApplicationRoles();
 
-    public List<String> findApplicationGroupsByRole(Authentication auth, String role, Integer startRow, Integer maxRows,
+    public List<String> getGroupsByRole(Authentication auth, String role, Integer startRow, Integer maxRows,
             String sortDirection,
             Boolean authorized) throws MuleException;
 

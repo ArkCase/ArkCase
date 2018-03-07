@@ -44,19 +44,19 @@ public class GetApplicationRolesToGroupsAPIController
 
     @RequestMapping(value = "/{roleName:.+}/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<String> findApplicationGroupsByRole(Authentication auth,
+    public List<String> findGroupsByRole(Authentication auth,
             @PathVariable(value = "roleName") String roleName,
             @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws MuleException, AcmEncryptionException
     {
-        LOG.debug("Taking application role: " + roleName + " to groups ...");
+        LOG.debug("Taking application to groups by role name {}: ", roleName);
 
-        List<String> retval = getFunctionalAccessService().findApplicationGroupsByRole(auth, roleName, startRow, maxRows, sortDirection,
+        List<String> retval = getFunctionalAccessService().getGroupsByRole(auth, roleName, startRow, maxRows, sortDirection,
                 authorized);
 
-        LOG.debug("Application role: " + roleName + " to groups number: " + retval.size());
+        LOG.debug("Application groups number {} by role name {} ", retval.size(), roleName);
 
         return retval;
     }
