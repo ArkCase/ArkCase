@@ -26,7 +26,8 @@
         "zip": "郵便番号",
         "mainPhone": "メインオフィス電話",
         "fax": "ファックス",
-        "website": "ウェブサイト"
+        "website": "ウェブサイト",
+        "websiteTitle": "ja_Enable edit"
     },
     "profile.contact": {
         "title": "連絡先",
