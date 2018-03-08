@@ -63,6 +63,12 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_time_type")
     private String type;
 
+    @Column(name = "cm_time_charge_code")
+    private String chargeRole;
+
+    @Column(name = "cm_time_total_cost")
+    private Long totalCost;
+
     @Column(name = "cm_time_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
@@ -136,6 +142,22 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
     public void setType(String type)
     {
         this.type = type;
+    }
+
+    public String getChargeRole() {
+        return chargeRole;
+    }
+
+    public void setChargeRole(String chargeRole) {
+        this.chargeRole = chargeRole;
+    }
+
+    public Long getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(Long totalCost) {
+        this.totalCost = totalCost;
     }
 
     public Date getDate()

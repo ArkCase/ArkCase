@@ -223,4 +223,16 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="13-acm-time-add-charge-code-column" author="marko.stojanoski">
+        <addColumn tableName="acm_time">
+            <column name="cm_time_charge_code" type="VARCHAR(400)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="14-acm-time-add-total-cost-column" author="marko.stojanoski">
+        <addColumn tableName="acm_time">
+            <column name="cm_time_total_cost" type="NUMBER(32,2)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -75,6 +75,11 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-admin-plugin</artifactId>
+            <version>3.2.6-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 

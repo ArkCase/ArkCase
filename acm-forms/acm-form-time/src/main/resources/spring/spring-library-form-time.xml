@@ -16,6 +16,7 @@
         <property name="timeFactory" ref="timeFactory"/>
         <property name="AcmContainerDao" ref="acmContainerFolderDao"/>
         <property name="timesheetEventPublisher" ref="timesheetEventPublisher"/>
+        <property name="timesheetConfigurationService" ref="timesheetConfigurationService"/>
     </bean>
 
 </beans>
