@@ -45,7 +45,7 @@ public class TranscribeToSolrTransformer implements AcmObjectToSolrDocTransforme
         solr.setStatus_lcs(in.getStatus());
         solr.setType_lcs(in.getType());
 
-        solr.setAdditionalProperty("remote_id_l", in.getRemoteId());
+        solr.setAdditionalProperty("remote_id_s", in.getRemoteId());
         solr.setAdditionalProperty("language_s", in.getLanguage());
         solr.setAdditionalProperty("media_file_version_id_l", in.getMediaEcmFileVersion().getId());
 
@@ -62,7 +62,7 @@ public class TranscribeToSolrTransformer implements AcmObjectToSolrDocTransforme
         solr.setAdditionalProperty("word_count_l", in.getWordCount());
 
 
-        return null;
+        return solr;
     }
 
     @Override
