@@ -102,4 +102,5 @@ public interface SearchConstants
     String SEPARATOR_COMMA = ",";
 
     Integer MAX_RESULT_ROWS = 100000;
+    String DEFAULT_FIELD = "catch_all";
 }

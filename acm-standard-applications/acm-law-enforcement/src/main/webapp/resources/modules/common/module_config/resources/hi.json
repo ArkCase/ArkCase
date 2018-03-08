@@ -619,7 +619,12 @@
         "FILE": "फ़ाइल",
         "DOC_REPO": "दस्तावेज़ रिपॉजिटरी",
         "ORGANIZATION": "संगठन",
-        "PERSON": "व्यक्ति"
+        "PERSON": "व्यक्ति",
+        "PERSON-ASSOCIATION": "hi_Person-Association",
+        "PARTICIPANT": "hi_Participant",
+        "NOTE": "hi_Note",
+        "PARTICIPANT-ASSOCIATION": "hi_Participant-Association",
+        "ASSIGNMENT": "hi_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "उपयोगकर्ता चुनें",

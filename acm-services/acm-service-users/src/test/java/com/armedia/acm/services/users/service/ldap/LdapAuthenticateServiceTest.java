@@ -100,13 +100,17 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
 
         LdapTemplate mockTemplate = createMock(LdapTemplate.class);
 
-        expect(mockLdapDao.buildLdapTemplate(mockLdapAuthenticateConfig)).andReturn(mockTemplate);
+        expect(mockLdapDao.buildLdapTemplate(mockLdapAuthenticateConfig, mockUser.getDistinguishedName(), currentPassword))
+                .andReturn(mockTemplate);
 
         expect(mockUserDao.findByUserId("ann-acm")).andReturn(mockUser);
 
         mockLdapUserDao.changeUserPassword(mockUser.getDistinguishedName(), currentPassword, newPassword, mockTemplate,
                 mockLdapAuthenticateConfig);
         expectLastCall().once();
+
+        expect(mockLdapDao.buildLdapTemplate(mockLdapAuthenticateConfig, mockUser.getDistinguishedName(), newPassword))
+                .andReturn(mockTemplate);
 
         LdapUser userEntry = new LdapUser();
         userEntry.setDistinguishedName("cn=ann-acm,dc=arkcase,dc=com");
@@ -131,7 +135,8 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
 
         LdapTemplate mockTemplate = createMock(LdapTemplate.class);
 
-        expect(mockLdapDao.buildLdapTemplate(mockLdapAuthenticateConfig)).andReturn(mockTemplate);
+        expect(mockLdapDao.buildLdapTemplate(mockLdapAuthenticateConfig, mockUser.getDistinguishedName(), currentPassword))
+                .andReturn(mockTemplate);
 
         expect(mockUserDao.findByUserId("ann-acm")).andReturn(mockUser);
 
@@ -180,7 +185,7 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
     }
 
     @Test(expected = AcmUserActionFailedException.class)
-    public void resetUserPasswordNoSuchUser() throws AcmLdapActionFailedException, AcmUserActionFailedException
+    public void resetUserPasswordNoSuchUser() throws AcmUserActionFailedException
     {
         String password = "password";
         PasswordResetToken passwordResetToken = new PasswordResetToken();
