@@ -1,5 +1,6 @@
 package com.armedia.acm.services.timesheet.service;
 
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 
 import org.springframework.security.core.Authentication;
@@ -12,9 +13,9 @@ public interface TimesheetService
 
     Properties getProperties();
 
-    AcmTimesheet save(AcmTimesheet timesheet);
+    AcmTimesheet save(AcmTimesheet timesheet) throws PipelineProcessException;
 
-    AcmTimesheet save(AcmTimesheet timesheet, String submissionName);
+    AcmTimesheet save(AcmTimesheet timesheet, String submissionName) throws PipelineProcessException;
 
     AcmTimesheet get(Long id);
 

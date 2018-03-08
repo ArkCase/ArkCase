@@ -4,12 +4,15 @@
 package com.armedia.acm.services.timesheet.service;
 
 import com.armedia.acm.objectonverter.DateFormats;
+import com.armedia.acm.services.pipeline.PipelineManager;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
+import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.mule.api.MuleException;
@@ -37,6 +40,8 @@ public class TimesheetServiceImpl implements TimesheetService
     private ExecuteSolrQuery executeSolrQuery;
     private List<String> startWorkflowEvents;
 
+    private PipelineManager<AcmTimesheet, TimesheetPipelineContext> pipelineManager;
+
     @Override
     public Properties getProperties()
     {
@@ -49,20 +54,24 @@ public class TimesheetServiceImpl implements TimesheetService
     }
 
     @Override
-    public AcmTimesheet save(AcmTimesheet timesheet)
+    public AcmTimesheet save(AcmTimesheet timesheet) throws PipelineProcessException
     {
-        AcmTimesheet saved = getAcmTimesheetDao().save(timesheet);
-
-        return saved;
+        TimesheetPipelineContext pipelineContext = new TimesheetPipelineContext();
+        return pipelineManager.executeOperation(timesheet, pipelineContext, () -> getAcmTimesheetDao().save(timesheet));
     }
 
     @Override
-    public AcmTimesheet save(AcmTimesheet timesheet, String submissionName)
+    public AcmTimesheet save(AcmTimesheet timesheet, String submissionName) throws PipelineProcessException
     {
-        timesheet.setStatus(getSubmissionStatusesMap().get(submissionName));
-        AcmTimesheet saved = getAcmTimesheetDao().save(timesheet);
 
-        return saved;
+        TimesheetPipelineContext pipelineContext = new TimesheetPipelineContext();
+
+        return pipelineManager.executeOperation(timesheet, pipelineContext, () -> {
+
+            timesheet.setStatus(getSubmissionStatusesMap().get(submissionName));
+            return getAcmTimesheetDao().save(timesheet);
+        });
+
     }
 
     @Override
@@ -262,5 +271,15 @@ public class TimesheetServiceImpl implements TimesheetService
     public void setStartWorkflowEvents(List<String> startWorkflowEvents)
     {
         this.startWorkflowEvents = startWorkflowEvents;
+    }
+
+    public PipelineManager<AcmTimesheet, TimesheetPipelineContext> getPipelineManager()
+    {
+        return pipelineManager;
+    }
+
+    public void setPipelineManager(PipelineManager<AcmTimesheet, TimesheetPipelineContext> pipelineManager)
+    {
+        this.pipelineManager = pipelineManager;
     }
 }
