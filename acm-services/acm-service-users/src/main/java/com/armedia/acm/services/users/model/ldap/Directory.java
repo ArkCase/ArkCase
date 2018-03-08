@@ -11,22 +11,23 @@ import java.util.function.Function;
 
 public enum Directory
 {
-    activedirectory("yyyyMMddHHmmss.0VV", MapperUtils.convertFileTimeTimestampToDate,
+    activedirectory("yyyyMMddHHmmss.0VV", "cn", MapperUtils.convertFileTimeTimestampToDate,
             MapperUtils.activeDirectoryPasswordToAttribute, MapperUtils.activeDirectoryPasswordToAttribute),
-    openldap("yyyyMMddHHmmssVV",
-                    MapperUtils.calculatePasswordExpirationDateByShadowAccount,
+    openldap("yyyyMMddHHmmssVV", "uid", MapperUtils.calculatePasswordExpirationDateByShadowAccount,
                     MapperUtils.openLdapPasswordToAttribute, MapperUtils.openLdapCurrentPasswordToAttribute);
 
     private final String datePattern;
+    private final String userRdnAttribute;
     private final Function<DirContextAdapter, LocalDate> timestampToLocalDate;
     private final Function<String, BasicAttribute> passwordToAttribute;
     private final Function<String, BasicAttribute> currentPasswordToAttribute;
     private DateTimeFormatter dateTimeFormatter;
 
-    Directory(String datePattern, Function<DirContextAdapter, LocalDate> timestampToLocalDate,
+    Directory(String datePattern, String userRdnAttribute, Function<DirContextAdapter, LocalDate> timestampToLocalDate,
             Function<String, BasicAttribute> passwordToAttribute, Function<String, BasicAttribute> currentPasswordToAttribute)
     {
         this.datePattern = datePattern;
+        this.userRdnAttribute = userRdnAttribute;
         this.timestampToLocalDate = timestampToLocalDate;
         dateTimeFormatter = DateTimeFormatter.ofPattern(datePattern);
         this.passwordToAttribute = passwordToAttribute;
@@ -36,6 +37,17 @@ public enum Directory
     public String getDatePattern()
     {
         return datePattern;
+    }
+
+    public String getUserRdnAttribute()
+    {
+        return userRdnAttribute;
+    }
+
+    public String buildDnForUserEntry(String userId, AcmLdapSyncConfig syncConfig)
+    {
+        String rdn = String.format("%s=%s", userRdnAttribute, userId);
+        return MapperUtils.appendToDn(rdn, syncConfig.getUserSearchBase(), syncConfig.getBaseDC());
     }
 
     public String convertToDirectorySpecificTimestamp(String date)

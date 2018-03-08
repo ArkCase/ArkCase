@@ -194,7 +194,8 @@
         "edtPlaceholder": "Type in to search",
         "noData.text": "No Results",
         "pickUserLabel": "Pick Associated User",
-        "pickGroupLabel": "Pick Associated Group"
+        "pickGroupLabel": "Pick Associated Group",
+        "selectedItemsGrid.label": "Selected entries"
     },
     "common.directive.search": {
         "showMore.button.text": "Show More Values",
@@ -642,7 +643,12 @@
         "FILE": "File",
         "DOC_REPO": "Document Repository",
         "ORGANIZATION": "Organization",
-        "PERSON": "Person"
+        "PERSON": "Person",
+        "PERSON-ASSOCIATION": "Person-Association",
+        "PARTICIPANT": "Participant",
+        "NOTE": "Note",
+        "PARTICIPANT-ASSOCIATION": "Participant-Association",
+        "ASSIGNMENT": "Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",

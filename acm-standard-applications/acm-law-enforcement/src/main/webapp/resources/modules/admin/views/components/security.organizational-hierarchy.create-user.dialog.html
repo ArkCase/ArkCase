@@ -31,26 +31,6 @@
                     placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.email' | translate}}"
                     ng-model="user.mail" required>
         </div>
-        <div class="form-group required" ng-class="{ 'has-error' : passwordErrorMessage}" ng-if="cloneUser && addUser">
-            <label for="password">{{"admin.security.organizationalHierarchy.createUserDialog.password" |
-                translate}}</label>
-            <input type="password" class="form-control" id="password" name="password" ng-change="clearPasswordError()"
-                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.password' | translate}}"
-                    ng-model="user.password" required>
-            <p class="help-block" ng-bind-html="passwordErrorMessage" ng-show="passwordErrorMessage && userForm.$invalid"></p>
-        </div>
-        <div class="form-group required" ng-if="cloneUser && addUser">
-            <label for="password">{{"admin.security.organizationalHierarchy.createUserDialog.confirmation" |
-                translate}}</label>
-            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
-                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.confirmation' | translate}}"
-                    ng-model="confirmPassword" password-check new-password="user.password" confirm-new-password="confirmPassword"
-                    error-messages="passwordErrorMessages" new-password-validation="password"
-                    confirm-new-password-validation="confirmPassword" required>
-            <p class="help-block" ng-show="userForm.password.$error.notSamePasswords">
-                <span class="text-danger" translate>{{passwordErrorMessages.notSamePasswordsMessage}}</span>
-            </p>
-        </div>
     </div>
     <div class=" modal-footer">
         <button type="button" class="btn btn-secondary" ng-click="$dismiss()">

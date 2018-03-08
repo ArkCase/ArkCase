@@ -242,7 +242,8 @@
                 "type": "Type",
                 "supervisorName": "Supervisor Name",
                 "actions": "Actions"
-            }
+            },
+            "searchFilter.placeholder": "Search"
         },
         "security.selectPrivileges": "Create Role/Select Privileges",
         "security.selectPrivileges.applicationRole": "Application Role",
@@ -349,7 +350,8 @@
                 "validate.label": "SMTP Validation",
                 "validate.button": "Validate",
                 "smtpValid": "SMTP settings are valid",
-                "smtpNotValid": "SMTP settings are not valid"
+                "smtpNotValid": "SMTP settings are not valid",
+                "errorMsg": "Please select how documents will be sent"
             }
         },
         "security.emailTemplates": {
@@ -379,7 +381,9 @@
                 "download": "Download",
                 "save": "Save",
                 "cancel": "Cancel",
-                "validationResponse": "Email Template already exists with selected parameters"
+                "validationResponse": "Email Template already exists with selected parameters",
+                "uploadError": "File upload canceled due to incorrect type of file. You can only upload html file.",
+                "invalidTemplateName": "Template name must end on '.html', '.htm' or '.xhtml' and can only consist of characters, digits or underscores."
             },
             "objectTypes": {
                 "caseFile": "Case File",
@@ -440,6 +444,42 @@
             "btn": {
                 "reportDesigner": "Report Designer",
                 "sync": "Synchronise"
+            },
+            "schedule": {
+                "title": "Reports Scheduling",
+                "selectReportType": "Select Report Type",
+                "emailAddress": {
+                    "title": "Enter Email Addresses",
+                    "placeholder": "Please enter comma (,) separated email addresses"
+                },
+                "table": {
+                    "header": "Existing Schedules",
+                    "startTimeFormat": "hh:mm a",
+                    "columns": {
+                        "jobName": "Schedule Name",
+                        "recurrence": "Recurrence",
+                        "startTime": "Start Time",
+                        "startDate": "Start Date",
+                        "endDate": "End Date",
+                        "emailAddresses": "Email Addresses",
+                        "state": "Status"
+                    }
+                },
+                "delete": {
+                    "success": "Schedule deleted successfully",
+                    "error": "Failed to delete schedule"
+                },
+                "createScheduleSuccess": "Schedule created successfully",
+                "createScheduleFailure": "Failed to create schedule",
+                "enterFutureDate": "Enter a start time in the future",
+                "recurrence": "Recurrence (Enter future time)",
+                "time": "Time",
+                "startDate": "Start Date",
+                "endDate": "End Date",
+                "filterStartDate": "Result Filter Start Date",
+                "filterEndDate": "Result Filter End Date",
+                "outputFormat": "Select Output Format",
+                "submit": "Submit"
             }
         },
         "forms.title": "Forms",
