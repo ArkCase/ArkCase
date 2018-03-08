@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration additivity="false">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS} [%-5p] [%t] %c - %m %n}</pattern>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.armedia" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
