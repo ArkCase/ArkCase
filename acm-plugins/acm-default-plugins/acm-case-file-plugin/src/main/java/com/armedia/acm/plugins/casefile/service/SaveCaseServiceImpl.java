@@ -7,7 +7,6 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
-import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -30,7 +29,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
 
     private PipelineManager<CaseFile, CaseFilePipelineContext> pipelineManager;
     private EcmFileService ecmFileService;
-    private AcmFolderService acmFolderService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
