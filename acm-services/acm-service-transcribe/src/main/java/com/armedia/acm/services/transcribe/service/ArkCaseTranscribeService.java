@@ -1,6 +1,7 @@
 package com.armedia.acm.services.transcribe.service;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.transcribe.dao.TranscribeDao;
 import com.armedia.acm.services.transcribe.exception.*;
 import com.armedia.acm.services.transcribe.factory.TranscribeServiceFactory;
 import com.armedia.acm.services.transcribe.model.*;
@@ -12,6 +13,7 @@ import java.util.List;
  */
 public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
 {
+    private TranscribeDao transcribeDao;
     private TranscribeConfigurationService transcribeConfigurationService;
 
     @Override
@@ -144,6 +146,16 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     public List<Transcribe> getPageByStatus(int start, int n, String status) throws GetTranscribeException
     {
         return null;
+    }
+
+    public TranscribeDao getTranscribeDao()
+    {
+        return transcribeDao;
+    }
+
+    public void setTranscribeDao(TranscribeDao transcribeDao)
+    {
+        this.transcribeDao = transcribeDao;
     }
 
     public TranscribeConfigurationService getTranscribeConfigurationService()
