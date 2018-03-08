@@ -2,6 +2,8 @@ package com.armedia.acm.tools.activemq;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.armedia.acm.tools.activemq.service.MessageCounter;
+
 import org.apache.activemq.EnhancedConnection;
 import org.apache.activemq.advisory.AdvisorySupport;
 import org.apache.activemq.command.ActiveMQMessage;
@@ -27,6 +29,9 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.Topic;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-mule-activemq.xml",
@@ -41,6 +46,8 @@ import javax.jms.Topic;
 public class ActiveMqIT
 {
     public transient final Logger log = LoggerFactory.getLogger(getClass());
+
+    private final MessageCounter messageCounter = new MessageCounter();
 
     @Autowired
     @Qualifier("jmsConnectionFactory")
@@ -105,7 +112,7 @@ public class ActiveMqIT
                     log.info("created fast producer, slow consumer, and full advisory topics for queue: {}",
                             q.getQueueName());
                 }
-                catch (JMSException e)
+                catch (Exception e)
                 {
                     log.error("Could not get queue name, {}", e.getMessage(), e);
                 }
@@ -138,7 +145,7 @@ public class ActiveMqIT
 
         final String largeMessage = kb500message;
 
-        for (int a = 1; a < 500; a++)
+        for (int a = 1; a < 100; a++)
         {
 
             log.info("Sending message # {}", a);
@@ -147,18 +154,44 @@ public class ActiveMqIT
 
     }
 
-    private void createTopicListener(Session session, Topic topic) throws JMSException
+    private void createTopicListener(Session session, Topic topic) throws Exception
     {
         MessageConsumer consumerAdvisory = session.createConsumer(topic);
+        final Pattern p = Pattern.compile("ActiveMQ\\.Advisory\\.([A-Za-z]+)\\.([A-Za-z]+)\\.(.*)");
         consumerAdvisory.setMessageListener(message -> {
             log.debug("Got a message on an advisory topic");
             if (message instanceof ActiveMQMessage)
             {
                 ActiveMQMessage activeMQMessage = (ActiveMQMessage) message;
-                log.debug("Destination: {}, data structure: {}",
+                log.debug("Destination: {}, data structure: {}, # of properties: {}",
                         activeMQMessage.getDestination().getPhysicalName(),
-                        activeMQMessage.getDataStructure() == null ? "null" : activeMQMessage.getDataStructure().getClass().getName());
+                        activeMQMessage.getDataStructure() == null ? "null" : activeMQMessage.getDataStructure().getClass().getName(),
+                        activeMQMessage.getDestination().getProperties().size());
 
+                final String destination = activeMQMessage.getDestination().getPhysicalName();
+                log.debug("destination: {}", destination);
+                final Matcher matcher = p.matcher("ActiveMQ.Advisory.FULL.Queue.testQueue.in");
+
+                if (matcher.matches())
+                {
+
+                    final String advisoryType = matcher.group(1);
+                    final String destinationType = matcher.group(2);
+                    final String targetName = matcher.group(3);
+
+                    log.debug("Advisory: {}, destination: {}, target: {}", advisoryType, destinationType, targetName);
+
+                    long count = 0;
+                    try
+                    {
+                        count = messageCounter.countMessages(activeMQMessage.getConnection(), destinationType, targetName);
+                    }
+                    catch (Exception e)
+                    {
+                        log.error("could not count messages: {}", e.getMessage(), e);
+                    }
+                    log.debug("# of messages in queue now: {}", count);
+                }
             }
 
         });
