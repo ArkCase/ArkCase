@@ -87,6 +87,7 @@ public class SaveCaseFileAPIController
         }
     }
 
+    @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public CaseFile insertCaseMultipart(@RequestPart(name = "casefile") CaseFile in,
