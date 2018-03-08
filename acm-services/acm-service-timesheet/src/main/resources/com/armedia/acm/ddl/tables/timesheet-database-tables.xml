@@ -210,4 +210,22 @@
             <column name="cm_timesheet_title" type="VARCHAR(1024)"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="11-add-number-in-acm-timesheet-table" author="marjan.trifunov">
+        <addColumn tableName="acm_timesheet">
+            <column name="cm_timesheet_number" type="VARCHAR(1024)">
+                <constraints unique="true" uniqueConstraintName="uk_timesheet_number" nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="12-populate-number-in-acm-timesheet-table" author="marjan.trifunov">
+        <sql>
+            <comment>Populate timesheet number column</comment>
+            UPDATE acm_timesheet c
+            SET c.cm_timesheet_number = c.cm_timesheet_id
+            WHERE c.cm_timesheet_number IS NULL OR c.cm_timesheet_number = ''
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
