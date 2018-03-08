@@ -1,9 +1,11 @@
 package com.armedia.acm.services.transcribe.service;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.transcribe.exception.*;
 import com.armedia.acm.services.transcribe.factory.TranscribeServiceFactory;
 import com.armedia.acm.services.transcribe.model.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,14 +15,26 @@ import java.util.List;
 public abstract class AbstractArkCaseTranscribeService implements TranscribeService
 {
     /**
-     * This method will create Transcribe for given media file ID and media file version ID
+     * This method will create Transcribe for given media file version ID
      *
-     * @param mediaId - ID of the media file
-     * @param versionId - ID of the media file version
-     * @return Transcribe
+     * @param mediaVersionId - ID of the media file version
+     * @param type - AUTOMATIC or MANUAL
+     * @return Transcribe object
      * @throws CreateTranscribeException
      */
-    public abstract Transcribe create(Long mediaId, Long versionId) throws CreateTranscribeException;
+    @Transactional
+    public abstract Transcribe create(Long mediaVersionId, TranscribeType type) throws CreateTranscribeException;
+
+    /**
+     * This method will create Transcribe for given media file version
+     *
+     * @param mediaVersion - Media File Version
+     * @param type - AUTOMATIC or MANUAL
+     * @return Transcribe object
+     * @throws CreateTranscribeException
+     */
+    @Transactional
+    public abstract Transcribe create(EcmFileVersion mediaVersion, TranscribeType type) throws CreateTranscribeException;
 
     /**
      * This method will get Transcribe object for given ID
@@ -32,14 +46,13 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
     public abstract Transcribe get(Long id) throws GetTranscribeException;
 
     /**
-     * This method will return Transcribe object for given media file ID and media file version ID
+     * This method will return Transcribe object for given media file version ID
      *
-     * @param mediaId - ID of the media file
-     * @param versionId - ID of the media file version
+     * @param mediaVersionId - ID of the media file version
      * @return Transcribe object
      * @throws GetTranscribeException
      */
-    public abstract Transcribe getByMediaIdAndVersionId(Long mediaId, Long versionId) throws GetTranscribeException;
+    public abstract Transcribe getByMediaVersionId(Long mediaVersionId) throws GetTranscribeException;
 
     /**
      * This method will save given Transcribe object in database. The method should be used only for Transcribe
