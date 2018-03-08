@@ -25,6 +25,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -32,6 +33,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -72,6 +76,65 @@ public class RolesPrivilegesService
     public Map<String, String> retrievePrivileges() throws AcmRolesPrivilegesException
     {
         return loadPrivileges();
+    }
+
+    /**
+     * Retrieve application's privileges without role privileges
+     *
+     * @return map of privileges and descriptions
+     * @throws AcmRolesPrivilegesException
+     */
+    public Map<String, String> getNPrivilegesByRole(String roleName, String sortDirection, Integer startRow, Integer maxRows,
+            Boolean authorized)
+            throws AcmRolesPrivilegesException
+    {
+        Map<String, String> privileges;
+        if (authorized)
+        {
+            privileges = loadRolePrivileges(roleName);
+        }
+        else
+        {
+            privileges = loadPrivileges();
+
+            for (Map.Entry<String, String> entry : loadRolePrivileges(roleName).entrySet())
+            {
+                privileges.remove(entry.getKey());
+            }
+        }
+
+        return getNPrivileges(privileges, sortDirection, startRow, maxRows);
+    }
+
+    private Map<String, String> getNPrivileges(Map<String, String> privileges, String sortDirection,
+            Integer startRow, Integer maxRows)
+    {
+        Map<String, String> result;
+        Supplier<Map<String, String>> sortSupplier;
+
+        if (sortDirection.contains("DESC"))
+        {
+            sortSupplier = () -> new TreeMap<>((o1, o2) -> o2.toLowerCase().compareTo(o1.toLowerCase()));
+            result = new TreeMap<>((o1, o2) -> o2.toLowerCase().compareTo(o1.toLowerCase()));
+        }
+        else
+        {
+            sortSupplier = () -> new TreeMap<>(Comparator.comparing(String::toLowerCase));
+            result = new TreeMap<>(Comparator.comparing(String::toLowerCase));
+        }
+
+        privileges.entrySet().forEach(entry -> {
+            result.put(entry.getValue(), entry.getKey());
+        });
+
+        if (startRow > result.size())
+        {
+            return result;
+        }
+        maxRows = maxRows > privileges.size() ? privileges.size() : maxRows;
+
+        return result.entrySet().stream().skip(startRow).limit(maxRows)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1, sortSupplier));
     }
 
     /**

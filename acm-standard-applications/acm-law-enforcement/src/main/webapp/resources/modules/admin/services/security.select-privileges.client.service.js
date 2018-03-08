@@ -20,6 +20,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
         getAllPrivileges : getAllPrivileges,
         addRolePrivileges : addRolePrivileges,
         getRolePrivileges : getRolePrivileges,
+        getNRolePrivileges : getNRolePrivileges,
         upsertRole : upsertRole
     });
 
@@ -39,7 +40,6 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
             url : 'api/latest/plugin/admin/rolesprivileges/roles'
         });
     }
-    ;
 
     /**
      * @ngdoc method
@@ -57,7 +57,6 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
             url : 'api/latest/plugin/admin/rolesprivileges/privileges'
         });
     }
-    ;
 
     /**
      * @ngdoc method
@@ -85,7 +84,6 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
             }
         });
     }
-    ;
 
     /**
      * @ngdoc method
@@ -106,7 +104,35 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
             url : url
         });
     }
-    ;
+
+    /**
+     * @ngdoc method
+     * @name getNRolePrivileges
+     * @methodOf admin.service:Admin.SelectPrivilegesService
+     *
+     * @description
+     * Performs retrieving N app privileges for provided role
+     *
+     * @param {object} data that holds:
+     *      {authorized} data.authorized what type will be returned privileges(authorized/notAuthorized)
+     *      {string} roleName role name which privileges will be returned
+     *      {n} data.n end position
+     *      {start} data.start start position
+     *
+     * @returns {HttpPromise} Future info about role privileges
+     */
+    function getNRolePrivileges(data) {
+        var url = 'api/latest/plugin/admin/' + data.role.name + '/privileges';
+        return $http({
+            method : 'GET',
+            url : url,
+            params : {
+                authorized : data.isAuthorized,
+                n : (data.n ? data.n : 18),
+                start : (data.start ? data.start : 0)
+            }
+        });
+    }
 
     /**
      * @ngdoc method
@@ -134,5 +160,4 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
             }
         });
     }
-    ;
 });
