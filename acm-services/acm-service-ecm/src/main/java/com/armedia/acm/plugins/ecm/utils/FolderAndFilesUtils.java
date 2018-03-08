@@ -175,7 +175,7 @@ public class FolderAndFilesUtils
     public String getBaseFileName(String fileName, String fileExtension)
     {
         // endsWith throws NPE on null input
-        if (fileName.lastIndexOf(".") > 0 && fileExtension != null && fileName.endsWith(fileExtension))
+        if (fileName.lastIndexOf(".") > 0 && fileExtension != null && StringUtils.endsWithIgnoreCase(fileName, fileExtension))
         {
             return fileName.substring(0, fileName.lastIndexOf("."));
         }

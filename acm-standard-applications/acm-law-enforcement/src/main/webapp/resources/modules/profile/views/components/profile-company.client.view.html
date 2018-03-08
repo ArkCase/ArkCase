@@ -46,8 +46,14 @@
                     <small>
                         <span translate>profile.company.fax</span>
                     </small>
-                    <h4><a href="#" editable-text="profileCompanyWebsite" onaftersave="update()">{{profileCompanyWebsite ||
-                        'profile.unknown' | translate}}</a></h4>
+
+                    <h4 ng-hide="editDisabled"><a href="{{profileCompanyWebsite}}" target="_blank">
+                        {{profileCompanyWebsite || 'profile.unknown' | translate}}</a>
+                    </h4>
+                    <h4 ng-show="editDisabled"><a editable-text="profileCompanyWebsite" onaftersave="update()" oncancel="disableEdit()">
+                        {{profileCompanyWebsite || 'profile.unknown' | translate}}</a>
+                    </h4>
+                    <a ng-click="enableEdit()" title="{{'profile.company.websiteTitle' | translate}}"><i class="fa fa-pencil"></i></a>
                     <small>
                         <span translate>profile.company.website</span>
                     </small>
