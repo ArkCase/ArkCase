@@ -18,7 +18,6 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="roleToGroupMapping" ref="acmRoleToGroupConfig"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
 
 </beans>
