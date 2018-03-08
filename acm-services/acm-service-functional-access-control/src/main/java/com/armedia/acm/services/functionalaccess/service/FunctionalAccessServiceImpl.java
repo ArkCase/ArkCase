@@ -2,7 +2,6 @@ package com.armedia.acm.services.functionalaccess.service;
 
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
@@ -48,7 +47,6 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     private AcmGroupDao acmGroupDao;
     private UserDao userDao;
     private ExecuteSolrQuery executeSolrQuery;
-    private MuleContextManager muleContextManager;
 
     @Override
     public void onApplicationEvent(ConfigurationFileChangedEvent configurationFileChangedEvent)
@@ -127,23 +125,30 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             String sortDirection,
             Boolean authorized) throws MuleException
     {
-        List<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, list -> new ArrayList<>(list.getValue()))).get(roleName);
-
-        if (authorized)
+        List<String> groupsByRole = new ArrayList<>();
+        try
         {
-            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
-                    + groupsByRole.stream().collect(Collectors.joining(" OR name_lcs:", "(name_lcs:", ")"));
+            groupsByRole = new ArrayList<>(roleToGroupMapping.getRoleToGroupsMap().get(roleName));
+            if (authorized)
+            {
+                String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
+                        + groupsByRole.stream().collect(Collectors.joining(" OR name_lcs:", "(name_lcs:", ")"));
 
-            return getGroupsByRoleBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+                return getGroupsByRoleBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+            }
+            else
+            {
+                String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
+                        + groupsByRole.stream().collect(Collectors.joining(" AND -name_lcs:", "-name_lcs:", ""));
+
+                return getGroupsByRoleBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+            }
         }
-        else
+        catch (Exception e)
         {
-            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
-                    + groupsByRole.stream().collect(Collectors.joining(" AND -name_lcs:", "-name_lcs:", ""));
-
-            return getGroupsByRoleBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+            LOG.error("Can't create LDAP directory", e);
         }
+        return groupsByRole;
     }
 
     @Override
@@ -386,15 +391,5 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 }
