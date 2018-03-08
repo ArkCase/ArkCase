@@ -17,7 +17,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_transcribe_media_file_version_id" type="${idType}">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_media_file_version_id"/>
             </column>
             <column name="cm_transcribe_file_id" type="${idType}">
                 <constraints nullable="true"/>
