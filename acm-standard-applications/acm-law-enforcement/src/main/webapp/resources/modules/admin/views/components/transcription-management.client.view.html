@@ -1,20 +1,17 @@
 <div ng-controller="Admin.TranscriptionManagementController">
     <ng-form name="transcribeConfigurationForm">
         <div class="panel panel-success panel-grid">
-            <div class="panel-heading">
-                <div class="panel-title">
-                    <span translate>admin.transcription.title</span>
-                    <div class="pull-right">
-                        <button class="btn btn-default btn-xs" ng-click="saveChanges()" ng-disabled="transcribeConfigurationForm.$invalid">
-                            <i class="fa fa-save"></i>
-                            <span translate>
+            <div class="pull-right well">
+                <div class="btn-group">
+                    <button class="btn btn-xs btn-link" ng-click="saveChanges()" ng-disabled="transcribeConfigurationForm.$invalid">
+                        <i class="fa fa-save"></i>
+                        <span translate>
 			            	admin.transcription.transcriptionConfigForm.save.button
                         </span>
-                        </button>
-                    </div>
+                    </button>
                 </div>
             </div>
-            <div class="panel-body">
+            <panel-view header="{{'admin.transcription.title' | translate}}" collapsible="false">
                 <div class="row">
                     <div class="col-lg-12">
                         <label translate>
@@ -70,13 +67,13 @@
                         <form class="well-sm">
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="versionProperty" ng-model="transcriptionVersion" ng-value="true">
+                                    <input type="radio" name="versionProperty" ng-model="transcriptionForNewVersion" ng-value="true">
                                     <span translate>admin.transcription.transcriptionConfigForm.generateTranscription.radio</span>
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="versionProperty" ng-model="transcriptionVersion" ng-value="false">
+                                    <input type="radio" name="versionProperty" ng-model="transcriptionForNewVersion" ng-value="false">
                                     <span translate>admin.transcription.transcriptionConfigForm.copyTranscription.radio</span>
                                 </label>
                             </div>
@@ -166,7 +163,7 @@
                             </span>
                     </div>
                 </div>
-            </div>
+            </panel-view>
         </div>
     </ng-form>
 </div>
