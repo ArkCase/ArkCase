@@ -67,13 +67,15 @@
                         <form class="well-sm">
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="versionProperty" ng-model="transcriptionForNewVersion" ng-value="true">
+                                    <input ng-change="checkButtonValue(transcriptionForNewVersion)" type="radio" name="versionProperty"
+                                            ng-model="transcriptionForNewVersion" ng-value="true">
                                     <span translate>admin.transcription.transcriptionConfigForm.generateTranscription.radio</span>
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="versionProperty" ng-model="transcriptionForNewVersion" ng-value="false">
+                                    <input ng-change="checkButtonValue(transcriptionForNewVersion)" type="radio" name="versionProperty"
+                                            ng-model="transcriptionForNewVersion" ng-value="false">
                                     <span translate>admin.transcription.transcriptionConfigForm.copyTranscription.radio</span>
                                 </label>
                             </div>
