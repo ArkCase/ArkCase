@@ -30,6 +30,7 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
     private ParticipantsBusinessRule participantsBusinessRule;
     private AcmParticipantService participantService;
     private EntityParticipantsChangedEventPublisher entityParticipantsChangedEventPublisher;
+    private boolean documentACLEnabled;
 
     @Override
     public void beforeInsert(Object object) throws AcmAccessControlException
@@ -54,7 +55,18 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
             applyDataAccessRules(assignedObject);
             updateParentPointers(assignedObject);
             validateParticipantAssignmentRules(assignedObject);
-            handleParticipantsChanged(assignedObject);
+
+            // AFDP-5567 2018-03-07 quick fix to avoid updating file and folder participants when document ACL is
+            // disabled.
+            // The act of looking up the current participants seems to cause database deadlocks and unique key
+            // violations in PostgreSQL environments; or possibly in situations where there are many participant
+            // changes to be applied. This code should still be fixed such that the participant differences are found
+            // via Nebojsha's object-diff algorithm, or by the acm_object_history table, or some other way that doesn't
+            // issue a SELECT against the same rows that are being updated in this transaction.
+            if (isDocumentACLEnabled())
+            {
+                handleParticipantsChanged(assignedObject);
+            }
         }
     }
 
@@ -206,5 +218,15 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
     public void setEntityParticipantsChangedEventPublisher(EntityParticipantsChangedEventPublisher entityParticipantsChangedEventPublisher)
     {
         this.entityParticipantsChangedEventPublisher = entityParticipantsChangedEventPublisher;
+    }
+
+    public boolean isDocumentACLEnabled()
+    {
+        return documentACLEnabled;
+    }
+
+    public void setDocumentACLEnabled(boolean documentACLEnabled)
+    {
+        this.documentACLEnabled = documentACLEnabled;
     }
 }
