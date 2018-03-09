@@ -13,17 +13,18 @@ angular
 
                             $scope.isLoading = false;
                             $scope.transcribeConfigDataModel = {};
+                            $scope.transcriptionForNewVersion = {};
 
                             TranscriptionManagementService.getTranscribeConfiguration().then(function(res) {
                                 $scope.transcribeConfigDataModel = res.data;
-                                $scope.transcriptionForNewVersion = res.data.newTranscriptionForNewVersion;
+                                $scope.transcriptionForNewVersion.value = res.data.newTranscriptionForNewVersion;
                             }, function(err) {
                                 MessageService.error(err.data);
                             });
 
                             $scope.saveChanges = function() {
                                 $scope.isLoading = true;
-                                $scope.transcribeConfigDataModel.newTranscriptionForNewVersion = $scope.transcriptionForNewVersion;
+                                $scope.transcribeConfigDataModel.newTranscriptionForNewVersion = $scope.transcriptionForNewVersion.value;
                                 $scope.transcribeConfigDataModel.copyTranscriptionForNewVersion = !$scope.transcribeConfigDataModel.newTranscriptionForNewVersion;
                                 TranscriptionManagementService.saveTranscribeConfiguration($scope.transcribeConfigDataModel).then(
                                         function(res) {
@@ -34,9 +35,5 @@ angular
                                             MessageService.errorAction();
                                         });
                             };
-
-                            $scope.checkButtonValue = function(val) {
-                                $scope.transcriptionForNewVersion = val;
-                            }
 
                         } ]);
