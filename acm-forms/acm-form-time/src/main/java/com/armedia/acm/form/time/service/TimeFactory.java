@@ -277,7 +277,7 @@ public class TimeFactory extends FrevvoFormFactory
 
             Map<String, TimeItem> itemsMap = new HashMap<>();
             timesheet.getTimes().forEach(time -> {
-                TimeItem item = itemsMap.computeIfAbsent(time.getCode(), key -> new TimeItem());
+                TimeItem item = itemsMap.computeIfAbsent(time.getCode()+":"+time.getType(), key -> new TimeItem());
 
                 List<String> timeItemKey = Arrays.asList(time.getType(), time.getCode());
                 Double timeItemTotalCost = totalCostsPerObject.getOrDefault(timeItemKey, 0.0);
