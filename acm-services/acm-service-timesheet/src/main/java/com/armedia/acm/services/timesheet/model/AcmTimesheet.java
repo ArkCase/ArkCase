@@ -65,7 +65,7 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
     private String title;
 
     @Column(name = "cm_timesheet_number")
-    private String number;
+    private String timesheetNumber;
 
     @Column(name = "cm_timesheet_creator")
     private String creator;
@@ -135,7 +135,7 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
         {
             getContainer().setContainerObjectId(getId());
             getContainer().setContainerObjectType(getObjectType());
-            getContainer().setContainerObjectTitle(getNumber());
+            getContainer().setContainerObjectTitle(getTimesheetNumber());
         }
     }
 
@@ -190,14 +190,14 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
         this.times = times;
     }
 
-    public String getNumber()
+    public String getTimesheetNumber()
     {
-        return number;
+        return timesheetNumber;
     }
 
-    public void setNumber(String number)
+    public void setTimesheetNumber(String timesheetNumber)
     {
-        this.number = number;
+        this.timesheetNumber = timesheetNumber;
     }
 
     @Override
