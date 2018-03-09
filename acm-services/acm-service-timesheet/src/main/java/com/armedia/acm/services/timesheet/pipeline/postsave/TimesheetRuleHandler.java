@@ -14,8 +14,8 @@ public class TimesheetRuleHandler implements PipelineHandler<AcmTimesheet, Times
     @Override
     public void execute(AcmTimesheet entity, TimesheetPipelineContext pipelineContext) throws PipelineProcessException
     {
-        // apply costsheet business rules after save
-        getCostsheetBusinessRule().applyRules(entity);
+        // apply timesheet business rules after save
+        getTimesheetBusinessRule().applyRules(entity);
     }
 
     @Override
@@ -24,14 +24,13 @@ public class TimesheetRuleHandler implements PipelineHandler<AcmTimesheet, Times
         // nothing to execute on rollback
     }
 
-    public SaveTimesheetBusinessRule getCostsheetBusinessRule()
+    public SaveTimesheetBusinessRule getTimesheetBusinessRule()
     {
         return timesheetBusinessRule;
     }
 
-    public void setCostsheetBusinessRule(SaveTimesheetBusinessRule timesheetBusinessRule)
+    public void setTimesheetBusinessRule(SaveTimesheetBusinessRule timesheetBusinessRule)
     {
         this.timesheetBusinessRule = timesheetBusinessRule;
     }
-
 }

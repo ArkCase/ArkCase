@@ -14,8 +14,11 @@ angular.module('time-tracking').controller(
                 'Task.AlertsService',
                 'Object.TaskService',
                 'ObjectService',
+                'ModalDialogService',
+                'Task.WorkflowService',
                 function($scope, $stateParams, Util, ConfigService, HelperUiGridService, TimeTrackingInfoService,
-                        HelperObjectBrowserService, LookupService, TaskAlertsService, ObjectTaskService, ObjectService) {
+                        HelperObjectBrowserService, LookupService, TaskAlertsService, ObjectTaskService, ObjectService, ModalDialogService,
+                        TaskWorkflowService) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope : $scope,
@@ -75,8 +78,34 @@ angular.module('time-tracking').controller(
                         }
                     };
 
+                    $scope.addNew = function() {
+                        var modalMetadata = {
+                            moduleName : "tasks",
+                            templateUrl : "modules/tasks/views/components/task-new-task.client.view.html",
+                            controllerName : "Tasks.NewTaskController",
+                            params : {
+                                parentType : ObjectService.ObjectTypes.TIMESHEET,
+                                parentObject : $scope.objectInfo.timesheetNumber,
+                                parentId : $scope.objectInfo.id,
+                                parentTitle : $scope.objectInfo.title,
+                                taskType : 'ACM_TASK'
+                            }
+                        };
+                        ModalDialogService.showModal(modalMetadata);
+                    };
+
                     $scope.isDeleteDisabled = function(rowEntity) {
                         return !rowEntity.adhocTask_b;
+                    };
+                    $scope.deleteRow = function(rowEntity) {
+                        var timesheetInfo = Util.omitNg($scope.objectInfo);
+                        if (TimeTrackingInfoService.validateTimesheet(timesheetInfo)) {
+                            TaskWorkflowService.deleteTask(rowEntity.object_id_s).then(function(timesheetInfo) {
+                                gridHelper.deleteRow(rowEntity);
+                                $scope.$emit("report-object-updated", timesheetInfo);
+                                return timesheetInfo;
+                            });
+                        }
                     };
                     $scope.onClickObjLink = function(event, rowEntity) {
                         event.preventDefault();

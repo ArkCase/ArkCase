@@ -19,6 +19,7 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class TimesheetServiceImpl implements TimesheetService
     }
 
     @Override
+    @Transactional
     public AcmTimesheet save(AcmTimesheet timesheet) throws PipelineProcessException
     {
         TimesheetPipelineContext pipelineContext = new TimesheetPipelineContext();
@@ -61,16 +63,14 @@ public class TimesheetServiceImpl implements TimesheetService
     }
 
     @Override
+    @Transactional
     public AcmTimesheet save(AcmTimesheet timesheet, String submissionName) throws PipelineProcessException
     {
 
         TimesheetPipelineContext pipelineContext = new TimesheetPipelineContext();
+        timesheet.setStatus(getSubmissionStatusesMap().get(submissionName));
 
-        return pipelineManager.executeOperation(timesheet, pipelineContext, () -> {
-
-            timesheet.setStatus(getSubmissionStatusesMap().get(submissionName));
-            return getAcmTimesheetDao().save(timesheet);
-        });
+        return pipelineManager.executeOperation(timesheet, pipelineContext, () -> getAcmTimesheetDao().save(timesheet));
 
     }
 
