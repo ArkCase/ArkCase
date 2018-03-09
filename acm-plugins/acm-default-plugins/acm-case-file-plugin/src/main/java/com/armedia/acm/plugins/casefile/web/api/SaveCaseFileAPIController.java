@@ -46,57 +46,33 @@ public class SaveCaseFileAPIController
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
     @RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE })
     @ResponseBody
-    public CaseFile createCaseFile(@RequestBody CaseFile in, HttpSession session, Authentication auth) throws AcmCreateObjectFailedException
+    public CaseFile createCaseFile(@RequestBody CaseFile in, HttpSession session, Authentication auth)
+            throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
+            IOException
+    {
+        return saveCase(in, null, session, auth);
+    }
+
+    @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public CaseFile createCaseFileMutipart(@RequestPart(name = "casefile") CaseFile in,
+            @RequestPart(name = "files") List<MultipartFile> files, HttpSession session, Authentication auth)
+            throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
+            IOException
+    {
+        return saveCase(in, files, session, auth);
+    }
+
+    private CaseFile saveCase(CaseFile in, List<MultipartFile> files, HttpSession session, Authentication auth)
+            throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
+            IOException
     {
         log.trace("Got a case file: [{}] ; case ID: [{}]", in, in.getId());
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
         userTrackerService.trackUser(ipAddress);
 
-        try
-        {
-            boolean isNew = in.getId() == null;
-
-            // explicitly set modifier and modified to trigger transformer to reindex data
-            // fixes problem when some child objects are changed (e.g participants) and solr document is not updated
-            in.setModifier(AuthenticationUtils.getUsername());
-            in.setModified(new Date());
-
-            CaseFile saved = getSaveCaseService().saveCase(in, auth, ipAddress);
-
-            // since the approver list is not persisted to the database, we want to send them back to the caller...
-            // the approver list is only here to send to the Activiti engine. After the workflow is started the
-            // approvers are stored in Activiti.
-            saved.setApprovers(in.getApprovers());
-
-            if (isNew)
-            {
-                caseFileEventUtility.raiseEvent(saved, "created", new Date(), ipAddress, auth.getName(), auth);
-                caseFileEventUtility.raiseEvent(saved, saved.getStatus(), new Date(), ipAddress, auth.getName(), auth);
-            }
-            else
-            {
-                caseFileEventUtility.raiseEvent(saved, "updated", new Date(), ipAddress, auth.getName(), auth);
-            }
-
-            return saved;
-        }
-        catch (PipelineProcessException | PersistenceException e)
-        {
-            throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseBody
-    public CaseFile insertCaseMultipart(@RequestPart(name = "casefile") CaseFile in,
-            @RequestPart(name = "files") List<MultipartFile> files, HttpSession session, Authentication auth)
-            throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
-            IOException
-    {
-        String ipAddress = (String) session.getAttribute("acm_ip_address");
-
-        userTrackerService.trackUser(ipAddress);
         try
         {
             boolean isNew = in.getId() == null;
@@ -127,8 +103,7 @@ public class SaveCaseFileAPIController
         }
         catch (PipelineProcessException | PersistenceException e)
         {
-            log.error("Error while saving Case: [{}]", in, e);
-            throw new AcmCreateObjectFailedException("CaseFile", e.getMessage(), e);
+            throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
         }
     }
 

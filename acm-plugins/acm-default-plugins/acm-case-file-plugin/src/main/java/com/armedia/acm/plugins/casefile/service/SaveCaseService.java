@@ -28,10 +28,12 @@ public interface SaveCaseService
      * @param casefile
      *            casefile data
      * @param files
-     *            casefile pictures
+     *            casefile files
      * @param authentication
      *            authentication
-     * @return PerCaseFileson saved casefile
+     * @param ipAdress
+     *            ipAddress
+     * @return CaseFile saved casefile
      */
     @Transactional
     CaseFile saveCase(CaseFile casefile, List<MultipartFile> files, Authentication authentication, String ipAddress)

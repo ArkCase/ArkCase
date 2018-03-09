@@ -7,7 +7,6 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
-import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -29,8 +28,8 @@ public class SaveCaseServiceImpl implements SaveCaseService
     private CaseFileDao caseFileDao;
 
     private PipelineManager<CaseFile, CaseFilePipelineContext> pipelineManager;
+
     private EcmFileService ecmFileService;
-    private AcmFolderService acmFolderService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -63,19 +62,23 @@ public class SaveCaseServiceImpl implements SaveCaseService
     {
         CaseFile saved = saveCase(caseFile, authentication, ipAddress);
 
-        for (MultipartFile file : files)
+        if (files != null)
         {
-            if (file != null)
+            for (MultipartFile file : files)
             {
+                if (file != null)
+                {
 
-                String folderId = saved.getContainer().getAttachmentFolder() == null ? saved.getContainer().getFolder().getCmisFolderId()
-                        : saved.getContainer().getAttachmentFolder().getCmisFolderId();
+                    String folderId = saved.getContainer().getAttachmentFolder() == null
+                            ? saved.getContainer().getFolder().getCmisFolderId()
+                            : saved.getContainer().getAttachmentFolder().getCmisFolderId();
 
-                log.debug("Uploading document for FOIA Request [{}] as [{}]", saved.getId(), file.getOriginalFilename());
+                    log.debug("Uploading document for FOIA Request [{}] as [{}]", saved.getId(), file.getOriginalFilename());
 
-                getEcmFileService().upload(file.getOriginalFilename(), "other", "Document", file.getInputStream(), "",
-                        file.getOriginalFilename(), authentication,
-                        folderId, saved.getObjectType(), saved.getId());
+                    getEcmFileService().upload(file.getOriginalFilename(), "other", "Document", file.getInputStream(), "",
+                            file.getOriginalFilename(), authentication,
+                            folderId, saved.getObjectType(), saved.getId());
+                }
             }
         }
 
@@ -112,13 +115,4 @@ public class SaveCaseServiceImpl implements SaveCaseService
         this.ecmFileService = ecmFileService;
     }
 
-    public AcmFolderService getAcmFolderService()
-    {
-        return acmFolderService;
-    }
-
-    public void setAcmFolderService(AcmFolderService acmFolderService)
-    {
-        this.acmFolderService = acmFolderService;
-    }
 }
