@@ -27,7 +27,7 @@ public class LdapUser
     private String state;
     private LocalDate passwordExpirationDate;
 
-    public AcmUser toAcmUser()
+    public AcmUser toAcmUser(String defaultLang)
     {
         AcmUser acmUser = new AcmUser();
         acmUser.setUserId(userId.toLowerCase());
@@ -35,6 +35,7 @@ public class LdapUser
         acmUser.setUserPrincipalName(userPrincipalName);
         acmUser.setsAMAccountName(sAMAccountName);
         acmUser.setUserDirectoryName(directoryName);
+        acmUser.setLang(defaultLang);
         return setAcmUserEditableFields(acmUser);
     }
 

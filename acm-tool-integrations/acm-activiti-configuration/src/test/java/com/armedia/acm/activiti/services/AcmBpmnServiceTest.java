@@ -152,7 +152,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         fromDBExisting.setFileName("TestActivitiSpringProcessUnitTest_v1.bpmn20.xml");
         fromDBExisting.setDescription(null);
         fromDBExisting.setVersion(1);
-        fromDBExisting.setMd5Hash("ecf918b65e9ad2b6aaf51166aa3cac9a");
+        fromDBExisting.setSha256Hash("ecf918b65e9ad2b6aaf51166aa3cac9a");
         fromDBExisting.setKey("TestActivitiSpringProcessUnitTest");
         EasyMock.expect(acmBpmnDao.getByKeyAndDigest("TestActivitiSpringProcessUnitTest", resourceFileNotChangedMD5Sum))
                 .andReturn(fromDBExisting);
@@ -304,9 +304,9 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         {
             FileInputStream stream = new FileInputStream(processDefinitionFile);
 
-            String md5Hex = DigestUtils.md5Hex(stream);
+            String sha256Hex = DigestUtils.sha256Hex(stream);
             closeStream(stream);
-            return md5Hex;
+            return sha256Hex;
         }
         catch (IOException e)
         {

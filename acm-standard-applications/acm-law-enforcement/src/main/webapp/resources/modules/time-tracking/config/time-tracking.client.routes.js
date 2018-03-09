@@ -46,9 +46,9 @@ angular.module('time-tracking').config([ '$stateProvider', function($stateProvid
         templateUrl : 'modules/time-tracking/views/components/time-tracking-tags.client.view.html'
     })
 
-    .state('time-tracking.approvers', {
-        url : '/:id/approvers',
-        templateUrl : 'modules/time-tracking/views/components/time-tracking-approvers.client.view.html'
+    .state('time-tracking.tasks', {
+        url : '/:id/tasks',
+        templateUrl : 'modules/time-tracking/views/components/time-tracking-tasks.client.view.html'
     })
 
 } ]).run([ 'Helper.DashboardService', function(DashboardHelper) {

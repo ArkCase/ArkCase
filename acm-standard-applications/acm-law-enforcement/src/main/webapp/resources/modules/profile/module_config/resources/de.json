@@ -26,7 +26,8 @@
         "zip": "Postleitzahl",
         "mainPhone": "Hauptbüro Telefon",
         "fax": "Fax",
-        "website": "Webseite"
+        "website": "Webseite",
+        "websiteTitle": "de_Enable edit"
     },
     "profile.contact": {
         "title": "Kontakt Informationen",

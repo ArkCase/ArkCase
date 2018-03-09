@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -89,16 +90,32 @@ public class GroupServiceImpl implements GroupService
     @Override
     public String buildGroupsForUserByNameSolrQuery(Boolean authorized, String userId, String searchFilter)
     {
-        return buildGroupsForUserSolrQuery(authorized, userId) + " AND name_partial:" + searchFilter;
+        String query = buildGroupsForUserSolrQuery(authorized, userId);
+        return query.isEmpty() ? "" : query + " AND name_partial:" + searchFilter;
     }
 
     @Override
     public String buildGroupsForUserSolrQuery(Boolean authorized, String userId)
     {
-        String solrQuery = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED"
+        AcmUser user = userDao.findByUserId(userId);
+        if (user == null)
+        {
+            return "";
+        }
+        return "object_type_s:GROUP AND "
+                + "(object_sub_type_s:ADHOC_GROUP OR (object_sub_type_s:LDAP_GROUP AND directory_name_s:"
+                + user.getUserDirectoryName()
+                + ")) AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED"
                 + (authorized ? " AND member_id_ss:" : " AND -member_id_ss:") + userId;
+    }
 
-        return solrQuery;
+    @Override
+    public String getGroupsByNameFilter(Authentication authentication, String nameFilter, int start, int max, String sortBy, String sortDir)
+            throws MuleException
+    {
+        String query = "object_type_s:GROUP AND status_lcs:ACTIVE AND -ascendants_id_ss:* AND name_partial:" + nameFilter;
+        return executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, start, max,
+                sortBy + " " + sortDir);
     }
 
     @Override
@@ -438,8 +455,31 @@ public class GroupServiceImpl implements GroupService
         String ancestorsStringList = AcmGroupUtils.buildAncestorsStringForAcmGroup(subGroup);
         subGroup.setAscendantsList(ancestorsStringList);
         Set<AcmGroup> descendants = AcmGroupUtils.findDescendantsForAcmGroup(subGroup);
-        descendants.forEach(group -> group.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(group)));
+        descendants.forEach(group -> {
+            group.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(group));
+            groupDao.save(group);
+        });
         return subGroup;
+    }
+
+    @Override
+    @Transactional
+    public List<AcmGroup> addGroupMembers(String parentId, List<String> memberIds) throws AcmCreateObjectFailedException
+    {
+        List<AcmGroup> members = new ArrayList<>();
+        for (String groupId : memberIds)
+        {
+            AcmGroup acmGroup = groupDao.findByName(groupId);
+            if (acmGroup != null)
+            {
+                members.add(addGroupMember(groupId, parentId));
+            }
+            else
+            {
+                log.warn("Group with id [{}] not found", groupId);
+            }
+        }
+        return members;
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.objectonverter.DateFormats;
+import com.armedia.acm.plugins.admin.service.TimesheetConfigurationService;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
@@ -19,7 +20,6 @@ import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.common.base.Objects;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -29,10 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author riste.tutureski
@@ -46,6 +44,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
     private AcmTimesheetDao acmTimesheetDao;
     private TimesheetEventPublisher timesheetEventPublisher;
     private TimeFactory timeFactory;
+    private TimesheetConfigurationService timesheetConfigurationService;
 
     @Override
     public Object init()
@@ -84,7 +83,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
             if (timesheet != null)
             {
                 form = getTimeFactory().asFrevvoTimeForm(timesheet);
-                form = (TimeForm) populateEditInformation(form, timesheet.getContainer(), FrevvoFormName.TIMESHEET.toLowerCase());
+                form = (TimeForm) populateEditInformation(form, timesheet.getContainer(), getFormName().toLowerCase());
                 if (form.getItems() != null)
                 {
                     String objectIdString = getRequest().getParameter("_id");
@@ -205,7 +204,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
         String submissionName = getRequest().getParameter("submission_name");
 
         // Unmarshall XML to object
-        TimeForm form = (TimeForm) convertFromXMLToObject(cleanXML(xml), TimeForm.class);
+        TimeForm form = (TimeForm) convertFromXMLToObject(cleanXML(xml), getFormClass());
 
         if (form == null)
         {
@@ -234,7 +233,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
                 .checkWorkflowStartup(TimesheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
 
         FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(),
-                FrevvoFormName.TIMESHEET.toUpperCase(), saved.getId());
+                getFormName().toUpperCase(), saved.getId());
 
         getTimesheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles,
                 startWorkflow);
@@ -261,6 +260,9 @@ public class TimeService extends FrevvoFormChargeAbstractService
         // Set period (now)
         form.setPeriod(new Date());
 
+        // Set timesheet config
+        form.setTimesheetConfig(getTimesheetConfigurationService().getConfig());
+
         LOG.debug("setting form types");
         List<String> types = getStandardLookupEntries("timesheetTypes");
 
@@ -269,6 +271,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
         LOG.debug("creating time item");
         TimeItem item = new TimeItem();
         item.setTypeOptions(types);
+        item.setChargeRoles(getStandardLookupEntries("timesheetChargeRoles"));
         form.setItems(Arrays.asList(item));
 
         // Init Statuses
@@ -343,6 +346,14 @@ public class TimeService extends FrevvoFormChargeAbstractService
     public void setTimeFactory(TimeFactory timeFactory)
     {
         this.timeFactory = timeFactory;
+    }
+
+    public TimesheetConfigurationService getTimesheetConfigurationService() {
+        return timesheetConfigurationService;
+    }
+
+    public void setTimesheetConfigurationService(TimesheetConfigurationService timesheetConfigurationService) {
+        this.timesheetConfigurationService = timesheetConfigurationService;
     }
 
     @Override

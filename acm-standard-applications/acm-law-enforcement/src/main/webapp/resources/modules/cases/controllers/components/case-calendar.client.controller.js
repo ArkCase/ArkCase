@@ -10,8 +10,9 @@ angular.module('cases').controller(
                 'ObjectService',
                 'Admin.CalendarConfigurationService',
                 'MessageService',
+                'Object.CalendarService',
                 function($scope, $stateParams, CaseInfoService, HelperObjectBrowserService, ObjectService, CalendarConfigurationService,
-                        MessageService) {
+                        MessageService, CalendarService) {
 
                     $scope.objectInfoRetrieved = false;
 
@@ -28,16 +29,11 @@ angular.module('cases').controller(
                     });
 
                     var onObjectInfoRetrieved = function(objectInfo) {
-                        CalendarConfigurationService.getCurrentCalendarConfiguration().then(function(calendarAdminConfigRes) {
-                            $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
-                            $scope.objectId = objectInfo.id;
-                            $scope.eventSources = [];
-                            if (calendarAdminConfigRes.data.configurationsByType['CASE_FILE'].integrationEnabled) {
-                                $scope.objectInfoRetrieved = true;
-                            } else {
-                                MessageService.info($translate.instant('cases.comp.calendar.message'));
-                                $scope.objectInfoRetrieved = false;
-                            }
+                        $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
+                        $scope.objectId = objectInfo.id;
+                        $scope.eventSources = [];
+                        CalendarService.isCalendarConfigurationEnabled('CASE_FILE').then(function(data) {
+                            $scope.objectInfoRetrieved = data;
                         });
                     };
                 } ]);
