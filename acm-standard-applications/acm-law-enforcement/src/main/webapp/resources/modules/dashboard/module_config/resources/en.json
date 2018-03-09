@@ -356,6 +356,25 @@
                 "title": "Approvers",
                 "description": "Displays Approvers",
                 "noDataMessage": "Currently there are no approvers to display"
+            },
+            "userWebsites": {
+                "title": "Websites",
+                "description": "Displays user websites",
+                "noDataMessage": "Currently there is no website info",
+                "table": {
+                    "header": {
+                        "name": "Site Name",
+                        "url": "URL"
+                    }
+                },
+                "modal": {
+                    "addWebsite": "Add Website",
+                    "editWebsite": "Edit Website",
+                    "save": "Save",
+                    "cancel": "Cancel",
+                    "name": "Site Name",
+                    "url": "URL"
+                }
             }
         }
     },

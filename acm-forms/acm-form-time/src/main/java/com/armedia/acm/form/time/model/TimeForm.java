@@ -8,6 +8,7 @@ import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
 import com.armedia.acm.frevvo.model.FrevvoForm;
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
+import com.armedia.acm.plugins.admin.model.TimesheetConfig;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -36,6 +37,7 @@ public class TimeForm extends FrevvoForm
     private String details;
     private List<ApproverItem> approvers;
     private List<String> totals;
+    private TimesheetConfig timesheetConfig;
 
     @XmlElement(name = "id")
     public Long getId()
@@ -158,5 +160,14 @@ public class TimeForm extends FrevvoForm
     public void setTotals(List<String> totals)
     {
         this.totals = totals;
+    }
+
+    @XmlTransient
+    public TimesheetConfig getTimesheetConfig() {
+        return timesheetConfig;
+    }
+
+    public void setTimesheetConfig(TimesheetConfig timesheetConfig) {
+        this.timesheetConfig = timesheetConfig;
     }
 }

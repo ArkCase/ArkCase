@@ -17,6 +17,7 @@
                 <value>file:${user.home}/.arkcase/acm/alfrescoRmaPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/acm-forms.properties</value>
                 <value>file:${user.home}/.arkcase/acm/acm-reports.properties</value>
+                <value>file:${user.home}/.arkcase/acm/acm-reports-server-config.properties</value>
                 <value>file:${user.home}/.arkcase/acm/activiti.properties</value>
                 <value>file:${user.home}/.arkcase/acm/adminPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/applicationRoleToUserGroup.properties</value>
@@ -51,6 +52,7 @@
                 <value>file:${user.home}/.arkcase/acm/spring/spring-config-kerberos.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring/spring-config-saml.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring-security/sessionControl.properties</value>
+                <value>file:${user.home}/.arkcase/acm/acmExternalIntegration.properties</value>
             </list>
         </property>
     </bean>

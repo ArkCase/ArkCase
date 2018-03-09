@@ -206,6 +206,7 @@
             "name": "Form Name",
             "user": "User",
             "tally": "Total Hours",
+            "cost": "Total Cost",
             "modified": "Modified Date",
             "status": "Status"
         },
@@ -292,11 +293,30 @@
         "title": "Approvers",
         "addNewTooltip": "Add new approver",
         "noBuckslipMessage": "No Data",
+        "processInitialize.successfull": "Process Initialized",
+        "processInitialize.fail": "Process Not Initialized",
+        "processWithdraw.successfull": "Process Withdrawn",
+        "processWithdraw.fail": "Process Not Withdrawn",
+        "businessProcessUpdate.successfull": "Approval Routing Updated",
+        "businessProcessUpdate.fail": "Approval Routing Not Updated",
         "button": {
-            "save.tooltip": "Save Changes"
+            "save.tooltip": "Save Changes",
+            "initiate": "Initiate",
+            "withdraw": "Withdraw",
+            "initiate.tooltip": "Initiate Task",
+            "withdraw.tooltip": "Withdraw Task"
+        },
+        "checkbox": {
+            "nonConcurEndsApprovalCycle": "Non-concur ends the approval cycle"
         },
         "table.columns": {
-            "fullName": "Full Name"
+            "assignee": "Assignee",
+            "owningGroup": "Owning Group",
+            "subject": "Subject",
+            "details": "Details",
+            "dueDate": "Due Date",
+            "status": "Status",
+            "addedBy": "Added By"
         },
         "assigne.none": "None",
         "assignee.label": "Assignee",
@@ -304,7 +324,17 @@
         "priority.label": "Priority",
         "startDate.label": "Start Date",
         "dueDate.label": "Due Date",
-        "state.label": "State"
+        "state.label": "State",
+        "future.task.modal": {
+            "title": "New Future Task",
+            "assignee": "Assignee",
+            "owningGroup": "Owning Group",
+            "subject.label": "Subject",
+            "subject.placeholder": "Enter future case subject",
+            "details.label": "Details",
+            "cancel.button": "Cancel",
+            "save.button": "Save"
+        }
     },
     "complaints.comp.pastApprovals": {
         "title": "Past Approvers",

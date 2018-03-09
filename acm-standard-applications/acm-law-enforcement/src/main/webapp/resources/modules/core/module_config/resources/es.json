@@ -67,7 +67,7 @@
                 "corporation": "Corporación"
             },
             "organizationalParticipantTypes": {
-                "owner": "Propietario"
+                "owner": "Dueño"
             },
             "entitiesParticipantTypes": {
                 "assignee": "Cesionario",
@@ -77,7 +77,7 @@
                 "follower": "Seguidor"
             },
             "personOrganizationRelationTypes": {
-                "owner": "Propietario",
+                "owner": "Dueño",
                 "owned": "De propiedad",
                 "employee": "Empleado",
                 "employer": "Empleador",
@@ -184,9 +184,9 @@
                 "status": "Estado",
                 "details": "Detalles",
                 "incidentDate": "Incidente",
-                "created": "Creado",
+                "created": "Creado el",
                 "creator": "Creador",
-                "modified": "Modificado",
+                "modified": "Modificado el",
                 "modifier": "Modificador",
                 "closed": "Cerrado",
                 "disposition": "Disposición",

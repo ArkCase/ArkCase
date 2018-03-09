@@ -33,15 +33,6 @@ angular
                                 return moduleConfig;
                             });
 
-                            Authentication.queryUserInfo().then(
-                                    function(userInfo) {
-                                        var directoryName = userInfo.directoryName;
-                                        OrganizationalHierarchyService.isEnabledEditingLdapUsers(directoryName).then(
-                                                function(enableEditingLdapUsers) {
-                                                    $scope.exposeChangePassword = enableEditingLdapUsers;
-                                                });
-                                    });
-
                             $scope.openPasswordDialog = function() {
                                 $modal
                                         .open({
@@ -156,18 +147,21 @@ angular.module('profile').controller(
                             MessageService.info($translate.instant("profile.modal.success"));
                         }, function(errorData) {
                             $scope.loading = false;
-                            var message = errorData.data.authError; //auth error
-                            var passwordError = errorData.data.message;
-                            if (message) {
-                                $scope.authError = message;
+                            var authError = errorData.data.authError; //auth error
+                            var passwordError = errorData.data.passError;
+                            var message = errorData.data.message;
+                            if (authError) {
+                                $scope.authError = authError;
                                 $scope.currentPassword = '';
-                            } else if (errorData.data.message) {
+                            } else if (passwordError) {
                                 $scope.authError = false;
                                 $scope.errorMessage = passwordError;
+                            } else if (message) {
+                                $modalInstance.close('done');
+                                MessageService.error(message);
                             } else {
                                 $modalInstance.close('done');
                                 MessageService.errorAction();
-
                             }
                         });
 

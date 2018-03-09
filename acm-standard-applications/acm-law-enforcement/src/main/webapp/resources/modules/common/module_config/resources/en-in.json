@@ -633,6 +633,7 @@
         "DOC_REPO": "Document Repository",
         "ORGANIZATION": "Organization",
         "PERSON": "Person",
+        "PERSON-ASSOCIATION": "en-in_Person-Association",
         "PARTICIPANT": "en-in_Participant",
         "NOTE": "en-in_Note",
         "PARTICIPANT-ASSOCIATION": "en-in_Participant-Association",

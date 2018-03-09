@@ -12,6 +12,7 @@ angular.module('organizations').config([ '$stateProvider', function($stateProvid
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('dashboard');
                 $translatePartialLoader.addPart('organizations');
+                $translatePartialLoader.addPart('preference');
                 return $translate.refresh();
             } ]
         }

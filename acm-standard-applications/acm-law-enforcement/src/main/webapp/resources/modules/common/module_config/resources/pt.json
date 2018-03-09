@@ -620,6 +620,7 @@
         "DOC_REPO": "Repositório de documentos",
         "ORGANIZATION": "Organização",
         "PERSON": "Pessoa",
+        "PERSON-ASSOCIATION": "pt_Person-Association",
         "PARTICIPANT": "pt_Participant",
         "NOTE": "pt_Note",
         "PARTICIPANT-ASSOCIATION": "pt_Participant-Association",
