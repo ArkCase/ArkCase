@@ -5,7 +5,7 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
 
-public class timesheetContainerHandler implements PipelineHandler<AcmTimesheet, TimesheetPipelineContext>
+public class TimesheetContainerHandler implements PipelineHandler<AcmTimesheet, TimesheetPipelineContext>
 {
     @Override
     public void execute(AcmTimesheet entity, TimesheetPipelineContext pipelineContext) throws PipelineProcessException
