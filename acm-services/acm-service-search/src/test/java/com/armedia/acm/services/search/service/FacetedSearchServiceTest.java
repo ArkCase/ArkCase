@@ -104,4 +104,17 @@ public class FacetedSearchServiceTest
         assertEquals(expected, found);
     }
 
+    @Test
+    public void escapeTermsInQuery()
+    {
+        assertEquals("\"term1\" \"term2\" \"quoted term3\" \"term4!@#$%()\"",
+                unit.escapeTermsInQuery("term1 term2 \"quoted term3\" term4!@#$%()"));
+        // if term containing quotes inside term should be split as separate term
+        assertEquals("\"term1\" \"term2\" \"quoted term3\" \"term4!@\"#\"$%()\"",
+                unit.escapeTermsInQuery("term1 term2 \"quoted term3\" term4!@\"#\"$%()"));
+        // check for edge situations
+        assertEquals("", unit.escapeTermsInQuery(null));
+        assertEquals("", unit.escapeTermsInQuery(""));
+        assertEquals("", unit.escapeTermsInQuery("   "));
+    }
 }

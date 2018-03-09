@@ -35,8 +35,7 @@ angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'Util
                     scope.filter({
                         data : {}
                     });
-                }
-                if (!Util.isEmpty(scope.data.filterWord) && scope.data.filterWord.length > 1) {
+                } else {
                     scope.isSearchValid = false;
                 }
             };

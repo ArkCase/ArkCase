@@ -25,6 +25,7 @@ angular
                                                                 $translatePartialLoader.addPart('dashboard');
                                                                 $translatePartialLoader.addPart('document-repository');
                                                                 $translatePartialLoader.addPart('document-details');
+                                                                $translatePartialLoader.addPart('preference');
                                                                 $translate.resetDataDict().addDataDictFromLabels(
                                                                         LocaleService.getLabelResources([ "document-repository",
                                                                                 "document-details", "common" ], "en"));
