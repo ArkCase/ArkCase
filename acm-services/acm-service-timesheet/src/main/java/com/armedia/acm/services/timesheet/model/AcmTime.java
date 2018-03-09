@@ -67,7 +67,7 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
     private String chargeRole;
 
     @Column(name = "cm_time_total_cost")
-    private Long totalCost;
+    private Double totalCost;
 
     @Column(name = "cm_time_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -152,11 +152,11 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
         this.chargeRole = chargeRole;
     }
 
-    public Long getTotalCost() {
+    public Double getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(Long totalCost) {
+    public void setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
     }
 
