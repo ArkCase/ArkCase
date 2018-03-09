@@ -125,30 +125,35 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             String sortDirection,
             Boolean authorized) throws MuleException
     {
-        List<String> groupsByRole = new ArrayList<>();
-        try
-        {
-            groupsByRole = new ArrayList<>(roleToGroupMapping.getRoleToGroupsMap().get(roleName));
-            if (authorized)
-            {
-                String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
-                        + groupsByRole.stream().collect(Collectors.joining(" OR name_lcs:", "(name_lcs:", ")"));
+        List<String> retrieveGroupsByRole = new ArrayList<>();
+        Set<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().get(roleName);
 
-                return getGroupsByRoleBySolrQuery(auth, sortDirection, startRow, maxRows, query);
-            }
-            else
-            {
-                String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
-                        + groupsByRole.stream().collect(Collectors.joining(" AND -name_lcs:", "-name_lcs:", ""));
-
-                return getGroupsByRoleBySolrQuery(auth, sortDirection, startRow, maxRows, query);
-            }
-        }
-        catch (Exception e)
+        if (groupsByRole == null)
         {
-            LOG.error("Can't create LDAP directory", e);
+            return retrieveGroupsByRole;
         }
-        return groupsByRole;
+
+        retrieveGroupsByRole = new ArrayList<>(groupsByRole);
+
+        if (groupsByRole.isEmpty())
+        {
+            return retrieveGroupsByRole;
+        }
+
+        if (authorized)
+        {
+            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
+                    + retrieveGroupsByRole.stream().collect(Collectors.joining(" OR name_lcs:", "(name_lcs:", ")"));
+
+            return getGroupsByRoleBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+        }
+        else
+        {
+            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
+                    + retrieveGroupsByRole.stream().collect(Collectors.joining(" AND -name_lcs:", "-name_lcs:", ""));
+
+            return getGroupsByRoleBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+        }
     }
 
     @Override
