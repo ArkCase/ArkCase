@@ -16,13 +16,8 @@ import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author riste.tutureski
@@ -222,6 +217,17 @@ public class TimeFactory extends FrevvoFormFactory
         calendar.setTime(form.getPeriod());
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 
+        Double totalWeekHours = 0.0;
+        totalWeekHours +=  Objects.nonNull(item.getSunday()) ? item.getSunday() : 0.0;
+        totalWeekHours +=  Objects.nonNull(item.getMonday()) ? item.getMonday() : 0.0;
+        totalWeekHours +=  Objects.nonNull(item.getTuesday()) ? item.getTuesday() : 0.0;
+        totalWeekHours +=  Objects.nonNull(item.getWednesday()) ? item.getWednesday() : 0.0;
+        totalWeekHours +=  Objects.nonNull(item.getThursday()) ? item.getThursday() : 0.0;
+        totalWeekHours +=  Objects.nonNull(item.getFriday()) ? item.getFriday() : 0.0;
+        totalWeekHours +=  Objects.nonNull(item.getSaturday()) ? item.getSaturday() : 0.0;
+
+        Double costPerHour = item.getTotalCost() / totalWeekHours;
+
         AcmTime time = null;
 
         if (id != null)
@@ -237,6 +243,8 @@ public class TimeFactory extends FrevvoFormFactory
         time.setObjectId(item.getObjectId());
         time.setCode(item.getCode());
         time.setType(item.getType());
+        time.setChargeRole(item.getChargeRole());
+        time.setTotalCost(value * costPerHour);
 
         calendar.add(Calendar.DATE, offset);
         time.setDate(calendar.getTime());
@@ -261,14 +269,25 @@ public class TimeFactory extends FrevvoFormFactory
 
         if (timesheet != null && timesheet.getTimes() != null)
         {
+           Map<List<String>, Double> totalCostsPerObject =
+                   timesheet.getTimes()
+                   .stream()
+                   .collect(Collectors.groupingBy(o -> Arrays.asList(o.getType(), o.getCode()), Collectors.summingDouble(AcmTime::getTotalCost)));
+
+
             Map<String, TimeItem> itemsMap = new HashMap<>();
             timesheet.getTimes().forEach(time -> {
                 TimeItem item = itemsMap.computeIfAbsent(time.getCode(), key -> new TimeItem());
+
+                List<String> timeItemKey = Arrays.asList(time.getType(), time.getCode());
+                Double timeItemTotalCost = totalCostsPerObject.getOrDefault(timeItemKey, 0.0);
 
                 item.setObjectId(time.getObjectId());
                 item.setCode(time.getCode());
                 item.setType(time.getType());
                 item.setTitle(getObjectTitleByObjectCode(item.getObjectId(), item.getType()));
+                item.setChargeRole(time.getChargeRole());
+                item.setTotalCost(timeItemTotalCost);
 
                 item = setTimeFromAcmTime(item, time);
             });

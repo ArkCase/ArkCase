@@ -67,6 +67,11 @@ angular
                                                                     function(total, n) {
                                                                         return total + Util.goodValue(n.value, 0);
                                                                     }, 0);
+                                                            var totalCost = 0.0;
+                                                            for(var j=0; j<timesheets[i].times.length; j++){
+                                                                totalCost += parseFloat(timesheets[i].times[j].totalCost);
+                                                            }
+                                                            timesheets[i].totalCost = totalCost;
                                                         }
 
                                                         $scope.gridOptions = $scope.gridOptions || {};

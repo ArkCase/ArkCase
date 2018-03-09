@@ -23,7 +23,7 @@ public class TimeItem
 
     private List<String> chargeRoles;
 
-    private Long totalCost;
+    private Double totalCost;
 
     private String title;
 
@@ -111,11 +111,11 @@ public class TimeItem
     }
 
     @XmlElement(name = "totalCost")
-    public Long getTotalCost() {
+    public Double getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(Long totalCost) {
+    public void setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
     }
 
