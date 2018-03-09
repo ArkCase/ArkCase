@@ -114,7 +114,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
             url : 'api/latest/functionalaccess/' + data.roleName.key + '/groups/',
             params : {
                 start : (data.start ? data.start : 0),
-                n : (data.n ? data.n : 18), //change this to 50
+                n : (data.n ? data.n : 50),
                 authorized : data.isAuthorized
             }
         });
