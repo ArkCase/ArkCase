@@ -1,10 +1,7 @@
 package com.armedia.acm.services.transcribe.web.api;
 
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
-import com.armedia.acm.services.transcribe.exception.GetTranscribeConfigurationException;
-import com.armedia.acm.services.transcribe.exception.SaveTranscribeException;
 import com.armedia.acm.services.transcribe.model.Transcribe;
-import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.model.TranscribeType;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 import org.springframework.http.MediaType;
@@ -19,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping({ "/api/v1/service/transcribe", "/api/latest/service/transcribe" })
-public class SaveTranscribeAPIController
+public class CreateTranscribeAPIController
 {
     private ArkCaseTranscribeService arkCaseTranscribeService;
 

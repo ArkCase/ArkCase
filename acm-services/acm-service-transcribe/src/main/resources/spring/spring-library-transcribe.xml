@@ -15,6 +15,10 @@
         <property name="ruleSpreadsheetFilename" value="drools-transcribe-rules.xlsx"/>
     </bean>
 
+    <bean id="transcribeBusinessProcessRulesExecutor" class="com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor" parent="simpleStatelessSingleObjectRuleManager">
+        <property name="ruleSpreadsheetFilename" value="drools-transcribe-business-process-rules.xlsx"/>
+    </bean>
+
     <!-- pre-save handlers -->
     <bean id="transcribeInitHandler" class="com.armedia.acm.services.transcribe.pipline.presave.TranscribeInitHandler"/>
 
@@ -22,7 +26,9 @@
     <bean id="transcribeRulesHandler" class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeRulesHandler">
         <property name="transcribeBusinessRulesExecutor" ref="transcribeBusinessRulesExecutor"/>
     </bean>
-    <bean id="transcribeStartBusinessProcessHandler" class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeStartBusinessProcessHandler"/>
+    <bean id="transcribeBusinessProcessHandler" class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeBusinessProcessHandler">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
 
     <bean id="transcribePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
@@ -33,7 +39,7 @@
         <property name="postSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="transcribeRulesHandler"/>
-                <ref bean="transcribeStartBusinessProcessHandler"/>
+                <ref bean="transcribeBusinessProcessHandler"/>
             </list>
         </property>
     </bean>
@@ -43,6 +49,8 @@
         <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
         <property name="pipelineManager" ref="transcribePipelineManager"/>
         <property name="transcribeConfigurationService" ref="transcribeConfigurationPropertiesService"/>
+        <property name="transcribeBusinessProcessRulesExecutor" ref="transcribeBusinessProcessRulesExecutor"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <aop:scoped-proxy proxy-target-class="true"/>
     </bean>
 
@@ -57,5 +65,8 @@
     <bean id="ecmFileAddedListener" class="com.armedia.acm.services.transcribe.listener.EcmFileAddedListener">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
     </bean>
+
+    <bean id="transcribeProcessingChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeProcessingChecker"/>
+    <bean id="transcribeStatusChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeStatusChecker"/>
 
 </beans>
