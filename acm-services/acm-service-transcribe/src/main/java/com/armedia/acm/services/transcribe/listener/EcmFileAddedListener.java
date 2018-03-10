@@ -1,16 +1,8 @@
 package com.armedia.acm.services.transcribe.listener;
 
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedEvent;
-import com.armedia.acm.plugins.ecm.model.event.EcmFileCreatedEvent;
-import com.armedia.acm.plugins.ecm.model.event.EcmFilePersistenceEvent;
-import com.armedia.acm.plugins.ecm.model.event.EcmFileReplacedEvent;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
-import com.armedia.acm.services.transcribe.exception.GetTranscribeConfigurationException;
-import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
-import com.armedia.acm.services.transcribe.model.TranscribeConstants;
 import com.armedia.acm.services.transcribe.model.TranscribeType;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 import org.slf4j.Logger;
@@ -32,13 +24,17 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
         if (event != null && event.getSource() != null)
         {
             EcmFileVersion ecmFileVersion = event.getSource().getVersions().stream().filter(item -> event.getSource().getActiveVersionTag().equals(item.getVersionTag())).findFirst().orElse(null);
-            try
+
+            if (getArkCaseTranscribeService().isAudioOrVideo(ecmFileVersion))
             {
-                getArkCaseTranscribeService().create(ecmFileVersion, TranscribeType.AUTOMATIC);
-            }
-            catch (CreateTranscribeException e)
-            {
-                LOG.error("Error while creating Transcription in automatic way.", e);
+                try
+                {
+                    getArkCaseTranscribeService().create(ecmFileVersion, TranscribeType.AUTOMATIC);
+                }
+                catch (CreateTranscribeException e)
+                {
+                    LOG.warn("Creating Transcription in automatic way was not executed.");
+                }
             }
         }
     }

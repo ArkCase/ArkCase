@@ -10,11 +10,15 @@ import com.armedia.acm.services.transcribe.exception.*;
 import com.armedia.acm.services.transcribe.factory.TranscribeServiceFactory;
 import com.armedia.acm.services.transcribe.model.*;
 import com.armedia.acm.services.transcribe.pipline.TranscribePipelineContext;
+import com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.mule.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/28/2018
@@ -27,6 +31,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     private EcmFileVersionDao ecmFileVersionDao;
     private TranscribeConfigurationService transcribeConfigurationService;
     private PipelineManager<Transcribe, TranscribePipelineContext> pipelineManager;
+    private TranscribeBusinessProcessRulesExecutor transcribeBusinessProcessRulesExecutor;
+    private RuntimeService activitiRuntimeService;
 
     @Override
     @Transactional
@@ -53,14 +59,12 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         }
         catch (GetTranscribeException e)
         {
-            String message = String.format("Creating Transcribe job is aborted. REASON=[%s]", e.getMessage());
-            throw new CreateTranscribeException(message, e);
+            throw new CreateTranscribeException(String.format("Creating Transcribe job is aborted. REASON=[%s]", e.getMessage()), e);
         }
 
         if (existingTranscribe != null)
         {
-            String message = String.format("Creating Transcribe job is aborted. There is already Transcribe object for MEDIA_FILE_VERSION_ID=[%d]", ecmFileVersion.getId());
-            throw new CreateTranscribeException(message);
+            throw new CreateTranscribeException(String.format("Creating Transcribe job is aborted. There is already Transcribe object for MEDIA_FILE_VERSION_ID=[%d]", ecmFileVersion.getId()));
         }
 
         TranscribePipelineContext context = new TranscribePipelineContext();
@@ -77,8 +81,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         }
         catch (PipelineProcessException e)
         {
-            LOG.error("Transcribe for MEDIA_VERSION_ID=[{}] was not created successfully. REASON=[{}]", ecmFileVersion != null ? ecmFileVersion.getId() : null, e.getMessage(), e);
-            throw new CreateTranscribeException(String.format("Transcribe for MEDIA_VERSION_ID=[%d] was not created successfully. REASON=[%s]", ecmFileVersion != null ? ecmFileVersion.getId() : null, e.getMessage()));
+            throw new CreateTranscribeException(String.format("Transcribe for MEDIA_VERSION_ID=[%d] was not created successfully. REASON=[%s]", ecmFileVersion != null ? ecmFileVersion.getId() : null, e.getMessage()), e);
         }
     }
 
@@ -115,35 +118,37 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     @Override
     public Transcribe changeStatus(Long id, String status) throws SaveTranscribeException
     {
+
         return null;
     }
 
     @Override
-    public List<Transcribe> changeStatus(List<Long> ids, String status) throws SaveTranscribeException
+    public List<Transcribe> changeStatusMultiple(List<Long> ids, String status) throws SaveTranscribeException
     {
+
         return null;
     }
 
     @Override
-    public void notify(Long id, UserType userType, ActionType action)
+    public void notify(Long id, String userType, String action)
     {
 
     }
 
     @Override
-    public void notify(List<Long> ids, UserType userType, ActionType action)
+    public void notifyMultiple(List<Long> ids, String userType, String action)
     {
 
     }
 
     @Override
-    public void audit(Long id, ActionType action)
+    public void audit(Long id, String action)
     {
 
     }
 
     @Override
-    public void audit(List<Long> ids, ActionType action)
+    public void auditMultiple(List<Long> ids, String action)
     {
 
     }
@@ -164,6 +169,52 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     public TranscribeConfiguration saveConfiguration(TranscribeConfiguration configuration) throws SaveTranscribeConfigurationException
     {
         return getTranscribeConfigurationService().save(configuration);
+    }
+
+    @Override
+    public ProcessInstance startBusinessProcess(Transcribe transcribe)
+    {
+        LOG.debug("Checking if starting business process is allowed for Transcribe Object [{}]", transcribe);
+        ProcessInstance processInstance = null;
+        if (transcribe != null)
+        {
+            // Check drools if we need to start workflow for provided Transcribe object
+            TranscribeBusinessProcessModel transcribeBusinessProcessModel = new TranscribeBusinessProcessModel();
+            transcribeBusinessProcessModel.setType(transcribe.getType());
+
+            LOG.debug("Executing Drools Business rules");
+
+            transcribeBusinessProcessModel = getTranscribeBusinessProcessRulesExecutor().applyRules(transcribeBusinessProcessModel);
+
+            LOG.debug("Start business process: [{}]", transcribeBusinessProcessModel.isStart());
+
+            if (transcribeBusinessProcessModel.isStart())
+            {
+                // Check if there is already startes business process. This can be the case when we replace media file
+                // and in the Transcribe Configuration (properties file) we have set "copy transcription" instead of "new transcription".
+                // In that case we have complete two copies of Transcribe object, just different IDS. So we should use the same Process
+                // for both Transcribe objects
+                if (StringUtils.isNotEmpty(transcribe.getProcessId()))
+                {
+                    processInstance = getActivitiRuntimeService().createProcessInstanceQuery().processInstanceId(transcribe.getProcessId()).includeProcessVariables().singleResult();
+                }
+
+                if (processInstance == null)
+                {
+                    // When we don't have process instance, create it
+                    processInstance = createProcessInstance(transcribe, transcribeBusinessProcessModel);
+                }
+                else
+                {
+                    // When we have process instance, just update the variable 'IDS'
+                    updateProcessInstance(transcribe, processInstance);
+                }
+            }
+        }
+
+        LOG.debug("There is no Transcribe Object. It's [{}]", transcribe);
+
+        return processInstance;
     }
 
     @Override
@@ -208,6 +259,12 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         return null;
     }
 
+    /**
+     * This method will return true if all conditions are reached for proceeding with automatic transcription
+     *
+     * @param ecmFileVersion - File version
+     * @return true/false
+     */
     private boolean allow(EcmFileVersion ecmFileVersion)
     {
         // TODO: Restrict only for Case/Complaints?
@@ -217,12 +274,24 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                 isLessThan2Hours(ecmFileVersion);
     }
 
-    private boolean isTranscribeOn()
+    /**
+     * This method will return if transcribe is enabled
+     *
+     * @return true/false
+     */
+    public boolean isTranscribeOn()
     {
         try
         {
             TranscribeConfiguration configuration = getConfiguration();
-            return configuration != null && configuration.isEnabled();
+            boolean allow = configuration != null && configuration.isEnabled();
+
+            if (!allow)
+            {
+                LOG.warn("Transcribe is not enabled. It will be terminated.");
+            }
+
+            return allow;
         }
         catch (GetTranscribeConfigurationException e)
         {
@@ -231,34 +300,104 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         }
     }
 
-    private boolean isAutomaticTranscribeOn()
+    /**
+     * This method will return if automatic transcribe is enabled
+     *
+     * @return true/false
+     */
+    public boolean isAutomaticTranscribeOn()
     {
         try
         {
             TranscribeConfiguration configuration = getConfiguration();
-            return configuration != null && configuration.isAutomaticEnabled();
+            boolean allow =  configuration != null && configuration.isAutomaticEnabled();
+
+            if (!allow)
+            {
+                LOG.warn("Automatic Transcribe is not enabled. It will be terminated.");
+            }
+
+            return  allow;
         }
         catch (GetTranscribeConfigurationException e)
         {
-            LOG.error("Failed to retrieve Transcribe configuration.", e);
+            LOG.warn("Failed to retrieve Transcribe configuration. Automatic Transcribe will be terminated.");
             return false;
         }
     }
 
-    private boolean isLessThan2Hours(EcmFileVersion ecmFileVersion)
+    /**
+     * This method will return if provided audio/video is less than 2 hours
+     *
+     * @param ecmFileVersion - Media file version
+     * @return true/false
+     */
+    public boolean isLessThan2Hours(EcmFileVersion ecmFileVersion)
     {
-        return ecmFileVersion != null && ecmFileVersion.getDurationSeconds() <= 60 * 60 * 2;
+        boolean allow = ecmFileVersion != null && ecmFileVersion.getDurationSeconds() <= 60 * 60 * 2;
+
+        if (!allow)
+        {
+            LOG.warn("The media file is more than 2 hours. Automatic Transcription will be terminated.");
+        }
+
+        return allow;
     }
 
-    private boolean isAudioOrVideo(EcmFileVersion ecmFileVersion)
+    /**
+     * This method will return if provided file is audio or video
+     *
+     * @param ecmFileVersion - File version
+     * @return true/false
+     */
+    public boolean isAudioOrVideo(EcmFileVersion ecmFileVersion)
     {
 
-        return ecmFileVersion != null &&
-               ecmFileVersion.getVersionMimeType() != null &&
-               (
-                   ecmFileVersion.getVersionMimeType().startsWith(TranscribeConstants.MEDIA_TYPE_AUDIO_RECOGNITION_KEY) ||
-                   ecmFileVersion.getVersionMimeType().startsWith(TranscribeConstants.MEDIA_TYPE_VIDEO_RECOGNITION_KEY)
-               );
+        boolean allow = ecmFileVersion != null &&
+                        ecmFileVersion.getVersionMimeType() != null &&
+                        (
+                            ecmFileVersion.getVersionMimeType().startsWith(TranscribeConstants.MEDIA_TYPE_AUDIO_RECOGNITION_KEY) ||
+                            ecmFileVersion.getVersionMimeType().startsWith(TranscribeConstants.MEDIA_TYPE_VIDEO_RECOGNITION_KEY)
+                        );
+
+        if (!allow)
+        {
+            LOG.warn("The media file is not audio or video. Automatic Transcription will be terminated.");
+        }
+
+        return allow;
+    }
+
+    private ProcessInstance createProcessInstance(Transcribe transcribe, TranscribeBusinessProcessModel transcribeBusinessProcessModel)
+    {
+        List<Long> ids = new ArrayList<>();
+        ids.add(transcribe.getId());
+
+        Map<String, Object> processVariables = new HashMap<>();
+        processVariables.put("IDS", ids);
+        processVariables.put("REMOTE_ID", transcribe.getRemoteId());
+        processVariables.put("STATUS", StatusType.QUEUED);
+        processVariables.put("ACTION", ActionType.QUEUED);
+
+        ProcessInstance processInstance = getActivitiRuntimeService().startProcessInstanceByKey(transcribeBusinessProcessModel.getName(), processVariables);
+
+        transcribe.setProcessId(processInstance.getId());
+
+        return processInstance;
+    }
+
+    private void updateProcessInstance(Transcribe transcribe, ProcessInstance processInstance)
+    {
+        List<Long> ids = (List<Long>) processInstance.getProcessVariables().get("IDS");
+        if (ids != null)
+        {
+            if (!ids.stream().filter(id -> id.equals(transcribe.getId())).findFirst().isPresent())
+            {
+                ids.add(transcribe.getId());
+            }
+
+            getActivitiRuntimeService().setVariable(processInstance.getId(), "IDS", ids);
+        }
     }
 
     public TranscribeDao getTranscribeDao()
@@ -299,5 +438,25 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     public void setPipelineManager(PipelineManager<Transcribe, TranscribePipelineContext> pipelineManager)
     {
         this.pipelineManager = pipelineManager;
+    }
+
+    public TranscribeBusinessProcessRulesExecutor getTranscribeBusinessProcessRulesExecutor()
+    {
+        return transcribeBusinessProcessRulesExecutor;
+    }
+
+    public void setTranscribeBusinessProcessRulesExecutor(TranscribeBusinessProcessRulesExecutor transcribeBusinessProcessRulesExecutor)
+    {
+        this.transcribeBusinessProcessRulesExecutor = transcribeBusinessProcessRulesExecutor;
+    }
+
+    public RuntimeService getActivitiRuntimeService()
+    {
+        return activitiRuntimeService;
+    }
+
+    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
+    {
+        this.activitiRuntimeService = activitiRuntimeService;
     }
 }
