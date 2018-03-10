@@ -62,7 +62,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
             throw new CreateTranscribeException(String.format("Creating Transcribe job is aborted. REASON=[%s]", e.getMessage()), e);
         }
 
-        if (existingTranscribe != null)
+        // TODO: If there is already automatic transcription and another is requested, abort, or abort every time when there is existing transcribe?
+        if (existingTranscribe != null && TranscribeType.AUTOMATIC.toString().equals(existingTranscribe.getType()) && TranscribeType.AUTOMATIC.equals(type))
         {
             throw new CreateTranscribeException(String.format("Creating Transcribe job is aborted. There is already Transcribe object for MEDIA_FILE_VERSION_ID=[%d]", ecmFileVersion.getId()));
         }
@@ -73,7 +74,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
 
         try
         {
-            Transcribe transcribe = new Transcribe();
+            Transcribe transcribe = existingTranscribe != null ? existingTranscribe : new Transcribe();
             return getPipelineManager().executeOperation(transcribe, context, () ->{
                 Transcribe saved = getTranscribeDao().save(transcribe);
                 return saved;
