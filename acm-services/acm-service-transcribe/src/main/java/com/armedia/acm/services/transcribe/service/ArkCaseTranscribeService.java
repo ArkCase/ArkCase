@@ -392,7 +392,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         List<Long> ids = (List<Long>) processInstance.getProcessVariables().get("IDS");
         if (ids != null)
         {
-            if (!ids.stream().filter(id -> id.equals(transcribe.getId())).findFirst().isPresent())
+            if (!ids.contains(transcribe.getId()))
             {
                 ids.add(transcribe.getId());
             }
