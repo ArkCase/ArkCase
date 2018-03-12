@@ -15,27 +15,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -106,6 +87,9 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = TimesheetConstants.OBJECT_TYPE;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumns({
@@ -332,11 +316,13 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
         return TimesheetConstants.OBJECT_TYPE;
     }
 
-    public String getClassName() {
+    public String getClassName()
+    {
         return className;
     }
 
-    public void setClassName(String className) {
+    public void setClassName(String className)
+    {
         this.className = className;
     }
 }
