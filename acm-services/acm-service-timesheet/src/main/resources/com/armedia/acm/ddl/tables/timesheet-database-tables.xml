@@ -236,8 +236,7 @@
     </changeSet>
 
     <changeSet id="15-acm-time-total-cost-column-default-value" author="marko.stojanoski">
-        <addDefaultValue tableName="acm_time" columnName="cm_time_total_cost" columnDataType="NUMBER(32,2)"
-            defaultValueNumeric="0"/>
+        <addDefaultValue tableName="acm_time" columnName="cm_time_total_cost" columnDataType="NUMBER(32,2)" defaultValueNumeric="0"/>
     </changeSet>
 
     <changeSet id="16-acm-time-update-total-cost-column" author="marko.stojanoski">
