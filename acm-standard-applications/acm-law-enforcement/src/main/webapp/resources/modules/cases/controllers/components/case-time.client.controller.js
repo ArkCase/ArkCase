@@ -91,6 +91,15 @@ angular
                                                             total, n) {
                                                         return total + Util.goodValue(n.value, 0);
                                                     }, 0);
+
+                                                    var totalCost = 0.0;
+                                                    for(var j=0; j<timesheets[i].times.length; j++){
+                                                        if($scope.newTimesheetParamsFromObject._type == timesheets[i].times[j].type
+                                                                    && $scope.newTimesheetParamsFromObject._number == timesheets[i].times[j].code){
+                                                                        totalCost += parseFloat(timesheets[i].times[j].totalCost);
+                                                        }
+                                                    }
+                                                    timesheets[i].totalCost = totalCost;
                                                 }
 
                                                 $scope.gridOptions = $scope.gridOptions || {};

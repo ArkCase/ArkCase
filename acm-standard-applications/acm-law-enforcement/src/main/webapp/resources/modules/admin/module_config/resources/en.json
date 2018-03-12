@@ -435,6 +435,20 @@
                 }
             }
         },
+        "forms.timesheetConfiguration": {
+            "title": "Timesheet Configuration",
+            "chargeRole": "Charge Role",
+            "chargeRole.placeholder": "Enter Charge Role",
+            "rate": "Rate",
+            "rate.placeholder": "Enter Rate ($)",
+            "active": "Active/Inactive",
+            "active.active": "Active",
+            "active.inactive": "Inactive",
+            "modal" : {
+                "button.save": "Save",
+                "button.cancel" : "Cancel"
+            }
+        },
         "dashboard.title": "Dashboard",
         "dashboard.config": "Dashboard Configuration",
         "dashboard.widgets": "Widgets",
@@ -814,6 +828,32 @@
                 "update.success": "Successfully updated configuration row.",
                 "update.error": "Error updating configuration row.",
                 "test.conection.success": "Successfully connected."
+            }
+        },
+        "transcription": {
+            "title": "Transcription Services",
+            "transcriptionManagement": "Transcription Management",
+            "transcriptionConfigForm": {
+                "save.button": "Save",
+                "automation.label": "Automation",
+                "enableTranscription.checkbox": "Enable Transcription",
+                "automaticTranscription.checkbox": "Automatic Transcription",
+                "overwriteTranscription.checkbox": "Overwrite Original Transcription with New Versions",
+                "mediaFileAdded.label": "When a new version of a media file is added, the system will:",
+                "generateTranscription.radio": "Generate a new transcription for the new version",
+                "copyTranscription.radio": "Copy the transcription from the active version to the new version",
+                "provider.label": "Provider",
+                "numOfFiles.label": "Number of Files for Processing",
+                "selectProvider": "Select a Provider",
+                "wordCount.label": "Word Count",
+                "costPerSecond.label": "Cost Per Second",
+                "confidenceThreshold.label": "Confidence Threshold",
+                "validation.messages": {
+                    "requiredErrorMsg": "This field is required",
+                    "maxErrorMsg": "Value must be less than or equal to 100",
+                    "minZeroValueErrorMsg": "Value must be greater than or equal to 0",
+                    "minOneValueErrorMsg": "Value must be greater than or equal to 1"
+                }
             }
         }
     },
