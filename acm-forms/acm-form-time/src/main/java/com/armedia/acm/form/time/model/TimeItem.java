@@ -19,6 +19,12 @@ public class TimeItem
 
     private String code;
 
+    private String chargeRole;
+
+    private List<String> chargeRoles;
+
+    private Double totalCost;
+
     private String title;
 
     private Long sundayId;
@@ -84,6 +90,33 @@ public class TimeItem
     public void setCode(String code)
     {
         this.code = code;
+    }
+
+    @XmlElement(name = "chargeRole")
+    public String getChargeRole() {
+        return chargeRole;
+    }
+
+    public void setChargeRole(String chargeRole) {
+        this.chargeRole = chargeRole;
+    }
+
+    @XmlTransient
+    public List<String> getChargeRoles() {
+        return chargeRoles;
+    }
+
+    public void setChargeRoles(List<String> chargeRoles) {
+        this.chargeRoles = chargeRoles;
+    }
+
+    @XmlElement(name = "totalCost")
+    public Double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(Double totalCost) {
+        this.totalCost = totalCost;
     }
 
     @XmlElement(name = "objectTitle")

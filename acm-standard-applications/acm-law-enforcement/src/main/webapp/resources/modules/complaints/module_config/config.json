@@ -1135,6 +1135,12 @@
                     "headerCellFilter": "translate"
                 },
                 {
+                    "name": "totalCost",
+                    "displayName": "complaints.comp.time.table.columns.cost",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>${{ row.entity.totalCost | number : 2 }}</div>"
+                },
+                {
                     "name": "modified",
                     "field": "modified",
                     "displayName": "complaints.comp.time.table.columns.modified",
