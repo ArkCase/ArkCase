@@ -231,11 +231,7 @@ public class AcmBpmnServiceIT
 
         List<AcmProcessDefinition> acmProcessDefinitionList = acmBpmnService.getVersionHistory(apd);
 
-        assertEquals(1, acmProcessDefinitionList.size());
-
-        // somehow I get 5 now when I run this test.
-        assertTrue(acmProcessDefinitionList.get(0).getVersion() > 1);
-        // assertEquals(2, acmProcessDefinitionList.get(0).getVersion());
+        assertEquals(2, acmProcessDefinitionList.size());
 
         acmBpmnService.remove(apd, true);
         acmBpmnService.remove(apd1, true);
