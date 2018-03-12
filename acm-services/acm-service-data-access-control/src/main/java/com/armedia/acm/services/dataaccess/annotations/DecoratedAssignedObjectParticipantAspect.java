@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Aspect
 @Component
@@ -36,52 +37,60 @@ public class DecoratedAssignedObjectParticipantAspect
     {
         Object ret = pjp.proceed();
         // Check if the returned Object is AcmAssignableObject
-        if (AcmAssignedObject.class.isAssignableFrom(ret.getClass()))
+        try
         {
-
-            AcmAssignedObject assignedObject = (AcmAssignedObject) ret;
-            // Decorate the AssignableObject
-            assignedObject = decorateAssignableObjectParticipants(assignedObject);
-            return assignedObject;
-        } // check if the returned Object is a list of AcmParticipants
-        else if (List.class.isAssignableFrom(ret.getClass()) && AcmParticipant.class.isAssignableFrom(((List) ret).get(0).getClass()))
-        {
-            // check if the instance of the annotation exists
-            if (decoratedAssignedObjectParticipants != null)
+            if (AcmAssignedObject.class.isAssignableFrom(ret.getClass()))
             {
-                // Get function parameters and annotation parameters and
-                // map them to objectType and objectId so we can get participants parent AcmAssignableObject
-                Object[] args = pjp.getArgs();
-                Object objectType;
-                Object objectId;
-                if (decoratedAssignedObjectParticipants.objectType().equals(""))
+
+                AcmAssignedObject assignedObject = (AcmAssignedObject) ret;
+                // Decorate the AssignableObject
+                assignedObject = decorateAssignableObjectParticipants(assignedObject);
+                return assignedObject;
+            } // check if the returned Object is a list of AcmParticipants
+            else if (List.class.isAssignableFrom(ret.getClass()) && ((List) ret).size() > 0)
+            {
+
+                // check if the instance of the annotation exists
+                if (decoratedAssignedObjectParticipants != null && AcmParticipant.class.isAssignableFrom(((List) ret).get(0).getClass()))
                 {
-                    objectType = args[decoratedAssignedObjectParticipants.objectTypeIndex()];
-                }
-                else
-                {
-                    objectType = decoratedAssignedObjectParticipants.objectType();
-                }
-                if (decoratedAssignedObjectParticipants.objectId() == -1)
-                {
-                    objectId = args[decoratedAssignedObjectParticipants.objectIdIndex()];
-                }
-                else
-                {
-                    objectId = decoratedAssignedObjectParticipants.objectId();
-                }
-                // Get the objects Dao
-                AcmAbstractDao<AcmObject> dao = springAcmDataService.getDaoByObjectType(objectType.toString());
-                // find participant's parent AcmAssignableObject by id
-                AcmObject entity = dao.find(((Number) objectId).longValue());
-                if (AcmAssignedObject.class.isAssignableFrom(entity.getClass()))
-                {
-                    AcmAssignedObject assignedObject = (AcmAssignedObject) entity;
-                    // Decorate the whole Object and return the participants list
-                    assignedObject = decorateAssignableObjectParticipants(assignedObject);
-                    return assignedObject.getParticipants();
+                    // Get function parameters and annotation parameters and
+                    // map them to objectType and objectId so we can get participants parent AcmAssignableObject
+                    Object[] args = pjp.getArgs();
+                    Object objectType;
+                    Object objectId;
+                    if (decoratedAssignedObjectParticipants.objectType().equals(""))
+                    {
+                        objectType = args[decoratedAssignedObjectParticipants.objectTypeIndex()];
+                    }
+                    else
+                    {
+                        objectType = decoratedAssignedObjectParticipants.objectType();
+                    }
+                    if (decoratedAssignedObjectParticipants.objectId() == -1)
+                    {
+                        objectId = args[decoratedAssignedObjectParticipants.objectIdIndex()];
+                    }
+                    else
+                    {
+                        objectId = decoratedAssignedObjectParticipants.objectId();
+                    }
+                    // Get the objects Dao
+                    AcmAbstractDao<AcmObject> dao = springAcmDataService.getDaoByObjectType(objectType.toString());
+                    // find participant's parent AcmAssignableObject by id
+                    AcmObject entity = dao.find(((Number) objectId).longValue());
+                    if (entity != null && AcmAssignedObject.class.isAssignableFrom(entity.getClass()))
+                    {
+                        AcmAssignedObject assignedObject = (AcmAssignedObject) entity;
+                        // Decorate the whole Object and return the participants list
+                        assignedObject = decorateAssignableObjectParticipants(assignedObject);
+                        return assignedObject.getParticipants();
+                    }
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            return ret;
         }
         return ret;
     }
@@ -126,14 +135,13 @@ public class DecoratedAssignedObjectParticipantAspect
 
         if (validationType.equals("user"))
         {
-            newObj = "TempLdapId";
+            newObj = UUID.randomUUID().toString();
             oldObj = copyParticipant.getParticipantLdapId();
             copyParticipant.setParticipantLdapId(newObj);
         }
         else if (validationType.equals("type"))
         {
-
-            newObj = "TempParticipantTypeForDecorate";
+            newObj = UUID.randomUUID().toString();
             oldObj = copyParticipant.getParticipantType();
             copyParticipant.setParticipantType(newObj);
         }
