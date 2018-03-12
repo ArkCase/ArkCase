@@ -206,6 +206,7 @@
             "name": "Form Name",
             "user": "User",
             "tally": "Total Hours",
+            "cost": "Total Cost",
             "modified": "Modified Date",
             "status": "Status"
         },

@@ -38,11 +38,13 @@
         }
     },
     "timeTracking.comp.summary": {
-        "title": "Hours",
+        "title": "Hours/Cost",
         "table.columns": {
             "code": "Parent ID",
             "type": "Parent Type",
+            "role": "Charge Role",
             "value": "Total Hours",
+            "cost": "Total Cost",
             "date": "Date Charged",
             "modified": "Modified Date"
         }

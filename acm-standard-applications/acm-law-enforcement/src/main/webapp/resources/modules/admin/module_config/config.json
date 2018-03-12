@@ -957,6 +957,34 @@
                 }
             ],
             "rowTemplate": "modules/admin/views/components/application-draggable-rows.view.html"
+        },
+        {
+            "id": "timesheetConfiguration",
+            "title": "admin.forms.timesheetConfiguration.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "chargeRole",
+                    "displayName": "admin.forms.timesheetConfiguration.chargeRole",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "rate",
+                    "displayName": "admin.forms.timesheetConfiguration.rate",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "active",
+                    "displayName": "admin.forms.timesheetConfiguration.active.active",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ]
         }
     ],
     "tree": {
@@ -1101,6 +1129,13 @@
                 "label": "admin.forms.config",
                 "components": [
                     "forms.config"
+                ]
+            },
+            {
+                "type": "p/forms/config",
+                "label": "admin.forms.timesheetConfiguration.title",
+                "components": [
+                    "timesheet.config"
                 ]
             },
             {
