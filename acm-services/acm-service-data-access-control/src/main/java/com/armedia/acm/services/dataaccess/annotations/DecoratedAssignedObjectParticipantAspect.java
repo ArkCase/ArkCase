@@ -22,6 +22,9 @@ import java.util.UUID;
 public class DecoratedAssignedObjectParticipantAspect
 {
 
+    private final String USER_VALIDATION_TYPE = "user";
+    private final String TYPE_VALIDATION_TYPE = "type";
+
     private AcmAssignedObjectBusinessRule assignmentBusinessRule;
     private AcmDataService springAcmDataService;
 
@@ -46,38 +49,18 @@ public class DecoratedAssignedObjectParticipantAspect
                 // Decorate the AssignableObject
                 assignedObject = decorateAssignableObjectParticipants(assignedObject);
                 return assignedObject;
-            } // check if the returned Object is a list of AcmParticipants
+            } // check if the returned Object is a list of AcmParticipants and the participants list is not empty
             else if (List.class.isAssignableFrom(ret.getClass()) && ((List) ret).size() > 0)
             {
 
-                // check if the instance of the annotation exists
+                // check if the instance of the annotation exists and the items in the list is instance of
+                // AcmParticipant
                 if (decoratedAssignedObjectParticipants != null && AcmParticipant.class.isAssignableFrom(((List) ret).get(0).getClass()))
                 {
                     // Get function parameters and annotation parameters and
                     // map them to objectType and objectId so we can get participants parent AcmAssignableObject
                     Object[] args = pjp.getArgs();
-                    Object objectType;
-                    Object objectId;
-                    if (decoratedAssignedObjectParticipants.objectType().equals(""))
-                    {
-                        objectType = args[decoratedAssignedObjectParticipants.objectTypeIndex()];
-                    }
-                    else
-                    {
-                        objectType = decoratedAssignedObjectParticipants.objectType();
-                    }
-                    if (decoratedAssignedObjectParticipants.objectId() == -1)
-                    {
-                        objectId = args[decoratedAssignedObjectParticipants.objectIdIndex()];
-                    }
-                    else
-                    {
-                        objectId = decoratedAssignedObjectParticipants.objectId();
-                    }
-                    // Get the objects Dao
-                    AcmAbstractDao<AcmObject> dao = springAcmDataService.getDaoByObjectType(objectType.toString());
-                    // find participant's parent AcmAssignableObject by id
-                    AcmObject entity = dao.find(((Number) objectId).longValue());
+                    AcmObject entity = getAssignedObjectForParticipants(args, decoratedAssignedObjectParticipants);
                     if (entity != null && AcmAssignedObject.class.isAssignableFrom(entity.getClass()))
                     {
                         AcmAssignedObject assignedObject = (AcmAssignedObject) entity;
@@ -95,6 +78,34 @@ public class DecoratedAssignedObjectParticipantAspect
         return ret;
     }
 
+    // Method for Finding the ObjectType and ObjectId and return AcmAssignedObject for participants
+    private AcmObject getAssignedObjectForParticipants(Object[] args,
+            DecoratedAssignedObjectParticipants decoratedAssignedObjectParticipants) throws Exception
+    {
+        Object objectType;
+        Object objectId;
+        if (decoratedAssignedObjectParticipants.objectType().equals(""))
+        {
+            objectType = args[decoratedAssignedObjectParticipants.objectTypeIndex()];
+        }
+        else
+        {
+            objectType = decoratedAssignedObjectParticipants.objectType();
+        }
+        if (decoratedAssignedObjectParticipants.objectId() == -1)
+        {
+            objectId = args[decoratedAssignedObjectParticipants.objectIdIndex()];
+        }
+        else
+        {
+            objectId = decoratedAssignedObjectParticipants.objectId();
+        }
+        // Get the objects Dao
+        AcmAbstractDao<AcmObject> dao = springAcmDataService.getDaoByObjectType(objectType.toString());
+        // find participant's parent AcmAssignableObject by id
+        return dao.find(((Number) objectId).longValue());
+    }
+
     private AcmAssignedObject decorateAssignableObjectParticipants(AcmAssignedObject assignedObject) throws Exception
     {
         List<AcmParticipant> originalParticipants = assignedObject.getParticipants();
@@ -102,18 +113,18 @@ public class DecoratedAssignedObjectParticipantAspect
         // get a new list of participants, not to change the original participants references
         List<AcmParticipant> copyParticipants = getParticipantsCopyWithAppliedAssignmentRules(assignedObject, originalParticipants);
 
-        // check for editable
+        // loop through the participants to validate and decorate editable user, editable type and deletable
         for (int i = 0; i < copyParticipants.size(); i++)
         {
-            // Decorate editableUserParticipants
-            validateParticipantsEditableUser(assignedObject, originalParticipants, i);
+            // validate and decorate participant editable user
+            validateParticipantsEditable(assignedObject, originalParticipants, i, USER_VALIDATION_TYPE);
             // reset copy participants
             copyParticipants = getParticipantsCopyWithAppliedAssignmentRules(assignedObject, originalParticipants);
-            // Decorate editableTypeParticipants
-            validateParticipantsEditableType(assignedObject, originalParticipants, i);
+            // validate and decorate participant editable type
+            validateParticipantsEditable(assignedObject, originalParticipants, i, TYPE_VALIDATION_TYPE);
             // reset copy participants
             copyParticipants = getParticipantsCopyWithAppliedAssignmentRules(assignedObject, originalParticipants);
-            // Decorate deletableParticipants
+            // validate and decorate deletable participant
             validateParticipantsDeletable(assignedObject, originalParticipants, i);
             // reset copy participants
             copyParticipants = getParticipantsCopyWithAppliedAssignmentRules(assignedObject, originalParticipants);
@@ -123,6 +134,10 @@ public class DecoratedAssignedObjectParticipantAspect
         return assignedObject;
     }
 
+    // Validate and Decorate participant editable fields depending on validation type
+    // @String ValidationType:
+    // 1. User (participantLdapId)
+    // 2. Type(participantType)
     private void validateParticipantsEditable(AcmAssignedObject assignedObjectWithCopyParticipants,
             List<AcmParticipant> originalParticipants, int index, String validationType)
     {
@@ -130,73 +145,91 @@ public class DecoratedAssignedObjectParticipantAspect
         AcmParticipant copyParticipant = assignedObjectWithCopyParticipants.getParticipants().get(index);
 
         String oldObj = "";
-        String newObj = "";
-        Boolean changeParticipantEditable = false;
+        String newObj = UUID.randomUUID().toString();
 
-        if (validationType.equals("user"))
+        if (validationType.equals(USER_VALIDATION_TYPE))
         {
-            newObj = UUID.randomUUID().toString();
             oldObj = copyParticipant.getParticipantLdapId();
             copyParticipant.setParticipantLdapId(newObj);
         }
-        else if (validationType.equals("type"))
+        else if (validationType.equals(TYPE_VALIDATION_TYPE))
         {
-            newObj = UUID.randomUUID().toString();
             oldObj = copyParticipant.getParticipantType();
             copyParticipant.setParticipantType(newObj);
         }
-        String finalNewObj = newObj;
-        String finalOldObj = oldObj;
+
         getAssignmentBusinessRule().applyRules(assignedObjectWithCopyParticipants);
 
+        Boolean changeParticipantEditable;
+        // check if size is equals and no new participant is added
         if (assignedObjectWithCopyParticipants.getParticipants().size() != copyParticipantsSize)
-        { // check if size is equals and no new participant is added
-          // set editable and deletable flags on the original participants references
+        {
+            // new participants added editable fields should be changed
             changeParticipantEditable = true;
         }
         else
         {
-            AcmParticipant changedParticipant = null;
-            if (validationType.equals("user"))
-            {
-                changedParticipant = assignedObjectWithCopyParticipants.getParticipants().stream()
-                        .filter(p -> p.getParticipantLdapId().equals(finalNewObj)
-                                && p.getParticipantType().equals(copyParticipant.getParticipantType()))
-                        .findFirst().orElse(null);
-            }
-            else
-            {
-                changedParticipant = assignedObjectWithCopyParticipants.getParticipants().stream()
-                        .filter(p -> p.getParticipantType().equals(finalNewObj)
-                                && p.getParticipantLdapId().equals(copyParticipant.getParticipantLdapId()))
-                        .findFirst().orElse(null);
-            }
-            if (changedParticipant == null)
-            { // check if the changed participant is updated and exists
-              // set editable and deletable flags on the original participants references
-                changeParticipantEditable = true;
-            }
+            // Check if we should check for participant editable fields
+            changeParticipantEditable = ShouldChangeOriginalParticipant(assignedObjectWithCopyParticipants, copyParticipant, newObj,
+                    validationType);
         }
         if (changeParticipantEditable)
         {
-            originalParticipants.stream()
-                    .filter(origParticipant -> validationType.equals("user") && origParticipant.getParticipantLdapId().equals(finalOldObj)
-                            && origParticipant.getParticipantType().equals(copyParticipant.getParticipantType())
-                            || validationType.equals("type")
-                                    && origParticipant.getParticipantLdapId().equals(copyParticipant.getParticipantLdapId())
-                                    && origParticipant.getParticipantType().equals(finalOldObj))
-                    .forEach(origParticipant -> {
-                        if (validationType.equals("user"))
-                        {
-                            origParticipant.setEditableUser(false);
-                        }
-                        else
-                        {
-                            origParticipant.setEditableType(false);
-                        }
-                        origParticipant.setDeletable(false);
-                    });
+            // find and change the original participant editable fields
+            ChangeOriginalParticipant(originalParticipants, copyParticipant, oldObj, validationType);
         }
+    }
+
+    // Compare original participant with the copy participant and change editable fields to false
+    private void ChangeOriginalParticipant(List<AcmParticipant> originalParticipants, AcmParticipant copyParticipant, String oldObj,
+            String validationType)
+    {
+        originalParticipants.stream()
+                .filter(origParticipant -> validationType.equals(USER_VALIDATION_TYPE)
+                        && origParticipant.getParticipantLdapId().equals(oldObj)
+                        && origParticipant.getParticipantType().equals(copyParticipant.getParticipantType())
+                        || validationType.equals(TYPE_VALIDATION_TYPE)
+                                && origParticipant.getParticipantLdapId().equals(copyParticipant.getParticipantLdapId())
+                                && origParticipant.getParticipantType().equals(oldObj))
+                .forEach(origParticipant -> {
+                    if (validationType.equals(USER_VALIDATION_TYPE))
+                    {
+                        origParticipant.setEditableUser(false);
+                    }
+                    else
+                    {
+                        origParticipant.setEditableType(false);
+                    }
+                    origParticipant.setDeletable(false);
+                });
+    }
+
+    // Check if current participant editable user or type should be changed
+    private Boolean ShouldChangeOriginalParticipant(AcmAssignedObject assignedObjectWithCopyParticipants, AcmParticipant copyParticipant,
+            String newObj, String validationType)
+    {
+        AcmParticipant changedParticipant = null;
+        // check validation type
+        // if validation type is user check for participantLdapId
+        if (validationType.equals(USER_VALIDATION_TYPE))
+        {
+            changedParticipant = assignedObjectWithCopyParticipants.getParticipants().stream()
+                    .filter(p -> p.getParticipantLdapId().equals(newObj)
+                            && p.getParticipantType().equals(copyParticipant.getParticipantType()))
+                    .findFirst().orElse(null);
+        }
+        else // else validation type is "type" and check for participantType
+        {
+            changedParticipant = assignedObjectWithCopyParticipants.getParticipants().stream()
+                    .filter(p -> p.getParticipantType().equals(newObj)
+                            && p.getParticipantLdapId().equals(copyParticipant.getParticipantLdapId()))
+                    .findFirst().orElse(null);
+        }
+        if (changedParticipant == null) // check if the changed participant is updated and exists
+        {
+            return true; // changed participand does not exists so the validationType should be changed
+        }
+        return false;
     }
 
     private void validateParticipantsDeletable(AcmAssignedObject assignedObjectWithCopyParticipants,
@@ -239,18 +272,7 @@ public class DecoratedAssignedObjectParticipantAspect
         }
     }
 
-    private void validateParticipantsEditableUser(AcmAssignedObject assignedObjectWithCopyParticipants,
-            List<AcmParticipant> originalParticipants, int index)
-    {
-        validateParticipantsEditable(assignedObjectWithCopyParticipants, originalParticipants, index, "user");
-    }
-
-    private void validateParticipantsEditableType(AcmAssignedObject assignedObjectWithCopyParticipants,
-            List<AcmParticipant> originalParticipants, int index)
-    {
-        validateParticipantsEditable(assignedObjectWithCopyParticipants, originalParticipants, index, "type");
-    }
-
+    // Apply rules to participants and return copy list
     private List<AcmParticipant> getParticipantsCopyWithAppliedAssignmentRules(AcmAssignedObject assignedObject,
             List<AcmParticipant> originalParticipants)
     {
