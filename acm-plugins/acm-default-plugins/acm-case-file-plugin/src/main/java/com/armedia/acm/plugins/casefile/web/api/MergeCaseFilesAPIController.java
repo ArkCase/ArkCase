@@ -13,6 +13,7 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +34,7 @@ public class MergeCaseFilesAPIController
     private MergeCaseService mergeCaseService;
 
     @RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE })
+    @PreAuthorize("hasPermission(#mergeCaseOptions.sourceCaseFileId, 'CASE_FILE', 'editCase') && hasPermission(#mergeCaseOptions.targetCaseFileId, 'CASE_FILE', 'editCase')")
     @ResponseBody
     public CaseFile mergeCaseFiles(
             @RequestBody MergeCaseOptions mergeCaseOptions,
