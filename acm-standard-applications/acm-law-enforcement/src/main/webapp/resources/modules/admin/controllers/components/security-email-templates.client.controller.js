@@ -94,12 +94,16 @@ angular.module('admin')
                                 });
 
                                 modalInstance.result.then(function(data) {
-                                    if (!containsExtensionHtml(data.file.name)) {
+                                    if (data.file != null && !containsExtensionHtml(data.file.name)) {
                                         DialogService.alert($translate.instant("admin.security.emailTemplates.modal.uploadError"));
                                     } else {
                                         emailTemplatesService.validateEmailTemplate(data.template).then(
                                                 function(response) {
                                                     if (response.data.validTemplate) {
+                                                        if (!containsExtensionHtml(data.template.templateName)) {
+                                                            data.template.templateName = data.template.templateName.replace(/\s/g, "")
+                                                                    + ".html";
+                                                        }
                                                         emailTemplatesService.saveEmailTemplate(data.template, data.file).then(function() {
                                                             MessageService.succsessAction();
                                                             ReloadGrid();
