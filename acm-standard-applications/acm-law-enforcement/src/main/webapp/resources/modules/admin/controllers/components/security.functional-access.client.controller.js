@@ -6,7 +6,9 @@ angular.module('admin').controller(
                 '$scope',
                 'Admin.FunctionalAccessControlService',
                 '$q',
-                function($scope, functionalAccessControlService, $q) {
+                '$log',
+                'UtilService',
+                function($scope, functionalAccessControlService, $q, $log, Util) {
                     var tempAppRolesPromise = functionalAccessControlService.getAppRoles();
                     var tempUserGroupsPromise = functionalAccessControlService.getUserGroups();
                     var tempAppRolesUserGroupsPromise = functionalAccessControlService.getAppUserToGroups();
@@ -14,14 +16,19 @@ angular.module('admin').controller(
 
                     $scope.onObjSelect = onObjSelect;
                     $scope.fillList = fillList;
+                    //scroll functions
+                    $scope.unauthorizedScroll = unauthorizedScroll;
+                    $scope.authorizedScroll = authorizedScroll;
+                    $scope.retrieveDataScroll = retrieveDataScroll;
                     $scope.onAuthRoleSelected = onAuthRoleSelected;
                     //filter functions
                     $scope.chooseAppRoleFilter = chooseAppRoleFilter;
                     $scope.appRoleUnauthorizedFilter = appRoleUnauthorizedFilter;
                     $scope.appRoleAuthorizedFilter = appRoleAuthorizedFilter;
 
-                    var lastSelectedUser = "";
+                    $scope.lastSelectedRole = "";
                     $scope.showFilter = true;
+                    $scope.userGroupsAll = [];
                     // Loaded data after the initialization
                     var initRolesData = {
                         "chooseObject" : [],
@@ -34,73 +41,15 @@ angular.module('admin').controller(
                         "selectedNotAuthorized" : [],
                         "selectedAuthorized" : []
                     };
+                    $scope.scrollLoadData = {
+                        "loadUnauthorizedScroll" : $scope.unauthorizedScroll,
+                        "loadAuthorizedScroll" : $scope.authorizedScroll
+                    };
                     $scope.filterData = {
                         "objectsFilter" : $scope.chooseAppRoleFilter,
                         "unauthorizedFilter" : $scope.appRoleUnauthorizedFilter,
                         "authorizedFilter" : $scope.appRoleAuthorizedFilter
                     };
-                    $scope.userGroupsAll = [];
-
-                    function fillList(listToFill, data) {
-                        _.forEach(data, function(obj) {
-                            var element = {};
-                            element.name = obj;
-                            element.key = obj;
-                            listToFill.push(element);
-                        });
-                    }
-
-                    function chooseAppRoleFilter(data) {
-                        if (!_.isEmpty(data)) {
-                            $scope.rolesData.chooseObject = _.filter(initRolesData.chooseObject, function(item) {
-                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
-                            });
-                        } else {
-                            $scope.rolesData.chooseObject = angular.copy(initRolesData.chooseObject);
-                        }
-                    }
-
-                    function appRoleUnauthorizedFilter(data) {
-                        $scope.rolesData.selectedNotAuthorized = [];
-                        var selectedNotAuthorized = [];
-                        //set not authorized groups.
-                        // Logic: iterate all user groups and if not already exists in selected app role user groups, add to the array
-                        for ( var key in initRolesData.userGroupsAll) {
-                            // appRolesUserGroups might not have this particular selected object at all.
-                            if (initRolesData.appRolesUserGroups[lastSelectedUser.key] === undefined
-                                    || initRolesData.appRolesUserGroups[lastSelectedUser.key].indexOf(key) == -1) {
-                                var notAuthObject = {};
-                                notAuthObject.key = key;
-                                notAuthObject.name = key;
-                                selectedNotAuthorized.push(notAuthObject);
-                            }
-                        }
-
-                        //filter
-                        if (!_.isEmpty(data)) {
-                            $scope.rolesData.selectedNotAuthorized = _.filter(selectedNotAuthorized, function(item) {
-                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
-                            });
-                        } else {
-                            $scope.rolesData.selectedNotAuthorized = angular.copy(selectedNotAuthorized);
-                        }
-                    }
-
-                    function appRoleAuthorizedFilter(data) {
-                        $scope.rolesData.selectedAuthorized = [];
-                        var selectedAuthorized = [];
-                        //set authorized groups
-                        fillList(selectedAuthorized, initRolesData.appRolesUserGroups[lastSelectedUser.key]);
-
-                        //filter
-                        if (!_.isEmpty(data)) {
-                            $scope.rolesData.selectedAuthorized = _.filter(selectedAuthorized, function(item) {
-                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
-                            });
-                        } else {
-                            $scope.rolesData.selectedAuthorized = angular.copy(selectedAuthorized);
-                        }
-                    }
 
                     //wait all promises to resolve
                     $q.all([ tempAppRolesPromise, tempUserGroupsPromise, tempAppRolesUserGroupsPromise ]).then(function(payload) {
@@ -122,26 +71,44 @@ angular.module('admin').controller(
 
                         //init the displaying object
                         $scope.rolesData.chooseObject = angular.copy(initRolesData.chooseObject);
+
+                        $scope.onObjSelect($scope.rolesData.chooseObject[0]);
                     });
 
                     //callback function when app role is selected
                     function onObjSelect(selectedObject, authorized, notAuthorized) {
-                        lastSelectedUser = selectedObject;
+                        $scope.rolesData.selectedNotAuthorized = [];
+                        $scope.rolesData.selectedAuthorized = [];
+                        if (!_.isEmpty($scope.rolesData.chooseObject)) {
+                            var data = {};
+                            data.roleName = selectedObject;
+                            data.isAuthorized = true;
+                            $scope.lastSelectedRole = [];
+                            $scope.lastSelectedRole = selectedObject;
 
-                        //set authorized groups
-                        fillList(authorized, initRolesData.appRolesUserGroups[selectedObject.key]);
+                            var authorizedGroupsForRole = functionalAccessControlService.getGroupsForRole(data);
+                            data.isAuthorized = false;
+                            var unAuthorizedGroupsForRole = functionalAccessControlService.getGroupsForRole(data);
 
-                        //set not authorized groups.
-                        // Logic: iterate all user groups and if not already exists in selected app role user groups, add to the array
-                        for ( var key in initRolesData.userGroupsAll) {
-                            // appRolesUserGroups might not have this particular selected object at all.
-                            if (initRolesData.appRolesUserGroups[selectedObject.key] === undefined
-                                    || initRolesData.appRolesUserGroups[selectedObject.key].indexOf(key) == -1) {
-                                var notAuthObject = {};
-                                notAuthObject.key = key;
-                                notAuthObject.name = key;
-                                notAuthorized.push(notAuthObject);
-                            }
+                            $q.all([ authorizedGroupsForRole, unAuthorizedGroupsForRole ]).then(function(result) {
+                                //set authorized groups
+                                angular.forEach(result[0].data, function(element) {
+                                    //we need to create wrapper, since appRolesUserGroups doesn't have name which directive expect to have
+                                    var authObject = {};
+                                    authObject.key = element;
+                                    authObject.name = element;
+                                    $scope.rolesData.selectedAuthorized.push(authObject);
+                                });
+
+                                //set unauthorized groups
+                                angular.forEach(result[1].data, function(element) {
+                                    //we need to create wrapper, since appRolesUserGroups doesn't have name which directive expect to have
+                                    var authObject = {};
+                                    authObject.key = element;
+                                    authObject.name = element;
+                                    $scope.rolesData.selectedNotAuthorized.push(authObject);
+                                });
+                            });
                         }
                     }
 
@@ -160,5 +127,99 @@ angular.module('admin').controller(
                         });
 
                         return deferred.promise;
+                    }
+
+                    function retrieveDataScroll(data, methodName, panelName) {
+                        functionalAccessControlService[methodName](data).then(function(response) {
+                            if (_.isArray(response.data)) {
+                                $scope.fillList($scope.rolesData[panelName], response.data);
+                            } else {
+                                $scope.fillList($scope.rolesData[panelName], response.data.response.docs);
+                            }
+                        }, function() {
+                            $log.error('Error during calling the method ' + methodName);
+                        });
+                    }
+
+                    function authorizedScroll() {
+                        var data = {};
+                        data.roleName = $scope.lastSelectedRole;
+                        data.n = Util.isArrayEmpty($scope.rolesData.selectedAuthorized) ? 18
+                                : $scope.rolesData.selectedAuthorized.length * 2;
+                        data.start = $scope.rolesData.selectedAuthorized.length;
+                        data.isAuthorized = true;
+                        $scope.retrieveDataScroll(data, "getGroupsForRole", "selectedAuthorized");
+                    }
+
+                    function unauthorizedScroll() {
+                        var data = {};
+                        data.roleName = $scope.lastSelectedRole;
+                        data.n = Util.isArrayEmpty($scope.rolesData.selectedNotAuthorized) ? 18
+                                : $scope.rolesData.selectedNotAuthorized.length * 2;
+                        data.start = $scope.rolesData.selectedNotAuthorized.length;
+                        data.isAuthorized = false;
+                        $scope.retrieveDataScroll(data, "getGroupsForRole", "selectedNotAuthorized");
+                    }
+
+                    function fillList(listToFill, data) {
+                        _.forEach(data, function(obj) {
+                            var element = {};
+                            element.name = obj;
+                            element.key = obj;
+                            listToFill.push(element);
+                        });
+                    }
+
+                    function chooseAppRoleFilter(data) {
+                        if (!_.isEmpty(data)) {
+                            $scope.rolesData.chooseObject = _.filter(initRolesData.chooseObject, function(item) {
+                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
+                            });
+                        } else {
+                            $scope.rolesData.chooseObject = angular.copy(initRolesData.chooseObject);
+                        }
+                        $scope.onObjSelect($scope.rolesData.chooseObject[0]);
+                    }
+
+                    function appRoleUnauthorizedFilter(data) {
+                        $scope.rolesData.selectedNotAuthorized = [];
+                        var selectedNotAuthorized = [];
+                        //set not authorized groups.
+                        // Logic: iterate all user groups and if not already exists in selected app role user groups, add to the array
+                        for ( var key in initRolesData.userGroupsAll) {
+                            // appRolesUserGroups might not have this particular selected object at all.
+                            if (initRolesData.appRolesUserGroups[$scope.lastSelectedRole.key] === undefined
+                                    || initRolesData.appRolesUserGroups[$scope.lastSelectedRole.key].indexOf(key) == -1) {
+                                var notAuthObject = {};
+                                notAuthObject.key = key;
+                                notAuthObject.name = key;
+                                selectedNotAuthorized.push(notAuthObject);
+                            }
+                        }
+
+                        //filter
+                        if (!_.isEmpty(data)) {
+                            $scope.rolesData.selectedNotAuthorized = _.filter(selectedNotAuthorized, function(item) {
+                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
+                            });
+                        } else {
+                            $scope.rolesData.selectedNotAuthorized = angular.copy(selectedNotAuthorized);
+                        }
+                    }
+
+                    function appRoleAuthorizedFilter(data) {
+                        $scope.rolesData.selectedAuthorized = [];
+                        var selectedAuthorized = [];
+                        //set authorized groups
+                        fillList(selectedAuthorized, initRolesData.appRolesUserGroups[$scope.lastSelectedRole.key]);
+
+                        //filter
+                        if (!_.isEmpty(data)) {
+                            $scope.rolesData.selectedAuthorized = _.filter(selectedAuthorized, function(item) {
+                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
+                            });
+                        } else {
+                            $scope.rolesData.selectedAuthorized = angular.copy(selectedAuthorized);
+                        }
                     }
                 } ]);
