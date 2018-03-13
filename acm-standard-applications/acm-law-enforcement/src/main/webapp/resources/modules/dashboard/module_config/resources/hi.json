@@ -5,6 +5,14 @@
             "leftnav.item": "डैशबोर्ड"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "hi_Select your preferred row count.",
+                    "fiveRows": "hi_5",
+                    "tenRows": "hi_10",
+                    "twentyFiveRows": "hi_25"
+                }
+            },
             "casesByQueue": {
                 "title": "कतार द्वारा सक्रिय केस फ़ाइलें",
                 "description": "कतार द्वारा सक्रिय केस फाइल प्रदर्शित करता है",

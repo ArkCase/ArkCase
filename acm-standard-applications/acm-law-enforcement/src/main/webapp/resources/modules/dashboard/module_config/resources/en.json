@@ -5,6 +5,14 @@
             "leftnav.item": "Dashboard"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "Select your preferred row count.",
+                    "fiveRows": "5",
+                    "tenRows": "10",
+                    "twentyFiveRows": "25"
+                }
+            },
             "casesByQueue": {
                 "title": "Active Case Files by Queue",
                 "description": "Displays active case files by queue",
