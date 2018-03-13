@@ -103,7 +103,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         return applicationRoles;
     }
 
-    private List<String> getGroupsByRoleBySolrQuery(Authentication auth, String sortDirection,
+    private List<String> getGroupsBySolrQuery(Authentication auth, String sortDirection,
             Integer startRow,
             Integer maxRows, String query) throws MuleException
     {
@@ -145,14 +145,14 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
                     + retrieveGroupsByRole.stream().collect(Collectors.joining(" OR name_lcs:", "(name_lcs:", ")"));
 
-            return getGroupsByRoleBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+            return getGroupsBySolrQuery(auth, sortDirection, startRow, maxRows, query);
         }
         else
         {
             String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
                     + retrieveGroupsByRole.stream().collect(Collectors.joining(" AND -name_lcs:", "-name_lcs:", ""));
 
-            return getGroupsByRoleBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+            return getGroupsBySolrQuery(auth, sortDirection, startRow, maxRows, query);
         }
     }
 
