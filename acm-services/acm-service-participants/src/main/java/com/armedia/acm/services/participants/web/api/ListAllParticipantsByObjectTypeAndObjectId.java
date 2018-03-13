@@ -7,6 +7,7 @@ import com.armedia.acm.services.participants.service.AcmParticipantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ public class ListAllParticipantsByObjectTypeAndObjectId
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'listParticipants')")
     @ResponseBody
     public List<AcmParticipant> listParticipants(
             @PathVariable(value = "objectType") String objectType,
