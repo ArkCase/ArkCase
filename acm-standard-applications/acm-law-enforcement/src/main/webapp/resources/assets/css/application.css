@@ -1622,3 +1622,18 @@ a.primary {
     margin-bottom: 0;
 }
 
+/*New row button*/
+.add-row {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.btn-delete {
+    margin-right: -5px;
+}
+
+.input-size {
+    width: 20px;
+    height: 18px;
+}
+
