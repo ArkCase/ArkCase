@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        <span translate>profile.mfa.activateModal.title</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <label class="control-label" for="factorType">
+            <span translate>profile.mfa.activateModal.factorType.label</span>
+        </label>
+        <input id="factorType"
+               ng-model="factorTypeLabel"
+               ng-disabled="true"
+               type="text"
+               class="form-control"/>
+    </div>
+    <div class="form-group" ng-show="'token:software:totp' == factorInfo.factorType">
+        <label class="control-label" for="sharedSecret">
+            <span translate>profile.mfa.activateModal.sharedSecret.label</span>
+        </label>
+        <input id="sharedSecret"
+               ng-model="factorInfo._embedded.activation.sharedSecret"
+               ng-disabled="true"
+               type="text"
+               class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label class="control-label" for="activationCode">
+            <span translate>profile.mfa.activateModal.activationCode.label</span>
+            <span class="required-asterisk">*</span>
+        </label>
+        <input id="activationCode"
+               ng-model="activateInfo.activationCode"
+               type="text"
+               required="required"
+               placeholder="{{'profile.mfa.activateModal.activationCode.placeholder' | translate}}"
+               class="form-control"/>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-sm btn-secondary pull-left" ng-click="cancel()">
+        <span translate>profile.mfa.activateModal.cancel</span>
+    </button>
+    <button class="btn btn-sm btn-primary pull-right" ng-click="confirm()" ng-disabled="disableConfirm()">
+        <span translate>profile.mfa.activateModal.confirm</span>
+    </button>
+</div>
