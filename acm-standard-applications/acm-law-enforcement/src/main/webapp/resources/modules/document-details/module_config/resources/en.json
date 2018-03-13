@@ -7,6 +7,20 @@
         "fileType": "File type",
         "status": "Status",
         "name": "Name",
+        "comp.transcription": {
+            "title": "Transcript",
+            "buttons": {
+                "cancel": "Cancel",
+                "transcribe": "Transcribe",
+                "complete": "Complete",
+                "compile": "Compile",
+                "save": "Save"
+            },
+            "startTime": "Start time",
+            "confidence": "Confidence",
+            "corrected": "Corrected",
+            "enterText": "Enter Text"
+        },
         "comp.eventHistory": {
             "title": "Event History",
             "table.columns": {
