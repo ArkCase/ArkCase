@@ -1269,14 +1269,16 @@
                 "type": "p/transcription",
                 "label": "admin.transcription.title",
                 "icon": "fa fa-wrench",
-                "components": []
+                "components": [],
+                "hidden": true
             },
             {
                 "type": "p/transcription/transcriptionManagement",
                 "label": "admin.transcription.transcriptionManagement",
                 "components": [
                     "transcription-management"
-                ]
+                ],
+                "hidden": true
             }
         ]
     }

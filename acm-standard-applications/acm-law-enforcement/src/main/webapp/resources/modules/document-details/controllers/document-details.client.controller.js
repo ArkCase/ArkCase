@@ -49,6 +49,7 @@ angular.module('document-details').controller(
                         selectedIds : $stateParams['selectedIds']
                     };
                     $scope.showVideoPlayer = false;
+                    $scope.transcribeEnabled = false;
 
                     /**
                      * Builds the snowbound url based on the parameters passed into the controller state and opens the
