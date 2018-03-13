@@ -15,8 +15,10 @@ angular.module('document-details').controller(
                 'Authentication',
                 'EcmService',
                 'Helper.LocaleService',
+                'Admin.TranscriptionManagementService',
+                'MessageService',
                 function($scope, $stateParams, $sce, $q, $timeout, TicketService, ConfigService, LookupService, SnowboundService,
-                        Authentication, EcmService, LocaleHelper) {
+                        Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService) {
 
                     new LocaleHelper.Locale({
                         scope : $scope
@@ -49,7 +51,12 @@ angular.module('document-details').controller(
                         selectedIds : $stateParams['selectedIds']
                     };
                     $scope.showVideoPlayer = false;
-                    $scope.transcribeEnabled = false;
+
+                    TranscriptionManagementService.getTranscribeConfiguration().then(function(res) {
+                        $scope.transcribeEnabled = res.data.enabled;
+                    }, function(err) {
+                        MessageService.error(err.data);
+                    });
 
                     /**
                      * Builds the snowbound url based on the parameters passed into the controller state and opens the
