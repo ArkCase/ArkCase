@@ -4,6 +4,7 @@ import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
@@ -11,6 +12,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,6 +101,59 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         }
 
         return applicationRoles;
+    }
+
+    private List<String> getGroupsBySolrQuery(Authentication auth, String sortDirection,
+            Integer startRow,
+            Integer maxRows, String query) throws MuleException
+    {
+        List<String> result = new ArrayList<>();
+        String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                sortDirection);
+        SearchResults searchResults = new SearchResults();
+        JSONArray docs = searchResults.getDocuments(solrResponse);
+
+        for (int i = 0; i < docs.length(); i++)
+        {
+            result.add((String) docs.getJSONObject(i).get("name"));
+        }
+        return result;
+    }
+
+    @Override
+    public List<String> getGroupsByRole(Authentication auth, String roleName, Integer startRow, Integer maxRows,
+            String sortDirection,
+            Boolean authorized) throws MuleException
+    {
+        List<String> retrieveGroupsByRole = new ArrayList<>();
+        Set<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().get(roleName);
+
+        if (groupsByRole == null)
+        {
+            return retrieveGroupsByRole;
+        }
+
+        retrieveGroupsByRole = new ArrayList<>(groupsByRole);
+
+        if (groupsByRole.isEmpty())
+        {
+            return retrieveGroupsByRole;
+        }
+
+        if (authorized)
+        {
+            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
+                    + retrieveGroupsByRole.stream().collect(Collectors.joining(" OR name_lcs:", "(name_lcs:", ")"));
+
+            return getGroupsBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+        }
+        else
+        {
+            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
+                    + retrieveGroupsByRole.stream().collect(Collectors.joining(" AND -name_lcs:", "-name_lcs:", ""));
+
+            return getGroupsBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+        }
     }
 
     @Override
@@ -342,5 +397,4 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     {
         this.executeSolrQuery = executeSolrQuery;
     }
-
 }
