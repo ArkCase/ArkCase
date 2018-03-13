@@ -20,7 +20,6 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +39,6 @@ public class CreateAdHocTaskAPIController
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#in.attachedToObjectId, #in.attachedToObjectType, 'addTask')")
     @RequestMapping(value = "/adHocTask", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmTask createAdHocTask(@RequestBody AcmTask in, Authentication authentication, HttpSession httpSession)
