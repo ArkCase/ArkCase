@@ -12,14 +12,59 @@
  */
 angular.module('services').factory(
         'Case.InfoService',
-        [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService',
-                function($resource, $translate, Store, Util, ObjectInfoService) {
-                    var Service = $resource('api/latest/plugin', {}, {});
+        [ '$resource', '$translate', 'UtilService', 'CacheFactory', 'ObjectService',
+                function($resource, $translate, Util, CacheFactory, ObjectService) {
 
-                    Service.SessionCacheNames = {};
-                    Service.CacheNames = {
-                        CASE_INFO : "CaseInfo"
-                    };
+                    var caseCache = CacheFactory(ObjectService.ObjectTypes.CASE_FILE, {
+                        maxAge : 1 * 60 * 1000, // Items added to this cache expire after 1 minute
+                        cacheFlushInterval : 60 * 60 * 1000, // This cache will clear itself every hour
+                        deleteOnExpire : 'aggressive', // Items will be deleted from this cache when they expire
+                        capacity : 1
+                    });
+                    var caseGetUrl = 'api/latest/plugin/casefile/byId/';
+
+                    var Service = $resource('api/latest/plugin', {}, {
+                        /**
+                         * @ngdoc method
+                         * @name save
+                         * @methodOf services:Case.InfoService
+                         *
+                         * @description
+                         * Save case data
+                         *
+                         * @param {Object} params Map of input parameter.
+                         * @param {Function} onSuccess (Optional)Callback function of success query.
+                         * @param {Function} onError (Optional) Callback function when fail.
+                         *
+                         * @returns {Object} Case returned by $resource
+                         */
+                        save : {
+                            method : 'POST',
+                            url : 'api/latest/plugin/casefile'
+                        },
+
+                        /**
+                         * @ngdoc method
+                         * @name get
+                         * @methodOf services:Case.InfoService
+                         *
+                         * @description
+                         * Query case data from database.
+                         *
+                         * @param {Object} params Map of input parameter.
+                         * @param {Number} params.id  Object ID
+                         * @param {Function} onSuccess (Optional)Callback function of success query.
+                         * @param {Function} onError (Optional) Callback function when fail.
+                         *
+                         * @returns {Object} Object returned by $resource
+                         */
+                        get : {
+                            method : 'GET',
+                            url : caseGetUrl + ':id',
+                            cache : caseCache,
+                            isArray : false
+                        }
+                    });
 
                     /**
                      * @ngdoc method
@@ -31,9 +76,10 @@ angular.module('services').factory(
                      *
                      * @returns None
                      */
-                    Service.resetCaseInfo = function() {
-                        var cacheCaseInfo = new Store.CacheFifo(Service.CacheNames.CASE_INFO);
-                        cacheCaseInfo.reset();
+                    Service.resetCaseInfo = function(caseInfo) {
+                        if (caseInfo && caseInfo.id) {
+                            caseCache.remove(caseGetUrl + caseInfo.id);
+                        }
                     };
 
                     /**
@@ -49,10 +95,7 @@ angular.module('services').factory(
                      * @returns {Object} Promise
                      */
                     Service.updateCaseInfo = function(caseInfo) {
-                        if (Service.validateCaseInfo(caseInfo)) {
-                            var cacheCaseInfo = new Store.CacheFifo(Service.CacheNames.CASE_INFO);
-                            cacheCaseInfo.put(caseInfo.id, caseInfo);
-                        }
+                        //TODO remove this method
                     };
 
                     /**
@@ -68,18 +111,13 @@ angular.module('services').factory(
                      * @returns {Object} Promise
                      */
                     Service.getCaseInfo = function(id) {
-                        var cacheCaseInfo = new Store.CacheFifo(Service.CacheNames.CASE_INFO);
-                        var caseInfo = cacheCaseInfo.get(id);
                         return Util.serviceCall({
-                            service : ObjectInfoService.get,
+                            service : Service.get,
                             param : {
-                                type : "casefile",
                                 id : id
                             },
-                            result : caseInfo,
                             onSuccess : function(data) {
                                 if (Service.validateCaseInfo(data)) {
-                                    cacheCaseInfo.put(id, data);
                                     return data;
                                 }
                             }
@@ -107,16 +145,14 @@ angular.module('services').factory(
                         //but update will be trigger
                         caseInfo.modified = null;
                         return Util.serviceCall({
-                            service : ObjectInfoService.save,
-                            param : {
-                                type : "casefile"
-                            },
+                            service : Service.save,
                             data : JSOG.encode(caseInfo),
                             onSuccess : function(data) {
                                 if (Service.validateCaseInfo(data)) {
                                     var caseInfo = data;
-                                    var cacheCaseInfo = new Store.CacheFifo(Service.CacheNames.CASE_INFO);
-                                    cacheCaseInfo.put(caseInfo.id, caseInfo);
+                                    if (caseInfo.id) {
+                                        caseCache.put(caseGetUrl + caseInfo.id, caseInfo);
+                                    }
                                     return caseInfo;
                                 }
                             }
