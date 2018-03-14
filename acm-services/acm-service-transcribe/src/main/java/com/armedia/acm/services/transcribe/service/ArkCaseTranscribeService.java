@@ -183,7 +183,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
             TranscribeBusinessProcessModel transcribeBusinessProcessModel = new TranscribeBusinessProcessModel();
             transcribeBusinessProcessModel.setType(transcribe.getType());
 
-            LOG.debug("Executing Drools Business rules");
+            LOG.debug("Executing Drools Business rules for [{}] Transcribe with ID=[{}], MEDIA_FILE_ID=[{}] and MEDIA_FILE_VERSION_ID=[{}]", transcribe.getType(), transcribe.getMediaEcmFileVersion().getFile().getId(), transcribe.getMediaEcmFileVersion().getId());
 
             transcribeBusinessProcessModel = getTranscribeBusinessProcessRulesExecutor().applyRules(transcribeBusinessProcessModel);
 
@@ -269,10 +269,10 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     private boolean allow(EcmFileVersion ecmFileVersion)
     {
         // TODO: Restrict only for Case/Complaints?
-        return isAudioOrVideo(ecmFileVersion) &&
+        return isFileVersionTranscribable(ecmFileVersion) &&
                 isTranscribeOn() &&
                 isAutomaticTranscribeOn() &&
-                isLessThan2Hours(ecmFileVersion);
+                isMediaDurationAllowed(ecmFileVersion);
     }
 
     /**
@@ -333,16 +333,25 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
      * @param ecmFileVersion - Media file version
      * @return true/false
      */
-    public boolean isLessThan2Hours(EcmFileVersion ecmFileVersion)
+    public boolean isMediaDurationAllowed(EcmFileVersion ecmFileVersion)
     {
-        boolean allow = ecmFileVersion != null && ecmFileVersion.getDurationSeconds() <= 60 * 60 * 2;
-
-        if (!allow)
+        try
         {
-            LOG.warn("The media file is more than 2 hours. Automatic Transcription will be terminated.");
-        }
+            TranscribeConfiguration configuration = getConfiguration();
+            boolean allow = configuration != null && ecmFileVersion != null && ecmFileVersion.getDurationSeconds() <= configuration.getAllowedMediaDuration();
 
-        return allow;
+            if (!allow)
+            {
+                LOG.warn("The duration of the media file is more than allowed [{}] seconds. Automatic Transcription will be terminated.", configuration.getAllowedMediaDuration());
+            }
+
+            return  allow;
+        }
+        catch (GetTranscribeConfigurationException e)
+        {
+            LOG.warn("Failed to retrieve Transcribe configuration. Automatic Transcribe will be terminated.");
+            return false;
+        }
     }
 
     /**
@@ -351,7 +360,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
      * @param ecmFileVersion - File version
      * @return true/false
      */
-    public boolean isAudioOrVideo(EcmFileVersion ecmFileVersion)
+    public boolean isFileVersionTranscribable(EcmFileVersion ecmFileVersion)
     {
 
         boolean allow = ecmFileVersion != null &&
@@ -363,7 +372,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
 
         if (!allow)
         {
-            LOG.warn("The media file is not audio or video. Automatic Transcription will be terminated.");
+            LOG.warn("The media file is not transcribable. Automatic Transcription will be terminated.");
         }
 
         return allow;

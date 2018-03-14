@@ -28,6 +28,7 @@
     </bean>
     <bean id="transcribeBusinessProcessHandler" class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeBusinessProcessHandler">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
     </bean>
 
     <bean id="transcribePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">

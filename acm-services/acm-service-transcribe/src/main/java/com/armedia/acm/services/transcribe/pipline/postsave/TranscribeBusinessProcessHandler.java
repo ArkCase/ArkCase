@@ -7,6 +7,9 @@ import com.armedia.acm.services.transcribe.model.TranscribeBusinessProcessModel;
 import com.armedia.acm.services.transcribe.pipline.TranscribePipelineContext;
 import com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,13 +21,18 @@ public class TranscribeBusinessProcessHandler implements PipelineHandler<Transcr
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private ArkCaseTranscribeService arkCaseTranscribeService;
+    private RuntimeService activitiRuntimeService;
 
     @Override
     public void execute(Transcribe entity, TranscribePipelineContext pipelineContext) throws PipelineProcessException
     {
         LOG.debug("Transcribe entering TranscribeBusinessProcessHandler : [{}]", entity);
 
-        getArkCaseTranscribeService().startBusinessProcess(entity);
+        ProcessInstance processInstance = getArkCaseTranscribeService().startBusinessProcess(entity);
+        if (processInstance != null)
+        {
+            pipelineContext.setProcessId(processInstance.getId());
+        }
 
         LOG.debug("Transcribe leaving TranscribeBusinessProcessHandler : [{}]", entity);
     }
@@ -32,7 +40,11 @@ public class TranscribeBusinessProcessHandler implements PipelineHandler<Transcr
     @Override
     public void rollback(Transcribe entity, TranscribePipelineContext pipelineContext) throws PipelineProcessException
     {
-        // nothing to do here, there is no rollback action to be executed
+        // Stop the process is started during execute
+        if (pipelineContext != null && StringUtils.isNotEmpty(pipelineContext.getProcessId()))
+        {
+            getActivitiRuntimeService().deleteProcessInstance(pipelineContext.getProcessId(), "Pipeline rollback action.");
+        }
     }
 
     public ArkCaseTranscribeService getArkCaseTranscribeService()
@@ -43,5 +55,15 @@ public class TranscribeBusinessProcessHandler implements PipelineHandler<Transcr
     public void setArkCaseTranscribeService(ArkCaseTranscribeService arkCaseTranscribeService)
     {
         this.arkCaseTranscribeService = arkCaseTranscribeService;
+    }
+
+    public RuntimeService getActivitiRuntimeService()
+    {
+        return activitiRuntimeService;
+    }
+
+    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
+    {
+        this.activitiRuntimeService = activitiRuntimeService;
     }
 }
