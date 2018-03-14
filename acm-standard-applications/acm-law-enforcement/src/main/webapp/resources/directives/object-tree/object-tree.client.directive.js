@@ -153,520 +153,553 @@ angular.module('directives').directive(
                                 name : "ObjectTree"
                             });
 
-                var treeArgsToUse = this._getDefaultTreeArgs();
-                _.merge(treeArgsToUse, treeArgs);
-                Tree.jqDivTree.fancytree(treeArgsToUse);
-                Tree.tree = Tree.jqDivTree.fancytree('getTree');
-            }
-            , select: function (args, activate) {
-                var treeInfo = Tree.Info.getTreeInfo();
-                var pageStart = Util.goodValue(args.pageStart, treeInfo.start);
-                var nodeType = args.nodeType;
-                var nodeId = args.nodeId;
-                var subKey = args.subKey;
+                            var treeArgsToUse = this._getDefaultTreeArgs();
+                            _.merge(treeArgsToUse, treeArgs);
+                            Tree.jqDivTree.fancytree(treeArgsToUse);
+                            Tree.tree = Tree.jqDivTree.fancytree('getTree');
+                        },
+                        select : function(args, activate) {
+                            var treeInfo = Tree.Info.getTreeInfo();
+                            var pageStart = Util.goodValue(args.pageStart, treeInfo.start);
+                            var nodeType = args.nodeType;
+                            var nodeId = args.nodeId;
+                            var subKey = args.subKey;
 
-                var key = Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
-                if (!Util.isEmpty(subKey)) {
-                    key += Tree.Key.KEY_SEPARATOR;
-                    key += subKey;
-                }
-                treeInfo.key = key;
+                            var key = Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
+                            if (!Util.isEmpty(subKey)) {
+                                key += Tree.Key.KEY_SEPARATOR;
+                                key += subKey;
+                            }
+                            treeInfo.key = key;
 
-                if (activate) {
-                    var node = Tree.tree.getNodeByKey(key);
-                    if (node) {
-                        node.setActive();
-                        node.setFocus();
-                    }
-                }
-            }
-            , selectComponent: function(nodeType, nodeId, component) {
-                var key = Tree.Key.getKeyByObj(nodeType, nodeId);
-                var node = Tree.tree.getNodeByKey(key);
-                if (node) {
-                    var subKey = null;
-                    if (node.expanded) {
-                        subKey = Tree.getSubKeyByComponent(component);
-                    }
-                    Tree.select({pageStart: null
-                        , nodeType: nodeType
-                        , nodeId: nodeId
-                        , subKey: subKey
-                    }, true);
-
-                }
-            }
-            , setTitle: function (nodeType, nodeId, nodeTitle, nodeToolTip) {
-                var key = Tree.Key.getKeyByObj(nodeType, nodeId);
-                var node = Tree.tree.getNodeByKey(key);
-                if (node) {
-                    node.setTitle(nodeTitle);
-                    Tree.fixNodeIcon(node);
-                }
-            }
-
-            , refreshTree: function (key) {
-                //this.tree.reload().done(function () {
-                this.tree.reload(Tree.getSource()).done(function () {
-                    if (!Util.isEmpty(key)) {
-                        var parts = key.split(Tree.Key.KEY_SEPARATOR);
-                        if (parts && 1 < parts.length) {
-                            var promiseClosestParentExpanded = null;
-                            var parentNode = null;
-                            var parentKey = parts[0];
-                            //exclude page ID, so start from 1; expand parents only, not include self, so length-1
-                            for (var i = 1; i < parts.length - 1; i++) {
-                                parentKey += Tree.Key.KEY_SEPARATOR + parts[i];
-                                parentNode = Tree.tree.getNodeByKey(parentKey);
-                                if (parentNode) {
-                                    promiseClosestParentExpanded = parentNode.setExpanded(true);
+                            if (activate) {
+                                var node = Tree.tree.getNodeByKey(key);
+                                if (node) {
+                                    node.setActive();
+                                    node.setFocus();
                                 }
                             }
+                        },
+                        selectComponent : function(nodeType, nodeId, component) {
+                            var key = Tree.Key.getKeyByObj(nodeType, nodeId);
+                            var node = Tree.tree.getNodeByKey(key);
+                            if (node) {
+                                var subKey = null;
+                                if (node.expanded) {
+                                    subKey = Tree.getSubKeyByComponent(component);
+                                }
+                                Tree.select({
+                                    pageStart : null,
+                                    nodeType : nodeType,
+                                    nodeId : nodeId,
+                                    subKey : subKey
+                                }, true);
+
+                            }
+                        },
+                        setTitle : function(nodeType, nodeId, nodeTitle, nodeToolTip) {
+                            var key = Tree.Key.getKeyByObj(nodeType, nodeId);
+                            var node = Tree.tree.getNodeByKey(key);
+                            if (node) {
+                                node.setTitle(nodeTitle);
+                                Tree.fixNodeIcon(node);
+                            }
                         }
 
-                        Tree.tree.activateKey(key);
-                    }
-                });
-            }
+                        ,
+                        refreshTree : function(key) {
+                            //this.tree.reload().done(function () {
+                            this.tree.reload(Tree.getSource()).done(function() {
+                                if (!Util.isEmpty(key)) {
+                                    var parts = key.split(Tree.Key.KEY_SEPARATOR);
+                                    if (parts && 1 < parts.length) {
+                                        var promiseClosestParentExpanded = null;
+                                        var parentNode = null;
+                                        var parentKey = parts[0];
+                                        //exclude page ID, so start from 1; expand parents only, not include self, so length-1
+                                        for (var i = 1; i < parts.length - 1; i++) {
+                                            parentKey += Tree.Key.KEY_SEPARATOR + parts[i];
+                                            parentNode = Tree.tree.getNodeByKey(parentKey);
+                                            if (parentNode) {
+                                                promiseClosestParentExpanded = parentNode.setExpanded(true);
+                                            }
+                                        }
+                                    }
 
-            , refresh: function () {
-                Tree.onReset()();
-                Tree.reset();
-
-                var treeInfo = Tree.Info.getTreeInfo();
-                treeInfo.sorter = treeInfo.defaultSorter;
-                treeInfo.filter = treeInfo.defaultFilter;
-
-                Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
-            }
-
-            , expandAll: function() {
-                Tree.tree.visit(function(node){
-                    node.setExpanded();
-                });
-            }
-
-            , collapseAll: function() {
-                Tree.tree.visit(function(node){
-                    node.setExpanded(false);
-                });
-            }
-
-            , _previousKey: null
-            , _activeKey: null
-            , getPreviousKey: function () {
-                return this._previousKey;
-            }
-            , getActiveKey: function () {
-                return this._activeKey;
-            }
-            , setActiveKey: function (activeKey) {
-                this._previousKey = this._activeKey;
-                this._activeKey = activeKey;
-            }
-
-            , _nodeType: null
-            , getNodeType: function () {
-                return this._nodeType;
-            }
-            , setNodeType: function (nodeType) {
-                this._nodeType = nodeType;
-            }
-
-            , _nodeId: 0
-            , getNodeId: function () {
-                return this._nodeId;
-            }
-            , setNodeId: function (nodeId) {
-                this._nodeId = nodeId;
-            }
-
-            , reset: function () {
-                this._previousKey = null;
-                this._activeKey = null;
-                this._nodeType = null;
-                this._nodeId = 0;
-
-                Tree.Info.reset();
-            }
-            , fixNodeIcon: function (node) {
-                var key = node.key;
-                var nodeType = Tree.Key.getNodeTypeByKey(key);
-                var nodeIcon = Tree.getIconByKey(key);
-                if (nodeIcon) {
-                    var span = node.span;
-                    var $spanIcon = $(span.children[1]);
-                    $spanIcon.removeClass("fancytree-icon");
-                    $spanIcon.html("<i class='" + nodeIcon + " " + node.data.nodeStatusColor + " ' title='" + node.data.nodeStatus + "'></i>");
-                }
-            }
-            , getIconByKey: function (key) {
-                var icon = null;
-                if (!Util.isEmpty(key)) {
-                    var nodeType = Tree.Key.getNodeTypeByKey(key);
-                    var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
-                    for (var i = 0; i < nodeTypes.length; i++) {
-                        if (nodeType == nodeTypes[i].type) {
-                            icon = nodeTypes[i].icon;
-                            break;
+                                    Tree.tree.activateKey(key);
+                                }
+                            });
                         }
-                    }
-                }
-                return icon;
-            }
-            , getComponentsByKey: function (key) {
-                var components = null;
-                if (!Util.isEmpty(key)) {
-                    var nodeType = Tree.Key.getNodeTypeByKey(key);
-                    var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
-                    for (var i = 0; i < nodeTypes.length; i++) {
-                        if (nodeType == nodeTypes[i].type) {
-                            components = nodeTypes[i].components;
-                            break;
-                        }
-                    }
-                }
-                return components;
-            }
-            , getLeadComponentByKey: function (key) {
-                var leadComponent = null;
-                if (!Util.isEmpty(key)) {
-                    var nodeType = Tree.Key.getNodeTypeByKey(key);
-                    var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
-                    for (var i = 0; i < nodeTypes.length; i++) {
-                        if (nodeType == nodeTypes[i].type) {
-                            leadComponent = nodeTypes[i].leadComponent;
-                            break;
-                        }
-                    }
-                }
-                return leadComponent;
-            }
-            , getSubKeyByComponent: function (component) {
-                var nt = null;
-                if (!Util.isEmpty(component)) {
-                    var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
-                    for (var i = 0; i < nodeTypes.length; i++) {
-                        var aComponent = Util.goodMapValue(nodeTypes[i], "components[0]", null);
 
-                        if ("main" == component) {
-                            if (nodeTypes[i].components) {
-                                if (1 < nodeTypes[i].components.length) {
-                                    nt = nodeTypes[i].type;
-                                    break;
+                        ,
+                        refresh : function() {
+                            Tree.onReset()();
+                            Tree.reset();
+
+                            var treeInfo = Tree.Info.getTreeInfo();
+                            treeInfo.sorter = treeInfo.defaultSorter;
+                            treeInfo.filter = treeInfo.defaultFilter;
+
+                            Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
+                        }
+
+                        ,
+                        expandAll : function() {
+                            Tree.tree.visit(function(node) {
+                                node.setExpanded();
+                            });
+                        }
+
+                        ,
+                        collapseAll : function() {
+                            Tree.tree.visit(function(node) {
+                                node.setExpanded(false);
+                            });
+                        }
+
+                        ,
+                        _previousKey : null,
+                        _activeKey : null,
+                        getPreviousKey : function() {
+                            return this._previousKey;
+                        },
+                        getActiveKey : function() {
+                            return this._activeKey;
+                        },
+                        setActiveKey : function(activeKey) {
+                            this._previousKey = this._activeKey;
+                            this._activeKey = activeKey;
+                        }
+
+                        ,
+                        _nodeType : null,
+                        getNodeType : function() {
+                            return this._nodeType;
+                        },
+                        setNodeType : function(nodeType) {
+                            this._nodeType = nodeType;
+                        }
+
+                        ,
+                        _nodeId : 0,
+                        getNodeId : function() {
+                            return this._nodeId;
+                        },
+                        setNodeId : function(nodeId) {
+                            this._nodeId = nodeId;
+                        }
+
+                        ,
+                        reset : function() {
+                            this._previousKey = null;
+                            this._activeKey = null;
+                            this._nodeType = null;
+                            this._nodeId = 0;
+
+                            Tree.Info.reset();
+                        },
+                        fixNodeIcon : function(node) {
+                            var key = node.key;
+                            var nodeType = Tree.Key.getNodeTypeByKey(key);
+                            var nodeIcon = Tree.getIconByKey(key);
+                            if (nodeIcon) {
+                                var span = node.span;
+                                var $spanIcon = $(span.children[1]);
+                                $spanIcon.removeClass("fancytree-icon");
+                                $spanIcon.html("<i class='" + nodeIcon + " " + node.data.nodeStatusColor + " ' title='"
+                                        + node.data.nodeStatus + "'></i>");
+                            }
+                        },
+                        getIconByKey : function(key) {
+                            var icon = null;
+                            if (!Util.isEmpty(key)) {
+                                var nodeType = Tree.Key.getNodeTypeByKey(key);
+                                var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
+                                for (var i = 0; i < nodeTypes.length; i++) {
+                                    if (nodeType == nodeTypes[i].type) {
+                                        icon = nodeTypes[i].icon;
+                                        break;
+                                    }
                                 }
                             }
-                        } else if (aComponent == component) {
-                            if (1 == nodeTypes[i].components.length) {
-                                nt = nodeTypes[i].type;
-                                break;
+                            return icon;
+                        },
+                        getComponentsByKey : function(key) {
+                            var components = null;
+                            if (!Util.isEmpty(key)) {
+                                var nodeType = Tree.Key.getNodeTypeByKey(key);
+                                var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
+                                for (var i = 0; i < nodeTypes.length; i++) {
+                                    if (nodeType == nodeTypes[i].type) {
+                                        components = nodeTypes[i].components;
+                                        break;
+                                    }
+                                }
                             }
+                            return components;
+                        },
+                        getLeadComponentByKey : function(key) {
+                            var leadComponent = null;
+                            if (!Util.isEmpty(key)) {
+                                var nodeType = Tree.Key.getNodeTypeByKey(key);
+                                var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
+                                for (var i = 0; i < nodeTypes.length; i++) {
+                                    if (nodeType == nodeTypes[i].type) {
+                                        leadComponent = nodeTypes[i].leadComponent;
+                                        break;
+                                    }
+                                }
+                            }
+                            return leadComponent;
+                        },
+                        getSubKeyByComponent : function(component) {
+                            var nt = null;
+                            if (!Util.isEmpty(component)) {
+                                var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
+                                for (var i = 0; i < nodeTypes.length; i++) {
+                                    var aComponent = Util.goodMapValue(nodeTypes[i], "components[0]", null);
+
+                                    if ("main" == component) {
+                                        if (nodeTypes[i].components) {
+                                            if (1 < nodeTypes[i].components.length) {
+                                                nt = nodeTypes[i].type;
+                                                break;
+                                            }
+                                        }
+                                    } else if (aComponent == component) {
+                                        if (1 == nodeTypes[i].components.length) {
+                                            nt = nodeTypes[i].type;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            var subKey = null;
+                            if (nt) {
+                                var arr = nt.split(Tree.Key.KEY_SEPARATOR);
+                                if (3 == arr.length) {
+                                    subKey = arr[2];
+                                }
+                            }
+                            return subKey;
+                        },
+                        getHiddenByKey : function(key) {
+                            var hidden = false;
+                            if (!Util.isEmpty(key)) {
+                                var nodeType = Tree.Key.getNodeTypeByKey(key);
+                                var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
+                                for (var i = 0; i < nodeTypes.length; i++) {
+                                    if (nodeType == nodeTypes[i].type) {
+                                        hidden = nodeTypes[i].hidden ? true : false;
+                                        break;
+                                    }
+                                }
+                            }
+                            return hidden;
                         }
-                    }
-                }
-                var subKey = null;
-                if (nt) {
-                    var arr = nt.split(Tree.Key.KEY_SEPARATOR);
-                    if (3 == arr.length) {
-                        subKey = arr[2];
-                    }
-                }
-                return subKey;
-            }
 
-            , _getDefaultTreeArgs: function (treeArgs) {
-                return {
-                    source: Tree.getSource()
-                    , lazyLoad: Tree.lazyLoad
-                    , activate: function (event, data) {
-                        Tree.onActivate(data.node);
-                    }
-                    , beforeActivate: function (event, data) {//todo: use to check dirty data
-                        return true;
-                    }
-                    , renderNode: function (event, data) {
-                        Tree.fixNodeIcon(data.node);
-                    }
-                }
-            }
-            , onActivate: function (node) {
-                Tree.setActiveKey(node.key);
+                        ,
+                        _getDefaultTreeArgs : function(treeArgs) {
+                            return {
+                                source : Tree.getSource(),
+                                lazyLoad : Tree.lazyLoad,
+                                activate : function(event, data) {
+                                    Tree.onActivate(data.node);
+                                },
+                                beforeActivate : function(event, data) {//todo: use to check dirty data
+                                    return true;
+                                },
+                                renderNode : function(event, data) {
+                                    Tree.fixNodeIcon(data.node);
+                                }
+                            }
+                        },
+                        onActivate : function(node) {
+                            Tree.setActiveKey(node.key);
 
-                if (Tree.Key.getKeyPrevPage() == node.key) {
-                    Tree.setNodeId(0);
-                    Tree.setNodeType(null);
+                            if (Tree.Key.getKeyPrevPage() == node.key) {
+                                Tree.setNodeId(0);
+                                Tree.setNodeType(null);
 
-                    var treeInfo = Tree.Info.getTreeInfo();
-                    if (0 < treeInfo.start) {
-                        treeInfo.start -= treeInfo.n;
-                        if (0 > treeInfo.start) {
-                            treeInfo.start = 0;
-                        }
-                    }
-                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
+                                var treeInfo = Tree.Info.getTreeInfo();
+                                if (0 < treeInfo.start) {
+                                    treeInfo.start -= treeInfo.n;
+                                    if (0 > treeInfo.start) {
+                                        treeInfo.start = 0;
+                                    }
+                                }
+                                Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
 
-                } else if (Tree.Key.getKeyNextPage() == node.key) {
-                    Tree.setNodeId(0);
-                    Tree.setNodeType(null);
+                            } else if (Tree.Key.getKeyNextPage() == node.key) {
+                                Tree.setNodeId(0);
+                                Tree.setNodeType(null);
 
-                    var treeInfo = Tree.Info.getTreeInfo();
-                    if (0 > treeInfo.total) {       //should never get to this condition
-                        treeInfo.start = 0;
-                    } else if ((treeInfo.total - treeInfo.n) > treeInfo.start) {
-                        treeInfo.start += treeInfo.n;
-                    }
-                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
+                                var treeInfo = Tree.Info.getTreeInfo();
+                                if (0 > treeInfo.total) { //should never get to this condition
+                                    treeInfo.start = 0;
+                                } else if ((treeInfo.total - treeInfo.n) > treeInfo.start) {
+                                    treeInfo.start += treeInfo.n;
+                                }
+                                Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
 
-                } else {
-                    var activeKey = Tree.getActiveKey();
-                    var nodeId = Tree.Key.getNodeIdByKey(activeKey);
-                    var nodeTypePath = Tree.Key.getNodeTypeByKey(activeKey);
+                            } else {
+                                var activeKey = Tree.getActiveKey();
+                                var nodeId = Tree.Key.getNodeIdByKey(activeKey);
+                                var nodeTypePath = Tree.Key.getNodeTypeByKey(activeKey);
 
-                    var previousKey = Tree.getPreviousKey();
-                    var previousNodeId = Tree.Key.getNodeIdByKey(previousKey);
-                    var previousNodeTypePath = Tree.Key.getNodeTypeByKey(previousKey);
+                                var previousKey = Tree.getPreviousKey();
+                                var previousNodeId = Tree.Key.getNodeIdByKey(previousKey);
+                                var previousNodeTypePath = Tree.Key.getNodeTypeByKey(previousKey);
 
-                    if (nodeId != previousNodeId || nodeTypePath != previousNodeTypePath) {
-                        Tree.onSelect()(node.data);
-                    }
-                }
-            }
-            , getSource: function () {
-                var treeData = Util.goodValue(Tree.treeData, {total: 0, docs: []});
-                var treeInfo = Tree.Info.getTreeInfo();
-                treeInfo.pageSize = Util.goodMapValue(Tree, "treeConfig.pageSize", Tree.Info.DEFAULT_PAGE_SIZE);
-                treeInfo.total = treeData.total;
+                                if (nodeId != previousNodeId || nodeTypePath != previousNodeTypePath) {
+                                    Tree.onSelect()(node.data);
+                                }
+                            }
+                        },
+                        getSource : function() {
+                            var treeData = Util.goodValue(Tree.treeData, {
+                                total : 0,
+                                docs : []
+                            });
+                            var treeInfo = Tree.Info.getTreeInfo();
+                            treeInfo.pageSize = Util.goodMapValue(Tree, "treeConfig.pageSize", Tree.Info.DEFAULT_PAGE_SIZE);
+                            treeInfo.total = treeData.total;
 
-                var objList = Util.goodMapValue(treeData, "docs", []);
-                if (Util.isArrayEmpty(objList)) {
-                    return [];
-                }
+                            var objList = Util.goodMapValue(treeData, "docs", []);
+                            if (Util.isArrayEmpty(objList)) {
+                                return [];
+                            }
 
-                var builder = Util.FancyTreeBuilder.reset();
+                            var builder = Util.FancyTreeBuilder.reset();
 
-                if (0 < treeInfo.start) {
-                    builder.addLeaf({
-                        key: Tree.Key.NODE_TYPE_PART_PREV_PAGE
-                        , title: treeInfo.start + $translate.instant("common.directive.objectTree.btnPrev.title")
-                        , tooltip: $translate.instant("common.directive.objectTree.btnPrev.toolTip")
-                        , tooltipLabel: "common.directive.objectTree.btnPrev.toolTip"
-                        , expanded: false
-                        , folder: false
-                    });
-                }
-
-                _.each(objList, function (obj) {
-                    var nodeId = obj.nodeId;
-                    var nodeType = obj.nodeType;
-                    var nodeStatus = obj.nodeStatus;
-                    var nodeStatusColor = obj.nodeStatusColor;
-                    var nodeTitleLabel = obj.nodeTitleLabel;
-                    var nodeTitle = nodeTitleLabel? $translate.instant(nodeTitleLabel) : obj.nodeTitle;
-                    var nodeToolTipLabel = obj.nodeToolTipLabel;
-                    var nodeToolTip = nodeToolTipLabel? $translate.instant(nodeToolTipLabel) : obj.nodeToolTip;
-                    if (nodeId && nodeType) {
-                        var objKey = Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
-                        var components = Tree.getComponentsByKey(objKey);
-                        var leadComponent = Tree.getLeadComponentByKey(objKey);
-                        builder.addLeaf({
-                            key: objKey
-                            , title: nodeTitle
-                            , label: nodeTitleLabel
-                            , tooltip: nodeToolTip
-                            , tooltipLabel: nodeToolTipLabel
-                            , expanded: false
-                            , folder: true
-                            , lazy: true
-                            , cache: false
-                            , components: components
-                            , leadComponent: leadComponent
-                            , nodeType: nodeType
-                            , nodeId: nodeId
-                            , nodeStatus: nodeStatus
-                            , nodeStatusColor: nodeStatusColor
-                        });
-                    }
-                });
-                builder.makeLast();
-
-                if ((0 > treeInfo.total)                                    //unknown size
-                    || (treeInfo.total - treeInfo.n > treeInfo.start)) {    //more page
-                    var title = (0 > treeInfo.total) ? $translate.instant("common.directive.objectTree.btnNext.titleUnknownSize")
-                        : (treeInfo.total - treeInfo.start - treeInfo.n) + $translate.instant("common.directive.objectTree.btnNext.title");
-
-                    builder.addLeafLast({
-                        key: Tree.Key.NODE_TYPE_PART_NEXT_PAGE
-                        , title: title
-                        , tooltip: $translate.instant("common.directive.objectTree.btnNext.toolTip")
-                        , tooltipLabel: "common.directive.objectTree.btnNext.toolTip"
-                        , expanded: false
-                        , folder: false
-                    });
-                }
-
-                return builder.getTree();
-            }
-            , lazyLoad: function (event, data) {
-                var builder = Util.FancyTreeBuilder.reset();
-                var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
-                var key = data.node.key;
-                var nodeId = Tree.Key.getNodeIdByKey(key);
-                var nodeTypePath = Tree.Key.getNodeTypeByKey(key);
-                var arr = nodeTypePath.split(Tree.Key.KEY_SEPARATOR);
-                if (Util.isArray(arr) && 2 == arr.length) {
-                    var nodeDataType = arr[1];
-                    _.each(nodeTypes, function (nodeType) {
-                        var type = Util.goodValue(nodeType.type);
-                        var label = Util.goodValue(nodeType.label);
-                        var title = $translate.instant(label);
-                        var components = Util.goodArray(nodeType.components);
-                        var leadComponent = nodeType.leadComponent;
-                        if (0 == type.indexOf(nodeTypePath)) {
-                            var realLabel = label.substring(0, label.indexOf("."));
-                            if(HelperObjectBrowserService.isNodeDisabled(realLabel, title)) return true;
-                            var lastSep = type.lastIndexOf(Tree.Key.KEY_SEPARATOR);
-                            if (nodeTypePath.length == lastSep) {
-                                var subPart = type.substring(lastSep);
+                            if (0 < treeInfo.start) {
                                 builder.addLeaf({
-                                    key: key + subPart
-                                    , label: label
-                                    , title: title
-                                    , components: components
-                                    , leadComponent: leadComponent
-                                    , nodeType: nodeDataType
-                                    , nodeId: nodeId
+                                    key : Tree.Key.NODE_TYPE_PART_PREV_PAGE,
+                                    title : treeInfo.start + $translate.instant("common.directive.objectTree.btnPrev.title"),
+                                    tooltip : $translate.instant("common.directive.objectTree.btnPrev.toolTip"),
+                                    tooltipLabel : "common.directive.objectTree.btnPrev.toolTip",
+                                    expanded : false,
+                                    folder : false
                                 });
                             }
-                        }
-                    });
-                }
 
-                data.result = builder.getTree();
-            }
+                            _.each(objList, function(obj) {
+                                var nodeId = obj.nodeId;
+                                var nodeType = obj.nodeType;
+                                var nodeStatus = obj.nodeStatus;
+                                var nodeStatusColor = obj.nodeStatusColor;
+                                var nodeTitleLabel = obj.nodeTitleLabel;
+                                var nodeTitle = nodeTitleLabel ? $translate.instant(nodeTitleLabel) : obj.nodeTitle;
+                                var nodeToolTipLabel = obj.nodeToolTipLabel;
+                                var nodeToolTip = nodeToolTipLabel ? $translate.instant(nodeToolTipLabel) : obj.nodeToolTip;
+                                if (nodeId && nodeType) {
+                                    var objKey = Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
+                                    var components = Tree.getComponentsByKey(objKey);
+                                    var leadComponent = Tree.getLeadComponentByKey(objKey);
+                                    var hidden = Tree.getHiddenByKey(objKey);
+                                    builder.addLeaf({
+                                        key : objKey,
+                                        title : nodeTitle,
+                                        label : nodeTitleLabel,
+                                        tooltip : nodeToolTip,
+                                        tooltipLabel : nodeToolTipLabel,
+                                        expanded : false,
+                                        folder : true,
+                                        lazy : true,
+                                        cache : false,
+                                        components : components,
+                                        leadComponent : leadComponent,
+                                        nodeType : nodeType,
+                                        nodeId : nodeId,
+                                        nodeStatus : nodeStatus,
+                                        nodeStatusColor : nodeStatusColor,
+                                        hidden : hidden
+                                    });
+                                }
+                            });
+                            builder.makeLast();
 
-            , Key: {
-                KEY_SEPARATOR: "/"
-                , TYPE_ID_SEPARATOR: "."
-                , NODE_TYPE_PART_PREV_PAGE: "prev"
-                , NODE_TYPE_PART_NEXT_PAGE: "next"
-                , NODE_TYPE_PART_PAGE: "p"
-                , NODE_TYPE_PART_ERROR: "err"
+                            if ((0 > treeInfo.total) //unknown size
+                                    || (treeInfo.total - treeInfo.n > treeInfo.start)) { //more page
+                                var title = (0 > treeInfo.total) ? $translate
+                                        .instant("common.directive.objectTree.btnNext.titleUnknownSize")
+                                        : (treeInfo.total - treeInfo.start - treeInfo.n)
+                                                + $translate.instant("common.directive.objectTree.btnNext.title");
 
-                , getNodeTypeByKey: function (key) {
-                    var nt = "";
-                    if (!Util.isEmpty(key)) {
-                        var arr = key.split(this.KEY_SEPARATOR);
-                        for (var i = 0; i < arr.length; i++) {
-                            var typeAndId = arr[i].split(this.TYPE_ID_SEPARATOR);
-                            if (0 < i) {
-                                nt += this.KEY_SEPARATOR;
+                                builder.addLeafLast({
+                                    key : Tree.Key.NODE_TYPE_PART_NEXT_PAGE,
+                                    title : title,
+                                    tooltip : $translate.instant("common.directive.objectTree.btnNext.toolTip"),
+                                    tooltipLabel : "common.directive.objectTree.btnNext.toolTip",
+                                    expanded : false,
+                                    folder : false
+                                });
                             }
-                            nt += typeAndId[0];
-                        }
-                    }
-                    return nt;
-                }
-                , getNodeIdByKey: function (key) {
-                    var id = "";
-                    if (!Util.isEmpty(key)) {
-                        var arr = key.split(this.KEY_SEPARATOR);
-                        if (1 < arr.length) {
-                            var idPart = arr[1];
-                            var typeAndId = idPart.split(this.TYPE_ID_SEPARATOR);
-                            if (1 < typeAndId.length) {
-                                id = typeAndId[1];
-                            }
-                        }
-                    }
-                    return id;
-                }
-                , getPageIdByKey: function (key) {
-                    var pageId = "";
-                    if (!Util.isEmpty(key)) {
-                        var arr = key.split(this.KEY_SEPARATOR);
-                        if (0 < arr.length) {
-                            var pagePart = arr[0];
-                            var typeAndId = pagePart.split(this.TYPE_ID_SEPARATOR);
-                            if (1 < typeAndId.length) {
-                                pageId = typeAndId[1];
-                            }
-                        }
-                    }
-                    return pageId;
-                }
-                , getLastKeyPart: function (key) {
-                    var part = "";
-                    if (!Util.isEmpty(key)) {
-                        var arr = key.split(this.KEY_SEPARATOR);
-                        if (0 < arr.length) {
-                            part = arr[arr.length - 1];
-                        }
-                    }
-                    return part;
-                }
 
-                //keyParts format: [{type: "t", id: "123"}, ....]
-                //Integer ID works as well: [{type: "t", id: 123}, ....]
-                , makeKey: function (keyParts) {
-                    var key = "";
-                    if (Util.isArray(keyParts)) {
-                        for (var i = 0; i < keyParts.length; i++) {
-                            if (keyParts[i].type) {
+                            return builder.getTree();
+                        },
+                        lazyLoad : function(event, data) {
+                            var builder = Util.FancyTreeBuilder.reset();
+                            var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
+                            var key = data.node.key;
+                            var nodeId = Tree.Key.getNodeIdByKey(key);
+                            var nodeTypePath = Tree.Key.getNodeTypeByKey(key);
+                            var arr = nodeTypePath.split(Tree.Key.KEY_SEPARATOR);
+                            if (Util.isArray(arr) && 2 == arr.length) {
+                                var nodeDataType = arr[1];
+                                _.each(nodeTypes, function(nodeType) {
+                                    var type = Util.goodValue(nodeType.type);
+                                    var label = Util.goodValue(nodeType.label);
+                                    var title = $translate.instant(label);
+                                    var components = Util.goodArray(nodeType.components);
+                                    var leadComponent = nodeType.leadComponent;
+                                    var hidden = nodeType.hidden ? true : false;
+                                    if (0 == type.indexOf(nodeTypePath) && !hidden) {
+                                        var realLabel = label.substring(0, label.indexOf("."));
+                                        if (HelperObjectBrowserService.isNodeDisabled(realLabel, title))
+                                            return true;
+                                        var lastSep = type.lastIndexOf(Tree.Key.KEY_SEPARATOR);
+                                        if (nodeTypePath.length == lastSep) {
+                                            var subPart = type.substring(lastSep);
+                                            builder.addLeaf({
+                                                key : key + subPart,
+                                                label : label,
+                                                title : title,
+                                                components : components,
+                                                leadComponent : leadComponent,
+                                                nodeType : nodeDataType,
+                                                nodeId : nodeId
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+
+                            data.result = builder.getTree();
+                        }
+
+                        ,
+                        Key : {
+                            KEY_SEPARATOR : "/",
+                            TYPE_ID_SEPARATOR : ".",
+                            NODE_TYPE_PART_PREV_PAGE : "prev",
+                            NODE_TYPE_PART_NEXT_PAGE : "next",
+                            NODE_TYPE_PART_PAGE : "p",
+                            NODE_TYPE_PART_ERROR : "err"
+
+                            ,
+                            getNodeTypeByKey : function(key) {
+                                var nt = "";
                                 if (!Util.isEmpty(key)) {
-                                    key += this.KEY_SEPARATOR;
+                                    var arr = key.split(this.KEY_SEPARATOR);
+                                    for (var i = 0; i < arr.length; i++) {
+                                        var typeAndId = arr[i].split(this.TYPE_ID_SEPARATOR);
+                                        if (0 < i) {
+                                            nt += this.KEY_SEPARATOR;
+                                        }
+                                        nt += typeAndId[0];
+                                    }
                                 }
-                                key += keyParts[i].type;
-
-                                if (!Util.isEmpty(keyParts[i].id)) {
-                                    key += this.TYPE_ID_SEPARATOR;
-                                    key += keyParts[i].id;
+                                return nt;
+                            },
+                            getNodeIdByKey : function(key) {
+                                var id = "";
+                                if (!Util.isEmpty(key)) {
+                                    var arr = key.split(this.KEY_SEPARATOR);
+                                    if (1 < arr.length) {
+                                        var idPart = arr[1];
+                                        var typeAndId = idPart.split(this.TYPE_ID_SEPARATOR);
+                                        if (1 < typeAndId.length) {
+                                            id = typeAndId[1];
+                                        }
+                                    }
                                 }
+                                return id;
+                            },
+                            getPageIdByKey : function(key) {
+                                var pageId = "";
+                                if (!Util.isEmpty(key)) {
+                                    var arr = key.split(this.KEY_SEPARATOR);
+                                    if (0 < arr.length) {
+                                        var pagePart = arr[0];
+                                        var typeAndId = pagePart.split(this.TYPE_ID_SEPARATOR);
+                                        if (1 < typeAndId.length) {
+                                            pageId = typeAndId[1];
+                                        }
+                                    }
+                                }
+                                return pageId;
+                            },
+                            getLastKeyPart : function(key) {
+                                var part = "";
+                                if (!Util.isEmpty(key)) {
+                                    var arr = key.split(this.KEY_SEPARATOR);
+                                    if (0 < arr.length) {
+                                        part = arr[arr.length - 1];
+                                    }
+                                }
+                                return part;
                             }
-                        } //for i
-                    }
-                    return key;
-                }
-                //typeParts is string array: ["t1","t2", ....]
-                , makeNodeType: function (typeParts) {
-                    var nodeType = "";
-                    if (Util.isArray(typeParts)) {
-                        for (var i = 0; i < typeParts.length; i++) {
-                            if (!Util.isEmpty(nodeType)) {
-                                nodeType += this.KEY_SEPARATOR;
+
+                            //keyParts format: [{type: "t", id: "123"}, ....]
+                            //Integer ID works as well: [{type: "t", id: 123}, ....]
+                            ,
+                            makeKey : function(keyParts) {
+                                var key = "";
+                                if (Util.isArray(keyParts)) {
+                                    for (var i = 0; i < keyParts.length; i++) {
+                                        if (keyParts[i].type) {
+                                            if (!Util.isEmpty(key)) {
+                                                key += this.KEY_SEPARATOR;
+                                            }
+                                            key += keyParts[i].type;
+
+                                            if (!Util.isEmpty(keyParts[i].id)) {
+                                                key += this.TYPE_ID_SEPARATOR;
+                                                key += keyParts[i].id;
+                                            }
+                                        }
+                                    } //for i
+                                }
+                                return key;
                             }
-                            nodeType += typeParts[i];
-                        } //for i
-                    }
-                    return nodeType;
-                }
+                            //typeParts is string array: ["t1","t2", ....]
+                            ,
+                            makeNodeType : function(typeParts) {
+                                var nodeType = "";
+                                if (Util.isArray(typeParts)) {
+                                    for (var i = 0; i < typeParts.length; i++) {
+                                        if (!Util.isEmpty(nodeType)) {
+                                            nodeType += this.KEY_SEPARATOR;
+                                        }
+                                        nodeType += typeParts[i];
+                                    } //for i
+                                }
+                                return nodeType;
+                            }
 
-                , getKeyPrevPage: function () {
-                    return this.NODE_TYPE_PART_PREV_PAGE;
-                }
-                , getKeyNextPage: function () {
-                    return this.NODE_TYPE_PART_NEXT_PAGE;
-                }
+                            ,
+                            getKeyPrevPage : function() {
+                                return this.NODE_TYPE_PART_PREV_PAGE;
+                            },
+                            getKeyNextPage : function() {
+                                return this.NODE_TYPE_PART_NEXT_PAGE;
+                            }
 
-                , getKeyByObj: function (objNodeType, objNodeId) {
-                    var pageId = Tree.Info.getPageId();
-                    return this.getKeyByObjWithPage(pageId, objNodeType, objNodeId);
-                },
-                 getKeyByObjWithPage: function (pageId, objNodeType, objNodeId) {
-                    var subKey = objNodeType
-                            + this.TYPE_ID_SEPARATOR
-                            + objNodeId;
+                            ,
+                            getKeyByObj : function(objNodeType, objNodeId) {
+                                var pageId = Tree.Info.getPageId();
+                                return this.getKeyByObjWithPage(pageId, objNodeType, objNodeId);
+                            },
+                            getKeyByObjWithPage : function(pageId, objNodeType, objNodeId) {
+                                var subKey = objNodeType + this.TYPE_ID_SEPARATOR + objNodeId;
 
-                    return this.getKeyBySubWithPage(pageId, subKey);
-                },
-                 getKeyBySubWithPage: function (pageId, subKey) {
-                    return this.NODE_TYPE_PART_PAGE
-                        + this.TYPE_ID_SEPARATOR
-                        + pageId
-                        + this.KEY_SEPARATOR
-                        + subKey
-                        ;
-                }
-            } //Key
+                                return this.getKeyBySubWithPage(pageId, subKey);
+                            },
+                            getKeyBySubWithPage : function(pageId, subKey) {
+                                return this.NODE_TYPE_PART_PAGE + this.TYPE_ID_SEPARATOR + pageId + this.KEY_SEPARATOR + subKey;
+                            }
+                        } //Key
 
                         ,
                         Info : {
@@ -851,38 +884,53 @@ angular.module('directives').directive(
                                     var oldSorter = treeInfo.sorter;
                                     var oldSearchQuery = treeInfo.searchQuery;
 
-                        treeInfo.pageSize = Util.goodValue(treeConfig.pageSize, Tree.Info.DEFAULT_PAGE_SIZE);
-                        Tree.scope.filters = Util.goodArray(treeConfig.filters);
-                        treeInfo.defaultFilter = Util.goodMapValue(_.find(Tree.scope.filters, {'default': true}), "name");
-                        treeInfo.filter = treeInfo.defaultFilter;
-                        Tree.scope.nameFilter = Util.goodMapValue(_.find(Tree.scope.filters, {'default': true}), "desc");Tree.scope.onSelectFilter = function (filterName) {Tree.scope.nameFilter =  Util.goodMapValue(_.find(Tree.scope.filters, function(filters) {
-                                return filters.name == filterName
-                            }), "desc");
-                            var treeInfo = Tree.Info.getTreeInfo();
-                            if (!Util.compare(treeInfo.filter, filterName)) {
-                                Tree.setNodeId(0);
-                                Tree.setNodeType(null);
-                                treeInfo.start = 0;
-                                treeInfo.filter = filterName;
-                                Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
-                            }
-                        };
+                                    treeInfo.pageSize = Util.goodValue(treeConfig.pageSize, Tree.Info.DEFAULT_PAGE_SIZE);
+                                    Tree.scope.filters = Util.goodArray(treeConfig.filters);
+                                    treeInfo.defaultFilter = Util.goodMapValue(_.find(Tree.scope.filters, {
+                                        'default' : true
+                                    }), "name");
+                                    treeInfo.filter = treeInfo.defaultFilter;
+                                    Tree.scope.nameFilter = Util.goodMapValue(_.find(Tree.scope.filters, {
+                                        'default' : true
+                                    }), "desc");
+                                    Tree.scope.onSelectFilter = function(filterName) {
+                                        Tree.scope.nameFilter = Util.goodMapValue(_.find(Tree.scope.filters, function(filters) {
+                                            return filters.name == filterName
+                                        }), "desc");
+                                        var treeInfo = Tree.Info.getTreeInfo();
+                                        if (!Util.compare(treeInfo.filter, filterName)) {
+                                            Tree.setNodeId(0);
+                                            Tree.setNodeType(null);
+                                            treeInfo.start = 0;
+                                            treeInfo.filter = filterName;
+                                            Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter,
+                                                    treeInfo.searchQuery);
+                                        }
+                                    };
 
-                        Tree.scope.sorters = Util.goodArray(treeConfig.sorters);
-                        treeInfo.defaultSorter = Util.goodMapValue(_.find(Tree.scope.sorters, {'default': true}), "name");
-                        treeInfo.sorter = treeInfo.defaultSorter;
-                        Tree.scope.nameSort = Util.goodMapValue(_.find(Tree.scope.sorters, {'default': true}), "desc");Tree.scope.onSelectSort = function (sorterName) {Tree.scope.nameSort= Tree.scope.nameSort = Util.goodMapValue(_.find(Tree.scope.sorters, function(sorters) {
-                                return sorters.name == sorterName
-                            }), "desc");
-                            var treeInfo = Tree.Info.getTreeInfo();
-                            if (!Util.compare(treeInfo.sorter, sorterName)) {
-                                Tree.setNodeId(0);
-                                Tree.setNodeType(null);
-                                treeInfo.start = 0;
-                                treeInfo.sorter = sorterName;
-                                Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
-                            }
-                        };
+                                    Tree.scope.sorters = Util.goodArray(treeConfig.sorters);
+                                    treeInfo.defaultSorter = Util.goodMapValue(_.find(Tree.scope.sorters, {
+                                        'default' : true
+                                    }), "name");
+                                    treeInfo.sorter = treeInfo.defaultSorter;
+                                    Tree.scope.nameSort = Util.goodMapValue(_.find(Tree.scope.sorters, {
+                                        'default' : true
+                                    }), "desc");
+                                    Tree.scope.onSelectSort = function(sorterName) {
+                                        Tree.scope.nameSort = Tree.scope.nameSort = Util.goodMapValue(_.find(Tree.scope.sorters, function(
+                                                sorters) {
+                                            return sorters.name == sorterName
+                                        }), "desc");
+                                        var treeInfo = Tree.Info.getTreeInfo();
+                                        if (!Util.compare(treeInfo.sorter, sorterName)) {
+                                            Tree.setNodeId(0);
+                                            Tree.setNodeType(null);
+                                            treeInfo.start = 0;
+                                            treeInfo.sorter = sorterName;
+                                            Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter,
+                                                    treeInfo.searchQuery);
+                                        }
+                                    };
 
                                     var searchQuery = Util.goodArray(treeConfig.searchQuery);
                                     treeInfo.searchQuery = searchQuery;
