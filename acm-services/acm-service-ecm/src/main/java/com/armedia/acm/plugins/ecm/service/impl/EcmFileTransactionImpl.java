@@ -14,6 +14,7 @@ import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
 
+import com.armedia.acm.web.api.MDCConstants;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.FileUtils;
@@ -25,7 +26,9 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -34,6 +37,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by armdev on 4/22/14.
@@ -397,6 +401,17 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
         try
         {
+            String alfrescoUser = "admin";
+            Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() : null;
+
+            if (authentication != null && authentication.getName() != null)
+            {
+                alfrescoUser = StringUtils.substringBeforeLast(authentication.getName(), "@");
+            }
+
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUser);
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+
             Map<String, Object> messageProps = new HashMap<>();
             messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId()));
             MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId(), messageProps);

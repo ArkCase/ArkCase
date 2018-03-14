@@ -61,7 +61,23 @@
             <artifactId>javax.el-api</artifactId>
             <scope>test</scope>
         </dependency>
-    </dependencies>
 
+        <!-- AMAZON -->
+        <!-- Amazon Core -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-core</artifactId>
+        </dependency>
+        <!-- Amazon S3 -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+        </dependency>
+        <!-- Amazon Transcribe -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-transcribe</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

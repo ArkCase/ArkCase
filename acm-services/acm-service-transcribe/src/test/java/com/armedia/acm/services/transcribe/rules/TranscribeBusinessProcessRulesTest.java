@@ -36,7 +36,7 @@ public class TranscribeBusinessProcessRulesTest
         assertTrue(xls.exists());
 
         String drl = sc.compile(xls.getInputStream(), InputType.XLS);
-        LOG.info("DRL: " + drl);
+        LOG.info("DRL: {}", drl);
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
@@ -68,7 +68,7 @@ public class TranscribeBusinessProcessRulesTest
 
         assertNotNull(model.isStart());
 
-        LOG.debug("Start: " + model.isStart());
+        LOG.debug("Start: {}", model.isStart());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class TranscribeBusinessProcessRulesTest
 
         assertNotNull(model.getName());
 
-        LOG.debug("Name: " + model.getName());
+        LOG.debug("Name: {}", model.getName());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class TranscribeBusinessProcessRulesTest
 
         assertNotNull(model.isStart());
 
-        LOG.debug("Start: " + model.isStart());
+        LOG.debug("Start: {}", model.isStart());
     }
 
     @Test
@@ -107,6 +107,6 @@ public class TranscribeBusinessProcessRulesTest
 
         assertNotNull(model.getName());
 
-        LOG.debug("Name: " + model.getName());
+        LOG.debug("Name: {}", model.getName());
     }
 }
