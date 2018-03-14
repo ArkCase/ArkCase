@@ -1606,7 +1606,7 @@ a.primary {
 }
 
 /*Scroll on transcription details tab */
-.scroll-body {
+.scroll-body-transcript {
     overflow: auto;
     height: 500px;
 }
