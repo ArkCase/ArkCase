@@ -13,7 +13,8 @@
                 "cancel": "Cancel",
                 "transcribe": "Transcribe",
                 "complete": "Complete",
-                "compile": "Compile"
+                "compile": "Compile",
+                "save": "Save"
             },
             "startTime": "Start time",
             "confidence": "Confidence",

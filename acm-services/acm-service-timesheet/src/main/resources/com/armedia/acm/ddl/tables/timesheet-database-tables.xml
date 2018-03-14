@@ -236,8 +236,7 @@
     </changeSet>
 
     <changeSet id="15-acm-time-total-cost-column-default-value" author="marko.stojanoski">
-        <addDefaultValue tableName="acm_time" columnName="cm_time_total_cost" columnDataType="NUMBER(32,2)"
-            defaultValueNumeric="0"/>
+        <addDefaultValue tableName="acm_time" columnName="cm_time_total_cost" columnDataType="NUMBER(32,2)" defaultValueNumeric="0"/>
     </changeSet>
 
     <changeSet id="16-acm-time-update-total-cost-column" author="marko.stojanoski">
@@ -246,4 +245,26 @@
             <where>cm_time_total_cost IS NULL</where>
         </update>
     </changeSet>
+
+    <!-- good old mysql doesn't allow functions in default value specs so we have to create it as nullable, then set the values,
+         then make it not null -->
+    <changeSet id="17-add-number-in-acm-timesheet-table" author="marjan.trifunov">
+        <addColumn tableName="acm_timesheet">
+            <column name="cm_timesheet_number" type="VARCHAR(1024)">
+                <constraints unique="true" uniqueConstraintName="uk_timesheet_number" nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="18-set-timesheet-number-for-existing-timesheets" author="marjan.trifunov">
+        <update tableName="acm_timesheet">
+            <column name="cm_timesheet_number" valueComputed="${strToIntLeader}cm_timesheet_id${strToIntTrailer}"/>
+            <where>cm_timesheet_number IS NULL</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="19-make-timesheet-number-required" author="dmiller">
+        <addNotNullConstraint tableName="acm_timesheet" columnName="cm_timesheet_number" columnDataType="VARCHAR(1024)"/>
+    </changeSet>
+
 </databaseChangeLog>
