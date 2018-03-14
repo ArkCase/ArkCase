@@ -75,7 +75,7 @@ public class ModuleConfigurationService implements ModuleConfigurationConstants
 
                 ModuleItem moduleItem = new ModuleItem();
                 moduleItem.setId(moduleId);
-                moduleItem.setName(props.getProperty(nameProperty));
+                moduleItem.setName(props.getProperty(nameProperty, ""));
                 moduleItem.setPrivilege(props.getProperty(privilegeProperty));
 
                 modulesInfos.add(moduleItem);
