@@ -170,18 +170,18 @@ public class DecoratedAssignedObjectParticipantAspect
         else
         {
             // Check if we should check for participant editable fields
-            changeParticipantEditable = ShouldChangeOriginalParticipant(assignedObjectWithCopyParticipants, copyParticipant, newObj,
+            changeParticipantEditable = shouldChangeOriginalParticipant(assignedObjectWithCopyParticipants, copyParticipant, newObj,
                     validationType);
         }
         if (changeParticipantEditable)
         {
             // find and change the original participant editable fields
-            ChangeOriginalParticipant(originalParticipants, copyParticipant, oldObj, validationType);
+            changeOriginalParticipant(originalParticipants, copyParticipant, oldObj, validationType);
         }
     }
 
     // Compare original participant with the copy participant and change editable fields to false
-    private void ChangeOriginalParticipant(List<AcmParticipant> originalParticipants, AcmParticipant copyParticipant, String oldObj,
+    private void changeOriginalParticipant(List<AcmParticipant> originalParticipants, AcmParticipant copyParticipant, String oldObj,
             String validationType)
     {
         originalParticipants.stream()
@@ -205,7 +205,7 @@ public class DecoratedAssignedObjectParticipantAspect
     }
 
     // Check if current participant editable user or type should be changed
-    private Boolean ShouldChangeOriginalParticipant(AcmAssignedObject assignedObjectWithCopyParticipants, AcmParticipant copyParticipant,
+    private Boolean shouldChangeOriginalParticipant(AcmAssignedObject assignedObjectWithCopyParticipants, AcmParticipant copyParticipant,
             String newObj, String validationType)
     {
         AcmParticipant changedParticipant = null;
