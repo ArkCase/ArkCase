@@ -10,12 +10,12 @@
                 <div class="row">
                     <table class="table table-bordered table-margin">
                         <thead>
-                        <tr ng-style="itemHolder.item.confidence < 80 ? { backgroundColor:'#ea4944', color:'black' } : ''">
+                        <tr ng-style="itemHolder.item.confidence < 80 ? { backgroundColor:'#ea6764', color:'black' } : ''">
                             <th><span translate>documentDetails.comp.transcription.startTime</span>:<input contenteditable="true"
-                                    class="input-size" ng-model="itemHolder.hours" type="text" min="0" max="99" ng-pattern="">:<input
-                                    contenteditable="true" class="input-size" ng-model="itemHolder.minutes" type="text" min="0"
-                                    max="59">:<input contenteditable="true" class="input-size" ng-model="itemHolder.seconds" type="text"
-                                    min="0" max="59"></th>
+                                    class="input-size" ng-model="itemHolder.hours" type="text" ng-pattern="/^[0-9]{1,2}$/">:<input
+                                    contenteditable="true" class="input-size" ng-model="itemHolder.minutes" type="text"
+                                    ng-pattern="/^([0-5][0-9]){1,2}$/">:<input contenteditable="true" class="input-size"
+                                    ng-model="itemHolder.seconds" type="text" ng-pattern="/^([0-5][0-9]){1,2}$/"></th>
                             <th><span translate>documentDetails.comp.transcription.confidence</span>:{{itemHolder.item.confidence}}<span
                                     ng-show="itemHolder.item.confidence" ng-model="itemHolder.item.confidence">%</span></th>
                             <th><input type="checkbox" ng-model="itemHolder.item.corrected"><span class="cb-corrected" translate>documentDetails.comp.transcription.corrected</span>
