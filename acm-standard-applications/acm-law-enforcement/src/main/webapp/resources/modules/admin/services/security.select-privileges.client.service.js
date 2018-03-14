@@ -20,7 +20,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
         getAllPrivileges : getAllPrivileges,
         addRolePrivileges : addRolePrivileges,
         getRolePrivileges : getRolePrivileges,
-        getNRolePrivileges : getNRolePrivileges,
+        getRolePrivilegesByName : getRolePrivilegesByName,
         upsertRole : upsertRole
     });
 
@@ -121,7 +121,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
      *
      * @returns {HttpPromise} Future info about role privileges
      */
-    function getNRolePrivileges(data) {
+    function getRolePrivilegesByName(data) {
         var url = 'api/latest/plugin/admin/' + data.role.name + '/privileges';
         return $http({
             method : 'GET',
@@ -129,7 +129,8 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
             params : {
                 authorized : data.isAuthorized,
                 n : (data.n ? data.n : 18),
-                start : (data.start ? data.start : 0)
+                start : (data.start ? data.start : 0),
+                fq : (data.filterWord ? data.filterWord : "")
             }
         });
     }

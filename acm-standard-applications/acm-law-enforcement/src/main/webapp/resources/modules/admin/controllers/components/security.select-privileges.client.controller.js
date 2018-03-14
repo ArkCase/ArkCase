@@ -28,9 +28,7 @@ angular.module('admin').controller(
                     $scope.showFilter = true;
                     // Loaded data after the initialization
                     var initRolesData = {
-                        "chooseObject" : [],
-                        "notAuthorized" : [],
-                        "authorized" : []
+                        "chooseObject" : []
                     };
                     // Data to be displayed
                     $scope.rolesData = {
@@ -86,29 +84,21 @@ angular.module('admin').controller(
                     }
 
                     function appRoleUnauthorizedFilter(data) {
-                        $scope.rolesData.selectedNotAuthorized = [];
-
-                        //filter
-                        if (!_.isEmpty(data)) {
-                            $scope.rolesData.selectedNotAuthorized = _.filter(initRolesData.notAuthorized, function(item) {
-                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
-                            });
-                        } else {
-                            $scope.rolesData.selectedNotAuthorized = angular.copy(initRolesData.notAuthorized);
-                        }
+                        data.isAuthorized = false;
+                        data.role = $scope.lastSelectedRole;
+                        selectPrivilegesService.getRolePrivilegesByName(data).then(function(response) {
+                            $scope.rolesData.selectedNotAuthorized = [];
+                            $scope.fillList($scope.rolesData.selectedNotAuthorized, response.data);
+                        });
                     }
 
                     function appRoleAuthorizedFilter(data) {
-                        $scope.rolesData.selectedAuthorized = [];
-
-                        //filter
-                        if (!_.isEmpty(data)) {
-                            $scope.rolesData.selectedAuthorized = _.filter(initRolesData.authorized, function(item) {
-                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
-                            });
-                        } else {
-                            $scope.rolesData.selectedAuthorized = angular.copy(initRolesData.authorized);
-                        }
+                        data.isAuthorized = true;
+                        data.role = $scope.lastSelectedRole;
+                        selectPrivilegesService.getRolePrivilegesByName(data).then(function(response) {
+                            $scope.rolesData.selectedAuthorized = [];
+                            $scope.fillList($scope.rolesData.selectedAuthorized, response.data);
+                        });
                     }
 
                     function retrieveDataScroll(data, methodName, panelName) {
@@ -129,7 +119,7 @@ angular.module('admin').controller(
                         data.n = Util.isArrayEmpty($scope.rolesData.selectedAuthorized) ? 18 : $scope.rolesData.selectedAuthorized.length;
                         data.start = $scope.rolesData.selectedAuthorized.length;
                         data.isAuthorized = true;
-                        $scope.retrieveDataScroll(data, "getNRolePrivileges", "selectedAuthorized");
+                        $scope.retrieveDataScroll(data, "getRolePrivilegesByName", "selectedAuthorized");
                     }
 
                     function unauthorizedScroll() {
@@ -139,7 +129,7 @@ angular.module('admin').controller(
                                 : $scope.rolesData.selectedNotAuthorized.length;
                         data.start = $scope.rolesData.selectedNotAuthorized.length;
                         data.isAuthorized = false;
-                        $scope.retrieveDataScroll(data, "getNRolePrivileges", "selectedNotAuthorized");
+                        $scope.retrieveDataScroll(data, "getRolePrivilegesByName", "selectedNotAuthorized");
                     }
 
                     //callback function when app role is selected
@@ -152,16 +142,12 @@ angular.module('admin').controller(
                             var data = {};
                             data.role = selectedObject;
                             data.isAuthorized = true;
-                            var unAuthorizedGroupsForUserPromise = selectPrivilegesService.getNRolePrivileges(data);
+                            var unAuthorizedGroupsForUserPromise = selectPrivilegesService.getRolePrivilegesByName(data);
                             data.isAuthorized = false;
-                            var authorizedGroupsForUserPromise = selectPrivilegesService.getNRolePrivileges(data);
+                            var authorizedGroupsForUserPromise = selectPrivilegesService.getRolePrivilegesByName(data);
 
                             //wait all promises to resolve
                             $q.all([ unAuthorizedGroupsForUserPromise, authorizedGroupsForUserPromise ]).then(function(payload) {
-                                initRolesData.authorized = [];
-                                initRolesData.notAuthorized = [];
-                                fillList(initRolesData.authorized, payload[0].data);
-                                fillList(initRolesData.notAuthorized, payload[1].data);
                                 fillList($scope.rolesData.selectedAuthorized, payload[0].data);
                                 fillList($scope.rolesData.selectedNotAuthorized, payload[1].data);
                             });
