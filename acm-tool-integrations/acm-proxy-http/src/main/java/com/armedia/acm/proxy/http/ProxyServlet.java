@@ -979,6 +979,16 @@ public class ProxyServlet extends HttpServlet
     {
         // TODO document example paths
         final String targetUri = getTargetUri(servletRequest);
+
+        // RFC 2616 required absolute paths in redirect Location header
+        // RFC 7231 from June 2014 replaced RFC 2616 and allows relative paths
+        // issue first encountered with Pentaho 8
+        // redirect location can be given with a relative URI, so we prepend the target Uri
+        if (theUrl.startsWith("/"))
+        {
+            theUrl = targetUri + theUrl;
+        }
+
         if (theUrl.startsWith(targetUri))
         {
             /*-
