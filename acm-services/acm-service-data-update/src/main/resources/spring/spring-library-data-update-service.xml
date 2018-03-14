@@ -27,6 +27,7 @@
                 <ref bean="userRootFolderAccessUpdateExecutor"/>
                 <ref bean="outlookFolderCreatorPasswordMd5ToSha256UpdateExecutor"/>
                 <ref bean="triggerCostsheetSolrUpdateExecutor"/>
+                <ref bean="triggerTimesheetSolrUpdateExecutor" />
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -66,6 +67,10 @@
     </bean>
 
     <bean id="triggerSolrUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TriggerSolrUpdateExecutor">
+        <property name="solrReindexService" ref="solrReindexService"/>
+    </bean>
+
+    <bean id="triggerTimesheetSolrUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TriggerTimesheetSolrUpdateExecutor">
         <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 

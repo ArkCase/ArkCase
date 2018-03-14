@@ -5,6 +5,14 @@
             "leftnav.item": "板面"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "zh-cn_Select your preferred row count.",
+                    "fiveRows": "zh-cn_5",
+                    "tenRows": "zh-cn_10",
+                    "twentyFiveRows": "zh-cn_25"
+                }
+            },
             "casesByQueue": {
                 "title": "活跃案件队列",
                 "description": "按队列显示活跃案件",

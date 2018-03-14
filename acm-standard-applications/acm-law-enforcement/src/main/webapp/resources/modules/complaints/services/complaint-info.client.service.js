@@ -12,30 +12,17 @@
  */
 angular.module('services').factory(
         'Complaint.InfoService',
-        [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService',
-                function($resource, $translate, Store, Util, ObjectInfoService) {
+        [ '$resource', '$translate', 'UtilService', 'CacheFactory', 'ObjectService',
+                function($resource, $translate, Util, CacheFactory, ObjectService) {
+                    var complaintCache = CacheFactory(ObjectService.ObjectTypes.COMPLAINT, {
+                        maxAge : 1 * 60 * 1000, // Items added to this cache expire after 1 minute
+                        cacheFlushInterval : 60 * 60 * 1000, // This cache will clear itself every hour
+                        deleteOnExpire : 'aggressive', // Items will be deleted from this cache when they expire
+                        capacity : 1
+                    });
+                    var complaintGetUrl = 'api/latest/plugin/complaint/byId/';
+
                     var Service = $resource('api/latest/plugin', {}, {
-                        ///**
-                        // * ngdoc method
-                        // * name get
-                        // * methodOf services:Complaint.InfoService
-                        // *
-                        // * @description
-                        // * Query complaint data
-                        // *
-                        // * @param {Object} params Map of input parameter.
-                        // * @param {Number} params.id  Complaint ID
-                        // * @param {Function} onSuccess (Optional)Callback function of success query.
-                        // * @param {Function} onError (Optional) Callback function when fail.
-                        // *
-                        // * @returns {Object} Object returned by $resource
-                        // */
-                        //get: {
-                        //    method: 'GET',
-                        //    url: 'api/latest/plugin/complaint/byId/:id',
-                        //    cache: false,
-                        //    isArray: false
-                        //}
 
                         /**
                          * @ngdoc method
@@ -54,15 +41,31 @@ angular.module('services').factory(
                          */
                         save : {
                             method : 'POST',
-                            url : 'api/latest/plugin/complaint/save/:id',
+                            url : 'api/latest/plugin/complaint',
                             cache : false
+                        },
+                        /**
+                         * @ngdoc method
+                         * @name get
+                         * @methodOf services:Case.InfoService
+                         *
+                         * @description
+                         * Query case data from database.
+                         *
+                         * @param {Object} params Map of input parameter.
+                         * @param {Number} params.id  Object ID
+                         * @param {Function} onSuccess (Optional)Callback function of success query.
+                         * @param {Function} onError (Optional) Callback function when fail.
+                         *
+                         * @returns {Object} Object returned by $resource
+                         */
+                        get : {
+                            method : 'GET',
+                            url : complaintGetUrl + ':id',
+                            cache : complaintCache,
+                            isArray : false
                         }
                     });
-
-                    Service.SessionCacheNames = {};
-                    Service.CacheNames = {
-                        COMPLAINT_INFO : "ComplaintInfo"
-                    };
 
                     /**
                      * @ngdoc method
@@ -74,9 +77,10 @@ angular.module('services').factory(
                      *
                      * @returns None
                      */
-                    Service.resetComplaintInfo = function() {
-                        var cacheInfo = new Store.CacheFifo(Service.CacheNames.COMPLAINT_INFO);
-                        cacheInfo.reset();
+                    Service.resetComplaintInfo = function(complaintInfo) {
+                        if (complaintInfo && complaintInfo.complaintId) {
+                            complaintInfo.remove(complaintGetUrl + complaintInfo.complaintId);
+                        }
                     };
 
                     /**
@@ -92,10 +96,7 @@ angular.module('services').factory(
                      * @returns {Object} Promise
                      */
                     Service.updateComplaintInfo = function(complaintInfo) {
-                        if (Service.validateComplaintInfo(complaintInfo)) {
-                            var cacheComplaintInfo = new Store.CacheFifo(Service.CacheNames.COMPLAINT_INFO);
-                            cacheComplaintInfo.put(complaintInfo.id, complaintInfo);
-                        }
+                        //TODO remove this method
                     };
 
                     /**
@@ -111,18 +112,13 @@ angular.module('services').factory(
                      * @returns {Object} Promise
                      */
                     Service.getComplaintInfo = function(id) {
-                        var cacheComplaintInfo = new Store.CacheFifo(Service.CacheNames.COMPLAINT_INFO);
-                        var complaintInfo = cacheComplaintInfo.get(id);
                         return Util.serviceCall({
-                            service : ObjectInfoService.get,
+                            service : Service.get,
                             param : {
-                                type : "complaint",
                                 id : id
                             },
-                            result : complaintInfo,
                             onSuccess : function(data) {
                                 if (Service.validateComplaintInfo(data)) {
-                                    cacheComplaintInfo.put(id, data);
                                     return data;
                                 }
                             }
@@ -150,16 +146,11 @@ angular.module('services').factory(
                         //but update will be trigger
                         complaintInfo.modified = null;
                         return Util.serviceCall({
-                            service : ObjectInfoService.save,
-                            param : {
-                                type : "complaint"
-                            },
+                            service : Service.save,
                             data : JSOG.encode(complaintInfo),
                             onSuccess : function(data) {
                                 if (Service.validateComplaintInfo(data)) {
-                                    var complaintInfo = data;
-                                    var cacheComplaintInfo = new Store.CacheFifo(Service.CacheNames.COMPLAINT_INFO);
-                                    cacheComplaintInfo.put(complaintInfo.complaintId, complaintInfo);
+                                    complaintCache.put(complaintGetUrl + data.complaintId, data);
                                     return complaintInfo;
                                 }
                             }

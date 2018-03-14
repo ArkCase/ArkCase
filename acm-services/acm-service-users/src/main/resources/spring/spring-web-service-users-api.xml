@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="userInfoAPIController" class="com.armedia.acm.services.users.web.api.UserInfoAPIController">
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <bean id="findParticipantTypesForObjectTypeNameAPIController"
-          class="com.armedia.acm.services.users.web.api.FindParticipantTypesForObjectTypeNameAPIController">
+        class="com.armedia.acm.services.users.web.api.FindParticipantTypesForObjectTypeNameAPIController">
         <property name="acmApplication" ref="acmApplication"/>
     </bean>
 
@@ -53,7 +53,7 @@
     </bean>
 
     <bean id="ldapGroupAPIController" class="com.armedia.acm.services.users.web.api.group.LdapGroupAPIController"
-          parent="secureLdapController">
+        parent="secureLdapController">
         <property name="ldapGroupService" ref="ldapGroupService"/>
     </bean>
 
