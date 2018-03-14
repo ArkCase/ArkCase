@@ -14,9 +14,8 @@ angular.module('complaints').controller(
                 'Helper.ObjectBrowserService',
                 'ServCommService',
                 'MessageService',
-                'Object.CalendarService',
                 function($scope, $state, $stateParams, $translate, Util, ObjectService, ComplaintListService, ComplaintInfoService,
-                        HelperObjectBrowserService, ServCommService, MessageService, CalendarService) {
+                        HelperObjectBrowserService, ServCommService, MessageService) {
 
                     // maybe optional listener for "close-complaint"?
                     var eventName = "object.inserted";
@@ -50,13 +49,6 @@ angular.module('complaints').controller(
                             return ComplaintListService.updateComplaintsTreeData(start, n, sort, filters, query, nodeData);
                         },
                         getTreeData : function(start, n, sort, filters, query) {
-                            CalendarService.isCalendarConfigurationEnabled('COMPLAINT').then(
-                                    function(data) {
-                                        if (!data) {
-                                            MessageService.info($translate
-                                                    .instant('dashboard.widgets.calendar.calendarIntegrationDisabledMessage'));
-                                        }
-                                    });
                             return ComplaintListService.queryComplaintsTreeData(start, n, sort, filters, query);
                         },
                         getNodeData : function(complaintId) {

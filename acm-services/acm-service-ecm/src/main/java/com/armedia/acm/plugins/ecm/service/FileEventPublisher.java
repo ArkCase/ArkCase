@@ -9,7 +9,7 @@ import com.armedia.acm.plugins.ecm.model.event.EcmFileDeletedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileMovedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileRenamedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileReplacedEvent;
-import com.armedia.acm.plugins.ecm.model.event.EcmFiledCopiedEvent;
+import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +58,7 @@ public class FileEventPublisher implements ApplicationEventPublisherAware
     {
 
         log.debug("Publishing a file copied event.");
-        EcmFiledCopiedEvent filedCopiedEvent = new EcmFiledCopiedEvent(source, auth.getName(), ipAddress);
+        EcmFileCopiedEvent filedCopiedEvent = new EcmFileCopiedEvent(source, auth.getName(), ipAddress);
         filedCopiedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(filedCopiedEvent);

@@ -14,6 +14,48 @@
     ],
     "components": [
         {
+            "id": "mfa",
+            "title": "profile.mfa.title",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "factorType",
+                    "displayName": "profile.mfa.table.columns.factorType",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getFactorType(row.entity) }}</div>"
+                },
+                {
+                    "name": "factorDetails",
+                    "displayName": "profile.mfa.table.columns.factorDetails",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getFactorDetails(row.entity) }}</div>"
+                },
+                {
+                    "name": "status",
+                    "field": "status",
+                    "displayName": "profile.mfa.table.columns.status",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.translateFactorStatus(row.entity.status) }}</div>"
+                },
+                {
+                    "name": "act",
+                    "cellEditableCondition": false,
+                    "width": 50,
+                    "headerCellTemplate": "<span></span>",
+                    "cellTemplate": "<a class='inline animated btn btn-secondary btn-xs' ng-click='grid.appScope.activateFactor(row.entity)' ng-hide='grid.appScope.isFactorActivateDisabled(row.entity)' tooltip=\"{{'profile.mfa.table.activate' | translate}}\" tooltip-append-to-body='true' tooltip-popup-delay='400'><i class='fa fa-check-circle'></i></a><a class='inline animated btn btn-secondary btn-xs' ng-click='grid.appScope.editFactor(row.entity)' ng-hide='grid.appScope.isFactorEditDisabled(row.entity)' tooltip=\"{{'profile.mfa.table.edit' | translate}}\" tooltip-append-to-body='true' tooltip-popup-delay='400'><i class='fa fa-pencil'></i></a><a class='inline animated btn btn-secondary btn-xs' ng-click='grid.appScope.deleteFactor(row.entity)' tooltip=\"{{'profile.mfa.table.delete' | translate}}\" tooltip-append-to-body='true' tooltip-popup-delay='400'><i class='fa fa-trash-o'></i></a>"
+                }
+            ]
+        },
+        {
             "id": "subscription",
             "title": "profile.comp.subscription.title",
             "enabled": true,

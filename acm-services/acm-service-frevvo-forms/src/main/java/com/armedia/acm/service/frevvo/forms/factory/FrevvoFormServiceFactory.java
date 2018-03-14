@@ -7,17 +7,14 @@ import com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusService;
 import com.armedia.acm.form.electroniccommunication.service.ElectronicCommunicationService;
 import com.armedia.acm.form.plainconfiguration.service.PlainConfigurationFormService;
 import com.armedia.acm.form.project.service.ProjectService;
-import com.armedia.acm.form.time.service.TimeService;
 import com.armedia.acm.forms.roi.service.ROIService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.service.frevvo.forms.web.api.FrevvoFormController;
-
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.Map;
 
 /**
@@ -104,37 +101,6 @@ public class FrevvoFormServiceFactory
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
             service.setAcmFolderService(frevvoFormController.getAcmFolderService());
-            service.setObjectConverter(getObjectConverter());
-
-            return service;
-        }
-
-        if (FrevvoFormName.TIMESHEET.equals(name))
-        {
-            String contextPath = request.getServletContext().getContextPath();
-
-            TimeService service = new TimeService();
-
-            service.setEcmFileService(frevvoFormController.getEcmFileService());
-            service.setServletContextPath(contextPath);
-            service.setProperties(frevvoFormController.getProperties());
-            service.setRequest(request);
-            service.setAuthentication(authentication);
-            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
-            service.setUserDao(frevvoFormController.getUserDao());
-            service.setUserActionDao(frevvoFormController.getUserActionDao());
-            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
-            service.setTimesheetService(frevvoFormController.getTimesheetService());
-            service.setAcmTimesheetDao(frevvoFormController.getAcmTimesheetDao());
-            service.setTimeFactory(frevvoFormController.getTimeFactory());
-            service.setSearchResults(frevvoFormController.getSearchResults());
-            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
-            service.setAcmContainerDao(frevvoFormController.getAcmContainerDao());
-            service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
-            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
-            service.setTimesheetEventPublisher(frevvoFormController.getTimesheetEventPublisher());
-            service.setLookupDao(frevvoFormController.getLookupDao());
-            service.setTranslationService(frevvoFormController.getTranslationService());
             service.setObjectConverter(getObjectConverter());
 
             return service;
