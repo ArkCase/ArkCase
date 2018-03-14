@@ -10,7 +10,8 @@ angular
                         'Admin.OrganizationalHierarchyService',
                         '$modal',
                         'Authentication',
-                        function($scope, ConfigService, OrganizationalHierarchyService, $modal, Authentication) {
+                        'Profile.MfaService',
+                        function($scope, ConfigService, OrganizationalHierarchyService, $modal, Authentication, ProfileMfaService) {
 
                             //TODO: Remove following phased out code block. Leave it just in case some extension are still using
                             //the 'req-component-config' and 'component-config' events to get config.
@@ -31,6 +32,10 @@ angular
                             ConfigService.getModuleConfig("profile").then(function(moduleConfig) {
                                 $scope.config = moduleConfig;
                                 return moduleConfig;
+                            });
+
+                            ProfileMfaService.getAuthProfile().then(function (authProfile) {
+                                $scope.authProfile = authProfile;
                             });
 
                             $scope.openPasswordDialog = function() {

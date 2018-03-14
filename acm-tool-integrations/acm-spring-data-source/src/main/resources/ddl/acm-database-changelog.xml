@@ -10,6 +10,14 @@
     <!--<property name="idType" value="BIGSERIAL" dbms="postgresql"/>-->
     <property name="idType" value="BIGINT" dbms="postgresql"/>
 
+    <!-- conversions -->
+    <property name="strToIntLeader" value="to_char(" dbms="postgresql"/>
+    <property name="strToIntTrailer" value=", '999999999999')" dbms="postgresql"/>
+    <property name="strToIntLeader" value="concat('', " dbms="mssql,mysql"/>
+    <property name="strToIntTrailer" value=")" dbms="mssql,mysql"/>
+    <property name="strToIntLeader" value="to_char(" dbms="oracle"/>
+    <property name="strToIntTrailer" value=")" dbms="oracle"/>
+
     <!-- gps properties -->
     <property name="gpsLatLong" value="NUMBER(10, 5)" dbms="oracle"/>
     <property name="gpsLatLong" value="NUMERIC" dbms="postgresql"/>
