@@ -1028,11 +1028,11 @@ a.editable.editable-click {
     background-color: #f4f5f4;
 }
 
-.full-docview .snowbound-iframe { 
-	position: absolute;
-	left: 0;
-	width: 100% !important;
-	height: 100% !important;
+.full-docview .snowbound-iframe {
+    position: absolute;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 @media only screen and (min-height: 900px) {
@@ -1604,3 +1604,21 @@ a.primary {
     height: 30px;
     opacity: 1 !important;
 }
+
+/*Scroll on transcription details tab */
+.scroll-body {
+    overflow: auto;
+    height: 500px;
+}
+
+/*Correction of checkbox position in transcription details tab */
+.cb-corrected {
+    position: relative;
+    bottom: 2px;
+    left: 4px;
+}
+
+.table-margin {
+    margin-bottom: 0;
+}
+

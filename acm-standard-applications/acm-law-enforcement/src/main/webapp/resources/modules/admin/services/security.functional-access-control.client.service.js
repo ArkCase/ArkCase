@@ -20,6 +20,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
         getUserGroups : getUserGroups,
         getAppUserToGroups : getAppUserToGroups,
         saveAppRolesToGroups : saveAppRolesToGroups,
+        getGroupsForRole : getGroupsForRole
     });
 
     /**
@@ -38,7 +39,6 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
             url : 'api/latest/functionalaccess/roles'
         });
     }
-    ;
 
     /**
      * @ngdoc method
@@ -56,7 +56,6 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
             url : 'api/latest/users/groups/get'
         });
     }
-    ;
 
     /**
      * @ngdoc method
@@ -74,7 +73,6 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
             url : 'api/latest/functionalaccess/rolestogroups'
         });
     }
-    ;
 
     /**
      * @ngdoc method
@@ -96,5 +94,29 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
             }
         });
     }
-    ;
+
+    /**
+     * @ngdoc method
+     * @name getGroupsForRole
+     * @methodOf services.service:Admin.FunctionalAccessControlService
+     *
+     * @description
+     * List of N groups for a specified Role:
+     *      Start position: start
+     *      End position: n
+     *      Is the group part of the Role: authorized/unauthorized
+     *
+     * @returns List of all authorized/unauthorized groups
+     */
+    function getGroupsForRole(data) {
+        return $http({
+            method : 'GET',
+            url : 'api/latest/functionalaccess/' + data.roleName.key + '/groups/',
+            params : {
+                start : (data.start ? data.start : 0),
+                n : (data.n ? data.n : 50),
+                authorized : data.isAuthorized
+            }
+        });
+    }
 });
