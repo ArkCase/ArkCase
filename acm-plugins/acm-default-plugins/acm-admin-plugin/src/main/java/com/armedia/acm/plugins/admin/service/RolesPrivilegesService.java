@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -79,14 +80,12 @@ public class RolesPrivilegesService
     }
 
     /**
-     * Retrieve application's privileges without role privileges
+     * Retrieve application's privileges by authorization
      *
      * @return map of privileges and descriptions
      * @throws AcmRolesPrivilegesException
      */
-    public Map<String, String> getNPrivilegesByRole(String roleName, String sortDirection, Integer startRow, Integer maxRows,
-            Boolean authorized)
-            throws AcmRolesPrivilegesException
+    public Map<String, String> retrievePrivilegesByAuthorization(Boolean authorized, String roleName) throws AcmRolesPrivilegesException
     {
         Map<String, String> privileges;
         if (authorized)
@@ -102,25 +101,53 @@ public class RolesPrivilegesService
                 privileges.remove(entry.getKey());
             }
         }
-
-        return getNPrivileges(privileges, sortDirection, startRow, maxRows);
+        return privileges;
     }
 
-    private Map<String, String> getNPrivileges(Map<String, String> privileges, String sortDirection,
+    /**
+     * Retrieve application's privileges without role privileges paged
+     *
+     * @return map of privileges and descriptions
+     * @throws AcmRolesPrivilegesException
+     */
+    public Map<String, String> getPrivilegesByRolePaged(String roleName, String sortDirection, Integer startRow, Integer maxRows,
+            Boolean authorized)
+            throws AcmRolesPrivilegesException
+    {
+        Map<String, String> privileges = retrievePrivilegesByAuthorization(authorized, roleName);
+
+        return getPrivilegesPaged(privileges, sortDirection, startRow, maxRows, "");
+    }
+
+    /**
+     * Retrieve application's privileges without role privileges by role name
+     *
+     * @return map of privileges and descriptions
+     * @throws AcmRolesPrivilegesException
+     */
+    public Map<String, String> getPrivilegesByRole(String roleName, Boolean authorized, String filterQuery, String sortDirection,
             Integer startRow, Integer maxRows)
+            throws AcmRolesPrivilegesException
+    {
+        Map<String, String> privileges = retrievePrivilegesByAuthorization(authorized, roleName);
+
+        return getPrivilegesPaged(privileges, sortDirection, startRow, maxRows, filterQuery);
+    }
+
+    public Map<String, String> getPrivilegesPaged(Map<String, String> privileges, String sortDirection,
+            Integer startRow, Integer maxRows, String filterQuery)
     {
         Map<String, String> result;
         Supplier<Map<String, String>> sortSupplier;
-
         if (sortDirection.contains("DESC"))
         {
             sortSupplier = () -> new TreeMap<>((o1, o2) -> o2.toLowerCase().compareTo(o1.toLowerCase()));
-            result = new TreeMap<>((o1, o2) -> o2.toLowerCase().compareTo(o1.toLowerCase()));
+            result = sortSupplier.get();
         }
         else
         {
             sortSupplier = () -> new TreeMap<>(Comparator.comparing(String::toLowerCase));
-            result = new TreeMap<>(Comparator.comparing(String::toLowerCase));
+            result = sortSupplier.get();
         }
 
         privileges.entrySet().forEach(entry -> {
@@ -132,6 +159,19 @@ public class RolesPrivilegesService
             return result;
         }
         maxRows = maxRows > privileges.size() ? privileges.size() : maxRows;
+
+        if (!filterQuery.isEmpty())
+        {
+            Iterator<Map.Entry<String, String>> it = result.entrySet().iterator();
+            while (it.hasNext())
+            {
+                Map.Entry<String, String> privilege = it.next();
+                if (!privilege.getKey().toLowerCase().contains(filterQuery.toLowerCase()))
+                {
+                    it.remove();
+                }
+            }
+        }
 
         return result.entrySet().stream().skip(startRow).limit(maxRows)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1, sortSupplier));

@@ -51,7 +51,7 @@ public class RolesPrivilegesRetrievePrivileges
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public Map<String, String> findPrivilegesByRole(
+    public Map<String, String> findPrivilegesByRolePaged(
             @PathVariable(value = "roleName") String roleName,
             @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
@@ -60,7 +60,30 @@ public class RolesPrivilegesRetrievePrivileges
     {
         try
         {
-            return rolesPrivilegesService.getNPrivilegesByRole(roleName, sortDirection, startRow, maxRows, authorized);
+            return rolesPrivilegesService.getPrivilegesByRolePaged(roleName, sortDirection, startRow, maxRows, authorized);
+        }
+        catch (Exception e)
+        {
+            log.error("Can't retrieve privileges", e);
+            throw new AcmRolesPrivilegesException("Can't retrieve privileges", e);
+        }
+    }
+
+    @RequestMapping(value = "/{roleName:.+}/privileges", params = { "fq" }, method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+    })
+    @ResponseBody
+    public Map<String, String> findPrivilegesByRole(
+            @PathVariable(value = "roleName") String roleName,
+            @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "fq") String filterQuery,
+            @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws IOException, AcmRolesPrivilegesException
+    {
+        try
+        {
+            return rolesPrivilegesService.getPrivilegesByRole(roleName, authorized, filterQuery, sortDirection, startRow, maxRows);
         }
         catch (Exception e)
         {
