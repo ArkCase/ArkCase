@@ -657,6 +657,9 @@ angular
                                         return this;
                                     },
                                     _addNode : function(node, isLast) {
+                                        if (node.hidden) {
+                                            return this;
+                                        }
                                         if (0 == this._depth) {
                                             this._nodes.push(node);
                                         } else {
