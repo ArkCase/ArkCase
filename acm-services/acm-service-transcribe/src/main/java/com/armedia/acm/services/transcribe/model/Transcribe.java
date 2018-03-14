@@ -51,10 +51,6 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     @JoinColumn(name = "cm_transcribe_media_file_version_id")
     private EcmFileVersion mediaEcmFileVersion;
 
-    @OneToOne
-    @JoinColumn(name = "cm_transcribe_file_id")
-    private EcmFile transcribeEcmFile;
-
     @Column(name = "cm_transcribe_status")
     private String status;
 
@@ -160,16 +156,6 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     public void setMediaEcmFileVersion(EcmFileVersion mediaEcmFileVersion)
     {
         this.mediaEcmFileVersion = mediaEcmFileVersion;
-    }
-
-    public EcmFile getTranscribeEcmFile()
-    {
-        return transcribeEcmFile;
-    }
-
-    public void setTranscribeEcmFile(EcmFile transcribeEcmFile)
-    {
-        this.transcribeEcmFile = transcribeEcmFile;
     }
 
     public String getProcessId()
