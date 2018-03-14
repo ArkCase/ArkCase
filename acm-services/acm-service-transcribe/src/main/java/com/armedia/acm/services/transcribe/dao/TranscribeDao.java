@@ -32,7 +32,7 @@ public class TranscribeDao extends AcmAbstractDao<Transcribe>
         }
         catch (NoResultException e)
         {
-            LOG.warn("There is no Transcribe for MEDIA_VERSION_ID=[%d]", mediaVersionId);
+            LOG.warn("There is no Transcribe for MEDIA_VERSION_ID=[%d]. REASON=[{}]", mediaVersionId, e.getMessage());
             return null;
         }
         catch (NonUniqueResultException e)

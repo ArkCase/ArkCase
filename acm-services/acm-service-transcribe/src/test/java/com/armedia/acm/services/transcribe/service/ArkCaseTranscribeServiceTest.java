@@ -2,6 +2,7 @@ package com.armedia.acm.services.transcribe.service;
 
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -103,6 +104,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
 
         when(ecmFileVersionDao.find(version.getId())).thenReturn(version);
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
@@ -112,7 +114,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         Transcribe created = arkCaseTranscribeService.create(version.getId(), TranscribeType.AUTOMATIC);
 
         verify(ecmFileVersionDao).find(version.getId());
-        verify(propertyFileManager, times(2)).loadMultiple(any(), any());
+        verify(propertyFileManager, times(3)).loadMultiple(any(), any());
         verify(transcribeDao).findByMediaVersionId(version.getId());
         verify(pipelineManager).executeOperation(any(), any(), any());
 
@@ -143,6 +145,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         when(transcribeDao.findByMediaVersionId(version.getId())).thenReturn(null);
@@ -150,7 +153,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
 
         Transcribe created = arkCaseTranscribeService.create(version, TranscribeType.AUTOMATIC);
 
-        verify(propertyFileManager, times(2)).loadMultiple(any(), any());
+        verify(propertyFileManager, times(3)).loadMultiple(any(), any());
         verify(transcribeDao).findByMediaVersionId(version.getId());
         verify(pipelineManager).executeOperation(any(), any(), any());
 
@@ -177,6 +180,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
 
@@ -212,6 +216,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
 
@@ -265,6 +270,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
 
@@ -304,6 +310,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         when(transcribeDao.findByMediaVersionId(version.getId())).thenReturn(transcribe);
@@ -314,7 +321,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         }
         catch (Exception e)
         {
-            verify(propertyFileManager, times(2)).loadMultiple(any(), any());
+            verify(propertyFileManager, times(3)).loadMultiple(any(), any());
             verify(transcribeDao).findByMediaVersionId(version.getId());
 
             assertTrue(e instanceof CreateTranscribeException);
@@ -345,6 +352,8 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
+
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         when(transcribeDao.findByMediaVersionId(version.getId())).thenReturn(null);
@@ -356,7 +365,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         }
         catch (Exception e)
         {
-            verify(propertyFileManager, times(2)).loadMultiple(any(), any());
+            verify(propertyFileManager, times(3)).loadMultiple(any(), any());
             verify(transcribeDao).findByMediaVersionId(version.getId());
             verify(pipelineManager).executeOperation(any(), any(), any());
 
@@ -368,9 +377,19 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
     @Test
     public void startBusinessProcess_Start_true() throws Exception
     {
+        EcmFile file = new EcmFile();
+        file.setFileId(103l);
+
+        EcmFileVersion version = new EcmFileVersion();
+        version.setId(101l);
+        version.setDurationSeconds(200d);
+        version.setVersionMimeType("video/mp4");
+        version.setFile(file);
+
         Transcribe transcribe = new Transcribe();
         transcribe.setId(102l);
         transcribe.setType(TranscribeType.AUTOMATIC.toString());
+        transcribe.setMediaEcmFileVersion(version);
 
         TranscribeBusinessProcessModel model = new TranscribeBusinessProcessModel();
         model.setType(transcribe.getType());
@@ -393,6 +412,15 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
     @Test
     public void startBusinessProcess_Start_true_Existing_Process() throws Exception
     {
+        EcmFile file = new EcmFile();
+        file.setFileId(103l);
+
+        EcmFileVersion version = new EcmFileVersion();
+        version.setId(101l);
+        version.setDurationSeconds(200d);
+        version.setVersionMimeType("video/mp4");
+        version.setFile(file);
+
         List<Long> ids = new ArrayList<>();
         ids.add(999l);
 
@@ -401,6 +429,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         transcribe.setType(TranscribeType.AUTOMATIC.toString());
         transcribe.setProcessId("123");
         transcribe.setRemoteId("remoteId");
+        transcribe.setMediaEcmFileVersion(version);
 
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("IDS", ids);
@@ -441,9 +470,19 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
     @Test
     public void startBusinessProcess_Start_false() throws Exception
     {
+        EcmFile file = new EcmFile();
+        file.setFileId(103l);
+
+        EcmFileVersion version = new EcmFileVersion();
+        version.setId(101l);
+        version.setDurationSeconds(200d);
+        version.setVersionMimeType("video/mp4");
+        version.setFile(file);
+
         Transcribe transcribe = new Transcribe();
         transcribe.setId(102l);
         transcribe.setType(TranscribeType.AUTOMATIC.toString());
+        transcribe.setMediaEcmFileVersion(version);
 
         TranscribeBusinessProcessModel model = new TranscribeBusinessProcessModel();
         model.setType(transcribe.getType());
@@ -473,6 +512,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
 
@@ -497,6 +537,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
 
@@ -521,6 +562,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
 
@@ -545,6 +587,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
 
@@ -556,27 +599,61 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
     }
 
     @Test
-    public void isLessThan2Hours_true() throws Exception
+    public void isMediaDurationAllowed_true() throws Exception
     {
         EcmFileVersion version = new EcmFileVersion();
         version.setId(101l);
         version.setDurationSeconds(200d);
         version.setVersionMimeType("video/mp4");
 
-        boolean result = arkCaseTranscribeService.isLessThan2Hours(version);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("transcribe.enabled", "true");
+        properties.put("transcribe.automatic.enabled", "true");
+        properties.put("transcribe.new.transcribe.for.new.version", "false");
+        properties.put("transcribe.copy.transcribe.for.new.version", "true");
+        properties.put("transcribe.cost", "10");
+        properties.put("transcribe.confidence", "80");
+        properties.put("transcribe.number.of.files.for.processing", "10");
+        properties.put("transcribe.word.count.per.item", "20");
+        properties.put("transcribe.provider", "AWS");
+        properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
+
+        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
+
+        boolean result = arkCaseTranscribeService.isMediaDurationAllowed(version);
+
+        verify(propertyFileManager).loadMultiple(any(), any());
 
         assertTrue(result);
     }
 
     @Test
-    public void isLessThan2Hours_false() throws Exception
+    public void isMediaDurationAllowed_false() throws Exception
     {
         EcmFileVersion version = new EcmFileVersion();
         version.setId(101l);
         version.setDurationSeconds(1000000d);
         version.setVersionMimeType("video/mp4");
 
-        boolean result = arkCaseTranscribeService.isLessThan2Hours(version);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("transcribe.enabled", "true");
+        properties.put("transcribe.automatic.enabled", "true");
+        properties.put("transcribe.new.transcribe.for.new.version", "false");
+        properties.put("transcribe.copy.transcribe.for.new.version", "true");
+        properties.put("transcribe.cost", "10");
+        properties.put("transcribe.confidence", "80");
+        properties.put("transcribe.number.of.files.for.processing", "10");
+        properties.put("transcribe.word.count.per.item", "20");
+        properties.put("transcribe.provider", "AWS");
+        properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
+
+        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
+
+        boolean result = arkCaseTranscribeService.isMediaDurationAllowed(version);
+
+        verify(propertyFileManager).loadMultiple(any(), any());
 
         assertFalse(result);
     }
@@ -589,7 +666,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         version.setDurationSeconds(200d);
         version.setVersionMimeType("video/mp4");
 
-        boolean result = arkCaseTranscribeService.isAudioOrVideo(version);
+        boolean result = arkCaseTranscribeService.isFileVersionTranscribable(version);
 
         assertTrue(result);
     }
@@ -601,7 +678,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         version.setId(101l);
         version.setVersionMimeType("text/plain");
 
-        boolean result = arkCaseTranscribeService.isAudioOrVideo(version);
+        boolean result = arkCaseTranscribeService.isFileVersionTranscribable(version);
 
         assertFalse(result);
     }
@@ -620,6 +697,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
 
@@ -649,6 +727,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
 
@@ -683,6 +762,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         configuration.setWordCountPerItem(20);
         configuration.setProvider(TranscribeServiceProvider.AWS);
         configuration.setProviders(providers);
+        configuration.setAllowedMediaDuration(7200);
 
         doNothing().when(propertyFileManager).storeMultiple(any(), any(), eq(false));
 

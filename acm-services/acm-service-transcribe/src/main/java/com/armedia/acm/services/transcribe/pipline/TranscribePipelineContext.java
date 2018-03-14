@@ -12,6 +12,7 @@ public class TranscribePipelineContext extends AbstractPipelineContext
 {
     private EcmFileVersion ecmFileVersion;
     private TranscribeType type;
+    private String processId;
 
     public EcmFileVersion getEcmFileVersion()
     {
@@ -31,5 +32,15 @@ public class TranscribePipelineContext extends AbstractPipelineContext
     public void setType(TranscribeType type)
     {
         this.type = type;
+    }
+
+    public String getProcessId()
+    {
+        return processId;
+    }
+
+    public void setProcessId(String processId)
+    {
+        this.processId = processId;
     }
 }
