@@ -1126,13 +1126,6 @@
             },
             {
                 "type": "p/forms/config",
-                "label": "admin.forms.config",
-                "components": [
-                    "forms.config"
-                ]
-            },
-            {
-                "type": "p/forms/config",
                 "label": "admin.forms.timesheetConfiguration.title",
                 "components": [
                     "timesheet.config"
