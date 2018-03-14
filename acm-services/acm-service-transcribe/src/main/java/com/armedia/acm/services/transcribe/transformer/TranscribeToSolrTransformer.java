@@ -49,18 +49,8 @@ public class TranscribeToSolrTransformer implements AcmObjectToSolrDocTransforme
         solr.setAdditionalProperty("language_s", in.getLanguage());
         solr.setAdditionalProperty("media_file_version_id_l", in.getMediaEcmFileVersion().getId());
 
-        if (in.getTranscribeEcmFile() != null)
-        {
-            solr.setAdditionalProperty("transcribe_file_id_l", in.getTranscribeEcmFile().getId());
-        }
-        else
-        {
-            solr.setAdditionalProperty("transcribe_file_id_l", null);
-        }
-
         solr.setAdditionalProperty("process_id_s", in.getProcessId());
         solr.setAdditionalProperty("word_count_l", in.getWordCount());
-
 
         return solr;
     }
