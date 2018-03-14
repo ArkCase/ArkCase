@@ -61,7 +61,7 @@ public class DecoratedParticipantAnnotationTest
     }
 
     @Test
-    public void AssignableObjectDecorationWithoutParticipantsTest() throws Throwable
+    public void assignableObjectDecorationWithoutParticipantsTest() throws Throwable
     {
         DataAccessAssignedObject testObject = new DataAccessAssignedObject();
         expect(pjp.proceed()).andReturn(testObject);
@@ -73,7 +73,7 @@ public class DecoratedParticipantAnnotationTest
     }
 
     @Test
-    public void AssignableObjectDecorationWithParticipantsTest() throws Throwable
+    public void assignableObjectDecorationWithParticipantsTest() throws Throwable
     {
         DataAccessAssignedObject testObject = new DataAccessAssignedObject();
         testObject.setParticipants(getDefaultParticipants());
@@ -88,12 +88,12 @@ public class DecoratedParticipantAnnotationTest
     }
 
     @Test
-    public void ParticipantsListDecorationTest() throws Throwable
+    public void participantsListDecorationTest() throws Throwable
     {
         DataAccessAssignedObject testObject = new DataAccessAssignedObject();
         List<AcmParticipant> participants = getDefaultParticipants();
         testObject.setParticipants(participants);
-        SetupTestObjectReturnMethod(testObject, participants);
+        setupTestObjectReturnMethod(testObject, participants);
         List<AcmParticipant> decorated = (List<AcmParticipant>) decoratedParticipantAspect.aroundDecoratingMethod(pjp,
                 decoratedAssignedObjectParticipants);
 
@@ -102,12 +102,12 @@ public class DecoratedParticipantAnnotationTest
     }
 
     @Test
-    public void ParticipantsListDecorationWithoutParticipantsTest() throws Throwable
+    public void participantsListDecorationWithoutParticipantsTest() throws Throwable
     {
         DataAccessAssignedObject testObject = new DataAccessAssignedObject();
         List<AcmParticipant> participants = new ArrayList<>();
         testObject.setParticipants(participants);
-        SetupTestObjectReturnMethod(testObject, participants);
+        setupTestObjectReturnMethod(testObject, participants);
         List<AcmParticipant> decorated = (List<AcmParticipant>) decoratedParticipantAspect.aroundDecoratingMethod(pjp,
                 decoratedAssignedObjectParticipants);
 
@@ -115,17 +115,17 @@ public class DecoratedParticipantAnnotationTest
     }
 
     @Test
-    public void ParticipantsListDecorationWithInvalidParentObject() throws Throwable
+    public void participantsListDecorationWithInvalidParentObject() throws Throwable
     {
         List<AcmParticipant> participants = getDefaultParticipants();
-        SetupTestObjectReturnMethod(null, participants);
+        setupTestObjectReturnMethod(null, participants);
         List<AcmParticipant> decorated = (List<AcmParticipant>) decoratedParticipantAspect.aroundDecoratingMethod(pjp,
                 decoratedAssignedObjectParticipants);
 
         Assert.assertEquals(decorated.size(), participants.size());
     }
 
-    private void SetupTestObjectReturnMethod(DataAccessAssignedObject object, List<AcmParticipant> participants) throws Throwable
+    private void setupTestObjectReturnMethod(DataAccessAssignedObject object, List<AcmParticipant> participants) throws Throwable
     {
         Object[] args = new Object[2];
         args[0] = this.objectType;
