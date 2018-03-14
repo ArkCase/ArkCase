@@ -16,10 +16,6 @@ angular.module('services').factory(
                 function($resource, $translate, Store, Util, ObjectLookupService) {
                     var Service = $resource('api/latest/plugin', {}, {});
 
-                    Service.SessionCacheNames = {
-                        PERSON_TYPES : "AcmPersonTypes"
-                    };
-
                     /**
                      * @ngdoc method
                      * @name getPersonTypes

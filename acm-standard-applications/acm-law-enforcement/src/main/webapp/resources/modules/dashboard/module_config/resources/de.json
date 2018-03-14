@@ -5,6 +5,14 @@
             "leftnav.item": "Übersicht"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "de_Select your preferred row count.",
+                    "fiveRows": "de_5",
+                    "tenRows": "de_10",
+                    "twentyFiveRows": "de_25"
+                }
+            },
             "casesByQueue": {
                 "title": "Aktive Falldateien nach Warteschlange",
                 "description": "Anzeige aktiver Falldateien nach Warteschlange",
