@@ -36,11 +36,12 @@ public class AWSTranscribeService implements TranscribeService
     private AmazonTranscribe transcribeClient;
     private EcmFileTransaction ecmFileTransaction;
     private AWSTranscribeConfigurationPropertiesService awsTranscribeConfigurationPropertiesService;
+    private String credentialConfigurationFileLocation;
 
     public void init() throws GetConfigurationException
     {
         AWSTranscribeConfiguration configuration = getConfiguration();
-        ArkCaseAWSCredentialsProviderChain credentialsProviderChain = new ArkCaseAWSCredentialsProviderChain();
+        ArkCaseAWSCredentialsProviderChain credentialsProviderChain = new ArkCaseAWSCredentialsProviderChain(getCredentialConfigurationFileLocation(), configuration.getProfile());
         s3Client = AmazonS3ClientBuilder.standard().withCredentials(credentialsProviderChain).withRegion(Regions.fromName(configuration.getRegion())).build();
         transcribeClient = AmazonTranscribeClientBuilder.standard().withCredentials(credentialsProviderChain).withRegion(Regions.fromName(configuration.getRegion())).build();
     }
@@ -213,5 +214,15 @@ public class AWSTranscribeService implements TranscribeService
     public void setAwsTranscribeConfigurationPropertiesService(AWSTranscribeConfigurationPropertiesService awsTranscribeConfigurationPropertiesService)
     {
         this.awsTranscribeConfigurationPropertiesService = awsTranscribeConfigurationPropertiesService;
+    }
+
+    public String getCredentialConfigurationFileLocation()
+    {
+        return credentialConfigurationFileLocation;
+    }
+
+    public void setCredentialConfigurationFileLocation(String credentialConfigurationFileLocation)
+    {
+        this.credentialConfigurationFileLocation = credentialConfigurationFileLocation;
     }
 }

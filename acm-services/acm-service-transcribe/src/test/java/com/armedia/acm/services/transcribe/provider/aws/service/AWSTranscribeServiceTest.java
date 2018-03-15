@@ -94,6 +94,7 @@ public class AWSTranscribeServiceTest
         properties.put("aws.bucket", "bucket");
         properties.put("aws.region", "region");
         properties.put("aws.host", "host");
+        properties.put("aws.profile", "profile");
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         when(s3Client.doesObjectExist((String) properties.get("aws.bucket"), transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension())).thenReturn(false);
@@ -150,6 +151,7 @@ public class AWSTranscribeServiceTest
         properties.put("aws.bucket", "bucket");
         properties.put("aws.region", "region");
         properties.put("aws.host", "host");
+        properties.put("aws.profile", "profile");
 
         String key = transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension();
         String expectedErrorMessage = "The file with KEY=[" + key + "] already exist on Amazon.";
@@ -196,6 +198,7 @@ public class AWSTranscribeServiceTest
         properties.put("aws.bucket", "bucket");
         properties.put("aws.region", "region");
         properties.put("aws.host", "host");
+        properties.put("aws.profile", "profile");
 
         String expectedErrorMessage = "Unable to upload media file to Amazon. REASON=[error (Service: null; Status Code: 0; Error Code: null; Request ID: null)].";
 
@@ -245,6 +248,7 @@ public class AWSTranscribeServiceTest
         properties.put("aws.bucket", "bucket");
         properties.put("aws.region", "region");
         properties.put("aws.host", "host");
+        properties.put("aws.profile", "profile");
 
         String expectedErrorMessage = "Unable to start transcribe job on Amazon. REASON=[error (Service: null; Status Code: 0; Error Code: null; Request ID: null)]";
 

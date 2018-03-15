@@ -49,9 +49,10 @@
         </property>
     </bean>
 
-    <bean id="awsTranscribeService" class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeService" init-method="init" depends-on="awsTranscribeConfigurationPropertiesService">
+    <bean id="awsTranscribeService" class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeService" init-method="init" lazy-init="true" depends-on="awsTranscribeConfigurationPropertiesService">
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="awsTranscribeConfigurationPropertiesService" ref="awsTranscribeConfigurationPropertiesService"/>
+        <property name="credentialConfigurationFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/aws/credentials.properties"/>
         <aop:scoped-proxy proxy-target-class="true"/>
     </bean>
 

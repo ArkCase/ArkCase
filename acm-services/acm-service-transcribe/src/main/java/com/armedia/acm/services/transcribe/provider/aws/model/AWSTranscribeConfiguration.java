@@ -20,6 +20,9 @@ public class AWSTranscribeConfiguration implements Serializable
     @ConfigurationProperty(key = "aws.host")
     private String host;
 
+    @ConfigurationProperty(key = "aws.profile")
+    private String profile;
+
     public String getBucket()
     {
         return bucket;
@@ -48,5 +51,15 @@ public class AWSTranscribeConfiguration implements Serializable
     public void setHost(String host)
     {
         this.host = host;
+    }
+
+    public String getProfile()
+    {
+        return profile;
+    }
+
+    public void setProfile(String profile)
+    {
+        this.profile = profile;
     }
 }
