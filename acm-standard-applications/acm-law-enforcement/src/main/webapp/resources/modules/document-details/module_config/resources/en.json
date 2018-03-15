@@ -23,7 +23,7 @@
             "newRow": "New Row"
         },
         "comp.eventHistory": {
-            "title": "Event History",
+            "title": "History",
             "table.columns": {
                 "eventType": "Event Name",
                 "eventDate": "Created",
@@ -82,7 +82,7 @@
             }
         },
         "comp.versionHistory": {
-            "title": "Version History",
+            "title": "Versions",
             "table.columns": {
                 "creator": "User",
                 "created": "Created",
