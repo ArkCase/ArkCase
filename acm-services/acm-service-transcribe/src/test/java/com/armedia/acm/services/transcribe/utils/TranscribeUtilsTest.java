@@ -63,4 +63,82 @@ public class TranscribeUtilsTest
 
         assertEquals(expectedResult, actualResult);
     }
+
+    @Test
+    public void extractMediaType_video()
+    {
+        String mimeType = "video/mp4";
+        String expectedResult = "mp4";
+
+        String actualResult = TranscribeUtils.extractMediaType(mimeType);
+
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void extractMediaType_audio()
+    {
+        String mimeType = "audio/mp3";
+        String expectedResult = "mp3";
+
+        String actualResult = TranscribeUtils.extractMediaType(mimeType);
+
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void extractMediaType_More_Slashes()
+    {
+        String mimeType = "video/mp4/mistake";
+        String expectedResult = "";
+
+        String actualResult = TranscribeUtils.extractMediaType(mimeType);
+
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void extractMediaType_Ends_With_Slash()
+    {
+        String mimeType = "video/";
+        String expectedResult = "";
+
+        String actualResult = TranscribeUtils.extractMediaType(mimeType);
+
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void extractMediaType_No_Slash()
+    {
+        String mimeType = "video";
+        String expectedResult = "";
+
+        String actualResult = TranscribeUtils.extractMediaType(mimeType);
+
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void extractMediaType_Empty_String()
+    {
+        String mimeType = "";
+        String expectedResult = "";
+
+        String actualResult = TranscribeUtils.extractMediaType(mimeType);
+
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void extractMediaType_Null()
+    {
+        String mimeType = null;
+        String expectedResult = "";
+
+        String actualResult = TranscribeUtils.extractMediaType(mimeType);
+
+        assertEquals(expectedResult, actualResult);
+    }
+
 }

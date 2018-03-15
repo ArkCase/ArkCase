@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-import com.armedia.acm.services.transcribe.exception.SaveTranscribeConfigurationException;
+import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.model.TranscribeServiceProvider;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
@@ -118,7 +118,7 @@ public class SaveTranscribeConfigurationAPIControllerTest extends EasyMockSuppor
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        SaveTranscribeConfigurationException exception = new SaveTranscribeConfigurationException("error");
+        SaveConfigurationException exception = new SaveConfigurationException("error");
 
         when(mockAuthentication.getName()).thenReturn("user");
         when(mockArkCaseTranscribeService.saveConfiguration(any(TranscribeConfiguration.class))).thenThrow(exception);
@@ -135,7 +135,7 @@ public class SaveTranscribeConfigurationAPIControllerTest extends EasyMockSuppor
         catch (Exception e)
         {
             assertNotNull(e);
-            assertTrue(e.getCause() instanceof SaveTranscribeConfigurationException);
+            assertTrue(e.getCause() instanceof SaveConfigurationException);
             assertEquals("error", e.getCause().getMessage());
         }
     }
