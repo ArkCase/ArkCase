@@ -24,6 +24,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.tika.exception.TikaException;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -401,7 +402,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
         try
         {
-            String alfrescoUser = "admin";
+            CMISCloudConnectorConnectionManager manager = cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId());
+
+            String alfrescoUser = manager.getUsername();
             Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() : null;
 
             if (authentication != null && authentication.getName() != null)
@@ -413,7 +416,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
             Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId()));
+            messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, manager);
             MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId(), messageProps);
 
             InputStream result = ((ContentStream) message.getPayload()).getStream();
