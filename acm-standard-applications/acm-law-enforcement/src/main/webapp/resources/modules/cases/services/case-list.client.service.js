@@ -16,11 +16,6 @@ angular.module('services').factory(
                 function($resource, $translate, Store, Util, ObjectService, ObjectListService) {
                     var Service = $resource('api/latest/plugin', {}, {});
 
-                    Service.SessionCacheNames = {};
-                    Service.CacheNames = {
-                        CASE_LIST : "CaseList"
-                    };
-
                     /**
                      * @ngdoc method
                      * @name resetCasesTreeData
@@ -32,8 +27,8 @@ angular.module('services').factory(
                      * @returns None
                      */
                     Service.resetCasesTreeData = function() {
-                        var cacheCaseList = new Store.CacheFifo(Service.CacheNames.CASE_LIST);
-                        cacheCaseList.reset();
+                        // var cacheCaseList = new Store.CacheFifo(Service.CacheNames.CASE_LIST);
+                        // cacheCaseList.reset();
                     };
 
                     /**
@@ -54,7 +49,7 @@ angular.module('services').factory(
                      * @returns {Object} Promise
                      */
                     Service.updateCasesTreeData = function(start, n, sort, filters, query, nodeData) {
-                        ObjectListService.updateObjectTreeData(Service.CacheNames.CASE_LIST, start, n, sort, filters, query, nodeData);
+
                     };
 
                     /**
@@ -81,17 +76,13 @@ angular.module('services').factory(
                         param.sort = Util.goodValue(sort);
                         param.filters = Util.goodValue(filters);
                         param.query = Util.goodValue(query);
-                        var cacheCaseList = new Store.CacheFifo(Service.CacheNames.CASE_LIST);
-                        var cacheKey = param.start + "." + param.n + "." + param.sort + "." + param.filters + "." + param.query;
-                        var treeData = cacheCaseList.get(cacheKey);
 
                         return Util.serviceCall({
                             service : ObjectListService._queryObjects,
                             param : param,
-                            result : treeData,
                             onSuccess : function(data) {
                                 if (Service.validateCaseList(data)) {
-                                    treeData = {
+                                    var treeData = {
                                         docs : [],
                                         total : data.response.numFound
                                     };
@@ -110,7 +101,6 @@ angular.module('services').factory(
                                         }
                                         treeData.docs.push(node);
                                     });
-                                    cacheCaseList.put(cacheKey, treeData);
                                     return treeData;
                                 }
                             }

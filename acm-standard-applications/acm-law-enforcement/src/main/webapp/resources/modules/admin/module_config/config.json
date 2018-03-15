@@ -1126,13 +1126,6 @@
             },
             {
                 "type": "p/forms/config",
-                "label": "admin.forms.config",
-                "components": [
-                    "forms.config"
-                ]
-            },
-            {
-                "type": "p/forms/config",
                 "label": "admin.forms.timesheetConfiguration.title",
                 "components": [
                     "timesheet.config"
@@ -1269,14 +1262,16 @@
                 "type": "p/transcription",
                 "label": "admin.transcription.title",
                 "icon": "fa fa-wrench",
-                "components": []
+                "components": [],
+                "hidden": true
             },
             {
                 "type": "p/transcription/transcriptionManagement",
                 "label": "admin.transcription.transcriptionManagement",
                 "components": [
                     "transcription-management"
-                ]
+                ],
+                "hidden": true
             }
         ]
     }

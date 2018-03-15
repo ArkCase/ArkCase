@@ -334,7 +334,7 @@ angular.module('services').factory(
                         case "CASE_FILE":
                         case "DOC_REPO":
                             return Service.getLookupByLookupName("entitiesParticipantTypes");
-                        case "FILE"  :
+                        case "FILE":
                         case "FOLDER":
                             return Service.getLookupByLookupName("documentsParticipantTypes");
                         }

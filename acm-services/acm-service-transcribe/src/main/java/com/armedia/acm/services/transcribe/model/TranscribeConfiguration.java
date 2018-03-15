@@ -44,6 +44,9 @@ public class TranscribeConfiguration implements Serializable
     @TranscribeConfigurationProperty(key = "transcribe.providers", write = false)
     private List<TranscribeServiceProvider> providers;
 
+    @TranscribeConfigurationProperty(key = "transcribe.allowed.media.duration.in.seconds", write = false)
+    private long allowedMediaDuration;
+
     public boolean isEnabled()
     {
         return enabled;
@@ -152,6 +155,16 @@ public class TranscribeConfiguration implements Serializable
         this.providers = providers;
     }
 
+    public long getAllowedMediaDuration()
+    {
+        return allowedMediaDuration;
+    }
+
+    public void setAllowedMediaDuration(long allowedMediaDuration)
+    {
+        this.allowedMediaDuration = allowedMediaDuration;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -168,15 +181,15 @@ public class TranscribeConfiguration implements Serializable
                 confidence == that.confidence &&
                 numberOfFilesForProcessing == that.numberOfFilesForProcessing &&
                 wordCountPerItem == that.wordCountPerItem &&
-                provider == that.provider;
+                provider == that.provider &&
+                allowedMediaDuration == that.allowedMediaDuration;
     }
 
     @Override
     public int hashCode()
     {
-
         return Objects.hash(enabled, automaticEnabled, newTranscriptionForNewVersion, copyTranscriptionForNewVersion, cost, confidence,
-                numberOfFilesForProcessing, wordCountPerItem, provider);
+                numberOfFilesForProcessing, wordCountPerItem, provider, allowedMediaDuration);
     }
 
     @Override
@@ -192,6 +205,7 @@ public class TranscribeConfiguration implements Serializable
                 ", numberOfFilesForProcessing=" + numberOfFilesForProcessing +
                 ", wordCountPerItem=" + wordCountPerItem +
                 ", provider=" + provider +
+                ", allowedMediaDuration=" + allowedMediaDuration +
                 '}';
     }
 }

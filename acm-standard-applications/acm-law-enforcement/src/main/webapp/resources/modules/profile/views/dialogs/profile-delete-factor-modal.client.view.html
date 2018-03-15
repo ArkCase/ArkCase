@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        <span translate>profile.mfa.deleteModal.title</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <span>{{ buildConfirmationMessage(factorInfo) }}</span>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-sm btn-secondary pull-left" ng-click="cancel()">
+        <span translate>profile.mfa.deleteModal.cancel</span>
+    </button>
+    <button class="btn btn-sm btn-primary pull-right" ng-click="confirm()">
+        <span translate>profile.mfa.deleteModal.confirm</span>
+    </button>
+</div>

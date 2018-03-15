@@ -5,6 +5,14 @@
             "leftnav.item": "Painel de Controle"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "es_Select your preferred row count.",
+                    "fiveRows": "es_5",
+                    "tenRows": "es_10",
+                    "twentyFiveRows": "es_25"
+                }
+            },
             "casesByQueue": {
                 "title": "Archivos de caso activo por cola",
                 "description": "Muestra los archivos de casos activos por cola",
