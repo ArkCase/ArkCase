@@ -1,7 +1,6 @@
 package com.armedia.acm.services.transcribe.provider.aws.credentials;
 
 import com.amazonaws.auth.*;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/12/2018
