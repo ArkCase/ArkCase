@@ -7,7 +7,7 @@
     "components": [
         {
             "id": "eventHistory",
-            "title": "Event History",
+            "title": "History",
             "icon": "fa fa-bell-o",
             "enabled": true,
             "type": "grid",
@@ -88,7 +88,7 @@
         },
         {
             "id": "versionHistory",
-            "title": "Version History",
+            "title": "Versions",
             "icon": "fa fa-comments",
             "enabled": true,
             "type": "grid",
