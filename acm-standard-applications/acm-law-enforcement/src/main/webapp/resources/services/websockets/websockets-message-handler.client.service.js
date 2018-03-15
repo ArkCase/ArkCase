@@ -144,7 +144,7 @@ angular.module('services').factory(
                     function handleChildItemsData(objectType, objectId) {
                         //for casefile and complaint we have ChildTaskData, CostSheets and TimeSheets
 
-                        if (objectType === 'CASE_FILE' || objectType === 'COMPLAINT') {
+                        if (objectType === 'CASE_FILE' || objectType === 'COMPLAINT' || objectType === 'TIMESHEET') {
                             //subKey is objecttype.objectid and some other things like sorting
                             var subKey = objectType + "." + objectId;
                             removeFromCache(subKey, 'ChildTaskData');

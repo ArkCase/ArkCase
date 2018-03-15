@@ -12,8 +12,16 @@
  */
 angular.module('services').factory(
         'Person.InfoService',
-        [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', '$http', '$q', 'MessageService',
-                function($resource, $translate, Store, Util, $http, $q, MessageService) {
+        [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', '$http', '$q', 'MessageService', 'CacheFactory', 'ObjectService',
+                function($resource, $translate, Store, Util, $http, $q, MessageService, CacheFactory, ObjectService) {
+
+                    var personCache = CacheFactory(ObjectService.ObjectTypes.PERSON, {
+                        maxAge : 1 * 60 * 1000, // Items added to this cache expire after 1 minute
+                        cacheFlushInterval : 60 * 60 * 1000, // This cache will clear itself every hour
+                        deleteOnExpire : 'aggressive', // Items will be deleted from this cache when they expire
+                        capacity : 1
+                    });
+                    var peopleBaseUrl = "api/latest/plugin/people/";
                     var Service = $resource('api/latest/plugin', {}, {
                         /**
                          * @ngdoc method
@@ -40,8 +48,7 @@ angular.module('services').factory(
                                     return angular.toJson(Util.omitNg(encodedPerson));
                                 }
                                 return data;
-                            },
-                            cache : false
+                            }
                         },
 
                         /**
@@ -61,17 +68,12 @@ angular.module('services').factory(
                          */
                         get : {
                             method : 'GET',
-                            url : 'api/latest/plugin/people/:id',
-                            cache : false,
+                            url : peopleBaseUrl + ':id',
+                            cache : personCache,
                             isArray : false
                         }
 
                     });
-
-                    Service.SessionCacheNames = {};
-                    Service.CacheNames = {
-                        PERSON_INFO : "PersonInfo"
-                    };
 
                     /**
                      * @ngdoc method
@@ -83,9 +85,10 @@ angular.module('services').factory(
                      *
                      * @returns None
                      */
-                    Service.resetPersonInfo = function() {
-                        var cacheInfo = new Store.CacheFifo(Service.CacheNames.PERSON_INFO);
-                        cacheInfo.reset();
+                    Service.resetPersonInfo = function(personInfo) {
+                        if (personInfo && personInfo.id) {
+                            personCache.remove(peopleBaseUrl + personInfo.id);
+                        }
                     };
 
                     /**
@@ -101,10 +104,7 @@ angular.module('services').factory(
                      * @returns {Object} Promise
                      */
                     Service.updatePersonInfo = function(personInfo) {
-                        if (Service.validatePersonInfo(personInfo)) {
-                            var cachePersonInfo = new Store.CacheFifo(Service.CacheNames.PERSON_INFO);
-                            cachePersonInfo.put(personInfo.id, personInfo);
-                        }
+                        //TODO remove this method
                     };
 
                     /**
@@ -120,17 +120,13 @@ angular.module('services').factory(
                      * @returns {Object} Promise
                      */
                     Service.getPersonInfo = function(id) {
-                        var cachePersonInfo = new Store.CacheFifo(Service.CacheNames.PERSON_INFO);
-                        var personInfo = cachePersonInfo.get(id);
                         return Util.serviceCall({
                             service : Service.get,
                             param : {
                                 id : id
                             },
-                            result : personInfo,
                             onSuccess : function(data) {
                                 if (Service.validatePersonInfo(data)) {
-                                    cachePersonInfo.put(id, data);
                                     return data;
                                 }
                             }
@@ -163,15 +159,15 @@ angular.module('services').factory(
                             data : personInfo,
                             onSuccess : function(data) {
                                 if (Service.validatePersonInfo(data)) {
-                                    var personInfo = data;
-                                    var cachePersonInfo = new Store.CacheFifo(Service.CacheNames.PERSON_INFO);
-                                    cachePersonInfo.put(personInfo.id, personInfo);
-                                    return personInfo;
+                                    if (data.id) {
+                                        personCache.put(peopleBaseUrl + data.id, data);
+                                    }
+                                    return data;
                                 }
                             },
-                            onError: function (error) {
-                                    MessageService.error(error.data);
-                                    return error;
+                            onError : function(error) {
+                                MessageService.error(error.data);
+                                return error;
                             }
                         });
                     };
@@ -235,9 +231,7 @@ angular.module('services').factory(
 
                         savePersonInfoPromise.then(function(payload) {
                             if (Service.validatePersonInfo(payload.data)) {
-                                var personInfo = payload.data;
-                                var cachePersonInfo = new Store.CacheFifo(Service.CacheNames.PERSON_INFO);
-                                cachePersonInfo.put(personInfo.id, personInfo);
+                                personCache.put(peopleBaseUrl + data.id, data);
                             }
                             deferred.resolve(payload);
                         }, function(payload) {

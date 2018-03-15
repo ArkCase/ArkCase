@@ -1,0 +1,27 @@
+<section class="well">
+    <div ng-controller="Profile.MfaController" class="panel panel-success">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>profile.mfa.table.title</span>
+                <button class="btn btn-xs btn-default pull-right" ng-click="createFactor()"
+                        ng-disabled="!availableFactors || availableFactors.length < 1">
+                    <i class="fa fa-plus"></i>
+                    <span translate>profile.mfa.table.create</span>
+                </button>
+            </div>
+        </div>
+        <div ng-hide="noData"
+             ui-grid="gridOptions"
+             ui-grid-resize-columns
+             ui-grid-auto-resize
+             ui-grid-pagination
+             adjust-table-height="gridOptions.data.length"
+             class="grid">
+        </div>
+        <div class="alert" ng-if="noData">
+            <p class="text-center">
+                <span translate>profile.mfa.noData</span>
+            </p>
+        </div>
+    </div>
+</section>

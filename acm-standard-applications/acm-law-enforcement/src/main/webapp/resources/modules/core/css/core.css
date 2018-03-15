@@ -1,6 +1,7 @@
 /* @override 
 	http://localhost:8080/arkcase/modules/core/css/core.css
-	https://core.arkcase.dev.armedia.com/arkcase/modules/core/css/core.css */
+	https://core.arkcase.dev.armedia.com/arkcase/modules/core/css/core.css
+	https://pds.arkcase.com/arkcase/modules/core/css/core.css */
 
 html {
     height: 100%;
@@ -362,7 +363,9 @@ body {
     overflow-y: auto;
     position: relative;
     height: 100%;
+	z-index: 1999;
 }
+
 
 .module-content .left-sidebar .header h3,
 .module-content .left-sidebar-sm .header h3,
@@ -412,13 +415,10 @@ body {
 }
 
 .module-content .right-sidebar {
-    position: fixed;
-    top: 0;
+    position: absolute;
+	bottom: 0;
     right: 0;
     vertical-align: top;
-    padding-left: 0px;
-    padding-right: 0px;
-    top: 111px;
     width: 500px;
     height: 100% !important;
     -webkit-overflow-scrolling: touch;
