@@ -19,7 +19,8 @@
             "startTime": "Start time",
             "confidence": "Confidence",
             "corrected": "Corrected",
-            "enterText": "Enter Text"
+            "enterText": "Enter Text",
+            "newRow": "New Row"
         },
         "comp.eventHistory": {
             "title": "History",
