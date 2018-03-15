@@ -17,8 +17,9 @@ angular.module('document-details').controller(
                 'Helper.LocaleService',
                 'Admin.TranscriptionManagementService',
                 'MessageService',
+                'UtilService',
                 function($scope, $stateParams, $sce, $q, $timeout, TicketService, ConfigService, LookupService, SnowboundService,
-                        Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService) {
+                        Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util) {
 
                     new LocaleHelper.Locale({
                         scope : $scope
@@ -56,6 +57,49 @@ angular.module('document-details').controller(
                         $scope.transcribeEnabled = res.data.enabled;
                     }, function(err) {
                         MessageService.error(err.data);
+                    });
+
+                    $scope.getEcmFileActiveVersion = function(ecmFile) {
+                        var activeVersion = null;
+                        if (Util.isEmpty(ecmFile) || Util.isEmpty(ecmFile.activeVersionTag) || Util.isArrayEmpty(ecmFile.versions)) {
+                            return null;
+                        }
+
+                        angular.forEach(ecmFile.versions, function(version, key) {
+                            if (angular.equals(ecmFile.activeVersionTag, version.versionTag)) {
+                                activeVersion = version;
+                            }
+                        });
+
+                        return activeVersion;
+                    };
+
+                    $scope.$on('transcribe-data-model', function(event, transcribeObj) {
+                        $scope.transcribeObjectModel = transcribeObj;
+                        var confidenceSum = 0;
+                        $scope.confidenceAverage = 0;
+                        angular.forEach($scope.transcribeObjectModel.transcribeItems, function(value, key) {
+                            confidenceSum += value.confidence;
+                            $scope.confidenceAverage = (confidenceSum / $scope.transcribeObjectModel.transcribeItems.length).toFixed(1);
+                        });
+
+                        var activeVersion = $scope.getEcmFileActiveVersion($scope.ecmFile);
+                        $scope.durationInMinutes = (activeVersion.durationSeconds / 60).toFixed(1);
+
+                        //color the status
+                        $scope.colorTranscribeStatus = function() {
+                            switch ($scope.transcribeObjectModel.status) {
+                            case 'QUEUED':
+                                return '#dcce22';
+                            case 'PROCESSING':
+                                return 'orange';
+                            case 'COMPLETED':
+                                return '#05a205';
+                            case 'FAILED':
+                                return 'red';
+                            }
+                        };
+
                     });
 
                     /**
