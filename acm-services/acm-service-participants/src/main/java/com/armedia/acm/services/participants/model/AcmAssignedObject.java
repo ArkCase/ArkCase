@@ -11,6 +11,8 @@ public interface AcmAssignedObject extends AcmObject
 {
     List<AcmParticipant> getParticipants();
 
+    void setParticipants(List<AcmParticipant> newParticipants);
+
     Boolean getRestricted();
 
     String getStatus();
