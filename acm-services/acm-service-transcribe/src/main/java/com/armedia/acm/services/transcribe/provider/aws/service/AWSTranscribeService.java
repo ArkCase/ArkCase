@@ -39,7 +39,7 @@ public class AWSTranscribeService implements TranscribeService
 
     public void init() throws GetConfigurationException
     {
-        AWSTranscribeConfiguration configuration = (AWSTranscribeConfiguration) getConfiguration();
+        AWSTranscribeConfiguration configuration = getConfiguration();
         ArkCaseAWSCredentialsProviderChain credentialsProviderChain = new ArkCaseAWSCredentialsProviderChain();
         s3Client = AmazonS3ClientBuilder.standard().withCredentials(credentialsProviderChain).withRegion(Regions.fromName(configuration.getRegion())).build();
         transcribeClient = AmazonTranscribeClientBuilder.standard().withCredentials(credentialsProviderChain).withRegion(Regions.fromName(configuration.getRegion())).build();
@@ -52,7 +52,7 @@ public class AWSTranscribeService implements TranscribeService
         AWSTranscribeConfiguration configuration = null;
         try
         {
-            configuration = (AWSTranscribeConfiguration)getConfiguration();
+            configuration = getConfiguration();
         }
         catch (GetConfigurationException e)
         {
