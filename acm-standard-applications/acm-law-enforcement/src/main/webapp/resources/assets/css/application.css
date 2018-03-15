@@ -1,5 +1,7 @@
 /* @override 
-	http://localhost:8080/arkcase/assets/css/application.css */
+	http://localhost:8080/arkcase/assets/css/application.css
+	https://pds.arkcase.com/arkcase/assets/css/application.css
+	https://core.arkcase.dev.armedia.com/arkcase/assets/css/application.css */
 
 /* Typography */
 
@@ -381,6 +383,7 @@ span.fancytree-title {
     border-left: 0px;
     border-right: 0px;
     position: relative;
+	z-index: 1001;
 }
 
 .ui-contextmenu {
@@ -596,6 +599,7 @@ span.fancytree-title {
     height: auto !important;
 }
 
+
 /* Fix ui-grids to resize based on content. (Source: alangumer on https://github.com/angular-ui/ui-grid/issues/3239) */
 /* Hey guys, let's not override the default styles of these grids. I realize they look like innocent changes on the forums, but this has been causing a lot of havoc.
 
@@ -617,8 +621,9 @@ span.fancytree-title {
     padding: 2px;
 }*/
 
+
 .ui-grid-top-panel {
-    width: 100%
+    width: 100%;
 }
 
 /* End of ui-grid fix. */
@@ -764,7 +769,6 @@ thead {
 }
 
 .ui-grid .ui-grid-cell div {
-/ / padding: 5 px;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -877,16 +881,15 @@ thead {
 /* In this way we localize this override only for x-editable.*/
 
 .editable + .form-inline {
-    position: fixed;
-    margin-top: 30px;
+    position: absolute;
+    margin-top: 10px;
     background-color: #ebeceb;
     border: 1px solid #AAA;
     border-radius: 5px;
     padding: 7px;
     width: auto;
-    display: inline-block;
-    margin-left: -140px;
-    z-index: 2000;
+	display: block;
+	z-index: 2000;
 }
 
 .editable + .form-inline:before {
@@ -898,7 +901,7 @@ thead {
     border-bottom: 10px solid #AAA;
     position: absolute;
     top: -10px;
-    left: 40%;
+    left: 10%;
 }
 
 .editable + .form-inline:after {
@@ -911,7 +914,8 @@ thead {
     position: absolute;
     top: -9px;
     margin-left: 1px;
-    left: 40%;
+    left: 10%;
+	
 }
 
 a.editable.editable-click {
@@ -1018,6 +1022,28 @@ a.editable.editable-click {
     min-height: 650px;
     width: 100%;
     height: 100%;
+}
+
+.detail-content .snowbound-iframe {
+	min-height: auto;
+    position: fixed;
+	padding-top: 130px;
+	padding-right: 510px;
+	padding-bottom: 0px;
+	bottom: 0px;
+	width: 100%;
+    height: 100%;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+.detail-content .full-docview .snowbound-iframe {
+	width: 100%;
+	height: 100%;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-right: 0px;
+	top: 60px;
 }
 
 .snowbound-open-document {
@@ -1606,7 +1632,7 @@ a.primary {
 }
 
 /*Scroll on transcription details tab */
-.scroll-body {
+.scroll-body-transcript {
     overflow: auto;
     height: 500px;
 }
