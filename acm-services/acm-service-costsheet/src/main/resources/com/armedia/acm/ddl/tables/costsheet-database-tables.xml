@@ -217,10 +217,15 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="12-add-number-in-acm-costsheet-table" author="marjan.trifunov">
+    <changeSet id="12-add-number-in-acm-costsheet-table-nullable" author="marjan.trifunov">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="acm_costsheet" columnName="cm_costsheet_number"/>
+            </not>
+        </preConditions>
         <addColumn tableName="acm_costsheet">
             <column name="cm_costsheet_number" type="VARCHAR(1024)">
-                <constraints unique="true" uniqueConstraintName="uk_costsheet_number" nullable="false"/>
+                <constraints unique="true" uniqueConstraintName="uk_costsheet_number" nullable="true"/>
             </column>
         </addColumn>
     </changeSet>
@@ -232,5 +237,9 @@
             SET c.cm_costsheet_number = c.cm_costsheet_id
             WHERE c.cm_costsheet_number IS NULL OR c.cm_costsheet_number = ''
         </sql>
+    </changeSet>
+
+    <changeSet id="14-require-costsheet-number" author="dmiller" failOnError="false">
+        <addNotNullConstraint tableName="acm_costsheet" columnName="cm_costsheet_number" columnDataType="VARCHAR(1024)"/>
     </changeSet>
 </databaseChangeLog>

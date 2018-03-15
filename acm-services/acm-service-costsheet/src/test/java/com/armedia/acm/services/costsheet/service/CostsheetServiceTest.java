@@ -3,6 +3,7 @@
  */
 package com.armedia.acm.services.costsheet.service;
 
+import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
@@ -10,6 +11,8 @@ import static org.junit.Assert.assertEquals;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCost;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
+import com.armedia.acm.services.costsheet.pipeline.CostsheetPipelineContext;
+import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
@@ -51,6 +54,7 @@ public class CostsheetServiceTest extends EasyMockSupport
     private AcmCostsheetDao mockAcmCostsheetDao;
     private ExecuteSolrQuery mockExecuteSolrQuery;
     private Map<String, String> submissionStatusesMap;
+    private PipelineManager<AcmCostsheet, CostsheetPipelineContext> pipelineManager;
 
     @Before
     public void setUp() throws Exception
@@ -60,6 +64,7 @@ public class CostsheetServiceTest extends EasyMockSupport
         mockAuthentication = createMock(Authentication.class);
         mockAcmCostsheetDao = createMock(AcmCostsheetDao.class);
         mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
+        pipelineManager = createMock(PipelineManager.class);
 
         submissionStatusesMap = new HashMap<>();
         submissionStatusesMap.put("Save", "DRAFT");
@@ -68,6 +73,7 @@ public class CostsheetServiceTest extends EasyMockSupport
         costsheetService.setAcmCostsheetDao(mockAcmCostsheetDao);
         costsheetService.setExecuteSolrQuery(mockExecuteSolrQuery);
         costsheetService.setSubmissionStatusesMap(submissionStatusesMap);
+        costsheetService.setPipelineManager(pipelineManager);
     }
 
     @Test
@@ -96,6 +102,9 @@ public class CostsheetServiceTest extends EasyMockSupport
         Capture<AcmCostsheet> costsheetCapture = new Capture<>();
 
         expect(mockAcmCostsheetDao.save(capture(costsheetCapture))).andReturn(costsheet);
+        expect(pipelineManager.executeOperation(anyObject(AcmCostsheet.class), anyObject(CostsheetPipelineContext.class),
+                anyObject(PipelineManager.PipelineManagerOperation.class)))
+                        .andAnswer(() -> mockAcmCostsheetDao.save(costsheet));
 
         replayAll();
 
@@ -132,6 +141,9 @@ public class CostsheetServiceTest extends EasyMockSupport
         Capture<AcmCostsheet> costsheetCapture = new Capture<>();
 
         expect(mockAcmCostsheetDao.save(capture(costsheetCapture))).andReturn(costsheet);
+        expect(pipelineManager.executeOperation(anyObject(AcmCostsheet.class), anyObject(CostsheetPipelineContext.class),
+                anyObject(PipelineManager.PipelineManagerOperation.class)))
+                        .andAnswer(() -> mockAcmCostsheetDao.save(costsheet));
 
         replayAll();
 
@@ -140,7 +152,9 @@ public class CostsheetServiceTest extends EasyMockSupport
         verifyAll();
 
         assertEquals(costsheetCapture.getValue().getId(), saved.getId());
-        assertEquals("DRAFT", saved.getStatus());
+        // our responsiblity now is only to call the pipeline save... so we don't have to check any effects of the
+        // rules.
+        // Sometime we need separate unit tests on the rules themselves.
     }
 
     @Test
@@ -169,6 +183,9 @@ public class CostsheetServiceTest extends EasyMockSupport
         Capture<AcmCostsheet> costsheetCapture = new Capture<>();
 
         expect(mockAcmCostsheetDao.save(capture(costsheetCapture))).andReturn(costsheet);
+        expect(pipelineManager.executeOperation(anyObject(AcmCostsheet.class), anyObject(CostsheetPipelineContext.class),
+                anyObject(PipelineManager.PipelineManagerOperation.class)))
+                        .andAnswer(() -> mockAcmCostsheetDao.save(costsheet));
 
         replayAll();
 
@@ -177,7 +194,9 @@ public class CostsheetServiceTest extends EasyMockSupport
         verifyAll();
 
         assertEquals(costsheetCapture.getValue().getId(), saved.getId());
-        assertEquals("IN_APPROVAL", saved.getStatus());
+        // our responsiblity now is only to call the pipeline save... so we don't have to check any effects of the
+        // rules.
+        // Sometime we need separate unit tests on the rules themselves.
     }
 
     @Test
