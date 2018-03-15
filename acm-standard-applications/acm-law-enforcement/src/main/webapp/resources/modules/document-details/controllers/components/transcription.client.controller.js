@@ -17,9 +17,9 @@ angular.module('document-details').controller(
                                     var itemHolder = getNewTranscribeItemHolder();
                                     itemHolder.item = v;
                                     var tempTime = moment.duration(v.startTime, 'seconds'); //get the seconds
-                                    itemHolder.seconds = tempTime.seconds() < 10 ? '0' + tempTime.seconds() : tempTime.seconds();
-                                    itemHolder.minutes = tempTime.minutes() < 10 ? '0' + tempTime.minutes() : tempTime.minutes();
-                                    itemHolder.hours = tempTime.hours() < 10 ? '0' + tempTime.hours() : tempTime.hours();
+                                    itemHolder.seconds = moment().seconds(tempTime.seconds()).format('ss');
+                                    itemHolder.minutes = moment().minutes(tempTime.minutes()).format('mm');
+                                    itemHolder.hours = moment().hours(tempTime.hours()).format('HH');
                                     $scope.items.push(itemHolder);
                                 });
                             }, function(err) {
