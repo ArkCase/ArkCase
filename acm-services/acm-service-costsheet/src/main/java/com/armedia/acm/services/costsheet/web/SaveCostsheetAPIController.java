@@ -7,6 +7,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,11 +43,9 @@ public class SaveCostsheetAPIController
 
         try
         {
-            AcmCostsheet saved = getCostsheetService().save(costsheet);
-
-            return saved;
+            return getCostsheetService().save(costsheet);
         }
-        catch (RuntimeException e)
+        catch (RuntimeException | PipelineProcessException e)
         {
             throw new AcmCreateObjectFailedException(CostsheetConstants.OBJECT_TYPE, e.getMessage(), e);
         }

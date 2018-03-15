@@ -48,6 +48,16 @@ angular.module('dashboard.tasks', [ 'adf.provider' ]).config(function(dashboardP
                                 configName : "time-tracking",
                                 getInfo : ObjectTaskService.queryChildTasks,
                                 objectType : ObjectService.ObjectTypes.TIMESHEET
+                            }, {
+                                name : ObjectService.ObjectTypes.TIMESHEET,
+                                configName : "time-tracking",
+                                getInfo : ObjectTaskService.queryChildTasks,
+                                objectType : ObjectService.ObjectTypes.TIMESHEET
+                            }, {
+                                name : ObjectService.ObjectTypes.COSTSHEET,
+                                configName : "cost-tracking",
+                                getInfo : ObjectTaskService.queryChildTasks,
+                                objectType : ObjectService.ObjectTypes.COSTSHEET
                             } ];
 
                             var module = _.find(modules, function(module) {
@@ -86,4 +96,15 @@ angular.module('dashboard.tasks', [ 'adf.provider' ]).config(function(dashboardP
 
                                 });
                             }
+
+                            var populateGridData = function() {
+                                promiseInfo = module.getInfo(module.objectType, currentObjectId, $scope.start, $scope.pageSize);
+                                promiseInfo.then(function(data) {
+                                    var tasks = data.response.docs;
+                                    $scope.gridOptions = $scope.gridOptions || {};
+                                    $scope.gridOptions.data = tasks;
+                                    $scope.gridOptions.totalItems = data.response.numFound;
+                                })
+                            };
+
                         } ]);
