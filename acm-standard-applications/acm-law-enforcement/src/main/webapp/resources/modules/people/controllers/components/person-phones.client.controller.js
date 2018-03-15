@@ -180,7 +180,10 @@ angular.module('people').controller(
                         return promiseSaveInfo;
                     }
 
-                    $scope.isDefault = function(data) {
-                        return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultPhone");
+                    $scope.isDefault = function(phone) {
+                        var defaultPhone = $scope.objectInfo.defaultPhone;
+                        return defaultPhone.id == phone.id && defaultPhone.value == phone.value
+                                && defaultPhone.description == phone.description && defaultPhone.type == phone.type
+                                && defaultPhone.subType == phone.subType;
                     }
                 } ]);
