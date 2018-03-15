@@ -42,6 +42,42 @@
                     </div>
 
                 </div>
+                <div class="row" ng-if="transcribeEnabled && showVideoPlayer">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="h4 font-bold">{{transcribeObjectModel.language}}</div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.language</small>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                        <div class="h4 font-bold">{{transcribeObjectModel.wordCount}}</div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.wordCount</small>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="h4 font-bold">{{confidenceAverage}}</div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.confidence</small>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus()}">
+                            {{transcribeObjectModel.status}} &nbsp;
+                            <button class="btn btn-xs btn-default" ng-if="transcribeObjectModel.status === 'QUEUED'">
+                                <span translate>documentDetails.comp.transcription.buttons.cancel</span>
+                            </button>
+                        </div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.transcriptStatus</small>
+
+                    </div>
+                </div>
+
+                <div class="row" ng-if="showVideoPlayer">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="h4 font-bold">{{fileType}}</div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.fileType</small>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="h4 font-bold">{{durationInMinutes}}</div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.length</small>
+                    </div>
+                </div>
 
             </div>
         </div>

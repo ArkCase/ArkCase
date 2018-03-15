@@ -11,6 +11,7 @@ angular.module('document-details').controller(
                         var activeVersion = $scope.getEcmFileActiveVersion(ecmFile);
                         if (!Util.isEmpty(activeVersion)) {
                             TranscriptionAppService.getTranscribeObject(activeVersion.id).then(function(res) {
+                                $scope.$emit('transcribe-data-model', res.data);
                                 $scope.transcribeDataModel = res.data;
                                 //format time
                                 angular.forEach($scope.transcribeDataModel.transcribeItems, function(v, k) {
