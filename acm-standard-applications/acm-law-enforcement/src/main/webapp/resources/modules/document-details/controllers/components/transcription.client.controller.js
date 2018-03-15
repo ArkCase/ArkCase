@@ -2,35 +2,29 @@
 
 angular.module('document-details').controller(
         'Document.TranscriptionController',
-        [
-                '$scope',
-                'DocumentDetails.TranscriptionAppService',
-                'UtilService',
-                'MessageService',
-                function($scope, TranscriptionAppService, Util, MessageService) {
+        [ '$scope', 'DocumentDetails.TranscriptionAppService', 'UtilService', 'MessageService', 'moment',
+                function($scope, TranscriptionAppService, Util, MessageService, moment) {
 
                     $scope.items = [];
 
                     $scope.$on('document-data', function(event, ecmFile) {
                         var activeVersion = $scope.getEcmFileActiveVersion(ecmFile);
                         if (!Util.isEmpty(activeVersion)) {
-                            TranscriptionAppService.getTranscribeObject(activeVersion.id).then(
-                                    function(res) {
-                                        $scope.transcribeDataModel = res.data;
-                                        //format time
-                                        angular.forEach($scope.transcribeDataModel.transcribeItems, function(v, k) {
-                                            var itemHolder = $scope.getNewTranscribeItemHolder();
-                                            itemHolder.item = v;
-                                            itemHolder.seconds = v.startTime % 60 < 10 ? '0' + v.startTime % 60 : v.startTime % 60;
-                                            itemHolder.minutes = Math.floor(v.startTime % 3600 / 60) < 10 ? '0'
-                                                    + Math.floor(v.startTime % 3600 / 60) : Math.floor(v.startTime % 3600 / 60);
-                                            itemHolder.hours = Math.floor(v.startTime / 3600) < 10 ? '0' + Math.floor(v.startTime / 3600)
-                                                    : Math.floor(v.startTime / 3600);
-                                            $scope.items.push(itemHolder);
-                                        });
-                                    }, function(err) {
-                                        MessageService.error(err.data);
-                                    });
+                            TranscriptionAppService.getTranscribeObject(activeVersion.id).then(function(res) {
+                                $scope.transcribeDataModel = res.data;
+                                //format time
+                                angular.forEach($scope.transcribeDataModel.transcribeItems, function(v, k) {
+                                    var itemHolder = getNewTranscribeItemHolder();
+                                    itemHolder.item = v;
+                                    var tempTime = moment.duration(v.startTime, 'seconds'); //get the seconds
+                                    itemHolder.seconds = tempTime.seconds() < 10 ? '0' + tempTime.seconds() : tempTime.seconds();
+                                    itemHolder.minutes = tempTime.minutes() < 10 ? '0' + tempTime.minutes() : tempTime.minutes();
+                                    itemHolder.hours = tempTime.hours() < 10 ? '0' + tempTime.hours() : tempTime.hours();
+                                    $scope.items.push(itemHolder);
+                                });
+                            }, function(err) {
+                                MessageService.error(err.data);
+                            });
                         }
                     });
 
@@ -50,7 +44,7 @@ angular.module('document-details').controller(
                     };
 
                     $scope.addTranscribeItem = function() {
-                        var itemHolder = $scope.getNewTranscribeItemHolder();
+                        var itemHolder = getNewTranscribeItemHolder();
                         $scope.items.push(itemHolder);
                     };
 
@@ -63,7 +57,7 @@ angular.module('document-details').controller(
                         }
                     };
 
-                    $scope.getNewTranscribeItem = function() {
+                    var getNewTranscribeItem = function() {
                         return {
                             id : null,
                             transcribe : null,
@@ -81,10 +75,10 @@ angular.module('document-details').controller(
                         };
                     };
 
-                    $scope.getNewTranscribeItemHolder = function() {
+                    var getNewTranscribeItemHolder = function() {
                         return {
                             id : new Date().getTime(),
-                            item : $scope.getNewTranscribeItem(),
+                            item : getNewTranscribeItem(),
                             seconds : '00',
                             minutes : '00',
                             hours : '00'
