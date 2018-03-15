@@ -3,6 +3,7 @@
  */
 package com.armedia.acm.objectchangestatus.service;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
@@ -36,7 +37,7 @@ public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
         log.debug("Changing object status: type [{}], id [{}], new status: [{}]",
                 objectType, objectId, status);
 
-        AcmAbstractDao<AcmStatefulEntity> dao = getAcmDataService().getDaoByObjectType(objectType);
+        AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
 
         if (dao != null)
         {
@@ -44,20 +45,20 @@ public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
 
             try
             {
-                entity = dao.find(objectId);
+                entity = (AcmStatefulEntity) dao.find(objectId);
             }
             catch (EntityNotFoundException e)
             {
                 // try and flush our SQL in case we are trying to operate on a brand new object
                 entityManager.flush();
-                entity = dao.find(objectId);
+                entity = (AcmStatefulEntity) dao.find(objectId);
             }
 
             if (entity != null)
             {
                 log.debug("Found object of type [{}], setting status to [{}]", entity.getClass().getName(), status);
                 entity.setStatus(status);
-                dao.save(entity);
+                dao.save((AcmObject) entity);
 
                 // now we have to flush our changes so other objects in a workflow will see our changes.
                 entityManager.flush();

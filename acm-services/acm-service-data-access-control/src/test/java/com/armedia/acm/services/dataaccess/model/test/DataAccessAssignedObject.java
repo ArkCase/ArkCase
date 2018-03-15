@@ -1,5 +1,6 @@
 package com.armedia.acm.services.dataaccess.model.test;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
@@ -10,11 +11,13 @@ import java.util.Random;
 /**
  * Created by armdev on 2/16/15.
  */
-public class DataAccessAssignedObject implements AcmAssignedObject
+public class DataAccessAssignedObject implements AcmAssignedObject, AcmObject
 {
     private String status;
     private List<AcmParticipant> participants = new ArrayList<>();
     private Long id;
+    private String objectType = "DATA-ACCESS-TEST";
+    private String creator = "TEST-CREATOR";
 
     public DataAccessAssignedObject()
     {
@@ -38,6 +41,7 @@ public class DataAccessAssignedObject implements AcmAssignedObject
         return participants;
     }
 
+    @Override
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
@@ -46,7 +50,7 @@ public class DataAccessAssignedObject implements AcmAssignedObject
     @Override
     public String getObjectType()
     {
-        return "DATA-ACCESS-TEST";
+        return this.objectType;
     }
 
     @Override
@@ -59,5 +63,15 @@ public class DataAccessAssignedObject implements AcmAssignedObject
     public Boolean getRestricted()
     {
         return false;
+    }
+
+    public String getCreator()
+    {
+        return creator;
+    }
+
+    public void setCreator(String creator)
+    {
+        this.creator = creator;
     }
 }
