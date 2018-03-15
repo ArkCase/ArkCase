@@ -7,8 +7,11 @@ import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
+import com.armedia.acm.plugins.dashboard.model.widget.RolesGroupByWidgetDto;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
+import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleName;
 import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
 
@@ -17,7 +20,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 
+import javax.servlet.http.HttpSession;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,6 +41,7 @@ public class DashboardService
     private WidgetDao widgetDao;
     private DashboardPropertyReader dashboardPropertyReader;
     private AcmUserRoleService userRoleService;
+    private WidgetEventPublisher eventPublisher;
 
     public static String removeWidgetsFromJson(JSONObject dashboardJson, Set<String> widgetNames)
     {
@@ -194,6 +202,85 @@ public class DashboardService
         return widgets.stream().distinct().collect(Collectors.toList());
     }
 
+    public void raiseGetEvent(Authentication authentication, HttpSession session, List<RolesGroupByWidgetDto> rolesPerWidgets,
+            boolean succeeded)
+    {
+        String ipAddress = (String) session.getAttribute("acm_ip_address");
+        getEventPublisher().publishGeRolesByWidgets(rolesPerWidgets, authentication, ipAddress, succeeded);
+    }
+
+    public List<RolesGroupByWidgetDto> addNotAuthorizedRolesPerWidget(List<RolesGroupByWidgetDto> rolesPerWidget)
+    {
+        List<AcmRole> allRoles = getUserDao().findAllRoles();
+        List<Widget> allWidgets = getWidgetDao().findAll();
+        List<WidgetRoleName> notAuthorized = new ArrayList<>();
+        boolean isNotAuthorized = true;
+        List<RolesGroupByWidgetDto> tmpRolesPerWidget = new ArrayList<>();
+        boolean isAddedToRolesGroupByWidgetLsit = false;
+        for (RolesGroupByWidgetDto rolePerW : rolesPerWidget)
+        {
+            rolePerW.setName(widgetName(rolePerW.getWidgetName()));
+            for (AcmRole role : allRoles)
+            {
+                for (WidgetRoleName roleName : rolePerW.getWidgetAuthorizedRoles())
+                {
+                    if (roleName.getName().equals(role.getRoleName()))
+                    {
+                        isNotAuthorized = false;
+                        break;
+                    }
+                }
+                if (isNotAuthorized)
+                {
+                    notAuthorized.add(new WidgetRoleName(role.getRoleName()));
+                }
+                isNotAuthorized = true;
+            }
+            rolePerW.setWidgetNotAuthorizedRoles(notAuthorized);
+            notAuthorized = new ArrayList<>();
+        }
+        for (Widget widget : allWidgets)
+        {
+            for (RolesGroupByWidgetDto roleW : rolesPerWidget)
+            {
+                if (roleW.getWidgetName().equals(widget.getWidgetName()))
+                {
+                    tmpRolesPerWidget.add(roleW);
+                    isAddedToRolesGroupByWidgetLsit = true;
+                    break;
+                }
+            }
+            if (!isAddedToRolesGroupByWidgetLsit)
+            {
+                RolesGroupByWidgetDto rolesGBW = new RolesGroupByWidgetDto();
+                rolesGBW.setWidgetName(widget.getWidgetName());
+                rolesGBW.setName(widgetName(widget.getWidgetName()));
+                List<WidgetRoleName> notAuth = new ArrayList<>();
+                for (AcmRole role : allRoles)
+                {
+                    notAuth.add(new WidgetRoleName(role.getRoleName()));
+                }
+                rolesGBW.setWidgetNotAuthorizedRoles(notAuth);
+                rolesGBW.setWidgetAuthorizedRoles(new ArrayList<>());
+                tmpRolesPerWidget.add(rolesGBW);
+            }
+            isAddedToRolesGroupByWidgetLsit = false;
+        }
+        return tmpRolesPerWidget;
+    }
+
+    private String widgetName(String camelName)
+    {
+        StringBuffer stringBuffer = new StringBuffer();
+        // create sentence from camelString
+        for (String w : camelName.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))
+        {
+            stringBuffer.append(w.substring(0, 1).toUpperCase() + w.substring(1));
+            stringBuffer.append(" ");
+        }
+        return stringBuffer.toString();
+    }
+
     public AcmPlugin getDashboardPlugin()
     {
         return dashboardPlugin;
@@ -247,5 +334,15 @@ public class DashboardService
     public void setUserRoleService(AcmUserRoleService userRoleService)
     {
         this.userRoleService = userRoleService;
+    }
+
+    public void setEventPublisher(WidgetEventPublisher eventPublisher)
+    {
+        this.eventPublisher = eventPublisher;
+    }
+
+    public WidgetEventPublisher getEventPublisher()
+    {
+        return eventPublisher;
     }
 }
