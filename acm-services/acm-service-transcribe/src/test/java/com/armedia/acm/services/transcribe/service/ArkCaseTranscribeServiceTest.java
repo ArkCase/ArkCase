@@ -8,7 +8,7 @@ import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.transcribe.dao.TranscribeDao;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
-import com.armedia.acm.services.transcribe.exception.GetTranscribeConfigurationException;
+import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
 import com.armedia.acm.services.transcribe.model.*;
 import com.armedia.acm.services.transcribe.pipline.TranscribePipelineContext;
 import com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor;
@@ -73,7 +73,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         transcribeConfigurationPropertiesService.setPropertyFileManager(propertyFileManager);
 
         arkCaseTranscribeService = new ArkCaseTranscribeService();
-        arkCaseTranscribeService.setTranscribeConfigurationService(transcribeConfigurationPropertiesService);
+        arkCaseTranscribeService.setTranscribeConfigurationPropertiesService(transcribeConfigurationPropertiesService);
         arkCaseTranscribeService.setTranscribeDao(transcribeDao);
         arkCaseTranscribeService.setPipelineManager(pipelineManager);
         arkCaseTranscribeService.setEcmFileVersionDao(ecmFileVersionDao);
@@ -434,8 +434,8 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("IDS", ids);
         processVariables.put("REMOTE_ID", transcribe.getRemoteId());
-        processVariables.put("STATUS", StatusType.QUEUED);
-        processVariables.put("ACTION", ActionType.QUEUED);
+        processVariables.put("STATUS", TranscribeStatusType.QUEUED);
+        processVariables.put("ACTION", TranscribeActionType.QUEUED);
 
         TranscribeBusinessProcessModel model = new TranscribeBusinessProcessModel();
         model.setType(transcribe.getType());
@@ -740,7 +740,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
             verify(propertyFileManager).loadMultiple(any(), any());
 
             assertNotNull(e);
-            assertTrue(e instanceof GetTranscribeConfigurationException);
+            assertTrue(e instanceof GetConfigurationException);
             assertTrue(e.getCause() instanceof NumberFormatException);
         }
     }

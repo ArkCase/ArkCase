@@ -37,7 +37,7 @@ public class TranscribeRulesTest
         assertTrue(xls.exists());
 
         String drl = sc.compile(xls.getInputStream(), InputType.XLS);
-        LOG.info("DRL: " + drl);
+        LOG.info("DRL: {}" + drl);
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
@@ -70,7 +70,7 @@ public class TranscribeRulesTest
 
         assertNotNull(transcribe.getRemoteId());
 
-        LOG.debug("Remote ID: " + transcribe.getRemoteId());
+        LOG.debug("Remote ID: {}", transcribe.getRemoteId());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class TranscribeRulesTest
 
         assertNotNull(transcribe.getStatus());
 
-        LOG.debug("Status: " + transcribe.getStatus());
+        LOG.debug("Status: {}", transcribe.getStatus());
     }
 
     @Test
@@ -106,6 +106,6 @@ public class TranscribeRulesTest
 
         assertNotNull(transcribe.getLanguage());
 
-        LOG.debug("Language: " + transcribe.getLanguage());
+        LOG.debug("Language: {}", transcribe.getLanguage());
     }
 }
