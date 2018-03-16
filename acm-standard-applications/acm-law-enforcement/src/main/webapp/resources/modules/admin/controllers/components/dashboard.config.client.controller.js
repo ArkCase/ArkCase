@@ -70,7 +70,7 @@ angular.module('admin')
                                         return ($translate.instant(item.name).toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
                                     });
                                 } else {
-                                    result = arrayFrom.slice(0, 50);
+                                    result = arrayFrom;
                                 }
                                 return result;
                             }
