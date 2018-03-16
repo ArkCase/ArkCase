@@ -77,11 +77,10 @@ angular.module('document-details').controller(
                     $scope.$on('transcribe-data-model', function(event, transcribeObj) {
                         $scope.transcribeObjectModel = transcribeObj;
                         var confidenceSum = 0;
-                        $scope.confidenceAverage = 0;
                         angular.forEach($scope.transcribeObjectModel.transcribeItems, function(value, key) {
                             confidenceSum += value.confidence;
-                            $scope.confidenceAverage = (confidenceSum / $scope.transcribeObjectModel.transcribeItems.length).toFixed(1);
                         });
+                        $scope.confidenceAverage = (confidenceSum / $scope.transcribeObjectModel.transcribeItems.length).toFixed(1);
 
                         var activeVersion = $scope.getEcmFileActiveVersion($scope.ecmFile);
                         $scope.durationInMinutes = (activeVersion.durationSeconds / 60).toFixed(1);
