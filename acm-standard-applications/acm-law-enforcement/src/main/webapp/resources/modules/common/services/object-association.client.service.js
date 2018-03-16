@@ -15,9 +15,8 @@ angular.module('services').factory(
         [
                 '$resource',
                 '$translate',
-                'Acm.StoreService',
                 'UtilService',
-                function($resource, $translate, Store, Util) {
+                function($resource, $translate, Util) {
                     var Service = $resource('api/latest/plugin', {}, {
                         /**
                          * @ngdoc method
@@ -186,16 +185,12 @@ angular.module('services').factory(
                      * @returns {Object} Promise
                      */
                     Service.getAssociationInfo = function(id) {
-                        var cacheAssociationInfo = new Store.CacheFifo(Service.CacheNames.OBJECT_ASSOCIATION_INFO);
-                        var associationInfo = cacheAssociationInfo.get(id);
                         return Util.serviceCall({
                             service : Service.get,
                             param : {
                                 id : id
                             },
-                            result : associationInfo,
                             onSuccess : function(data) {
-                                cacheAssociationInfo.put(id, data);
                                 return data;
                             }
                         });

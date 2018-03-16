@@ -12,8 +12,16 @@
  */
 angular.module('tasks').factory(
         'Task.InfoService',
-        [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService',
-                function($resource, $translate, Store, Util, ObjectInfoService) {
+        [ '$resource', '$translate', 'UtilService', 'CacheFactory', 'ObjectService',
+                function($resource, $translate, Util, CacheFactory, ObjectService) {
+                    var taskCache = CacheFactory(ObjectService.ObjectTypes.TASK, {
+                        maxAge : 1 * 60 * 1000, // Items added to this cache expire after 1 minute
+                        cacheFlushInterval : 60 * 60 * 1000, // This cache will clear itself every hour
+                        deleteOnExpire : 'aggressive', // Items will be deleted from this cache when they expire
+                        capacity : 1
+                    });
+                    var taskGetUrl = 'api/latest/plugin/task/byId/';
+
                     var Service = $resource('api/latest/plugin', {}, {
                         /**
                          * ngdoc method
@@ -30,12 +38,12 @@ angular.module('tasks').factory(
                          *
                          * @returns {Object} Object returned by $resource
                          */
-                        //get: {
-                        //    method: 'GET',
-                        //    url: 'api/latest/plugin/task/byId/:id',
-                        //    cache: false,
-                        //    isArray: false
-                        //}
+                        get : {
+                            method : 'GET',
+                            url : taskGetUrl + ':id',
+                            cache : taskCache,
+                            isArray : false
+                        },
                         /**
                          * @ngdoc method
                          * @name save
@@ -58,11 +66,6 @@ angular.module('tasks').factory(
                         }
                     });
 
-                    Service.SessionCacheNames = {};
-                    Service.CacheNames = {
-                        TASK_INFO : "TaskInfo"
-                    };
-
                     /**
                      * @ngdoc method
                      * @name resetTaskInfo
@@ -74,8 +77,7 @@ angular.module('tasks').factory(
                      * @returns None
                      */
                     Service.resetTaskInfo = function() {
-                        var cacheInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
-                        cacheInfo.reset();
+                        taskCache.clear();
                     };
 
                     /**
@@ -89,9 +91,8 @@ angular.module('tasks').factory(
                      * @param taskId id of task to clear cache for
                      */
                     Service.resetTaskCacheById = function(taskId) {
-                        if (Util.goodValue(taskId) && Util.goodPositive(taskId)) {
-                            var cacheInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
-                            cacheInfo.put(taskId, null);
+                        if (taskId) {
+                            taskCache.remove(taskGetUrl + taskId);
                         }
                     };
 
@@ -108,11 +109,8 @@ angular.module('tasks').factory(
                      * @returns {Object} Promise
                      */
                     Service.updateTaskInfo = function(taskInfo) {
-                        if (Service.validateTaskInfo(taskInfo)) {
-                            var cacheTaskInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
-                            cacheTaskInfo.put(taskInfo.taskId, taskInfo);
-                        }
-                    }
+                        //TODO remove this method
+                    };
 
                     /**
                      * @ngdoc method
@@ -127,18 +125,13 @@ angular.module('tasks').factory(
                      * @returns {Object} Promise
                      */
                     Service.getTaskInfo = function(id) {
-                        var cacheTaskInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
-                        var taskInfo = cacheTaskInfo.get(id);
                         return Util.serviceCall({
-                            service : ObjectInfoService.get,
+                            service : Service.get,
                             param : {
-                                type : "task",
                                 id : id
                             },
-                            result : taskInfo,
                             onSuccess : function(data) {
                                 if (Service.validateTaskInfo(data)) {
-                                    cacheTaskInfo.put(id, data);
                                     return data;
                                 }
                             }
@@ -170,25 +163,11 @@ angular.module('tasks').factory(
                             onSuccess : function(data) {
                                 if (Service.validateTaskInfo(data)) {
                                     var taskInfo = data;
-                                    var cacheTaskInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
-                                    cacheTaskInfo.put(taskInfo.taskId, taskInfo);
+                                    taskCache.put(taskGetUrl + taskInfo.taskId, data);
                                     return taskInfo;
                                 }
                             }
                         });
-                        //return Util.serviceCall({
-                        //    service: ObjectInfoService.save
-                        //    , param: {type: "TASK"}
-                        //    , data: taskInfo
-                        //    , onSuccess: function (data) {
-                        //        if (Service.validateTaskInfo(data)) {
-                        //            var taskInfo = data;
-                        //            var cacheTaskInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
-                        //            cacheTaskInfo.put(taskInfo.taskId, taskInfo);
-                        //            return taskInfo;
-                        //        }
-                        //    }
-                        //});
                     };
 
                     /**
@@ -210,18 +189,6 @@ angular.module('tasks').factory(
                         if (0 >= Util.goodValue(data.taskId, 0)) {
                             return false;
                         }
-                        //            if (Util.isEmpty(data.id) || Util.isEmpty(data.caseNumber)) {
-                        //             return false;
-                        //             }
-                        //             if (!Util.isArray(data.childObjects)) {
-                        //             return false;
-                        //             }
-                        //             if (!Util.isArray(data.participants)) {
-                        //             return false;
-                        //             }
-                        //             if (!Util.isArray(data.personAssociations)) {
-                        //             return false;
-                        //             }
                         return true;
                     };
 

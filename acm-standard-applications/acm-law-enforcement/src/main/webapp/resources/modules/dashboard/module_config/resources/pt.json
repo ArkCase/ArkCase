@@ -5,6 +5,14 @@
             "leftnav.item": "Painel de Controle"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "pt_Select your preferred row count.",
+                    "fiveRows": "pt_5",
+                    "tenRows": "pt_10",
+                    "twentyFiveRows": "pt_25"
+                }
+            },
             "casesByQueue": {
                 "title": "Arquivos de casos ativos por fila",
                 "description": "Exibe arquivos de casos ativos por fila",

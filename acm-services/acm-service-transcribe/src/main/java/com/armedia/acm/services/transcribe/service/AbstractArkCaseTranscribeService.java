@@ -1,9 +1,12 @@
 package com.armedia.acm.services.transcribe.service;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.transcribe.exception.*;
 import com.armedia.acm.services.transcribe.factory.TranscribeServiceFactory;
 import com.armedia.acm.services.transcribe.model.*;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,14 +16,26 @@ import java.util.List;
 public abstract class AbstractArkCaseTranscribeService implements TranscribeService
 {
     /**
-     * This method will create Transcribe for given media file ID and media file version ID
+     * This method will create Transcribe for given media file version ID
      *
-     * @param mediaId - ID of the media file
-     * @param versionId - ID of the media file version
-     * @return Transcribe
+     * @param mediaVersionId - ID of the media file version
+     * @param type - AUTOMATIC or MANUAL
+     * @return Transcribe object
      * @throws CreateTranscribeException
      */
-    public abstract Transcribe create(Long mediaId, Long versionId) throws CreateTranscribeException;
+    @Transactional
+    public abstract Transcribe create(Long mediaVersionId, TranscribeType type) throws CreateTranscribeException;
+
+    /**
+     * This method will create Transcribe for given media file version
+     *
+     * @param mediaVersion - Media File Version
+     * @param type - AUTOMATIC or MANUAL
+     * @return Transcribe object
+     * @throws CreateTranscribeException
+     */
+    @Transactional
+    public abstract Transcribe create(EcmFileVersion mediaVersion, TranscribeType type) throws CreateTranscribeException;
 
     /**
      * This method will get Transcribe object for given ID
@@ -32,14 +47,13 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
     public abstract Transcribe get(Long id) throws GetTranscribeException;
 
     /**
-     * This method will return Transcribe object for given media file ID and media file version ID
+     * This method will return Transcribe object for given media file version ID
      *
-     * @param mediaId - ID of the media file
-     * @param versionId - ID of the media file version
+     * @param mediaVersionId - ID of the media file version
      * @return Transcribe object
      * @throws GetTranscribeException
      */
-    public abstract Transcribe getByMediaIdAndVersionId(Long mediaId, Long versionId) throws GetTranscribeException;
+    public abstract Transcribe getByMediaVersionId(Long mediaVersionId) throws GetTranscribeException;
 
     /**
      * This method will save given Transcribe object in database. The method should be used only for Transcribe
@@ -89,7 +103,7 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
      * @return List of Transcribe objects with the new status
      * @throws SaveTranscribeException
      */
-    public abstract List<Transcribe> changeStatus(List<Long> ids, String status) throws SaveTranscribeException;
+    public abstract List<Transcribe> changeStatusMultiple(List<Long> ids, String status) throws SaveTranscribeException;
 
     /**
      * This method will notify user for the action performed under Transcribe object
@@ -98,7 +112,7 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
      * @param userType - Type of the user (owner of the media file, or owner of the parent object)
      * @param action - Action that is performed
      */
-    public abstract void notify(Long id, UserType userType, ActionType action);
+    public abstract void notify(Long id, String userType, String action);
 
     /**
      * This method will notify user for the action performed under list of Transcribe objects
@@ -107,7 +121,7 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
      * @param userType - Type of the user (owner of the media file, or owner of the parent object)
      * @param action - Action that is performed
      */
-    public abstract void notify(List<Long> ids, UserType userType, ActionType action);
+    public abstract void notifyMultiple(List<Long> ids, String userType, String action);
 
     /**
      * This method will audit performed action for Transcribe object
@@ -115,7 +129,7 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
      * @param id - ID of the Transcribe object
      * @param action - Action that is performed
      */
-    public abstract void audit(Long id, ActionType action);
+    public abstract void audit(Long id, String action);
 
     /**
      * This method will audit performed action for list of Transcribe objects
@@ -123,7 +137,7 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
      * @param ids - List of IDs of the Transcribe objects
      * @param action - Action that is performed
      */
-    public abstract void audit(List<Long> ids, ActionType action);
+    public abstract void auditMultiple(List<Long> ids, String action);
 
     /**
      * This method will create word document for given Transcribe object ID
@@ -150,6 +164,14 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
      * @throws SaveTranscribeConfigurationException
      */
     public abstract TranscribeConfiguration saveConfiguration(TranscribeConfiguration configuration) throws SaveTranscribeConfigurationException;
+
+    /**
+     * This method will start business process defined for Transcribe object
+     *
+     * @param transcribe
+     * @return
+     */
+    public abstract ProcessInstance startBusinessProcess(Transcribe transcribe);
 
     /**
      * This method will return factory that provides correct provider service

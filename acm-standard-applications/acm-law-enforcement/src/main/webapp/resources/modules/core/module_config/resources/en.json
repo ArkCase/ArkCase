@@ -490,6 +490,10 @@
                 "types": {
                     "case_file": "Case",
                     "complaint": "Complaint"
+                },
+                "chargeCodes": {
+                    "investigator": "Investigator",
+                    "analyst": "Analyst"
                 }
             },
             "changeCase": {

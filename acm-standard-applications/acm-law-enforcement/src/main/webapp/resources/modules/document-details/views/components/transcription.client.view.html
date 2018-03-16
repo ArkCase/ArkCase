@@ -1,0 +1,48 @@
+<div ng-controller="Document.TranscriptionController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>documentDetails.comp.transcription.title</span>
+            </div>
+        </div>
+        <div class="panel-body scroll-body-transcript">
+            <div>
+                <table class="table table-bordered table-margin">
+                    <thead>
+                    <tr>
+                        <th><span translate>documentDetails.comp.transcription.startTime</span></th>
+                        <th><span translate>documentDetails.comp.transcription.confidence</span></th>
+                        <th><input type="checkbox"><span class="cb-corrected" translate>documentDetails.comp.transcription.corrected</span>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+                <textarea class="col-lg-12" placeholder="{{ 'documentDetails.comp.transcription.enterText' | translate }}"></textarea>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-lg-12">
+                    <button class="btn btn-xs btn-primary">
+                        <i class="fa fa-floppy-o"></i>
+                        <span translate>documentDetails.comp.transcription.buttons.save</span>
+                    </button>
+                    <div class="pull-right">
+                        <button class="btn btn-xs btn-default">
+                            <span translate>documentDetails.comp.transcription.buttons.cancel</span>
+                        </button>
+                        <button class="btn btn-xs btn-default">
+                            <span translate>documentDetails.comp.transcription.buttons.transcribe</span>
+                        </button>
+                        <button class="btn btn-xs btn-default">
+                            <span translate>documentDetails.comp.transcription.buttons.complete</span>
+                        </button>
+                        <button class="btn btn-xs btn-info">
+                            <span translate>documentDetails.comp.transcription.buttons.compile</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

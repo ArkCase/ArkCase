@@ -73,6 +73,10 @@
                     <tab heading="{{'documentDetails.comp.tags.title' | translate}}">
                         <div ng-include="'modules/document-details/views/components/tags.client.view.html'"></div>
                     </tab>
+                    <tab ng-show="showVideoPlayer && transcribeEnabled"
+                            heading="{{'documentDetails.comp.transcription.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/transcription.client.view.html'"></div>
+                    </tab>
 
                 </tabset>
             </ng-form>
