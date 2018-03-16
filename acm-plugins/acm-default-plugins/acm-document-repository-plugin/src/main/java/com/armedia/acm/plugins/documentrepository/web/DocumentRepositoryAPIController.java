@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepositoryConstants;
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryEventPublisher;
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryService;
+import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.slf4j.Logger;
@@ -18,12 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionException;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.Objects;
@@ -66,6 +62,7 @@ public class DocumentRepositoryAPIController
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public DocumentRepository findById(@PathVariable(value = "id") Long id) throws AcmObjectNotFoundException
     {
