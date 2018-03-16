@@ -133,8 +133,9 @@ angular
                                     that.scope.gridOptions.multiSelect = config.multiSelect;
                                     that.scope.gridOptions.noUnselect = config.noUnselect;
 
-                                    that.scope.gridOptions.paginationPageSizes = config.paginationPageSizes;
-                                    that.scope.gridOptions.paginationPageSize = config.paginationPageSize;
+                                    that.scope.gridOptions.paginationPageSizes = config.paginationPageSizes || [ 250, 500, 1000 ];
+                                    that.scope.gridOptions.paginationPageSize = config.paginationPageSize
+                                            || that.scope.gridOptions.paginationPageSizes[0];
                                     that.scope.gridOptions.enableFiltering = config.enableFiltering;
                                     that.scope.gridOptions.enableSorting = config.enableSorting;
                                 }
