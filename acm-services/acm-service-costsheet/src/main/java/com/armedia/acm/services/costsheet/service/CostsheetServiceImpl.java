@@ -6,6 +6,9 @@ package com.armedia.acm.services.costsheet.service;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
+import com.armedia.acm.services.costsheet.pipeline.CostsheetPipelineContext;
+import com.armedia.acm.services.pipeline.PipelineManager;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
@@ -33,6 +36,8 @@ public class CostsheetServiceImpl implements CostsheetService
     private ExecuteSolrQuery executeSolrQuery;
     private List<String> startWorkflowEvents;
 
+    private PipelineManager<AcmCostsheet, CostsheetPipelineContext> pipelineManager;
+
     @Override
     public Properties getProperties()
     {
@@ -45,20 +50,24 @@ public class CostsheetServiceImpl implements CostsheetService
     }
 
     @Override
-    public AcmCostsheet save(AcmCostsheet costsheet)
+    public AcmCostsheet save(AcmCostsheet costsheet) throws PipelineProcessException
     {
-        AcmCostsheet saved = getAcmCostsheetDao().save(costsheet);
+        CostsheetPipelineContext pipelineContext = new CostsheetPipelineContext();
 
-        return saved;
+        return pipelineManager.executeOperation(costsheet, pipelineContext, () -> getAcmCostsheetDao().save(costsheet));
     }
 
     @Override
-    public AcmCostsheet save(AcmCostsheet costsheet, String submissionName)
+    public AcmCostsheet save(AcmCostsheet costsheet, String submissionName) throws PipelineProcessException
     {
-        costsheet.setStatus(getSubmissionStatusesMap().get(submissionName));
-        AcmCostsheet saved = getAcmCostsheetDao().save(costsheet);
+        CostsheetPipelineContext pipelineContext = new CostsheetPipelineContext();
 
-        return saved;
+        return pipelineManager.executeOperation(costsheet, pipelineContext, () -> {
+
+            costsheet.setStatus(getSubmissionStatusesMap().get(submissionName));
+            return getAcmCostsheetDao().save(costsheet);
+        });
+
     }
 
     @Override
@@ -218,5 +227,15 @@ public class CostsheetServiceImpl implements CostsheetService
     public void setStartWorkflowEvents(List<String> startWorkflowEvents)
     {
         this.startWorkflowEvents = startWorkflowEvents;
+    }
+
+    public PipelineManager<AcmCostsheet, CostsheetPipelineContext> getPipelineManager()
+    {
+        return pipelineManager;
+    }
+
+    public void setPipelineManager(PipelineManager<AcmCostsheet, CostsheetPipelineContext> pipelineManager)
+    {
+        this.pipelineManager = pipelineManager;
     }
 }

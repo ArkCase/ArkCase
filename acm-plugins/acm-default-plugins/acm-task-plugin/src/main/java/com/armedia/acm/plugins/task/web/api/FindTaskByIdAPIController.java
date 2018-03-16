@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class FindTaskByIdAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/byId/{taskId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public AcmTask findTaskById(
             @PathVariable("taskId") Long taskId,

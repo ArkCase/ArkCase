@@ -363,7 +363,9 @@ body {
     overflow-y: auto;
     position: relative;
     height: 100%;
+	z-index: 1999;
 }
+
 
 .module-content .left-sidebar .header h3,
 .module-content .left-sidebar-sm .header h3,

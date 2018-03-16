@@ -83,6 +83,8 @@ angular.module('complaints').controller(
                     $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
                     $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
                     var onObjectInfoRetrieved = function(objectInfo) {
+                        objectInfo.number = objectInfo.complaintNumber;
+                        objectInfo.title = objectInfo.complaintTitle;
                         $scope.objectInfo = objectInfo;
                         $scope.objectId = objectInfo.complaintId;
                         $scope.assignee = ObjectModelService.getAssignee(objectInfo);
