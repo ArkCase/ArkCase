@@ -9,10 +9,8 @@ import java.lang.annotation.Target;
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/01/2018
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface TranscribeConfigurationProperty
+@Target(ElementType.TYPE)
+public @interface ConfigurationProperties
 {
-    public String key();
-    public boolean read() default true;
-    public boolean write() default true;
+    public String path();
 }

@@ -77,6 +77,7 @@ angular.module('cases').controller(
                     $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
                     $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
                     var onObjectInfoRetrieved = function(objectInfo) {
+                        objectInfo.number = objectInfo.caseNumber;
                         $scope.objectInfo = objectInfo;
                         $scope.objectId = objectInfo.id;
                         $scope.assignee = ObjectModelService.getAssignee(objectInfo);
