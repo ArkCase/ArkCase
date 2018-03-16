@@ -86,7 +86,8 @@
             <div ng-include="'modules/document-details/views/document-viewer.client.view.html'"></div>
         </div>
 
-        <div class="right-sidebar well-sm documentDetails" ng-if="!viewerOnly">
+        <div class="right-sidebar well-sm documentDetails" ng-if="!viewerOnly"
+                ng-style="showVideoPlayer && transcribeEnabled ? {'top': '245px'} : {'top': '205px'}">
             <ng-form name="docDetails" novalidate>
                 <tabset>
                     <tab heading="{{'documentDetails.comp.details.title' | translate}}">
