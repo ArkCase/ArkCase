@@ -14,11 +14,10 @@ angular.module('admin')
                         '$translate',
                         function($scope, dashboardConfigService, ConfigService, $q, Util, $translate) {
 
-                            var deferred = $q.defer();
                             var tempWidgetsPromise = dashboardConfigService.getRolesByWidgets();
                             var tempDashboardModulePromise = ConfigService.getModuleConfig("dashboard");
 
-                            $scope.filterArray = filterArray;
+                            $scope.filterArrayByProperty = filterArrayByProperty;
                             //filter functions
                             $scope.chooseAppRoleFilter = chooseAppRoleFilter;
                             $scope.appRoleUnauthorizedFilter = appRoleUnauthorizedFilter;
@@ -63,11 +62,11 @@ angular.module('admin')
                                 $scope.onObjSelect($scope.widgetsData.chooseObject[0]);
                             });
 
-                            function filterArray(data, arrayFrom) {
+                            function filterArrayByProperty(filterWord, arrayFrom, property) {
                                 var result = [];
-                                if (!_.isEmpty(data)) {
+                                if (!Util.isEmpty(filterWord)) {
                                     result = _.filter(arrayFrom, function(item) {
-                                        return ($translate.instant(item.name).toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
+                                        return ($translate.instant(item[property]).toLowerCase().indexOf(filterWord.toLowerCase()) >= 0);
                                     });
                                 } else {
                                     result = angular.copy(arrayFrom);
@@ -75,19 +74,19 @@ angular.module('admin')
                                 return result;
                             }
 
-                            function chooseAppRoleFilter(data) {
-                                $scope.widgetsData.chooseObject = filterArray(data, initWidgetsData.chooseObject);
+                            function chooseAppRoleFilter(searchData) {
+                                $scope.widgetsData.chooseObject = filterArrayByProperty(searchData.filterWord, initWidgetsData.chooseObject, "name");
                                 if(_.isArray($scope.widgetsData.chooseObject)){
                                     $scope.onObjSelect($scope.widgetsData.chooseObject[0]);
                                 }
                             }
 
-                            function appRoleUnauthorizedFilter(data) {
-                                $scope.widgetsData.selectedNotAuthorized = filterArray(data, initWidgetsData.selectedNotAuthorized);
+                            function appRoleUnauthorizedFilter(searchData) {
+                                $scope.widgetsData.selectedNotAuthorized = filterArrayByProperty(searchData.filterWord, initWidgetsData.selectedNotAuthorized, "name");
                             }
 
-                            function appRoleAuthorizedFilter(data) {
-                                $scope.widgetsData.selectedAuthorized = filterArray(data, initWidgetsData.selectedAuthorized, $scope.widgetsData.selectedAuthorized);
+                            function appRoleAuthorizedFilter(searchData) {
+                                $scope.widgetsData.selectedAuthorized = filterArrayByProperty(searchData.filterWord, initWidgetsData.selectedAuthorized, "name");
                             }
 
                             $scope.onObjSelect = function(selectedObject, authorized, notAuthorized) {
@@ -104,8 +103,10 @@ angular.module('admin')
                             };
 
                             $scope.onAuthRoleSelected = function(selectedObject, authorized, notAuthorized) {
+                                var deferred = $q.defer();
                                 $scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles = authorized;
                                 $scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles = notAuthorized;
+
                                 dashboardConfigService.authorizeRolesForWidget($scope.widgetsMap[selectedObject.key]).then(function() {
                                     deferred.resolve();
                                 }, function() {
