@@ -11,6 +11,7 @@ angular.module('document-details').controller(
                         var activeVersion = $scope.getEcmFileActiveVersion(ecmFile);
                         if (!Util.isEmpty(activeVersion)) {
                             TranscriptionAppService.getTranscribeObject(activeVersion.id).then(function(res) {
+                                $scope.$emit('transcribe-data-model', res.data);
                                 $scope.transcribeDataModel = res.data;
                                 //format time
                                 angular.forEach($scope.transcribeDataModel.transcribeItems, function(v, k) {
@@ -29,15 +30,12 @@ angular.module('document-details').controller(
                     });
 
                     $scope.getEcmFileActiveVersion = function(ecmFile) {
-                        var activeVersion = null;
                         if (Util.isEmpty(ecmFile) || Util.isEmpty(ecmFile.activeVersionTag) || Util.isArrayEmpty(ecmFile.versions)) {
                             return null;
                         }
 
-                        angular.forEach(ecmFile.versions, function(version, key) {
-                            if (angular.equals(ecmFile.activeVersionTag, version.versionTag)) {
-                                activeVersion = version;
-                            }
+                        var activeVersion = _.find(ecmFile.versions, function(version) {
+                            return ecmFile.activeVersionTag === version.versionTag;
                         });
 
                         return activeVersion;
