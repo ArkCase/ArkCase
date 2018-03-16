@@ -23,10 +23,6 @@ angular.module('admin')
                             $scope.chooseAppRoleFilter = chooseAppRoleFilter;
                             $scope.appRoleUnauthorizedFilter = appRoleUnauthorizedFilter;
                             $scope.appRoleAuthorizedFilter = appRoleAuthorizedFilter;
-                            //scroll functions
-                            $scope.widgetsScroll = widgetsScroll;
-                            $scope.appRoleUnauthorizedScroll = appRoleUnauthorizedScroll;
-                            $scope.appRoleAuthorizedScroll = appRoleAuthorizedScroll;
 
                             $scope.showFilter = true;
                             // Loaded data after the initialization
@@ -46,11 +42,6 @@ angular.module('admin')
                                 "unauthorizedFilter" : $scope.appRoleUnauthorizedFilter,
                                 "authorizedFilter" : $scope.appRoleAuthorizedFilter
                             };
-                            $scope.scrollLoadData = {
-                                "loadObjectsScroll" : $scope.widgetsScroll,
-                                "loadUnauthorizedScroll" : $scope.appRoleUnauthorizedScroll,
-                                "loadAuthorizedScroll" : $scope.appRoleAuthorizedScroll
-                            };
                             $scope.widgetsMap = [];
 
                             $q.all([ tempWidgetsPromise, tempDashboardModulePromise ]).then(function(payload) {
@@ -65,54 +56,38 @@ angular.module('admin')
                                         element.key = widget.widgetName;
 
                                         initWidgetsData.chooseObject.push(element);
+                                        $scope.widgetsData.chooseObject.push(element);
                                         $scope.widgetsMap[widget.widgetName] = widget;
                                     }
                                 });
-                                $scope.widgetsData.chooseObject = initWidgetsData.chooseObject.slice(0, 18);
                                 $scope.onObjSelect($scope.widgetsData.chooseObject[0]);
                             });
 
-                            function filterArray(data, arrayFrom, arrayTo) {
+                            function filterArray(data, arrayFrom) {
+                                var result = [];
                                 if (!_.isEmpty(data)) {
-                                    arrayTo = _.filter(arrayFrom, function(item) {
+                                    result = _.filter(arrayFrom, function(item) {
                                         return ($translate.instant(item.name).toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
                                     });
                                 } else {
-                                    arrayTo = arrayFrom.slice(0, 18);
+                                    result = arrayFrom.slice(0, 50);
                                 }
+                                return result;
                             }
 
                             function chooseAppRoleFilter(data) {
-                                filterArray(data, initWidgetsData.chooseObject, $scope.widgetsData.chooseObject);
-                                $scope.onObjSelect($scope.widgetsData.chooseObject[0]);
+                                $scope.widgetsData.chooseObject = filterArray(data, initWidgetsData.chooseObject);
+                                if(_.isArray($scope.widgetsData.chooseObject)){
+                                    $scope.onObjSelect($scope.widgetsData.chooseObject[0]);
+                                }
                             }
 
                             function appRoleUnauthorizedFilter(data) {
-                                filterArray(data, initWidgetsData.selectedNotAuthorized, $scope.widgetsData.selectedNotAuthorized);
-                                $scope.onObjSelect($scope.widgetsData.chooseObject[0]);
+                                $scope.widgetsData.selectedNotAuthorized = filterArray(data, initWidgetsData.selectedNotAuthorized);
                             }
 
                             function appRoleAuthorizedFilter(data) {
-                                filterArray(data, initWidgetsData.selectedAuthorized, $scope.widgetsData.selectedAuthorized);
-                                $scope.onObjSelect($scope.widgetsData.chooseObject[0]);
-                            }
-
-                            function widgetsScroll() {
-                                $scope.widgetsData.chooseObject = initWidgetsData.chooseObject.slice(0,
-                                        $scope.widgetsData.chooseObject.length * 2);
-                                $scope.$digest();
-                            }
-
-                            function appRoleUnauthorizedScroll() {
-                                $scope.widgetsData.selectedNotAuthorized = initWidgetsData.selectedNotAuthorized.slice(0,
-                                        $scope.widgetsData.selectedNotAuthorized.length * 2);
-                                $scope.$digest();
-                            }
-
-                            function appRoleAuthorizedScroll() {
-                                $scope.widgetsData.selectedAuthorized = initWidgetsData.selectedAuthorized.slice(0,
-                                        $scope.widgetsData.selectedAuthorized.length * 2);
-                                $scope.$digest();
+                                $scope.widgetsData.selectedAuthorized = filterArray(data, initWidgetsData.selectedAuthorized, $scope.widgetsData.selectedAuthorized);
                             }
 
                             $scope.onObjSelect = function(selectedObject, authorized, notAuthorized) {
@@ -124,8 +99,8 @@ angular.module('admin')
                                 initWidgetsData.selectedNotAuthorized = angular
                                         .copy($scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles);
 
-                                $scope.widgetsData.selectedAuthorized = initWidgetsData.selectedAuthorized.slice(0, 18);
-                                $scope.widgetsData.selectedNotAuthorized = initWidgetsData.selectedNotAuthorized.slice(0, 18);
+                                $scope.widgetsData.selectedAuthorized = $scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles;
+                                $scope.widgetsData.selectedNotAuthorized = $scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles;
                             };
 
                             $scope.onAuthRoleSelected = function(selectedObject, authorized, notAuthorized) {
