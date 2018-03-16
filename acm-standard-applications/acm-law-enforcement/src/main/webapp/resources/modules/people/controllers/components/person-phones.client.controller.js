@@ -183,25 +183,7 @@ angular.module('people').controller(
                     $scope.isDefault = function(phone) {
                         var defaultPhone = $scope.objectInfo.defaultPhone;
                         var comparisonProperties = [ "description", "id", "subType", "type", "value" ];
-                        return objectsComparisonByGivenProperties(defaultPhone, phone, comparisonProperties);
-                    }
-
-                    function objectsComparisonByGivenProperties(objectA, objectB, comparisonProperties) {
-                        var isEqual = false;
-
-                        if (!objectA || !objectB)
-                            return false;
-
-                        var i = 0;
-                        for (i in comparisonProperties) {
-                            var key = comparisonProperties[i];
-                            if (objectA[key] === objectB[key]) {
-                                isEqual = true;
-                            } else {
-                                return false;
-                            }
-                        }
-                        return isEqual;
+                        return Util.objectsComparisonByGivenProperties(defaultPhone, phone, comparisonProperties);
                     }
 
                 } ]);
