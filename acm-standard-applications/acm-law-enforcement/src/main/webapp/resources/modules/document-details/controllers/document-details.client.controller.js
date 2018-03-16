@@ -60,15 +60,12 @@ angular.module('document-details').controller(
                     });
 
                     $scope.getEcmFileActiveVersion = function(ecmFile) {
-                        var activeVersion = null;
                         if (Util.isEmpty(ecmFile) || Util.isEmpty(ecmFile.activeVersionTag) || Util.isArrayEmpty(ecmFile.versions)) {
                             return null;
                         }
 
-                        angular.forEach(ecmFile.versions, function(version, key) {
-                            if (angular.equals(ecmFile.activeVersionTag, version.versionTag)) {
-                                activeVersion = version;
-                            }
+                        var activeVersion = _.find(ecmFile.versions, function(version) {
+                            return ecmFile.activeVersionTag === version.versionTag;
                         });
 
                         return activeVersion;
@@ -83,7 +80,11 @@ angular.module('document-details').controller(
                         $scope.confidenceAverage = (confidenceSum / $scope.transcribeObjectModel.transcribeItems.length).toFixed(1);
 
                         var activeVersion = $scope.getEcmFileActiveVersion($scope.ecmFile);
-                        $scope.durationInMinutes = (activeVersion.durationSeconds / 60).toFixed(1);
+                        if (!Util.isEmpty(activeVersion)) {
+                            $scope.durationInMinutes = (activeVersion.durationSeconds / 60).toFixed(1);
+                        } else {
+                            $scope.durationInMinutes = 0;
+                        }
 
                         //color the status
                         $scope.colorTranscribeStatus = function() {
