@@ -1,5 +1,6 @@
 package com.armedia.acm.services.costsheet.service;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataServiceImpl;
@@ -31,8 +32,8 @@ public class CostsheetHistoryEventListener implements ApplicationListener<AcmCos
             Long objectId = costsheet.getParentId();
             String eventType = "com.armedia.acm." + objectType.replace("_", "").toLowerCase() + ".costsheet.associated";
 
-            AcmAbstractDao<AcmStatefulEntity> dao = getAcmDataService().getDaoByObjectType(objectType);
-            AcmStatefulEntity entity = dao.find(objectId);
+            AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
+            AcmStatefulEntity entity = (AcmStatefulEntity) dao.find(objectId);
 
             if (entity != null)
             {

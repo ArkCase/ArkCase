@@ -149,23 +149,6 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
     public abstract EcmFile compile(Long id) throws CompileTranscribeException;
 
     /**
-     * This method will return configuration for Transcribe service
-     *
-     * @return TranscribeConfiguratoin object
-     * @throws GetTranscribeConfigurationException
-     */
-    public abstract TranscribeConfiguration getConfiguration() throws GetTranscribeConfigurationException;
-
-    /**
-     * This method will save configuration for Transcribe service
-     *
-     * @param configuration - TranscribeConfiguration object that should be saved
-     * @return Saved TranscribeConfiguration object
-     * @throws SaveTranscribeConfigurationException
-     */
-    public abstract TranscribeConfiguration saveConfiguration(TranscribeConfiguration configuration) throws SaveTranscribeConfigurationException;
-
-    /**
      * This method will start business process defined for Transcribe object
      *
      * @param transcribe
@@ -178,5 +161,22 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
      *
      * @return TranscribeServiceFactory object
      */
-    public abstract TranscribeServiceFactory getFactory();
+    public abstract TranscribeServiceFactory getTranscribeServiceFactory();
+
+    /**
+     * This method will return configuration for Transcribe service
+     *
+     * @return TranscribeConfiguration object
+     * @throws GetConfigurationException
+     */
+    public abstract TranscribeConfiguration getConfiguration() throws GetConfigurationException;
+
+    /**
+     * This method will save configuration for Transcribe service
+     *
+     * @param configuration - Configuration object that should be saved
+     * @return Saved TranscribeConfiguration object
+     * @throws SaveConfigurationException
+     */
+    public abstract TranscribeConfiguration saveConfiguration(TranscribeConfiguration configuration) throws SaveConfigurationException;
 }

@@ -17,4 +17,14 @@ public class TranscribeUtils
 
         return "";
     }
+
+    public static String extractMediaType(String mimeType)
+    {
+        if (mimeType != null && mimeType.contains("/") && !mimeType.endsWith("/") && mimeType.chars().filter(c -> c == '/').count() == 1)
+        {
+            return mimeType.substring(mimeType.indexOf("/") + 1, mimeType.length());
+        }
+
+        return "";
+    }
 }

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/05/2018
@@ -32,7 +33,7 @@ public class TranscribeDao extends AcmAbstractDao<Transcribe>
         }
         catch (NoResultException e)
         {
-            LOG.warn("There is no Transcribe for MEDIA_VERSION_ID=[%d]. REASON=[{}]", mediaVersionId, e.getMessage());
+            LOG.warn("There is no Transcribe for MEDIA_VERSION_ID=[{}]. REASON=[{}]", mediaVersionId, e.getMessage());
             return null;
         }
         catch (NonUniqueResultException e)
@@ -47,6 +48,23 @@ public class TranscribeDao extends AcmAbstractDao<Transcribe>
         }
 
         throw new GetTranscribeException(String.format("Transcribe for MEDIA_VERSION_ID=[%d] was not retrieved successfully. REASON=[%s]", mediaVersionId, reason));
+    }
+
+    public List<Transcribe> findAllByStatus(String status) throws GetTranscribeException
+    {
+        String queryString = "SELECT t FROM Transcribe t WHERE t.status=:status";
+
+        TypedQuery<Transcribe> query = getEm().createQuery(queryString, Transcribe.class);
+        query.setParameter("status", status);
+
+        try
+        {
+            return query.getResultList();
+        }
+        catch (Exception e)
+        {
+            throw new GetTranscribeException(String.format("Transcribe objects with STATUS=[%s] was not retrieved successfully. REASON=[%s]", status, e.getMessage()));
+        }
     }
 
     @Override
