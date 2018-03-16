@@ -383,7 +383,6 @@ span.fancytree-title {
     border-left: 0px;
     border-right: 0px;
     position: relative;
-    z-index: 1001;
 }
 
 .ui-contextmenu {
