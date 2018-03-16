@@ -101,20 +101,24 @@ public class ModuleConfigurationService implements ModuleConfigurationConstants
         return modules.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
-    public List<ModuleItem> findModulesByName(String filterQuery, Integer startRow, Integer maxRows, String sortDirection)
+    public List<ModuleItem> findModulesByMatchingName(String filterQuery, Integer startRow, Integer maxRows, String sortDirection)
             throws AcmModuleConfigurationException
     {
-        List<ModuleItem> foundModules = new ArrayList<>();
+        List<ModuleItem> foundModules = retrieveModules();
 
-        for (ModuleItem moduleItem : retrieveModules())
-        {
-            if (moduleItem.getName().toLowerCase().contains(filterQuery.toLowerCase()))
-            {
-                foundModules.add(moduleItem);
-            }
-        }
-        return foundModules.stream().sorted(Comparator.comparing(ModuleItem::getName)).skip(startRow).limit(maxRows)
+        foundModules = foundModules.stream().filter(moduleItem -> moduleItem.getName().toLowerCase().contains(filterQuery.toLowerCase()))
                 .collect(Collectors.toList());
+
+        if (sortDirection.contains("DESC"))
+        {
+            foundModules.sort(Comparator.comparing(ModuleItem::getName).reversed());
+        }
+        else
+        {
+            foundModules.sort(Comparator.comparing(ModuleItem::getName));
+        }
+
+        return foundModules.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
     public void setAppConfigPropertiesFile(String appConfigPropertiesFile)

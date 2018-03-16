@@ -86,7 +86,7 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
             method : 'GET',
             url : 'api/latest/plugin/admin/moduleconfiguration/modules',
             params : {
-                fq : (data.filterWord ? data.filterWord : ""),
+                fn : (data.filterWord ? data.filterWord : ""),
                 n : (Util.isEmpty(data.filterWord) ? 50 : 10000)
             }
         });

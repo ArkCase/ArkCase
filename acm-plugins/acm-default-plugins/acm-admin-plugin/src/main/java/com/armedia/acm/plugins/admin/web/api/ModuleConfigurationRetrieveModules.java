@@ -66,12 +66,12 @@ public class ModuleConfigurationRetrieveModules
         }
     }
 
-    @RequestMapping(value = "/moduleconfiguration/modules", params = { "fq" }, method = RequestMethod.GET, produces = {
+    @RequestMapping(value = "/moduleconfiguration/modules", params = { "fn" }, method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public List<ModuleItem> findModulesByName(
-            @RequestParam(value = "fq") String filterQuery,
+    public List<ModuleItem> findModulesByMatchingName(
+            @RequestParam(value = "fn") String filterName,
             @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows)
@@ -79,12 +79,12 @@ public class ModuleConfigurationRetrieveModules
     {
         try
         {
-            return moduleConfigurationService.findModulesByName(filterQuery, startRow, maxRows, sortDirection);
+            return moduleConfigurationService.findModulesByMatchingName(filterName, startRow, maxRows, sortDirection);
         }
         catch (Exception e)
         {
-            log.error("Can't retrieve roles", e);
-            throw new AcmModuleConfigurationException("Can't retrieve modules", e);
+            log.error("Can't retrieve modules by matching name", e);
+            throw new AcmModuleConfigurationException("Can't retrieve modules by matching name", e);
         }
     }
 
