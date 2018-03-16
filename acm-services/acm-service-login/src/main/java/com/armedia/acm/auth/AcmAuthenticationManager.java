@@ -1,5 +1,6 @@
 package com.armedia.acm.auth;
 
+import com.armedia.acm.auth.okta.model.OktaAPIConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
@@ -132,6 +133,9 @@ public class AcmAuthenticationManager implements AuthenticationManager
         // Add to all
         acmAuths.addAll(acmAuthsGroups);
         acmAuths.addAll(acmAuthsRoles);
+
+        log.debug("Granting [{}] role 'ROLE_PRE_AUTHENTICATED'", providerAuthentication.getName());
+        acmAuths.add(new AcmGrantedAuthority(OktaAPIConstants.ROLE_PRE_AUTHENTICATED));
 
         return new AcmAuthentication(acmAuths, providerAuthentication.getCredentials(), providerAuthentication.getDetails(),
                 providerAuthentication.isAuthenticated(), user.getUserId());

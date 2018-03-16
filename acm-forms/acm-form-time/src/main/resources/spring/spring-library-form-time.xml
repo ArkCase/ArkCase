@@ -10,4 +10,13 @@
         <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
+    <bean id="timeService" class="com.armedia.acm.form.time.service.TimeService" parent="frevvoFormService" scope="prototype">
+        <property name="timesheetService" ref="timesheetService"/>
+        <property name="acmTimesheetDao" ref="acmTimesheetDao"/>
+        <property name="timeFactory" ref="timeFactory"/>
+        <property name="AcmContainerDao" ref="acmContainerFolderDao"/>
+        <property name="timesheetEventPublisher" ref="timesheetEventPublisher"/>
+        <property name="timesheetConfigurationService" ref="timesheetConfigurationService"/>
+    </bean>
+
 </beans>

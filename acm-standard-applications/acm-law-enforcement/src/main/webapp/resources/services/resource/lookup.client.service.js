@@ -371,12 +371,12 @@ angular.module('services').factory(
                      * {
                      *     "standardLookup" : [{
                      *         "someStandardLookup" : [
-                     *                 { "key" : "1", "value" : "1"}, 
+                     *                 { "key" : "1", "value" : "1"},
                      *                 { "key" : "2", "value" : "2"}
                      *             ]
                      *         }, {
                      *         "anotherStandardLookup" : [
-                     *                 { "key" : "1", "value" : "1" }, 
+                     *                 { "key" : "1", "value" : "1" },
                      *                 { "key" : "2", "value" : "2" }
                      *             ]
                      *         }
@@ -384,11 +384,11 @@ angular.module('services').factory(
                      *     "nestedLookup" : [{
                      *         "contactMethodTypes" : [
                      *                 { "key" : "1", "value" : "1", "subLookup" : [
-                     *                         { "key" : "11", "value" : "11" }, 
-                     *                         { "key" : "12", "value" : "12" }, 
+                     *                         { "key" : "11", "value" : "11" },
+                     *                         { "key" : "12", "value" : "12" },
                      *                         { "key" : "13", "value" : "13" }
                      *                     ]
-                     *                 }, 
+                     *                 },
                      *                 { "key" : "2", "value" : "2", "subLookup" : [
                      *                         { "key" : "21", "value" : "21" }
                      *                     ]

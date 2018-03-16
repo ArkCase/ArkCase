@@ -11,6 +11,8 @@
  * The "paginationOnScroll" should be used for infinite pagination while user is scrolling
  *
  * @param {object} loadMore - An object(functions) that should be called when the user scroll and to retrieve more info
+ * @param {object} resetScrollPx - An object(Boolean) that should reset the scroll when the user select new object.
+ *                                 If there is one scrolling panel there is no need of this variable
  *
  * @example
  <example>
@@ -22,11 +24,18 @@ angular.module('directives').directive('paginationOnScroll', [ 'UtilService', fu
     return {
         restrict : 'A',
         scope : {
-            loadMore : "&"
+            loadMore : "&",
+            resetScrollPx : "=?"
         },
         link : function(scope, elem, attr) {
             elem.bind("scroll", function() {
-                var scrolledpx = elem.context.clientHeight + elem.context.scrollTop;
+                if (Util.isEmpty(scope.resetScrollPx) || scope.resetScrollPx) {
+                    var scrolledpx = 0;
+                    scope.resetScrollPx = false;
+                } else {
+                    var scrolledpx = elem.context.clientHeight + elem.context.scrollTop;
+                }
+
                 if (!(elem.context.clientHeight === elem.context.scrollHeight) && scrolledpx === elem.context.scrollHeight) {
                     scope.loadMore();
                 }
