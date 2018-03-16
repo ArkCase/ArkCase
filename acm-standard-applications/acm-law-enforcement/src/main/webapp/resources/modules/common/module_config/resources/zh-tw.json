@@ -2,6 +2,7 @@
     "common": {
         "select.option.none": "（選擇一個）",
         "value.unknown": "未知",
+        "value.none": "沒有",
         "defaultDateFormat": "zh-tw_MM/DD/YYYY",
         "defaultTimeFormat": "zh-tw_hh:mm:ss",
         "defaultDateTimeFormat": "zh-tw_MM/DD/YYYY hh:mm",

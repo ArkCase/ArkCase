@@ -19,7 +19,16 @@
             "startTime": "Start time",
             "confidence": "Confidence",
             "corrected": "Corrected",
-            "enterText": "Enter Text"
+            "enterText": "Enter Text",
+            "newRow": "New Row",
+            "mediaViewer": {
+                "length": "Length",
+                "transcriptStatus": "Transcript Status",
+                "confidence": "Confidence",
+                "wordCount": "Word Count",
+                "language": "Language",
+                "fileType": "File Type"
+            }
         },
         "comp.eventHistory": {
             "title": "History",

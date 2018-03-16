@@ -2,6 +2,7 @@
     "common": {
         "select.option.none": "（選択する）",
         "value.unknown": "不明",
+        "value.none": "なし",
         "defaultDateFormat": "ja_MM/DD/YYYY",
         "defaultTimeFormat": "ja_hh:mm:ss",
         "defaultDateTimeFormat": "ja_MM/DD/YYYY hh:mm",

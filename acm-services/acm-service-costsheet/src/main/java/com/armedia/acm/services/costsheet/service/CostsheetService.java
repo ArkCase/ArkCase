@@ -4,6 +4,7 @@
 package com.armedia.acm.services.costsheet.service;
 
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.springframework.security.core.Authentication;
 
@@ -18,9 +19,9 @@ public interface CostsheetService
 
     public Properties getProperties();
 
-    public AcmCostsheet save(AcmCostsheet costsheet);
+    public AcmCostsheet save(AcmCostsheet costsheet) throws PipelineProcessException;
 
-    public AcmCostsheet save(AcmCostsheet costsheet, String submissionName);
+    public AcmCostsheet save(AcmCostsheet costsheet, String submissionName) throws PipelineProcessException;
 
     public AcmCostsheet get(Long id);
 

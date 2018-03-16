@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,7 @@ public class FindCaseByIdAPIController
 
     @PreAuthorize("hasPermission(#id, 'CASE_FILE', 'viewCaseDetailsPage')")
     @RequestMapping(method = RequestMethod.GET, value = "/byId/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public CaseFile findCaseById(
             @PathVariable(value = "id") Long id,
@@ -40,7 +42,6 @@ public class FindCaseByIdAPIController
         try
         {
             CaseFile retval = getCaseFileDao().find(id);
-
             if (retval == null)
             {
                 throw new PersistenceException("No such case file with id '" + id + "'");
