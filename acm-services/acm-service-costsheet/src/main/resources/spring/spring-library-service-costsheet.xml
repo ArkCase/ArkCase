@@ -29,6 +29,7 @@
         </property>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="startWorkflowEvents" ref="startWorkflowEventsForCostsheet"/>
+        <property name="pipelineManager" ref="costsheetPipelineManager"/>
     </bean>
 
     <bean id="costsheetEventPublisher" class="com.armedia.acm.services.costsheet.service.CostsheetEventPublisher"/>

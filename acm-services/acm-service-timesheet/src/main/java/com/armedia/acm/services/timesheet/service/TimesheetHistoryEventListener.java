@@ -1,5 +1,6 @@
 package com.armedia.acm.services.timesheet.service;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataServiceImpl;
@@ -38,8 +39,8 @@ public class TimesheetHistoryEventListener implements ApplicationListener<AcmTim
                     String objectType = time.getType();
                     String eventType = "com.armedia.acm." + objectType.replace("_", "").toLowerCase() + ".timesheet.associated";
 
-                    AcmAbstractDao<AcmStatefulEntity> dao = getAcmDataService().getDaoByObjectType(objectType);
-                    AcmStatefulEntity entity = dao.find(objectId);
+                    AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
+                    AcmStatefulEntity entity = (AcmStatefulEntity) dao.find(objectId);
 
                     if (entity != null)
                     {

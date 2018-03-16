@@ -41,9 +41,14 @@ angular.module('cost-tracking').config([ '$stateProvider', function($stateProvid
         templateUrl : 'modules/cost-tracking/views/components/cost-tracking-tags.client.view.html'
     })
 
-    .state('cost-tracking.approvers', {
-        url : '/:id/approvers',
-        templateUrl : 'modules/cost-tracking/views/components/cost-tracking-approvers.client.view.html'
+    .state('cost-tracking.tasks', {
+        url : '/:id/tasks',
+        templateUrl : 'modules/cost-tracking/views/components/cost-tracking-tasks.client.view.html'
+    })
+
+    .state('cost-tracking.documents', {
+        url : '/:id/documents',
+        templateUrl : 'modules/cost-tracking/views/components/cost-tracking-documents.client.view.html'
     })
 
 } ]).run([ 'Helper.DashboardService', function(DashboardHelper) {
