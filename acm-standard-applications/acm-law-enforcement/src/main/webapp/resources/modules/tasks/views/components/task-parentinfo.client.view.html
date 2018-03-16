@@ -2,7 +2,8 @@
     <div class="clearfix" ng-show="'CASE_FILE' == objectInfo.parentObjectType">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a ng-click="onClickTitle()">{{parentCaseInfo.title || "Unknown"}}</a> ({{parentCaseInfo.status}}) </h4></div>
+                <h4><a ng-click="onClickTitle()">{{parentCaseInfo.title || 'common.value.unknown' | translate}}</a>
+                    ({{parentCaseInfo.status}}) </h4></div>
             <div class="col-xs-6  text-right">
                 <h4>
                     <span>{{parentCaseInfo.caseNumber || 'common.value.unknown' | translate}}</span>
@@ -54,7 +55,7 @@
     <div class="clearfix" ng-show="'COMPLAINT' == objectInfo.parentObjectType">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a ng-click="onClickTitle()">{{parentComplaintInfo.complaintTitle || "Unknown"}}</a>
+                <h4><a ng-click="onClickTitle()">{{parentComplaintInfo.complaintTitle || 'common.value.unknown' | translate}}</a>
                     ({{parentComplaintInfo.status}}) </h4>
             </div>
             <div class="col-xs-6  text-right">
@@ -99,14 +100,14 @@
     <div class="clearfix" ng-show="'COSTSHEET' == objectInfo.parentObjectType">
         <div class="row">
             <div class="col-xs-12">
-                <h4><a ng-click="onClickTitle()">{{parentCostsheetInfo.title || "Unknown"}}</a>
+                <h4><a ng-click="onClickTitle()">{{parentCostsheetInfo.title || 'common.value.unknown' | translate}}</a>
                     ({{parentCostsheetInfo.status}}) </h4>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-6">
                 <h4 class="font-bold"><small class="text-muted"><span translate>tasks.comp.parentinfo.costsheet.approver.label</span>
-                </small> {{costsheetApprover || "Unknown"}}</h4>
+                </small> {{costsheetApprover || 'common.value.unknown' | translate}}</h4>
             </div>
         </div>
     </div>
@@ -114,14 +115,14 @@
     <div class="clearfix" ng-show="'TIMESHEET' == objectInfo.parentObjectType">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a ng-click="onClickTitle()">{{parentTimesheetInfo.title || "Unknown"}}</a>
+                <h4><a ng-click="onClickTitle()">{{parentTimesheetInfo.title || 'common.value.unknown' | translate}}</a>
                     ({{parentTimesheetInfo.status}}) </h4>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-6">
                 <h4 class="font-bold"><small class="text-muted"><span translate>tasks.comp.parentinfo.timesheet.approver.label</span>
-                </small> {{timesheetApprover || "Unknown"}}</h4>
+                </small> {{timesheetApprover || 'common.value.unknown' | translate}}</h4>
             </div>
         </div>
     </div>

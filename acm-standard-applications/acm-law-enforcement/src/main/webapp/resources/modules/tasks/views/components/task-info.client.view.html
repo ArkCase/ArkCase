@@ -25,7 +25,7 @@
                     <div class="h4 font-bold no-margin">
                         <a href="" class="editable-click no-outline" ng-click="openAssigneePickerModal()" permission="editTask"
                                 permission-object-type="TASK" permission-properties="objectInfo" permission-action="disable">
-                            <user-full-name userId="objectInfo.assignee" fallback="None" />
+                            <user-full-name userId="objectInfo.assignee" fallback="{{'common.value.none' | translate}}" />
                         </a>
                     </div>
                     <small class="text-muted"><span translate>tasks.comp.info.assignee.label</span></small>

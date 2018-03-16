@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180310085513" modeler:modelId="1043074" modeler:modelVersion="1" modeler:modelLastUpdated="1520672104924">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180314162645" modeler:modelId="1043074" modeler:modelVersion="1" modeler:modelLastUpdated="1521044800565">
   <process id="TranscribeWorkflow" name="TranscribeWorkflow" isExecutable="true">
     <startEvent id="start">
       <extensionElements>
@@ -51,7 +51,7 @@
         <modeler:editor-resource-id><![CDATA[sid-C9F722A1-854D-493A-A875-C5078CBE3176]]></modeler:editor-resource-id>
       </extensionElements>
     </exclusiveGateway>
-    <serviceTask id="checkProcessing" name="Check if there are less Transcribe objects with status 'PROCESSING' (distinct by process ID) than configured limit in Admin" activiti:class="com.armedia.acm.services.transcribe.checker.TranscribeProcessingChecker">
+    <serviceTask id="checkProcessing" name="Check if there are less Transcribe objects with status 'PROCESSING' (distinct by process ID) than configured limit in Admin" activiti:expression="${execution.getId()}">
       <extensionElements>
         <activiti:executionListener event="start" delegateExpression="#{transcribeProcessingChecker}"/>
         <modeler:editor-resource-id><![CDATA[sid-7AA5CB10-6776-45A9-9C39-15C4EA0D7ECF]]></modeler:editor-resource-id>
@@ -117,12 +117,6 @@
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-D79BFAF4-62C5-47D3-85D0-E478AA7E6FD4]]></modeler:editor-resource-id>
       </extensionElements>
-    </sequenceFlow>
-    <sequenceFlow id="endOrCheckProcessingDecisionToCheckProcessing" sourceRef="endOrCheckProcessingDecision" targetRef="checkProcessing">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-5B8FF7CC-73D5-4B2F-BC59-CB72AF607B72]]></modeler:editor-resource-id>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'QUEUED'}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="endOrCheckProcessingDecisionToEnd" sourceRef="endOrCheckProcessingDecision" targetRef="end">
       <extensionElements>
@@ -224,6 +218,12 @@
       </extensionElements>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'FAILED' || ACTION == 'COMPLETED'}]]></conditionExpression>
     </sequenceFlow>
+    <sequenceFlow id="endOrCheckProcessingDecisionToCheckProcessing" sourceRef="endOrCheckProcessingDecision" targetRef="checkProcessing">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-5B8FF7CC-73D5-4B2F-BC59-CB72AF607B72]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'QUEUED'}]]></conditionExpression>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_TranscribeWorkflow">
     <bpmndi:BPMNPlane bpmnElement="TranscribeWorkflow" id="BPMNPlane_TranscribeWorkflow">
@@ -258,7 +258,7 @@
         <omgdc:Bounds height="40.0" width="40.0" x="965.0" y="398.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="checkProcessing" id="BPMNShape_checkProcessing">
-        <omgdc:Bounds height="114.0" width="134.0" x="920.25" y="234.5"/>
+        <omgdc:Bounds height="114.0" width="134.0" x="918.0" y="225.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="automaticOrManualDecision" id="BPMNShape_automaticOrManualDecision">
         <omgdc:Bounds height="40.0" width="40.0" x="1155.0" y="398.0"/>
@@ -305,8 +305,8 @@
         <omgdi:waypoint x="647.5" y="573.75"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="endOrCheckProcessingDecisionToCheckProcessing" id="BPMNEdge_endOrCheckProcessingDecisionToCheckProcessing">
-        <omgdi:waypoint x="985.9810996563574" y="398.9810996563574"/>
-        <omgdi:waypoint x="987.2253521126761" y="348.5"/>
+        <omgdi:waypoint x="985.375" y="398.375"/>
+        <omgdi:waypoint x="985.0062111801242" y="339.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="endOrCheckProcessingDecisionToEnd" id="BPMNEdge_endOrCheckProcessingDecisionToEnd">
         <omgdi:waypoint x="985.5946619217082" y="437.40533807829183"/>
@@ -355,8 +355,8 @@
         <omgdi:waypoint x="890.0" y="438.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="checkProcessingToWaitOrProcessDecision" id="BPMNEdge_checkProcessingToWaitOrProcessDecision">
-        <omgdi:waypoint x="1054.25" y="320.0"/>
-        <omgdi:waypoint x="1086.75" y="320.0"/>
+        <omgdi:waypoint x="1052.0" y="310.5"/>
+        <omgdi:waypoint x="1086.75" y="310.5"/>
         <omgdi:waypoint x="1086.75" y="365.0"/>
         <omgdi:waypoint x="1155.0" y="365.0"/>
       </bpmndi:BPMNEdge>

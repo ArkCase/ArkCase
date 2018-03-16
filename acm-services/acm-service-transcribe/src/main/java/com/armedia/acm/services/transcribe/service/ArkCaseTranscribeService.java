@@ -29,10 +29,11 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
 
     private TranscribeDao transcribeDao;
     private EcmFileVersionDao ecmFileVersionDao;
-    private TranscribeConfigurationService transcribeConfigurationService;
+    private TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
     private PipelineManager<Transcribe, TranscribePipelineContext> pipelineManager;
     private TranscribeBusinessProcessRulesExecutor transcribeBusinessProcessRulesExecutor;
     private RuntimeService activitiRuntimeService;
+    private TranscribeServiceFactory transcribeServiceFactory;
 
     @Override
     @Transactional
@@ -89,7 +90,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     @Override
     public Transcribe get(Long id) throws GetTranscribeException
     {
-        return null;
+        return getTranscribeDao().find(id);
     }
 
     @Override
@@ -119,15 +120,61 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     @Override
     public Transcribe changeStatus(Long id, String status) throws SaveTranscribeException
     {
+        LOG.debug("Changing status of the Transcribe with ID=[{}]. New status will be STATUS=[{}]", id, status);
+        if (id == null || StringUtils.isEmpty(status))
+        {
+            String message = String.format("Status of the Transcribe cannot be changed. ID=[%d], STATUS=[%s]", id, status);
+            LOG.error(message);
+            throw new SaveTranscribeException(message);
+        }
 
-        return null;
+        Transcribe transcribe = getTranscribeDao().find(id);
+
+        if (transcribe == null)
+        {
+            String message = String.format("Transcribe with ID=[%d] cannot be found or retrieved from database.", id);
+            LOG.error(message);
+            throw new SaveTranscribeException(message);
+        }
+
+        transcribe.setStatus(status);
+
+        try
+        {
+            return getTranscribeDao().save(transcribe);
+        }
+        catch(Exception e)
+        {
+            String message = String.format("Status of the Transcribe cannot be changed. ID=[%d], STATUS=[%s]. REASON=[%s]", id, status, e.getMessage());
+            LOG.error(message);
+            throw new SaveTranscribeException(message, e);
+        }
     }
 
     @Override
     public List<Transcribe> changeStatusMultiple(List<Long> ids, String status) throws SaveTranscribeException
     {
+        if (ids != null)
+        {
+            List<Transcribe> changedTranscribes = new ArrayList<>();
+            ids.forEach(id -> {
+                try
+                {
+                    Transcribe changed = changeStatus(id, status);
+                    changedTranscribes.add(changed);
+                }
+                catch (SaveTranscribeException e)
+                {
+                    LOG.warn("Changing status for Transcribe with ID=[{}] in bulk operation failed. REASON=[{}]", id, e.getMessage());
+                }
+            });
 
-        return null;
+            return changedTranscribes;
+        }
+
+        String message = String.format("Status of multiple Transcribe objects cannot be changed. IDS=[null], STATUS=[%s]", status);
+        LOG.error(message);
+        throw new SaveTranscribeException(message);
     }
 
     @Override
@@ -158,18 +205,6 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     public EcmFile compile(Long id) throws CompileTranscribeException
     {
         return null;
-    }
-
-    @Override
-    public TranscribeConfiguration getConfiguration() throws GetTranscribeConfigurationException
-    {
-        return getTranscribeConfigurationService().get();
-    }
-
-    @Override
-    public TranscribeConfiguration saveConfiguration(TranscribeConfiguration configuration) throws SaveTranscribeConfigurationException
-    {
-        return getTranscribeConfigurationService().save(configuration);
     }
 
     @Override
@@ -219,9 +254,26 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     }
 
     @Override
-    public TranscribeServiceFactory getFactory()
+    public TranscribeServiceFactory getTranscribeServiceFactory()
     {
-        return null;
+        return transcribeServiceFactory;
+    }
+
+    @Override
+    public TranscribeConfiguration getConfiguration() throws GetConfigurationException
+    {
+        return getTranscribeConfigurationPropertiesService().get();
+    }
+
+    @Override
+    public TranscribeConfiguration saveConfiguration(TranscribeConfiguration configuration) throws SaveConfigurationException
+    {
+        return getTranscribeConfigurationPropertiesService().save(configuration);
+    }
+
+    public void setTranscribeServiceFactory(TranscribeServiceFactory transcribeServiceFactory)
+    {
+        this.transcribeServiceFactory = transcribeServiceFactory;
     }
 
     @Override
@@ -239,13 +291,13 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     @Override
     public List<Transcribe> getAll() throws GetTranscribeException
     {
-        return null;
+        return getTranscribeDao().findAll();
     }
 
     @Override
     public List<Transcribe> getAllByStatus(String status) throws GetTranscribeException
     {
-        return null;
+        return getTranscribeDao().findAllByStatus(status);
     }
 
     @Override
@@ -294,7 +346,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
 
             return allow;
         }
-        catch (GetTranscribeConfigurationException e)
+        catch (GetConfigurationException e)
         {
             LOG.error("Failed to retrieve Transcribe configuration.", e);
             return false;
@@ -320,7 +372,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
 
             return  allow;
         }
-        catch (GetTranscribeConfigurationException e)
+        catch (GetConfigurationException e)
         {
             LOG.warn("Failed to retrieve Transcribe configuration. Automatic Transcribe will be terminated.");
             return false;
@@ -328,7 +380,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     }
 
     /**
-     * This method will return if provided audio/video is less than 2 hours
+     * This method will return if provided media duration is less than configured duration
      *
      * @param ecmFileVersion - Media file version
      * @return true/false
@@ -347,7 +399,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
 
             return  allow;
         }
-        catch (GetTranscribeConfigurationException e)
+        catch (GetConfigurationException e)
         {
             LOG.warn("Failed to retrieve Transcribe configuration. Automatic Transcribe will be terminated.");
             return false;
@@ -384,10 +436,10 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         ids.add(transcribe.getId());
 
         Map<String, Object> processVariables = new HashMap<>();
-        processVariables.put("IDS", ids);
-        processVariables.put("REMOTE_ID", transcribe.getRemoteId());
-        processVariables.put("STATUS", StatusType.QUEUED);
-        processVariables.put("ACTION", ActionType.QUEUED);
+        processVariables.put(TranscribeBusinessProcessVariableKey.IDS.toString(), ids);
+        processVariables.put(TranscribeBusinessProcessVariableKey.REMOTE_ID.toString(), transcribe.getRemoteId());
+        processVariables.put(TranscribeBusinessProcessVariableKey.STATUS.toString(), TranscribeStatusType.QUEUED);
+        processVariables.put(TranscribeBusinessProcessVariableKey.ACTION.toString(), TranscribeActionType.QUEUED);
 
         ProcessInstance processInstance = getActivitiRuntimeService().startProcessInstanceByKey(transcribeBusinessProcessModel.getName(), processVariables);
 
@@ -398,7 +450,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
 
     private void updateProcessInstance(Transcribe transcribe, ProcessInstance processInstance)
     {
-        List<Long> ids = (List<Long>) processInstance.getProcessVariables().get("IDS");
+        List<Long> ids = (List<Long>) processInstance.getProcessVariables().get(TranscribeBusinessProcessVariableKey.IDS.toString());
         if (ids != null)
         {
             if (!ids.contains(transcribe.getId()))
@@ -406,7 +458,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                 ids.add(transcribe.getId());
             }
 
-            getActivitiRuntimeService().setVariable(processInstance.getId(), "IDS", ids);
+            getActivitiRuntimeService().setVariable(processInstance.getId(), TranscribeBusinessProcessVariableKey.IDS.toString(), ids);
         }
     }
 
@@ -430,14 +482,14 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         this.ecmFileVersionDao = ecmFileVersionDao;
     }
 
-    public TranscribeConfigurationService getTranscribeConfigurationService()
+    public TranscribeConfigurationPropertiesService getTranscribeConfigurationPropertiesService()
     {
-        return transcribeConfigurationService;
+        return transcribeConfigurationPropertiesService;
     }
 
-    public void setTranscribeConfigurationService(TranscribeConfigurationService transcribeConfigurationService)
+    public void setTranscribeConfigurationPropertiesService(TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService)
     {
-        this.transcribeConfigurationService = transcribeConfigurationService;
+        this.transcribeConfigurationPropertiesService = transcribeConfigurationPropertiesService;
     }
 
     public PipelineManager<Transcribe, TranscribePipelineContext> getPipelineManager()
