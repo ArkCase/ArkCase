@@ -8,7 +8,7 @@ angular.module('document-details').controller(
                     $scope.items = [];
 
                     $scope.$on('document-data', function(event, ecmFile) {
-                        var isMediaFile = ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 || ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? true : false;
+                        var isMediaFile = !Util.isEmpty(ecmFile) && (ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 || ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0) ? true : false;
                         if (!isMediaFile){
                             // terminate execution. It's not media file
                             return;
