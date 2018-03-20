@@ -8,38 +8,44 @@ angular.module('document-details').controller(
                     $scope.items = [];
 
                     $scope.$on('document-data', function(event, ecmFile) {
-                        var activeVersion = $scope.getEcmFileActiveVersion(ecmFile);
-                        if (!Util.isEmpty(activeVersion)) {
-                            var transcribePromise = TranscriptionAppService.getTranscribeObject(activeVersion.id);
-                            var transcribeConfigPromise = TranscriptionManagementService.getTranscribeConfiguration();
-
-                            $q.all([transcribePromise, transcribeConfigPromise]).then(function(data) {
-                                var transcribeResult = data[0];
-                                var transcribeConfigResult = data[1];
-
-                                if (Util.isEmpty(transcribeResult) || Util.isEmpty(transcribeConfigResult) || !transcribeConfigResult.enabled) {
-                                    // There is no transcript for provided media version id, or no configuration or transcribe is disabled. Silent return.
-                                    return;
-                                }
-
-                                $scope.transcribeConfidence = transcribeConfigResult.data.confidence;
-
-                                $scope.$emit('transcribe-data-model', transcribeResult.data);
-                                $scope.transcribeDataModel = transcribeResult.data;
-                                //format time
-                                angular.forEach($scope.transcribeDataModel.transcribeItems, function(v, k) {
-                                    var itemHolder = getNewTranscribeItemHolder();
-                                    itemHolder.item = v;
-                                    var tempTime = moment.duration(v.startTime, 'seconds'); //get the seconds
-                                    itemHolder.seconds = moment().seconds(tempTime.seconds()).format('ss');
-                                    itemHolder.minutes = moment().minutes(tempTime.minutes()).format('mm');
-                                    itemHolder.hours = moment().hours(tempTime.hours()).format('HH');
-                                    $scope.items.push(itemHolder);
-                                });
-                            }, function(err) {
-                                MessageService.error(err.data);
-                            });
+                        var isMediaFile = ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 || ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? true : false;
+                        if (!isMediaFile){
+                            // terminate execution. It's not media file
+                            return;
                         }
+
+                        TranscriptionManagementService.getTranscribeConfiguration().then(function (configResult){
+                            if (!Util.isEmpty(configResult) && !Util.isEmpty(configResult.data) && configResult.data.enabled){
+                                var activeVersion = $scope.getEcmFileActiveVersion(ecmFile);
+                                if (!Util.isEmpty(activeVersion)) {
+                                    TranscriptionAppService.getTranscribeObject(activeVersion.id).then(function (transcribeResult) {
+                                        if (Util.isEmpty(transcribeResult)) {
+                                            // Something went wrong
+                                            return;
+                                        }
+
+                                        $scope.transcribeConfidence = configResult.data.confidence;
+
+                                        $scope.$emit('transcribe-data-model', transcribeResult.data);
+                                        $scope.transcribeDataModel = transcribeResult.data;
+                                        //format time
+                                        angular.forEach($scope.transcribeDataModel.transcribeItems, function (v, k) {
+                                            var itemHolder = getNewTranscribeItemHolder();
+                                            itemHolder.item = v;
+                                            var tempTime = moment.duration(v.startTime, 'seconds'); //get the seconds
+                                            itemHolder.seconds = moment().seconds(tempTime.seconds()).format('ss');
+                                            itemHolder.minutes = moment().minutes(tempTime.minutes()).format('mm');
+                                            itemHolder.hours = moment().hours(tempTime.hours()).format('HH');
+                                            $scope.items.push(itemHolder);
+                                        });
+                                    }, function (transcribeError) {
+                                        MessageService.error(transcribeError.data);
+                                    });
+                                }
+                            }
+                        }, function(configError) {
+                            MessageService.error(configError.data);
+                        });
                     });
 
                     $scope.getEcmFileActiveVersion = function(ecmFile) {
