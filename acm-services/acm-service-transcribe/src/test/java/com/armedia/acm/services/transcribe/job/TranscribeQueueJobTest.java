@@ -1,7 +1,10 @@
 package com.armedia.acm.services.transcribe.job;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.services.transcribe.factory.TranscribeServiceFactory;
 import com.armedia.acm.services.transcribe.model.*;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+import com.armedia.acm.services.transcribe.service.TranscribeService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.runtime.ProcessInstanceQuery;
@@ -34,6 +37,15 @@ public class TranscribeQueueJobTest
     @Mock
     private ProcessInstanceQuery processInstanceQuery;
 
+    @Mock
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+
+    @Mock
+    private TranscribeServiceFactory transcribeServiceFactory;
+
+    @Mock
+    private TranscribeService transcribeService;
+
     private Map<String, Object> processVariables1;
     private Map<String, Object> processVariables2;
     private Map<String, Object> processVariables3;
@@ -43,33 +55,41 @@ public class TranscribeQueueJobTest
     @Before
     public void setUp() throws Exception
     {
+        arkCaseTranscribeService.setTranscribeServiceFactory(transcribeServiceFactory);
+
         transcribeQueueJob = new TranscribeQueueJob();
         transcribeQueueJob.setArkCaseTranscribeService(arkCaseTranscribeService);
         transcribeQueueJob.setActivitiRuntimeService(activitiRuntimeService);
+        transcribeQueueJob.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
 
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(2018, 3, 1);
         processVariables1 = new HashMap<>();
+        processVariables1.put("IDS", Arrays.asList(101l));
         processVariables1.put("CREATED", calendar1.getTime());
 
         Calendar calendar2 = Calendar.getInstance();
         calendar2.set(2018, 3, 2);
         processVariables2 = new HashMap<>();
+        processVariables1.put("IDS", Arrays.asList(102l));
         processVariables2.put("CREATED", calendar2.getTime());
 
         Calendar calendar3 = Calendar.getInstance();
         calendar3.set(2018, 3, 2);
         processVariables3 = new HashMap<>();
+        processVariables1.put("IDS", Arrays.asList(103l));
         processVariables3.put("CREATED", calendar3.getTime());
 
         Calendar calendar4 = Calendar.getInstance();
         calendar4.set(2018, 3, 3);
         processVariables4 = new HashMap<>();
+        processVariables1.put("IDS", Arrays.asList(104l));
         processVariables4.put("CREATED", calendar4.getTime());
 
         Calendar calendar5 = Calendar.getInstance();
         calendar5.set(2018, 3, 4);
         processVariables5 = new HashMap<>();
+        processVariables1.put("IDS", Arrays.asList(105l));
         processVariables5.put("CREATED", calendar5.getTime());
 
     }
@@ -79,6 +99,10 @@ public class TranscribeQueueJobTest
     {
         TranscribeConfiguration configuration = new TranscribeConfiguration();
         configuration.setNumberOfFilesForProcessing(10);
+        configuration.setProvider(TranscribeServiceProvider.AWS);
+
+        Transcribe serviceProviderTranscribe = new Transcribe();
+        serviceProviderTranscribe.setStatus(TranscribeStatusType.PROCESSING.toString());
 
         Transcribe transcribe1 = new Transcribe();
         transcribe1.setProcessId("123");
@@ -122,8 +146,14 @@ public class TranscribeQueueJobTest
         when(arkCaseTranscribeService.getAllByStatus(TranscribeStatusType.PROCESSING.toString())).thenReturn(transcribes);
         when(activitiRuntimeService.createProcessInstanceQuery()).thenReturn(processInstanceQuery);
         when(processInstanceQuery.variableValueEqualsIgnoreCase(variableKey, variableValue)).thenReturn(processInstanceQuery);
+        when(processInstanceQuery.includeProcessVariables()).thenReturn(processInstanceQuery);
         when(processInstanceQuery.list()).thenReturn(processInstances);
+        when(arkCaseTranscribeService.get(105l)).thenReturn(transcribe1);
+        when(arkCaseTranscribeService.getTranscribeServiceFactory()).thenReturn(transcribeServiceFactory);
+        when(transcribeServiceFactory.getService(TranscribeServiceProvider.AWS)).thenReturn(transcribeService);
+        when(transcribeService.create(transcribe1)).thenReturn(serviceProviderTranscribe);
         doNothing().when(arkCaseTranscribeService).signal(processInstance1, TranscribeStatusType.PROCESSING.toString(), TranscribeActionType.PROCESSING.toString());
+        doNothing().when(auditPropertyEntityAdapter).setUserId("TRANSCRIBE_SERVICE");
 
         transcribeQueueJob.executeTask();
 
@@ -132,6 +162,11 @@ public class TranscribeQueueJobTest
         verify(activitiRuntimeService).createProcessInstanceQuery();
         verify(processInstanceQuery).variableValueEqualsIgnoreCase(variableKey, variableValue);
         verify(processInstanceQuery).list();
+        verify(arkCaseTranscribeService).get(105L);
+        verify(arkCaseTranscribeService).getTranscribeServiceFactory();
+        verify(transcribeServiceFactory).getService(TranscribeServiceProvider.AWS);
+        verify(transcribeService).create(transcribe1);
         verify(arkCaseTranscribeService).signal(processInstance1, TranscribeStatusType.PROCESSING.toString(), TranscribeActionType.PROCESSING.toString());
+        verify(auditPropertyEntityAdapter).setUserId("TRANSCRIBE_SERVICE");
     }
 }
