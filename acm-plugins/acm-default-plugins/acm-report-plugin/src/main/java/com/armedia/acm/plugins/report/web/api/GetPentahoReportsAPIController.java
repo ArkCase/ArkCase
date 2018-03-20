@@ -3,8 +3,8 @@
  */
 package com.armedia.acm.plugins.report.web.api;
 
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.report.model.Report;
+import com.armedia.acm.plugins.report.service.PentahoFilePropertiesService;
 import com.armedia.acm.plugins.report.service.ReportService;
 
 import org.slf4j.Logger;
@@ -14,9 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,12 +28,10 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/report", "/api/latest/plugin/report" })
 public class GetPentahoReportsAPIController
 {
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private String reportsPropertyFileLocation;
     private ReportService reportService;
-    private PropertyFileManager propertyFileManager;
+    private PentahoFilePropertiesService pentahoFilePropertiesService;
 
     @RequestMapping(value = "/get/pentaho", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
@@ -42,58 +40,48 @@ public class GetPentahoReportsAPIController
     {
         LOG.info("Retrieving Pentaho reports.");
 
-        List<Report> retval = new ArrayList<>();
-        List<Report> reports = null;
-
-        try
-        {
-            reports = getReportService().getPentahoReports();
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-
-        if (reports != null)
-        {
-            for (Report report : reports)
-            {
-                if (!report.isFolder())
-                {
-                    String acmReportProperty = null;
-
-                    try
-                    {
-                        acmReportProperty = getPropertyFileManager().load(getReportsPropertyFileLocation(), report.getPropertyName(), null);
-                    }
-                    catch (Exception e)
-                    {
-                        LOG.warn("Cannot find property in the report properties file.");
-                    }
-
-                    if (acmReportProperty != null)
-                    {
-                        report.setInjected(true);
-                    }
-
-                    retval.add(report);
-                }
-            }
-        }
+        List<Report> retval = pentahoFilePropertiesService.getPentahoReports();
 
         LOG.info("Retrieved " + retval.size() + " Pentaho reports.");
 
         return retval;
     }
 
-    public String getReportsPropertyFileLocation()
+    @RequestMapping(value = "/pentaho/paged", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
+    @ResponseBody
+    public List<Report> getPentahoReportsPaged(
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
+            Authentication auth) throws Exception
     {
-        return reportsPropertyFileLocation;
+        LOG.info("Retrieving Pentaho reports.");
+
+        List<Report> retval = pentahoFilePropertiesService.getPentahoReportsPaged(startRow, maxRows, sortDirection);
+
+        LOG.info("Retrieved " + retval.size() + " Pentaho reports.");
+
+        return retval;
     }
 
-    public void setReportsPropertyFileLocation(String reportsPropertyFileLocation)
+    @RequestMapping(value = "/pentaho", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
+    @ResponseBody
+    public List<Report> getPentahoReportsByMatchingName(
+            @RequestParam(value = "fn") String filterName,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
+            Authentication auth) throws Exception
     {
-        this.reportsPropertyFileLocation = reportsPropertyFileLocation;
+        LOG.info("Retrieving Pentaho reports.");
+
+        List<Report> retval = pentahoFilePropertiesService.getPentahoReportsByMatchingName(filterName, startRow, maxRows, sortDirection);
+
+        LOG.info("Retrieved " + retval.size() + " Pentaho reports.");
+
+        return retval;
     }
 
     public ReportService getReportService()
@@ -106,13 +94,13 @@ public class GetPentahoReportsAPIController
         this.reportService = reportService;
     }
 
-    public PropertyFileManager getPropertyFileManager()
+    public void setPentahoFilePropertiesService(PentahoFilePropertiesService pentahoFilePropertiesService)
     {
-        return propertyFileManager;
+        this.pentahoFilePropertiesService = pentahoFilePropertiesService;
     }
 
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
+    public PentahoFilePropertiesService getPentahoFilePropertiesService()
     {
-        this.propertyFileManager = propertyFileManager;
+        return pentahoFilePropertiesService;
     }
 }
