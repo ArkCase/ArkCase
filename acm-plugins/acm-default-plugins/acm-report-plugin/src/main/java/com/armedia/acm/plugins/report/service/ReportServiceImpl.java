@@ -402,6 +402,33 @@ public class ReportServiceImpl implements ReportService
         return new HashMap<>();
     }
 
+    @Override
+    public String buildGroupsForReportSolrQuery(Boolean authorized, String reportId, String filterQuery)
+    {
+        StringBuilder solrQuery = new StringBuilder();
+        Map<String, List<String>> groupsForReports = getReportToGroupsMap();
+        List<String> groupsForReport = groupsForReports.get(reportId);
+
+        solrQuery.append(
+                "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED");
+
+        if (groupsForReport != null)
+        {
+            solrQuery.append(authorized ? " AND object_id_s:" : " AND -object_id_s:");
+            solrQuery.append(groupsForReport.stream().collect(Collectors.joining("\" OR \"", "(\"", "\")")));
+        }
+        else if (authorized)
+        {
+            return "";
+        }
+
+        if (!filterQuery.isEmpty())
+        {
+            solrQuery.append(" AND name_partial:" + filterQuery);
+        }
+        return solrQuery.toString();
+    }
+
     public MuleContextManager getMuleContextManager()
     {
         return muleContextManager;
