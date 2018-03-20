@@ -6,4 +6,8 @@
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
     </bean>
 
+    <bean id="getTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.GetTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
 </beans>

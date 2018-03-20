@@ -2,17 +2,30 @@
 
 angular.module('document-details').controller(
         'Document.TranscriptionController',
-        [ '$scope', 'DocumentDetails.TranscriptionAppService', 'UtilService', 'MessageService', 'moment',
-                function($scope, TranscriptionAppService, Util, MessageService, moment) {
+        [ '$scope', 'DocumentDetails.TranscriptionAppService', 'UtilService', 'MessageService', 'moment', '$modal', 'Admin.TranscriptionManagementService', '$q',
+                function($scope, TranscriptionAppService, Util, MessageService, moment, $modal, TranscriptionManagementService, $q) {
 
                     $scope.items = [];
 
                     $scope.$on('document-data', function(event, ecmFile) {
                         var activeVersion = $scope.getEcmFileActiveVersion(ecmFile);
                         if (!Util.isEmpty(activeVersion)) {
-                            TranscriptionAppService.getTranscribeObject(activeVersion.id).then(function(res) {
-                                $scope.$emit('transcribe-data-model', res.data);
-                                $scope.transcribeDataModel = res.data;
+                            var transcribePromise = TranscriptionAppService.getTranscribeObject(activeVersion.id);
+                            var transcribeConfigPromise = TranscriptionManagementService.getTranscribeConfiguration();
+
+                            $q.all([transcribePromise, transcribeConfigPromise]).then(function(data) {
+                                var transcribeResult = data[0];
+                                var transcribeConfigResult = data[1];
+
+                                if (Util.isEmpty(transcribeResult) || Util.isEmpty(transcribeConfigResult)) {
+                                    // There is no transcript for provided media version id. Silent return
+                                    return;
+                                }
+
+                                $scope.transcribeConfidence = transcribeConfigResult.data.confidence;
+
+                                $scope.$emit('transcribe-data-model', transcribeResult.data);
+                                $scope.transcribeDataModel = transcribeResult.data;
                                 //format time
                                 angular.forEach($scope.transcribeDataModel.transcribeItems, function(v, k) {
                                     var itemHolder = getNewTranscribeItemHolder();
@@ -53,6 +66,30 @@ angular.module('document-details').controller(
                                 $scope.items.splice(index, 1);
                             }
                         }
+                    };
+
+                    $scope.diagram = function() {
+                        var modalInstance = $modal.open({
+                            templateUrl : "modules/tasks/views/components/task-diagram-modal.client.view.html",
+                            controller : 'Tasks.DiagramByProcessIdModalController',
+                            windowClass : 'modal-width-80',
+                            resolve : {
+                                processId : function() {
+                                    return $scope.transcribeDataModel.processId;
+                                },
+                                showLoader : function() {
+                                    return true;
+                                },
+                                showError : function() {
+                                    return false;
+                                }
+                            }
+                        });
+                        modalInstance.result.then(function(result) {
+                            if (result) {
+                                // Do nothing
+                            }
+                        });
                     };
 
                     var getNewTranscribeItem = function() {
