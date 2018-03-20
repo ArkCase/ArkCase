@@ -100,9 +100,4 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
-    <bean id="transcribeWaitToCheckStatusJob" class="com.armedia.acm.services.transcribe.job.TranscribeWaitToCheckStatusJob">
-        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
-        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
-    </bean>
-
 </beans>
