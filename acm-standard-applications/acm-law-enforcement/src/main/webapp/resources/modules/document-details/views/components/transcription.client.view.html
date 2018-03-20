@@ -10,19 +10,21 @@
                 <div class="row">
                     <table class="table table-bordered transcript-table-margin">
                         <thead>
-                        <tr ng-style="itemHolder.item.confidence < 80 ? { backgroundColor:'#ea6764', color:'black' } : ''">
+                        <tr ng-style="itemHolder.item.confidence < transcribeConfidence && itemHolder.item.corrected === false ? { backgroundColor:'#ea6764', color:'black' } : ''">
                             <th><span translate>documentDetails.comp.transcription.startTime</span>:<input contenteditable="true"
                                     class="transcript-input-size" ng-model="itemHolder.hours" type="text"
-                                    ng-pattern="/^[0-9]{1,2}$/">:<input contenteditable="true" class="transcript-input-size"
-                                    ng-model="itemHolder.minutes" type="text" ng-pattern="/^([0-5][0-9]){1,2}$/">:<input
+                                    ng-pattern="/^[0-9]{1,2}$/"/>:<input contenteditable="true" class="transcript-input-size"
+                                    ng-model="itemHolder.minutes" type="text" ng-pattern="/^([0-5][0-9]){1,2}$/"/>:<input
                                     contenteditable="true" class="transcript-input-size" ng-model="itemHolder.seconds" type="text"
-                                    ng-pattern="/^([0-5][0-9]){1,2}$/"></th>
+                                    ng-pattern="/^([0-5][0-9]){1,2}$/"/></th>
                             <th><span translate>documentDetails.comp.transcription.confidence</span>:{{itemHolder.item.confidence}}<span
                                     ng-show="itemHolder.item.confidence" ng-model="itemHolder.item.confidence">%</span></th>
-                            <th><input type="checkbox" ng-model="itemHolder.item.corrected"><span class="transcript-cb-corrected" translate>documentDetails.comp.transcription.corrected</span>
+                            <th><input type="checkbox" ng-model="itemHolder.item.corrected"/>
+                                <span class="transcript-cb-corrected" translate>documentDetails.comp.transcription.corrected</span>
+                                <span ng-if="!itemHolder.item.corrected && itemHolder.item.confidence < transcribeConfidence" class="transcript-warning-sign"><i class="glyphicon glyphicon-warning-sign"></i></span>
                             </th>
                             <th>
-                                <button class="btn btn-default btn-xs transcript-btn-delete" ng-click="removeTranscribeItem(itemHolder)"><i
+                                <button class="btn btn-default btn-xs transcript-btn-delete" ng-click="removeTranscribeItem(itemHolder)" ng-if="transcribeDataModel.type === 'MANUAL'"><i
                                         class="fa fa-trash"></i></button>
                             </th>
                         </tr>
@@ -40,21 +42,24 @@
         <div class="panel-footer">
             <div class="row">
                 <div class="col-lg-12">
-                    <button class="btn btn-xs btn-primary">
+                    <button class="btn btn-xs btn-primary" ng-disabled="items != null && items.length > 0">
                         <i class="fa fa-floppy-o"></i>
                         <span translate>documentDetails.comp.transcription.buttons.save</span>
                     </button>
                     <div class="pull-right">
-                        <button class="btn btn-xs btn-default">
+                        <a ng-click="diagram()" href="" class="inline animated btn btn-default btn-xs ng-scope" ng-if="transcribeDataModel.processId != null && transcribeDataModel.status != 'DRAFT' && transcribeDataModel.status != 'COMPLETED' && transcribeDataModel.status != 'FAILED'">
+                            <i class="fa fa-sitemap"></i>
+                        </a>
+                        <button class="btn btn-xs btn-default" ng-disabled="transcribeDataModel.status != 'QUEUED'">
                             <span translate>documentDetails.comp.transcription.buttons.cancel</span>
                         </button>
-                        <button class="btn btn-xs btn-default">
+                        <button class="btn btn-xs btn-default" ng-disabled="transcribeDataModel.status === 'QUEUED' || transcribeDataModel.status === 'PROCESSING'">
                             <span translate>documentDetails.comp.transcription.buttons.transcribe</span>
                         </button>
-                        <button class="btn btn-xs btn-default">
+                        <button class="btn btn-xs btn-default" ng-if="transcribeDataModel.type === 'MANUAL' && transcribeDataModel.status === 'PROCESSING'">
                             <span translate>documentDetails.comp.transcription.buttons.complete</span>
                         </button>
-                        <button class="btn btn-xs btn-info">
+                        <button class="btn btn-xs btn-info" ng-disabled="items == null || items.length === 0">
                             <span translate>documentDetails.comp.transcription.buttons.compile</span>
                         </button>
                     </div>

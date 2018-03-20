@@ -145,6 +145,26 @@ angular.module('tasks').factory(
                             cache : false
                         }
 
+                        /**
+                         * @ngdoc method
+                         * @name _diagramByProcessId
+                         * @methodOf tasks.service:Task.WorkflowService
+                         *
+                         * @description
+                         * Make REST call for diagramByProcessId() function to get diagram for a Process.
+                         * @param {String} processId  Process ID
+                         * @param {Function} onSuccess (Optional)Callback function of success taking the diagram.
+                         * @param {Function} onError (Optional) Callback function when fail.
+                         *
+                         * @returns {String} Base64 of diagram
+                         */
+                        ,
+                        _diagramByProcessId : {
+                            method : 'GET',
+                            url : 'api/latest/plugin/task/diagram/process/:processId',
+                            cache : false
+                        }
+
                     });
 
                     Service.WorkflowStatus = {
@@ -153,7 +173,8 @@ angular.module('tasks').factory(
                     };
 
                     Service.CacheNames = {
-                        TASK_DIAGRAM : "TaskDiagram"
+                        TASK_DIAGRAM : "TaskDiagram",
+                        PROCESS_DIAGRAM : "ProcessDiagram"
                     };
 
                     /**
@@ -332,6 +353,36 @@ angular.module('tasks').factory(
                             onSuccess : function(data) {
                                 if (Service.validateDiagramData(data)) {
                                     cacheTaskDiagram.put(taskId, data);
+                                    return data;
+                                }
+                            }
+                        });
+                    };
+
+                    /**
+                     * @ngdoc method
+                     * @name diagram
+                     * @methodOf tasks.service:Task.WorkflowService
+                     *
+                     * @description
+                     * Get diagram for the process
+                     *
+                     * @param {Number} processId  Process ID
+                     *
+                     * @returns {Object} Promise
+                     */
+                    Service.diagramByProcessId = function(processId) {
+                        var cacheProcessDiagram = new Store.CacheFifo(Service.CacheNames.PROCESS_DIAGRAM);
+                        var processDiagram = cacheProcessDiagram.get(processId);
+                        return Util.serviceCall({
+                            service : Service._diagramByProcessId,
+                            param : {
+                                processId : processId
+                            },
+                            data : processDiagram,
+                            onSuccess : function(data) {
+                                if (Service.validateDiagramData(data)) {
+                                    cacheProcessDiagram.put(processId, data);
                                     return data;
                                 }
                             }

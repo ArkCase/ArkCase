@@ -1,8 +1,19 @@
 package com.armedia.acm.services.transcribe.utils;
 
+import com.armedia.acm.services.transcribe.model.TranscribeItem;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/06/2018
@@ -140,5 +151,4 @@ public class TranscribeUtilsTest
 
         assertEquals(expectedResult, actualResult);
     }
-
 }

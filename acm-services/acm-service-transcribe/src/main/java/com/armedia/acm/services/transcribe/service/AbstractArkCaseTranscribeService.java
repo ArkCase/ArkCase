@@ -157,6 +157,15 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
     public abstract ProcessInstance startBusinessProcess(Transcribe transcribe);
 
     /**
+     * This method will remove Transcribe object from the waiting state
+     *
+     * @param processInstance
+     * @param status The next status after signal
+     * @param action The action that is performing
+     */
+    public abstract void signal(ProcessInstance processInstance, String status, String action);
+
+    /**
      * This method will return factory that provides correct provider service
      *
      * @return TranscribeServiceFactory object
