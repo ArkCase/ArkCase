@@ -17,8 +17,8 @@ angular.module('document-details').controller(
                                 var transcribeResult = data[0];
                                 var transcribeConfigResult = data[1];
 
-                                if (Util.isEmpty(transcribeResult) || Util.isEmpty(transcribeConfigResult)) {
-                                    // There is no transcript for provided media version id. Silent return
+                                if (Util.isEmpty(transcribeResult) || Util.isEmpty(transcribeConfigResult) || !transcribeConfigResult.enabled) {
+                                    // There is no transcript for provided media version id, or no configuration or transcribe is disabled. Silent return.
                                     return;
                                 }
 
