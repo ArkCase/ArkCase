@@ -7,6 +7,7 @@ angular.module('admin').controller('Admin.ReportsConfigController',
             var deferred = $q.defer();
 
             $scope.fillList = fillList;
+            $scope.fillListReport = fillListReport;
             $scope.retrieveDataScroll = retrieveDataScroll;
             //Filter
             $scope.chooseReportsFilter = chooseReportsFilter;
@@ -41,13 +42,7 @@ angular.module('admin').controller('Admin.ReportsConfigController',
             function chooseReportsFilter(data) {
                 reportsConfigService.getReportsByMatchingName(data).then(function(response) {
                     $scope.reportsData.chooseObject = [];
-                    angular.forEach(response.data, function(report) {
-                        var element = new Object;
-                        element.name = report["title"];
-                        element.key = report["propertyName"];
-                        $scope.reportsData.chooseObject.push(element);
-                        $scope.reportsMap[report["propertyName"]] = report;
-                    });
+                    fillListReport($scope.reportsData.chooseObject, $scope.reportsMap, response.data);
                 });
             }
 
@@ -73,7 +68,9 @@ angular.module('admin').controller('Admin.ReportsConfigController',
                 var data = {};
                 data.report = $scope.lastSelectedReport;
                 data.start = $scope.reportsData.chooseObject.length;
-                $scope.retrieveDataScroll(data, "getReportsPaged", "chooseObject");
+                reportsConfigService.getReportsPaged(data).then(function(response) {
+                    fillListReport($scope.reportsData.chooseObject, $scope.reportsMap, response.data);
+                });
             }
 
             function reportsUnauthorizedScroll() {
@@ -105,20 +102,14 @@ angular.module('admin').controller('Admin.ReportsConfigController',
             }
 
             $scope.execute = function() {
-                var tempReportsPromise = reportsConfigService.getReports();
+                var tempReportsPromise = reportsConfigService.getReportsPaged({});
                 var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
                 var tempReportsUserGroupsPromise = reportsConfigService.getReportsUserGroups();
                 //wait all promises to resolve
                 $q.all([ tempReportsPromise, promiseServerConfig, tempReportsUserGroupsPromise ]).then(function(payload) {
                     $scope.reportsData.chooseObject = [];
                     //get all reports
-                    angular.forEach(payload[0].data, function(report) {
-                        var element = new Object;
-                        element.name = report["title"];
-                        element.key = report["propertyName"];
-                        $scope.reportsData.chooseObject.push(element);
-                        $scope.reportsMap[report["propertyName"]] = report;
-                    });
+                    fillListReport($scope.reportsData.chooseObject, $scope.reportsMap, payload[0].data);
 
                     $scope.reportsConfig = payload[1];
 
@@ -138,6 +129,16 @@ angular.module('admin').controller('Admin.ReportsConfigController',
                     element.name = obj.object_id_s;
                     element.key = obj.object_id_s;
                     listToFill.push(element);
+                });
+            }
+
+            function fillListReport(listToFill, mapToFill, data) {
+                angular.forEach(data, function(report) {
+                    var element = new Object;
+                    element.name = report["title"];
+                    element.key = report["propertyName"];
+                    listToFill.push(element);
+                    mapToFill[report["propertyName"]] = report;
                 });
             }
 
