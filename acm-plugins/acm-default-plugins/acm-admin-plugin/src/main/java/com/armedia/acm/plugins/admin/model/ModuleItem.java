@@ -2,9 +2,9 @@ package com.armedia.acm.plugins.admin.model;
 
 public class ModuleItem
 {
-    String name;
-    String id;
-    String privilege;
+    private String name;
+    private String id;
+    private String privilege;
 
     public String getName()
     {

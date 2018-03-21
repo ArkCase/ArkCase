@@ -98,27 +98,36 @@ public class ModuleConfigurationService implements ModuleConfigurationConstants
         List<ModuleItem> modules = retrieveModules();
         modules.sort(Comparator.comparing(ModuleItem::getName));
 
+        if (sortDirection.contains("DESC"))
+        {
+            modules.sort(Comparator.comparing(ModuleItem::getName).reversed());
+        }
+        else
+        {
+            modules.sort(Comparator.comparing(ModuleItem::getName));
+        }
+
         return modules.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
     public List<ModuleItem> findModulesByMatchingName(String filterQuery, Integer startRow, Integer maxRows, String sortDirection)
             throws AcmModuleConfigurationException
     {
-        List<ModuleItem> foundModules = retrieveModules();
+        List<ModuleItem> modules = retrieveModules();
 
-        foundModules = foundModules.stream().filter(moduleItem -> moduleItem.getName().toLowerCase().contains(filterQuery.toLowerCase()))
+        modules = modules.stream().filter(moduleItem -> moduleItem.getName().toLowerCase().contains(filterQuery.toLowerCase()))
                 .collect(Collectors.toList());
 
         if (sortDirection.contains("DESC"))
         {
-            foundModules.sort(Comparator.comparing(ModuleItem::getName).reversed());
+            modules.sort(Comparator.comparing(ModuleItem::getName).reversed());
         }
         else
         {
-            foundModules.sort(Comparator.comparing(ModuleItem::getName));
+            modules.sort(Comparator.comparing(ModuleItem::getName));
         }
 
-        return foundModules.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
+        return modules.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
     public void setAppConfigPropertiesFile(String appConfigPropertiesFile)
