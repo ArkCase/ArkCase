@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="col-xs-9">
                         <h4><a href="#" editable-text="objectInfo.organizationValue" onaftersave="saveOrganization()" e-required>
-                            {{objectInfo.organizationValue || "Unknown"}}</a>
+                            {{objectInfo.organizationValue || 'common.value.unknown' | translate}}</a>
                         </h4></div>
                     <div class="col-xs-3 text-right">
                         <h4>{{objectInfo.organizationId }}</h4>
@@ -14,20 +14,20 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-4">
                         <div class="h4 font-bold" ng-show="objectInfo.defaultPhone">
-                            {{objectInfo.defaultPhone.value || "Unknown"}} ({{objectInfo.defaultPhone.subType}})
+                            {{objectInfo.defaultPhone.value || 'common.value.unknown' | translate}} ({{objectInfo.defaultPhone.subType}})
                         </div>
                         <small class="text-muted"><span translate>organizations.comp.info.phone.label</span></small>
                     </div>
                     <div class="col-xs-12 col-md-4">
                         <div class="h4 font-bold">
                             {{objectInfo.primaryContact.person.givenName + ' ' +
-                            objectInfo.primaryContact.person.familyName || "Unknown"}}
+                            objectInfo.primaryContact.person.familyName || 'common.value.unknown' | translate}}
                         </div>
                         <small class="text-muted"><span translate>organizations.comp.info.primary.label</span></small>
                     </div>
                     <div class="col-xs-12 col-md-4">
                         <div class="h4 font-bold" ng-show="objectInfo.defaultIdentification">
-                            {{objectInfo.defaultIdentification.identificationNumber || "Unknown"}}
+                            {{objectInfo.defaultIdentification.identificationNumber || 'common.value.unknown' | translate}}
                             ({{objectInfo.defaultIdentification.identificationType}})
                         </div>
                         <small class="text-muted"><span translate>organizations.comp.info.identification.label</span>
@@ -37,14 +37,14 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-4">
                         <div class="h4 font-bold" ng-show="objectInfo.defaultEmail">
-                            {{objectInfo.defaultEmail.value || "Unknown"}} ({{objectInfo.defaultEmail.subType}})
+                            {{objectInfo.defaultEmail.value || 'common.value.unknown' | translate}} ({{objectInfo.defaultEmail.subType}})
                         </div>
                         <small class="text-muted"><span translate>organizations.comp.info.email.label</span></small>
                     </div>
                     <div class="col-xs-12 col-md-4">
                         <div class="h4 font-bold">
                             <a href="javascript:void(0)" readonly ng-click="addParent(true)">
-                                {{objectInfo.parentOrganization.organizationValue || "Unknown"}}</a>
+                                {{objectInfo.parentOrganization.organizationValue || 'common.value.unknown' | translate}}</a>
                         </div>
                         <small class="text-muted"><span translate>organizations.comp.info.parent.label</span></small>
                     </div>
