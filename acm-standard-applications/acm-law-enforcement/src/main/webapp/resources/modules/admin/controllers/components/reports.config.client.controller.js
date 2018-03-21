@@ -43,6 +43,7 @@ angular.module('admin').controller('Admin.ReportsConfigController',
                 reportsConfigService.getReportsByMatchingName(data).then(function(response) {
                     $scope.reportsData.chooseObject = [];
                     fillListReport($scope.reportsData.chooseObject, $scope.reportsMap, response.data);
+                    $scope.onObjSelect($scope.reportsData.chooseObject[0]);
                 });
             }
 

@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,7 +69,7 @@ public class GetPentahoReportsAPIController
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public List<Report> getPentahoReportsByMatchingName(
-            @PathVariable(value = "fn") String filterName,
+            @RequestParam(value = "fn") String filterName,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
