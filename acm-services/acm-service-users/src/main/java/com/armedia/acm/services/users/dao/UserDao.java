@@ -341,4 +341,13 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     {
         this.configList = configList;
     }
+
+    public Long getUserCount()
+    {
+        String queryText = "SELECT COUNT(acmUser) FROM AcmUser acmUser";
+
+        Query query = getEm().createQuery(queryText);
+
+        return (Long) query.getSingleResult();
+    }
 }
