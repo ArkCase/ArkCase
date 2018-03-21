@@ -213,7 +213,8 @@
             "type.label": "Tipo",
             "type.placeholder": "Ingresar tipo",
             "value.label": "URL",
-            "value.placeholder": "Ingresar URL"
+            "value.placeholder": "Ingresar URL",
+            "value.title": "es_Url must be valid (e.g. https://www.google.com)"
         }
     },
     "organizations.comp.participants": {
