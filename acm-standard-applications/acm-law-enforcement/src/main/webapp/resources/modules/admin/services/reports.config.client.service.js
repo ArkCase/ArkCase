@@ -88,7 +88,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
     function getReportsPaged(data) {
         return $http({
             method : "GET",
-            url : "api/latest/plugin/report/pentaho/paged",
+            url : "api/latest/plugin/report/pentaho",
             params : {
                 dir : (data.dir ? data.dir : "ASC"),
                 start : (data.start ? data.start : 0),
