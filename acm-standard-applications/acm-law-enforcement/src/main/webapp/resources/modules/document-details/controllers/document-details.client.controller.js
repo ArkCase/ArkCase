@@ -55,6 +55,7 @@ angular.module('document-details').controller(
 
                     TranscriptionManagementService.getTranscribeConfiguration().then(function(res) {
                         $scope.transcribeEnabled = res.data.enabled;
+                        $scope.$broadcast('transcribe-configuration', res.data);
                     }, function(err) {
                         MessageService.error(err.data);
                     });
