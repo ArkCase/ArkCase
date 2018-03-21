@@ -222,7 +222,8 @@
             "type.label": "Tipo",
             "type.placeholder": "Digite Tipo",
             "value.label": "URLs",
-            "value.placeholder": "Digite URL"
+            "value.placeholder": "Digite URL",
+            "value.title": "pt_Url must be valid (e.g. https://www.google.com)"
         }
     },
     "people.comp.participants": {
