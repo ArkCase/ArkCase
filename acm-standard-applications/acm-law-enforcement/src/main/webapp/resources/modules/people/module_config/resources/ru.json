@@ -222,7 +222,8 @@
             "type.label": "Тип",
             "type.placeholder": "Введите тип",
             "value.label": "URL-адрес",
-            "value.placeholder": "Введите URL-адрес"
+            "value.placeholder": "Введите URL-адрес",
+            "value.title": "ru_Url must be valid (e.g. https://www.google.com)"
         }
     },
     "people.comp.participants": {
