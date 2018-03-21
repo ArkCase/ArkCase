@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
-    xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd
        http://www.springframework.org/schema/util
        http://www.springframework.org/schema/util/spring-util-2.5.xsd">
@@ -87,7 +88,8 @@
         <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
-    <bean id="applicationRoleToUserGroupProperties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
+    <bean id="applicationRoleToUserGroupProperties"
+          class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -181,7 +183,8 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/spring/spring-config-ldap-add-group.properties"/>
+        <property name="location"
+                  value="file:${user.home}/.arkcase/acm/spring/spring-config-ldap-add-group.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -199,7 +202,8 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/spring/spring-config-ldap-edit-user.properties"/>
+        <property name="location"
+                  value="file:${user.home}/.arkcase/acm/spring/spring-config-ldap-edit-user.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -232,31 +236,40 @@
         <ref bean="passwordLengthValidationRule"/>
     </util:list>
 
-    <bean id="passwordShouldNotContainUserId" class="com.armedia.acm.services.users.model.ldap.PasswordShouldNotContainUserId"></bean>
+    <bean id="passwordShouldNotContainUserId"
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldNotContainUserId"></bean>
 
-    <bean id="passwordShouldMatchLowerCasePattern" class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+    <bean id="passwordShouldMatchLowerCasePattern"
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
         <constructor-arg type="java.lang.String" name="pattern" value="^.*?[a-z].*$"/>
-        <constructor-arg type="java.lang.String" name="message" value="Password must contain at least one lowercase character"/>
+        <constructor-arg type="java.lang.String" name="message"
+                         value="Password must contain at least one lowercase character"/>
     </bean>
 
-    <bean id="passwordShouldMatchUpperCasePattern" class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+    <bean id="passwordShouldMatchUpperCasePattern"
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
         <constructor-arg type="java.lang.String" name="pattern" value="^.*?[A-Z].*$"/>
-        <constructor-arg type="java.lang.String" name="message" value="Password must contain at least one uppercase character"/>
+        <constructor-arg type="java.lang.String" name="message"
+                         value="Password must contain at least one uppercase character"/>
     </bean>
 
-    <bean id="passwordShouldMatchDigitPattern" class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+    <bean id="passwordShouldMatchDigitPattern"
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
         <constructor-arg type="java.lang.String" name="pattern" value="^.*?[0-9].*$"/>
         <constructor-arg type="java.lang.String" name="message" value="Password must contain at least one digit (0-9)"/>
     </bean>
 
-    <bean id="passwordShouldMatchSpecialCharPattern" class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+    <bean id="passwordShouldMatchSpecialCharPattern"
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
         <constructor-arg type="java.lang.String" name="pattern">
             <value><![CDATA[^.*?[[~!@#$%^&*_+=`|\(){}:;"'<>,.?/-]].*$]]></value>
         </constructor-arg>
-        <constructor-arg type="java.lang.String" name="message" value="Password must contain at least one special character"/>
+        <constructor-arg type="java.lang.String" name="message"
+                         value="Password must contain at least one special character"/>
     </bean>
 
-    <bean id="passwordLengthValidationRule" class="com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule">
+    <bean id="passwordLengthValidationRule"
+          class="com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule">
         <constructor-arg type="int" name="minLength" value="7"/>
         <constructor-arg type="java.lang.String" name="message" value="Password must be of minimum length of 7."/>
     </bean>
@@ -265,5 +278,9 @@
     <bean id="acmUserEventPublisher" class="com.armedia.acm.services.users.service.AcmUserEventPublisher"/>
 
     <bean id="acmGroupEventPublisher" class="com.armedia.acm.services.users.service.AcmGroupEventPublisher"/>
+
+    <bean id="usersStateProvider" class="com.armedia.acm.services.users.service.UsersStateProvider">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
 
 </beans>
