@@ -18,6 +18,7 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
         getRolesByWidgets : getRolesByWidgets,
         authorizeRolesForWidget : authorizeRolesForWidget
     });
+
     /**
      * @ngdoc method
      * @name getRolesByWidgets
@@ -34,7 +35,6 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
             url : "api/latest/plugin/dashboard/widgets/rolesByWidget/all"
         });
     }
-    ;
 
     /**
      * @ngdoc method
@@ -55,5 +55,4 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
             }
         });
     }
-    ;
 });
