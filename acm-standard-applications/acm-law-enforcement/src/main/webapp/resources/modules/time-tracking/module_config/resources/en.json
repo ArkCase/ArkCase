@@ -14,7 +14,8 @@
     },
     "timeTracking.comp.info": {
         "title": "Info",
-        "lastModified.label": "Last Modified"
+        "lastModified.label": "Last Modified",
+        "state": "State"
     },
     "timeTracking.comp.actions": {
         "title": "Actions",
