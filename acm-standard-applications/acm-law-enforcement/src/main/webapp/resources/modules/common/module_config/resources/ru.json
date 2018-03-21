@@ -2,6 +2,7 @@
     "common": {
         "select.option.none": "(Выбрать один)",
         "value.unknown": "Неизвестно",
+        "value.none": "Никто",
         "defaultDateFormat": "Ru_MM/DD/YYYY",
         "defaultTimeFormat": "Ru_hh:mm:ss",
         "defaultDateTimeFormat": "Ru_MM/DD/YYYY hh:mm",

@@ -382,8 +382,7 @@
                 "save": "Save",
                 "cancel": "Cancel",
                 "validationResponse": "Email Template already exists with selected parameters",
-                "uploadError": "File upload canceled due to incorrect type of file. You can only upload html file.",
-                "invalidTemplateName": "Template name must end on '.html', '.htm' or '.xhtml' and can only consist of characters, digits or underscores."
+                "uploadError": "File upload canceled due to incorrect type of file. You can only upload html file."
             },
             "objectTypes": {
                 "caseFile": "Case File",
@@ -444,9 +443,9 @@
             "active": "Active/Inactive",
             "active.active": "Active",
             "active.inactive": "Inactive",
-            "modal" : {
+            "modal": {
                 "button.save": "Save",
-                "button.cancel" : "Cancel"
+                "button.cancel": "Cancel"
             }
         },
         "dashboard.title": "Dashboard",

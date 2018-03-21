@@ -2,6 +2,7 @@
     "common": {
         "select.option.none": "(Selecione um)",
         "value.unknown": "Desconhecido",
+        "value.none": "Nenhum",
         "defaultDateFormat": "Pt_MM/DD/YYYY",
         "defaultTimeFormat": "Pt_hh:mm:ss",
         "defaultDateTimeFormat": "Pt_MM/DD/YYYY hh:mm",
