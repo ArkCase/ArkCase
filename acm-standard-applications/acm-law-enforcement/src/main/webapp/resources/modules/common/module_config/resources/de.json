@@ -2,6 +2,7 @@
     "common": {
         "select.option.none": "(Wähle Eins)",
         "value.unknown": "Unbekannt",
+        "value.none": "Keiner",
         "defaultDateFormat": "De_MM/DD/YYYY",
         "defaultTimeFormat": "De_hh:mm:ss",
         "defaultDateTimeFormat": "De_MM/DD/YYYY hh:mm",
