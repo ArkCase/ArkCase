@@ -213,31 +213,21 @@ public class DashboardService
     {
         List<AcmRole> allRoles = getUserDao().findAllRoles();
         List<Widget> allWidgets = getWidgetDao().findAll();
-        List<WidgetRoleName> notAuthorized = new ArrayList<>();
-        boolean isNotAuthorized = true;
+        List<WidgetRoleName> notAuthorizedWidgetRoleNames = new ArrayList<>();
         List<RolesGroupByWidgetDto> tmpRolesPerWidget = new ArrayList<>();
-        boolean isAddedToRolesGroupByWidgetLsit = false;
+        boolean isAddedToRolesGroupByWidgetList = false;
         for (RolesGroupByWidgetDto rolePerW : rolesPerWidget)
         {
             rolePerW.setName(widgetName(rolePerW.getWidgetName()));
             for (AcmRole role : allRoles)
             {
-                for (WidgetRoleName roleName : rolePerW.getWidgetAuthorizedRoles())
+                if (rolePerW.getWidgetAuthorizedRoles().stream().noneMatch(roleName -> roleName.getName().equals(role.getRoleName())))
                 {
-                    if (roleName.getName().equals(role.getRoleName()))
-                    {
-                        isNotAuthorized = false;
-                        break;
-                    }
+                    notAuthorizedWidgetRoleNames.add(new WidgetRoleName(role.getRoleName()));
                 }
-                if (isNotAuthorized)
-                {
-                    notAuthorized.add(new WidgetRoleName(role.getRoleName()));
-                }
-                isNotAuthorized = true;
             }
-            rolePerW.setWidgetNotAuthorizedRoles(notAuthorized);
-            notAuthorized = new ArrayList<>();
+            rolePerW.setWidgetNotAuthorizedRoles(notAuthorizedWidgetRoleNames);
+            notAuthorizedWidgetRoleNames = new ArrayList<>();
         }
         for (Widget widget : allWidgets)
         {
@@ -246,11 +236,11 @@ public class DashboardService
                 if (roleW.getWidgetName().equals(widget.getWidgetName()))
                 {
                     tmpRolesPerWidget.add(roleW);
-                    isAddedToRolesGroupByWidgetLsit = true;
+                    isAddedToRolesGroupByWidgetList = true;
                     break;
                 }
             }
-            if (!isAddedToRolesGroupByWidgetLsit)
+            if (!isAddedToRolesGroupByWidgetList)
             {
                 RolesGroupByWidgetDto rolesGBW = new RolesGroupByWidgetDto();
                 rolesGBW.setWidgetName(widget.getWidgetName());
@@ -264,7 +254,7 @@ public class DashboardService
                 rolesGBW.setWidgetAuthorizedRoles(new ArrayList<>());
                 tmpRolesPerWidget.add(rolesGBW);
             }
-            isAddedToRolesGroupByWidgetLsit = false;
+            isAddedToRolesGroupByWidgetList = false;
         }
         return tmpRolesPerWidget;
     }
