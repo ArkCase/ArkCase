@@ -109,7 +109,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
                     @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") })
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
-    @OneToMany(cascade = {
+    /*@OneToMany(cascade = {
             CascadeType.DETACH,
             CascadeType.REFRESH,
             CascadeType.REMOVE,
@@ -117,14 +117,16 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
     @JoinColumns({
             @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_organization_id"),
             @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
-    @OrderBy("created ASC")
+    @OrderBy("created ASC")*/
+    @Transient
     private List<OrganizationAssociation> associationsToObjects = new ArrayList<>();
 
-    @OneToMany(cascade = {
+    /*@OneToMany(cascade = {
             CascadeType.DETACH,
             CascadeType.REFRESH,
             CascadeType.REMOVE,
-            CascadeType.PERSIST }, orphanRemoval = true, mappedBy = "organization")
+            CascadeType.PERSIST }, orphanRemoval = true, mappedBy = "organization")*/
+    @Transient
     private List<OrganizationAssociation> associationsFromObjects = new ArrayList<>();
 
     @Column(name = "cm_status")
