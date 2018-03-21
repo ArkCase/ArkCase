@@ -2,20 +2,26 @@
 
 angular.module('document-details').controller(
         'Document.TranscriptionController',
-        [ '$scope', 'DocumentDetails.TranscriptionAppService', 'UtilService', 'MessageService', 'moment',
+        [
+                '$scope',
+                'DocumentDetails.TranscriptionAppService',
+                'UtilService',
+                'MessageService',
+                'moment',
                 function($scope, TranscriptionAppService, Util, MessageService, moment) {
 
                     $scope.items = [];
 
-                    var transcribeEnabled = false;
-
-                    $scope.$on('transcribe-configuration', function(event, transcribeConfig) {
-                        transcribeEnabled = transcribeConfig.enabled;
-                    });
-
                     $scope.$on('document-data', function(event, ecmFile) {
+                        var isMediaFile = !Util.isEmpty(ecmFile)
+                                && (ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 || ecmFile.fileActiveVersionMimeType
+                                        .indexOf("audio") === 0) ? true : false;
+                        if (!isMediaFile) {
+                            // terminate execution. It's not media file
+                            return;
+                        }
                         var activeVersion = $scope.getEcmFileActiveVersion(ecmFile);
-                        if (!Util.isEmpty(activeVersion) && transcribeEnabled) {
+                        if (!Util.isEmpty(activeVersion)) {
                             TranscriptionAppService.getTranscribeObject(activeVersion.id).then(function(res) {
                                 $scope.$emit('transcribe-data-model', res.data);
                                 $scope.transcribeDataModel = res.data;
