@@ -7,9 +7,15 @@ angular.module('document-details').controller(
 
                     $scope.items = [];
 
+                    var transcribeEnabled = false;
+
+                    $scope.$on('transcribe-configuration', function(event, transcribeConfig) {
+                        transcribeEnabled = transcribeConfig.enabled;
+                    });
+
                     $scope.$on('document-data', function(event, ecmFile) {
                         var activeVersion = $scope.getEcmFileActiveVersion(ecmFile);
-                        if (!Util.isEmpty(activeVersion)) {
+                        if (!Util.isEmpty(activeVersion) && transcribeEnabled) {
                             TranscriptionAppService.getTranscribeObject(activeVersion.id).then(function(res) {
                                 $scope.$emit('transcribe-data-model', res.data);
                                 $scope.transcribeDataModel = res.data;
