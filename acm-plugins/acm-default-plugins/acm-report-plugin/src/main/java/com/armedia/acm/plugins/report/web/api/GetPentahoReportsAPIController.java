@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,7 +48,7 @@ public class GetPentahoReportsAPIController
         return retval;
     }
 
-    @RequestMapping(value = "/pentaho/paged", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+    @RequestMapping(value = "/pentaho", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public List<Report> getPentahoReportsPaged(
@@ -60,16 +61,16 @@ public class GetPentahoReportsAPIController
 
         List<Report> retval = pentahoFilePropertiesService.getPentahoReportsPaged(startRow, maxRows, sortDirection);
 
-        LOG.info("Retrieved " + retval.size() + " Pentaho reports.");
+        LOG.info("Retrieved {} Pentaho reports.", retval.size());
 
         return retval;
     }
 
-    @RequestMapping(value = "/pentaho", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+    @RequestMapping(value = "/pentaho", params = { "fn" }, method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public List<Report> getPentahoReportsByMatchingName(
-            @RequestParam(value = "fn") String filterName,
+            @PathVariable(value = "fn") String filterName,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
@@ -79,7 +80,7 @@ public class GetPentahoReportsAPIController
 
         List<Report> retval = pentahoFilePropertiesService.getPentahoReportsByMatchingName(filterName, startRow, maxRows, sortDirection);
 
-        LOG.info("Retrieved " + retval.size() + " Pentaho reports.");
+        LOG.info("Retrieved {} Pentaho reports.", retval.size());
 
         return retval;
     }

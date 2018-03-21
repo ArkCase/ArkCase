@@ -41,15 +41,7 @@ public class PentahoFilePropertiesService
     {
         List<Report> retval = new ArrayList<>();
         List<Report> reports = null;
-
-        try
-        {
-            reports = getReportService().getPentahoReports();
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
+        reports = getReportService().getPentahoReports();
 
         if (reports != null)
         {
@@ -81,39 +73,33 @@ public class PentahoFilePropertiesService
         return retval;
     }
 
-    public List<Report> getPentahoReportsPaged(Integer start, Integer maxRows, String sortDirection) throws Exception
+    private List<Report> getSortedPentahoReportsPaged(List<Report> reports, Integer start, Integer maxRows, String sortDirection)
     {
-        List<Report> foundReports = getPentahoReports();
         if (sortDirection.contains("DESC"))
         {
-            foundReports.sort(Comparator.comparing(Report::getPropertyName, String.CASE_INSENSITIVE_ORDER).reversed());
+            reports.sort(Comparator.comparing(Report::getPropertyName, String.CASE_INSENSITIVE_ORDER).reversed());
         }
         else
         {
-            foundReports.sort(Comparator.comparing(Report::getPropertyName, String.CASE_INSENSITIVE_ORDER));
+            reports.sort(Comparator.comparing(Report::getPropertyName, String.CASE_INSENSITIVE_ORDER));
         }
 
-        return foundReports.stream().skip(start).limit(maxRows).collect(Collectors.toList());
+        return reports.stream().skip(start).limit(maxRows).collect(Collectors.toList());
+    }
+
+    public List<Report> getPentahoReportsPaged(Integer start, Integer maxRows, String sortDirection) throws Exception
+    {
+        return getSortedPentahoReportsPaged(getPentahoReports(), start, maxRows, sortDirection);
     }
 
     public List<Report> getPentahoReportsByMatchingName(String filterName, Integer start, Integer maxRows, String sortDirection)
             throws Exception
     {
-        List<Report> foundReports = getPentahoReports();
-
-        foundReports = foundReports.stream().filter(report -> report.getPropertyName().toLowerCase().contains(filterName.toLowerCase()))
+        List<Report> reports = getPentahoReports().stream()
+                .filter(report -> report.getPropertyName().toLowerCase().contains(filterName.toLowerCase()))
                 .collect(Collectors.toList());
 
-        if (sortDirection.contains("DESC"))
-        {
-            foundReports.sort(Comparator.comparing(Report::getPropertyName, String.CASE_INSENSITIVE_ORDER).reversed());
-        }
-        else
-        {
-            foundReports.sort(Comparator.comparing(Report::getPropertyName, String.CASE_INSENSITIVE_ORDER));
-        }
-
-        return foundReports.stream().skip(start).limit(maxRows).collect(Collectors.toList());
+        return getSortedPentahoReportsPaged(reports, start, maxRows, sortDirection);
     }
 
     public PentahoReportFiles consumeXML(HttpHeaders headers, RestTemplate restTemplate)
