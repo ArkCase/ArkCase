@@ -61,7 +61,7 @@ public class ModuleConfigurationRetrieveModules
         }
         catch (Exception e)
         {
-            log.error("Can't retrieve roles", e);
+            log.error("Can't retrieve modules", e);
             throw new AcmModuleConfigurationException("Can't retrieve modules", e);
         }
     }
@@ -72,7 +72,7 @@ public class ModuleConfigurationRetrieveModules
     @ResponseBody
     public List<ModuleItem> findModulesByMatchingName(
             @RequestParam(value = "fn") String filterName,
-            @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows)
             throws IOException, AcmModuleConfigurationException
