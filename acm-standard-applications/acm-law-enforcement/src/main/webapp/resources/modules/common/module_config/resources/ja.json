@@ -2,15 +2,28 @@
     "common": {
         "select.option.none": "（選択する）",
         "value.unknown": "不明",
-        "defaultDateFormat": "ja_MM/DD/YYYY",
-        "defaultTimeFormat": "ja_hh:mm:ss",
-        "defaultDateTimeFormat": "ja_MM/DD/YYYY hh:mm",
-        "defaultDatePickerFormat": "ja_MM/dd/yyyy",
-        "defaultDateUIFormat": "ja_MM/dd/yyyy",
-        "defaultDateTimeUIFormat": "ja_MM/dd/yyyy HH:mm"
+		"_1_": "I18nに準拠したエラーが発生する可能性があるため、カスタム日付形式を使用または追加しないでください.",
+        "_2_": "定義済みのフォーマットのいずれかを使用してください: ",
+        "_3_": "'中'       - に相当 'MMM d, y h:mm:ss a' en_USロケールの場合 (たとえば、2010年9月3日12：05：08 PM)",
+        "_4_": "'ショート'    - に相当 'M/d/yy h:mm a' en_USロケールの場合 (例えば 9/3/10 12:05 PM)",
+        "_5_": "'完全な日付'- に相当 'EEEE, MMMM d, y' en_USロケールの場合 (たとえば、2010年9月3日金曜日)",
+        "_6_": "'長い日付'  - に相当 'MMMM d, y' en_USロケールの場合 (例えば 2010年9月3日)",
+        "_7_": "'中期'     - に相当 'MMM d, y' en_USロケールの場合 (例えば 2010年9月3日)",
+        "_8_": "'短い日付'  - に相当 'M/d/yy' en_USロケールの場合 (例えば 9/3/10)",
+        "_9_": "'中時間'   - に相当 'h:mm:ss a' en_USロケールの場合 (例えば 12:05:08 PM)",
+        "_10": "'短時間'   - に相当 'h:mm a' en_USロケールの場合 (例えば 12:05 PM)",
+        "_11": " ",
+        "_12": "以下の日付形式は段階的に廃止されています。 顧客がフォーマットをカスタマイズするよう要求した場合、 ",
+        "_13": "それを避けるように教育すること",
+        "defaultDateFormat": "MM/DD/YYYY",
+        "defaultTimeFormat": "hh:mm:ss",
+        "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
+        "defaultDatePickerFormat": "MM/dd/yyyy",
+        "defaultDateUIFormat": "MM/dd/yyyy",
+        "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
     },
     "common.frevvo": {
-        "defaultDateFormat": "ja_YYYY-MM-DD"
+        "defaultDateFormat": "YYYY-MM-DD"
     },
     "common.service": {
         "error.invalidData": "無効なデータ"
@@ -52,7 +65,7 @@
             "newCorrespondence": "新しい対応",
             "open": "開いた",
             "email": "電子メイル",
-            "newTask": "ja_New Task",
+            "newTask": "新しい仕事",
             "download": "ダウンロード",
             "copy": "複写",
             "cut": "カット",
@@ -95,6 +108,10 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "添付ファイルとハイパーリンクとして送信",
             "btnCancel.text": "キャンセル",
             "btnOk.text": "メールを送る"
+		},
+        "participantsDialog": {
+            "titlePart": "Participants for ",
+            "title": "Participants"	
         },
         "recipientsDialog": {
             "title": "受信者を選択",
@@ -167,7 +184,7 @@
         "authorized": "認可された"
     },
     "common.directive.objectAuthorizationRolesFilter": {
-        "pattern.title": "ja_Error, 2 characters required."
+        "pattern.title": "エラー、2文字必要."
     },
     "common.directive.searchModal": {
         "header": "検索",
@@ -175,7 +192,9 @@
         "btnOk.text": "[OK]",
         "btnCancel.text": "キャンセル",
         "edtPlaceholder": "検索するには入力",
-        "noData.text": "結果なし"
+        "noData.text": "結果なし",
+		"pickUserLabel": "関連付けられたユーザを選ぶ",
+        "pickGroupLabel": "関連グループを選択"
     },
     "common.directive.search": {
         "showMore.button.text": "もっと表示",
@@ -472,7 +491,9 @@
             "day.label": "日数",
             "week.label": "週間",
             "month.label": "月",
-            "on.label": "に",
+            "_1_": "'に.ラベル' 使用されていないように見える. _TO_BE_REMOVED_",
+            "_2_": "それが必要な場合は、メッセージの英語中心の文法を避けるためにメッセージを言い直してください",
+            "_on.label": "に",
             "day.placeholder": "日",
             "year.placeholder": "年",
             "dailyRecurrence": {
@@ -566,7 +587,7 @@
     },
     "common.directive.coreParticipants": {
         "title": "参加者",
-        "replaceFolderChildrenParticipants": "ja_Replace child documents participants",
+        "replaceFolderChildrenParticipants": "子ドキュメントの交換",
         "modal": {
             "addParticipant.label": "参加者を追加",
             "editParticipant.label": "レコードの編集",
@@ -576,7 +597,7 @@
             "btnCancel.text": "キャンセル",
             "dialogUserPicker.header": "ユーザーを検索",
             "dialogGroupPicker.header": "検索グループ",
-            "replaceChildrenParticipant": "ja_replace children participant"
+            "replaceChildrenParticipant": "子供の参加者を交換する"
         },
         "message": {
             "error.groupType": "所有グループは人になることはできません。",
@@ -588,6 +609,8 @@
             "error.noAccessCombo": "無アクセスと譲受人の組み合わせは許可されていません。",
             "error.duplicateUserOrGroup": "参加者が無効です。参加者の重複したエントリが見つかりました。",
             "error.userOrGroupNotFound": "参加者が無効です。参加者のエントリがシステムにありません。",
+			"error.emptyParticipantLdapId": "参加者名は空にできません",
+            "error.emptyParticipantType": "参加者の種類は空にできません",
             "error.ownerUnique": "所有者は1人だけです。"
         }
     },
@@ -620,10 +643,10 @@
         "DOC_REPO": "ドキュメントリポジトリ",
         "ORGANIZATION": "組織",
         "PERSON": "人物",
-        "PARTICIPANT": "ja_Participant",
-        "NOTE": "ja_Note",
-        "PARTICIPANT-ASSOCIATION": "ja_Participant-Association",
-        "ASSIGNMENT": "ja_Assignment"
+        "PARTICIPANT": "参加者",
+        "NOTE": "注意",
+        "PARTICIPANT-ASSOCIATION": "参加者-協会",
+        "ASSIGNMENT": "割り当て"
     },
     "frevvo.dialogUserPicker": {
         "header": "ユーザーを選択",
