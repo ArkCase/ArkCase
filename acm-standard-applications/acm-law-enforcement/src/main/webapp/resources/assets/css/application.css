@@ -1654,4 +1654,8 @@ a.primary {
     width: 20px;
     height: 18px;
 }
-
+.transcript-warning-sign {
+    position: relative;
+    bottom: 2px;
+    left: 4px;
+}

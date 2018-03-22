@@ -8,5 +8,7 @@ public enum TranscribeBusinessProcessVariableKey
     IDS,
     REMOTE_ID,
     STATUS,
-    ACTION
+    ACTION,
+    TYPE,
+    CREATED
 }
