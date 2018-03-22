@@ -1,24 +1,19 @@
 package com.armedia.acm.services.transcribe.checker;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
 import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
 import com.armedia.acm.services.transcribe.exception.TranscribeServiceProviderNotFoundException;
-import com.armedia.acm.services.transcribe.model.TranscribeBusinessProcessVariableKey;
-import com.armedia.acm.services.transcribe.model.TranscribeStatusType;
-import com.armedia.acm.services.transcribe.model.Transcribe;
-import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
+import com.armedia.acm.services.transcribe.model.*;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -28,10 +23,13 @@ public class TranscribeProcessingChecker implements JavaDelegate
 {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private ArkCaseTranscribeService arkCaseTranscribeService;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception
     {
+        getAuditPropertyEntityAdapter().setUserId("TRANSCRIBE_SERVICE");
+
         List<Long> ids = (List<Long>) delegateExecution.getVariable(TranscribeBusinessProcessVariableKey.IDS.toString());
 
         if (ids != null && ids.size() > 0)
@@ -47,7 +45,7 @@ public class TranscribeProcessingChecker implements JavaDelegate
                 {
                     TranscribeConfiguration configuration = getArkCaseTranscribeService().getConfiguration();
                     List<Transcribe> processingTranscribeObjects = getArkCaseTranscribeService().getAllByStatus(TranscribeStatusType.PROCESSING.toString());
-                    List<Transcribe> processingTranscribeObjectsDistinctByProcessId = processingTranscribeObjects.stream().filter(distinctByKey(Transcribe::getProcessId)).collect(Collectors.toList());
+                    List<Transcribe> processingTranscribeObjectsDistinctByProcessId = processingTranscribeObjects.stream().filter(TranscribeUtils.distinctByProperty(Transcribe::getProcessId)).collect(Collectors.toList());
 
                     if (configuration.getNumberOfFilesForProcessing() > processingTranscribeObjectsDistinctByProcessId.size())
                     {
@@ -55,8 +53,8 @@ public class TranscribeProcessingChecker implements JavaDelegate
                         {
                             // Create Transcribe Job on provider side and set the Status and Action to PROCESSING
                             getArkCaseTranscribeService().getTranscribeServiceFactory().getService(configuration.getProvider()).create(transcribe);
-                            delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.STATUS.toString(), TranscribeStatusType.PROCESSING);
-                            delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(), TranscribeStatusType.PROCESSING);
+                            delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.STATUS.toString(), TranscribeStatusType.PROCESSING.toString());
+                            delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(), TranscribeActionType.PROCESSING.toString());
                         }
                         catch (TranscribeServiceProviderNotFoundException | CreateTranscribeException e)
                         {
@@ -73,12 +71,6 @@ public class TranscribeProcessingChecker implements JavaDelegate
         }
     }
 
-    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor)
-    {
-        Set<Object> seen = ConcurrentHashMap.newKeySet();
-        return t -> seen.add(keyExtractor.apply(t));
-    }
-
     public ArkCaseTranscribeService getArkCaseTranscribeService()
     {
         return arkCaseTranscribeService;
@@ -87,5 +79,15 @@ public class TranscribeProcessingChecker implements JavaDelegate
     public void setArkCaseTranscribeService(ArkCaseTranscribeService arkCaseTranscribeService)
     {
         this.arkCaseTranscribeService = arkCaseTranscribeService;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }

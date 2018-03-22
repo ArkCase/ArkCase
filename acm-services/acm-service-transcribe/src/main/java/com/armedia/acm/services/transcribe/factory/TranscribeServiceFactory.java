@@ -2,7 +2,6 @@ package com.armedia.acm.services.transcribe.factory;
 
 import com.armedia.acm.services.transcribe.exception.TranscribeServiceProviderNotFoundException;
 import com.armedia.acm.services.transcribe.model.TranscribeServiceProvider;
-import com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeService;
 import com.armedia.acm.services.transcribe.service.TranscribeService;
 
 /**
@@ -10,7 +9,7 @@ import com.armedia.acm.services.transcribe.service.TranscribeService;
  */
 public class TranscribeServiceFactory
 {
-    private AWSTranscribeService awsTranscribeService;
+    private TranscribeService awsTranscribeService;
 
     public TranscribeService getService(TranscribeServiceProvider provider) throws TranscribeServiceProviderNotFoundException
     {
@@ -23,7 +22,7 @@ public class TranscribeServiceFactory
         throw new TranscribeServiceProviderNotFoundException(String.format("Provider [%s] not found.", provider != null ? provider.toString() : null));
     }
 
-    public void setAwsTranscribeService(AWSTranscribeService awsTranscribeService)
+    public void setAwsTranscribeService(TranscribeService awsTranscribeService)
     {
         this.awsTranscribeService = awsTranscribeService;
     }

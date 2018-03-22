@@ -38,7 +38,7 @@ public class GetRolesByWidgetsAPIController
     @RequestMapping(value = "/rolesByWidget/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<RolesGroupByWidgetDto> getRolesGroupedByWidget(Authentication authentication, HttpSession session)
-            throws AcmWidgetException, AcmObjectNotFoundException
+            throws AcmWidgetException
     {
         log.info("List of all, authorized and not authorized roles grouped by widget'");
 
