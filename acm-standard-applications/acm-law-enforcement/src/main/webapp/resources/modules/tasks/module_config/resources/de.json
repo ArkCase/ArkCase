@@ -91,14 +91,14 @@
     "tasks.comp.parentdocs": {
         "title": "Übergeordnete Dokumente",
         "noParentDataMessage": "Keine übergeordneten Dokumente für eigenständige Aufgabe",
-        "sendEmail": "E-Mail senden",
+        "sendEmail": "Email senden",
         "filterInputPlaceholder": "Filter",
         "searchInputPlaceholder": "Suche",
         "folderName": "Ordnernamen"
     },
     "tasks.comp.attachments": {
         "title": "Anhänge",
-        "sendEmail": "E-Mail senden",
+        "sendEmail": "Email senden",
         "filterInputPlaceholder": "Filter",
         "searchInputPlaceholder": "Suche"
     },
@@ -241,7 +241,7 @@
         }
     },
     "tasks.owningGroupSearch": {
-        "id": "OwningGroupSearch",
+        "id": "EigeneGruppenSuchen",
         "title": "Nach dieser Benutzergruppe suchen",
         "search": {
             "btn": "Suche",
@@ -257,7 +257,7 @@
         }
     },
     "tasks.objectSearch": {
-        "id": "ObjectSearch",
+        "id": "Objektsuche",
         "title": "Objektsuche",
         "search": {
             "btn": "Suche",

@@ -1,6 +1,6 @@
 package com.armedia.acm.data.service;
 
-import com.armedia.acm.core.AcmStatefulEntity;
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -18,7 +18,7 @@ public class AcmDataServiceImpl implements AcmDataService
 
     @SuppressWarnings("unchecked")
     @Override
-    public AcmAbstractDao<AcmStatefulEntity> getDaoByObjectType(String objectType)
+    public AcmAbstractDao<AcmObject> getDaoByObjectType(String objectType)
     {
         if (objectType != null)
         {
@@ -26,7 +26,7 @@ public class AcmDataServiceImpl implements AcmDataService
 
             if (daos != null)
             {
-                for (AcmAbstractDao<AcmStatefulEntity> dao : daos.values())
+                for (AcmAbstractDao<AcmObject> dao : daos.values())
                 {
                     if (objectType.equals(dao.getSupportedObjectType()))
                     {

@@ -222,7 +222,8 @@
             "type.label": "Tipo",
             "type.placeholder": "Ingresar tipo",
             "value.label": "URL",
-            "value.placeholder": "Introducir URL"
+            "value.placeholder": "Introducir URL",
+            "value.title": "es_Url must be valid (e.g. https://www.google.com)"
         }
     },
     "people.comp.participants": {

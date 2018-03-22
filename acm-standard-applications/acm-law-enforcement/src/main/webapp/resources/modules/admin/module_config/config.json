@@ -97,10 +97,6 @@
                 {
                     "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.complaints.label",
                     "id": "COMPLAINT"
-                },
-                {
-                    "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.tasks.label",
-                    "id": "TASK"
                 }
             ]
         },
@@ -387,6 +383,69 @@
             ]
         },
         {
+            "id": "scheduleReportConfig",
+            "title": "Schedule Report Config",
+            "enabled": true,
+            "type": "grid",
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "rowHeight": "auto",
+            "columnDefs": [
+                {
+                    "name": "jobName",
+                    "displayName": "admin.reports.schedule.table.columns.jobName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "recurrence",
+                    "field": "jobTrigger.uiPassParam",
+                    "displayName": "admin.reports.schedule.table.columns.recurrence",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "startTime",
+                    "displayName": "admin.reports.schedule.table.columns.startTime",
+                    "visible": true,
+                    "cellTemplate": "<div>{{ row.entity.jobTrigger.startTime | date : ('admin.reports.schedule.table.startTimeFormat' | translate) }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "startDate",
+                    "displayName": "admin.reports.schedule.table.columns.startDate",
+                    "visible": true,
+                    "cellTemplate": "<div>{{ row.entity.jobTrigger.startTime | date : ('common.defaultDateUIFormat' | translate) }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "endDate",
+                    "displayName": "admin.reports.schedule.table.columns.endDate",
+                    "visible": true,
+                    "cellTemplate": "<div>{{ row.entity.jobTrigger.endTime | date : ('common.defaultDateUIFormat' | translate) }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "emailAddresses",
+                    "displayName": "admin.reports.schedule.table.columns.emailAddresses",
+                    "visible": true,
+                    "cellTemplate": "<div>{{ grid.appScope.extractEmailAddresses(row.entity) }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "state",
+                    "displayName": "admin.reports.schedule.table.columns.state",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
             "id": "labelsChooser",
             "title": "Application - Labels Config grid",
             "enabled": true,
@@ -607,6 +666,23 @@
                     "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
                 }
             ],
+            "selectedItemsGrid": {
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.name",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "delete",
+                        "cellEditableCondition": false,
+                        "width": 40,
+                        "cellClass": "text-center",
+                        "headerCellTemplate": "<span></span>",
+                        "cellTemplate": "<span><i class='fa fa-trash-o' style='cursor :pointer' ng-click='grid.appScope.gridSelectedItems.deleteRow(row.entity)'></i></span>"
+                    }
+                ]
+            },
             "paginationPageSizes": [
                 5,
                 10,
@@ -881,6 +957,34 @@
                 }
             ],
             "rowTemplate": "modules/admin/views/components/application-draggable-rows.view.html"
+        },
+        {
+            "id": "timesheetConfiguration",
+            "title": "admin.forms.timesheetConfiguration.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "chargeRole",
+                    "displayName": "admin.forms.timesheetConfiguration.chargeRole",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "rate",
+                    "displayName": "admin.forms.timesheetConfiguration.rate",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "active",
+                    "displayName": "admin.forms.timesheetConfiguration.active.active",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ]
         }
     ],
     "tree": {
@@ -905,13 +1009,6 @@
                 "components": []
             },
             {
-                "type": "p/security/access",
-                "label": "admin.security.functionalAccessControl",
-                "components": [
-                    "security.functional-access-control"
-                ]
-            },
-            {
                 "type": "p/security/ldap",
                 "label": "admin.security.ldapConfig",
                 "components": [
@@ -926,10 +1023,10 @@
                 ]
             },
             {
-                "type": "p/security/ldapUser",
-                "label": "admin.security.ldap.user.management.title",
+                "type": "p/security/access",
+                "label": "admin.security.functionalAccessControl",
                 "components": [
-                    "security.ldap-user-management"
+                    "security.functional-access-control"
                 ]
             },
             {
@@ -937,6 +1034,13 @@
                 "label": "admin.security.selectPrivileges",
                 "components": [
                     "security.select-privileges"
+                ]
+            },
+            {
+                "type": "p/security/ldapUser",
+                "label": "admin.security.ldap.user.management.title",
+                "components": [
+                    "security.ldap-user-management"
                 ]
             },
             {
@@ -1008,6 +1112,13 @@
                 ]
             },
             {
+                "type": "p/reports/schedule",
+                "label": "admin.reports.schedule.title",
+                "components": [
+                    "reports.schedule"
+                ]
+            },
+            {
                 "type": "p/forms",
                 "label": "admin.forms.title",
                 "icon": "fa fa-wrench",
@@ -1015,9 +1126,9 @@
             },
             {
                 "type": "p/forms/config",
-                "label": "admin.forms.config",
+                "label": "admin.forms.timesheetConfiguration.title",
                 "components": [
-                    "forms.config"
+                    "timesheet.config"
                 ]
             },
             {
@@ -1146,6 +1257,21 @@
                 "components": [
                     "cmis-configuration"
                 ]
+            },
+            {
+                "type": "p/transcription",
+                "label": "admin.transcription.title",
+                "icon": "fa fa-wrench",
+                "components": [],
+                "hidden": true
+            },
+            {
+                "type": "p/transcription/transcriptionManagement",
+                "label": "admin.transcription.transcriptionManagement",
+                "components": [
+                    "transcription-management"
+                ],
+                "hidden": true
             }
         ]
     }

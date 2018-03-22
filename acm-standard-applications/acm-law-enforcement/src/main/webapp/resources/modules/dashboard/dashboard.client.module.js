@@ -9,4 +9,4 @@ ApplicationConfiguration.registerModule('dashboard', [ 'adf', 'adf.provider', 'c
         'dashboard.notes', 'dashboard.tasks', 'dashboard.references', 'dashboard.workflow', 'dashboard.relOrganizations',
         'dashboard.related', 'dashboard.history', 'dashboard.time', 'dashboard.cost', 'dashboard.signature', 'dashboard.person',
         'dashboard.expenses', 'dashboard.hoursSummary', 'dashboard.tags', 'dashboard.calendar', 'dashboard.approvalRouting',
-        'dashboard.new-cases', 'dashboard.workflow-report', 'dashboard.approvers' ]);
+        'dashboard.new-cases', 'dashboard.workflow-report', 'dashboard.approvers', 'dashboard.websites-widget' ]);

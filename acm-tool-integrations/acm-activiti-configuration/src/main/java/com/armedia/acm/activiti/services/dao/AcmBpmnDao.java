@@ -120,7 +120,7 @@ public class AcmBpmnDao
 
     public AcmProcessDefinition getByKeyAndDigest(String key, String digest)
     {
-        String queryText = "SELECT apd FROM AcmProcessDefinition apd WHERE apd.key = :key and apd.md5Hash =:digest";
+        String queryText = "SELECT apd FROM AcmProcessDefinition apd WHERE apd.key = :key and apd.sha256Hash =:digest";
         TypedQuery<AcmProcessDefinition> query = getEm().createQuery(queryText, AcmProcessDefinition.class);
         query.setParameter("key", key);
         query.setParameter("digest", digest);

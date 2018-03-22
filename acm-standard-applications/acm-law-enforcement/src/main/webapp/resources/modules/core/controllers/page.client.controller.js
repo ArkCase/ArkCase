@@ -3,10 +3,10 @@
 angular.module('core').controller(
         'PageController',
         [ '$scope', '$modal', '$sce', '$q', '$location', 'UtilService', 'Acm.LoginService', 'LoginWarningService', 'Authentication',
-                function($scope, $modal, $sce, $q, $location, Util, AcmLoginService, LoginWarningService, Authentication) {
+                'ConfigService',
+                function($scope, $modal, $sce, $q, $location, Util, AcmLoginService, LoginWarningService, Authentication, ConfigService) {
 
-                    $scope.fullScreenMode = _.startsWith($location.path(), "/viewer/");
-
+                    $scope.fullScreenMode = false;
                     $scope.isLeftMenuCollapsed = false;
 
                     $scope.$on('isLeftMenuCollapsed', function(e, isLeftMenuCollapsed) {
@@ -15,12 +15,22 @@ angular.module('core').controller(
 
                     var promiseLoginWarning = LoginWarningService.queryLoginWarning();
                     var promiseUserInfo = Authentication.queryUserInfo();
+                    var promiseConfig = ConfigService.getModuleConfig("core");
 
                     var notificationMessage = '';
 
-                    $q.all([ promiseLoginWarning, promiseUserInfo ]).then(function(data) {
+                    $q.all([ promiseLoginWarning, promiseUserInfo, promiseConfig ]).then(function(data) {
                         var loginWarning = data[0];
                         var userInfo = data[1];
+                        var config = data[2];
+
+                        var fullScreenPathExpressions = Util.goodMapValue(config, 'fullScreenPathExpressions', []);
+                        _.each(fullScreenPathExpressions, function(element) {
+                            var expression = Util.goodMapValue(element, 'expression', '');
+                            if (_.startsWith($location.path(), expression)) {
+                                $scope.fullScreenMode = true;
+                            }
+                        });
 
                         var isLoginGlobalWarning = false;
                         if (Util.goodMapValue(loginWarning, "enabled", false)) {

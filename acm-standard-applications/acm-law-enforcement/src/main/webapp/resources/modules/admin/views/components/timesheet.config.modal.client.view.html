@@ -1,0 +1,45 @@
+<div class="modal-header">
+    <h3><span translate>admin.forms.timesheetConfiguration.title</span></h3>
+</div>
+<div class="modal-body">
+    <form name="timesheetForm">
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>admin.forms.timesheetConfiguration.chargeRole</label><span class="required-asterisk">*</span><br />
+                <select ng-model="chargeRoleItem.chargeRole" ng-disabled="isEdit == true"
+                        ng-options="chargeRoleOption.key as chargeRoleOption.value | translate for chargeRoleOption in chargeRoleDropdownOptions" class="form-control input-md"
+                        required>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>admin.forms.timesheetConfiguration.rate</label><span class="required-asterisk">*</span><br />
+                <input type="number" id="rate" class="input-md form-control" ng-model="chargeRoleItem.rate" required="required"
+                        placeholder="{{ 'admin.forms.timesheetConfiguration.rate.placeholder' | translate }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>admin.forms.timesheetConfiguration.active</label><br />
+                <label>
+                    <input type="radio" ng-model="chargeRoleItem.active" value="ACTIVE">
+                    <translate>admin.forms.timesheetConfiguration.active.active</translate>
+                </label>
+                <label>
+                    <input type="radio" ng-model="chargeRoleItem.active" value="INACTIVE">
+                    <translate>admin.forms.timesheetConfiguration.active.inactive</translate>
+                </label>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+        admin.forms.timesheetConfiguration.modal.button.cancel
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="timesheetForm.$invalid">
+        <span translate>admin.forms.timesheetConfiguration.modal.button.save</span>
+    </button>
+</div>
+

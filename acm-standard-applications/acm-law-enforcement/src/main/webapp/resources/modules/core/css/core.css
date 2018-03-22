@@ -1,5 +1,7 @@
 /* @override 
-	http://localhost:8080/arkcase/modules/core/css/core.css */
+	http://localhost:8080/arkcase/modules/core/css/core.css
+	https://core.arkcase.dev.armedia.com/arkcase/modules/core/css/core.css
+	https://pds.arkcase.com/arkcase/modules/core/css/core.css */
 
 html {
     height: 100%;
@@ -128,10 +130,6 @@ body {
 	top: -60px;
 	left: 0px;
 	padding-right: 0px;
-}
-
-.page-content.detail-content .module-content .right-sidebar{
-	top: 132px;
 }
 
 /* Left Menu (Left Column) */
@@ -365,7 +363,9 @@ body {
     overflow-y: auto;
     position: relative;
     height: 100%;
+	z-index: 1999;
 }
+
 
 .module-content .left-sidebar .header h3,
 .module-content .left-sidebar-sm .header h3,
@@ -408,15 +408,17 @@ body {
 
 /* Right Sidebar (Right Column) */
 
+.module-content .right-sidebar::after {
+    display: block;
+    content: '';
+    padding: 190px 0 0 0;
+}
+
 .module-content .right-sidebar {
-    position: fixed;
-    top: 0;
+    position: absolute;
+	bottom: 0;
     right: 0;
     vertical-align: top;
-    padding-left: 0px;
-    padding-right: 0px;
-    top: 132px;
-    padding-bottom: 190px;
     width: 500px;
     height: 100% !important;
     -webkit-overflow-scrolling: touch;
@@ -483,6 +485,9 @@ body.fullscreen .cancelFullScreen i.fa {
 /* Responsive - Medium Devices, Desktops */
 
 @media only screen and (max-width: 992px) {
+	
+
+	
     .leftnav-menu footer a {
         color: white;
     }
@@ -541,22 +546,47 @@ body.fullscreen .cancelFullScreen i.fa {
     body.fullscreen .module-content {
         padding: 0px !important;
     }
+	
+	.new-iframe {
+	
+		padding-right: 15px;
+	}
 }
 
 /* Responsive - Small Devices, Tablets */
 
 @media only screen and (max-width: 768px) {
 
+	.atlwdg-trigger.atlwdg-RIGHT {
+		display: none !important;
+	}
+	
+	body.ng-scope div.page-wrapper.uncollapsed div:first-child {
+		width: 100% !important;
+		display: block !important;
+	}
+
 	.page-content {
 	    display: block;
-	    position: absolute;
-	    top: 535px;
+	    position: relative;
 	    width: 100%;
-	    overflow: scroll !important;
+		
+	}
+
+	.leftnav-menu {
+	    position: relative;
+		top: 0px;
+		margin-top: 60px;
+		width: 100%;
+	}
+	
+	.page-wrapper {
+	    padding: 0px;
 	}
 
     .navbar-arkcase {
         width: 100%;
+
     }
 
     .navbar-arkcase .navbar-header {
@@ -590,26 +620,23 @@ body.fullscreen .cancelFullScreen i.fa {
         text-align: center;
     }
 
-    .navbar-arkcase .dropdown-menu div.col-xs-4 {
-        width: 100%;
-    }
+
 
     .navbar-arkcase .dropdown-menu div.col-xs-4 span.text-muted.ng-binding {
         position: relative;
-        top: 3px;
-        left: 10px;
         font-size: 16px;
         font-weight: bold;
     }
 
     .page-wrapper {
         position: relative;
-        overflow: auto;
+        overflow-y: auto;
+		overflow-x: hidden;
+		width: 100%;
     }
 
     .leftnav-menu {
-        width: 100% !important;
-        height: auto;
+        width: 100%;
         padding: 0px;
     }
 
@@ -619,10 +646,6 @@ body.fullscreen .cancelFullScreen i.fa {
 
     .leftnav-menu footer a {
         color: white;
-    }
-
-    .leftnav-menu {
-        width: 100%;
     }
 
     .leftnav-menu .user-info .fullname {
@@ -697,8 +720,8 @@ body.fullscreen .cancelFullScreen i.fa {
     }
 
     .page-content {
+		position: relative;
         display: block;
-        top: 435px;
         width: 100%;
     }
 
@@ -733,7 +756,7 @@ body.fullscreen .cancelFullScreen i.fa {
     .module-content .content-body {
         width: 100% !important;
         display: block;
-        width: 100%;
+        width: 100% !important;
         padding: 0px !important;
         margin: 0px !important;
     }
@@ -757,19 +780,24 @@ body.fullscreen .cancelFullScreen i.fa {
     body.fullscreen .cancelFullScreen {
         display: none;
     }
+	
+	.module-content .content-body .tabbed-footer {
+		display: none;
+	}
+	
+	.new-iframe {
+		position: relative;
+		width: 100%;
+		padding-right:  15px;
+		height: 600px;
+	}
+	
+
 }
 
 /* Responsive - Extra Small Devices, Phones */
 
 @media only screen and (max-width: 480px) {
-
-	.page-content {
-	    display: block;
-	    position: absolute;
-	    top: 535px;
-	    width: 100%;
-	    overflow: scroll !important;
-	}
 
     .leftnav-menu ul.nav.nav-main li a {
         text-align: left;
@@ -782,45 +810,27 @@ body.fullscreen .cancelFullScreen i.fa {
         float: left;
         width: 50%;
     }
-    
-    .module-content {
-        border-spacing: 0;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        padding-right: 200px;
-        overflow: scroll !important;
-    }
-    
-    
-    
-
-    .pull-left {
-        float: left !important;
-    }
+	
+	.navbar-arkcase .dropdown-menu div.col-xs-4 {
+	    width: 50%;
+	}
 
 }
 
 /* Responsive - Custom, iPhone Retina */
 
 @media only screen and (max-width: 320px) {
-
-	.page-content {
-	    display: block;
-	    top: 535px;
-	    width: 100%;
-	}
 	
-	.leftnav-menu ul {
-		width: 320px !important;
-		max-width: 320px !important;
-	}
+	.leftnav-menu ul.nav.nav-main li a {
+        text-align: left;
+        float: left;
+        width: 100%;
+    }
 
-    .pull-left {
-        float: left !important;
+    .page-wrapper.collapsed .leftnav-menu ul.nav.nav-main li a {
+        text-align: left;
+        float: left;
+        width: 100%;
     }
     
-	
 }

@@ -47,6 +47,20 @@ public interface GroupService
     String buildGroupsForUserSolrQuery(Boolean authorized, String userId) throws MuleException;
 
     /**
+     * Returns solr search results for GROUP filtered by name
+     * @param authentication
+     * @param nameFilter
+     * @param start
+     * @param max
+     * @param sortBy
+     * @param sortDir
+     * @return groups
+     * @throws MuleException
+     */
+    String getGroupsByNameFilter(Authentication authentication, String nameFilter, int start, int max, String sortBy, String sortDir)
+            throws MuleException;
+
+    /**
      * Retrieve all LDAP groups that a user belongs to
      *
      * @param usernamePasswordAuthenticationToken
@@ -169,6 +183,19 @@ public interface GroupService
      *             in case when subgroup or parent group are not found
      */
     AcmGroup addGroupMember(String subGroupId, String parentId) throws AcmCreateObjectFailedException;
+
+    /**
+     * Adds group as member to parent group
+     *
+     * @param parentId
+     *            parent group name
+     * @param memberIds
+     *            member groups names
+     * @return list of member groups
+     * @throws AcmCreateObjectFailedException
+     *             in case when subgroup or parent group are not found
+     */
+    List<AcmGroup> addGroupMembers(String parentId, List<String> memberIds) throws AcmCreateObjectFailedException;
 
     /**
      * retrive groups for given parent group id

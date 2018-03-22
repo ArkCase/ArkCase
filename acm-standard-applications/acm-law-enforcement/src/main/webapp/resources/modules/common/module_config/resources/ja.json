@@ -2,6 +2,7 @@
     "common": {
         "select.option.none": "（選択する）",
         "value.unknown": "不明",
+        "value.none": "なし", 
 		"_1_": "I18nに準拠したエラーが発生する可能性があるため、カスタム日付形式を使用または追加しないでください.",
         "_2_": "定義済みのフォーマットのいずれかを使用してください: ",
         "_3_": "'中'       - に相当 'MMM d, y h:mm:ss a' en_USロケールの場合 (たとえば、2010年9月3日12：05：08 PM)",
@@ -194,7 +195,8 @@
         "edtPlaceholder": "検索するには入力",
         "noData.text": "結果なし",
 		"pickUserLabel": "関連付けられたユーザを選ぶ",
-        "pickGroupLabel": "関連グループを選択"
+        "pickGroupLabel": "関連グループを選択",
+		"selectedItemsGrid.label": "選択されたエントリ"
     },
     "common.directive.search": {
         "showMore.button.text": "もっと表示",
@@ -643,6 +645,7 @@
         "DOC_REPO": "ドキュメントリポジトリ",
         "ORGANIZATION": "組織",
         "PERSON": "人物",
+        "PERSON-ASSOCIATION": "人物-協会",
         "PARTICIPANT": "参加者",
         "NOTE": "注意",
         "PARTICIPANT-ASSOCIATION": "参加者-協会",

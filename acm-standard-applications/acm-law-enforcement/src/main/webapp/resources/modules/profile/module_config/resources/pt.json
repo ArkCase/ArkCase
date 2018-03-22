@@ -26,7 +26,8 @@
         "zip": "CEP",
         "mainPhone": "Telefone do escritório principal",
         "fax": "Fax",
-        "website": "Local na rede Internet"
+        "website": "Local na rede Internet",
+        "websiteTitle": "pt_Enable edit"
     },
     "profile.contact": {
         "title": "Informações de contato",

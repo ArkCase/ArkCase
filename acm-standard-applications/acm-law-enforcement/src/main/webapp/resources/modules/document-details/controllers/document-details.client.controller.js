@@ -15,8 +15,11 @@ angular.module('document-details').controller(
                 'Authentication',
                 'EcmService',
                 'Helper.LocaleService',
+                'Admin.TranscriptionManagementService',
+                'MessageService',
+                'UtilService',
                 function($scope, $stateParams, $sce, $q, $timeout, TicketService, ConfigService, LookupService, SnowboundService,
-                        Authentication, EcmService, LocaleHelper) {
+                        Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util) {
 
                     new LocaleHelper.Locale({
                         scope : $scope
@@ -49,6 +52,55 @@ angular.module('document-details').controller(
                         selectedIds : $stateParams['selectedIds']
                     };
                     $scope.showVideoPlayer = false;
+
+                    TranscriptionManagementService.getTranscribeConfiguration().then(function(res) {
+                        $scope.transcribeEnabled = res.data.enabled;
+                    }, function(err) {
+                        MessageService.error(err.data);
+                    });
+
+                    $scope.getEcmFileActiveVersion = function(ecmFile) {
+                        if (Util.isEmpty(ecmFile) || Util.isEmpty(ecmFile.activeVersionTag) || Util.isArrayEmpty(ecmFile.versions)) {
+                            return null;
+                        }
+
+                        var activeVersion = _.find(ecmFile.versions, function(version) {
+                            return ecmFile.activeVersionTag === version.versionTag;
+                        });
+
+                        return activeVersion;
+                    };
+
+                    $scope.$on('transcribe-data-model', function(event, transcribeObj) {
+                        $scope.transcribeObjectModel = transcribeObj;
+                        var confidenceSum = 0;
+                        angular.forEach($scope.transcribeObjectModel.transcribeItems, function(value, key) {
+                            confidenceSum += value.confidence;
+                        });
+                        $scope.confidenceAverage = (confidenceSum / $scope.transcribeObjectModel.transcribeItems.length).toFixed(1);
+
+                        var activeVersion = $scope.getEcmFileActiveVersion($scope.ecmFile);
+                        if (!Util.isEmpty(activeVersion)) {
+                            $scope.durationInMinutes = (activeVersion.durationSeconds / 60).toFixed(1);
+                        } else {
+                            $scope.durationInMinutes = 0;
+                        }
+
+                        //color the status
+                        $scope.colorTranscribeStatus = function() {
+                            switch ($scope.transcribeObjectModel.status) {
+                            case 'QUEUED':
+                                return '#dcce22';
+                            case 'PROCESSING':
+                                return 'orange';
+                            case 'COMPLETED':
+                                return '#05a205';
+                            case 'FAILED':
+                                return 'red';
+                            }
+                        };
+
+                    });
 
                     /**
                      * Builds the snowbound url based on the parameters passed into the controller state and opens the

@@ -5,6 +5,14 @@
             "leftnav.item": "Painel de Controle"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "es_Select your preferred row count.",
+                    "fiveRows": "es_5",
+                    "tenRows": "es_10",
+                    "twentyFiveRows": "es_25"
+                }
+            },
             "casesByQueue": {
                 "title": "Archivos de caso activo por cola",
                 "description": "Muestra los archivos de casos activos por cola",
@@ -279,7 +287,8 @@
             "calendar": {
                 "title": "Calendario",
                 "description": "Muestra el gráfico de eventos programados por día",
-                "noDataMessage": "Actualmente no hay eventos para mostrar"
+                "noDataMessage": "Actualmente no hay eventos para mostrar",
+				"calendarIntegrationDisabledMessage": "La integración del calendario está desactivada por el administrador"
             },
             "reworkDetails": {
                 "title": "Detalles de reanudación",
@@ -350,6 +359,11 @@
                 "title": "Personas relacionadas",
                 "description": "Mostrar personas relacionadas",
                 "noDataMessage": "Actualmente no hay personas relacionadas para mostrar"
+			},
+            "approvers": {
+                "title": "Aprobadores",
+                "description": "Mostrar aprobadores",
+                "noDataMessage": "Actualmente no hay aprobadores para mostrar"	
             }
         }
     },
@@ -363,7 +377,7 @@
         "title": "Mi widget de casos"
     },
     "dashboard.comp.myTasks": {
-        "title": "My Tasks Widget"
+        "title": "Mi widget de tareas"
     },
     "dashboard.comp.myComplaints": {
         "title": "Mi widget de reclamaciones"

@@ -27,6 +27,10 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
+    <bean id="searchGroupAPIController" class="com.armedia.acm.services.users.web.api.group.SearchGroupAPIController">
+        <property name="groupService" ref="groupService"/>
+    </bean>
+
     <bean id="supervisorGroupAPIController" class="com.armedia.acm.services.users.web.api.group.SupervisorGroupAPIController">
         <property name="groupService" ref="groupService"/>
     </bean>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="transcribeDao" class="com.armedia.acm.services.transcribe.dao.TranscribeDao"/>
+    <bean id="transcribeItemDao" class="com.armedia.acm.services.transcribe.dao.TranscribeItemDao"/>
+
+    <bean id="transcribeConfigurationPropertiesService" class="com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService">
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+    </bean>
+
+    <bean id="awsTranscribeConfigurationPropertiesService" class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeConfigurationPropertiesService">
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+    </bean>
+
+    <bean id="transcribeBusinessRulesExecutor" class="com.armedia.acm.services.transcribe.rules.TranscribeBusinessRulesExecutor" parent="simpleStatelessSingleObjectRuleManager">
+        <property name="ruleSpreadsheetFilename" value="drools-transcribe-rules.xlsx"/>
+    </bean>
+
+    <bean id="transcribeBusinessProcessRulesExecutor" class="com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor" parent="simpleStatelessSingleObjectRuleManager">
+        <property name="ruleSpreadsheetFilename" value="drools-transcribe-business-process-rules.xlsx"/>
+    </bean>
+
+    <!-- pre-save handlers -->
+    <bean id="transcribeInitHandler" class="com.armedia.acm.services.transcribe.pipline.presave.TranscribeInitHandler"/>
+
+    <!-- post-save handlers -->
+    <bean id="transcribeRulesHandler" class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeRulesHandler">
+        <property name="transcribeBusinessRulesExecutor" ref="transcribeBusinessRulesExecutor"/>
+    </bean>
+    <bean id="transcribeBusinessProcessHandler" class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeBusinessProcessHandler">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+    </bean>
+
+    <bean id="transcribePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+        <property name="preSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="transcribeInitHandler"/>
+            </list>
+        </property>
+        <property name="postSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="transcribeRulesHandler"/>
+                <ref bean="transcribeBusinessProcessHandler"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="awsTranscribeService" class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeService" init-method="init" lazy-init="true" depends-on="awsTranscribeConfigurationPropertiesService">
+        <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
+        <property name="awsTranscribeConfigurationPropertiesService" ref="awsTranscribeConfigurationPropertiesService"/>
+        <property name="credentialConfigurationFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/aws/credentials.properties"/>
+        <aop:scoped-proxy proxy-target-class="true"/>
+    </bean>
+
+    <bean id="transcribeServiceFactory" class="com.armedia.acm.services.transcribe.factory.TranscribeServiceFactory">
+        <property name="awsTranscribeService" ref="awsTranscribeService"/>
+    </bean>
+
+    <bean id="arkCaseTranscribeService" class="com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService">
+        <property name="transcribeDao" ref="transcribeDao"/>
+        <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
+        <property name="pipelineManager" ref="transcribePipelineManager"/>
+        <property name="transcribeConfigurationPropertiesService" ref="transcribeConfigurationPropertiesService"/>
+        <property name="transcribeBusinessProcessRulesExecutor" ref="transcribeBusinessProcessRulesExecutor"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="transcribeServiceFactory" ref="transcribeServiceFactory"/>
+        <aop:scoped-proxy proxy-target-class="true"/>
+    </bean>
+
+    <bean id="transcribeToSolrTransformer" class="com.armedia.acm.services.transcribe.transformer.TranscribeToSolrTransformer">
+        <property name="transcribeDao" ref="transcribeDao"/>
+    </bean>
+
+    <bean id="transcribeItemToSolrTransformer" class="com.armedia.acm.services.transcribe.transformer.TranscribeItemToSolrTransformer">
+        <property name="transcribeItemDao" ref="transcribeItemDao"/>
+    </bean>
+
+    <bean id="ecmFileAddedListener" class="com.armedia.acm.services.transcribe.listener.EcmFileAddedListener">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
+    <bean id="transcribeProcessingChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeProcessingChecker">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+    <bean id="transcribeStatusChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeStatusChecker"/>
+
+</beans>
