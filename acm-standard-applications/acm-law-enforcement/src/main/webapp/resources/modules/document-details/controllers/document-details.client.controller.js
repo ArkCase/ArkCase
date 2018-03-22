@@ -73,24 +73,9 @@ angular.module('document-details').controller(
 
             $scope.$on('transcribe-data-model', function(event, transcribeObj) {
                 $scope.transcribeObjectModel = transcribeObj;
-                var track = null;
-                var videoElement = angular.element(document.getElementsByTagName("video")[0])[0];
-                if (videoElement) {
-                    track = videoElement.addTextTrack("subtitles", "Transcription", $scope.transcribeObjectModel.language);
-                    videoElement.addEventListener("play", function() {
-                        track.mode = "showing";
-                    });
-                    videoElement.addEventListener("pause", function() {
-                        //track.mode = "hidden";
-                    });
-                }
-
                 var confidenceSum = 0;
                 angular.forEach($scope.transcribeObjectModel.transcribeItems, function(value, key) {
                     confidenceSum += value.confidence;
-                    if (track != null) {
-                        addCue(track, value);
-                    }
                 });
 
                 $scope.confidenceAverage = 0;
@@ -113,25 +98,6 @@ angular.module('document-details').controller(
                 };
 
             });
-
-            var addCue = function(track, value) {
-                var cueAdded = false;
-                try {
-                    track.addCue(new VTTCue(value.startTime, value.endTime, value.text));
-                    cueAdded = true;
-                } catch(e) {
-                    // Browser does not support VTTCue
-                }
-
-                if (!cueAdded) {
-                    try {
-                        track.addCue(new TextTrackCue(value.startTime, value.endTime, value.text));
-                        cueAdded = true;
-                    }catch(e) {
-                        // Browser does not support TextTrackCue
-                    }
-                }
-            }
 
             /**
              * Builds the snowbound url based on the parameters passed into the controller state and opens the
