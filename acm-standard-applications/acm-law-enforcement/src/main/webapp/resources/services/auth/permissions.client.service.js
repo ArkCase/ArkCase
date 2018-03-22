@@ -98,6 +98,29 @@ angular.module('services').factory(
                         }
                     };
 
+                    function findParentPermission(rules, actionName, objectType) {
+                        var parentActionName = null;
+                        if (actionName.toLowerCase().match("(get|list|read|download|view).*")) {
+                            // read parent permission
+                            parentActionName = "getObject";
+                        } else if (actionName.toLowerCase()
+                                .match("(save|edit|change|lock|complete|unlock|merge|restrict|declare|rename).*")) {
+                            // write parent permission
+                            parentActionName = "editObject";
+                        } else if (actionName.toLowerCase().match("(insert|add|create).*")) {
+                            // insert parent permission
+                            parentActionName = "insertObject";
+                        } else if (actionName.toLowerCase().match("(delete|remove).*")) {
+                            // delete parent permission
+                            parentActionName = "deleteObject";
+                        }
+
+                        return _.filter(rules.data.accessControlRuleList, {
+                            actionName : parentActionName,
+                            objectType : objectType
+                        });
+                    }
+
                     /**
                      *
                      * @param {String }actionName
@@ -107,15 +130,21 @@ angular.module('services').factory(
                      */
                     function processAction(actionName, objectProperties, opts) {
                         var isEnabled = true;
-                        if (opts && opts.objectType)
+                        if (opts && opts.objectType) {
+                            //check if can find permission
                             var actions = _.filter(rules.data.accessControlRuleList, {
                                 actionName : actionName,
                                 objectType : opts.objectType
                             });
-                        else
+                            //if not found check for parent fallback permission
+                            if (actions.length <= 0) {
+                                actions = findParentPermission(rules, actionName, opts.objectType);
+                            }
+                        } else {
                             var actions = _.filter(rules.data.accessControlRuleList, {
                                 actionName : actionName
                             });
+                        }
                         // If actions found
                         if (actions.length > 0) {
                             // Process all found actions objects

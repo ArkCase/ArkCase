@@ -4,8 +4,8 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
-
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -17,16 +17,8 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -106,6 +98,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
         log.debug("Checking if [{}] is granted executing [{}] on object of type [{}] with id [{}]", authentication.getName(),
                 StringUtils.join(permissions, ","), targetType, targetId);
         boolean granted = false;
+        boolean permissionExists = false;
 
         JSONObject solrJsonDocument = new JSONObject(solrDocument);
         JSONObject solrJsonResult = solrJsonDocument.getJSONObject("response").getJSONArray("docs").getJSONObject(0);
@@ -154,6 +147,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
                     // log entry created in checkRolesAny() method
                     continue;
                 }
+                permissionExists = true;
                 // all initial checks passed, proceed with checking required object properties
                 granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
 
@@ -170,6 +164,54 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             if (granted)
             {
                 break;
+            }
+        }
+        if (!permissionExists)
+        {
+            for (String permission : permissions)
+            {
+                String parentActionName = null;
+                if (permission.toLowerCase().matches("(get|list|read|download|view|subscribe).*"))
+                {
+                    // read parent permission
+                    parentActionName = "getObject";
+                }
+                else if (permission.toLowerCase()
+                        .matches("(save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename).*"))
+                {
+                    // write parent permission
+                    parentActionName = "editObject";
+                }
+                else if (permission.toLowerCase().matches("(create).*"))
+                {
+                    // insert parent permission
+                    parentActionName = "insertObject";
+                }
+                else if (permission.toLowerCase().matches("(delete).*"))
+                {
+                    // delete parent permission
+                    parentActionName = "deleteObject";
+                }
+                if (parentActionName != null)
+                {
+                    String finalParentActionName = parentActionName;
+                    List<AccessControlRule> accessControlRuleList = accessControlRules.getAccessControlRuleList().stream()
+                            .filter(p -> p.getActionName().equals(finalParentActionName) && p.getObjectType().contains(targetType))
+                            .collect(Collectors.toList());
+
+                    for (AccessControlRule accessControlRule : accessControlRuleList)
+                    {
+                        granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
+
+                        // proceed with checking if user is any of required participant types
+                        granted = granted
+                                && checkParticipantTypes(accessControlRule.getUserIsParticipantTypeAny(), authentication, solrJsonResult);
+                        if (granted)
+                        {
+                            break;
+                        }
+                    }
+                }
             }
         }
         if (!granted)

@@ -8,11 +8,7 @@ import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.easymock.EasyMock;
-import org.easymock.EasyMockRunner;
-import org.easymock.EasyMockSupport;
-import org.easymock.Mock;
-import org.easymock.TestSubject;
+import org.easymock.*;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,12 +22,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Petar Ilin <petar.ilin@armedia.com> on 06.11.2015.
@@ -176,6 +167,48 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
                 "editAttachments", solrDocument);
         assertTrue(granted);
+        verifyAll();
+    }
+
+    @Test
+    public void testMatchingParentFallbackPermission() throws IOException
+    {
+        JSONObject rule = new JSONObject();
+        rule.put("actionName", "editObject");
+        rule.put("objectType", "CASE_FILE");
+        rule.put("objectProperties", new JSONObject("{status : [\"DRAFT\", \"ACTIVE\", \"Quality Control\"]}"));
+
+        ObjectMapper mapper = new ObjectMapper();
+        AccessControlRule accessControlRule = mapper.readValue(rule.toString(), AccessControlRule.class);
+
+        GrantedAuthority grantedAuthority1 = new SimpleGrantedAuthority("ROLE_ADMINISTRATOR");
+        GrantedAuthority grantedAuthority2 = new SimpleGrantedAuthority("ROLE_ANALYST");
+        GrantedAuthority grantedAuthority3 = new SimpleGrantedAuthority("ROLE_TECHNICIAN");
+        Collection grantedAuthorities = Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3);
+
+        // mock the behavior
+        EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping).anyTimes();
+        EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
+        EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
+        replayAll();
+
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "editAttachments", solrDocument);
+        assertTrue(granted);
+
+        granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "mergeCase", solrDocument);
+        assertTrue(granted);
+
+        granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "completeCase", solrDocument);
+        assertTrue(granted);
+
+        granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "saveCase", solrDocument);
+        assertTrue(granted);
+
         verifyAll();
     }
 
