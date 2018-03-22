@@ -92,7 +92,6 @@ angular.module('organizations').controller(
                         $scope.dba = dba;
                         var item = {
                             id : '',
-
                             type : '',
                             value : '',
                             description : ''
@@ -182,8 +181,10 @@ angular.module('organizations').controller(
                         return promiseSaveInfo;
                     }
 
-                    $scope.isDefault = function(data) {
-                        return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultDBA");
+                    $scope.isDefault = function(dba) {
+                        var defaultDBA = $scope.objectInfo.defaultDBA;
+                        var comparisonProperties = [ "id", "type", "value", "description" ];
+                        return Util.objectsComparisonByGivenProperties(defaultDBA, dba, comparisonProperties);
                     }
 
                 } ]);

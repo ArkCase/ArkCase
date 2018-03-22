@@ -21,7 +21,7 @@
                     <input type="radio" ng-model="isDefault" name="'{{common.addPerson.radioName}}'" ng-value="true">
                     <translate>common.addPerson.radioYes.text</translate>
                 </label>
-                <label ng-if="hideNoField">
+                <label ng-hide="hideNoField">
                     <input type="radio" ng-model="isDefault" name="'{{common.addPerson.radioName}}'" ng-value="false">
                     <translate>common.addPerson.radioNo.text</translate>
                 </label>
