@@ -59,7 +59,7 @@ public class FileEventPublisher implements ApplicationEventPublisherAware
     {
 
         log.debug("Publishing a file copied event.");
-        EcmFileCopiedEvent filedCopiedEvent =new EcmFileCopiedEvent(source, original, auth.getName(), ipAddress);
+        EcmFileCopiedEvent filedCopiedEvent = new EcmFileCopiedEvent(source, original, auth.getName(), ipAddress);
         filedCopiedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(filedCopiedEvent);
