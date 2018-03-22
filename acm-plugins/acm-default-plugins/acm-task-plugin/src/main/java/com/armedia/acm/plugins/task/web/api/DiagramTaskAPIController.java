@@ -28,6 +28,16 @@ public class DiagramTaskAPIController
         return response;
     }
 
+    @RequestMapping(value = "/diagram/process/{processId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public DiagramResponse diagramByProcessId(@PathVariable("processId") String processId) throws AcmTaskException
+    {
+        byte[] data = getAcmTaskService().getDiagram(processId);
+        DiagramResponse response = new DiagramResponse(data);
+
+        return response;
+    }
+
     public AcmTaskService getAcmTaskService()
     {
         return acmTaskService;

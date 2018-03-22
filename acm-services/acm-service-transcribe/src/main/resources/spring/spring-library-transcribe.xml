@@ -49,11 +49,12 @@
         </property>
     </bean>
 
-    <bean id="awsTranscribeService" class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeService" init-method="init" lazy-init="true" depends-on="awsTranscribeConfigurationPropertiesService">
+    <bean id="awsTranscribeService" class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeService" init-method="init">
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="awsTranscribeConfigurationPropertiesService" ref="awsTranscribeConfigurationPropertiesService"/>
-        <property name="credentialConfigurationFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/aws/credentials.properties"/>
-        <aop:scoped-proxy proxy-target-class="true"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="transcribeConfigurationPropertiesService" ref="transcribeConfigurationPropertiesService"/>
+        <property name="credentialConfigurationFileLocation" value="${user.home}/.arkcase/acm/aws/credentials.properties"/>
     </bean>
 
     <bean id="transcribeServiceFactory" class="com.armedia.acm.services.transcribe.factory.TranscribeServiceFactory">
@@ -85,7 +86,18 @@
 
     <bean id="transcribeProcessingChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeProcessingChecker">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
-    <bean id="transcribeStatusChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeStatusChecker"/>
+
+    <bean id="transcribeStatusChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeStatusChecker">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="transcribeQueueJob" class="com.armedia.acm.services.transcribe.job.TranscribeQueueJob">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
 
 </beans>
