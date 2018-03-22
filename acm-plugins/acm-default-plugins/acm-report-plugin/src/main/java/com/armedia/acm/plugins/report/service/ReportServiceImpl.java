@@ -47,12 +47,19 @@ import java.util.stream.Collectors;
 
 public class ReportServiceImpl implements ReportService
 {
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
+
+    private static final String PENTAHO_DASHBOARD_REPORT_EXTENSION = ".xdash";
+    private static final String PENTAHO_ANALYSIS_REPORT_EXTENSION = ".xanalyzer";
+    private static final String PENTAHO_INTERACTIVE_REPORT_EXTENSION = ".prpti";
     private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
     private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
     private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE = "PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE";
     private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/prpti.view";
+    private final String PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE = "PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE";
+    private final String PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE_DEFAULT = "/arkcase/pentaho/api/repos/{path}/viewer?ts={timestamp}";
+    private final String PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE = "PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE";
+    private final String PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE_DEFAULT = "/arkcase/pentaho/api/repos/{path}/viewer";
     private String reportsPropertiesFileLocation;
     private String reportToGroupsMapPropertiesFileLocation;
     private String reportServerConfigPropertiesFileLocation;
@@ -331,10 +338,20 @@ public class ReportServiceImpl implements ReportService
         }
 
         String url = null;
-        if (report.getName() != null && report.getName().endsWith(".prpti"))
+        if (report.getName() != null && report.getName().endsWith(PENTAHO_INTERACTIVE_REPORT_EXTENSION))
         {
             url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE,
                     PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT);
+        }
+        else if (report.getName() != null && report.getName().endsWith(PENTAHO_ANALYSIS_REPORT_EXTENSION))
+        {
+            url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE,
+                    PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE_DEFAULT);
+        }
+        else if (report.getName() != null && report.getName().endsWith(PENTAHO_DASHBOARD_REPORT_EXTENSION))
+        {
+            url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE,
+                    PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE_DEFAULT);
         }
         else
         {
@@ -345,6 +362,7 @@ public class ReportServiceImpl implements ReportService
         if (url != null)
         {
             url = url.replace("{path}", report.getPropertyPath());
+            url = url.replace("{timestamp}", String.valueOf(System.currentTimeMillis()));
         }
 
         return url;

@@ -44,20 +44,20 @@ angular.module('reports').factory(
                         getUrl : function(params, xmlReport) {
 
                             var reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "")
-                                    + params.reports[params.reportSelected] + "?startDate=" + UtilDateService.goodIsoDate(params.startDate)
-                                    + "&endDate=" + UtilDateService.goodIsoDate(params.endDate) + "&dateFormat="
-                                    + encodeURIComponent(UtilDateService.defaultDateFormat) + "&timeZone="
-                                    + encodeURIComponent(UtilDateService.getTimeZoneOffset());
+                                    + params.reports[params.reportSelected];
 
                             if (xmlReport) {
                                 var xmlReportUri = params.reports[params.reportSelected];
                                 xmlReportUri = xmlReportUri.substring(0, xmlReportUri.indexOf('viewer')) + 'report';
-                                reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + xmlReportUri
-                                        + "?startDate=" + UtilDateService.goodIsoDate(params.startDate) + "&endDate="
-                                        + UtilDateService.goodIsoDate(params.endDate) + "&dateFormat="
-                                        + encodeURIComponent(UtilDateService.defaultDateFormat) + "&timeZone="
-                                        + encodeURIComponent(UtilDateService.getTimeZoneOffset());
+                                reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + xmlReportUri;
                             }
+
+                            // add parameters only on prpt reports
+                            if (reportUrl.indexOf('prpt/viewer', reportUrl.length - 'prpt/viewer'.length) !== -1)
+                                    + "?startDate=" + UtilDateService.goodIsoDate(params.startDate)
+                                    + "&endDate=" + UtilDateService.goodIsoDate(params.endDate) + "&dateFormat="
+                                    + encodeURIComponent(UtilDateService.defaultDateFormat) + "&timeZone="
+                                    + encodeURIComponent(UtilDateService.getTimeZoneOffset());
 
                             if (params.stateSelected) {
                                 reportUrl += "&status=" + params.stateSelected;
@@ -65,7 +65,7 @@ angular.module('reports').factory(
                             var absUrl = $location.absUrl();
                             var baseHref = $browser.baseHref();
                             var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-                            reportUrl += "&baseUrl=" + encodeURIComponent(appUrl);
+
                             if (xmlReport) {
                                 reportUrl += "&output-target=" + encodeURIComponent("table/xml");
                             }
