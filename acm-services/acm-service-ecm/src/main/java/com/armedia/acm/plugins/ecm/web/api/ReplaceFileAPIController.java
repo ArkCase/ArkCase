@@ -4,10 +4,12 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,7 @@ public class ReplaceFileAPIController
     private EcmFileService fileService;
     private EcmFileTransaction fileTransaction;
     private FileEventPublisher fileEventPublisher;
+    private FolderAndFilesUtils folderAndFilesUtils;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -55,11 +58,12 @@ public class ReplaceFileAPIController
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
 
         EcmFile fileToBeReplaced = getFileService().findById(fileToBeReplacedId);
+        EcmFileVersion fileToBeReplacedVersion = getFolderAndFilesUtils().getVersion(fileToBeReplaced, fileToBeReplaced.getActiveVersionTag());
         EcmFile replacedFile;
         if (fileToBeReplaced == null)
         {
             log.debug("File, fileId: {} does not exist, and can not be replaced", fileToBeReplacedId);
-            getFileEventPublisher().publishFileReplacedEvent(null, authentication, ipAddress, false);
+            getFileEventPublisher().publishFileReplacedEvent(null, null, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                     fileToBeReplacedId, "File not found.", null);
         }
@@ -73,13 +77,13 @@ public class ReplaceFileAPIController
             }
 
             replacedFile = getFileTransaction().updateFileTransactionEventAware(authentication, fileToBeReplaced, replacementStream);
-            getFileEventPublisher().publishFileReplacedEvent(replacedFile, authentication, ipAddress, true);
+            getFileEventPublisher().publishFileReplacedEvent(replacedFile, fileToBeReplacedVersion, authentication, ipAddress, true);
         }
         catch (MuleException | IOException e)
         {
             log.error("Exception occurred while trying to replace file: {}, {}", fileToBeReplaced.getFileName(), e.getMessage(),
                     e);
-            getFileEventPublisher().publishFileReplacedEvent(fileToBeReplaced, authentication, ipAddress, false);
+            getFileEventPublisher().publishFileReplacedEvent(fileToBeReplaced, fileToBeReplacedVersion, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                     fileToBeReplacedId, e.getMessage(), e);
 
@@ -135,5 +139,15 @@ public class ReplaceFileAPIController
     public void setFileService(EcmFileService fileService)
     {
         this.fileService = fileService;
+    }
+
+    public FolderAndFilesUtils getFolderAndFilesUtils()
+    {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
+    {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }
