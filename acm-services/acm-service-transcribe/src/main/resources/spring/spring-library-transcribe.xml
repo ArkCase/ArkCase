@@ -103,6 +103,7 @@
 
     <bean id="ecmFileCopiedListener" class="com.armedia.acm.services.transcribe.listener.EcmFileCopiedListener">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 
     <bean id="transcribeProcessingChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeProcessingChecker">
