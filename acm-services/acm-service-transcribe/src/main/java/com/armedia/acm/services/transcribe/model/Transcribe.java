@@ -91,9 +91,17 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
 
     private void setUpTranscribeItems()
     {
+        wordCount = 0;
         if (getTranscribeItems() != null)
         {
-            getTranscribeItems().forEach(item -> item.setTranscribe(this));
+            getTranscribeItems().forEach(item -> {
+                item.setTranscribe(this);
+                if (item.getText() != null)
+                {
+                    String[] textAsArray = item.getText().split(" ");
+                    wordCount += textAsArray.length;
+                }
+            });
         }
     }
 

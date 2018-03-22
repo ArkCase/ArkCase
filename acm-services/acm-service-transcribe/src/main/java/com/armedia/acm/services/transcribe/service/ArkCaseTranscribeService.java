@@ -102,7 +102,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     @Override
     public Transcribe save(Transcribe transcribe) throws SaveTranscribeException
     {
-        return null;
+        return getTranscribeDao().save(transcribe);
     }
 
     @Override
@@ -254,6 +254,19 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     }
 
     @Override
+    public void signal(ProcessInstance processInstance, String status, String action)
+    {
+        if (processInstance != null && StringUtils.isNotEmpty(status) && StringUtils.isNotEmpty(action))
+        {
+            String statusKey = TranscribeBusinessProcessVariableKey.STATUS.toString();
+            String actionKey = TranscribeBusinessProcessVariableKey.ACTION.toString();
+            getActivitiRuntimeService().setVariable(processInstance.getId(), statusKey, status);
+            getActivitiRuntimeService().setVariable(processInstance.getId(), actionKey, action);
+            getActivitiRuntimeService().signal(processInstance.getId());
+        }
+    }
+
+    @Override
     public TranscribeServiceFactory getTranscribeServiceFactory()
     {
         return transcribeServiceFactory;
@@ -323,7 +336,6 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         // TODO: Restrict only for Case/Complaints?
         return isFileVersionTranscribable(ecmFileVersion) &&
                 isTranscribeOn() &&
-                isAutomaticTranscribeOn() &&
                 isMediaDurationAllowed(ecmFileVersion);
     }
 
@@ -438,8 +450,10 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put(TranscribeBusinessProcessVariableKey.IDS.toString(), ids);
         processVariables.put(TranscribeBusinessProcessVariableKey.REMOTE_ID.toString(), transcribe.getRemoteId());
-        processVariables.put(TranscribeBusinessProcessVariableKey.STATUS.toString(), TranscribeStatusType.QUEUED);
-        processVariables.put(TranscribeBusinessProcessVariableKey.ACTION.toString(), TranscribeActionType.QUEUED);
+        processVariables.put(TranscribeBusinessProcessVariableKey.STATUS.toString(), TranscribeStatusType.QUEUED.toString());
+        processVariables.put(TranscribeBusinessProcessVariableKey.ACTION.toString(), TranscribeActionType.QUEUED.toString());
+        processVariables.put(TranscribeBusinessProcessVariableKey.TYPE.toString(), transcribe.getType());
+        processVariables.put(TranscribeBusinessProcessVariableKey.CREATED.toString(), new Date());
 
         ProcessInstance processInstance = getActivitiRuntimeService().startProcessInstanceByKey(transcribeBusinessProcessModel.getName(), processVariables);
 
