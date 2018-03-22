@@ -1,0 +1,65 @@
+<div ng-controller="Document.TranscriptionController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>documentDetails.comp.transcription.title</span>
+            </div>
+        </div>
+        <div class="panel-body scroll-body-transcript">
+            <div ng-repeat="itemHolder in items">
+                <div class="row">
+                    <table class="table table-bordered transcript-table-margin">
+                        <thead>
+                        <tr ng-style="itemHolder.item.confidence < 80 ? { backgroundColor:'#ea6764', color:'black' } : ''">
+                            <th><span translate>documentDetails.comp.transcription.startTime</span>:<input contenteditable="true"
+                                    class="transcript-input-size" ng-model="itemHolder.hours" type="text"
+                                    ng-pattern="/^[0-9]{1,2}$/">:<input contenteditable="true" class="transcript-input-size"
+                                    ng-model="itemHolder.minutes" type="text" ng-pattern="/^([0-5][0-9]){1,2}$/">:<input
+                                    contenteditable="true" class="transcript-input-size" ng-model="itemHolder.seconds" type="text"
+                                    ng-pattern="/^([0-5][0-9]){1,2}$/"></th>
+                            <th><span translate>documentDetails.comp.transcription.confidence</span>:{{itemHolder.item.confidence}}<span
+                                    ng-show="itemHolder.item.confidence" ng-model="itemHolder.item.confidence">%</span></th>
+                            <th><input type="checkbox" ng-model="itemHolder.item.corrected"><span class="transcript-cb-corrected" translate>documentDetails.comp.transcription.corrected</span>
+                            </th>
+                            <th>
+                                <button class="btn btn-default btn-xs transcript-btn-delete" ng-click="removeTranscribeItem(itemHolder)"><i
+                                        class="fa fa-trash"></i></button>
+                            </th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <textarea rows="5" class="col-lg-12" placeholder="{{ 'documentDetails.comp.transcription.enterText' | translate }}">{{itemHolder.item.text}}</textarea>
+                </div>
+            </div>
+            <div class="row">
+                <button class="btn btn-xs btn-default" ng-click="addTranscribeItem()" ng-if="transcribeDataModel.type === 'MANUAL'">
+                    <span translate>documentDetails.comp.transcription.newRow</span>
+                </button>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-lg-12">
+                    <button class="btn btn-xs btn-primary">
+                        <i class="fa fa-floppy-o"></i>
+                        <span translate>documentDetails.comp.transcription.buttons.save</span>
+                    </button>
+                    <div class="pull-right">
+                        <button class="btn btn-xs btn-default">
+                            <span translate>documentDetails.comp.transcription.buttons.cancel</span>
+                        </button>
+                        <button class="btn btn-xs btn-default">
+                            <span translate>documentDetails.comp.transcription.buttons.transcribe</span>
+                        </button>
+                        <button class="btn btn-xs btn-default">
+                            <span translate>documentDetails.comp.transcription.buttons.complete</span>
+                        </button>
+                        <button class="btn btn-xs btn-info">
+                            <span translate>documentDetails.comp.transcription.buttons.compile</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

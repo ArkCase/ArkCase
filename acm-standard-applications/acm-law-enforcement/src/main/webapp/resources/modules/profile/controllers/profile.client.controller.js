@@ -10,7 +10,8 @@ angular
                         'Admin.OrganizationalHierarchyService',
                         '$modal',
                         'Authentication',
-                        function($scope, ConfigService, OrganizationalHierarchyService, $modal, Authentication) {
+                        'Profile.MfaService',
+                        function($scope, ConfigService, OrganizationalHierarchyService, $modal, Authentication, ProfileMfaService) {
 
                             //TODO: Remove following phased out code block. Leave it just in case some extension are still using
                             //the 'req-component-config' and 'component-config' events to get config.
@@ -33,14 +34,9 @@ angular
                                 return moduleConfig;
                             });
 
-                            Authentication.queryUserInfo().then(
-                                    function(userInfo) {
-                                        var directoryName = userInfo.directoryName;
-                                        OrganizationalHierarchyService.isEnabledEditingLdapUsers(directoryName).then(
-                                                function(enableEditingLdapUsers) {
-                                                    $scope.exposeChangePassword = enableEditingLdapUsers;
-                                                });
-                                    });
+                            ProfileMfaService.getAuthProfile().then(function (authProfile) {
+                                $scope.authProfile = authProfile;
+                            });
 
                             $scope.openPasswordDialog = function() {
                                 $modal
@@ -156,18 +152,21 @@ angular.module('profile').controller(
                             MessageService.info($translate.instant("profile.modal.success"));
                         }, function(errorData) {
                             $scope.loading = false;
-                            var message = errorData.data.authError; //auth error
-                            var passwordError = errorData.data.message;
-                            if (message) {
-                                $scope.authError = message;
+                            var authError = errorData.data.authError; //auth error
+                            var passwordError = errorData.data.passError;
+                            var message = errorData.data.message;
+                            if (authError) {
+                                $scope.authError = authError;
                                 $scope.currentPassword = '';
-                            } else if (errorData.data.message) {
+                            } else if (passwordError) {
                                 $scope.authError = false;
                                 $scope.errorMessage = passwordError;
+                            } else if (message) {
+                                $modalInstance.close('done');
+                                MessageService.error(message);
                             } else {
                                 $modalInstance.close('done');
                                 MessageService.errorAction();
-
                             }
                         });
 

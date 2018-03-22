@@ -2,6 +2,7 @@
     "common": {
         "select.option.none": "（選擇一個）",
         "value.unknown": "未知",
+		 "value.none": "沒有",
         "_1_": "請不要使用或添加自定義日期格式，因為它容易出錯並符合國際標準.",
         "_2_": "請使用其中一種預定義的格式: ",
         "_3_": "'中'       - 相當於 '月 天, 年 h:mm:ss a' 對於en_US語言環境 (例如，2010年9月3日12:05:08 PM)",
@@ -21,7 +22,7 @@
         "defaultDatePickerFormat": "年月天",
         "defaultDateUIFormat": "年月天",
         "defaultDateTimeUIFormat": "年月天 HH:mm"
-    },
+	},	
     "common.frevvo": {
         "defaultDateFormat": "年月天"
     },
@@ -194,7 +195,8 @@
         "edtPlaceholder": "鍵入搜索內容",
         "noData.text": "無結果",
 		"pickUserLabel": "選擇關聯的用戶",
-        "pickGroupLabel": "選擇相關組"
+        "pickGroupLabel": "選擇相關組",
+		"selectedItemsGrid.label": "選定的條目"
     },
     "common.directive.search": {
         "showMore.button.text": "顯示更多",
@@ -643,6 +645,7 @@
         "DOC_REPO": "文檔庫",
         "ORGANIZATION": "組織",
         "PERSON": "人員",
+        "PERSON-ASSOCIATION": "人員-協會",
         "PARTICIPANT": "參加者",
         "NOTE": "注意",
         "PARTICIPANT-ASSOCIATION": "參加者-協會",

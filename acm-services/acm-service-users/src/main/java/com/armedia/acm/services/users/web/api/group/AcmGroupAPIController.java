@@ -71,10 +71,10 @@ public class AcmGroupAPIController
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
     }
 
-    @RequestMapping(value = "/{userid:.+}/groups", params = {
+    @RequestMapping(value = "/{userId:.+}/groups", params = {
             "authorized" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String findGroupsForUser(@PathVariable("userid") String userId, @RequestParam(value = "authorized") Boolean authorized,
+    public String findGroupsForUser(@PathVariable("userId") String userId, @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
             @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
@@ -252,6 +252,17 @@ public class AcmGroupAPIController
         parentId = new String(Base64.getUrlDecoder().decode(parentId.getBytes()));
         LOG.info("Saving ad-hoc subgroup with id [{}]", subGroupId);
         return groupService.addGroupMember(subGroupId, parentId);
+    }
+
+    @RequestMapping(value = "/group/{parentId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<AcmGroup> addGroupMembers(@PathVariable("parentId") String parentId, @RequestBody List<String> members)
+            throws AcmCreateObjectFailedException
+    {
+        // we need to decode base64 encoded group id because can contain characters which can interfere with url
+        parentId = new String(Base64.getUrlDecoder().decode(parentId.getBytes()));
+        LOG.info("Saving ad-hoc subgroups in parent [{}]", parentId);
+        return groupService.addGroupMembers(parentId, members);
     }
 
     @RequestMapping(value = "/group/save/{parentId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

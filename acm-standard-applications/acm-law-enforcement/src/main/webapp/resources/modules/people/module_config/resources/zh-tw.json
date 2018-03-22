@@ -222,7 +222,8 @@
             "type.label": "類型",
             "type.placeholder": "鍵入類型",
             "value.label": "網址",
-            "value.placeholder": "鍵入網址"
+            "value.placeholder": "鍵入網址",
+            "value.title": "zh-tw_Url must be valid (e.g. https://www.google.com)"
         }
     },
     "people.comp.participants": {

@@ -2,6 +2,7 @@
     "common": {
         "select.option.none": "（选择一个）",
         "value.unknown": "未知",
+        "value.none": "没有",
 		"_1_": "请不要使用或添加自定义日期格式，因为它很容易出错，符合国际化标准.",
         "_2_": "请使用其中一种预定义的格式: ",
         "_3_": "'中'       - 相当于 'MMM d, y h:mm:ss a' 对于en_US语言环境 (例如，2010年9月3日12:05:08 PM)",
@@ -193,8 +194,9 @@
         "btnCancel.text": "消除",
         "edtPlaceholder": "鍵入搜索內容",
         "noData.text": "無結果",
-		 "pickUserLabel": "选择关联的用户",
-        "pickGroupLabel": "选择相关组"
+		"pickUserLabel": "选择关联的用户",
+        "pickGroupLabel": "选择相关组",
+		"selectedItemsGrid.label": "选定的项目"
     },
     "common.directive.search": {
         "showMore.button.text": "显示更多",
@@ -643,10 +645,11 @@
         "DOC_REPO": "文档库",
         "ORGANIZATION": "组织",
         "PERSON": "人员",
+        "PERSON-ASSOCIATION": "人员-协会",
         "PARTICIPANT": "参加者",
         "NOTE": "注意",
         "PARTICIPANT-ASSOCIATION": "参加者-协会",
-        "ASSIGNMENT": "任务"
+        "ASSIGNMENT": "分配"
     },
     "frevvo.dialogUserPicker": {
         "header": "选择用户",

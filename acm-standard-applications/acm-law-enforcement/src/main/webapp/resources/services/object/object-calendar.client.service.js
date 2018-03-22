@@ -13,7 +13,8 @@
 angular.module('services').factory(
         'Object.CalendarService',
         [ '$resource', 'UtilService', 'Acm.StoreService', 'Upload', '$q', '$http', '$httpParamSerializer',
-                function($resource, Util, Store, Upload, $q, $http, $httpParamSerializer) {
+                'Admin.CalendarConfigurationService',
+                function($resource, Util, Store, Upload, $q, $http, $httpParamSerializer, CalendarConfigurationService) {
                     var Service = this;
                     Service.SessionCacheNames = {};
                     Service.CacheNames = {
@@ -312,5 +313,14 @@ angular.module('services').factory(
                             url : 'api/latest/service/calendar/calendars/' + objectType + '/' + objectId
                         });
                     };
+
+                    Service.isCalendarConfigurationEnabled = function(objectType) {
+                        var deferred = $q.defer();
+                        CalendarConfigurationService.getCurrentCalendarConfiguration().then(function(calendarAdminConfigRes) {
+                            deferred.resolve(calendarAdminConfigRes.data.configurationsByType[objectType].integrationEnabled);
+                        });
+                        return deferred.promise;
+                    };
+
                     return Service;
                 } ]);

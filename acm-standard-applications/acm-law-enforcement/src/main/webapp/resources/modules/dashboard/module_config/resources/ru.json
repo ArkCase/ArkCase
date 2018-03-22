@@ -5,6 +5,14 @@
             "leftnav.item": "Обзор"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "ru_Select your preferred row count.",
+                    "fiveRows": "ru_5",
+                    "tenRows": "ru_10",
+                    "twentyFiveRows": "ru_25"
+                }
+            },
             "casesByQueue": {
                 "title": "Активные файлы дел по очереди",
                 "description": "Отображает файлы активных файлов по очереди",
@@ -34,7 +42,7 @@
                 "noDataMessage": "В настоящее время нет информации о случаях",
                 "table": {
                     "header": {
-                        "caseId": "ID",
+                        "caseId": "ИД",
                         "title": "Название",
                         "priority": "Приоритет",
                         "created": "Создано",
@@ -54,7 +62,7 @@
                 "description": "Отображает мои жалобы",
                 "table": {
                     "header": {
-                        "number": "ID",
+                        "number": "ИД",
                         "title": "Название",
                         "priority": "Приоритет",
                         "created": "Создано",
@@ -77,10 +85,10 @@
                 "rowNumbers.placeholder": "Введите номера строк по умолчанию",
                 "table": {
                     "header": {
-                        "taskId": "ID",
+                        "taskId": "ИД",
                         "title": "Название",
                         "priority": "Приоритет",
-                        "dueDate": "Due",
+                        "dueDate": "В связи",
                         "status": "Статус",
                         "objectId": "Идентификатор объекта"
                     },
@@ -154,8 +162,8 @@
                     "description": "Отобразить текущую температуру города",
                     "location": "Местоположение",
                     "insertLocationInConfiguration": "Пожалуйста, вставьте местоположение в конфигурацию виджета",
-                    "zip": "ru_Zip Code",
-                    "enterZip": "ru_Enter Zip Code"
+                    "zip": "Почтовый Индекс",
+                    "enterZip": "Введите почтовый индекс"
                 },
                 "title": "Погода",
                 "noDataMessage": "В настоящее время нет информации о погоде",
@@ -204,7 +212,7 @@
                 "title": "Документы",
                 "description": "Отображает диаграмму документов по папке",
                 "noDataMessage": "В настоящее время нет документов для отображения",
-                "series": "ru_Number of Documents"
+                "series": "Количество документов"
             },
             "locations": {
                 "title": "Местоположения",
@@ -279,7 +287,8 @@
             "calendar": {
                 "title": "Календарь",
                 "description": "Отображает график запланированных событий в день",
-                "noDataMessage": "В настоящее время нет событий для отображения"
+                "noDataMessage": "В настоящее время нет событий для отображения",
+				"calendarIntegrationDisabledMessage": "Интеграция с календарем отключена администратором."
             },
             "reworkDetails": {
                 "title": "Детали редукции",
@@ -350,6 +359,11 @@
                 "title": "Связанные люди",
                 "description": "Показать связанных людей",
                 "noDataMessage": "В настоящее время нет связанных людей для отображения"
+			},
+            "approvers": {
+                "title": "утверждающих",
+                "description": "Отображает утверждающих",
+                "noDataMessage": "В настоящее время нет утверждающих для отображения"	
             }
         }
     },

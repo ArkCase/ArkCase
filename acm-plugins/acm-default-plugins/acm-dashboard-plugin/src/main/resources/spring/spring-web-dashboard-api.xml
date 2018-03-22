@@ -27,8 +27,8 @@
 
     <bean id="getRolesByWidgets" class="com.armedia.acm.plugins.dashboard.web.api.GetRolesByWidgetsAPIController">
         <property name="widgetDao" ref="acmWidgetDao"/>
-        <property name="eventPublisher" ref="widgetEventPublisher"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="dashboardService" ref="dashboardService"/>
     </bean>
 
     <bean id="setAuthorizedWidgetRoles" class="com.armedia.acm.plugins.dashboard.web.api.SetAuthorizedWidgetRolesAPIController">
@@ -68,10 +68,19 @@
         <property name="dashboardPropertyReader" ref="dashboardPropertyReader"/>
         <property name="widgetDao" ref="acmWidgetDao"/>
         <property name="userRoleService" ref="userRoleService"/>
+        <property name="eventPublisher" ref="widgetEventPublisher"/>
     </bean>
 
     <bean id="setUserPreferredWidgetsPerModule" class="com.armedia.acm.plugins.dashboard.web.api.SetUserPreferredWidgetsPerModule">
         <property name="userPreferenceService" ref="userPreferenceService"/>
+    </bean>
+
+    <bean id="siteSaveAPIController" class="com.armedia.acm.plugins.dashboard.site.web.api.SaveSiteAPIController">
+        <property name="siteDao" ref="siteDao"/>
+    </bean>
+
+    <bean id="siteListAPIController" class="com.armedia.acm.plugins.dashboard.site.web.api.ListSiteAPIController">
+        <property name="siteDao" ref="siteDao"/>
     </bean>
 
 </beans>

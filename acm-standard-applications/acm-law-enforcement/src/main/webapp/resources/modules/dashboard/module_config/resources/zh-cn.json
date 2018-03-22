@@ -5,6 +5,14 @@
             "leftnav.item": "板面"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "zh-cn_Select your preferred row count.",
+                    "fiveRows": "zh-cn_5",
+                    "tenRows": "zh-cn_10",
+                    "twentyFiveRows": "zh-cn_25"
+                }
+            },
             "casesByQueue": {
                 "title": "活跃案件队列",
                 "description": "按队列显示活跃案件",
@@ -110,8 +118,8 @@
                 "title": "新案件",
                 "description": "显示新案件",
                 "noDataMessage": "目前没有案件信息",
-                "configDescription": "",
-                "configDescriptionPlaceholder": ""
+                "configDescription": "描述",
+                "configDescriptionPlaceholder": "输入小工具说明"
             },
             "teamWorkload": {
                 "title": "团队工作量",
@@ -154,8 +162,8 @@
                     "description": "显示城市的当前温度",
                     "location": "位置",
                     "insertLocationInConfiguration": "请在窗口小部件配置中插入位置",
-                    "zip": "zh-ch_Zip Code",
-                    "enterZip": "zh-cn_Enter Zip Code"
+                    "zip": "邮政编码",
+                    "enterZip": "输入邮政编码"
                 },
                 "title": "天气",
                 "noDataMessage": "目前没有天气信息",
@@ -204,7 +212,7 @@
                 "title": "文件",
                 "description": "按文件夹显示文件",
                 "noDataMessage": "目前没有文件信息可以显示",
-                "series": "zh-cn_Number of Documents"
+                "series": "文件数量"
             },
             "locations": {
                 "title": "地点",
@@ -279,7 +287,8 @@
             "calendar": {
                 "title": "日历",
                 "description": "显示每日计划事件的图表",
-                "noDataMessage": "目前没有事件信息可以显示"
+                "noDataMessage": "目前没有事件信息可以显示",
+				"calendarIntegrationDisabledMessage": "日历集成被管理员禁用"
             },
             "reworkDetails": {
                 "title": "返工细节",
@@ -350,6 +359,11 @@
                 "title": "相关人员",
                 "description": "显示相关人员",
                 "noDataMessage": "目前没有相关人员信息可以显示"
+			},
+            "approvers": {
+                "title": "审批",
+                "description": "显示审批者",
+                "noDataMessage": "当前没有要显示的审批者"
             }
         }
     },

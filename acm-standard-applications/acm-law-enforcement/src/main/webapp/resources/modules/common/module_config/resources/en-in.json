@@ -2,6 +2,7 @@
     "common": {
         "select.option.none": "(Select One)",
         "value.unknown": "Unknown",
+        "value.none": "None",
         "_1_": "Please do not use or add custom date formats, because it is error prone to be i18n compliant.",
         "_2_": "Please use one of the predefined formats: ",
         "_3_": "'medium'    - equivalent to 'MMM d, y h:mm:ss a' for en_US locale (e.g. Sep 3, 2010 12:05:08 PM)",
@@ -194,7 +195,8 @@
         "edtPlaceholder": "Type in to search",
         "noData.text": "No Results",
 		"pickUserLabel": "Pick Associated User",
-        "pickGroupLabel": "Pick Associated Group"
+        "pickGroupLabel": "Pick Associated Group",
+		"selectedItemsGrid.label": "Selected entries"
     },
     "common.directive.search": {
         "showMore.button.text": "Show More Values",
@@ -643,6 +645,7 @@
         "DOC_REPO": "Document Repository",
         "ORGANIZATION": "Organization",
         "PERSON": "Person",
+        "PERSON-ASSOCIATION": "Person-Association",
         "PARTICIPANT": "Participant",
         "NOTE": "Note",
         "PARTICIPANT-ASSOCIATION": "Participant-Association",

@@ -2,6 +2,7 @@
     "common": {
         "select.option.none": "(Selecione um)",
         "value.unknown": "Desconhecido",
+        "value.none": "Nenhum", 
 		"_1_": "Não use ou adicione formatos de data personalizados porque é propenso a erros para serem compatíveis com i18n.",
         "_2_": "Use um dos formatos predefinidos: ",
         "_3_": "'médio'       - equivalente a 'MMM d, a h:mm:ss a' para en_US localidade (por exemplo. 3 de setembro de 2010 12:05:08 PM)",
@@ -194,7 +195,8 @@
         "edtPlaceholder": "Digite para pesquisar",
         "noData.text": "Sem resultados",
 		"pickUserLabel": "Escolha Usuário associado",
-        "pickGroupLabel": "Escolha Grupo Associado"
+        "pickGroupLabel": "Escolha Grupo Associado",
+		"selectedItemsGrid.label": "Entradas selecionadas"
     },
     "common.directive.search": {
         "showMore.button.text": "Mostrar mais valores",
@@ -643,8 +645,9 @@
         "DOC_REPO": "Repositório de documentos",
         "ORGANIZATION": "Organização",
         "PERSON": "Pessoa",
+        "PERSON-ASSOCIATION": "Pessoa-Associação",
         "PARTICIPANT": "Participante",
-        "NOTE": "Notae",
+        "NOTE": "Nota",
         "PARTICIPANT-ASSOCIATION": "Participante-Associação",
         "ASSIGNMENT": "Tarefa"
     },
@@ -867,7 +870,7 @@
             "identificationNumber": "Número de identificação",
             "identificationNumber.placeholder": "Digite o número de identificação",
             "identificationIssuer": "Identificador emissor",
-            "identificationIssuer.placeholder": "Digite a Emissora Identificadora",
+            "identificationIssuer.placeholder": "Digite a Emissora Iadentificadora",
             "identificationYearIssued": "Identificação emitida",
             "identificationYearIssued.placeholder": "Selecionar Identificação Emitida",
             "identificationYearIssued.close.button": "Fechar"

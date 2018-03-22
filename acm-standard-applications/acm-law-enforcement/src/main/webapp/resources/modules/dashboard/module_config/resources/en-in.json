@@ -5,6 +5,14 @@
             "leftnav.item": "Dashboard"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "Select your preferred row count.",
+                    "fiveRows": "5",
+                    "tenRows": "10",
+                    "twentyFiveRows": "25"
+                }
+            },
             "casesByQueue": {
                 "title": "Active Case Files by Queue",
                 "description": "Displays active case files by queue",
@@ -204,7 +212,7 @@
                 "title": "Documents",
                 "description": "Displays chart of documents by folder",
                 "noDataMessage": "Currently there are no documents to display",
-                "series": "en-in_Number of Documents"
+                "series": "Number of Documents"
             },
             "locations": {
                 "title": "Locations",
@@ -279,7 +287,8 @@
             "calendar": {
                 "title": "Calendar",
                 "description": "Displays chart of scheduled events per day",
-                "noDataMessage": "Currently there are no events to display"
+                "noDataMessage": "Currently there are no events to display",
+                "calendarIntegrationDisabledMessage": "Calendar integration is disabled by Administrator"
             },
             "reworkDetails": {
                 "title": "Rework Details",
@@ -350,6 +359,11 @@
                 "title": "Related People",
                 "description": "Display related people",
                 "noDataMessage": "Currently no related people to display"
+            },			
+            "approvers": {
+                "title": "Approvers",
+                "description": "Displays Approvers",
+                "noDataMessage": "Currently there are no approvers to display"
             }
         }
     },

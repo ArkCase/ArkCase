@@ -6,9 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class AcmAbstractDao<T>
 {
@@ -64,6 +69,46 @@ public abstract class AcmAbstractDao<T>
 
         List<T> retval = sinceWhen.getResultList();
         return retval;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public TypedQuery<T> getSortedQuery(String sort)
+    {
+        TypedQuery<T> siteTypedQuery = null;
+        CriteriaBuilder criteriaBuilder = getEm().getCriteriaBuilder();
+        CriteriaQuery<T> queryBuilder = criteriaBuilder.createQuery(getPersistenceClass());
+        Root<T> site = queryBuilder.from(getPersistenceClass());
+
+        // Query will retrieve all sites associated with the user
+        queryBuilder.select(site);
+
+        // Can be sorted by any of the fields ascending or descending
+        if (sort != null)
+        {
+            Pattern sortPattern = Pattern.compile("^([a-zA-Z0-9_]+)\\s+([a-zA-Z0-9_]+)$");
+            Matcher sortMatcher = sortPattern.matcher(sort);
+            if (sortMatcher.matches())
+            {
+                String fieldName = sortMatcher.group(1);
+                String direction = sortMatcher.group(2);
+                if ("ASC".equalsIgnoreCase(direction))
+                {
+                    queryBuilder.orderBy(criteriaBuilder.asc(site.get(fieldName)));
+                } else
+                {
+                    queryBuilder.orderBy(criteriaBuilder.desc(site.get(fieldName)));
+                }
+            } else
+            {
+                // default sort order is descending by created date
+                queryBuilder.orderBy(criteriaBuilder.desc(site.get("created")));
+            }
+        } else
+        {
+            queryBuilder.orderBy(criteriaBuilder.desc(site.get("created")));
+        }
+        siteTypedQuery = getEm().createQuery(queryBuilder);
+        return siteTypedQuery;
     }
 
     protected abstract Class<T> getPersistenceClass();

@@ -12,7 +12,8 @@
                 <!--<span>{{!isEdit ? templateFile.name : template.templateName}}</span>-->
                 <span>{{templateFile.name || template.templateName}}</span>
 
-                <button type="button" ng-disabled="!isEdit" ng-click="downloadFile(template.templateName)" class="btn btn-sm btn-default pull-right" translate>
+                <button type="button" ng-disabled="!isEdit" ng-click="downloadFile(template.templateName)"
+                        class="btn btn-sm btn-default pull-right" translate>
                     admin.security.emailTemplates.modal.download
                 </button>
             </div>

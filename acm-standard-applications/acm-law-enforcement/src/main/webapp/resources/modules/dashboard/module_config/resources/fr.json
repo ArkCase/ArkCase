@@ -5,6 +5,14 @@
             "leftnav.item": "Tableau de bord"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "fr_Select your preferred row count.",
+                    "fiveRows": "fr_5",
+                    "tenRows": "fr_10",
+                    "twentyFiveRows": "fr_25"
+                }
+            },
             "casesByQueue": {
                 "title": "Active Case Files by Queue",
                 "description": "Affiche les fichiers de cas actifs par la file d'attente",
@@ -82,7 +90,7 @@
                         "priority": "Priorité",
                         "dueDate": "Due",
                         "status": "Statut",
-                        "objectId": "Object ID"
+                        "objectId": "Objet ID"
                     },
                     "overdue.tooltip": "La tâche est en retard",
                     "deadline.tooltip": "La date limite est l'approche"
@@ -154,8 +162,8 @@
                     "description": "Afficher la température actuelle d'une ville",
                     "location": "Emplacement",
                     "insertLocationInConfiguration": "Veuillez insérer un emplacement dans la configuration du widget",
-                    "zip": "fr_Zip Code",
-                    "enterZip": "fr_Enter Zip Code"
+                    "zip": "Code postal",
+                    "enterZip": "Entrer le code postal"
                 },
                 "title": "Météo",
                 "noDataMessage": "Actuellement, il n'y a pas de météo",
@@ -204,7 +212,7 @@
                 "title": "Documents",
                 "description": "Affiche le tableau des documents par dossier",
                 "noDataMessage": "Actuellement, il n'y a pas de documents à afficher",
-                "series": "fr_Number of Documents"
+                "series": "Nombre de documents"
             },
             "locations": {
                 "title": "Emplacements",
@@ -279,7 +287,8 @@
             "calendar": {
                 "title": "Calendrier",
                 "description": "Affiche le tableau des événements programmés par jour",
-                "noDataMessage": "Actuellement, il n'y a aucun événement à afficher"
+                "noDataMessage": "Actuellement, il n'y a aucun événement à afficher",
+				"calendarIntegrationDisabledMessage": "L'intégration du calendrier est désactivée par l'administrateur"
             },
             "reworkDetails": {
                 "title": "Détails de rétractation",
@@ -350,6 +359,11 @@
                 "title": "Personnes apparentées",
                 "description": "Affichage des personnes liées",
                 "noDataMessage": "Actuellement, aucune personne liée à afficher"
+			},
+            "approvers": {
+                "title": "Approbateurs",
+                "description": "Afficher les approbateurs",
+                "noDataMessage": "Actuellement, il n'y a pas d'approbateur à afficher"	
             }
         }
     },
