@@ -189,8 +189,11 @@ angular.module('people').controller(
                         }
                         return promiseSaveInfo;
                     }
-                    $scope.isDefault = function(data) {
-                        return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultAddress");
+
+                    $scope.isDefault = function(address) {
+                        var defaultAddress = $scope.objectInfo.defaultAddress;
+                        var comparisonProperties = [ "id", "streetAddress", "streetAddress2", "city", "state", "zip", "country" ];
+                        return Util.objectsComparisonByGivenProperties(defaultAddress, address, comparisonProperties);
                     }
 
                 } ]);

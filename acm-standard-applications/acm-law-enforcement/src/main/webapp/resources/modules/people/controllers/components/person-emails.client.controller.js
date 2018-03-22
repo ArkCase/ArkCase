@@ -181,7 +181,10 @@ angular.module('people').controller(
                         return promiseSaveInfo;
                     }
 
-                    $scope.isDefault = function(data) {
-                        return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultEmail");
-                    };
+                    $scope.isDefault = function(email) {
+                        var defaultEmail = $scope.objectInfo.defaultEmail;
+                        var comparisonProperties = [ "id", "type", "subType", "value", "description" ];
+                        return Util.objectsComparisonByGivenProperties(defaultEmail, email, comparisonProperties);
+                    }
+
                 } ]);
