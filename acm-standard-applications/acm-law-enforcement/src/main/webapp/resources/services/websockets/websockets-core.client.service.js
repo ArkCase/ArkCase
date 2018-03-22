@@ -100,6 +100,6 @@ angular.module("services").factory("WebSocketsListener",
 
         } ]).run(function(WebSocketsListener) {
     if (WebSocketsListener.shouldStart) {
-        WebSocketsListener.connect();
+        //WebSocketsListener.connect();
     }
 });

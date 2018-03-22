@@ -2,6 +2,7 @@ package com.armedia.acm.services.transcribe.listener;
 
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.model.TranscribeType;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
@@ -17,13 +18,14 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private ArkCaseTranscribeService arkCaseTranscribeService;
+    private FolderAndFilesUtils folderAndFilesUtils;
 
     @Override
     public void onApplicationEvent(EcmFileAddedEvent event)
     {
-        if (event != null && event.getSource() != null)
+        if (event != null && event.isSucceeded())
         {
-            EcmFileVersion ecmFileVersion = event.getSource().getVersions().stream().filter(item -> event.getSource().getActiveVersionTag().equals(item.getVersionTag())).findFirst().orElse(null);
+            EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(event.getSource(), event.getSource().getActiveVersionTag());
 
             if (getArkCaseTranscribeService().isFileVersionTranscribable(ecmFileVersion) && getArkCaseTranscribeService().isAutomaticTranscribeOn())
             {
@@ -33,7 +35,7 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
                 }
                 catch (CreateTranscribeException e)
                 {
-                    LOG.warn("Creating Transcription in automatic way was not executed.");
+                    LOG.warn("Creating Transcription in automatic way was not executed. REASON=[{}]", e.getMessage());
                 }
             }
         }
@@ -47,5 +49,15 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
     public void setArkCaseTranscribeService(ArkCaseTranscribeService arkCaseTranscribeService)
     {
         this.arkCaseTranscribeService = arkCaseTranscribeService;
+    }
+
+    public FolderAndFilesUtils getFolderAndFilesUtils()
+    {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
+    {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }
