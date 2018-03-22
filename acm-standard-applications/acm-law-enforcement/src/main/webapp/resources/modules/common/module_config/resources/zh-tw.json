@@ -2,15 +2,28 @@
     "common": {
         "select.option.none": "（選擇一個）",
         "value.unknown": "未知",
-        "defaultDateFormat": "zh-tw_MM/DD/YYYY",
-        "defaultTimeFormat": "zh-tw_hh:mm:ss",
-        "defaultDateTimeFormat": "zh-tw_MM/DD/YYYY hh:mm",
-        "defaultDatePickerFormat": "zh-tw_MM/dd/yyyy",
-        "defaultDateUIFormat": "zh-tw_MM/dd/yyyy",
-        "defaultDateTimeUIFormat": "zh-tw_MM/dd/yyyy HH:mm"
+        "_1_": "請不要使用或添加自定義日期格式，因為它容易出錯並符合國際標準.",
+        "_2_": "請使用其中一種預定義的格式: ",
+        "_3_": "'中'       - 相當於 '月 天, 年 h:mm:ss a' 對於en_US語言環境 (例如，2010年9月3日12:05:08 PM)",
+        "_4_": "'短'       - 相當於 '月/天/年 h:mm a' 對於en_US語言環境 (例如 9/3/10 12:05 PM)",
+        "_5_": "'完整的日期'- 相當於 'EEEE, 月 天, 年' 對於en_US語言環境 (例如 2010年9月3日星期五)",
+        "_6_": "'長日期'    - 相當於 '月 天, 年' 對於en_US語言環境 (例如 2010年9月3日)",
+        "_7_": "'中等日期'  - 相當於 '月 天, 年' 對於en_US語言環境 (例如 2010年9月3日)",
+        "_8_": "'短日期'   - 相當於 '月/天/年' 對於en_US語言環境 (例如 9/3/10)",
+        "_9_": "'中等時間' - 相當於 'h:mm:ss a' 對於en_US語言環境 (例如 12:05:08 PM)",
+        "_10": "'短時間'   - 相當於 'h:mm a' 對於en_US語言環境 (例如 12:05 PM)",
+        "_11": " ",
+        "_12": "以下日期格式被淘汰。 如果客戶要求定制格式，我們需要 ",
+        "_13": "為了教育他們避免這樣做，因為國際化",
+        "defaultDateFormat": "年月天",
+        "defaultTimeFormat": "hh:mm:ss",
+        "defaultDateTimeFormat": "年月天 hh:mm",
+        "defaultDatePickerFormat": "年月天",
+        "defaultDateUIFormat": "年月天",
+        "defaultDateTimeUIFormat": "年月天 HH:mm"
     },
     "common.frevvo": {
-        "defaultDateFormat": "zh-tw_YYYY-MM-DD"
+        "defaultDateFormat": "年月天"
     },
     "common.service": {
         "error.invalidData": "不正確數據"
@@ -52,7 +65,7 @@
             "newCorrespondence": "創建新信件",
             "open": "打開",
             "email": "電子郵件",
-            "newTask": "zh-tw_New Task",
+            "newTask": "新任務",
             "download": "下載",
             "copy": "複製",
             "cut": "切割",
@@ -95,6 +108,10 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "作為附件發送和超鏈接",
             "btnCancel.text": "取消",
             "btnOk.text": "發電子郵件"
+		},
+        "participantsDialog": {
+            "titlePart": "參加者 ",
+            "title": "參與者"	
         },
         "recipientsDialog": {
             "title": "選擇收件人",
@@ -167,7 +184,7 @@
         "authorized": "合法"
     },
     "common.directive.objectAuthorizationRolesFilter": {
-        "pattern.title": "zh-tw_Error, 2 characters required."
+        "pattern.title": "錯誤，需要2個字符."
     },
     "common.directive.searchModal": {
         "header": "搜索",
@@ -175,7 +192,9 @@
         "btnOk.text": "確定",
         "btnCancel.text": "消除",
         "edtPlaceholder": "鍵入搜索內容",
-        "noData.text": "無結果"
+        "noData.text": "無結果",
+		"pickUserLabel": "選擇關聯的用戶",
+        "pickGroupLabel": "選擇相關組"
     },
     "common.directive.search": {
         "showMore.button.text": "顯示更多",
@@ -472,7 +491,9 @@
             "day.label": "天",
             "week.label": "週",
             "month.label": "月",
-            "on.label": "上",
+            "_1_": "'on.label' 似乎沒有被使用。 _即將被刪除_",
+            "_2_": "如果需要的話，重新修改消息以避免消息中的以英語為中心的語法",
+            "_on.label": "上",
             "day.placeholder": "天",
             "year.placeholder": "年",
             "dailyRecurrence": {
@@ -566,7 +587,7 @@
     },
     "common.directive.coreParticipants": {
         "title": "參與者",
-        "replaceFolderChildrenParticipants": "zh-tw_Replace child documents participants",
+        "replaceFolderChildrenParticipants": "替換小孩文檔參與者",
         "modal": {
             "addParticipant.label": "添加參與者",
             "editParticipant.label": "編輯記錄",
@@ -576,7 +597,7 @@
             "btnCancel.text": "取消",
             "dialogUserPicker.header": "搜索用戶",
             "dialogGroupPicker.header": "搜索組",
-            "replaceChildrenParticipant": "zh-tw_replace children participant"
+            "replaceChildrenParticipant": "替換子文檔參與者"
         },
         "message": {
             "error.groupType": "擁有的團體不能成為一個人。",
@@ -588,6 +609,8 @@
             "error.noAccessCombo": "禁止訪問和受讓人的組合是不允許的。",
             "error.duplicateUserOrGroup": "無效的參與者。為參與者找到重複的條目。",
             "error.userOrGroupNotFound": "無效的參與者。系統中缺少參與者條目。",
+			 "error.emptyParticipantLdapId": "參與者姓名不能為空",
+            "error.emptyParticipantType": "參與者類型不能為空",
             "error.ownerUnique": "只有一個所有者是允許的。"
         }
     },
@@ -620,10 +643,10 @@
         "DOC_REPO": "文檔庫",
         "ORGANIZATION": "組織",
         "PERSON": "人員",
-        "PARTICIPANT": "zh-tw_Participant",
-        "NOTE": "zh-tw_Note",
-        "PARTICIPANT-ASSOCIATION": "zh-tw_Participant-Association",
-        "ASSIGNMENT": "zh-tw_Assignment"
+        "PARTICIPANT": "參加者",
+        "NOTE": "注意",
+        "PARTICIPANT-ASSOCIATION": "參加者-協會",
+        "ASSIGNMENT": "分配"
     },
     "frevvo.dialogUserPicker": {
         "header": "選擇用戶",

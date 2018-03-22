@@ -65,7 +65,7 @@
             "newCorrespondence": "New Correspondence",
             "open": "Open",
             "email": "Email",
-            "newTask": "en-in_New Task",
+            "newTask": "New Task",
             "download": "Download",
             "copy": "Copy",
             "cut": "Cut",
@@ -109,6 +109,10 @@
             "btnCancel.text": "Cancel",
             "btnOk.text": "Send Email"
         },
+		"participantsDialog": {
+            "titlePart": "Participants for ",
+            "title": "Participants"
+		},	
         "recipientsDialog": {
             "title": "Choose Recipients",
             "search.placeholder": "Search Recipients",
@@ -188,7 +192,9 @@
         "btnOk.text": "OK",
         "btnCancel.text": "Cancel",
         "edtPlaceholder": "Type in to search",
-        "noData.text": "No Results"
+        "noData.text": "No Results",
+		"pickUserLabel": "Pick Associated User",
+        "pickGroupLabel": "Pick Associated Group"
     },
     "common.directive.search": {
         "showMore.button.text": "Show More Values",
@@ -485,7 +491,9 @@
             "day.label": "Day",
             "week.label": "Week",
             "month.label": "Month",
-            "on.label": "On",
+			"_1_": "'on.label' appears not in use. _TO_BE_REMOVED_",
+            "_2_": "If needed it, rephrase message to avoid English centric grammar in message",
+            "_on.label": "On",
             "day.placeholder": "Day",
             "year.placeholder": "Year",
             "dailyRecurrence": {
@@ -601,6 +609,8 @@
             "error.noAccessCombo": "The combination of No Access and Assignee is not allowed.",
             "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
             "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system.",
+			"error.emptyParticipantLdapId": "Participant name cannot be empty",
+            "error.emptyParticipantType": "Participant type cannot be empty",
             "error.ownerUnique": "Only one owner is allowed."
         }
     },
@@ -633,10 +643,10 @@
         "DOC_REPO": "Document Repository",
         "ORGANIZATION": "Organization",
         "PERSON": "Person",
-        "PARTICIPANT": "en-in_Participant",
-        "NOTE": "en-in_Note",
-        "PARTICIPANT-ASSOCIATION": "en-in_Participant-Association",
-        "ASSIGNMENT": "en-in_Assignment"
+        "PARTICIPANT": "Participant",
+        "NOTE": "Note",
+        "PARTICIPANT-ASSOCIATION": "Participant-Association",
+        "ASSIGNMENT": "Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",

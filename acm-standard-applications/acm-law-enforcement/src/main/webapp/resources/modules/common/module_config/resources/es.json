@@ -2,15 +2,28 @@
     "common": {
         "select.option.none": "(Seleccionar uno)",
         "value.unknown": "Desconocido",
-        "defaultDateFormat": "Es_MM/DD/YYYY",
-        "defaultTimeFormat": "Es_hh:mm:ss",
-        "defaultDateTimeFormat": "Es_MM/DD/YYYY hh:mm",
-        "defaultDatePickerFormat": "Es_MM/dd/yyyy",
-        "defaultDateUIFormat": "Es_MM/dd/yyyy",
-        "defaultDateTimeUIFormat": "Es_MM/dd/yyyy HH:mm"
+		"_1_": "No utilice estilos de fecha personalizados ni los agregue, ya que son propensos a errores.",
+        "_2_": "Use uno de los formatos predefinidos: ",
+        "_3_": "'medio'     - equivalente a 'MMM d, a h:mm:ss a' para la configuración en_US (p.ej. 3 de septiembre de 2010, 12:05:08 p.m.)",
+        "_4_": "'corto'     - equivalente a 'M/d/aa h:mm a' para la configuración en_US (p.ej. 9/3/10 12:05 PM)",
+        "_5_": "'fechaCompleta'  - equivalente a 'EEEE, MMMM d, a' para la configuración en_US (p.ej. Viernes, 3 de septiembre de 2010)",
+        "_6_": "'largaFecha'  - equivalente a 'MMMM d, a' para la configuración en_US (p.ej. 3 de septiembre de 2010)",
+        "_7_": "'medioFecha'- equivalente a 'MMM d, a' para la configuración en_US (p.ej. 3 de septiembre de 2010)",
+        "_8_": "'cortaFecha' - equivalente a 'M/d/aa' para la configuración en_US (p.ej. 9/3/10)",
+        "_9_": "'tiempoMedio'- equivalente a 'h:mm:ss a' para la configuración en_US (p.ej. 12:05:08 PM)",
+        "_10": "'cortoTiempo' - equivalente a 'h:mm a' para la configuración en_US (p.ej. 12:05 PM)",
+        "_11": " ",
+        "_12": "Se eliminan los siguientes formatos de fecha. Si los clientes solicitan personalizar el formato, necesitamos ",
+        "_13": "Educarlos para evitar esto porque tienen preocupaciones",
+        "defaultDateFormat": "MM/DD/AAAA",
+        "defaultTimeFormat": "hh:mm:ss",
+        "defaultDateTimeFormat": "MM/DD/AAAA hh:mm",
+        "defaultDatePickerFormat": "MM/dd/AAAA",
+        "defaultDateUIFormat": "MM/dd/aaaa",
+        "defaultDateTimeUIFormat": "MM/dd/aaaa HH:mm"
     },
     "common.frevvo": {
-        "defaultDateFormat": "Es_YYYY-MM-DD"
+        "defaultDateFormat": "AAAA-MM-DD"
     },
     "common.service": {
         "error.invalidData": "Datos no válidos"
@@ -52,7 +65,7 @@
             "newCorrespondence": "Nueva correspondencia",
             "open": "Abierto",
             "email": "Email",
-            "newTask": "es_New Task",
+            "newTask": "Nueva tarea",
             "download": "Descargar",
             "copy": "Dupdo",
             "cut": "Cortar",
@@ -96,6 +109,10 @@
             "btnCancel.text": "Cancelar",
             "btnOk.text": "Enviar correo electrónico"
         },
+		"participantsDialog": {
+            "titlePart": "Participantes para ",
+            "title": "Participantes"
+		},	
         "recipientsDialog": {
             "title": "Elija destinatarios",
             "search.placeholder": "Destinatarios de búsqueda",
@@ -167,7 +184,7 @@
         "authorized": "Autorizado"
     },
     "common.directive.objectAuthorizationRolesFilter": {
-        "pattern.title": "es_Error, 2 characters required."
+        "pattern.title": "Error, se requieren 2 caracteres."
     },
     "common.directive.searchModal": {
         "header": "Buscar",
@@ -175,7 +192,9 @@
         "btnOk.text": "DE ACUERDO",
         "btnCancel.text": "Cancelar",
         "edtPlaceholder": "Escriba para buscar",
-        "noData.text": "Sin resultados"
+        "noData.text": "Sin resultados",
+		"pickUserLabel": "Elige usuario asociado",
+        "pickGroupLabel": "Elige un grupo asociado"
     },
     "common.directive.search": {
         "showMore.button.text": "Mostrar más valores",
@@ -472,7 +491,9 @@
             "day.label": "Día",
             "week.label": "Semana",
             "month.label": "Mes",
-            "on.label": "En",
+		    "_1_": "'en.etiqueta' parece no estar en uso. _Ser_Eliminado_",
+            "_2_": "Si es necesario, reformule el mensaje para evitar la gramática centrada en inglés en el mensaje",
+            "_on.label": "En", 
             "day.placeholder": "Día",
             "year.placeholder": "Año",
             "dailyRecurrence": {
@@ -566,7 +587,7 @@
     },
     "common.directive.coreParticipants": {
         "title": "Participantes",
-        "replaceFolderChildrenParticipants": "es_Replace child documents participants",
+        "replaceFolderChildrenParticipants": "Reemplazar los documentos de niños participantes",
         "modal": {
             "addParticipant.label": "Añada participante",
             "editParticipant.label": "Editar registro",
@@ -576,7 +597,7 @@
             "btnCancel.text": "Cancelar",
             "dialogUserPicker.header": "Usuario de búsqueda",
             "dialogGroupPicker.header": "Grupo de búsqueda",
-            "replaceChildrenParticipant": "es_replace children participant"
+            "replaceChildrenParticipant": "Reemplazar a los niños participantes"
         },
         "message": {
             "error.groupType": "El grupo propietario no puede ser una persona.",
@@ -588,6 +609,8 @@
             "error.noAccessCombo": "La combinación de No Access y Assignee no está permitida.",
             "error.duplicateUserOrGroup": "Participante inválido Entradas duplicadas encontradas para el participante.",
             "error.userOrGroupNotFound": "Participante inválido Falta la entrada del participante en el sistema.",
+			"error.emptyParticipantLdapId": "El nombre del participante no puede estar vacío",
+            "error.emptyParticipantType": "El tipo de participante no puede estar vacío",
             "error.ownerUnique": "Solo se permite un dueño."
         }
     },
@@ -620,10 +643,10 @@
         "DOC_REPO": "Repositorio de documentos",
         "ORGANIZATION": "Organización",
         "PERSON": "Persona",
-        "PARTICIPANT": "es_Participant",
-        "NOTE": "es_Note",
-        "PARTICIPANT-ASSOCIATION": "es_Participant-Association",
-        "ASSIGNMENT": "es_Assignment"
+        "PARTICIPANT": "Partícipe",
+        "NOTE": "Nota",
+        "PARTICIPANT-ASSOCIATION": "Partícipe-Asociación",
+        "ASSIGNMENT": "Asignación"
     },
     "frevvo.dialogUserPicker": {
         "header": "Elija usuario",
@@ -879,8 +902,3 @@
         }
     }
 }
-
-
-
-
-
