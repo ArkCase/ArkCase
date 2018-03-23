@@ -42,6 +42,7 @@ public class PeopleAPIController
 
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'PERSON', 'editPerson')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public Person upsertPerson(@RequestBody Person in, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException

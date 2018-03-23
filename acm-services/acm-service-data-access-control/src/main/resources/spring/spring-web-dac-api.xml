@@ -7,7 +7,7 @@
         <property name="accessControlRuleChecker" ref="accessControlRuleChecker"/>
     </bean>
 
-    <aop:aspectj-autoproxy/>
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
     <bean id="decoratedAssignedObjectParticipantAspect"
         class="com.armedia.acm.services.dataaccess.annotations.DecoratedAssignedObjectParticipantAspect">
