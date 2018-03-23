@@ -23,7 +23,7 @@ import java.util.Date;
 @DiscriminatorColumn(name = "cm_transcribe_item_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.services.transcribe.model.TranscribeItem")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class TranscribeItem implements AcmObject, AcmEntity, Serializable
+public class TranscribeItem implements AcmObject, AcmEntity, Serializable, Comparable<TranscribeItem>
 {
     @Id
     @TableGenerator(name = "transcribe_item_gen", table = "acm_transcribe_item_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_transcribe_item", initialValue = 100, allocationSize = 1)
@@ -210,5 +210,26 @@ public class TranscribeItem implements AcmObject, AcmEntity, Serializable
     public String getObjectType()
     {
         return TranscribeConstants.OBJECT_TYPE_ITEM;
+    }
+
+    @Override
+    public int compareTo(TranscribeItem item)
+    {
+        // First show nulls items in the list
+        if (item == null)
+        {
+            return 1;
+        }
+
+        // If startTime of the caller is null, add it first in the list
+        // This step is not necessary because in the setter, I explicitly setting 0 if it's null
+        // But let's have as guard
+        if (startTime == null)
+        {
+            return -1;
+        }
+
+        // Proceed with regular compareTo
+        return startTime.compareTo(item.startTime);
     }
 }

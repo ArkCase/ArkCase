@@ -66,6 +66,15 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
     public abstract Transcribe save(Transcribe transcribe) throws SaveTranscribeException;
 
     /**
+     * This method will create copy a of given Transcribe object. Every fields will have the same value except the ID
+     *
+     * @param transcribe - Transcribe object that is already in database that we want to make a copy
+     * @return Copied Transcribe object
+     * @throws CreateTranscribeException
+     */
+    public abstract Transcribe copy(Transcribe transcribe, EcmFileVersion ecmFileVersion) throws CreateTranscribeException;
+
+    /**
      * This method will create TranscribeItem in the Transcribe with given ID
      *
      * @param id - ID of the Transcribe object
