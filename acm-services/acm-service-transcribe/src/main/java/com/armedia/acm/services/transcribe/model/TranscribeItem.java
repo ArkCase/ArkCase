@@ -222,6 +222,8 @@ public class TranscribeItem implements AcmObject, AcmEntity, Serializable, Compa
         }
 
         // If startTime of the caller is null, add it first in the list
+        // This step is not necessary because in the setter, I explicitly setting 0 if it's null
+        // But let's have as guard
         if (startTime == null)
         {
             return -1;
