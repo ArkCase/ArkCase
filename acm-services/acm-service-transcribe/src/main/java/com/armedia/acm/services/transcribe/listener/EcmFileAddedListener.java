@@ -35,7 +35,7 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
                 }
                 catch (CreateTranscribeException e)
                 {
-                    LOG.warn("Creating Transcription in automatic way was not executed. REASON=[{}]", e.getMessage());
+                    LOG.warn("Creating Transcription in automatic way for MEDIA_FILE_VERSION_ID=[{}] was not executed. REASON=[{}]", ecmFileVersion.getId(), e.getMessage());
                 }
             }
         }

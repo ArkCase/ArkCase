@@ -39,7 +39,7 @@ public class EcmFileReplacedListener implements ApplicationListener<EcmFileRepla
                     TranscribeConfiguration configuration = getArkCaseTranscribeService().getConfiguration();
                     if (configuration.isCopyTranscriptionForNewVersion())
                     {
-                        LOG.debug("Copy Transcription for replaced file");
+                        LOG.debug("Copy Transcription for replaced file with ID=[{}] and VERSION_ID=[{}]", ecmFile.getId(), ecmFileVersion.getId());
                         Transcribe transcribe = getArkCaseTranscribeService().getByMediaVersionId(event.getPreviousActiveFileVersion().getId());
 
                         if (transcribe != null)
@@ -49,13 +49,13 @@ public class EcmFileReplacedListener implements ApplicationListener<EcmFileRepla
                     }
                     else if(configuration.isNewTranscriptionForNewVersion() && configuration.isAutomaticEnabled())
                     {
-                        LOG.debug("New Transcription for replaced file");
+                        LOG.debug("New Transcription for replaced file with ID=[{}] and VERSION_ID=[{}]", ecmFile.getId(), ecmFileVersion.getId());
                         getArkCaseTranscribeService().create(ecmFileVersion, TranscribeType.AUTOMATIC);
                     }
                 }
                 catch (GetConfigurationException | GetTranscribeException | CreateTranscribeException e)
                 {
-                    LOG.warn("Creating Transcription for replaced file is not executed. REASON=[{}]", e.getMessage());
+                    LOG.warn("Creating Transcription for replaced file with ID=[{}] and VERSION_ID=[{}] is not executed. REASON=[{}]", ecmFile.getId(), ecmFileVersion.getId(), e.getMessage());
                 }
             }
         }
