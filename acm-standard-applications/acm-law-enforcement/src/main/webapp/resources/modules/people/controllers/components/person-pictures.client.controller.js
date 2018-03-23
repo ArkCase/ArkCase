@@ -87,12 +87,14 @@ angular.module('people').controller(
 
                         var imageId = Util.goodMapValue(rowEntity, "object_id_s", 0);
                         if (imageId) {
-                            PersonPicturesService.deletePersonPictures($scope.objectInfo.id, imageId).then(function() {
-                                $scope.reloadGrid();
+                            PersonPicturesService.deletePersonPictures($scope.objectInfo.id, imageId).then(function(objectInfo) {
+                                $scope.$emit("report-object-updated", objectInfo);
                                 MessageService.succsessAction();
-                            }, function() {
+                                return objectInfo;
+                            }, function(error) {
+                                $scope.$emit("report-object-update-failed", error);
                                 MessageService.errorAction();
-                                $scope.reloadGrid();
+                                return error;
                             });
                         }
                         gridHelper.deleteRow(rowEntity);
@@ -127,8 +129,9 @@ angular.module('people').controller(
                                 data.image.modified = null;
                                 PersonPicturesService.savePersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image).then(
                                         function() {
+                                            $scope.objectInfo.defaultPicture = data.image;
                                             MessageService.succsessAction();
-                                            $scope.refresh();
+                                            $scope.$emit("report-object-updated", $scope.objectInfo);
                                         }, function() {
                                             MessageService.errorAction();
                                         });
@@ -146,7 +149,9 @@ angular.module('people').controller(
                                     PersonPicturesService.insertPersonPicture($scope.objectInfo.id, data.file, data.isDefault,
                                             data.image.description).then(function() {
                                         MessageService.succsessAction();
-                                        $scope.refresh();
+                                        $timeout(function() {
+                                            $scope.refresh();
+                                        }, 2000);
                                     }, function() {
                                         MessageService.errorAction();
                                     });

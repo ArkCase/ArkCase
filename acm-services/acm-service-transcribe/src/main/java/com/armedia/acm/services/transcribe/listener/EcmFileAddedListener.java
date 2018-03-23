@@ -25,7 +25,7 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
         {
             EcmFileVersion ecmFileVersion = event.getSource().getVersions().stream().filter(item -> event.getSource().getActiveVersionTag().equals(item.getVersionTag())).findFirst().orElse(null);
 
-            if (getArkCaseTranscribeService().isFileVersionTranscribable(ecmFileVersion))
+            if (getArkCaseTranscribeService().isFileVersionTranscribable(ecmFileVersion) && getArkCaseTranscribeService().isAutomaticTranscribeOn())
             {
                 try
                 {

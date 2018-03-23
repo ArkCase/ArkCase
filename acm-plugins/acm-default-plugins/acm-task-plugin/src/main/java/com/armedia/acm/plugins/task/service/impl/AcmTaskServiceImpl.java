@@ -300,6 +300,12 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
+    public byte[] getDiagram(String processId) throws AcmTaskException
+    {
+        return taskDao.getDiagram(processId);
+    }
+
+    @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void copyTasks(Long fromObjectId, String fromObjectType, Long toObjectId, String toObjectType, String toObjectName,
             Authentication auth, String ipAddress) throws AcmTaskException, AcmCreateObjectFailedException

@@ -217,7 +217,7 @@
             "modified": "Измененная дата",
             "status": "Положение дел"
         },
-        "formNamePrefix": "Costsheet"
+        "formNamePrefix": "Себестоимость"
     },
     "cases.comp.tags": {
         "title": "Теги",
