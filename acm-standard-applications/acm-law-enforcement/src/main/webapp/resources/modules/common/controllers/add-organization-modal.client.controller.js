@@ -35,7 +35,7 @@ angular.module('common').controller(
                     $scope.isSelectedParent = !!params.isSelectedParent;
                     $scope.isEditParent = false;
                     $scope.description = params.description;
-                    $scope.hideNoField = true;
+                    $scope.hideNoField = params.isDefault;
                     if (!Util.isEmpty(params.externalSearchServiceName)) {
                         $scope.externalSearchServiceName = params.externalSearchServiceName;
                     }

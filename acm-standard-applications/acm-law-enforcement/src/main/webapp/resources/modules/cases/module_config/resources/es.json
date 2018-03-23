@@ -245,7 +245,7 @@
     },
     "cases.comp.calendar": {
         "title": "Calendario",
-        "message": "es_Calendar Integration Configuration Not Enabled"
+        "message": "La configuración de integración del calendario no está habilitada"
     },
     "cases.comp.merge": {
         "title": "Unir",
