@@ -2,6 +2,11 @@ package com.armedia.acm.services.transcribe.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/06/2018
  */
@@ -26,5 +31,11 @@ public class TranscribeUtils
         }
 
         return "";
+    }
+
+    public static <T> Predicate<T> distinctByProperty(Function<? super T, ?> propertyExtractor)
+    {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(propertyExtractor.apply(t));
     }
 }

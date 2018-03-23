@@ -77,13 +77,10 @@ angular.module('document-details').controller(
                         angular.forEach($scope.transcribeObjectModel.transcribeItems, function(value, key) {
                             confidenceSum += value.confidence;
                         });
-                        $scope.confidenceAverage = (confidenceSum / $scope.transcribeObjectModel.transcribeItems.length).toFixed(1);
 
-                        var activeVersion = $scope.getEcmFileActiveVersion($scope.ecmFile);
-                        if (!Util.isEmpty(activeVersion)) {
-                            $scope.durationInMinutes = (activeVersion.durationSeconds / 60).toFixed(1);
-                        } else {
-                            $scope.durationInMinutes = 0;
+                        $scope.confidenceAverage = 0;
+                        if (confidenceSum > 0 && !Util.isArrayEmpty($scope.transcribeObjectModel.transcribeItems)) {
+                            $scope.confidenceAverage = (confidenceSum / $scope.transcribeObjectModel.transcribeItems.length).toFixed(1);
                         }
 
                         //color the status
@@ -163,6 +160,14 @@ angular.module('document-details').controller(
                                 $timeout(function() {
                                     $scope.$broadcast('document-data', $scope.ecmFile);
                                 }, 1000);
+
+                                var durationInSeconds = 0;
+                                var activeVersion = $scope.getEcmFileActiveVersion($scope.ecmFile);
+                                if (!Util.isEmpty(activeVersion)) {
+                                    durationInSeconds = activeVersion.durationSeconds;
+                                }
+                                var formatTime = moment.duration(durationInSeconds, 'seconds'); //get the seconds
+                                $scope.durationFormatted = moment.utc(formatTime.asMilliseconds()).format('HH:mm:ss');
 
                                 var key = $scope.ecmFile.fileType + ".name";
                                 // Search for descriptive file type in acm-forms.properties

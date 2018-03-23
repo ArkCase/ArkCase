@@ -114,7 +114,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         Transcribe created = arkCaseTranscribeService.create(version.getId(), TranscribeType.AUTOMATIC);
 
         verify(ecmFileVersionDao).find(version.getId());
-        verify(propertyFileManager, times(3)).loadMultiple(any(), any());
+        verify(propertyFileManager, times(2)).loadMultiple(any(), any());
         verify(transcribeDao).findByMediaVersionId(version.getId());
         verify(pipelineManager).executeOperation(any(), any(), any());
 
@@ -153,7 +153,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
 
         Transcribe created = arkCaseTranscribeService.create(version, TranscribeType.AUTOMATIC);
 
-        verify(propertyFileManager, times(3)).loadMultiple(any(), any());
+        verify(propertyFileManager, times(2)).loadMultiple(any(), any());
         verify(transcribeDao).findByMediaVersionId(version.getId());
         verify(pipelineManager).executeOperation(any(), any(), any());
 
@@ -321,7 +321,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         }
         catch (Exception e)
         {
-            verify(propertyFileManager, times(3)).loadMultiple(any(), any());
+            verify(propertyFileManager, times(2)).loadMultiple(any(), any());
             verify(transcribeDao).findByMediaVersionId(version.getId());
 
             assertTrue(e instanceof CreateTranscribeException);
@@ -365,7 +365,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         }
         catch (Exception e)
         {
-            verify(propertyFileManager, times(3)).loadMultiple(any(), any());
+            verify(propertyFileManager, times(2)).loadMultiple(any(), any());
             verify(transcribeDao).findByMediaVersionId(version.getId());
             verify(pipelineManager).executeOperation(any(), any(), any());
 
