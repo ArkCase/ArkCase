@@ -215,6 +215,19 @@ public class TranscribeItem implements AcmObject, AcmEntity, Serializable, Compa
     @Override
     public int compareTo(TranscribeItem item)
     {
+        // First show nulls items in the list
+        if (item == null)
+        {
+            return 1;
+        }
+
+        // If startTime of the caller is null, add it first in the list
+        if (startTime == null)
+        {
+            return -1;
+        }
+
+        // Proceed with regular compareTo
         return startTime.compareTo(item.startTime);
     }
 }
