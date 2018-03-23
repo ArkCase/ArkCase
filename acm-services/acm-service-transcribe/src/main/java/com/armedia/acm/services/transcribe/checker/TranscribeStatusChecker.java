@@ -3,8 +3,10 @@ package com.armedia.acm.services.transcribe.checker;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
 import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
+import com.armedia.acm.services.transcribe.exception.SaveTranscribeException;
 import com.armedia.acm.services.transcribe.model.*;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -56,8 +58,18 @@ public class TranscribeStatusChecker implements JavaDelegate
                                 break;
                             case COMPLETED:
                                 action = TranscribeActionType.COMPLETED.toString();
-                                transcribe.setTranscribeItems(providerTranscribe.getTranscribeItems());
-                                getArkCaseTranscribeService().save(transcribe);
+                                ids.forEach(id -> {
+                                    try
+                                    {
+                                        Transcribe t = getArkCaseTranscribeService().get(id);
+                                        t.setTranscribeItems(TranscribeUtils.clone(providerTranscribe.getTranscribeItems()));
+                                        getArkCaseTranscribeService().save(t);
+                                    }
+                                    catch (GetTranscribeException | SaveTranscribeException e)
+                                    {
+                                        LOG.warn("Changing status for Transcribe with ID=[{}] in bulk operation failed. REASON=[{}]", id, e.getMessage());
+                                    }
+                                });
                                 break;
                             case FAILED:
                                 action = TranscribeActionType.FAILED.toString();
