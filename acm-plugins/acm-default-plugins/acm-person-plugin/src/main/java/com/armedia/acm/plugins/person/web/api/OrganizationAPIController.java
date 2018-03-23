@@ -47,6 +47,7 @@ public class OrganizationAPIController
 
     @PreAuthorize("#in.organizationId == null or hasPermission(#in.organizationId, 'ORGANIZATION', 'editOrganization')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public Organization upsertOrganization(@RequestBody Organization in, Authentication auth, HttpSession httpSession)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException
