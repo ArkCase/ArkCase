@@ -98,7 +98,7 @@ public class ModuleConfigurationService implements ModuleConfigurationConstants
         List<ModuleItem> modules = retrieveModules();
         modules.sort(Comparator.comparing(ModuleItem::getName));
 
-        if (sortDirection.contains("DESC"))
+        if (sortDirection.equalsIgnoreCase("DESC"))
         {
             modules.sort(Comparator.comparing(ModuleItem::getName).reversed());
         }
