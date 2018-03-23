@@ -98,7 +98,6 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
         log.debug("Checking if [{}] is granted executing [{}] on object of type [{}] with id [{}]", authentication.getName(),
                 StringUtils.join(permissions, ","), targetType, targetId);
         boolean granted = false;
-        boolean permissionExists = false;
 
         JSONObject solrJsonDocument = new JSONObject(solrDocument);
         JSONObject solrJsonResult = solrJsonDocument.getJSONObject("response").getJSONArray("docs").getJSONObject(0);
@@ -106,58 +105,51 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
         Map<String, Object> targetObjectProperties = retrieveTargetObjectProperties(accessControlRules.getPropertiesMapping(),
                 solrJsonResult);
 
-        // loop trough configured access control rules, break on first positive match
-        for (AccessControlRule accessControlRule : accessControlRules.getAccessControlRuleList())
+        for (String permission : permissions)
         {
-            for (String permission : permissions)
-            {
-                // check if action name matches
-                if (permission == null || !permission.equals(accessControlRule.getActionName()))
+
+            List<AccessControlRule> permissionRules = accessControlRules.getAccessControlRuleList().stream().filter(rule -> {
+                if (targetType.equals(rule.getObjectType()) && permission.equals(rule.getActionName()))
                 {
-                    log.trace("Non matching permission [{} != {}], ignoring", accessControlRule.getActionName(), permission);
-                    continue;
-                }
-                // check if target type matches
-                if (targetType == null || !targetType.equals(accessControlRule.getObjectType()))
-                {
-                    log.trace("Non matching target type [{} != {}], ignoring", accessControlRule.getObjectType(), targetType);
-                    continue;
-                }
-                // check if target sub type matches (NOTE: it is optional in JSON rules structure)
-                if (accessControlRule.getObjectSubType() != null)
-                {
-                    // FIXME: unsafe - "object_sub_type_s" to "objectSubType" mapping has to be defined in
-                    // accessControlRules.json
-                    String targetSubType = (String) targetObjectProperties.get("objectSubType");
-                    if (targetSubType == null || !targetSubType.equals(accessControlRule.getObjectSubType()))
+                    if (rule.getObjectType() != null) // optional field in rule
                     {
-                        log.trace("Non matching target sub type [{} != {}], ignoring", accessControlRule.getObjectSubType(), targetSubType);
-                        continue;
+                        String targetSubType = (String) targetObjectProperties.get("objectSubType");
+                        if (targetSubType == null || !targetSubType.equals(rule.getObjectSubType()))
+                        {
+                            return false;
+                        }
                     }
+                    return true;
                 }
-                // check if "ALL" roles match
-                if (!checkRolesAll(accessControlRule.getUserRolesAll(), authentication.getAuthorities(), targetObjectProperties))
+                return false;
+            }).collect(Collectors.toList());
+            if (permissionRules.size() == 0)
+            { // no permissions found add fallback parent permission
+                String fallbackPermission = getFallbackPermissionName(permission);
+                permissionRules = accessControlRules.getAccessControlRuleList().stream()
+                        .filter(rule -> targetType.equals(rule.getObjectType()) && fallbackPermission.equals(rule.getActionName()))
+                        .collect(Collectors.toList());
+            }
+            for (AccessControlRule rule : permissionRules)
+            {
+                if (!checkRolesAll(rule.getUserRolesAll(), authentication.getAuthorities(), targetObjectProperties))
                 {
                     // log entry created in checkRolesAll() method
                     continue;
                 }
                 // check if "ANY" roles match
-                if (!checkRolesAny(accessControlRule.getUserRolesAny(), authentication.getAuthorities(), targetObjectProperties))
+                if (!checkRolesAny(rule.getUserRolesAny(), authentication.getAuthorities(), targetObjectProperties))
                 {
                     // log entry created in checkRolesAny() method
                     continue;
                 }
-                permissionExists = true;
-                // all initial checks passed, proceed with checking required object properties
-                granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
 
-                // proceed with checking if user is any of required participant types
-                granted = granted && checkParticipantTypes(accessControlRule.getUserIsParticipantTypeAny(), authentication, solrJsonResult);
-
-                if (granted)
+                if (evaluate(rule.getObjectProperties(), authentication, targetObjectProperties)
+                        && checkParticipantTypes(rule.getUserIsParticipantTypeAny(), authentication, solrJsonResult))
                 {
+                    granted = true;
                     log.debug("[{}] is granted executing [{}] on object of type [{}] with id [{}], matching rule [{}]",
-                            authentication.getName(), permission, targetType, targetId, accessControlRule);
+                            authentication.getName(), permission, targetType, targetId, rule);
                     break;
                 }
             }
@@ -166,60 +158,40 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
                 break;
             }
         }
-        if (!permissionExists)
-        {
-            for (String permission : permissions)
-            {
-                String parentActionName = null;
-                if (permission.toLowerCase().matches("(get|list|read|download|view|subscribe).*"))
-                {
-                    // read parent permission
-                    parentActionName = "getObject";
-                }
-                else if (permission.toLowerCase()
-                        .matches("(save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename).*"))
-                {
-                    // write parent permission
-                    parentActionName = "editObject";
-                }
-                else if (permission.toLowerCase().matches("(create).*"))
-                {
-                    // insert parent permission
-                    parentActionName = "insertObject";
-                }
-                else if (permission.toLowerCase().matches("(delete).*"))
-                {
-                    // delete parent permission
-                    parentActionName = "deleteObject";
-                }
-                if (parentActionName != null)
-                {
-                    String finalParentActionName = parentActionName;
-                    List<AccessControlRule> accessControlRuleList = accessControlRules.getAccessControlRuleList().stream()
-                            .filter(p -> p.getActionName().equals(finalParentActionName) && p.getObjectType().contains(targetType))
-                            .collect(Collectors.toList());
 
-                    for (AccessControlRule accessControlRule : accessControlRuleList)
-                    {
-                        granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
-
-                        // proceed with checking if user is any of required participant types
-                        granted = granted
-                                && checkParticipantTypes(accessControlRule.getUserIsParticipantTypeAny(), authentication, solrJsonResult);
-                        if (granted)
-                        {
-                            break;
-                        }
-                    }
-                }
-            }
-        }
         if (!granted)
         {
             log.warn("[{}] is denied executing [{}] on object of type [{}] with id [{}], no matching rule found", authentication.getName(),
                     StringUtils.join(permissions, ","), targetType, targetId);
         }
         return granted;
+    }
+
+    private String getFallbackPermissionName(String permission)
+    {
+        String parentActionName = null;
+        if (permission.toLowerCase().matches("(get|list|read|download|view|subscribe).*"))
+        {
+            // read parent permission
+            parentActionName = "getObject";
+        }
+        else if (permission.toLowerCase()
+                .matches("(save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename).*"))
+        {
+            // write parent permission
+            parentActionName = "editObject";
+        }
+        else if (permission.toLowerCase().matches("(create).*"))
+        {
+            // insert parent permission
+            parentActionName = "insertObject";
+        }
+        else if (permission.toLowerCase().matches("(delete).*"))
+        {
+            // delete parent permission
+            parentActionName = "deleteObject";
+        }
+        return parentActionName;
     }
 
     /**
