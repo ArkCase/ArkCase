@@ -179,7 +179,10 @@ angular.module('people').controller(
                         return promiseSaveInfo;
                     }
 
-                    $scope.isDefault = function(data) {
-                        return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultAlias");
+                    $scope.isDefault = function(alias) {
+                        var defaultAlias = $scope.objectInfo.defaultAlias;
+                        var comparisonProperties = [ "id", "aliasType", "aliasValue", "description" ];
+                        return Util.objectsComparisonByGivenProperties(defaultAlias, alias, comparisonProperties);
                     }
+
                 } ]);
