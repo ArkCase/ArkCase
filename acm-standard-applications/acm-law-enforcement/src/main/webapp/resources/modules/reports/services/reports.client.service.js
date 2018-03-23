@@ -54,18 +54,22 @@ angular.module('reports').factory(
 
                             // add parameters only on prpt reports
                             if (reportUrl.indexOf('prpt/viewer', reportUrl.length - 'prpt/viewer'.length) !== -1)
-                                    + "?startDate=" + UtilDateService.goodIsoDate(params.startDate)
-                                    + "&endDate=" + UtilDateService.goodIsoDate(params.endDate) + "&dateFormat="
-                                    + encodeURIComponent(UtilDateService.defaultDateFormat) + "&timeZone="
-                                    + encodeURIComponent(UtilDateService.getTimeZoneOffset());
+                                    reportUrl += "?startDate=" + UtilDateService.goodIsoDate(params.startDate)
+                                        + "&endDate=" + UtilDateService.goodIsoDate(params.endDate) + "&dateFormat="
+                                        + encodeURIComponent(UtilDateService.defaultDateFormat) + "&timeZone="
+                                        + encodeURIComponent(UtilDateService.getTimeZoneOffset());
 
                             if (params.stateSelected) {
-                                reportUrl += "&status=" + params.stateSelected;
+                                reportUrl += (reportUrl.indexOf("?") == -1 ? "?" : "&" ) + "status=" + params.stateSelected;
                             }
+
+                            // add baseUrl parameter
+                            // It is used for hyperlinks on object Ids in the reports
                             var absUrl = $location.absUrl();
                             var baseHref = $browser.baseHref();
                             var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-
+                            reportUrl +=  (reportUrl.indexOf("?") == -1 ? "?" : "&" ) + "baseUrl=" + encodeURIComponent(appUrl);
+                            
                             if (xmlReport) {
                                 reportUrl += "&output-target=" + encodeURIComponent("table/xml");
                             }
