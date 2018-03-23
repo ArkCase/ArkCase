@@ -22,6 +22,19 @@ angular.module('services').factory(
                     // Initial rules loading
                     var rules = queryRules();
                     var userProfile = Authentication.queryUserInfo();
+                    var parentPermissions = [ {
+                        expr : "(get|list|read|download|view|subscribe).*",
+                        parentActionName : "getObject"
+                    }, {
+                        expr : "(save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename).*",
+                        parentActionName : "editObject"
+                    }, {
+                        expr : "(create).*",
+                        parentActionName : "insertObject"
+                    }, {
+                        expr : "(delete).*",
+                        parentActionName : "deleteObject"
+                    } ];
 
                     return {
                         /**
@@ -99,26 +112,15 @@ angular.module('services').factory(
                     };
 
                     function findParentPermission(rules, actionName, objectType) {
-                        var parentActionName = null;
-                        if (actionName.toLowerCase().match("(get|list|read|download|view).*")) {
-                            // read parent permission
-                            parentActionName = "getObject";
-                        } else if (actionName.toLowerCase()
-                                .match("(save|edit|change|lock|complete|unlock|merge|restrict|declare|rename).*")) {
-                            // write parent permission
-                            parentActionName = "editObject";
-                        } else if (actionName.toLowerCase().match("(insert|add|create).*")) {
-                            // insert parent permission
-                            parentActionName = "insertObject";
-                        } else if (actionName.toLowerCase().match("(delete|remove).*")) {
-                            // delete parent permission
-                            parentActionName = "deleteObject";
+                        for ( var parentPermission in parentPermissions) {
+                            if (actionName.toLowerCase().match(parentPermission.expr)) {
+                                return _.filter(rules.data.accessControlRuleList, {
+                                    actionName : parentPermission.parentActionName,
+                                    objectType : objectType
+                                });
+                            }
                         }
-
-                        return _.filter(rules.data.accessControlRuleList, {
-                            actionName : parentActionName,
-                            objectType : objectType
-                        });
+                        return [];
                     }
 
                     /**
