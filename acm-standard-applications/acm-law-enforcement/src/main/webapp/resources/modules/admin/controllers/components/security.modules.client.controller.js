@@ -39,10 +39,10 @@ angular.module('admin').controller(
 
                     function fillList(listToFill, data) {
                         _.forEach(data, function(obj) {
-                            var element = {};
-                            element.key = obj;
-                            element.name = obj;
-                            listToFill.push(element);
+                            listToFill.push({
+                                key : obj,
+                                name : obj
+                            });
                         });
                     }
 

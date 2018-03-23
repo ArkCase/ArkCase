@@ -50,7 +50,7 @@ public class ModuleConfigurationRetrieveModules
     })
     @ResponseBody
     public List<ModuleItem> findModulesPaged(
-            @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows)
             throws IOException, AcmModuleConfigurationException
@@ -83,7 +83,7 @@ public class ModuleConfigurationRetrieveModules
         }
         catch (Exception e)
         {
-            log.error("Can't retrieve modules by matching name", e);
+            log.error("Can't retrieve modules by matching name {}", filterName, e);
             throw new AcmModuleConfigurationException("Can't retrieve modules by matching name", e);
         }
     }
