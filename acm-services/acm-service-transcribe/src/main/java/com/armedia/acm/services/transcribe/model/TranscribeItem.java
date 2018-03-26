@@ -3,14 +3,14 @@ package com.armedia.acm.services.transcribe.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
-import com.armedia.acm.services.transcribe.converter.DurationConverter;
+import com.armedia.acm.services.transcribe.converter.BigDecimalConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.Duration;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -36,12 +36,12 @@ public class TranscribeItem implements AcmObject, AcmEntity, Serializable
     private Transcribe transcribe;
 
     @Column(name = "cm_transcribe_item_start_time")
-    @Convert(converter = DurationConverter.class)
-    private Duration startTime;
+    @Convert(converter = BigDecimalConverter.class)
+    private BigDecimal startTime;
 
     @Column(name = "cm_transcribe_item_end_time")
-    @Convert(converter = DurationConverter.class)
-    private Duration endTime;
+    @Convert(converter = BigDecimalConverter.class)
+    private BigDecimal endTime;
 
     @Column(name = "cm_transcribe_item_confidence")
     private int confidence;
@@ -90,23 +90,31 @@ public class TranscribeItem implements AcmObject, AcmEntity, Serializable
         this.transcribe = transcribe;
     }
 
-    public Duration getStartTime()
+    public BigDecimal getStartTime()
     {
         return startTime;
     }
 
-    public void setStartTime(Duration startTime)
+    public void setStartTime(BigDecimal startTime)
     {
+        if (startTime == null)
+        {
+            startTime = new BigDecimal("0");
+        }
         this.startTime = startTime;
     }
 
-    public Duration getEndTime()
+    public BigDecimal getEndTime()
     {
         return endTime;
     }
 
-    public void setEndTime(Duration endTime)
+    public void setEndTime(BigDecimal endTime)
     {
+        if (endTime == null)
+        {
+            endTime = new BigDecimal("0");
+        }
         this.endTime = endTime;
     }
 

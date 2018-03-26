@@ -30,4 +30,6 @@ public interface ReportService
     public boolean saveReportToGroupsMap(Map<String, List<String>> reportToGroupsMap, Authentication auth);
 
     public List<Report> sync() throws Exception;
+
+    public String buildGroupsForReportSolrQuery(Boolean authorized, String reportId, String filterQuery);
 }
