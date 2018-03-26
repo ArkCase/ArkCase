@@ -10,4 +10,15 @@
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
     </bean>
 
+    <bean id="updateTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.UpdateTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
+    <bean id="completeTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.CompleteTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
+    <bean id="cancelTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.CancelTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
 </beans>
