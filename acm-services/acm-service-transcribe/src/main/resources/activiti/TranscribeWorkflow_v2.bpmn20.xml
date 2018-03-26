@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180314162645" modeler:modelId="1043074" modeler:modelVersion="1" modeler:modelLastUpdated="1521044800565">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180319104431" modeler:modelId="1043074" modeler:modelVersion="1" modeler:modelLastUpdated="1521456265929">
   <process id="TranscribeWorkflow" name="TranscribeWorkflow" isExecutable="true">
-    <startEvent id="start">
+    <startEvent id="start" name="Start">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[startEvent1]]></modeler:editor-resource-id>
       </extensionElements>
@@ -72,22 +72,6 @@
         <modeler:editor-resource-id><![CDATA[sid-9816D97E-8F70-4803-A50D-5F438A473162]]></modeler:editor-resource-id>
       </extensionElements>
     </receiveTask>
-    <sequenceFlow id="startToSetStatus" sourceRef="start" targetRef="setStatus">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-4D60EA2A-EBF7-4846-84AE-5169CDB016C2]]></modeler:editor-resource-id>
-      </extensionElements>
-    </sequenceFlow>
-    <sequenceFlow id="setStatusToParallelActionsDecision" sourceRef="setStatus" targetRef="parallelActionsDecision">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-F144456A-06E6-425C-ABB1-EA672A3CF7E9]]></modeler:editor-resource-id>
-      </extensionElements>
-    </sequenceFlow>
-    <sequenceFlow id="parallelActionsDecisionToAuditEvent" sourceRef="parallelActionsDecision" targetRef="auditEvent">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-4CD46914-BC9F-4247-9E4C-491CE6F70B23]]></modeler:editor-resource-id>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PROCESSING'}]]></conditionExpression>
-    </sequenceFlow>
     <sequenceFlow id="parallelActionsToNotifyOwnerOfParentObject" sourceRef="parallelActionsStart" targetRef="notifyOwnerOfTheParentObject">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-A5682786-F668-4337-8047-CC88FEC16C03]]></modeler:editor-resource-id>
@@ -108,56 +92,6 @@
         <modeler:editor-resource-id><![CDATA[sid-CC9624FB-5253-4D3E-A112-426854FCE658]]></modeler:editor-resource-id>
       </extensionElements>
     </sequenceFlow>
-    <sequenceFlow id="notifyOwnerOfTheParentObjectToParalelActions" sourceRef="notifyOwnerOfTheParentObject" targetRef="parallelActionsEnd">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-FA6912F8-1F57-41D0-AD1C-D249878C0936]]></modeler:editor-resource-id>
-      </extensionElements>
-    </sequenceFlow>
-    <sequenceFlow id="auditEventToParalelActions" sourceRef="auditEvent" targetRef="parallelActionsEnd">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-D79BFAF4-62C5-47D3-85D0-E478AA7E6FD4]]></modeler:editor-resource-id>
-      </extensionElements>
-    </sequenceFlow>
-    <sequenceFlow id="endOrCheckProcessingDecisionToEnd" sourceRef="endOrCheckProcessingDecision" targetRef="end">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-B46ECE78-4B9E-4CA8-89F7-D6259487377D]]></modeler:editor-resource-id>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'CANCELLED' || ACTION == 'FAILED' || ACTION == 'COMPLETED'}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="paralelActionsDecisionToParalelActions" sourceRef="parallelActionsDecision" targetRef="parallelActionsStart">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-4DC6996D-FB94-4EE9-B4B9-329ED589FCEF]]></modeler:editor-resource-id>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION != 'PROCESSING'}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="parallelActionsToEndOrCheckProcessingDecision" sourceRef="parallelActionsEnd" targetRef="endOrCheckProcessingDecision">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-ADA1197D-598D-423F-980A-290948571B89]]></modeler:editor-resource-id>
-      </extensionElements>
-    </sequenceFlow>
-    <sequenceFlow id="endOrCheckProcessingDecisionToAutomaticOrManualDecision" sourceRef="endOrCheckProcessingDecision" targetRef="automaticOrManualDecision">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-51115228-F4CA-4CB2-8591-61A383F3DD62]]></modeler:editor-resource-id>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PROCESSING'}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="checkProcessingToWaitOrProcessDecision" sourceRef="checkProcessing" targetRef="waitOrProcessDecision">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-1EF4CFF7-6BE3-4CF6-ACEA-6A148ED0B7DF]]></modeler:editor-resource-id>
-      </extensionElements>
-    </sequenceFlow>
-    <sequenceFlow id="waitOrProcessDecisionToWait" sourceRef="waitOrProcessDecision" targetRef="waitInQueueForAutomatic">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-DA0603A8-E8D0-4D94-AD56-66252F8D7793]]></modeler:editor-resource-id>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'QUEUED'}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="waitOrProcessDecisionToSetStatus" sourceRef="waitOrProcessDecision" targetRef="setStatus">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-1D8F1FFF-4141-4E1B-AE89-241617F9894B]]></modeler:editor-resource-id>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PROCESSING'}]]></conditionExpression>
-    </sequenceFlow>
     <sequenceFlow id="waitToSetStatus" sourceRef="waitInQueueForAutomatic" targetRef="setStatus">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-5A230909-EB70-4994-AF42-38B47DA2F127]]></modeler:editor-resource-id>
@@ -177,6 +111,83 @@
         <modeler:editor-resource-id><![CDATA[sid-9B932E3B-7554-4422-A331-7662F0B3013B]]></modeler:editor-resource-id>
       </extensionElements>
     </receiveTask>
+    <serviceTask id="checkStatus" name="Check Status" activiti:expression="${execution.getId()}">
+      <extensionElements>
+        <activiti:executionListener event="start" delegateExpression="#{transcribeStatusChecker}"/>
+        <modeler:editor-resource-id><![CDATA[sid-5514F989-6FCB-4D07-9897-194164DF4F37]]></modeler:editor-resource-id>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="notifyOwnerOfTheParentObjectToParalelActions" sourceRef="notifyOwnerOfTheParentObject" targetRef="parallelActionsEnd">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-FA6912F8-1F57-41D0-AD1C-D249878C0936]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <exclusiveGateway id="parallelOrExclusiveGatewayDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-1C1093BB-95E9-45D5-A2B5-B681CC161120]]></modeler:editor-resource-id>
+      </extensionElements>
+    </exclusiveGateway>
+    <sequenceFlow id="paralelActionsDecisionToParalelActions" sourceRef="parallelActionsDecision" targetRef="parallelActionsStart">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-4DC6996D-FB94-4EE9-B4B9-329ED589FCEF]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION != 'PROCESSING'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="setStatusToParallelActionsDecision" sourceRef="setStatus" targetRef="parallelActionsDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-F144456A-06E6-425C-ABB1-EA672A3CF7E9]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="startToSetStatus" sourceRef="start" targetRef="setStatus">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-4D60EA2A-EBF7-4846-84AE-5169CDB016C2]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="parallelActionsDecisionToAuditEvent" sourceRef="parallelActionsDecision" targetRef="auditEvent">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-4CD46914-BC9F-4247-9E4C-491CE6F70B23]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PROCESSING'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="auditEventToParallelOrExclusiveGatewayDecision" sourceRef="auditEvent" targetRef="parallelOrExclusiveGatewayDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-1544D200-32CC-40E0-981D-A3E2668E9523]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="parallelActionsToEndOrCheckProcessingDecision" sourceRef="parallelActionsEnd" targetRef="endOrCheckProcessingDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-ADA1197D-598D-423F-980A-290948571B89]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="endOrCheckProcessingDecisionToEnd" sourceRef="endOrCheckProcessingDecision" targetRef="end">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-B46ECE78-4B9E-4CA8-89F7-D6259487377D]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'CANCELLED' || ACTION == 'FAILED' || ACTION == 'COMPLETED'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="endOrCheckProcessingDecisionToCheckProcessing" sourceRef="endOrCheckProcessingDecision" targetRef="checkProcessing">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-5B8FF7CC-73D5-4B2F-BC59-CB72AF607B72]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'QUEUED'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="checkProcessingToWaitOrProcessDecision" sourceRef="checkProcessing" targetRef="waitOrProcessDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-1EF4CFF7-6BE3-4CF6-ACEA-6A148ED0B7DF]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="waitOrProcessDecisionToWait" sourceRef="waitOrProcessDecision" targetRef="waitInQueueForAutomatic">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-DA0603A8-E8D0-4D94-AD56-66252F8D7793]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'QUEUED'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="endOrCheckProcessingDecisionToAutomaticOrManualDecision" sourceRef="endOrCheckProcessingDecision" targetRef="automaticOrManualDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-51115228-F4CA-4CB2-8591-61A383F3DD62]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PROCESSING'}]]></conditionExpression>
+    </sequenceFlow>
     <sequenceFlow id="automaticOrManualDecisionToWaitToComplete" sourceRef="automaticOrManualDecision" targetRef="waitToCompleteForManual">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-092ED66B-F8EA-49A3-A431-C4F64CE771D4]]></modeler:editor-resource-id>
@@ -189,22 +200,28 @@
       </extensionElements>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${TYPE == 'AUTOMATIC'}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="checkStatus" name="Check Status" activiti:class="com.armedia.acm.services.transcribe.checker.TranscribeStatusChecker">
+    <sequenceFlow id="waitOrProcessDecisionToSetStatus" sourceRef="waitOrProcessDecision" targetRef="setStatus">
       <extensionElements>
-        <activiti:executionListener event="start" delegateExpression="#{transcribeStatusChecker}"/>
-        <modeler:editor-resource-id><![CDATA[sid-5514F989-6FCB-4D07-9897-194164DF4F37]]></modeler:editor-resource-id>
+        <modeler:editor-resource-id><![CDATA[sid-1D8F1FFF-4141-4E1B-AE89-241617F9894B]]></modeler:editor-resource-id>
       </extensionElements>
-    </serviceTask>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PROCESSING'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="auditEventToExclusiveGateway" sourceRef="parallelOrExclusiveGatewayDecision" targetRef="endOrCheckProcessingDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-D13A294C-8540-415B-8AC0-5854EDD357A7]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PROCESSING'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="auditEventToParalelActions" sourceRef="parallelOrExclusiveGatewayDecision" targetRef="parallelActionsEnd">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-EFDA6599-FEB8-4FD0-AB9F-D4C02D32BB51]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION != 'PROCESSING'}]]></conditionExpression>
+    </sequenceFlow>
     <sequenceFlow id="waitToCheckStatusToCheckStatus" sourceRef="waitToCheckStatus" targetRef="checkStatus">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-BA8DA548-3363-4803-AA74-A9113C5554B5]]></modeler:editor-resource-id>
       </extensionElements>
-    </sequenceFlow>
-    <sequenceFlow id="checkStatusToWaitToCheckStatus" sourceRef="checkStatus" targetRef="waitToCheckStatus">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-DCC2BA77-DBB2-42DE-A64B-33E3A81F18A8]]></modeler:editor-resource-id>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PROCESSING'}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="waitToCompleteToSetStatus" sourceRef="waitToCompleteForManual" targetRef="setStatus">
       <extensionElements>
@@ -212,17 +229,27 @@
       </extensionElements>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'COMPLETED'}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="checkStatusToSetStatus" sourceRef="checkStatus" targetRef="setStatus">
+    <exclusiveGateway id="cehckStatusDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-B129543D-340D-46E4-956C-33799F4ABE0A]]></modeler:editor-resource-id>
+      </extensionElements>
+    </exclusiveGateway>
+    <sequenceFlow id="sid-69A7E93C-EF6B-4AF1-8ECA-48C2520971FF" sourceRef="checkStatus" targetRef="cehckStatusDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-69A7E93C-EF6B-4AF1-8ECA-48C2520971FF]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="checkStatusToWaitToCheckStatus" sourceRef="cehckStatusDecision" targetRef="waitToCheckStatus">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-DCC2BA77-DBB2-42DE-A64B-33E3A81F18A8]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PROCESSING'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="checkStatusToSetStatus" sourceRef="cehckStatusDecision" targetRef="setStatus">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-31AFD25E-87AB-43C6-B5D4-37AE44094D39]]></modeler:editor-resource-id>
       </extensionElements>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'FAILED' || ACTION == 'COMPLETED'}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="endOrCheckProcessingDecisionToCheckProcessing" sourceRef="endOrCheckProcessingDecision" targetRef="checkProcessing">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-5B8FF7CC-73D5-4B2F-BC59-CB72AF607B72]]></modeler:editor-resource-id>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'QUEUED'}]]></conditionExpression>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_TranscribeWorkflow">
@@ -255,10 +282,10 @@
         <omgdc:Bounds height="28.0" width="28.0" x="973.25" y="754.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endOrCheckProcessingDecision" id="BPMNShape_endOrCheckProcessingDecision">
-        <omgdc:Bounds height="40.0" width="40.0" x="965.0" y="398.0"/>
+        <omgdc:Bounds height="40.0" width="40.0" x="967.25" y="398.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="checkProcessing" id="BPMNShape_checkProcessing">
-        <omgdc:Bounds height="114.0" width="134.0" x="918.0" y="225.0"/>
+        <omgdc:Bounds height="114.0" width="134.0" x="920.25" y="225.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="automaticOrManualDecision" id="BPMNShape_automaticOrManualDecision">
         <omgdc:Bounds height="40.0" width="40.0" x="1155.0" y="398.0"/>
@@ -273,14 +300,20 @@
         <omgdc:Bounds height="31.0" width="31.0" x="1245.0" y="402.5"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="waitToCompleteForManual" id="BPMNShape_waitToCompleteForManual">
-        <omgdc:Bounds height="80.0" width="100.0" x="1125.0" y="507.5"/>
+        <omgdc:Bounds height="80.0" width="100.0" x="1125.0" y="495.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="checkStatus" id="BPMNShape_checkStatus">
         <omgdc:Bounds height="80.0" width="100.0" x="1320.0" y="378.0"/>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="parallelOrExclusiveGatewayDecision" id="BPMNShape_parallelOrExclusiveGatewayDecision">
+        <omgdc:Bounds height="40.0" width="40.0" x="810.0" y="527.5"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cehckStatusDecision" id="BPMNShape_cehckStatusDecision">
+        <omgdc:Bounds height="40.0" width="40.0" x="1440.0" y="398.0"/>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="endOrCheckProcessingDecisionToAutomaticOrManualDecision" id="BPMNEdge_endOrCheckProcessingDecisionToAutomaticOrManualDecision">
-        <omgdi:waypoint x="1004.5502645502645" y="418.44973544973544"/>
-        <omgdi:waypoint x="1155.0526315789473" y="418.0526315789474"/>
+        <omgdi:waypoint x="1006.8008701472556" y="418.4491298527443"/>
+        <omgdi:waypoint x="1155.0532623169108" y="418.0532623169108"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="waitOrProcessDecisionToWait" id="BPMNEdge_waitOrProcessDecisionToWait">
         <omgdi:waypoint x="1175.4" y="345.4"/>
@@ -294,29 +327,18 @@
         <omgdi:waypoint x="265.0" y="378.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="checkStatusToSetStatus" id="BPMNEdge_checkStatusToSetStatus">
-        <omgdi:waypoint x="1370.0" y="378.0"/>
-        <omgdi:waypoint x="1370.0" y="153.0"/>
+        <omgdi:waypoint x="1460.5" y="398.5"/>
+        <omgdi:waypoint x="1460.5" y="153.0"/>
         <omgdi:waypoint x="239.5" y="153.0"/>
         <omgdi:waypoint x="239.99778761061947" y="378.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="parallelActionsDecisionToAuditEvent" id="BPMNEdge_parallelActionsDecisionToAuditEvent">
-        <omgdi:waypoint x="445.5" y="437.5"/>
-        <omgdi:waypoint x="445.5" y="573.75"/>
-        <omgdi:waypoint x="647.5" y="573.75"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="endOrCheckProcessingDecisionToCheckProcessing" id="BPMNEdge_endOrCheckProcessingDecisionToCheckProcessing">
-        <omgdi:waypoint x="985.375" y="398.375"/>
-        <omgdi:waypoint x="985.0062111801242" y="339.0"/>
+        <omgdi:waypoint x="987.625" y="398.375"/>
+        <omgdi:waypoint x="987.2562111801242" y="339.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="endOrCheckProcessingDecisionToEnd" id="BPMNEdge_endOrCheckProcessingDecisionToEnd">
-        <omgdi:waypoint x="985.5946619217082" y="437.40533807829183"/>
-        <omgdi:waypoint x="987.1799007356827" y="754.0001754977735"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="checkStatusToWaitToCheckStatus" id="BPMNEdge_checkStatusToWaitToCheckStatus">
-        <omgdi:waypoint x="1370.0" y="458.0"/>
-        <omgdi:waypoint x="1370.0" y="487.0"/>
-        <omgdi:waypoint x="1260.5" y="487.0"/>
-        <omgdi:waypoint x="1260.5" y="433.5"/>
+        <omgdi:waypoint x="987.7227793696275" y="437.5272206303725"/>
+        <omgdi:waypoint x="987.2700285918074" y="754.0000143265962"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="parallelActionsToNotifyOwnerOfTheMedia" id="BPMNEdge_parallelActionsToNotifyOwnerOfTheMedia">
         <omgdi:waypoint x="575.5" y="398.5"/>
@@ -328,8 +350,59 @@
         <omgdi:waypoint x="870.0" y="418.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="automaticOrManualDecisionToWaitToComplete" id="BPMNEdge_automaticOrManualDecisionToWaitToComplete">
-        <omgdi:waypoint x="1175.4260700389104" y="437.5739299610895"/>
-        <omgdi:waypoint x="1175.15503875969" y="507.5"/>
+        <omgdi:waypoint x="1175.4181034482758" y="437.5818965517241"/>
+        <omgdi:waypoint x="1175.1716738197424" y="495.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="paralelActionsDecisionToParalelActions" id="BPMNEdge_paralelActionsDecisionToParalelActions">
+        <omgdi:waypoint x="464.5736434108527" y="418.4263565891473"/>
+        <omgdi:waypoint x="555.0769230769231" y="418.0769230769231"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="auditEventToParalelActions" id="BPMNEdge_auditEventToParalelActions">
+        <omgdi:waypoint x="830.5" y="528.0"/>
+        <omgdi:waypoint x="830.5" y="471.3333435058594"/>
+        <omgdi:waypoint x="890.0" y="471.3333435058594"/>
+        <omgdi:waypoint x="890.0" y="438.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="automaticOrManualDecisionToWaitToCheckStatus" id="BPMNEdge_automaticOrManualDecisionToWaitToCheckStatus">
+        <omgdi:waypoint x="1194.612426035503" y="418.38757396449705"/>
+        <omgdi:waypoint x="1245.0002681591309" y="418.09117489318163"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="setStatusToParallelActionsDecision" id="BPMNEdge_setStatusToParallelActionsDecision">
+        <omgdi:waypoint x="315.0" y="418.1385041551247"/>
+        <omgdi:waypoint x="425.44444444444446" y="418.44444444444446"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="waitToCheckStatusToCheckStatus" id="BPMNEdge_waitToCheckStatusToCheckStatus">
+        <omgdi:waypoint x="1276.9998316666579" y="418.42660627675843"/>
+        <omgdi:waypoint x="1320.0" y="418.22935779816515"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="waitToCompleteToSetStatus" id="BPMNEdge_waitToCompleteToSetStatus">
+        <omgdi:waypoint x="1225.0" y="535.0"/>
+        <omgdi:waypoint x="1496.5833740234375" y="535.0"/>
+        <omgdi:waypoint x="1496.5833740234375" y="113.99999999999994"/>
+        <omgdi:waypoint x="186.5" y="113.99999999999994"/>
+        <omgdi:waypoint x="186.5" y="398.0"/>
+        <omgdi:waypoint x="215.0" y="398.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="auditEventToExclusiveGateway" id="BPMNEdge_auditEventToExclusiveGateway">
+        <omgdi:waypoint x="849.5" y="548.0"/>
+        <omgdi:waypoint x="940.0" y="548.0"/>
+        <omgdi:waypoint x="940.0" y="418.0"/>
+        <omgdi:waypoint x="967.25" y="418.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="parallelActionsDecisionToAuditEvent" id="BPMNEdge_parallelActionsDecisionToAuditEvent">
+        <omgdi:waypoint x="445.5" y="437.5"/>
+        <omgdi:waypoint x="445.5" y="573.75"/>
+        <omgdi:waypoint x="647.5" y="573.75"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-69A7E93C-EF6B-4AF1-8ECA-48C2520971FF" id="BPMNEdge_sid-69A7E93C-EF6B-4AF1-8ECA-48C2520971FF">
+        <omgdi:waypoint x="1420.0" y="418.0"/>
+        <omgdi:waypoint x="1440.0" y="418.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="checkStatusToWaitToCheckStatus" id="BPMNEdge_checkStatusToWaitToCheckStatus">
+        <omgdi:waypoint x="1460.5" y="437.5"/>
+        <omgdi:waypoint x="1460.5" y="487.0"/>
+        <omgdi:waypoint x="1260.5" y="487.0"/>
+        <omgdi:waypoint x="1260.5" y="433.5"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="parallelActionsToAuditEvent" id="BPMNEdge_parallelActionsToAuditEvent">
         <omgdi:waypoint x="575.5" y="437.5"/>
@@ -341,21 +414,16 @@
         <omgdi:waypoint x="890.0" y="291.5"/>
         <omgdi:waypoint x="890.0" y="398.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="paralelActionsDecisionToParalelActions" id="BPMNEdge_paralelActionsDecisionToParalelActions">
-        <omgdi:waypoint x="464.5736434108527" y="418.4263565891473"/>
-        <omgdi:waypoint x="555.0769230769231" y="418.0769230769231"/>
+      <bpmndi:BPMNEdge bpmnElement="auditEventToParallelOrExclusiveGatewayDecision" id="BPMNEdge_auditEventToParallelOrExclusiveGatewayDecision">
+        <omgdi:waypoint x="780.5" y="547.5"/>
+        <omgdi:waypoint x="810.0" y="547.5"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="parallelActionsToEndOrCheckProcessingDecision" id="BPMNEdge_parallelActionsToEndOrCheckProcessingDecision">
-        <omgdi:waypoint x="909.6010638297872" y="418.3989361702128"/>
-        <omgdi:waypoint x="965.1052631578947" y="418.10526315789474"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="auditEventToParalelActions" id="BPMNEdge_auditEventToParalelActions">
-        <omgdi:waypoint x="780.5" y="547.5"/>
-        <omgdi:waypoint x="890.0" y="547.5"/>
-        <omgdi:waypoint x="890.0" y="438.0"/>
+        <omgdi:waypoint x="909.5987012987013" y="418.4012987012987"/>
+        <omgdi:waypoint x="967.3528277634962" y="418.1028277634961"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="checkProcessingToWaitOrProcessDecision" id="BPMNEdge_checkProcessingToWaitOrProcessDecision">
-        <omgdi:waypoint x="1052.0" y="310.5"/>
+        <omgdi:waypoint x="1054.25" y="310.5"/>
         <omgdi:waypoint x="1086.75" y="310.5"/>
         <omgdi:waypoint x="1086.75" y="365.0"/>
         <omgdi:waypoint x="1155.0" y="365.0"/>
@@ -364,35 +432,15 @@
         <omgdi:waypoint x="150.0" y="418.0"/>
         <omgdi:waypoint x="215.0" y="418.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="automaticOrManualDecisionToWaitToCheckStatus" id="BPMNEdge_automaticOrManualDecisionToWaitToCheckStatus">
-        <omgdi:waypoint x="1194.612426035503" y="418.38757396449705"/>
-        <omgdi:waypoint x="1245.0002681591309" y="418.09117489318163"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="waitToSetStatus" id="BPMNEdge_waitToSetStatus">
         <omgdi:waypoint x="1175.0" y="225.0"/>
         <omgdi:waypoint x="1175.0" y="211.0"/>
         <omgdi:waypoint x="290.0" y="211.0"/>
         <omgdi:waypoint x="290.0" y="378.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="setStatusToParallelActionsDecision" id="BPMNEdge_setStatusToParallelActionsDecision">
-        <omgdi:waypoint x="315.0" y="418.1385041551247"/>
-        <omgdi:waypoint x="425.44444444444446" y="418.44444444444446"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="parallelActionsToNotifyOwnerOfParentObject" id="BPMNEdge_parallelActionsToNotifyOwnerOfParentObject">
         <omgdi:waypoint x="594.6266122098023" y="418.37338779019774"/>
         <omgdi:waypoint x="650.0" y="418.00683322656414"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="waitToCheckStatusToCheckStatus" id="BPMNEdge_waitToCheckStatusToCheckStatus">
-        <omgdi:waypoint x="1276.9998316666579" y="418.42660627675843"/>
-        <omgdi:waypoint x="1320.0" y="418.22935779816515"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="waitToCompleteToSetStatus" id="BPMNEdge_waitToCompleteToSetStatus">
-        <omgdi:waypoint x="1225.0" y="547.5"/>
-        <omgdi:waypoint x="1436.5" y="547.5"/>
-        <omgdi:waypoint x="1436.5" y="113.99999999999994"/>
-        <omgdi:waypoint x="186.5" y="113.99999999999994"/>
-        <omgdi:waypoint x="186.5" y="398.0"/>
-        <omgdi:waypoint x="215.0" y="398.0"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

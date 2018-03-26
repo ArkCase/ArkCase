@@ -1,5 +1,6 @@
 package com.armedia.acm.services.transcribe.service;
 
+import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -34,6 +36,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     private TranscribeBusinessProcessRulesExecutor transcribeBusinessProcessRulesExecutor;
     private RuntimeService activitiRuntimeService;
     private TranscribeServiceFactory transcribeServiceFactory;
+    private ArkCaseBeanUtils transcribeArkCaseBeanUtils;
 
     @Override
     @Transactional
@@ -102,7 +105,48 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     @Override
     public Transcribe save(Transcribe transcribe) throws SaveTranscribeException
     {
-        return null;
+        return getTranscribeDao().save(transcribe);
+    }
+
+    @Override
+    public Transcribe copy(Transcribe transcribe, EcmFileVersion ecmFileVersion) throws CreateTranscribeException
+    {
+        Transcribe copy = null;
+        try
+        {
+            copy = new Transcribe();
+            copy.setMediaEcmFileVersion(ecmFileVersion);
+            getTranscribeArkCaseBeanUtils().copyProperties(copy, transcribe);
+        }
+        catch (IllegalAccessException | InvocationTargetException e)
+        {
+            LOG.warn("Could not copy properties for Transcribe object with ID=[{}]. REASON=[{}]", transcribe != null ? transcribe.getId() : null, e.getMessage());
+        }
+
+        if (copy != null)
+        {
+            Transcribe savedCopy = getTranscribeDao().save(copy);
+
+            if (StringUtils.isNotEmpty(transcribe.getProcessId()))
+            {
+                ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables().processInstanceId(transcribe.getProcessId()).singleResult();
+                if (processInstance != null)
+                {
+                    List<Long> ids = (List<Long>) processInstance.getProcessVariables().get(TranscribeBusinessProcessVariableKey.IDS.toString());
+                    if (ids == null)
+                    {
+                        ids = new ArrayList<>();
+                    }
+
+                    ids.add(savedCopy.getId());
+                    getActivitiRuntimeService().setVariable(processInstance.getId(), TranscribeBusinessProcessVariableKey.IDS.toString(), ids);
+                }
+            }
+
+            return savedCopy;
+        }
+
+        throw new CreateTranscribeException(String.format("Could not create copy for Transcribe object with ID=[{}]", transcribe != null ? transcribe.getId() : null));
     }
 
     @Override
@@ -254,6 +298,19 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     }
 
     @Override
+    public void signal(ProcessInstance processInstance, String status, String action)
+    {
+        if (processInstance != null && StringUtils.isNotEmpty(status) && StringUtils.isNotEmpty(action))
+        {
+            String statusKey = TranscribeBusinessProcessVariableKey.STATUS.toString();
+            String actionKey = TranscribeBusinessProcessVariableKey.ACTION.toString();
+            getActivitiRuntimeService().setVariable(processInstance.getId(), statusKey, status);
+            getActivitiRuntimeService().setVariable(processInstance.getId(), actionKey, action);
+            getActivitiRuntimeService().signal(processInstance.getId());
+        }
+    }
+
+    @Override
     public TranscribeServiceFactory getTranscribeServiceFactory()
     {
         return transcribeServiceFactory;
@@ -323,7 +380,6 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         // TODO: Restrict only for Case/Complaints?
         return isFileVersionTranscribable(ecmFileVersion) &&
                 isTranscribeOn() &&
-                isAutomaticTranscribeOn() &&
                 isMediaDurationAllowed(ecmFileVersion);
     }
 
@@ -438,8 +494,10 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put(TranscribeBusinessProcessVariableKey.IDS.toString(), ids);
         processVariables.put(TranscribeBusinessProcessVariableKey.REMOTE_ID.toString(), transcribe.getRemoteId());
-        processVariables.put(TranscribeBusinessProcessVariableKey.STATUS.toString(), TranscribeStatusType.QUEUED);
-        processVariables.put(TranscribeBusinessProcessVariableKey.ACTION.toString(), TranscribeActionType.QUEUED);
+        processVariables.put(TranscribeBusinessProcessVariableKey.STATUS.toString(), TranscribeStatusType.QUEUED.toString());
+        processVariables.put(TranscribeBusinessProcessVariableKey.ACTION.toString(), TranscribeActionType.QUEUED.toString());
+        processVariables.put(TranscribeBusinessProcessVariableKey.TYPE.toString(), transcribe.getType());
+        processVariables.put(TranscribeBusinessProcessVariableKey.CREATED.toString(), new Date());
 
         ProcessInstance processInstance = getActivitiRuntimeService().startProcessInstanceByKey(transcribeBusinessProcessModel.getName(), processVariables);
 
@@ -520,5 +578,15 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
     {
         this.activitiRuntimeService = activitiRuntimeService;
+    }
+
+    public ArkCaseBeanUtils getTranscribeArkCaseBeanUtils()
+    {
+        return transcribeArkCaseBeanUtils;
+    }
+
+    public void setTranscribeArkCaseBeanUtils(ArkCaseBeanUtils transcribeArkCaseBeanUtils)
+    {
+        this.transcribeArkCaseBeanUtils = transcribeArkCaseBeanUtils;
     }
 }

@@ -80,6 +80,7 @@
         <property name="fileService" ref="ecmFileService"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
         <property name="fileTransaction" ref="ecmFileTransaction"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 
     <bean id="subFolderListAPIController" class="com.armedia.acm.plugins.ecm.web.api.SubFolderListAPIController">
