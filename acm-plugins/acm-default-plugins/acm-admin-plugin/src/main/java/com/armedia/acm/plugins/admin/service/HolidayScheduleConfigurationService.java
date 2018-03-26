@@ -30,7 +30,7 @@ public class HolidayScheduleConfigurationService
     {
         String holidayScheduleConfigJson = Objects.nonNull(holidayScheduleConf)
                 ? getObjectConverter().getJsonMarshaller().marshal(holidayScheduleConf)
-                : "";
+                : "{}";
 
         try
         {
