@@ -1,7 +1,14 @@
 package com.armedia.acm.services.transcribe.utils;
 
+import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
+import com.armedia.acm.services.transcribe.model.TranscribeItem;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -12,6 +19,8 @@ import java.util.function.Predicate;
  */
 public class TranscribeUtils
 {
+    private final static Logger LOG = LoggerFactory.getLogger(TranscribeUtils.class);
+
     public static String getFirstWords(String text, int numberOfWords)
     {
         if (text != null)
@@ -37,5 +46,40 @@ public class TranscribeUtils
     {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
         return t -> seen.add(propertyExtractor.apply(t));
+    }
+
+    public static List<TranscribeItem> clone(List<TranscribeItem> items)
+    {
+        List<String> excludeFields = new ArrayList<>();
+        excludeFields.add("className");
+
+        ArkCaseBeanUtils arkCaseBeanUtils = new ArkCaseBeanUtils();
+        arkCaseBeanUtils.setExcludeFields(excludeFields);
+
+        if (items != null)
+        {
+            List<TranscribeItem> clonedItems = new ArrayList<>();
+            items.forEach(item -> {
+                TranscribeItem clone = null;
+                try
+                {
+                    clone =  new TranscribeItem();
+                    arkCaseBeanUtils.copyProperties(clone, item);
+                }
+                catch (IllegalAccessException | InvocationTargetException e)
+                {
+                    LOG.warn("Could not copy properties from [{}] to [{}]", item, clone);
+                }
+
+                if (clone != null)
+                {
+                     clonedItems.add(clone);
+                }
+            });
+
+            return clonedItems;
+        }
+
+        return null;
     }
 }
