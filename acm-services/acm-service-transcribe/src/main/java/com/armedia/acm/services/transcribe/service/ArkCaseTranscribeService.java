@@ -150,7 +150,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
             }
         }
 
-        throw new SaveTranscribeException(String.format("Could not complete Transcribe object with ID=[%d]", id));
+        throw new SaveTranscribeException(String.format("Could not cancel Transcribe object with ID=[%d]", id));
     }
 
     @Override
