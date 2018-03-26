@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.transcribe.AmazonTranscribe;
 import com.amazonaws.services.transcribe.AmazonTranscribeClientBuilder;
 import com.amazonaws.services.transcribe.model.*;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
@@ -17,14 +18,30 @@ import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
 import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
 import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
 import com.armedia.acm.services.transcribe.model.Transcribe;
+import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
+import com.armedia.acm.services.transcribe.model.TranscribeItem;
+import com.armedia.acm.services.transcribe.model.TranscribeStatusType;
 import com.armedia.acm.services.transcribe.provider.aws.credentials.ArkCaseAWSCredentialsProviderChain;
 import com.armedia.acm.services.transcribe.provider.aws.model.AWSTranscribeConfiguration;
+import com.armedia.acm.services.transcribe.provider.aws.model.transcript.AWSTranscript;
+import com.armedia.acm.services.transcribe.provider.aws.model.transcript.AWSTranscriptAlternative;
+import com.armedia.acm.services.transcribe.provider.aws.model.transcript.AWSTranscriptItem;
+import com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService;
 import com.armedia.acm.services.transcribe.service.TranscribeService;
 import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,10 +49,14 @@ import java.util.List;
  */
 public class AWSTranscribeService implements TranscribeService
 {
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
     private AmazonS3 s3Client;
     private AmazonTranscribe transcribeClient;
     private EcmFileTransaction ecmFileTransaction;
     private AWSTranscribeConfigurationPropertiesService awsTranscribeConfigurationPropertiesService;
+    private MuleContextManager muleContextManager;
+    private TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
     private String credentialConfigurationFileLocation;
 
     public void init() throws GetConfigurationException
@@ -78,7 +99,48 @@ public class AWSTranscribeService implements TranscribeService
     @Override
     public Transcribe get(String remoteId) throws GetTranscribeException
     {
-        return null;
+        if (StringUtils.isNotEmpty(remoteId))
+        {
+            try
+            {
+                GetTranscriptionJobRequest request = new GetTranscriptionJobRequest();
+                request.setTranscriptionJobName(remoteId);
+
+                GetTranscriptionJobResult result = getTranscribeClient().getTranscriptionJob(request);
+                String resultStatus = result.getTranscriptionJob().getTranscriptionJobStatus();
+
+                Transcribe transcribe = new Transcribe();
+                if (TranscriptionJobStatus.COMPLETED.toString().equals(resultStatus))
+                {
+                    transcribe.setTranscribeItems(generateTranscribeItems(result));
+                    transcribe.setStatus(TranscribeStatusType.COMPLETED.toString());
+                    transcribe.setRemoteId(remoteId);
+                }
+                else
+                {
+                    String status = TranscribeStatusType.PROCESSING.toString();
+                    switch (TranscriptionJobStatus.fromValue(resultStatus))
+                    {
+                        case IN_PROGRESS:
+                            status = TranscribeStatusType.PROCESSING.toString();
+                            break;
+                        case FAILED:
+                            status = TranscribeStatusType.FAILED.toString();
+                            break;
+                    }
+                    transcribe.setStatus(status);
+                    transcribe.setRemoteId(remoteId);
+                }
+
+                return transcribe;
+            }
+            catch (MuleException | AmazonServiceException e)
+            {
+                throw new GetTranscribeException(String.format("Unable to upload media file to Amazon. REASON=[%s].", e.getMessage()), e);
+            }
+        }
+
+        throw new GetTranscribeException("Unable to get transcribe job on Amazon. Remote ID not provided.");
     }
 
     @Override
@@ -176,6 +238,165 @@ public class AWSTranscribeService implements TranscribeService
         throw new CreateTranscribeException("Unable to start transcribe job on Amazon. Transcribe not provided.");
     }
 
+    private List<TranscribeItem> generateTranscribeItems(GetTranscriptionJobResult result) throws MuleException
+    {
+        if (result != null && result.getTranscriptionJob().getTranscript() != null)
+        {
+            String url = result.getTranscriptionJob().getTranscript().getTranscriptFileUri();
+
+            // Mule Flow MUST contain 'https://' string in the definition itself of the endpoint
+            String urlWithoutProtocol = url.replace("https://", "");
+
+            MuleMessage message = getMuleContextManager().send("vm://getProviderTranscribe.in", urlWithoutProtocol);
+
+            MuleException muleException = message.getInboundProperty("getProviderTranscribeException");
+
+            if (muleException != null)
+            {
+                throw muleException;
+            }
+
+            try
+            {
+                return convertJsonStringToListOfTranscribeItems(message.getPayloadAsString());
+            }
+            catch (Exception e)
+            {
+                LOG.error("Failed to convert Amazon JSON output to list of TranscribeItem objects. REASON=[{}]", e.getMessage(), e);
+            }
+        }
+
+        return null;
+    }
+
+    private List<TranscribeItem> convertJsonStringToListOfTranscribeItems(String jsonString) throws GetConfigurationException
+    {
+        TranscribeConfiguration configuration = getTranscribeConfigurationPropertiesService().get();
+        List<TranscribeItem> items = new ArrayList<>();
+
+        try
+        {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            AWSTranscript awsTranscript = objectMapper.readValue(jsonString, AWSTranscript.class);
+
+            int counter = 0;
+            BigDecimal startTime = null;
+            BigDecimal endTime = null;
+            BigDecimal confidence = new BigDecimal("0");
+            int confidenceCounter = 0;
+            String text = "";
+            List<AWSTranscriptItem> awsTranscriptItems = awsTranscript.getResult().getItems();
+            int size = awsTranscriptItems.size();
+            for (int i = 0; i < size; i++)
+            {
+                AWSTranscriptItem awsTranscriptItem = awsTranscriptItems.get(i);
+                boolean punctuation = "punctuation".equalsIgnoreCase(awsTranscriptItem.getType());
+
+                if (!punctuation)
+                {
+                    if (startTime == null && awsTranscriptItem.getStartTime() != null)
+                    {
+                        startTime = new BigDecimal(awsTranscriptItem.getStartTime());
+                    }
+
+                    if (awsTranscriptItem.getEndTime() != null)
+                    {
+                        endTime = new BigDecimal(awsTranscriptItem.getEndTime());
+                    }
+
+                    counter++;
+                }
+
+                if (awsTranscriptItem.getAlternatives() != null && awsTranscriptItem.getAlternatives().size() > 0)
+                {
+                    AWSTranscriptAlternative awsTranscriptAlternative = getBestAWSTranscriptAlternative(awsTranscriptItem.getAlternatives());
+
+                    if (awsTranscriptAlternative != null && awsTranscriptAlternative.getConfidence() != null)
+                    {
+                        BigDecimal confidenceAsBigDecimal = new BigDecimal(awsTranscriptAlternative.getConfidence());
+                        confidence = confidence.add(confidenceAsBigDecimal);
+                        confidenceCounter++;
+                    }
+
+                    String textDelimiter = !punctuation ? " " : "";
+                    if (awsTranscriptAlternative != null && StringUtils.isNotEmpty(awsTranscriptAlternative.getContent()))
+                    {
+                        text = (text + textDelimiter + awsTranscriptAlternative.getContent()).trim();
+                    }
+                }
+
+                if (counter >= configuration.getWordCountPerItem() || i == size - 1)
+                {
+                    if (!isNextPunctuation(i, size, awsTranscriptItems))
+                    {
+                        TranscribeItem item = new TranscribeItem();
+                        item.setStartTime(startTime);
+                        item.setEndTime(endTime);
+                        item.setText(text);
+
+                        int conf = confidence.intValue() == 0 || confidenceCounter == 0 ? 0 : confidence.multiply(new BigDecimal(100)).intValue() / confidenceCounter;
+                        item.setConfidence(conf);
+
+                        items.add(item);
+
+                        counter = 0;
+                        startTime = null;
+                        endTime = null;
+                        confidence = new BigDecimal("0");
+                        confidenceCounter = 0;
+                        text = "";
+                    }
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            LOG.warn("Could not create AWSTranscript object from JSON string. REASON=[{}], JSON=[{}]", e.getMessage(), jsonString);
+        }
+
+        return items;
+    }
+
+    private boolean isNextPunctuation(int i, int size, List<AWSTranscriptItem> awsTranscriptItems)
+    {
+        if (i <= size - 2 && awsTranscriptItems.get(i+1) != null && "punctuation".equalsIgnoreCase(awsTranscriptItems.get(i+1).getType()))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private AWSTranscriptAlternative getBestAWSTranscriptAlternative(List<AWSTranscriptAlternative> alternatives)
+    {
+        if (alternatives == null || alternatives.size() == 0)
+        {
+            return null;
+        }
+
+        if (alternatives.size() == 1)
+        {
+            return alternatives.get(0);
+        }
+
+        alternatives.sort((AWSTranscriptAlternative a1, AWSTranscriptAlternative a2) -> (toIntWithWholePrecision(a2.getConfidence()) - toIntWithWholePrecision(a1.getConfidence())));
+
+        return alternatives.get(0);
+    }
+
+    private int toIntWithWholePrecision(String confidence)
+    {
+        // Confidence is in the format with 4 digits after comma, for example 0.9878
+        // Convert it to whole number with all digits to be able to use in lambda sort method
+        if (StringUtils.isNotEmpty(confidence))
+        {
+            BigDecimal conf = new BigDecimal(confidence);
+            return conf.multiply(new BigDecimal(10000)).intValue();
+        }
+
+        return 0;
+    }
+
     public AmazonS3 getS3Client()
     {
         return s3Client;
@@ -211,9 +432,29 @@ public class AWSTranscribeService implements TranscribeService
         return awsTranscribeConfigurationPropertiesService;
     }
 
+    public MuleContextManager getMuleContextManager()
+    {
+        return muleContextManager;
+    }
+
+    public void setMuleContextManager(MuleContextManager muleContextManager)
+    {
+        this.muleContextManager = muleContextManager;
+    }
+
     public void setAwsTranscribeConfigurationPropertiesService(AWSTranscribeConfigurationPropertiesService awsTranscribeConfigurationPropertiesService)
     {
         this.awsTranscribeConfigurationPropertiesService = awsTranscribeConfigurationPropertiesService;
+    }
+
+    public TranscribeConfigurationPropertiesService getTranscribeConfigurationPropertiesService()
+    {
+        return transcribeConfigurationPropertiesService;
+    }
+
+    public void setTranscribeConfigurationPropertiesService(TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService)
+    {
+        this.transcribeConfigurationPropertiesService = transcribeConfigurationPropertiesService;
     }
 
     public String getCredentialConfigurationFileLocation()

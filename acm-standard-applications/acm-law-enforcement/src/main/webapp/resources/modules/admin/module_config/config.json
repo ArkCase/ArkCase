@@ -1298,16 +1298,14 @@
                 "type": "p/transcription",
                 "label": "admin.transcription.title",
                 "icon": "fa fa-wrench",
-                "components": [],
-                "hidden": true
+                "components": []
             },
             {
                 "type": "p/transcription/transcriptionManagement",
                 "label": "admin.transcription.transcriptionManagement",
                 "components": [
                     "transcription-management"
-                ],
-                "hidden": true
+                ]
             }
         ]
     }
