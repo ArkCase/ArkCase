@@ -985,6 +985,35 @@
                     "headerCellFilter": "translate"
                 }
             ]
+        },
+        {
+            "id": "holidaySchedule",
+            "title": "admin.application.holidaySchedule.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "holidayName",
+                    "displayName": "admin.application.holidaySchedule.grid.holidayName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "holidayDate",
+                    "displayName": "admin.application.holidaySchedule.grid.holidayDate",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20
         }
     ],
     "tree": {
@@ -1203,6 +1232,13 @@
                 "label": "admin.application.auditHistory.config.title",
                 "components": [
                     "application-audit-history.config"
+                ]
+            },
+            {
+                "type": "p/application/holidaySchedule",
+                "label": "admin.application.holidaySchedule.title",
+                "components": [
+                    "application-holiday-schedule.config"
                 ]
             },
             {

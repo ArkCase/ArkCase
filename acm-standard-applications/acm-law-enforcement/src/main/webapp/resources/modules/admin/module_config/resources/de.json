@@ -574,6 +574,16 @@
                 "historyDays.label": "Audit- und Benachrichtigungsereignisse (in Tagen)",
                 "inform": "Einstellung erfolgreich gespeichert",
                 "apply.label": "Sich bewerben"
+            },
+            "holidaySchedule": {
+                "title": "de_Holiday Schedule",
+                "grid": {
+                    "holidayName": "de_Name of Holiday",
+                    "holidayDate": "de_Date of holiday"
+                },
+                "cancel": "de_Cancel",
+                "save": "de_Save",
+                "message": "de_The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
             }
         },
         "branding.title": "Branding",

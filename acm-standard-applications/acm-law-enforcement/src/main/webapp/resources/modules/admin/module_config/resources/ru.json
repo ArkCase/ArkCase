@@ -573,6 +573,16 @@
                 "historyDays.label": "Сохранять события аудита и уведомления (в днях)",
                 "inform": "Установка успешно сохранена",
                 "apply.label": "Подать заявление"
+            },
+            "holidaySchedule": {
+                "title": "ru_Holiday Schedule",
+                "grid": {
+                    "holidayName": "ru_Name of Holiday",
+                    "holidayDate": "ru_Date of holiday"
+                },
+                "cancel": "ru_Cancel",
+                "save": "ru_Save",
+                "message": "ru_The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
             }
         },
         "branding.title": "Брендинг",
