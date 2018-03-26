@@ -3,12 +3,13 @@
 angular.module('document-details').controller(
         'Document.TranscriptionController',
         [ '$scope', 'DocumentDetails.TranscriptionAppService', 'UtilService', 'MessageService', 'moment', '$modal', 'Admin.TranscriptionManagementService', '$q',
-                function($scope, TranscriptionAppService, Util, MessageService, moment, $modal, TranscriptionManagementService, $q) {
+                function($scope, TranscriptionAppService, Util, MessageService, moment, $modal, TranscriptionManagementService, $q) {     
+                         
 
                     $scope.items = [];
 
                     $scope.$on('document-data', function(event, ecmFile) {
-                        var isMediaFile = !Util.isEmpty(ecmFile) && (ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 || ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0) ? true : false;
+                        var isMediaFile = !Util.isEmpty(ecmFile) && (ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 || ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0);
                         if (!isMediaFile){
                             // terminate execution. It's not media file
                             return;
