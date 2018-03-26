@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
+import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ public class FindComplaintByIdAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/byId/{complaintId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public Complaint findComplaintById(
             @PathVariable("complaintId") Long complaintId,

@@ -13,6 +13,7 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -50,10 +51,6 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     @OneToOne
     @JoinColumn(name = "cm_transcribe_media_file_version_id")
     private EcmFileVersion mediaEcmFileVersion;
-
-    @OneToOne
-    @JoinColumn(name = "cm_transcribe_file_id")
-    private EcmFile transcribeEcmFile;
 
     @Column(name = "cm_transcribe_status")
     private String status;
@@ -95,9 +92,17 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
 
     private void setUpTranscribeItems()
     {
+        wordCount = 0;
         if (getTranscribeItems() != null)
         {
-            getTranscribeItems().forEach(item -> item.setTranscribe(this));
+            getTranscribeItems().forEach(item -> {
+                item.setTranscribe(this);
+                if (item.getText() != null)
+                {
+                    String[] textAsArray = item.getText().split(" ");
+                    wordCount += textAsArray.length;
+                }
+            });
         }
     }
 
@@ -144,11 +149,19 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
 
     public List<TranscribeItem> getTranscribeItems()
     {
+        if (transcribeItems != null)
+        {
+            Collections.sort(transcribeItems);
+        }
         return transcribeItems;
     }
 
     public void setTranscribeItems(List<TranscribeItem> transcribeItems)
     {
+        if (transcribeItems != null)
+        {
+            Collections.sort(transcribeItems);
+        }
         this.transcribeItems = transcribeItems;
     }
 
@@ -160,16 +173,6 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     public void setMediaEcmFileVersion(EcmFileVersion mediaEcmFileVersion)
     {
         this.mediaEcmFileVersion = mediaEcmFileVersion;
-    }
-
-    public EcmFile getTranscribeEcmFile()
-    {
-        return transcribeEcmFile;
-    }
-
-    public void setTranscribeEcmFile(EcmFile transcribeEcmFile)
-    {
-        this.transcribeEcmFile = transcribeEcmFile;
     }
 
     public String getProcessId()

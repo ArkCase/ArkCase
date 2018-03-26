@@ -1,7 +1,7 @@
 package com.armedia.acm.services.transcribe.model;
 
-import com.armedia.acm.services.transcribe.annotation.TranscribeConfigurationProperties;
-import com.armedia.acm.services.transcribe.annotation.TranscribeConfigurationProperty;
+import com.armedia.acm.services.transcribe.annotation.ConfigurationProperties;
+import com.armedia.acm.services.transcribe.annotation.ConfigurationProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -11,38 +11,41 @@ import java.util.Objects;
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/28/2018
  */
-@TranscribeConfigurationProperties(path = "${user.home}/.arkcase/acm/transcribe.properties")
+@ConfigurationProperties(path = "${user.home}/.arkcase/acm/transcribe.properties")
 public class TranscribeConfiguration implements Serializable
 {
-    @TranscribeConfigurationProperty(key = "transcribe.enabled")
+    @ConfigurationProperty(key = "transcribe.enabled")
     private boolean enabled;
 
-    @TranscribeConfigurationProperty(key = "transcribe.automatic.enabled")
+    @ConfigurationProperty(key = "transcribe.automatic.enabled")
     private boolean automaticEnabled;
 
-    @TranscribeConfigurationProperty(key = "transcribe.new.transcribe.for.new.version")
+    @ConfigurationProperty(key = "transcribe.new.transcribe.for.new.version")
     private boolean newTranscriptionForNewVersion;
 
-    @TranscribeConfigurationProperty(key = "transcribe.copy.transcribe.for.new.version")
+    @ConfigurationProperty(key = "transcribe.copy.transcribe.for.new.version")
     private boolean copyTranscriptionForNewVersion;
 
-    @TranscribeConfigurationProperty(key = "transcribe.cost")
+    @ConfigurationProperty(key = "transcribe.cost")
     private BigDecimal cost;
 
-    @TranscribeConfigurationProperty(key = "transcribe.confidence")
+    @ConfigurationProperty(key = "transcribe.confidence")
     private int confidence;
 
-    @TranscribeConfigurationProperty(key = "transcribe.number.of.files.for.processing")
+    @ConfigurationProperty(key = "transcribe.number.of.files.for.processing")
     private int numberOfFilesForProcessing;
 
-    @TranscribeConfigurationProperty(key = "transcribe.word.count.per.item")
+    @ConfigurationProperty(key = "transcribe.word.count.per.item")
     private int wordCountPerItem;
 
-    @TranscribeConfigurationProperty(key = "transcribe.provider")
+    @ConfigurationProperty(key = "transcribe.provider")
     private TranscribeServiceProvider provider;
 
-    @TranscribeConfigurationProperty(key = "transcribe.providers", write = false)
+    @ConfigurationProperty(key = "transcribe.providers", write = false)
     private List<TranscribeServiceProvider> providers;
+
+    @ConfigurationProperty(key = "transcribe.allowed.media.duration.in.seconds", write = false)
+    private long allowedMediaDuration;
 
     public boolean isEnabled()
     {
@@ -152,6 +155,16 @@ public class TranscribeConfiguration implements Serializable
         this.providers = providers;
     }
 
+    public long getAllowedMediaDuration()
+    {
+        return allowedMediaDuration;
+    }
+
+    public void setAllowedMediaDuration(long allowedMediaDuration)
+    {
+        this.allowedMediaDuration = allowedMediaDuration;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -168,15 +181,15 @@ public class TranscribeConfiguration implements Serializable
                 confidence == that.confidence &&
                 numberOfFilesForProcessing == that.numberOfFilesForProcessing &&
                 wordCountPerItem == that.wordCountPerItem &&
-                provider == that.provider;
+                provider == that.provider &&
+                allowedMediaDuration == that.allowedMediaDuration;
     }
 
     @Override
     public int hashCode()
     {
-
         return Objects.hash(enabled, automaticEnabled, newTranscriptionForNewVersion, copyTranscriptionForNewVersion, cost, confidence,
-                numberOfFilesForProcessing, wordCountPerItem, provider);
+                numberOfFilesForProcessing, wordCountPerItem, provider, allowedMediaDuration);
     }
 
     @Override
@@ -192,6 +205,7 @@ public class TranscribeConfiguration implements Serializable
                 ", numberOfFilesForProcessing=" + numberOfFilesForProcessing +
                 ", wordCountPerItem=" + wordCountPerItem +
                 ", provider=" + provider +
+                ", allowedMediaDuration=" + allowedMediaDuration +
                 '}';
     }
 }

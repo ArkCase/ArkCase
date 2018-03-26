@@ -153,8 +153,9 @@ public class CreateFolderByPathAPIController
                     continue;
                 }
 
+                EcmFile original = getEcmFileService().findById(lngDocId);
                 EcmFile copied = getEcmFileService().copyFile(lngDocId, targetObjectId, targetObjectType, newFolder.getId());
-                getFileEventPublisher().publishFileCopiedEvent(copied, auth, ipAddress, true);
+                getFileEventPublisher().publishFileCopiedEvent(copied, original, auth, ipAddress, true);
 
             }
         }

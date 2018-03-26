@@ -8,6 +8,7 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationEventPublisher;
 import com.armedia.acm.plugins.person.service.OrganizationService;
+import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -19,12 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
@@ -51,6 +47,7 @@ public class OrganizationAPIController
 
     @PreAuthorize("#in.organizationId == null or hasPermission(#in.organizationId, 'ORGANIZATION', 'editOrganization')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public Organization upsertOrganization(@RequestBody Organization in, Authentication auth, HttpSession httpSession)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException
@@ -105,6 +102,7 @@ public class OrganizationAPIController
 
     @PreAuthorize("hasPermission(#organizationId, 'ORGANIZATION', 'viewOrganizationPage')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public Organization getOrganization(@PathVariable("id") Long organizationId) throws AcmObjectNotFoundException
     {

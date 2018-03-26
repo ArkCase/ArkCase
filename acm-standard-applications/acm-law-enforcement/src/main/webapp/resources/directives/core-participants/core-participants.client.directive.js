@@ -109,7 +109,7 @@ angular.module('directives').directive(
                                     scope.participantsInit.participantsTitle = $translate
                                             .instant("common.directive.coreParticipants.title");
                                 scope.config = config;
-                                gridHelper.addButton(config, "edit");
+                                gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
                                 gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
                                 gridHelper.setColumnDefs(config);
                                 gridHelper.setBasicOptions(config);
@@ -236,28 +236,20 @@ angular.module('directives').directive(
 
                             scope.editRow = function(rowEntity) {
                                 scope.participant = rowEntity;
+                                var item = rowEntity;
+                                item.participantTypes = scope.participantTypes;
+                                item.config = scope.config;
+
                                 if (rowEntity.participantLdapId === '*' || Util.isEmpty(rowEntity.participantLdapId)) {
-                                    var item = {
-                                        id : rowEntity.id,
-                                        participantType : rowEntity.participantType,
-                                        participantLdapId : rowEntity.participantLdapId,
-                                        participantTypes : scope.participantTypes,
-                                        selectedType : rowEntity.participantType,
-                                        config : scope.config
-                                    };
+                                    item.selectedType = rowEntity.participantType;
+
                                     showModal(item, true, scope.participantsInit.showReplaceChildrenParticipants);
                                 } else {
                                     var participantDataPromise = ObjectParticipantService.findParticipantById(rowEntity.participantLdapId);
                                     participantDataPromise.then(function(participantData) {
                                         if (!Util.isArrayEmpty(participantData)) {
-                                            var item = {
-                                                id : rowEntity.id,
-                                                participantType : rowEntity.participantType,
-                                                participantLdapId : rowEntity.participantLdapId,
-                                                participantTypes : scope.participantTypes,
-                                                selectedType : participantData[0].object_type_s ? participantData[0].object_type_s : "",
-                                                config : scope.config
-                                            };
+                                            item.selectedType = participantData[0].object_type_s ? participantData[0].object_type_s : "";
+
                                             showModal(item, true, scope.participantsInit.showReplaceChildrenParticipants);
                                         }
                                     })
@@ -290,7 +282,10 @@ angular.module('directives').directive(
                             }
 
                             scope.isDeleteDisabled = function(rowEntity) {
-                                return rowEntity.participantType === typeOwningGroup || rowEntity.participantType === typeAssignee;
+                                return !rowEntity.deletable;
+                            };
+                            scope.isEditDisabled = function(rowEntity) {
+                                return !(rowEntity.editableUser || rowEntity.editableType);
                             };
 
                             var saveObjectInfoAndRefresh = function() {

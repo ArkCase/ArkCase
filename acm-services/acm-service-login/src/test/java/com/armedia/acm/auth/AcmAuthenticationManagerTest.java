@@ -178,6 +178,36 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
     }
 
     @Test(expected = AuthenticationServiceException.class)
+    public void authenticate_emptyUsername_shouldThrowBadCredentials()
+    {
+        Map<String, AuthenticationProvider> providers = getAuthenticationProviderMap();
+
+        BadCredentialsException badCredentialsException = new BadCredentialsException("Bad credentials");
+
+        expect(mockContextHolder.getAllBeansOfType(AuthenticationProvider.class)).andReturn(providers);
+        expect(mockFirstProvider.authenticate(mockAuthentication)).andThrow(badCredentialsException);
+        expect(mockSecondProvider.authenticate(mockAuthentication)).andReturn(null);
+        expect(mockAuthentication.getName()).andReturn("").times(2);
+        expect(mockUserDao.isUserPasswordExpired("")).andReturn(false);
+
+        Capture<AuthenticationServiceException> authenticationServiceExceptionCapture = Capture.newInstance();
+        mockEventPublisher.publishAuthenticationFailure(capture(authenticationServiceExceptionCapture), eq(mockAuthentication));
+        expectLastCall().once();
+
+        replayAll();
+
+        unit.authenticate(mockAuthentication);
+
+        verifyAll();
+
+        AuthenticationServiceException actualException = authenticationServiceExceptionCapture.getValue();
+        AuthenticationServiceException expected = new AuthenticationServiceException(
+                ExceptionUtils.getRootCauseMessage(badCredentialsException), badCredentialsException);
+        assertNotNull(actualException);
+        assertEquals(expected, actualException);
+    }
+
+    @Test(expected = AuthenticationServiceException.class)
     public void authenticate_shouldThrowExceptionAndShowEmailSentMsg()
     {
         Map<String, AuthenticationProvider> providers = getAuthenticationProviderMap();

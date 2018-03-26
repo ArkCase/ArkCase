@@ -1679,6 +1679,7 @@ angular
                                         var selNodes = tree.getSelectedNodes();
                                         var node = tree.getActiveNode();
                                         var nodes = selNodes;
+                                        var config = DocTree.treeConfig;
                                         if (Util.isArrayEmpty(selNodes)) {
                                             nodes = [ node ];
                                         }
@@ -1699,7 +1700,7 @@ angular
                                             if ("file/" == name) {
                                                 handler.execute(nodes, args);
                                             } else {
-                                                DocTree.Command.handleCommand(handler, nodes, args);
+                                                DocTree.Command.handleCommand(handler, nodes, args, config); // + to send the config from above
                                             }
                                         }
                                     }
@@ -1709,7 +1710,7 @@ angular
                                     // continue when onPreCmd returns "true", "undefined" or anything else
                                     //
                                     ,
-                                    handleCommand : function(handler, nodes, args) {
+                                    handleCommand : function(handler, nodes, args, config) {
                                         var rcPre = true;
                                         var rcExe = true;
 
@@ -1720,7 +1721,7 @@ angular
                                             $q.all([ rcPre ]).then(function(preCmdData) {
                                                 if (false !== preCmdData[0]) {
                                                     if (handler.execute) {
-                                                        rcExe = handler.execute(nodes, args);
+                                                        rcExe = handler.execute(nodes, args, config);
                                                     }
                                                     $q.all([ rcExe ]).then(function() {
                                                         if (handler.onPostCmd) {

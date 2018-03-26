@@ -47,12 +47,19 @@ import java.util.stream.Collectors;
 
 public class ReportServiceImpl implements ReportService
 {
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
+
+    private static final String PENTAHO_DASHBOARD_REPORT_EXTENSION = ".xdash";
+    private static final String PENTAHO_ANALYSIS_REPORT_EXTENSION = ".xanalyzer";
+    private static final String PENTAHO_INTERACTIVE_REPORT_EXTENSION = ".prpti";
     private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
     private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
     private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE = "PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE";
     private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/prpti.view";
+    private final String PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE = "PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE";
+    private final String PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer?ts={timestamp}";
+    private final String PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE = "PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE";
+    private final String PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
     private String reportsPropertiesFileLocation;
     private String reportToGroupsMapPropertiesFileLocation;
     private String reportServerConfigPropertiesFileLocation;
@@ -331,10 +338,20 @@ public class ReportServiceImpl implements ReportService
         }
 
         String url = null;
-        if (report.getName() != null && report.getName().endsWith(".prpti"))
+        if (report.getName() != null && report.getName().endsWith(PENTAHO_INTERACTIVE_REPORT_EXTENSION))
         {
             url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE,
                     PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT);
+        }
+        else if (report.getName() != null && report.getName().endsWith(PENTAHO_ANALYSIS_REPORT_EXTENSION))
+        {
+            url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE,
+                    PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE_DEFAULT);
+        }
+        else if (report.getName() != null && report.getName().endsWith(PENTAHO_DASHBOARD_REPORT_EXTENSION))
+        {
+            url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE,
+                    PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE_DEFAULT);
         }
         else
         {
@@ -345,6 +362,7 @@ public class ReportServiceImpl implements ReportService
         if (url != null)
         {
             url = url.replace("{path}", report.getPropertyPath());
+            url = url.replace("{timestamp}", String.valueOf(System.currentTimeMillis()));
         }
 
         return url;
@@ -400,6 +418,33 @@ public class ReportServiceImpl implements ReportService
         }
 
         return new HashMap<>();
+    }
+
+    @Override
+    public String buildGroupsForReportSolrQuery(Boolean authorized, String reportId, String filterQuery)
+    {
+        StringBuilder solrQuery = new StringBuilder();
+        Map<String, List<String>> groupsForReports = getReportToGroupsMap();
+        List<String> groupsForReport = groupsForReports.get(reportId);
+
+        solrQuery.append(
+                "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED");
+
+        if (groupsForReport != null)
+        {
+            solrQuery.append(authorized ? " AND object_id_s:" : " AND -object_id_s:");
+            solrQuery.append(groupsForReport.stream().collect(Collectors.joining("\" OR \"", "(\"", "\")")));
+        }
+        else if (authorized)
+        {
+            return "";
+        }
+
+        if (!filterQuery.isEmpty())
+        {
+            solrQuery.append(" AND name_partial:" + filterQuery);
+        }
+        return solrQuery.toString();
     }
 
     public MuleContextManager getMuleContextManager()
