@@ -127,7 +127,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             { // no permissions found add fallback parent permission
                 String fallbackPermission = getFallbackPermissionName(permission);
                 permissionRules = accessControlRules.getAccessControlRuleList().stream()
-                        .filter(rule -> targetType.equals(rule.getObjectType()) && fallbackPermission.equals(rule.getActionName()))
+                        .filter(rule -> targetType.contains(rule.getObjectType()) && fallbackPermission.equals(rule.getActionName()))
                         .collect(Collectors.toList());
             }
             for (AccessControlRule rule : permissionRules)
