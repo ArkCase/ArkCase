@@ -5,6 +5,14 @@
             "leftnav.item": "Tableau de bord"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "fr_Select your preferred row count.",
+                    "fiveRows": "fr_5",
+                    "tenRows": "fr_10",
+                    "twentyFiveRows": "fr_25"
+                }
+            },
             "casesByQueue": {
                 "title": "Active Case Files by Queue",
                 "description": "Affiche les fichiers de cas actifs par la file d'attente",

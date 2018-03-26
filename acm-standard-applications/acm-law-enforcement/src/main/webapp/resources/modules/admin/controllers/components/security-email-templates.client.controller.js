@@ -11,7 +11,9 @@ angular.module('admin')
                         'Helper.UiGridService',
                         'MessageService',
                         'Dialog.BootboxService',
-                        function($scope, $translate, $modal, emailTemplatesService, HelperUiGridService, MessageService, DialogService) {
+                        'UtilService',
+                        function($scope, $translate, $modal, emailTemplatesService, HelperUiGridService, MessageService, DialogService,
+                                Util) {
 
                             var gridHelper = new HelperUiGridService.Grid({
                                 scope : $scope
@@ -94,12 +96,16 @@ angular.module('admin')
                                 });
 
                                 modalInstance.result.then(function(data) {
-                                    if (!containsExtensionHtml(data.file.name)) {
+                                    if (!Util.isEmpty(data.file) && !containsExtensionHtml(data.file.name)) {
                                         DialogService.alert($translate.instant("admin.security.emailTemplates.modal.uploadError"));
                                     } else {
                                         emailTemplatesService.validateEmailTemplate(data.template).then(
                                                 function(response) {
                                                     if (response.data.validTemplate) {
+                                                        if (!containsExtensionHtml(data.template.templateName)) {
+                                                            data.template.templateName = data.template.templateName.replace(/\s/g, "")
+                                                                    + ".html";
+                                                        }
                                                         emailTemplatesService.saveEmailTemplate(data.template, data.file).then(function() {
                                                             MessageService.succsessAction();
                                                             ReloadGrid();

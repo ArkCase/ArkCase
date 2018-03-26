@@ -4,7 +4,8 @@
             <object-authorization-roles data="rolesData" show-filter="showFilter" object-display-name="name"
                     on-object-selected="onObjSelect" role-display-name="name" on-auth-role-change="onAuthRoleSelected"
                     object-title="{{'admin.security.functionalAccessControl.applicationRole' | translate}}"
-                    filter-data-control="filterData" />
+                    pagination-data-control="scrollLoadData" filter-data-control="filterData"
+                    selected-object="lastSelectedRole" />
         </div>
     </panel-view>
 </div>

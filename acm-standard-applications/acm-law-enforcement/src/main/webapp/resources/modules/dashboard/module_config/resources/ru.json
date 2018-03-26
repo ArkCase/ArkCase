@@ -5,6 +5,14 @@
             "leftnav.item": "Обзор"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "ru_Select your preferred row count.",
+                    "fiveRows": "ru_5",
+                    "tenRows": "ru_10",
+                    "twentyFiveRows": "ru_25"
+                }
+            },
             "casesByQueue": {
                 "title": "Активные файлы дел по очереди",
                 "description": "Отображает файлы активных файлов по очереди",

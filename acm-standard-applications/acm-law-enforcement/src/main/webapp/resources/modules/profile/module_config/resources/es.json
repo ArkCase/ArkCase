@@ -6,6 +6,81 @@
     "profile.menus": {
         "usermenu.item": "Perfil"
     },
+    "profile.mfa": {
+        "title": "Autenticación Multifactorial",
+        "noData": "No hay factores inscritos",
+        "sms": "SMS",
+        "email": "Correo electrónico",
+        "authy": "Token de software Authy",
+        "createSucceeded": "Factor creado con éxito",
+        "createFailed": "Error al crear el factor",
+        "activateSucceeded": "Factor activado con éxito",
+        "activateFailed": "Error al activar el factor",
+        "editSucceeded": "Factor editado con éxito",
+        "editFailed": "Error al editar el factor",
+        "deleteSucceeded": "Factor eliminado con éxito",
+        "deleteFailed": "Error al eliminar el factor",
+        "table": {
+            "title": "Factores de autenticación",
+            "create": "Nuevo Factor",
+            "activate": "Activar el factor",
+            "edit": "Editar el factor",
+            "delete": "Eliminar el factor",
+            "columns": {
+                "factorType": "Tipo",
+                "factorDetails": "Detalles",
+                "status": "Estado"
+            },
+            "factorStatus": {
+                "not_setup": "No registrado",
+                "pending_activation": "Activacion Pendiente",
+                "enrolled": "Registrado",
+                "active": "Activo",
+                "inactive": "Inactivo",
+                "expired": "Caducado"
+            }
+        },
+        "modal": {
+            "create": "Nuevo Factor",
+            "edit": "Editar el factor",
+            "cancel": "Cancelar",
+            "save": "Salvar",
+            "factorType": {
+                "label": "Tipo de factor",
+                "placeholder": "Seleccionar el tipo de factor"
+            },
+            "emailAddress": {
+                "label": "Dirección de correo electrónico",
+                "placeholder": "Ingrese la dirección de correo electrónico"
+            },
+            "phoneNumber": {
+                "label": "Número de teléfono",
+                "placeholder": "Ingrese el número telefónico"
+            }
+        },
+        "activateModal": {
+            "title": "Activar el Factor",
+            "cancel": "Cancelar",
+            "confirm": "Activar",
+            "factorType": {
+                "label": "Tipo de factor",
+                "placeholder": "Seleccionar el tipo de factor"
+            },
+            "sharedSecret": {
+                "label": "Contraseña secreta (Ingrese la contraseña en Authy para generar el código de activación)"
+            },
+            "activationCode": {
+                "label": "Código de activación",
+                "placeholder": "Ingrese el código de activación"
+            }
+        },
+        "deleteModal": {
+            "title": "Confirme la eliminación del factor",
+            "cancel": "Cancelar",
+            "confirm": "Eliminar",
+            "confirmationMessage": "¿Está seguro de que quiere eliminar el factor?"
+        }
+    },
     "profile.subscriptions": {
         "title": "Suscripciones",
         "unsubscribeSelect": "Anular las suscripciones seleccionadas",

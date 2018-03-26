@@ -7,8 +7,31 @@
         "fileType": "File type",
         "status": "Status",
         "name": "Name",
+        "comp.transcription": {
+            "title": "Transcript",
+            "buttons": {
+                "cancel": "Cancel",
+                "transcribe": "Transcribe",
+                "complete": "Complete",
+                "compile": "Compile",
+                "save": "Save"
+            },
+            "startTime": "Start time",
+            "confidence": "Confidence",
+            "corrected": "Corrected",
+            "enterText": "Enter Text",
+            "newRow": "New Row",
+            "mediaViewer": {
+                "length": "Length",
+                "transcriptStatus": "Transcript Status",
+                "confidence": "Confidence",
+                "wordCount": "Word Count",
+                "language": "Language",
+                "fileType": "File Type"
+            }
+        },
         "comp.eventHistory": {
-            "title": "Event History",
+            "title": "History",
             "table.columns": {
                 "eventType": "Event Name",
                 "eventDate": "Created",
@@ -67,7 +90,7 @@
             }
         },
         "comp.versionHistory": {
-            "title": "Version History",
+            "title": "Versions",
             "table.columns": {
                 "creator": "User",
                 "created": "Created",

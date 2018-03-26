@@ -229,9 +229,12 @@ public class AcmBpmnServiceIT
         filesToDelete.add(apd1.getFileName());
         log.info("AcmProcessDefinition deployed: " + apd1);
 
-        List<AcmProcessDefinition> acmProcessDefinitionList = acmBpmnService.getVersionHistory(apd);
+        List<AcmProcessDefinition> acmProcessDefinitionList = acmBpmnService.getVersionHistory(apd1);
 
-        assertEquals(2, acmProcessDefinitionList.size());
+        // getVersionHistory should return all OTHER versions, aside from the version of the one that we sent to it.
+        // so since we now have two versions, and we exclude one of them, the result should have only one entry.
+        assertEquals(1, acmProcessDefinitionList.size());
+        assertNotEquals(apd1.getVersion(), acmProcessDefinitionList.get(0).getVersion());
 
         acmBpmnService.remove(apd, true);
         acmBpmnService.remove(apd1, true);

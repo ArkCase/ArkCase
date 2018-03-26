@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonEventPublisher;
 import com.armedia.acm.plugins.person.service.SavePersonTransaction;
+import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ public class SavePersonAPIController
     private PersonEventPublisher eventPublisher;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public Person addPerson(@RequestBody Person in, Authentication auth) throws AcmCreateObjectFailedException
     {

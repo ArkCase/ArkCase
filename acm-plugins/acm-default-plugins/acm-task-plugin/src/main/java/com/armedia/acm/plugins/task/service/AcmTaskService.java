@@ -36,6 +36,8 @@ public interface AcmTaskService
 
     byte[] getDiagram(Long id) throws AcmTaskException;
 
+    byte[] getDiagram(String processId) throws AcmTaskException;
+
     /**
      * Send a signal to an Activiti receive task. Activiti receive tasks cause the business process to halt until
      * the receive task is signaled. Receive tasks are used when the business process is waiting for user input, but

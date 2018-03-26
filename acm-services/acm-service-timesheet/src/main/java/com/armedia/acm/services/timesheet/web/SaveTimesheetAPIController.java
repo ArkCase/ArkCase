@@ -4,6 +4,7 @@
 package com.armedia.acm.services.timesheet.web;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
@@ -46,7 +47,7 @@ public class SaveTimesheetAPIController
 
             return saved;
         }
-        catch (RuntimeException e)
+        catch (RuntimeException | PipelineProcessException e)
         {
             throw new AcmCreateObjectFailedException(TimesheetConstants.OBJECT_TYPE, e.getMessage(), e);
         }

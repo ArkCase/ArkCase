@@ -333,7 +333,7 @@
             "status": "Status",
             "addedBy": "Hinzugefügt von"
         },
-        "assigne.none": "de_None",
+        "assigne.none": "Keiner",
         "assignee.label": "Empfänger",
         "owningGroup.label": "Eigentümergruppe",
         "priority.label": "Priorität",
