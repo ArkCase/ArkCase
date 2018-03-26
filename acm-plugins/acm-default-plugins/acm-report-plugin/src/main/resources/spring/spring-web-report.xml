@@ -7,7 +7,7 @@
     </bean>
 
     <bean id="getPentahoReportsAPIController" class="com.armedia.acm.plugins.report.web.api.GetPentahoReportsAPIController">
-        <property name="reportService" ref="reportService"/>
+        <property name="pentahoFilePropertiesService" ref="pentahoFilePropertiesService"/>
     </bean>
 
     <bean id="saveReportsAPIController" class="com.armedia.acm.plugins.report.web.api.SaveReportsAPIController">
@@ -16,6 +16,7 @@
 
     <bean id="getReportsToGroupsAPIController" class="com.armedia.acm.plugins.report.web.api.GetReportToGroupsMapAPIController">
         <property name="reportService" ref="reportService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="saveReportsToGroupsAPIController" class="com.armedia.acm.plugins.report.web.api.SaveReportToGroupsMapAPIController">
