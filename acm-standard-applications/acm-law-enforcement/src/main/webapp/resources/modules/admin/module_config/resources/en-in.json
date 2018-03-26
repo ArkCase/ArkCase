@@ -631,6 +631,16 @@
                         "historyDays.label": "Keep Audit and Notification events (in days)",
                         "inform": "Setting successfully saved",
                         "apply.label": "Apply"
+                    },
+                    "holidaySchedule": {
+                        "title": "en-in_Holiday Schedule",
+                        "grid": {
+                            "holidayName": "en-in_Name of Holiday",
+                            "holidayDate": "en-in_Date of holiday"
+                        },
+                        "cancel": "en-in_Cancel",
+                        "save": "en-in_Save",
+                        "message": "en-in_The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
                     }
                 },
                 "branding.title": "Branding",

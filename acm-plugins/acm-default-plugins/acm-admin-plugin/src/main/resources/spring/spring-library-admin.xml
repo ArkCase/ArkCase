@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
-    xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
     <!-- keeping this bean for now even though we are not using any properties yet.  -->
@@ -79,14 +79,14 @@
     <bean id="rolesPrivilegesService" class="com.armedia.acm.plugins.admin.service.RolesPrivilegesService">
         <property name="applicationRolesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationRoles.properties"/>
         <property name="applicationPrivilegesFile"
-            value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationPrivileges.properties"/>
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationPrivileges.properties"/>
         <property name="applicationRolesPrivilegesPropertiesFile"
-            value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationRolesPrivileges.properties"/>
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationRolesPrivileges.properties"/>
         <property name="applicationRolesPrivilegesTemplatesLocation"
-            value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/roles-privileges-templates/"/>
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/roles-privileges-templates/"/>
         <property name="applicationRolesPrivilegesTemplateFile" value="spring-acm-global-privileges.xml.ftl"/>
         <property name="applicationRolesPrivilegesFile"
-            value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/spring-config-acm-plugins/spring-acm-global-privileges.xml"/>
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/spring-config-acm-plugins/spring-acm-global-privileges.xml"/>
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
@@ -106,7 +106,7 @@
 
     <bean id="ldapDirectoryConfig" class="com.armedia.acm.plugins.admin.model.LdapDirectoryConfig">
         <property name="ldapConfigurationTemplatesLocation"
-            value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/ldap-config-templates/"/>
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/ldap-config-templates/"/>
         <property name="ldapTemplateFile" value="spring-config-ldap.xml.ftl"/>
         <property name="ldapTemplatePropertiesFile" value="spring-config-ldap.properties.ftl"/>
         <property name="ldapConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/"/>
@@ -179,6 +179,10 @@
 
     <bean id="timesheetConfigurationService" class="com.armedia.acm.plugins.admin.service.TimesheetConfigurationService">
         <property name="timesheetResource" value="file:${user.home}/.arkcase/acm/timesheetConfiguration.json"/>
+        <property name="objectConverter" ref="objectConverter"/>
+    </bean>
+    <bean id="holidayScheduleConfigurationService" class="com.armedia.acm.plugins.admin.service.HolidayScheduleConfigurationService">
+        <property name="holidayScheduleFile" value="file:${user.home}/.arkcase/acm/holidaySchedule.json"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 </beans>

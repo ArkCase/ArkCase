@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h3><span translate>admin.application.holidaySchedule.title</span></h3>
+</div>
+<div class="modal-body">
+    <form name="timesheetForm">
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="holidayName" translate>admin.application.holidaySchedule.grid.holidayName</label><span
+                    class="required-asterisk">*</span><br />
+                <input type="text" id="holidayName" name="holidayName" ng-model="schedule.holidayName" class="input-md form-control"
+                        required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="holidayDate" translate>admin.application.holidaySchedule.grid.holidayDate</label><span
+                    class="required-asterisk">*</span><br />
+                <input type="date" id="holidayDate" class="input-md form-control" ng-model="schedule.holidayDate" required="required"
+                        pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                        placeholder="{{ 'admin.forms.timesheetConfiguration.rate.placeholder' | translate }}">
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+        admin.application.holidaySchedule.cancel
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="timesheetForm.$invalid">
+        <span translate>admin.application.holidaySchedule.save</span>
+    </button>
+</div>
+

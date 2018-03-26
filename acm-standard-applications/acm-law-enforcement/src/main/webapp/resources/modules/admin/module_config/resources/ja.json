@@ -573,6 +573,16 @@
                 "historyDays.label": "監査および通知イベントの保存（日単位）",
                 "inform": "設定が保存されました",
                 "apply.label": "適用"
+            },
+            "holidaySchedule": {
+                "title": "ja_Holiday Schedule",
+                "grid": {
+                    "holidayName": "ja_Name of Holiday",
+                    "holidayDate": "ja_Date of holiday"
+                },
+                "cancel": "ja_Cancel",
+                "save": "ja_Save",
+                "message": "ja_The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
             }
         },
         "branding.title": "ブランディング",
