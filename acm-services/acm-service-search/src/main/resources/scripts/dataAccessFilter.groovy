@@ -45,9 +45,6 @@ if (!enableDocumentACL && targetType != null && (targetType.equals("FILE") || ta
 message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter, StandardCharsets.UTF_8.displayName()));
 message.setInboundProperty("denyAccessFilter", URLEncoder.encode(denyAccessFilter, StandardCharsets.UTF_8.displayName()));
 
-// for child objects, we want to grant access only if user has access to parent object, at least for now
-String isTopLevelObjectFilter = "if(exists(parent_ref_s), 0, 1)";  // this tells us if object is a toplevel object
-
 String childObjectDacFilter = "{!join from=id to=parent_ref_s}(not(exists(protected_object_b)) OR ";
 childObjectDacFilter += "protected_object_b:false OR public_doc_b:true ";
 
@@ -69,16 +66,17 @@ for (GrantedAuthority granted : authentication.getAuthorities()) {
     childObjectDacFilter += " AND -deny_acl_ss:" + safeAuthName;
 }
 
-String childObjectFilterQuery = "{!frange l=1}sum(\$topLevel, \$dac)";
+// Solr 7.2.1
+// Conditionals in {!func}sum are no longer correctly evaluated, change to conditional
+// Functions in fq clauses only work if they are wrapped in {!frange}.
+String childObjectFilterQuery = "{!frange l=1}if(not(exists(parent_ref_s)), 1, \$dac)";
 
 boolean filterParentRef = message.getInboundProperty("filterParentRef");
 
 if (filterParentRef) {
-    message.setInboundProperty("isTopLevelObjectFilter", isTopLevelObjectFilter);
     message.setInboundProperty("childObjectDacFilter", URLEncoder.encode(childObjectDacFilter, StandardCharsets.UTF_8.displayName()));
     message.setInboundProperty("childObjectFilterQuery", URLEncoder.encode(childObjectFilterQuery, StandardCharsets.UTF_8.displayName()));
 } else {
-    message.setInboundProperty("isTopLevelObjectFilter", "");
     message.setInboundProperty("childObjectDacFilter", "");
     message.setInboundProperty("childObjectFilterQuery", "");
 }
