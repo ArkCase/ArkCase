@@ -640,7 +640,7 @@
                         },
                         "cancel": "en-in_Cancel",
                         "save": "en-in_Save",
-                        "message": "en-in_The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
+                        "message": "en-in_The holiday you entered is not saved! Date of Holiday already exist!"
                     }
                 },
                 "branding.title": "Branding",

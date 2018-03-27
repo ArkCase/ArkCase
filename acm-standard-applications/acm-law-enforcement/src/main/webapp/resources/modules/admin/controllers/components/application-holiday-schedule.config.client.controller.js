@@ -47,33 +47,33 @@ angular
                                 };
                             });
 
-                            $scope.holidayScheduleConfig = {
-                                schedule : []
+                            $scope.holidayConfig = {
+                                holidays : []
                             };
 
                             var reloadGrid = function() {
-                                $scope.gridOptions.data = $scope.holidayScheduleConfig.schedule;
+                                $scope.gridOptions.data = $scope.holidayConfig.holidays;
                             };
 
                             AdminHolidayScheduleService.getHolidaySchedule().then(function(response) {
                                 if (!Util.isEmpty(response.data)) {
-                                    $scope.holidayScheduleConfig = response.data;
+                                    $scope.holidayConfig = response.data;
 
                                     reloadGrid();
                                 }
                             });
 
                             var saveConfig = function() {
-                                AdminHolidayScheduleService.saveHolidaySchedule($scope.holidayScheduleConfig).then(function() {
+                                AdminHolidayScheduleService.saveHolidaySchedule($scope.holidayConfig).then(function() {
                                     MessageService.succsessAction();
                                 }, function() {
                                     MessageService.errorAction();
                                 });
                             };
 
-                            function showModal(schedule, isEdit) {
+                            function showModal(holidays, isEdit) {
                                 var params = {};
-                                params.schedule = schedule;
+                                params.holidays = holidays;
                                 params.isEdit = isEdit;
 
                                 var modalInstance = $modal
@@ -93,65 +93,61 @@ angular
                             }
 
                             $scope.addNew = function() {
-                                var schedule = {
+                                var holidays = {
                                     holidayName : '',
                                     holidayDate : ''
                                 };
 
-                                showModal(schedule, false).then(
-                                        function(data) {
-                                            var itemExist = false;
-                                            var elements;
-                                            for (var i = 0; i < $scope.holidayScheduleConfig.schedule.length; i++) {
-                                                elements = $scope.holidayScheduleConfig.schedule[i];
-                                                if (elements.holidayName === data.schedule.holidayName
-                                                        || elements.holidayDate === data.schedule.holidayDate) {
-                                                    itemExist = true;
-                                                    if (itemExist) {
-                                                        break;
-                                                    }
-                                                }
+                                showModal(holidays, false).then(function(data) {
+                                    var itemExist = false;
+                                    var elements;
+                                    for (var i = 0; i < $scope.holidayConfig.holidays.length; i++) {
+                                        elements = $scope.holidayConfig.holidays[i];
+                                        if (elements.holidayDate === data.holidays.holidayDate) {
+                                            itemExist = true;
+                                            if (itemExist) {
+                                                break;
                                             }
+                                        }
+                                    }
 
-                                            if (itemExist === false) {
-                                                $scope.holidayScheduleConfig.schedule.push(data.schedule);
-                                                reloadGrid();
-                                                saveConfig();
-                                            } else {
-                                                DialogService.alert($translate.instant('admin.application.holidaySchedule.message'));
-                                            }
-                                        });
+                                    if (itemExist === false) {
+                                        $scope.holidayConfig.holidays.push(data.holidays);
+                                        reloadGrid();
+                                        saveConfig();
+                                    } else {
+                                        DialogService.alert($translate.instant('admin.application.holidaySchedule.message'));
+                                    }
+                                });
                             };
 
                             $scope.editRow = function(rowEntity) {
-                                showModal(rowEntity, true).then(
-                                        function(data) {
-                                            var itemExist = false;
-                                            var elements;
-                                            for (var i = 0; i < $scope.holidayScheduleConfig.schedule.length; i++) {
-                                                elements = $scope.holidayScheduleConfig.schedule[i];
-                                                if (rowEntity.holidayName === elements.holidayName) {
-                                                } else {
-                                                    if (elements.holidayName === data.schedule.holidayName
-                                                            || elements.holidayDate === data.schedule.holidayDate) {
-                                                        itemExist = true;
-                                                        if (itemExist) {
-                                                            break;
+                                showModal(rowEntity, true).then(function(data) {
+                                    var itemExist = false;
+                                    var elements;
+                                    for (var i = 0; i < $scope.holidayConfig.holidays.length; i++) {
+                                        elements = $scope.holidayConfig.holidays[i];
+                                        if (rowEntity.holidayName === elements.holidayName) {
+                                        } else {
+                                            if (elements.holidayDate === data.holidays.holidayDate) {
+                                                itemExist = true;
+                                                if (itemExist) {
+                                                    break;
 
-                                                        }
-                                                    }
                                                 }
                                             }
-                                            if (itemExist === false) {
-                                                rowEntity.holidayName = data.schedule.holidayName;
-                                                rowEntity.holidayDate = data.schedule.holidayDate;
+                                        }
+                                    }
+                                    if (itemExist === false) {
+                                        rowEntity.holidayName = data.holidays.holidayName;
+                                        rowEntity.holidayDate = data.holidays.holidayDate;
 
-                                                reloadGrid();
-                                                saveConfig();
-                                            } else {
-                                                DialogService.alert($translate.instant('admin.application.holidaySchedule.message'));
-                                            }
-                                        });
+                                        reloadGrid();
+                                        saveConfig();
+                                    } else {
+                                        DialogService.alert($translate.instant('admin.application.holidaySchedule.message'));
+                                    }
+                                });
                             };
 
                             $scope.deleteRow = function(rowEntity) {

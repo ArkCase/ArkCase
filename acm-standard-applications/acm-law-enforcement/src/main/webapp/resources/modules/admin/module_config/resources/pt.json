@@ -582,7 +582,7 @@
                 },
                 "cancel": "pt_Cancel",
                 "save": "pt_Save",
-                "message": "pt_The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
+                "message": "pt_The holiday you entered is not saved! Date of Holiday already exist!"
             }
         },
         "branding.title": "Branding",

@@ -582,7 +582,7 @@
                 },
                 "cancel": "ru_Cancel",
                 "save": "ru_Save",
-                "message": "ru_The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
+                "message": "ru_The holiday you entered is not saved! Date of Holiday already exist!"
             }
         },
         "branding.title": "Брендинг",

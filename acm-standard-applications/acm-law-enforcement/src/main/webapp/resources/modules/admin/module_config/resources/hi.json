@@ -582,7 +582,7 @@
                 },
                 "cancel": "hi_Cancel",
                 "save": "hi_Save",
-                "message": "hi_The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
+                "message": "hi_The holiday you entered is not saved! Date of Holiday already exist!"
             }
         },
         "branding.title": "ब्रांडिंग",
