@@ -10,6 +10,7 @@ import com.armedia.acm.services.transcribe.exception.SaveTranscribeException;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -97,7 +98,7 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
         {
             getTranscribeItems().forEach(item -> {
                 item.setTranscribe(this);
-                if (item.getText() != null)
+                if (StringUtils.isNotEmpty(item.getText()))
                 {
                     String[] textAsArray = item.getText().split(" ");
                     wordCount += textAsArray.length;

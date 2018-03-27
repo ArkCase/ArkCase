@@ -6,10 +6,7 @@ import com.armedia.acm.services.transcribe.model.TranscribeType;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/06/2018
@@ -19,6 +16,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class CreateTranscribeAPIController
 {
     private ArkCaseTranscribeService arkCaseTranscribeService;
+
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Transcribe createTranscribe(@RequestBody Transcribe transcribe) throws CreateTranscribeException
+    {
+        return getArkCaseTranscribeService().create(transcribe);
+    }
 
     @RequestMapping(value = "/{mediaVersionId}/automatic",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
