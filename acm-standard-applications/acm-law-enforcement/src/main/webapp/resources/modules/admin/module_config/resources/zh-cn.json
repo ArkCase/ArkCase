@@ -250,6 +250,10 @@
             "deleteUserMsg": "您确定要删除此用户吗？",
             "user": "用户"
         },
+        "security.group.management": {
+            "title": "zh-cn_Group Management",
+            "group": "zh-cn_Group"
+        },
         "security.calendarConfiguration": {
             "title": "日历配置",
             "calendarConfigForm": {

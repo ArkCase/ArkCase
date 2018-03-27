@@ -1,0 +1,11 @@
+<div ng-controller="Admin.GroupManagementController">
+    <panel-view header="{{'admin.security.group.management.title' | translate}}" collapsible="false">
+        <div class="row">
+            <object-authorization-roles show-filter="showFilter" data="userData" object-display-name="name"
+                    on-object-selected="onObjSelect" role-display-name="name" on-auth-role-change="onAuthRoleSelected"
+                    object-title="{{'admin.security.group.management.group' | translate}}"
+                    pagination-data-control="scrollLoadData" filter-data-control="filterData"
+                    selected-object="lastSelectedGroup" />
+        </div>
+    </panel-view>
+</div>

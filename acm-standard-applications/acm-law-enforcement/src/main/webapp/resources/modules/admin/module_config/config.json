@@ -56,6 +56,12 @@
                     "headerCellFilter": "translate"
                 },
                 {
+                    "name": "id",
+                    "displayName": "Dimeeeee",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
                     "name": "groupSearchBase",
                     "displayName": "admin.security.ldapConfig.data.groupSearchBase",
                     "visible": false,
@@ -1041,6 +1047,13 @@
                 "label": "admin.security.ldap.user.management.title",
                 "components": [
                     "security.ldap-user-management"
+                ]
+            },
+            {
+                "type": "p/security/ldapGroup",
+                "label": "admin.security.group.management.title",
+                "components": [
+                    "security.group-management"
                 ]
             },
             {

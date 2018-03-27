@@ -250,6 +250,10 @@
             "deleteUserMsg": "क्या आप वाकई इस उपयोगकर्ता को हटाना चाहते हैं?",
             "user": "उपयोगकर्ता"
         },
+        "security.group.management": {
+            "title": "hi_Group Management",
+            "group": "hi_Group"
+        },
         "security.calendarConfiguration": {
             "title": "कैलेंडर कॉन्फ़िगरेशन",
             "calendarConfigForm": {
