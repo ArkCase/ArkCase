@@ -250,6 +250,10 @@
             "deleteUserMsg": "Êtes-vous sûr de vouloir supprimer cet utilisateur?",
             "user": "Utilisateur"
         },
+        "security.group.management": {
+            "title": "fr_Group Management",
+            "group": "fr_Group"
+        },
         "security.calendarConfiguration": {
             "title": "Configuration du calendrier",
             "calendarConfigForm": {

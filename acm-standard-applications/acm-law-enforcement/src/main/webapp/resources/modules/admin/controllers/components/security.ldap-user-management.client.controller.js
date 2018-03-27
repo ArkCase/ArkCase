@@ -65,8 +65,8 @@ angular.module('admin').controller(
                                 $scope.fillList($scope.userData.chooseObject, response.data.response.docs);
                                 if (_.isEmpty($scope.lastSelectedUser)) {
                                     $scope.lastSelectedUser = $scope.userData.chooseObject[0];
+                                    $scope.onObjSelect($scope.lastSelectedUser);
                                 }
-                                $scope.onObjSelect($scope.lastSelectedUser);
                                 makePaginationRequest = response.data.response.numFound > userRequestInfo.n;
                             });
                         }
@@ -272,7 +272,7 @@ angular.module('admin').controller(
                     }
 
                     function userScroll() {
-                        initUser($scope.userData.chooseObject.length * 2);
+                        $scope.initUser($scope.userData.chooseObject.length * 2);
                     }
 
                     function retrieveDataScroll(data, methodName, panelName) {

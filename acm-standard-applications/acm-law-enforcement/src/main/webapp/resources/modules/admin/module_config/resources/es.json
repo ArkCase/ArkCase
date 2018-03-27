@@ -262,6 +262,10 @@
             "deleteUserMsg": "¿Está seguro que desea eliminar a este usuario?",
             "user": "un usuario"
         },
+        "security.group.management": {
+            "title": "es_Group Management",
+            "group": "es_Group"
+        },
         "security.calendarConfiguration": {
             "title": "Configuración del calendario",
             "calendarConfigForm": {

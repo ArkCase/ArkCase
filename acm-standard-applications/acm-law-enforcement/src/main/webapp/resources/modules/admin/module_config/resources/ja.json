@@ -250,6 +250,10 @@
             "deleteUserMsg": "このユーザーを削除してもよろしいですか？",
             "user": "ユーザー"
         },
+        "security.group.management": {
+            "title": "ja_Group Management",
+            "group": "ja_Group"
+        },
         "security.calendarConfiguration": {
             "title": "カレンダー設定",
             "calendarConfigForm": {
