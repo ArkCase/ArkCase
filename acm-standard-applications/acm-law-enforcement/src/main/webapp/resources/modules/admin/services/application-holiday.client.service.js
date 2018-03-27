@@ -1,20 +1,20 @@
 'use strict';
 
-angular.module('admin').factory('Admin.HolidayScheduleService', [ '$http', function($http) {
+angular.module('admin').factory('Admin.HolidayService', [ '$http', function($http) {
 
     return ({
-        getHolidaySchedule : getHolidaySchedule,
-        saveHolidaySchedule : saveHolidaySchedule
+        getHolidays : getHolidays,
+        saveHolidays : saveHolidays
     });
 
-    function getHolidaySchedule() {
+    function getHolidays() {
         return $http({
             method : 'GET',
             url : 'api/latest/service/holidayConfig'
         });
     }
 
-    function saveHolidaySchedule(holidayConfig) {
+    function saveHolidays(holidayConfig) {
         return $http({
             method : 'POST',
             url : 'api/latest/service/holidayConfig',

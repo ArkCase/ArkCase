@@ -574,7 +574,7 @@
                 "inform": "Paramètre enregistré avec succès",
                 "apply.label": "Appliquer"
             },
-            "holidaySchedule": {
+            "holiday": {
                 "title": "fr_Holiday Schedule",
                 "grid": {
                     "holidayName": "fr_Name of Holiday",
@@ -582,7 +582,11 @@
                 },
                 "cancel": "fr_Cancel",
                 "save": "fr_Save",
-                "message": "fr_The holiday you entered is not saved! Date of Holiday already exist!"
+                "message": "fr_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "fr_Enter Name of Holiday",
+                    "date": "fr_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "L'image de marque",

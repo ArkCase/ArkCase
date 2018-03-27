@@ -574,7 +574,7 @@
                 "inform": "Установка успешно сохранена",
                 "apply.label": "Подать заявление"
             },
-            "holidaySchedule": {
+            "holiday": {
                 "title": "ru_Holiday Schedule",
                 "grid": {
                     "holidayName": "ru_Name of Holiday",
@@ -582,7 +582,11 @@
                 },
                 "cancel": "ru_Cancel",
                 "save": "ru_Save",
-                "message": "ru_The holiday you entered is not saved! Date of Holiday already exist!"
+                "message": "ru_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "ru_Enter Name of Holiday",
+                    "date": "ru_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "Брендинг",

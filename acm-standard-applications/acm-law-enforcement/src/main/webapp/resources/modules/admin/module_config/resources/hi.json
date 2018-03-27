@@ -574,7 +574,7 @@
                 "inform": "सेटिंग सफलतापूर्वक सहेजी गई",
                 "apply.label": "लागू करें"
             },
-            "holidaySchedule": {
+            "holiday": {
                 "title": "hi_Holiday Schedule",
                 "grid": {
                     "holidayName": "hi_Name of Holiday",
@@ -582,7 +582,11 @@
                 },
                 "cancel": "hi_Cancel",
                 "save": "hi_Save",
-                "message": "hi_The holiday you entered is not saved! Date of Holiday already exist!"
+                "message": "hi_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "hi_Enter Name of Holiday",
+                    "date": "hi_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "ब्रांडिंग",

@@ -627,7 +627,7 @@
                 "inform": "Configuración salvada correctamente",
                 "apply.label": "Aplicar"
             },
-            "holidaySchedule": {
+            "holiday": {
                 "title": "es_Holiday Schedule",
                 "grid": {
                     "holidayName": "es_Name of Holiday",
@@ -635,7 +635,11 @@
                 },
                 "cancel": "es_Cancel",
                 "save": "es_Save",
-                "message": "es_The holiday you entered is not saved! Date of Holiday already exist!"
+                "message": "es_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "es_Enter Name of Holiday",
+                    "date": "es_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "Marca",

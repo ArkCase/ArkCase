@@ -641,7 +641,7 @@
                 "inform": "Setting successfully saved",
                 "apply.label": "Apply"
             },
-            "holidaySchedule": {
+            "holiday": {
                 "title": "Holiday Schedule",
                 "grid": {
                     "holidayName": "Name of Holiday",
@@ -649,7 +649,11 @@
                 },
                 "cancel": "Cancel",
                 "save": "Save",
-                "message": "The holiday you entered is not saved! Date of Holiday already exist!"
+                "message": "The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "Enter Name of Holiday",
+                    "date": "Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "Branding",

@@ -575,7 +575,7 @@
                 "inform": "Einstellung erfolgreich gespeichert",
                 "apply.label": "Sich bewerben"
             },
-            "holidaySchedule": {
+            "holiday": {
                 "title": "de_Holiday Schedule",
                 "grid": {
                     "holidayName": "de_Name of Holiday",
@@ -583,7 +583,11 @@
                 },
                 "cancel": "de_Cancel",
                 "save": "de_Save",
-                "message": "de_The holiday you entered is not saved! Date of Holiday already exist!"
+                "message": "de_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "de_Enter Name of Holiday",
+                    "date": "de_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "Branding",
