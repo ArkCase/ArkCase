@@ -109,4 +109,11 @@ public class EcmFileDaoIT
         assertNotNull(file.getFileId());
 
     }
+
+    @Test
+    public void getFilesCount()
+    {
+        assertNotNull(ecmFileDao);
+        assertNotNull(ecmFileDao.getFilesCount());
+    }
 }
