@@ -35,7 +35,8 @@ angular
                                     MY_DOC_REPO : "MY_DOC_REPO",
                                     PERSON : "PERSON",
                                     ORGANIZATION : "ORGANIZATION",
-                                    FOLDER: "FOLDER"
+                                    FOLDER: "FOLDER",
+                                    TRANSCRIPTION: "TRANSCRIPTION"
                                 }
 
                                 ,
