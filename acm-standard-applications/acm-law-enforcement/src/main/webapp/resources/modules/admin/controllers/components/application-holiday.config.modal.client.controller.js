@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('admin').controller(
-        'Admin.HolidayScheduleModalController',
+        'Admin.HolidayModalController',
         [ '$scope', '$modalInstance', 'params', 'Util.DateService', '$filter',
                 function($scope, $modalInstance, params, UtilDateService, $filter) {
 

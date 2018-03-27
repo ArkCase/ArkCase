@@ -987,8 +987,8 @@
             ]
         },
         {
-            "id": "holidaySchedule",
-            "title": "admin.application.holidaySchedule.title",
+            "id": "holiday",
+            "title": "admin.application.holiday.title",
             "enabled": true,
             "type": "grid",
             "enableFiltering": false,
@@ -996,13 +996,13 @@
             "columnDefs": [
                 {
                     "name": "holidayName",
-                    "displayName": "admin.application.holidaySchedule.grid.holidayName",
+                    "displayName": "admin.application.holiday.grid.holidayName",
                     "visible": true,
                     "headerCellFilter": "translate"
                 },
                 {
                     "name": "holidayDate",
-                    "displayName": "admin.application.holidaySchedule.grid.holidayDate",
+                    "displayName": "admin.application.holiday.grid.holidayDate",
                     "visible": true,
                     "headerCellFilter": "translate"
                 }
@@ -1235,10 +1235,10 @@
                 ]
             },
             {
-                "type": "p/application/holidaySchedule",
-                "label": "admin.application.holidaySchedule.title",
+                "type": "p/application/holiday",
+                "label": "admin.application.holiday.title",
                 "components": [
-                    "application-holiday-schedule.config"
+                    "application-holiday.config"
                 ]
             },
             {
