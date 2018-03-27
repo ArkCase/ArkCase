@@ -635,7 +635,7 @@
                 },
                 "cancel": "es_Cancel",
                 "save": "es_Save",
-                "message": "es_The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
+                "message": "es_The holiday you entered is not saved! Date of Holiday already exist!"
             }
         },
         "branding.title": "Marca",

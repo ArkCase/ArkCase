@@ -582,7 +582,7 @@
                 },
                 "cancel": "fr_Cancel",
                 "save": "fr_Save",
-                "message": "fr_The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
+                "message": "fr_The holiday you entered is not saved! Date of Holiday already exist!"
             }
         },
         "branding.title": "L'image de marque",

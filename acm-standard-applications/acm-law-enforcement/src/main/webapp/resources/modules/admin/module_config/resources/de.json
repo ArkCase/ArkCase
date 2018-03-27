@@ -583,7 +583,7 @@
                 },
                 "cancel": "de_Cancel",
                 "save": "de_Save",
-                "message": "de_The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
+                "message": "de_The holiday you entered is not saved! Date of Holiday already exist!"
             }
         },
         "branding.title": "Branding",

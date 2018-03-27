@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import java.time.LocalDate;
 
-public class HolidayScheduleItems
+public class HolidayItem
 {
     private String holidayName;
 

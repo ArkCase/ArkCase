@@ -583,7 +583,7 @@
             },
             "cancel": "zh-tw_Cancel",
             "save": "zh-tw_Save",
-            "message": "zh-tw_The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
+            "message": "zh-tw_The holiday you entered is not saved! Date of Holiday already exist!"
         }
     },
     "branding.title": "品牌",

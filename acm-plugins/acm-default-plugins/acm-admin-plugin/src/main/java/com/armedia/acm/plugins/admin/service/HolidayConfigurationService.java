@@ -1,7 +1,8 @@
 package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.admin.model.HolidayScheduleConfiguration;
+import com.armedia.acm.plugins.admin.model.HolidayConfiguration;
+import com.armedia.acm.plugins.admin.model.HolidayItem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,33 +12,34 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class HolidayScheduleConfigurationService
+public class HolidayConfigurationService
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    private Resource holidayScheduleFile;
+    private Resource holidayFile;
     private ObjectConverter objectConverter;
 
     private FileWriter fileWriter = null;
     private FileReader fileReader = null;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public void saveHolidaySchedule(HolidayScheduleConfiguration holidayScheduleConf)
+    public void saveHolidayConfig(HolidayConfiguration holidayConf)
     {
-        String holidayScheduleConfigJson = Objects.nonNull(holidayScheduleConf)
-                ? getObjectConverter().getJsonMarshaller().marshal(holidayScheduleConf)
-                : "{}";
+        String holidayConfigJson = Objects.nonNull(holidayConf)
+                ? getObjectConverter().getIndentedJsonMarshaller().marshal(holidayConf.getHolidays())
+                : "[]";
 
         try
         {
-            log.info("Trying to write to config file: " + getHolidayScheduleFile().getFile().getAbsolutePath());
+            log.info("Trying to write to config file: " + getHolidayFile().getFile().getAbsolutePath());
             lock.writeLock().lock();
-            fileWriter = new FileWriter(getHolidayScheduleFile().getFile(), false);
-            fileWriter.write(holidayScheduleConfigJson);
+            fileWriter = new FileWriter(getHolidayFile().getFile(), false);
+            fileWriter.write(holidayConfigJson);
             fileWriter.close();
         }
         catch (IOException e)
@@ -50,28 +52,30 @@ public class HolidayScheduleConfigurationService
         }
     }
 
-    public HolidayScheduleConfiguration getHolidaySchedule()
+    public HolidayConfiguration getHolidayConfiguration()
     {
         String currentLine;
-        String holidayScheduleConfigJson = "";
-        HolidayScheduleConfiguration holidayScheduleConfiguration = null;
+        String holidayConfigJson = "";
+        HolidayConfiguration holidayConfiguration = new HolidayConfiguration();
+        List<HolidayItem> holidayItemList;
 
         try
         {
-            log.info("Trying to read from config file: " + getHolidayScheduleFile().getFile().getAbsolutePath());
+            log.info("Trying to read from config file: " + getHolidayFile().getFile().getAbsolutePath());
 
             lock.readLock().lock();
-            fileReader = new FileReader(getHolidayScheduleFile().getFile());
+            fileReader = new FileReader(getHolidayFile().getFile());
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             while ((currentLine = bufferedReader.readLine()) != null)
             {
-                holidayScheduleConfigJson += currentLine;
+                holidayConfigJson += currentLine;
             }
 
             fileReader.close();
-            holidayScheduleConfiguration = getObjectConverter().getJsonUnmarshaller().unmarshall(holidayScheduleConfigJson,
-                    HolidayScheduleConfiguration.class);
+            holidayItemList = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(holidayConfigJson, List.class,
+                    HolidayItem.class);
+            holidayConfiguration.setHolidays(holidayItemList);
         }
         catch (IOException e)
         {
@@ -82,18 +86,18 @@ public class HolidayScheduleConfigurationService
             lock.readLock().unlock();
         }
 
-        return holidayScheduleConfiguration;
+        return holidayConfiguration;
 
     }
 
-    public Resource getHolidayScheduleFile()
+    public Resource getHolidayFile()
     {
-        return holidayScheduleFile;
+        return holidayFile;
     }
 
-    public void setHolidayScheduleFile(Resource holidayScheduleFile)
+    public void setHolidayFile(Resource holidayFile)
     {
-        this.holidayScheduleFile = holidayScheduleFile;
+        this.holidayFile = holidayFile;
     }
 
     public ObjectConverter getObjectConverter()

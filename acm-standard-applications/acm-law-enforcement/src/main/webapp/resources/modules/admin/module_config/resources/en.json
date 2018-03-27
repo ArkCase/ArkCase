@@ -649,7 +649,7 @@
                 },
                 "cancel": "Cancel",
                 "save": "Save",
-                "message": "The holiday you entered is not saved! Name of Holiday or Date of Holiday already exist!"
+                "message": "The holiday you entered is not saved! Date of Holiday already exist!"
             }
         },
         "branding.title": "Branding",

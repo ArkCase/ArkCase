@@ -181,8 +181,8 @@
         <property name="timesheetResource" value="file:${user.home}/.arkcase/acm/timesheetConfiguration.json"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
-    <bean id="holidayScheduleConfigurationService" class="com.armedia.acm.plugins.admin.service.HolidayScheduleConfigurationService">
-        <property name="holidayScheduleFile" value="file:${user.home}/.arkcase/acm/holidaySchedule.json"/>
+    <bean id="holidayConfigurationService" class="com.armedia.acm.plugins.admin.service.HolidayConfigurationService">
+        <property name="holidayFile" value="file:${user.home}/.arkcase/acm/holidayFile.json"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 </beans>

@@ -10,15 +10,15 @@ angular.module('admin').factory('Admin.HolidayScheduleService', [ '$http', funct
     function getHolidaySchedule() {
         return $http({
             method : 'GET',
-            url : 'api/latest/service/holidaySchedule/config'
+            url : 'api/latest/service/holidayConfig'
         });
     }
 
-    function saveHolidaySchedule(holidayScheduleConfig) {
+    function saveHolidaySchedule(holidayConfig) {
         return $http({
             method : 'POST',
-            url : 'api/latest/service/holidaySchedule/config',
-            data : holidayScheduleConfig,
+            url : 'api/latest/service/holidayConfig',
+            data : holidayConfig,
             headers : {
                 "Content-Type" : "application/json"
             }
