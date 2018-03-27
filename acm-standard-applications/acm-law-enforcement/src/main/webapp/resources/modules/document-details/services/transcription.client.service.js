@@ -69,6 +69,9 @@ angular.module('document-details').factory('DocumentDetails.TranscriptionAppServ
                 },
                 onSuccess: function(data){
                     return data;
+                },
+                onError: function (err) {
+                    return err;
                 }
             });
 
