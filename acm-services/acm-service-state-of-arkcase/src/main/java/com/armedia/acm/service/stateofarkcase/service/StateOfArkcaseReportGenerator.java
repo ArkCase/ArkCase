@@ -1,10 +1,10 @@
 package com.armedia.acm.service.stateofarkcase.service;
 
 import com.armedia.acm.service.stateofarkcase.dao.StateOfArkcaseRegistry;
-import com.armedia.acm.service.stateofarkcase.exceptions.StateOfArkcaseReportException;
+import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModule;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModuleProvider;
 import com.armedia.acm.service.stateofarkcase.model.StateOfArkcase;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
@@ -27,18 +27,10 @@ class StateOfArkcaseReportGenerator
      * 
      * @return StateOfArkcase as json string
      */
-    public String generateReportAsJSON()
+    public JsonNode generateReportAsJSON()
     {
         StateOfArkcase stateOfArkcase = generateReport();
-        try
-        {
-            return mapper.writeValueAsString(stateOfArkcase);
-        }
-        catch (JsonProcessingException e)
-        {
-            log.error("Can't generate state of Arkase report.", e);
-            throw new StateOfArkcaseReportException(e);
-        }
+        return mapper.valueToTree(stateOfArkcase);
     }
 
     /**
@@ -49,12 +41,20 @@ class StateOfArkcaseReportGenerator
      */
     public StateOfArkcase generateReport()
     {
+        long stateOfArkcaseStartTime = System.currentTimeMillis();
+        log.debug("Generating of state of arkcase report started.");
         StateOfArkcase stateOfArkcase = new StateOfArkcase();
         stateOfArkcase.setDateGenerated(LocalDateTime.now());
-        for (StateOfModuleProvider provider : stateOfArkcaseRegistry.getStatesOfModules())
+        for (StateOfModuleProvider provider : stateOfArkcaseRegistry.getStateOfModuleProviders())
         {
-            stateOfArkcase.addModuleState(provider.getModuleName(), provider.getModuleState());
+            long moduleStartTime = System.currentTimeMillis();
+            StateOfModule moduleState = provider.getModuleState();
+            log.debug("State of module [{}] generated in [{}] milliseconds.", provider.getModuleName(),
+                    System.currentTimeMillis() - moduleStartTime);
+            stateOfArkcase.addModuleState(provider.getModuleName(), moduleState);
         }
+        log.info("Generating of state of arkcase report finished in [{}] milliseconds.",
+                System.currentTimeMillis() - stateOfArkcaseStartTime);
         return stateOfArkcase;
     }
 

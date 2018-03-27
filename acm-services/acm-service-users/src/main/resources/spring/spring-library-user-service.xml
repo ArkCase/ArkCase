@@ -279,7 +279,7 @@
 
     <bean id="acmGroupEventPublisher" class="com.armedia.acm.services.users.service.AcmGroupEventPublisher"/>
 
-    <bean id="usersStateProvider" class="com.armedia.acm.services.users.service.UsersStateProvider">
+    <bean id="usersStateProvider" class="com.armedia.acm.services.users.state.AcmUsersStateProvider">
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 

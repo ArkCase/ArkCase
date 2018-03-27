@@ -2,6 +2,7 @@ package com.armedia.acm.service.stateofarkcase.interfaces;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,12 +30,37 @@ public abstract class StateOfModule
     }
 
     /**
+     * remove property.
      *
-     * @return returns all of the properties
+     * @param name
+     *            name of the property
+     * @return StateOfModule to support fluent api
+     */
+    public StateOfModule removeProperty(String name)
+    {
+        stateProperties.remove(name);
+        return this;
+    }
+
+    /**
+     * boolean whether contains property name or not.
+     *
+     * @param name
+     *            name of the property
+     * @return boolean true if property name exists
+     */
+    public boolean containsProperty(String name)
+    {
+        return stateProperties.containsKey(name);
+    }
+
+    /**
+     *
+     * @return immutable map of properties
      */
     @JsonAnyGetter
     public Map<String, Object> getStateProperties()
     {
-        return stateProperties;
+        return Collections.unmodifiableMap(stateProperties);
     }
 }
