@@ -23,5 +23,5 @@ public interface StateOfArkcaseRegistry
      * 
      * @return StateOfModuleProvider
      */
-    List<StateOfModuleProvider> getStatesOfModules();
+    List<StateOfModuleProvider> getStateOfModuleProviders();
 }

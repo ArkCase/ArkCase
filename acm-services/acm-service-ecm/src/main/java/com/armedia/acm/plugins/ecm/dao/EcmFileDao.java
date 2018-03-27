@@ -168,4 +168,13 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
 
         return query.getResultList();
     }
+
+    public Long getFilesCount()
+    {
+        String queryText = "SELECT COUNT(entity) FROM EcmFile entity";
+
+        Query query = getEm().createQuery(queryText);
+
+        return (Long) query.getSingleResult();
+    }
 }

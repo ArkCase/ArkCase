@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.IOException;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-library-object-converter.xml",
@@ -31,14 +29,13 @@ public class StateOfArkcaseReportGeneratorTest
     private StateOfArkcaseReportGenerator stateOfArkcaseReportGenerator;
 
     @Test
-    public void generateReportAsJSON() throws IOException
+    public void generateReportAsJSON()
     {
         assertNotNull(stateOfArkcaseReportGenerator);
-        String reportJsonString = stateOfArkcaseReportGenerator.generateReportAsJSON();
-        log.info(reportJsonString);
-        JsonNode report = sourceObjectMapper.readTree(reportJsonString);
-        assertNotNull(report.get("dateGenerated"));
-        JsonNode testModuleUsersJsonNode = report.get("test_module_users");
+        JsonNode reportJson = stateOfArkcaseReportGenerator.generateReportAsJSON();
+
+        assertNotNull(reportJson.get("dateGenerated"));
+        JsonNode testModuleUsersJsonNode = reportJson.get("test_module_users");
         assertNotNull(testModuleUsersJsonNode);
         assertEquals(1, testModuleUsersJsonNode.get("addedNewUsers").intValue());
         assertEquals(2, testModuleUsersJsonNode.get("removedUsers").intValue());
