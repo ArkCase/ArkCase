@@ -12,27 +12,32 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping({"/api/v1/service/holidayConfig", "/api/latest/service/holidayConfig"})
-public class HolidayConfigurationAPIController {
+@RequestMapping({ "/api/v1/service/holidayConfig", "/api/latest/service/holidayConfig" })
+public class HolidayConfigurationAPIController
+{
     private HolidayConfigurationService holidayConfigurationService;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public void saveHolidayConfig(@RequestBody HolidayConfiguration holidayConf) {
+    public void saveHolidayConfig(@RequestBody HolidayConfiguration holidayConf)
+    {
         holidayConfigurationService.saveHolidayConfig(holidayConf);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<HolidayConfiguration> getHolidayConfig() {
+    public ResponseEntity<HolidayConfiguration> getHolidayConfig()
+    {
         return new ResponseEntity<>(holidayConfigurationService.getHolidayConfiguration(), HttpStatus.OK);
     }
 
-    public HolidayConfigurationService getHolidayConfigurationService() {
+    public HolidayConfigurationService getHolidayConfigurationService()
+    {
         return holidayConfigurationService;
     }
 
-    public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService) {
+    public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService)
+    {
         this.holidayConfigurationService = holidayConfigurationService;
     }
 }
