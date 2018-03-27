@@ -4,7 +4,10 @@ import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 
+import javax.naming.directory.Attribute;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,9 +37,12 @@ public class AcmGroupContextMapper implements ContextMapper
         group.setDirectoryName(acmLdapSyncConfig.getDirectoryName());
         group.setDisplayName(MapperUtils.getAttribute(adapter, "displayName"));
 
-        if (adapter.attributeExists("member"))
+        // AFDP-5761 Support 'range' in member attribute for large group sizes.
+        ArrayList<? extends Attribute> list = Collections.list(adapter.getAttributes().getAll());
+        String rangedMember = list.stream().map(Attribute::getID).filter(id -> id.contains("range=")).findFirst().orElse("member");
+        if (adapter.attributeExists(rangedMember))
         {
-            String[] members = adapter.getStringAttributes("member");
+            String[] members = adapter.getStringAttributes(rangedMember);
 
             Set<String> memberDns = Arrays.stream(members)
                     .map(DistinguishedName::new)
