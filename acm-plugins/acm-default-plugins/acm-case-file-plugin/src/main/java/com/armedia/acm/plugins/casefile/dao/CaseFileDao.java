@@ -223,4 +223,13 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
     {
         return findByCaseNumber(name);
     }
+
+    public Long getCaseCount()
+    {
+        String queryText = "SELECT COUNT(caseFile) FROM CaseFile caseFile";
+
+        Query query = getEm().createQuery(queryText);
+
+        return (Long) query.getSingleResult();
+    }
 }
