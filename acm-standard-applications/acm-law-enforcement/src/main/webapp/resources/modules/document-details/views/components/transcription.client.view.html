@@ -10,7 +10,7 @@
                 <div class="row">
                     <table class="table table-bordered transcript-table-margin">
                         <thead>
-                        <tr ng-style="itemHolder.item.confidence < transcribeConfidence ? { backgroundColor:'#ea6764', color:'black' } : ''">
+                        <tr ng-class="{'lower-transcribe-confidence': itemHolder.item.confidence < transcribeConfidence}">
                             <th><span translate>documentDetails.comp.transcription.startTime</span>:<input ng-readonly="readonlyInputs"
                                     class="transcript-input-size" ng-model="itemHolder.startTime.hours" type="text"
                                     ng-pattern="/^[0-9]{1,2}$/" />:<input ng-readonly="readonlyInputs" class="transcript-input-size"

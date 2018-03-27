@@ -1658,3 +1658,7 @@ a.primary {
     bottom: 2px;
     left: 4px;
 }
+.lower-transcribe-confidence{
+    background-color:#ea6764;
+    color: #000000;
+}

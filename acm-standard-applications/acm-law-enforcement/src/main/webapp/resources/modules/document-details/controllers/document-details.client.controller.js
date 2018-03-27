@@ -18,8 +18,9 @@ angular.module('document-details').controller(
         'Admin.TranscriptionManagementService',
         'MessageService',
         'UtilService',
+        '$log',
         function($scope, $stateParams, $sce, $q, $timeout, TicketService, ConfigService, LookupService, SnowboundService,
-                 Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util) {
+                 Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, $log) {
 
             new LocaleHelper.Locale({
                 scope : $scope
@@ -120,7 +121,7 @@ angular.module('document-details').controller(
                     track.addCue(new VTTCue(value.startTime, value.endTime, value.text));
                     cueAdded = true;
                 } catch(e) {
-                    // Browser does not support VTTCue
+                    $log.warn("Browser does not support VTTCue");
                 }
 
                 if (!cueAdded) {
@@ -128,7 +129,7 @@ angular.module('document-details').controller(
                         track.addCue(new TextTrackCue(value.startTime, value.endTime, value.text));
                         cueAdded = true;
                     }catch(e) {
-                        // Browser does not support TextTrackCue
+                        $log.warn("Browser does not support TextTrackCue");
                     }
                 }
             }
