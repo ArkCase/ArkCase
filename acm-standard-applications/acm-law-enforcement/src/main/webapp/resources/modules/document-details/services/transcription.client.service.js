@@ -145,15 +145,18 @@ angular.module('document-details').factory('DocumentDetails.TranscriptionAppServ
          * @description
          * Start automatic transcription
          *
-         * @param {Object} transcribeObj  Transcribe object
+         * @param {Object} mediaVersionId  Active Version of ECM file
          *
          * @returns {Object} Promise
          */
 
-        Service.startAutomaticTranscription = function(transcribeObj){
+        Service.startAutomaticTranscription = function(mediaVersionId){
             return Util.serviceCall({
                 service: Service.startAutomatic,
-                data: transcribeObj,
+                param: {
+                    mediaVersionId: mediaVersionId
+                },
+                data: {},
                 onSuccess: function(data){
                     if(data.id){
                         transcriptionCache.put(transcriptionBaseUrl + data.id, data);
@@ -219,6 +222,7 @@ angular.module('document-details').factory('DocumentDetails.TranscriptionAppServ
                 param: {
                     id: transcribeObjId
                 },
+                data: {},
                 onSuccess: function(data){
                     if(data.id){
                         transcriptionCache.put(transcriptionBaseUrl + data.id, data);
