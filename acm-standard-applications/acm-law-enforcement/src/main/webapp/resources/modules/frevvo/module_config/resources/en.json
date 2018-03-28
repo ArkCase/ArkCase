@@ -23,5 +23,18 @@
     },
     "frevvo.timesheetCustomPicker": {
         "header": "Select charge code"
+    },
+    "frevvo.userAndGroupPicker": {
+        "header": "Search for User or Group",
+        "table.columns": {
+            "name": "Name",
+            "type": "Type",
+            "title": "Title",
+            "id": "ID"
+        },
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "search": "Search",
+        "search-placeholder": "Searching for user or group"
     }
 }
