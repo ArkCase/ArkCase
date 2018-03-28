@@ -6,6 +6,7 @@ import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.ConfigurationFileDeletedEvent;
 import com.armedia.acm.spring.events.ContextAddedEvent;
 import com.armedia.acm.spring.events.ContextRemovedEvent;
+import com.armedia.acm.spring.events.ContextReplacedEvent;
 import com.armedia.acm.spring.exceptions.AcmContextHolderException;
 
 import org.slf4j.Logger;
@@ -102,7 +103,7 @@ public class SpringContextHolder
 
         try
         {
-            return new FileSystemXmlApplicationContext(filesPaths, true, null);
+            return new FileSystemXmlApplicationContext(filesPaths, true, toplevelContext);
         }
         catch (BeansException be)
         {
@@ -148,10 +149,10 @@ public class SpringContextHolder
 
         log.info("Replacing context: {}", contextName);
 
-        removeContext(contextName);
-        context.setParent(toplevelContext);
+        AbstractApplicationContext oldContext = childContextMap.get(contextName);
         childContextMap.put(contextName, context);
-        applicationEventPublisher.publishEvent(new ContextAddedEvent(this, contextName));
+        oldContext.close();
+        applicationEventPublisher.publishEvent(new ContextReplacedEvent(this, contextName));
     }
 
     private AbstractApplicationContext createContextFromFile(File configFile) throws BeansException, IOException
