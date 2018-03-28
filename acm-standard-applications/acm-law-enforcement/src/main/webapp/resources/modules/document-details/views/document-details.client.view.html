@@ -44,12 +44,12 @@
                 </div>
                 <div class="row" ng-if="transcribeEnabled && showVideoPlayer">
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold">{{transcribeObjectModel.language}}</div>
+                        <div class="h4 font-bold">{{transcribeObjectModel.language || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.language</small>
                     </div>
 
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold">{{transcribeObjectModel.wordCount}}</div>
+                        <div class="h4 font-bold">{{transcribeObjectModel.wordCount || 0}}</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.wordCount</small>
                     </div>
                     <div class="col-sm-6 col-md-3">
@@ -57,7 +57,7 @@
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.confidence</small>
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus()}">{{transcribeObjectModel.status}}</div>
+                        <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus()}">{{transcribeObjectModel.status || 'documentDetails.comp.transcription.mediaViewer.readyForTranscription' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.transcriptStatus</small>
                     </div>
                 </div>
