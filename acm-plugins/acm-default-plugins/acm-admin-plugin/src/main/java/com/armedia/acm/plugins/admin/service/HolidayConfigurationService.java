@@ -4,12 +4,11 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.admin.model.HolidayConfiguration;
 import com.armedia.acm.plugins.admin.model.HolidayItem;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +24,6 @@ public class HolidayConfigurationService
     private ObjectConverter objectConverter;
 
     private FileWriter fileWriter = null;
-    private FileReader fileReader = null;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public void saveHolidayConfig(HolidayConfiguration holidayConf)
@@ -54,7 +52,6 @@ public class HolidayConfigurationService
 
     public HolidayConfiguration getHolidayConfiguration()
     {
-        String currentLine;
         String holidayConfigJson = "";
         HolidayConfiguration holidayConfiguration = new HolidayConfiguration();
         List<HolidayItem> holidayItemList;
@@ -64,15 +61,7 @@ public class HolidayConfigurationService
             log.info("Trying to read from config file: " + getHolidayFile().getFile().getAbsolutePath());
 
             lock.readLock().lock();
-            fileReader = new FileReader(getHolidayFile().getFile());
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            while ((currentLine = bufferedReader.readLine()) != null)
-            {
-                holidayConfigJson += currentLine;
-            }
-
-            fileReader.close();
+            holidayConfigJson = FileUtils.readFileToString(getHolidayFile().getFile());
             holidayItemList = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(holidayConfigJson, List.class,
                     HolidayItem.class);
             holidayConfiguration.setHolidays(holidayItemList);
