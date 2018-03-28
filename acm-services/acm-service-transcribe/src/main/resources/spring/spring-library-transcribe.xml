@@ -80,6 +80,7 @@
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="transcribeServiceFactory" ref="transcribeServiceFactory"/>
         <property name="transcribeArkCaseBeanUtils" ref="transcribeArkCaseBeanUtils"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
         <aop:scoped-proxy proxy-target-class="true"/>
     </bean>
 

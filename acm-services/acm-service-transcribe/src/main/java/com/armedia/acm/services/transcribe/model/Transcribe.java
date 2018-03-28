@@ -53,6 +53,10 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     @JoinColumn(name = "cm_transcribe_media_file_version_id")
     private EcmFileVersion mediaEcmFileVersion;
 
+    @OneToOne
+    @JoinColumn(name = "cm_transcribe_file_id")
+    private EcmFile transcribeEcmFile;
+
     @Column(name = "cm_transcribe_status")
     private String status;
 
@@ -61,6 +65,9 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
 
     @Column(name = "cm_transcribe_word_count")
     private long wordCount;
+
+    @Column(name = "cm_transcribe_confidence")
+    private int confidence;
 
     @Column(name = "cm_transcribe_creator")
     private String creator;
@@ -94,6 +101,7 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     private void setUpTranscribeItems()
     {
         wordCount = 0;
+        confidence = 0;
         if (getTranscribeItems() != null)
         {
             getTranscribeItems().forEach(item -> {
@@ -103,7 +111,11 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
                     String[] textAsArray = item.getText().split(" ");
                     wordCount += textAsArray.length;
                 }
+
+                confidence += item.getConfidence();
             });
+
+            confidence = confidence/getTranscribeItems().size();
         }
     }
 
@@ -176,6 +188,16 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
         this.mediaEcmFileVersion = mediaEcmFileVersion;
     }
 
+    public EcmFile getTranscribeEcmFile()
+    {
+        return transcribeEcmFile;
+    }
+
+    public void setTranscribeEcmFile(EcmFile transcribeEcmFile)
+    {
+        this.transcribeEcmFile = transcribeEcmFile;
+    }
+
     public String getProcessId()
     {
         return processId;
@@ -194,6 +216,16 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     public void setWordCount(long wordCount)
     {
         this.wordCount = wordCount;
+    }
+
+    public int getConfidence()
+    {
+        return confidence;
+    }
+
+    public void setConfidence(int confidence)
+    {
+        this.confidence = confidence;
     }
 
     @Override
