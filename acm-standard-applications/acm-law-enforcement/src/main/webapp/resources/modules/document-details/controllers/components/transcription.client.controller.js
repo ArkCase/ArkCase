@@ -181,9 +181,9 @@ angular.module('document-details').controller(
 
                     };
 
-                    $scope.complete = function () {
+                    var confirmationDialog = function (title, callbackFunction) {
                         bootbox.confirm({
-                            message: $translate.instant("documentDetails.comp.transcription.dialog.complete.title"),
+                            message: title,
                             buttons: {
                                 cancel: {
                                     label: $translate.instant("documentDetails.comp.transcription.buttons.cancel")
@@ -194,103 +194,68 @@ angular.module('document-details').controller(
                             },
                             callback: function(result){
                                 if(result){
-                                    if (!Util.isEmpty($scope.transcribeDataModel.id)) {
-                                        TranscriptionAppService.completeManualTranscription($scope.transcribeDataModel.id).then(function (data) {
-                                            $scope.$emit('transcribe-data-model', data);
-                                            $scope.transcribeDataModel = data;
-                                            MessageService.succsessAction();
-                                        }, function(err) {
-                                            MessageService.error(err.data);
-                                        });
-                                    }
+                                    callbackFunction();
                                 }
                             }
-
                         })
+                    };
 
+                    $scope.complete = function () {
+                        var completeManualTranscription = function(){
+                                if (!Util.isEmpty($scope.transcribeDataModel.id)) {
+                                    TranscriptionAppService.completeManualTranscription($scope.transcribeDataModel.id).then(function (data) {
+                                        $scope.$emit('transcribe-data-model', data);
+                                        $scope.transcribeDataModel = data;
+                                        MessageService.succsessAction();
+                                    }, function (err) {
+                                        MessageService.error(err.data);
+                                    });
+                                }
+                        };
+                        confirmationDialog($translate.instant("documentDetails.comp.transcription.dialog.complete.title"), completeManualTranscription);
                     };
 
                     $scope.cancel = function () {
-                        bootbox.confirm({
-                            message: $translate.instant("documentDetails.comp.transcription.dialog.cancel.title"),
-                            buttons: {
-                                cancel: {
-                                    label: $translate.instant("documentDetails.comp.transcription.buttons.cancel")
-                                },
-                                confirm: {
-                                    label: $translate.instant("documentDetails.comp.transcription.buttons.ok")
+                        var cancelManualTranscription = function(){
+                                if (!Util.isEmpty($scope.transcribeDataModel.id)) {
+                                    TranscriptionAppService.cancelManualTranscription($scope.transcribeDataModel.id).then(function (data) {
+                                        $scope.$emit('transcribe-data-model', data);
+                                        $scope.transcribeDataModel = data;
+                                        MessageService.succsessAction();
+                                    }, function(err) {
+                                        MessageService.error(err.data);
+                                    });
                                 }
-                            },
-                            callback: function(result){
-                                if(result){
-                                    if (!Util.isEmpty($scope.transcribeDataModel.id)) {
-                                        TranscriptionAppService.cancelManualTranscription($scope.transcribeDataModel.id).then(function (data) {
-                                            $scope.$emit('transcribe-data-model', data);
-                                            $scope.transcribeDataModel = data;
-                                            MessageService.succsessAction();
-                                        }, function(err) {
-                                            MessageService.error(err.data);
-                                        });
-                                    }
-                                }
-                            }
-
-                        })
-                    };
-
-                    var startAutomaticTranscription = function() {
-                        if (!Util.isEmpty(activeVersion)) {
-                            TranscriptionAppService.startAutomaticTranscription(activeVersion.id).then(function (data) {
-                                $scope.$emit('transcribe-data-model', data);
-                                $scope.transcribeDataModel = data;
-                                MessageService.succsessAction();
-                            }, function (err) {
-                                MessageService.error(err.data);
-                            });
-                        }
+                        };
+                        confirmationDialog($translate.instant("documentDetails.comp.transcription.dialog.cancel.title"), cancelManualTranscription);
                     };
 
                     $scope.transcribe = function () {
-                        if(Util.isArrayEmpty($scope.items)){
-                            startAutomaticTranscription(activeVersion.id);
-                        }else {
-                            bootbox.confirm({
-                                message: $translate.instant("documentDetails.comp.transcription.dialog.transcribe.title"),
-                                buttons: {
-                                    cancel: {
-                                        label: $translate.instant("documentDetails.comp.transcription.buttons.cancel")
-                                    },
-                                    confirm: {
-                                        label: $translate.instant("documentDetails.comp.transcription.buttons.ok")
-                                    }
-                                },
-                                callback: function (result) {
-                                    if (result) {
-                                        startAutomaticTranscription(activeVersion.id);
-                                    }
+                        var startAutomaticTranscription = function() {
+                                if (!Util.isEmpty(activeVersion)) {
+                                    TranscriptionAppService.startAutomaticTranscription(activeVersion.id).then(function (data) {
+                                        $scope.$emit('transcribe-data-model', data);
+                                        $scope.transcribeDataModel = data;
+                                        MessageService.succsessAction();
+                                    }, function (err) {
+                                        MessageService.error(err.data);
+                                    });
                                 }
-                            })
+                        };
+
+                        if(Util.isArrayEmpty($scope.items)){
+                            startAutomaticTranscription();
+                        } else {
+                            confirmationDialog($translate.instant("documentDetails.comp.transcription.dialog.transcribe.title"), startAutomaticTranscription);
                         }
+
                     };
 
                     $scope.compile = function () {
-                        bootbox.confirm({
-                            message: $translate.instant("documentDetails.comp.transcription.dialog.compile.title"),
-                            buttons: {
-                                cancel: {
-                                    label: $translate.instant("documentDetails.comp.transcription.buttons.cancel")
-                                },
-                                confirm: {
-                                    label: $translate.instant("documentDetails.comp.transcription.buttons.ok")
-                                }
-                            },
-                            callback: function(result){
-                                if(result){
-                                    //TODO
-                                }
-                            }
-                        })
-
+                        var compileTranscription = function(){
+                                //TODO
+                        };
+                        confirmationDialog($translate.instant("documentDetails.comp.transcription.dialog.compile.title"), compileTranscription);
                     };
 
                     var getTranscribeItemsFromHolders = function() {
