@@ -40,4 +40,8 @@ angular.module('time-tracking')
                                 $scope.$emit('report-object-refreshed', $stateParams.id);
                             };
 
+                            $scope.isVisible = function(){
+                                return $scope.objectInfo.status === 'DRAFT' ? true : false ;
+                            };
+
                         } ]);
