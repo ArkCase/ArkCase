@@ -27,7 +27,13 @@
                 "confidence": "Confidence",
                 "wordCount": "Word Count",
                 "language": "Language",
-                "fileType": "File Type"
+                "fileType": "File Type",
+                "readyForTranscription": "Ready for Transcription"
+            },
+            "dialog": {
+                "title": "Is this completed Transcript or you want to save as processing?",
+                "processing": "Processing",
+                "completed": "Completed"
             }
         },
         "comp.eventHistory": {

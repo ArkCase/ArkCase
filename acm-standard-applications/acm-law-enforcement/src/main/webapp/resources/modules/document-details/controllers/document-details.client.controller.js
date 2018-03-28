@@ -18,8 +18,9 @@ angular.module('document-details').controller(
         'Admin.TranscriptionManagementService',
         'MessageService',
         'UtilService',
+        '$log',
         function($scope, $stateParams, $sce, $q, $timeout, TicketService, ConfigService, LookupService, SnowboundService,
-                 Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util) {
+                 Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, $log) {
 
             new LocaleHelper.Locale({
                 scope : $scope
@@ -52,6 +53,7 @@ angular.module('document-details').controller(
                 selectedIds : $stateParams['selectedIds']
             };
             $scope.showVideoPlayer = false;
+            $scope.confidenceAverage = 0;
 
             TranscriptionManagementService.getTranscribeConfiguration().then(function(res) {
                 $scope.transcribeEnabled = res.data.enabled;
@@ -73,14 +75,27 @@ angular.module('document-details').controller(
 
             $scope.$on('transcribe-data-model', function(event, transcribeObj) {
                 $scope.transcribeObjectModel = transcribeObj;
+
+                var track = null;
+                var videoElement = angular.element(document.getElementsByTagName("video")[0])[0];
+                if (videoElement) {
+                    track = videoElement.addTextTrack("subtitles", "Transcription", $scope.transcribeObjectModel.language);
+                    videoElement.addEventListener("play", function() {
+                        track.mode = "showing";
+                    });
+                }
+
                 var confidenceSum = 0;
                 angular.forEach($scope.transcribeObjectModel.transcribeItems, function(value, key) {
                     confidenceSum += value.confidence;
+                    if (track != null) {
+                        addCue(track, value);
+                    }
                 });
 
                 $scope.confidenceAverage = 0;
                 if (confidenceSum > 0 && !Util.isArrayEmpty($scope.transcribeObjectModel.transcribeItems)) {
-                    $scope.confidenceAverage = (confidenceSum / $scope.transcribeObjectModel.transcribeItems.length).toFixed(1);
+                    $scope.confidenceAverage = (confidenceSum / $scope.transcribeObjectModel.transcribeItems.length).toFixed(0);
                 }
 
                 //color the status
@@ -98,6 +113,35 @@ angular.module('document-details').controller(
                 };
 
             });
+
+
+            var addCue = function(track, value) {
+                var cueAdded = false;
+                try {
+                    track.addCue(new VTTCue(value.startTime, value.endTime, value.text));
+                    cueAdded = true;
+                } catch(e) {
+                    $log.warn("Browser does not support VTTCue");
+                }
+
+                if (!cueAdded) {
+                    try {
+                        track.addCue(new TextTrackCue(value.startTime, value.endTime, value.text));
+                        cueAdded = true;
+                    }catch(e) {
+                        $log.warn("Browser does not support TextTrackCue");
+                    }
+                }
+            }
+
+            $scope.playAt = function(seconds) {
+                var videoElement = angular.element(document.getElementsByTagName("video")[0])[0];
+                if (videoElement) {
+                    videoElement.pause();
+                    videoElement.currentTime = seconds;
+                    videoElement.play();
+                }
+            }
 
             /**
              * Builds the snowbound url based on the parameters passed into the controller state and opens the
