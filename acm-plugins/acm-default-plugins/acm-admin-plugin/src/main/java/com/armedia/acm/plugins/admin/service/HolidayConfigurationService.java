@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +17,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class HolidayConfigurationService
 {
-
     private Logger log = LoggerFactory.getLogger(getClass());
     private Resource holidayFile;
     private ObjectConverter objectConverter;
-
-    private FileWriter fileWriter = null;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public void saveHolidayConfig(List<HolidayItem> holidays)
@@ -37,9 +33,6 @@ public class HolidayConfigurationService
             log.info("Trying to write to config file: {}", getHolidayFile().getFile().getAbsolutePath());
             lock.writeLock().lock();
             FileUtils.writeStringToFile(getHolidayFile().getFile(), holidayConfigJson);
-            // fileWriter = new FileWriter( false);
-            // fileWriter.write(holidayConfigJson);
-            // fileWriter.close();
         }
         catch (IOException e)
         {
