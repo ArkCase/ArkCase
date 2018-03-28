@@ -173,7 +173,7 @@ angular.module('document-details').controller(
                                     $scope.transcribeDataModel = data;
                                     MessageService.succsessAction();
                                 }, function(err) {
-                                    MessageService.error(err);
+                                    MessageService.error(err.data);
                                 });
                             }
 
@@ -181,44 +181,81 @@ angular.module('document-details').controller(
 
                     };
 
+                    var confirmationDialog = function (title, callbackFunction) {
+                        bootbox.confirm({
+                            message: title,
+                            buttons: {
+                                cancel: {
+                                    label: $translate.instant("documentDetails.comp.transcription.buttons.cancel")
+                                },
+                                confirm: {
+                                    label: $translate.instant("documentDetails.comp.transcription.buttons.ok")
+                                }
+                            },
+                            callback: function(result){
+                                if(result){
+                                    callbackFunction();
+                                }
+                            }
+                        })
+                    };
+
                     $scope.complete = function () {
-                        if (!Util.isEmpty($scope.transcribeDataModel.id)) {
-                            TranscriptionAppService.completeManualTranscription($scope.transcribeDataModel.id).then(function (data) {
-                                $scope.$emit('transcribe-data-model', data);
-                                $scope.transcribeDataModel = data;
-                                MessageService.succsessAction();
-                            }, function(err) {
-                                MessageService.error(err);
-                            });
-                        }
+                        var completeManualTranscription = function(){
+                                if (!Util.isEmpty($scope.transcribeDataModel.id)) {
+                                    TranscriptionAppService.completeManualTranscription($scope.transcribeDataModel.id).then(function (data) {
+                                        $scope.$emit('transcribe-data-model', data);
+                                        $scope.transcribeDataModel = data;
+                                        MessageService.succsessAction();
+                                    }, function (err) {
+                                        MessageService.error(err.data);
+                                    });
+                                }
+                        };
+                        confirmationDialog($translate.instant("documentDetails.comp.transcription.dialog.complete.title"), completeManualTranscription);
                     };
 
                     $scope.cancel = function () {
-                        if (!Util.isEmpty($scope.transcribeDataModel.id)) {
-                            TranscriptionAppService.cancelManualTranscription($scope.transcribeDataModel.id).then(function (data) {
-                                $scope.$emit('transcribe-data-model', data);
-                                $scope.transcribeDataModel = data;
-                                MessageService.succsessAction();
-                            }, function(err) {
-                                MessageService.error(err);
-                            });
-                        }
+                        var cancelManualTranscription = function(){
+                                if (!Util.isEmpty($scope.transcribeDataModel.id)) {
+                                    TranscriptionAppService.cancelManualTranscription($scope.transcribeDataModel.id).then(function (data) {
+                                        $scope.$emit('transcribe-data-model', data);
+                                        $scope.transcribeDataModel = data;
+                                        MessageService.succsessAction();
+                                    }, function(err) {
+                                        MessageService.error(err.data);
+                                    });
+                                }
+                        };
+                        confirmationDialog($translate.instant("documentDetails.comp.transcription.dialog.cancel.title"), cancelManualTranscription);
                     };
 
                     $scope.transcribe = function () {
-                        if (!Util.isEmpty(activeVersion)) {
-                            TranscriptionAppService.startAutomaticTranscription(activeVersion.id).then(function (data) {
-                                $scope.$emit('transcribe-data-model', data);
-                                $scope.transcribeDataModel = data;
-                                MessageService.succsessAction();
-                            }, function(err) {
-                                MessageService.error(err);
-                            });
+                        var startAutomaticTranscription = function() {
+                                if (!Util.isEmpty(activeVersion)) {
+                                    TranscriptionAppService.startAutomaticTranscription(activeVersion.id).then(function (data) {
+                                        $scope.$emit('transcribe-data-model', data);
+                                        $scope.transcribeDataModel = data;
+                                        MessageService.succsessAction();
+                                    }, function (err) {
+                                        MessageService.error(err.data);
+                                    });
+                                }
+                        };
+
+                        if(Util.isArrayEmpty($scope.items)){
+                            startAutomaticTranscription();
+                        } else {
+                            confirmationDialog($translate.instant("documentDetails.comp.transcription.dialog.transcribe.title"), startAutomaticTranscription);
                         }
+
                     };
 
                     $scope.compile = function () {
-
+                        var compileTranscription = function(){
+                                //TODO
+                        };
+                        confirmationDialog($translate.instant("documentDetails.comp.transcription.dialog.compile.title"), compileTranscription);
                     };
 
                     var getTranscribeItemsFromHolders = function() {

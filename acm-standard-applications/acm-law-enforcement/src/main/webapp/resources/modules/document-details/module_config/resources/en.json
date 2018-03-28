@@ -14,7 +14,8 @@
                 "transcribe": "Transcribe",
                 "complete": "Complete",
                 "compile": "Compile",
-                "save": "Save"
+                "save": "Save",
+                "ok": "OK"
             },
             "startTime": "Start time",
             "confidence": "Confidence",
@@ -33,7 +34,11 @@
             "dialog": {
                 "title": "Is this completed Transcript or you want to save as processing?",
                 "processing": "Processing",
-                "completed": "Completed"
+                "completed": "Completed",
+                "cancel.title": "Do you want to cancel the transcription?",
+                "complete.title": "Do you want to complete the transcription?",
+                "transcribe.title": "This action will override existing transcription. Do you want to proceed?",
+                "compile.title": "This action will override existing file. Do you want to proceed?"
             }
         },
         "comp.eventHistory": {
