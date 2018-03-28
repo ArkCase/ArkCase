@@ -10,14 +10,34 @@ import com.armedia.acm.services.transcribe.exception.SaveTranscribeException;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/27/2018
@@ -102,7 +122,7 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     {
         wordCount = 0;
         confidence = 0;
-        if (getTranscribeItems() != null && !getTranscribeItems().isEmpty() )
+        if (getTranscribeItems() != null && !getTranscribeItems().isEmpty())
         {
             getTranscribeItems().forEach(item -> {
                 item.setTranscribe(this);
@@ -115,7 +135,7 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
                 confidence += item.getConfidence();
             });
 
-            confidence = confidence/getTranscribeItems().size();
+            confidence = confidence / getTranscribeItems().size();
         }
     }
 
