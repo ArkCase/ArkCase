@@ -3,7 +3,48 @@
     "title": "Frevvo",
     "configurable": false,
     "menus": [],
-    "components": [],
+    "components": [
+        {
+            "id": "userOrGroupSearch",
+            "title": "something from component",
+            "enableFiltering": false,
+            "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
+            "userOrGroupFacetExtraFilter": "&fq=\"name\": ",
+            "configurable": true,
+            "multiSelect": false,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "CASE NAME",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "CASE TYPE",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "CASE TITLE",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "CASE USERNAME",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        }
+    ],
     "forms": [
         {
             "name": "new-case",
@@ -133,6 +174,44 @@
             {
                 "name": "object_id_s",
                 "displayName": "frevvo.dialogObjectPicker.table.columns.id",
+                "headerCellFilter": "translate"
+            }
+        ],
+        "paginationPageSizes": [
+            5,
+            10,
+            20,
+            50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+    },
+    "userOrGroupSearch": {
+        "enableFiltering": true,
+        "multiSelect": false,
+        "showFacets": false,
+        "enableSorting": false,
+        "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
+        "userOrGroupFacetExtraFilter": "&fq=\"name\": ",
+        "columnDefs": [
+            {
+                "name": "name",
+                "displayName": "CASE NAME",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "object_type_s",
+                "displayName": "CASE TYPE",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "title",
+                "displayName": "CASE TITLE",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "object_id_s",
+                "displayName": "CASE USERNAME",
                 "headerCellFilter": "translate"
             }
         ],
