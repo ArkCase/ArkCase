@@ -8,6 +8,7 @@ import com.armedia.acm.spring.SpringContextHolder;
 import com.armedia.acm.spring.events.AbstractContextHolderEvent;
 import com.armedia.acm.spring.events.ContextAddedEvent;
 import com.armedia.acm.spring.events.ContextRemovedEvent;
+import com.armedia.acm.spring.events.ContextReplacedEvent;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -217,26 +218,40 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
         String eventFile = event.getContextName();
         if ((event instanceof ContextRemovedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME))
         {
-            // clear all privileges
-            configurablePrivilegesByRole.clear();
-            configurableUrlPrivileges.clear();
-            // add non configurable privileges
-            configurablePrivilegesByRole.putAll(privilegesByRole);
-            configurableUrlPrivileges.addAll(urlPrivileges);
+            clearPrivileges();
         }
         else if ((event instanceof ContextAddedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME))
         {
-            // read all privileges
-            Map<String, AcmPluginPrivileges> pluginsPrivileges = springContextHolder.getAllBeansOfType(AcmPluginPrivileges.class);
-
-            log.info("{} plugins privileges(s) found.", pluginsPrivileges.size());
-
-            // get privileges from configuration files located in ${user.home}/.arkcase/acm
-            pluginsPrivileges.forEach((key, value) -> {
-                log.debug("Registering plugins privileges '{}'.", key);
-                registerPluginPrivileges(value);
-            });
+            loadPrivileges();
         }
+        else if ((event instanceof ContextReplacedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME))
+        {
+            clearPrivileges();
+            loadPrivileges();
+        }
+    }
 
+    private void loadPrivileges()
+    {
+        // read all privileges
+        Map<String, AcmPluginPrivileges> pluginsPrivileges = springContextHolder.getAllBeansOfType(AcmPluginPrivileges.class);
+
+        log.info("{} plugins privileges(s) found.", pluginsPrivileges.size());
+
+        // get privileges from configuration files located in ${user.home}/.arkcase/acm
+        pluginsPrivileges.forEach((key, value) -> {
+            log.debug("Registering plugins privileges '{}'.", key);
+            registerPluginPrivileges(value);
+        });
+    }
+
+    private void clearPrivileges()
+    {
+        // clear all privileges
+        configurablePrivilegesByRole.clear();
+        configurableUrlPrivileges.clear();
+        // add non configurable privileges
+        configurablePrivilegesByRole.putAll(privilegesByRole);
+        configurableUrlPrivileges.addAll(urlPrivileges);
     }
 }
