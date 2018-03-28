@@ -10,9 +10,11 @@ import com.armedia.acm.services.transcribe.exception.SaveTranscribeException;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -91,9 +93,17 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
 
     private void setUpTranscribeItems()
     {
+        wordCount = 0;
         if (getTranscribeItems() != null)
         {
-            getTranscribeItems().forEach(item -> item.setTranscribe(this));
+            getTranscribeItems().forEach(item -> {
+                item.setTranscribe(this);
+                if (StringUtils.isNotEmpty(item.getText()))
+                {
+                    String[] textAsArray = item.getText().split(" ");
+                    wordCount += textAsArray.length;
+                }
+            });
         }
     }
 
@@ -140,11 +150,19 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
 
     public List<TranscribeItem> getTranscribeItems()
     {
+        if (transcribeItems != null)
+        {
+            Collections.sort(transcribeItems);
+        }
         return transcribeItems;
     }
 
     public void setTranscribeItems(List<TranscribeItem> transcribeItems)
     {
+        if (transcribeItems != null)
+        {
+            Collections.sort(transcribeItems);
+        }
         this.transcribeItems = transcribeItems;
     }
 

@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.plugins.admin.exception.AcmModuleConfigurationException;
 import com.armedia.acm.plugins.admin.model.ModuleConfigurationConstants;
+import com.armedia.acm.plugins.admin.model.ModuleItem;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -10,10 +11,10 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * Created by sergey.kolomiets on 6/26/15.
@@ -23,7 +24,7 @@ public class ModuleConfigurationService implements ModuleConfigurationConstants
     private Logger log = LoggerFactory.getLogger(getClass());
     private String appConfigPropertiesFile;
 
-    public List<Map<String, String>> retrieveModules() throws AcmModuleConfigurationException
+    public List<ModuleItem> retrieveModules() throws AcmModuleConfigurationException
     {
         try (InputStream propInputStream = FileUtils.openInputStream(new File(appConfigPropertiesFile)))
         {
@@ -64,19 +65,20 @@ public class ModuleConfigurationService implements ModuleConfigurationConstants
                 }
             }
 
-            List<Map<String, String>> modulesInfos = new ArrayList<>();
+            List<ModuleItem> modulesInfos = new ArrayList<>();
+            String nameProperty = "";
+            String privilegeProperty = "";
             for (String moduleId : modulesIds)
             {
-                Map<String, String> moduleInfo = new HashMap<>();
-                moduleInfo.put(PROP_MODULE_ID, moduleId);
+                nameProperty = String.format(PROP_MODULE_NAME_TMPL, moduleId);
+                privilegeProperty = String.format(PROP_MODULE_PRIVILEGE_TMPL, moduleId);
 
-                String nameProperty = String.format(PROP_MODULE_NAME_TMPL, moduleId);
-                moduleInfo.put(PROP_MODULE_NAME, props.getProperty(nameProperty, ""));
+                ModuleItem moduleItem = new ModuleItem();
+                moduleItem.setId(moduleId);
+                moduleItem.setName(props.getProperty(nameProperty, ""));
+                moduleItem.setPrivilege(props.getProperty(privilegeProperty));
 
-                String privilegeProperty = String.format(PROP_MODULE_PRIVILEGE_TMPL, moduleId);
-                moduleInfo.put(PROP_MODULE_PRIVILEGE, props.getProperty(privilegeProperty, ""));
-
-                modulesInfos.add(moduleInfo);
+                modulesInfos.add(moduleItem);
             }
 
             // Get only modules names
@@ -88,6 +90,44 @@ public class ModuleConfigurationService implements ModuleConfigurationConstants
             log.error("Can't retrieve modules", e);
             throw new AcmModuleConfigurationException("Can't retrieve modules", e);
         }
+    }
+
+    public List<ModuleItem> findModulesPaged(Integer startRow, Integer maxRows, String sortDirection)
+            throws AcmModuleConfigurationException
+    {
+        List<ModuleItem> modules = retrieveModules();
+        modules.sort(Comparator.comparing(ModuleItem::getName));
+
+        if (sortDirection.equalsIgnoreCase("DESC"))
+        {
+            modules.sort(Comparator.comparing(ModuleItem::getName).reversed());
+        }
+        else
+        {
+            modules.sort(Comparator.comparing(ModuleItem::getName));
+        }
+
+        return modules.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
+    }
+
+    public List<ModuleItem> findModulesByMatchingName(String filterQuery, Integer startRow, Integer maxRows, String sortDirection)
+            throws AcmModuleConfigurationException
+    {
+        List<ModuleItem> modules = retrieveModules();
+
+        modules = modules.stream().filter(moduleItem -> moduleItem.getName().toLowerCase().contains(filterQuery.toLowerCase()))
+                .collect(Collectors.toList());
+
+        if (sortDirection.contains("DESC"))
+        {
+            modules.sort(Comparator.comparing(ModuleItem::getName).reversed());
+        }
+        else
+        {
+            modules.sort(Comparator.comparing(ModuleItem::getName));
+        }
+
+        return modules.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
     public void setAppConfigPropertiesFile(String appConfigPropertiesFile)

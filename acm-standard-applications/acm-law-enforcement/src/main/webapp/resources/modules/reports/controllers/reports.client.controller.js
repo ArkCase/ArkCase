@@ -10,6 +10,8 @@ angular.module('reports').controller(
                         scope : $scope
                     });
 
+                    $scope.showReportParameters = false;
+                    
                     $scope.showXmlReport = false;
 
                     $scope.data = Data.getData();
@@ -35,6 +37,8 @@ angular.module('reports').controller(
                         $scope.data.reportsUser = reportsConfig['PENTAHO_SERVER_USER'];
                         $scope.data.reportsPassword = reportsConfig['PENTAHO_SERVER_PASSWORD'];
                         $scope.data.reportSelected = null;
+                        
+                        $scope.showReportParameters = false;
                     });
 
                     $scope.generateReport = function() {
@@ -42,6 +46,22 @@ angular.module('reports').controller(
                             $window.open(BuildUrl.getUrl($scope.data, $scope.showXmlReport));
                         } else {
                             $scope.reportUrl = BuildUrl.getUrl($scope.data, $scope.showXmlReport);
+                        }
+                    };
+
+                    $scope.$watchCollection('data.reportSelected', onReportSelected);
+
+                    function onReportSelected() {
+                        if (!$scope.data.reports || !$scope.data.reportSelected) {
+                            $scope.showReportParameters = false;
+                            return;
+                        }
+                        var reportUrl = $scope.data.reports[$scope.data.reportSelected];
+                        // show report parameters only on prpt reports
+                        if (reportUrl.indexOf('prpt/viewer', reportUrl.length - 'prpt/viewer'.length) !== -1) {
+                            $scope.showReportParameters = true;
+                        } else {
+                            $scope.showReportParameters = false;
                         }
                     };
                 } ]);

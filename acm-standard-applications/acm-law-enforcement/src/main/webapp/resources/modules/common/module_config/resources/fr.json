@@ -3,15 +3,28 @@
         "select.option.none": "(Sélectionnez un)",
         "value.unknown": "Inconnu",
         "value.none": "Aucun",
-        "defaultDateFormat": "Fr_MM/DD/YYYY",
-        "defaultTimeFormat": "Fr_hh:mm:ss",
-        "defaultDateTimeFormat": "Fr_MM/DD/YYYY hh:mm",
-        "defaultDatePickerFormat": "Fr_MM/dd/yyyy",
-        "defaultDateUIFormat": "Fr_MM/dd/yyyy",
-        "defaultDateTimeUIFormat": "Fr_MM/dd/yyyy HH:mm"
+		"_1_": "Merci de ne pas utiliser les styles de date personnalisés ou de les ajouter car ils sont susceptibles d'erreur.",
+        "_2_": "Veuillez utiliser l'un des formats prédéfinis: ",
+        "_3_": "'moyen'       - équivalent à 'MMM j, a h:mm:ss a' pour local en_US (par ex. 3 septembre 2010 12:05:08)",
+        "_4_": "'court'       - équivalent à 'M/j/aa h:mm a' pour local en_US (par ex. 9/3/10 12:05)",
+        "_5_": "'dateComplète'- équivalent à 'EEEE, MMMM j, a' pour local en_US (par ex. Vendredi 3 septembre 2010)",
+        "_6_": "'longueDate'  - équivalent à 'MMMM j, a' pour local en_US (par ex. 3 septembre 2010)",
+        "_7_": "'dateMoyenne' - équivalent à 'MMM j, a' pour local en_US (par ex. 3 septembre 2010)",
+        "_8_": "'dateCourte'  - équivalent à 'M/j/aa' pour local en_US (par ex. 9/3/10)",
+        "_9_": "'tempsMoyen'  - équivalent à 'h:mm:ss a' pour local en_US (par ex. 12:05:08)",
+        "_10": "'tempsCourt'  - équivalent à 'h:mm a' pour local en_US (par ex. 12:05)",
+        "_11": " ",
+        "_12": "Les formats de date suivants sont supprimés progressivement. Si les clients demandent à avoir un format personnalisé, nous avons besoin ",
+        "_13": "pour les éduquer à éviter de le faire, en raison de préoccupations i18n",
+        "defaultDateFormat": "MM/JJ/AAAA",
+        "defaultTimeFormat": "hh:mm:ss",
+        "defaultDateTimeFormat": "MM/JJ/AAAA hh:mm",
+        "defaultDatePickerFormat": "MM/jj/aaaa",
+        "defaultDateUIFormat": "MM/jj/aaaa",
+        "defaultDateTimeUIFormat": "MM/jj/aaaa HH:mm"
     },
     "common.frevvo": {
-        "defaultDateFormat": "Fr_YYYY-MM-DD"
+        "defaultDateFormat": "AAAA-MM-JJ"
     },
     "common.service": {
         "error.invalidData": "Données invalides"
@@ -53,7 +66,7 @@
             "newCorrespondence": "Nouvelle correspondance",
             "open": "Ouvrir",
             "email": "Email",
-            "newTask": "fr_New Task",
+            "newTask": "Nouvelle tâche",
             "download": "Télécharger",
             "copy": "Copie",
             "cut": "Couper",
@@ -96,6 +109,10 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "Envoyer en tant que pièce jointe et lien hypertexte",
             "btnCancel.text": "Annuler",
             "btnOk.text": "Envoyer un email"
+		},
+        "participantsDialog": {
+            "titlePart": "Participants pour ",
+            "title": "Participants"	
         },
         "recipientsDialog": {
             "title": "Choisir les destinataires",
@@ -168,7 +185,7 @@
         "authorized": "Autorisé"
     },
     "common.directive.objectAuthorizationRolesFilter": {
-        "pattern.title": "fr_Error, 2 characters required."
+        "pattern.title": "Erreur, 2 caractères requis."
     },
     "common.directive.searchModal": {
         "header": "Rechercher",
@@ -176,7 +193,10 @@
         "btnOk.text": "D'accord",
         "btnCancel.text": "Annuler",
         "edtPlaceholder": "Entrez pour rechercher",
-        "noData.text": "Aucun résultat"
+        "noData.text": "Aucun résultat",
+		"pickUserLabel": "Choisissez un utilisateur associé",
+        "pickGroupLabel": "Choisissez un groupe associé",
+		"selectedItemsGrid.label": "Entrées sélectionnées"
     },
     "common.directive.search": {
         "showMore.button.text": "Afficher plus de valeurs",
@@ -473,7 +493,9 @@
             "day.label": "Journée",
             "week.label": "La semaine",
             "month.label": "Mois",
-            "on.label": "Sur",
+            "_1_": "'sur.l'étiquette' n'apparaît pas en cours d'utilisation. _à_SUPPRIMER_",
+            "_2_": "Si nécessaire, reformulez le message pour éviter la grammaire centrée sur l'anglais dans le message",
+            "_on.label": "Sur",
             "day.placeholder": "Journée",
             "year.placeholder": "An",
             "dailyRecurrence": {
@@ -567,7 +589,7 @@
     },
     "common.directive.coreParticipants": {
         "title": "Participants",
-        "replaceFolderChildrenParticipants": "fr_Replace child documents participants",
+        "replaceFolderChildrenParticipants": "Remplacer les participants aux documents enfants",
         "modal": {
             "addParticipant.label": "Ajouter un participant",
             "editParticipant.label": "Modifier l'enregistrement",
@@ -577,7 +599,7 @@
             "btnCancel.text": "Annuler",
             "dialogUserPicker.header": "Rechercher un utilisateur",
             "dialogGroupPicker.header": "Groupe de recherche",
-            "replaceChildrenParticipant": "fr_replace children participant"
+            "replaceChildrenParticipant": "remplacer les enfants participants"
         },
         "message": {
             "error.groupType": "Le groupe propriétaire ne peut pas être une personne.",
@@ -589,6 +611,8 @@
             "error.noAccessCombo": "La combinaison de No Access et Assignee n'est pas autorisée.",
             "error.duplicateUserOrGroup": "Participant invalide Entrées en double trouvées pour le participant.",
             "error.userOrGroupNotFound": "Participant invalide L'entrée du participant est manquante dans le système.",
+			"error.emptyParticipantLdapId": "Le nom du participant ne peut pas être vide",
+            "error.emptyParticipantType": "Le type de participant ne peut pas être vide",
             "error.ownerUnique": "Un seul propriétaire est autorisé."
         }
     },
@@ -620,12 +644,12 @@
         "FILE": "Fichier",
         "DOC_REPO": "Référentiel de documents",
         "ORGANIZATION": "Organisation",
-        "PERSON": "fr_La personne",
-        "PERSON-ASSOCIATION": "fr_Person-Association",
-        "PARTICIPANT": "fr_Participant",
-        "NOTE": "fr_Note",
-        "PARTICIPANT-ASSOCIATION": "fr_Participant-Association",
-        "ASSIGNMENT": "fr_Assignment"
+        "PERSON": "La personne",
+        "PERSON-ASSOCIATION": "La personne-Association",
+        "PARTICIPANT": "Participant",
+        "NOTE": "Remarque",
+        "PARTICIPANT-ASSOCIATION": "Participant-Association",
+        "ASSIGNMENT": "Affectation"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choisissez l'utilisateur",
@@ -881,8 +905,3 @@
         }
     }
 }
-
-
-
-
-

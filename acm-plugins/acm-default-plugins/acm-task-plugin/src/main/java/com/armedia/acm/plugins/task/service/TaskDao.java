@@ -148,6 +148,8 @@ public interface TaskDao
 
     byte[] getDiagram(Long id) throws AcmTaskException;
 
+    byte[] getDiagram(String processId) throws AcmTaskException;
+
     AcmTask startBusinessProcess(Map<String, Object> pVars, String businessProcessName) throws AcmTaskException;
 
     List<ProcessInstance> findProcessesByProcessVariables(Map<String, Object> matchProcessVariables);
