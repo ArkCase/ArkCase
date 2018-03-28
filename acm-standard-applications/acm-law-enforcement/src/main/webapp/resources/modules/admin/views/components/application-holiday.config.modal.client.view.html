@@ -7,7 +7,7 @@
             <div class="col-sm-12 form-group">
                 <label for="holidayName" translate>admin.application.holiday.grid.holidayName</label><span
                     class="required-asterisk">*</span><br />
-                <input type="text" id="holidayName" name="holidayName" ng-model="holidays.holidayName" class="input-md form-control"
+                <input type="text" id="holidayName" name="holidayName" ng-model="holiday.holidayName" class="input-md form-control"
                         placeholder="{{'admin.application.holiday.placeholder.name' | translate}}" required>
             </div>
         </div>
@@ -15,7 +15,7 @@
             <div class="col-sm-12 form-group">
                 <label for="holidayDate" translate>admin.application.holiday.grid.holidayDate</label><span
                     class="required-asterisk">*</span><br />
-                <input type="date" id="holidayDate" class="input-md form-control" ng-model="holidays.holidayDate" required="required"
+                <input type="date" id="holidayDate" class="input-md form-control" ng-model="holiday.holidayDate" required="required"
                         pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="{{ 'admin.application.holiday.placeholder.date' | translate }}">
             </div>
         </div>
