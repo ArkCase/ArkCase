@@ -21,4 +21,8 @@
     <bean id="cancelTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.CancelTranscribeAPIController">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
     </bean>
+
+    <bean id="compileTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.CompileTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
 </beans>
