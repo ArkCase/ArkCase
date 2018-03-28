@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/06/2018
@@ -78,6 +79,16 @@ public class TranscribeUtils
             });
 
             return clonedItems;
+        }
+
+        return null;
+    }
+
+    public static String getText(List<TranscribeItem> items)
+    {
+        if (items != null && items.size() > 0)
+        {
+            return String.join(" ", items.stream().map(item -> item.getText()).collect(Collectors.toList()));
         }
 
         return null;

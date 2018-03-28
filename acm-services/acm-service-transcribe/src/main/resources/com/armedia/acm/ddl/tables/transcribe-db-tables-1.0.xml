@@ -112,4 +112,12 @@
         </insert>
     </changeSet>
 
+    <changeSet id="5-add-confidence-transcribe-table" author="riste.tutureski">
+        <addColumn tableName="acm_transcribe">
+            <column name="cm_transcribe_confidence" type="INTEGER">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
