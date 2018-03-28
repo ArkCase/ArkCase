@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.admin.web.api;
 
-import com.armedia.acm.plugins.admin.model.HolidayConfiguration;
+import com.armedia.acm.plugins.admin.model.HolidayItem;
 import com.armedia.acm.plugins.admin.service.HolidayConfigurationService;
 
 import org.springframework.http.HttpStatus;
@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 @Controller
 @RequestMapping({ "/api/v1/service/holidayConfig", "/api/latest/service/holidayConfig" })
 public class HolidayConfigurationAPIController
@@ -19,14 +21,14 @@ public class HolidayConfigurationAPIController
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public void saveHolidayConfig(@RequestBody HolidayConfiguration holidayConf)
+    public void saveHolidayConfig(@RequestBody List<HolidayItem> holidays)
     {
-        holidayConfigurationService.saveHolidayConfig(holidayConf);
+        holidayConfigurationService.saveHolidayConfig(holidays);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<HolidayConfiguration> getHolidayConfig()
+    public ResponseEntity<List<HolidayItem>> getHolidayConfig()
     {
         return new ResponseEntity<>(holidayConfigurationService.getHolidayConfiguration(), HttpStatus.OK);
     }

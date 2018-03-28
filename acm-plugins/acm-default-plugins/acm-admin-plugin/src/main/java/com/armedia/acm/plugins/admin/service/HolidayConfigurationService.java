@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.admin.model.HolidayConfiguration;
 import com.armedia.acm.plugins.admin.model.HolidayItem;
 
 import org.apache.commons.io.FileUtils;
@@ -11,6 +10,7 @@ import org.springframework.core.io.Resource;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -26,19 +26,20 @@ public class HolidayConfigurationService
     private FileWriter fileWriter = null;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public void saveHolidayConfig(HolidayConfiguration holidayConf)
+    public void saveHolidayConfig(List<HolidayItem> holidays)
     {
-        String holidayConfigJson = Objects.nonNull(holidayConf)
-                ? getObjectConverter().getIndentedJsonMarshaller().marshal(holidayConf.getHolidays())
+        String holidayConfigJson = Objects.nonNull(holidays)
+                ? getObjectConverter().getIndentedJsonMarshaller().marshal(holidays)
                 : "[]";
 
         try
         {
-            log.info("Trying to write to config file: " + getHolidayFile().getFile().getAbsolutePath());
+            log.info("Trying to write to config file: {}", getHolidayFile().getFile().getAbsolutePath());
             lock.writeLock().lock();
-            fileWriter = new FileWriter(getHolidayFile().getFile(), false);
-            fileWriter.write(holidayConfigJson);
-            fileWriter.close();
+            FileUtils.writeStringToFile(getHolidayFile().getFile(), holidayConfigJson);
+            // fileWriter = new FileWriter( false);
+            // fileWriter.write(holidayConfigJson);
+            // fileWriter.close();
         }
         catch (IOException e)
         {
@@ -50,21 +51,18 @@ public class HolidayConfigurationService
         }
     }
 
-    public HolidayConfiguration getHolidayConfiguration()
+    public List<HolidayItem> getHolidayConfiguration()
     {
-        String holidayConfigJson = "";
-        HolidayConfiguration holidayConfiguration = new HolidayConfiguration();
-        List<HolidayItem> holidayItemList;
+        List<HolidayItem> holidayItemList = new ArrayList<>();
 
         try
         {
-            log.info("Trying to read from config file: " + getHolidayFile().getFile().getAbsolutePath());
+            log.info("Trying to read from config file: {}", getHolidayFile().getFile().getAbsolutePath());
 
             lock.readLock().lock();
-            holidayConfigJson = FileUtils.readFileToString(getHolidayFile().getFile());
+            String holidayConfigJson = FileUtils.readFileToString(getHolidayFile().getFile());
             holidayItemList = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(holidayConfigJson, List.class,
                     HolidayItem.class);
-            holidayConfiguration.setHolidays(holidayItemList);
         }
         catch (IOException e)
         {
@@ -75,8 +73,7 @@ public class HolidayConfigurationService
             lock.readLock().unlock();
         }
 
-        return holidayConfiguration;
-
+        return holidayItemList;
     }
 
     public Resource getHolidayFile()
