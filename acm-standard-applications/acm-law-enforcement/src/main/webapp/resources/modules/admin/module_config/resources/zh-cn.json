@@ -573,6 +573,20 @@
                 "historyDays.label": "保持审计和通知事件（天）",
                 "inform": "设置成功保存",
                 "apply.label": "生效"
+            },
+            "holiday": {
+                "title": "zh-cn_Holiday Schedule",
+                "grid": {
+                    "holidayName": "zh-cn_Name of Holiday",
+                    "holidayDate": "zh-cn_Date of holiday"
+                },
+                "cancel": "zh-cn_Cancel",
+                "save": "zh-cn_Save",
+                "message": "zh-cn_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "zh-cn_Enter Name of Holiday",
+                    "date": "zh-cn_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "品牌",
