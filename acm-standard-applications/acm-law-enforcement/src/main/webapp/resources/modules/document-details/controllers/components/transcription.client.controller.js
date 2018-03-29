@@ -262,7 +262,7 @@ angular.module('document-details').controller(
                             }
                         };
                         if($scope.transcribeDataModel.transcribeEcmFile === null){
-                            compileTranscription(true);
+                            compileTranscription();
                         } else {
                             confirmationDialog($translate.instant("documentDetails.comp.transcription.dialog.compile.title"), compileTranscription);
                         }
