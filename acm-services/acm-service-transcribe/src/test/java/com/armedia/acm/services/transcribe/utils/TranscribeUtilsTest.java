@@ -151,4 +151,31 @@ public class TranscribeUtilsTest
 
         assertEquals(expectedResult, actualResult);
     }
+
+    @Test
+    public void getText() throws Exception
+    {
+        TranscribeItem item1 = new TranscribeItem();
+        item1.setText("This");
+
+        TranscribeItem item2 = new TranscribeItem();
+        item2.setText("is");
+
+        TranscribeItem item3 = new TranscribeItem();
+        item3.setText("a");
+
+        TranscribeItem item4 = new TranscribeItem();
+        item4.setText("test");
+
+        List<TranscribeItem> items = new ArrayList<>();
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+        items.add(item4);
+
+        String text = TranscribeUtils.getText(items);
+
+        assertNotNull(text);
+        assertEquals("This is a test", text);
+    }
 }

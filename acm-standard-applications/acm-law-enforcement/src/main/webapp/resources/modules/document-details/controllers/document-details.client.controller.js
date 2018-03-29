@@ -53,7 +53,6 @@ angular.module('document-details').controller(
                 selectedIds : $stateParams['selectedIds']
             };
             $scope.showVideoPlayer = false;
-            $scope.confidenceAverage = 0;
 
             TranscriptionManagementService.getTranscribeConfiguration().then(function(res) {
                 $scope.transcribeEnabled = res.data.enabled;
@@ -85,18 +84,11 @@ angular.module('document-details').controller(
                     });
                 }
 
-                var confidenceSum = 0;
                 angular.forEach($scope.transcribeObjectModel.transcribeItems, function(value, key) {
-                    confidenceSum += value.confidence;
                     if (track != null) {
                         addCue(track, value);
                     }
                 });
-
-                $scope.confidenceAverage = 0;
-                if (confidenceSum > 0 && !Util.isArrayEmpty($scope.transcribeObjectModel.transcribeItems)) {
-                    $scope.confidenceAverage = (confidenceSum / $scope.transcribeObjectModel.transcribeItems.length).toFixed(0);
-                }
 
                 //color the status
                 $scope.colorTranscribeStatus = function() {
