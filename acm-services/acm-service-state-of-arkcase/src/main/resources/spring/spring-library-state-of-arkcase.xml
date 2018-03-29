@@ -9,5 +9,10 @@
         <property name="mapper" ref="sourceObjectMapper"/>
         <property name="stateOfArkcaseRegistry" ref="stateOfArkcaseRegistry"/>
     </bean>
-    
+
+    <bean id="errorsLogFileService"
+          class="com.armedia.acm.service.stateofarkcase.service.ErrorsLogFileService">
+        <constructor-arg index="0" value="file-errors-log"/>
+    </bean>
+
 </beans>
