@@ -174,7 +174,7 @@ public class GroupServiceImpl implements GroupService
             Boolean authorized, String groupId, String groupDirectory, String groupType) throws MuleException
     {
         String query = "object_type_s:GROUP AND -object_id_s:" + groupId + " AND status_lcs:ACTIVE AND object_sub_type_s:"
-                + groupType + " AND directory_name_s:" + groupDirectory
+                + groupType + (groupDirectory.isEmpty() ? "" : " AND directory_name_s:" + groupDirectory)
                 + (authorized ? " AND ascendants_id_ss:" + groupId : " AND -ascendants_id_ss:" + groupId);
 
         log.debug("User [{}] is searching for [{}]", auth.getName(), query);
