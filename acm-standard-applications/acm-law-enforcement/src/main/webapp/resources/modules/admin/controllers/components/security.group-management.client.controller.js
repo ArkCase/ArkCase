@@ -150,6 +150,7 @@ angular.module('admin').controller(
                             element.name = obj.name;
                             element.key = obj.object_id_s;
                             element.directory = obj.directory_name_s;
+                            element.type = obj.object_sub_type_s;
                             listToFill.push(element);
                         });
                     }

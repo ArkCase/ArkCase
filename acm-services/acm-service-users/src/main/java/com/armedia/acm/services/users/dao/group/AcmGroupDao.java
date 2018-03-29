@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
@@ -28,7 +27,6 @@ import java.util.Set;
 public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 {
     @PersistenceContext
-    private EntityManager entityManager;
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Transactional
@@ -66,12 +64,6 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         }
 
         return acmGroup;
-    }
-
-    public AcmGroup findByGroupId(String groupId)
-    {
-        groupId = groupId.toLowerCase();
-        return getEntityManager().find(AcmGroup.class, groupId);
     }
 
     public List<AcmGroup> findByMatchingName(String name)
@@ -143,15 +135,5 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     protected Class<AcmGroup> getPersistenceClass()
     {
         return AcmGroup.class;
-    }
-
-    public EntityManager getEntityManager()
-    {
-        return entityManager;
-    }
-
-    public void setEntityManager(EntityManager entityManager)
-    {
-        this.entityManager = entityManager;
     }
 }

@@ -49,12 +49,7 @@ public class AcmGroupAPIController
     {
         LOG.info("Taking groups.");
 
-        String solrQuery = groupService.buildGroupsSolrQuery();
-
-        LOG.debug("User [{}] is searching for [{}]", auth.getName(), solrQuery);
-
-        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows,
-                sortBy + " " + sortDirection);
+        return groupService.buildGroupsSolrQuery(auth, startRow, maxRows, sortBy, sortDirection);
     }
 
     @RequestMapping(value = "/groups/adhoc", params = { "fq" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -95,10 +90,12 @@ public class AcmGroupAPIController
                 sortBy + " " + sortDirection);
     }
 
-    @RequestMapping(value = "/{groupId:.+}/groups/adhoc", params = {
+    @RequestMapping(value = "/{groupName:.+}/groups/adhoc", params = {
             "authorized" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String findGroupsForGroup(@PathVariable("groupId") String userId, @RequestParam(value = "authorized") Boolean authorized,
+    public String getMemberGroups(@PathVariable("groupName") String groupName, @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "groupDirectory") String groupDirectory,
+            @RequestParam(value = "groupType") String groupType,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
             @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
@@ -107,12 +104,8 @@ public class AcmGroupAPIController
     {
         LOG.info("Taking groups from Solr for specific group.");
 
-        String solrQuery = groupService.buildGroupsForGroupSolrQuery(authorized, userId);
-
-        LOG.debug("User [{}] is searching for [{}]", auth.getName(), solrQuery);
-
-        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows,
-                sortBy + " " + sortDirection);
+        return groupService.getAdHocMemberGroups(auth, startRow, maxRows, sortBy, sortDirection, authorized, groupName, groupDirectory,
+                groupType);
     }
 
     @RequestMapping(value = "/{userId:.+}/groups", params = {
@@ -140,8 +133,10 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/{groupId:.+}/groups/adhoc", params = {
             "fq", "authorized" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String findGroupsForGroupByName(@PathVariable(value = "groupId") String groupId,
+    public String getMemberGroupsByName(@PathVariable(value = "groupId") String groupId,
             @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "groupDirectory") String groupDirectory,
+            @RequestParam(value = "groupType") String groupType,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
             @RequestParam(value = "s", defaultValue = "name_lcs") String sortBy,
@@ -151,12 +146,9 @@ public class AcmGroupAPIController
     {
         LOG.info("Taking groups and subgroups from Solr for specific group by name.");
 
-        String solrQuery = getGroupService().buildGroupsForGroupByNameSolrQuery(authorized, groupId, searchFilter);
-
-        LOG.debug("User [{}] is searching for [{}]", auth.getName(), solrQuery);
-
-        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows,
-                sortBy + " " + sortDirection);
+        return groupService.getAdHocMemberGroupsByMatchingName(auth, startRow, maxRows, sortBy, sortDirection,
+                authorized, groupId, searchFilter,
+                groupDirectory, groupType);
     }
 
     @RequestMapping(value = "/groups/adhoc", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
