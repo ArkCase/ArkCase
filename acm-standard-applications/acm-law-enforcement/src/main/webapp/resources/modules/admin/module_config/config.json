@@ -1073,6 +1073,13 @@
                 ]
             },
             {
+                "type": "p/security/ldapGroup",
+                "label": "admin.security.group.management.title",
+                "components": [
+                    "security.group-management"
+                ]
+            },
+            {
                 "type": "p/security/modules",
                 "label": "admin.security.modules",
                 "components": [
