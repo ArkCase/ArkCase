@@ -129,7 +129,9 @@ angular.module('people').controller(
                                 data.image.modified = null;
                                 PersonPicturesService.savePersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image).then(
                                         function() {
-                                            $scope.objectInfo.defaultPicture = data.image;
+                                            if (data.isDefault) {
+                                                $scope.objectInfo.defaultPicture = data.image;
+                                            }
                                             MessageService.succsessAction();
                                             $scope.$emit("report-object-updated", $scope.objectInfo);
                                         }, function() {
@@ -147,11 +149,35 @@ angular.module('people').controller(
                                     MessageService.error($translate.instant("people.comp.pictures.message.error.uploadSamePicture"));
                                 } else {
                                     PersonPicturesService.insertPersonPicture($scope.objectInfo.id, data.file, data.isDefault,
-                                            data.image.description).then(function() {
+                                            data.image.description).then(function(returnResponse) {
+                                        var uploadedPictureId = returnResponse.data.fileId;
+
                                         MessageService.succsessAction();
-                                        $timeout(function() {
-                                            $scope.refresh();
-                                        }, 2000);
+                                        EcmService.getFile({
+                                            fileId : uploadedPictureId
+                                        }).$promise.then(function(uploadedPic) {
+                                            $scope.image = uploadedPic;
+
+                                            if (data.isDefault) {
+                                                $scope.objectInfo.defaultPicture = $scope.image;
+                                                $scope.$emit("report-object-refreshed", $scope.objectInfo.id);
+                                            }
+                                        });
+
+                                        //------
+                                        // MessageService.succsessAction();
+                                        // $scope.refresh();
+                                        // $scope.reloadGrid();
+                                        //-----
+
+                                        // $timeout(function() {
+                                        //     $scope.refresh(); //se pojavuva novoto, bez da e primary
+                                        //     //     // onConfigRetrieved($scope.config);
+                                        // }, 2000);
+                                        // $timeout(function() {
+                                        //     $scope.reloadGrid(); //se pojavuva novoto, bez da e primary
+                                        // }, 2000);
+
                                     }, function() {
                                         MessageService.errorAction();
                                     });
@@ -195,4 +221,9 @@ angular.module('people').controller(
                     $scope.refresh = function() {
                         $scope.$emit('report-object-refreshed', $stateParams.id);
                     };
+
+                    // $rootScope.$bus.subscribe("object.changed/PERSON/" + $stateParams.id, function() {
+                    //     $scope.$emit("report-object-updated", $scope.objectInfo);
+                    // });
+
                 } ]);
