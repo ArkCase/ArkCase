@@ -143,9 +143,9 @@ public class GroupServiceImpl implements GroupService
     @Override
     public String getAdHocMemberGroupsByMatchingName(Authentication auth, Integer startRow, Integer maxRows, String sortBy,
             String sortDirection,
-            Boolean authorized, String groupId, String searchFilter, String groupDirectory, String groupType) throws MuleException
+            Boolean authorized, String groupId, String searchFilter, String groupType) throws MuleException
     {
-        String query = getAdHocMemberGroups(auth, startRow, maxRows, sortBy, sortDirection, authorized, groupId, groupDirectory, groupType)
+        String query = getAdHocMemberGroups(auth, startRow, maxRows, sortBy, sortDirection, authorized, groupId, groupType)
                 + " AND name_partial:" + searchFilter;
 
         log.debug("User [{}] is searching for [{}]", auth.getName(), query);
@@ -171,11 +171,10 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     public String getAdHocMemberGroups(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection,
-            Boolean authorized, String groupId, String groupDirectory, String groupType) throws MuleException
+            Boolean authorized, String groupId, String groupType) throws MuleException
     {
         String query = "object_type_s:GROUP AND -object_id_s:" + groupId + " AND status_lcs:ACTIVE AND object_sub_type_s:"
-                + groupType + (groupDirectory.isEmpty() ? "" : " AND directory_name_s:" + groupDirectory)
-                + (authorized ? " AND ascendants_id_ss:" + groupId : " AND -ascendants_id_ss:" + groupId);
+                + groupType + (authorized ? " AND ascendants_id_ss:" + groupId : " AND -ascendants_id_ss:" + groupId);
 
         log.debug("User [{}] is searching for [{}]", auth.getName(), query);
 
