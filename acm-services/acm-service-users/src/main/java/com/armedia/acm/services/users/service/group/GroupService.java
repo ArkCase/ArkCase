@@ -38,6 +38,17 @@ public interface GroupService
     String buildGroupsSolrQuery() throws MuleException;
 
     /**
+     * Retrieve all groups
+     *
+     * @params startRow,
+     *         maxRows, sortDirection
+     *
+     * @return groups
+     */
+    String buildGroupsSolrQuery(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection)
+            throws MuleException;
+
+    /**
      * Retrieve all adHoc groups
      *
      * @params startRow,
@@ -79,12 +90,14 @@ public interface GroupService
     /**
      * Retrieve all groups that belongs to specific group type
      *
-     * @params type,
-     *         memberId, searchFilter
+     * @params auth, startRow, maxRows, sortBy, sortDirection, authorized, groupId, searchFilter groupDirectory,
+     *         groupType
      *
      * @return groups
      */
-    String buildGroupsForGroupByNameSolrQuery(Boolean authorized, String memberId, String searchFilter) throws MuleException;
+    String getAdHocMemberGroupsByMatchingName(Authentication auth, Integer startRow, Integer maxRows, String sortBy,
+            String sortDirection,
+            Boolean authorized, String groupId, String searchFilter, String groupDirectory, String groupType) throws MuleException;
 
     /**
      * Retrieve all groups that a user belongs to
@@ -98,11 +111,13 @@ public interface GroupService
     /**
      * Retrieve all groups that a group belongs to
      *
-     * @params type,
-     *         groupId
+     * @params auth, startRow, maxRows, sortBy, sortDirection, authorized, groupId, groupDirectory, groupType
+     * 
      * @return groups
      */
-    String buildGroupsForGroupSolrQuery(Boolean authorized, String groupId) throws MuleException;
+    String getAdHocMemberGroups(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection,
+            Boolean authorized,
+            String groupId, String groupDirectory, String groupType) throws MuleException;
 
     /**
      * Returns solr search results for GROUP filtered by name
@@ -226,7 +241,7 @@ public interface GroupService
      * @throws AcmObjectNotFoundException
      *             in case group with groupName or parentGroupName is not found
      */
-    AcmGroup removeGroupMembershipp(String groupName, String parentGroupName, boolean flushInstructions)
+    AcmGroup removeGroupFromParent(String groupName, String parentGroupName, boolean flushInstructions)
             throws AcmObjectNotFoundException;
 
     AcmGroup setSupervisor(AcmUser supervisor, String groupId, boolean applyToAll) throws AcmUserActionFailedException;

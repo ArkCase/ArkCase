@@ -56,12 +56,6 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "id",
-                    "displayName": "Dimeeeee",
-                    "visible": true,
-                    "headerCellFilter": "translate"
-                },
-                {
                     "name": "groupSearchBase",
                     "displayName": "admin.security.ldapConfig.data.groupSearchBase",
                     "visible": false,
