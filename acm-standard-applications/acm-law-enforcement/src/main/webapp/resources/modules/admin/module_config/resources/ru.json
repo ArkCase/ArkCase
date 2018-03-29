@@ -250,6 +250,10 @@
             "deleteUserMsg": "Вы уверены, что хотите удалить этого пользователя?",
             "user": "Пользователь"
         },
+        "security.group.management": {
+            "title": "ru_Group Management",
+            "group": "ru_Group"
+        },
         "security.calendarConfiguration": {
             "title": "Настройка календаря",
             "calendarConfigForm": {

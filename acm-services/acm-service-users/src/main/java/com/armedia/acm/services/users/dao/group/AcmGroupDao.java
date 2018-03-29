@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -25,6 +26,7 @@ import java.util.Set;
  */
 public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 {
+    @PersistenceContext
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Transactional
@@ -134,5 +136,4 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     {
         return AcmGroup.class;
     }
-
 }

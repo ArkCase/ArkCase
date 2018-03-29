@@ -28,14 +28,76 @@ public interface GroupService
     AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException;
 
     /**
+     * Retrieve all groups
+     *
+     * @params startRow,
+     *         maxRows, sortDirection
+     * 
+     * @return groups
+     */
+    String buildGroupsSolrQuery() throws MuleException;
+
+    /**
+     * Retrieve all groups
+     *
+     * @params startRow,
+     *         maxRows, sortDirection
+     *
+     * @return groups
+     */
+    String buildGroupsSolrQuery(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection)
+            throws MuleException;
+
+    /**
+     * Retrieve all adHoc groups
+     *
+     * @params startRow,
+     *         maxRows, sortDirection
+     *
+     * @return groups
+     */
+    String buildGroupsAdHocSolrQuery() throws MuleException;
+
+    /**
+     * Retrieve all adHoc groups
+     *
+     * @params startRow,
+     *         maxRows, sortDirection
+     *
+     * @return groups
+     */
+    String buildGroupsAdHocByNameSolrQuery(String fq) throws MuleException;
+
+    /**
+     * Retrieve groups by name
+     *
+     * @params fq
+     *
+     * @return groups
+     */
+    String buildGroupsByNameSolrQuery(String fq) throws MuleException;
+
+    /**
      * Retrieve all groups that belongs to specific group type
      *
      * @params type,
      *         memberId, searchFilter
-     * 
+     *
      * @return groups
      */
     String buildGroupsForUserByNameSolrQuery(Boolean authorized, String memberId, String searchFilter) throws MuleException;
+
+    /**
+     * Retrieve all groups that belongs to specific group type
+     *
+     * @params auth, startRow, maxRows, sortBy, sortDirection, authorized, groupId, searchFilter groupDirectory,
+     *         groupType
+     *
+     * @return groups
+     */
+    String getAdHocMemberGroupsByMatchingName(Authentication auth, Integer startRow, Integer maxRows, String sortBy,
+            String sortDirection,
+            Boolean authorized, String groupId, String searchFilter, String groupDirectory, String groupType) throws MuleException;
 
     /**
      * Retrieve all groups that a user belongs to
@@ -47,7 +109,19 @@ public interface GroupService
     String buildGroupsForUserSolrQuery(Boolean authorized, String userId) throws MuleException;
 
     /**
+     * Retrieve all groups that a group belongs to
+     *
+     * @params auth, startRow, maxRows, sortBy, sortDirection, authorized, groupId, groupDirectory, groupType
+     * 
+     * @return groups
+     */
+    String getAdHocMemberGroups(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection,
+            Boolean authorized,
+            String groupId, String groupDirectory, String groupType) throws MuleException;
+
+    /**
      * Returns solr search results for GROUP filtered by name
+     * 
      * @param authentication
      * @param nameFilter
      * @param start
@@ -126,6 +200,20 @@ public interface GroupService
      * Removes group membership to the given parent group. In case this group is not member to any other group, the
      * group is deleted.
      *
+     * @param parentGroupName
+     *            name of the parent group
+     * @param subGroups
+     *            name of the groups to be removed
+     * @return updated AcmGroup
+     * @throws AcmObjectNotFoundException
+     *             in case group with groupName or parentGroupName is not found
+     */
+    List<AcmGroup> removeGroupsMembership(String parentGroupName, List<String> subGroups) throws AcmObjectNotFoundException;
+
+    /**
+     * Removes group membership to the given parent group. In case this group is not member to any other group, the
+     * group is deleted.
+     *
      * @param groupName
      *            name of the group to be removed
      * @param parentGroupName
@@ -136,7 +224,25 @@ public interface GroupService
      * @throws AcmObjectNotFoundException
      *             in case group with groupName or parentGroupName is not found
      */
-    AcmGroup removeGroupMembership(String groupName, String parentGroupName, boolean flushInstructions) throws AcmObjectNotFoundException;
+    AcmGroup removeGroupMembership(String groupName, String parentGroupName, boolean flushInstructions)
+            throws AcmObjectNotFoundException;
+
+    /**
+     * Removes group membership to the given parent group. In case this group is not member to any other group, the
+     * group is deleted.
+     *
+     * @param groupName
+     *            name of the group to be removed
+     * @param parentGroupName
+     *            name of the parent group
+     * @param flushInstructions
+     *            if set to true there is an explicit flush before the end of the method
+     * @return updated AcmGroup
+     * @throws AcmObjectNotFoundException
+     *             in case group with groupName or parentGroupName is not found
+     */
+    AcmGroup removeGroupFromParent(String groupName, String parentGroupName, boolean flushInstructions)
+            throws AcmObjectNotFoundException;
 
     AcmGroup setSupervisor(AcmUser supervisor, String groupId, boolean applyToAll) throws AcmUserActionFailedException;
 
