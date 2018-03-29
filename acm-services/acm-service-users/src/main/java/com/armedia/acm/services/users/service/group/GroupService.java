@@ -97,7 +97,7 @@ public interface GroupService
      */
     String getAdHocMemberGroupsByMatchingName(Authentication auth, Integer startRow, Integer maxRows, String sortBy,
             String sortDirection,
-            Boolean authorized, String groupId, String searchFilter, String groupDirectory, String groupType) throws MuleException;
+            Boolean authorized, String groupId, String searchFilter, String groupType) throws MuleException;
 
     /**
      * Retrieve all groups that a user belongs to
@@ -117,7 +117,7 @@ public interface GroupService
      */
     String getAdHocMemberGroups(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection,
             Boolean authorized,
-            String groupId, String groupDirectory, String groupType) throws MuleException;
+            String groupId, String groupType) throws MuleException;
 
     /**
      * Returns solr search results for GROUP filtered by name

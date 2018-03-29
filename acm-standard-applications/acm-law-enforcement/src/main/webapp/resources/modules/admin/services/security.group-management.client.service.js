@@ -109,8 +109,7 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
                 n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
                 authorized : data.isAuthorized,
-                groupType : data.member.type,
-                groupDirectory : data.member.directory
+                groupType : (data.member.type ? data.member.type : "")
             }
         });
     }
@@ -139,8 +138,7 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
                 start : (data.start ? data.start : 0),
                 authorized : data.isAuthorized,
                 fq : (data.filterWord ? data.filterWord : ""),
-                groupType : data.member.type,
-                groupDirectory : data.member.directory
+                groupType : (data.member.type ? data.member.type : "")
             }
         });
     }
