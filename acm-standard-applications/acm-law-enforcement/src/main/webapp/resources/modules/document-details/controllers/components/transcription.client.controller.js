@@ -253,9 +253,19 @@ angular.module('document-details').controller(
 
                     $scope.compile = function () {
                         var compileTranscription = function(){
-                                //TODO
+                            if (!Util.isEmpty($scope.transcribeDataModel.id)) {
+                                TranscriptionAppService.compileTranscription($scope.transcribeDataModel.id).then(function (data){
+                                    MessageService.succsessAction();
+                                }, function(err){
+                                    MessageService.error(err.data);
+                                });
+                            }
                         };
-                        confirmationDialog($translate.instant("documentDetails.comp.transcription.dialog.compile.title"), compileTranscription);
+                        if($scope.transcribeDataModel.transcribeEcmFile === null){
+                            compileTranscription();
+                        } else {
+                            confirmationDialog($translate.instant("documentDetails.comp.transcription.dialog.compile.title"), compileTranscription);
+                        }
                     };
 
                     var getTranscribeItemsFromHolders = function() {
@@ -300,6 +310,7 @@ angular.module('document-details').controller(
                             status : null,
                             processId : null,
                             wordCount : 0,
+                            confidence : 0,
                             creator : null,
                             created : null,
                             modifier : null,
