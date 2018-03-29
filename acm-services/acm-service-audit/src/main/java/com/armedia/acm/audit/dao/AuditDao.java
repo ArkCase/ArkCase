@@ -11,6 +11,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -188,5 +190,18 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
     protected Class<AuditEvent> getPersistenceClass()
     {
         return AuditEvent.class;
+    }
+
+    public Long getCountAuditEventSince(String eventType, LocalDate since)
+    {
+
+        String queryText = "SELECT COUNT(ae.fullEventType) " +
+                "FROM AuditEvent ae " +
+                "WHERE ae.fullEventType = :eventType AND ae.eventDate > :since";
+        Query query = getEm().createQuery(queryText);
+        query.setParameter("eventType", eventType);
+        query.setParameter("since", Date.from(since.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        Long count = (Long) query.getSingleResult();
+        return count;
     }
 }
