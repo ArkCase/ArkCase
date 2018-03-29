@@ -1,4 +1,4 @@
-<div ng-controller="Document.TranscriptionController">
+<form name="transcribeForm" ng-controller="Document.TranscriptionController">
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
             <div class="panel-title">
@@ -10,29 +10,34 @@
                 <div class="row">
                     <table class="table table-bordered transcript-table-margin">
                         <thead>
-                        <tr ng-style="itemHolder.item.confidence < 80 ? { backgroundColor:'#ea6764', color:'black' } : ''">
-                            <th><span translate>documentDetails.comp.transcription.startTime</span>:<input contenteditable="true"
-                                    class="transcript-input-size" ng-model="itemHolder.hours" type="text"
-                                    ng-pattern="/^[0-9]{1,2}$/">:<input contenteditable="true" class="transcript-input-size"
-                                    ng-model="itemHolder.minutes" type="text" ng-pattern="/^([0-5][0-9]){1,2}$/">:<input
-                                    contenteditable="true" class="transcript-input-size" ng-model="itemHolder.seconds" type="text"
-                                    ng-pattern="/^([0-5][0-9]){1,2}$/"></th>
+                        <tr ng-class="{'lower-transcribe-confidence': itemHolder.item.confidence < transcribeConfidence}">
+                            <th><span translate>documentDetails.comp.transcription.startTime</span>:<input ng-readonly="readonlyInputs"
+                                    class="transcript-input-size" ng-model="itemHolder.startTime.hours" type="text"
+                                    ng-pattern="/^[0-9]{1,2}$/" />:<input ng-readonly="readonlyInputs" class="transcript-input-size"
+                                    ng-model="itemHolder.startTime.minutes" type="text" ng-pattern="/^([0-5][0-9]){1,2}$/" />:<input
+                                    ng-readonly="readonlyInputs" class="transcript-input-size" ng-model="itemHolder.startTime.seconds" type="text"
+                                    ng-pattern="/^([0-5][0-9]){1,2}$/" /><a ng-click="playAt(itemHolder.item.startTime)" href="">
+                                <i class="fa fa-play-circle-o" aria-hidden="true"></i>
+                            </a></th>
                             <th><span translate>documentDetails.comp.transcription.confidence</span>:{{itemHolder.item.confidence}}<span
                                     ng-show="itemHolder.item.confidence" ng-model="itemHolder.item.confidence">%</span></th>
-                            <th><input type="checkbox" ng-model="itemHolder.item.corrected"><span class="transcript-cb-corrected" translate>documentDetails.comp.transcription.corrected</span>
+                            <th><input type="checkbox" ng-model="itemHolder.item.corrected"/>
+                                <span class="transcript-cb-corrected" translate>documentDetails.comp.transcription.corrected</span>
+                                <span ng-if="!itemHolder.item.corrected && itemHolder.item.confidence < transcribeConfidence" class="transcript-warning-sign"><i class="glyphicon glyphicon-warning-sign"></i></span>
                             </th>
                             <th>
-                                <button class="btn btn-default btn-xs transcript-btn-delete" ng-click="removeTranscribeItem(itemHolder)"><i
+                                <button class="btn btn-default btn-xs transcript-btn-delete" ng-click="removeTranscribeItem(itemHolder)"
+                                        ng-if="transcribeDataModel === null || transcribeDataModel.type === 'MANUAL'"><i
                                         class="fa fa-trash"></i></button>
                             </th>
                         </tr>
                         </thead>
                     </table>
-                    <textarea rows="5" class="col-lg-12" placeholder="{{ 'documentDetails.comp.transcription.enterText' | translate }}">{{itemHolder.item.text}}</textarea>
+                    <textarea rows="5" class="col-lg-12" placeholder="{{ 'documentDetails.comp.transcription.enterText' | translate }}" ng-model="itemHolder.item.text">{{itemHolder.item.text}}</textarea>
                 </div>
             </div>
             <div class="row">
-                <button class="btn btn-xs btn-default" ng-click="addTranscribeItem()" ng-if="transcribeDataModel.type === 'MANUAL'">
+                <button class="btn btn-xs btn-default" ng-click="addTranscribeItem()" ng-if="transcribeDataModel === null || transcribeDataModel.type === 'MANUAL'">
                     <span translate>documentDetails.comp.transcription.newRow</span>
                 </button>
             </div>
@@ -40,21 +45,24 @@
         <div class="panel-footer">
             <div class="row">
                 <div class="col-lg-12">
-                    <button class="btn btn-xs btn-primary">
+                    <button class="btn btn-xs btn-primary" ng-disabled="transcribeForm.$invalid || items == null || items.length === 0" ng-click="saveChanges()">
                         <i class="fa fa-floppy-o"></i>
                         <span translate>documentDetails.comp.transcription.buttons.save</span>
                     </button>
                     <div class="pull-right">
-                        <button class="btn btn-xs btn-default">
+                        <a ng-click="diagram()" href="" class="inline animated btn btn-default btn-xs ng-scope" ng-if="transcribeDataModel.processId != null && transcribeDataModel.status != 'DRAFT' && transcribeDataModel.status != 'COMPLETED' && transcribeDataModel.status != 'FAILED'">
+                            <i class="fa fa-sitemap"></i>
+                        </a>
+                        <button class="btn btn-xs btn-default" ng-click="cancel()" ng-disabled="transcribeDataModel.status != 'QUEUED'" ng-if="transcribeDataModel.type === 'AUTOMATIC'">
                             <span translate>documentDetails.comp.transcription.buttons.cancel</span>
                         </button>
-                        <button class="btn btn-xs btn-default">
+                        <button class="btn btn-xs btn-default" ng-click="transcribe()" ng-disabled="transcribeDataModel.status === 'QUEUED' || transcribeDataModel.status === 'PROCESSING'">
                             <span translate>documentDetails.comp.transcription.buttons.transcribe</span>
                         </button>
-                        <button class="btn btn-xs btn-default">
+                        <button class="btn btn-xs btn-default" ng-click="complete()" ng-disabled="transcribeDataModel.status === 'COMPLETED'" ng-if="transcribeDataModel.type === 'MANUAL'">
                             <span translate>documentDetails.comp.transcription.buttons.complete</span>
                         </button>
-                        <button class="btn btn-xs btn-info">
+                        <button class="btn btn-xs btn-info" ng-click="compile()" ng-disabled="items == null || items.length === 0">
                             <span translate>documentDetails.comp.transcription.buttons.compile</span>
                         </button>
                     </div>
@@ -62,4 +70,4 @@
             </div>
         </div>
     </div>
-</div>
+</form>
