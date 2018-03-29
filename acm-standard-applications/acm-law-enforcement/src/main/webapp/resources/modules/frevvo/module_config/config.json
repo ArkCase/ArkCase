@@ -6,7 +6,7 @@
     "components": [
         {
             "id": "userOrGroupSearch",
-            "title": "something from component",
+            "title": "User Or Group Search",
             "enableFiltering": false,
             "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
             "userOrGroupFacetExtraFilter": "&fq=\"name\": ",
@@ -16,22 +16,22 @@
             "columnDefs": [
                 {
                     "name": "name",
-                    "displayName": "CASE NAME",
+                    "displayName": "frevvo.userAndGroupPicker.table.columns.name",
                     "headerCellFilter": "translate"
                 },
                 {
                     "name": "object_type_s",
-                    "displayName": "CASE TYPE",
+                    "displayName": "frevvo.userAndGroupPicker.table.columns.type",
                     "headerCellFilter": "translate"
                 },
                 {
                     "name": "title",
-                    "displayName": "CASE TITLE",
+                    "displayName": "frevvo.userAndGroupPicker.table.columns.title",
                     "headerCellFilter": "translate"
                 },
                 {
                     "name": "object_id_s",
-                    "displayName": "CASE USERNAME",
+                    "displayName": "frevvo.userAndGroupPicker.table.columns.username",
                     "headerCellFilter": "translate"
                 }
             ],
@@ -196,22 +196,22 @@
         "columnDefs": [
             {
                 "name": "name",
-                "displayName": "CASE NAME",
+                "displayName": "frevvo.userAndGroupPicker.table.columns.name",
                 "headerCellFilter": "translate"
             },
             {
                 "name": "object_type_s",
-                "displayName": "CASE TYPE",
+                "displayName": "frevvo.userAndGroupPicker.table.columns.type",
                 "headerCellFilter": "translate"
             },
             {
                 "name": "title",
-                "displayName": "CASE TITLE",
+                "displayName": "frevvo.userAndGroupPicker.table.columns.title",
                 "headerCellFilter": "translate"
             },
             {
                 "name": "object_id_s",
-                "displayName": "CASE USERNAME",
+                "displayName": "frevvo.userAndGroupPicker.table.columns.username",
                 "headerCellFilter": "translate"
             }
         ],

@@ -30,7 +30,8 @@
             "name": "Name",
             "type": "Type",
             "title": "Title",
-            "id": "ID"
+            "id": "ID",
+            "username": "Username"
         },
         "cancel": "Cancel",
         "ok": "OK",
