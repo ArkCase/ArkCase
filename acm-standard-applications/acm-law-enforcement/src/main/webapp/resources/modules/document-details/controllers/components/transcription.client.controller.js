@@ -256,6 +256,8 @@ angular.module('document-details').controller(
                             if (!Util.isEmpty($scope.transcribeDataModel.id)) {
                                 TranscriptionAppService.compileTranscription($scope.transcribeDataModel.id).then(function (data){
                                     MessageService.succsessAction();
+                                    $scope.transcribeDataModel.transcribeEcmFile = data;
+                                    $scope.$emit('transcribe-data-model', $scope.transcribeDataModel);
                                 }, function(err){
                                     MessageService.error(err.data);
                                 });
