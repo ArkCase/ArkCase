@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.ComplaintService;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ public class CreateComplaintAPIController
     private FrevvoFormService complaintService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public Complaint createComplaint(
             @RequestBody Complaint in,

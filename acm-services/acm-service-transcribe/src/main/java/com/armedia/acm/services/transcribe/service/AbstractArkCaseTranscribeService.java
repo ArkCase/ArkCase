@@ -66,6 +66,33 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
     public abstract Transcribe save(Transcribe transcribe) throws SaveTranscribeException;
 
     /**
+     * This method will create copy a of given Transcribe object. Every fields will have the same value except the ID
+     *
+     * @param transcribe - Transcribe object that is already in database that we want to make a copy
+     * @return Copied Transcribe object
+     * @throws CreateTranscribeException
+     */
+    public abstract Transcribe copy(Transcribe transcribe, EcmFileVersion ecmFileVersion) throws CreateTranscribeException;
+
+    /**
+     * This method will complete the process and set the status to COMPLETED
+     *
+     * @param id - ID of Transcribe object
+     * @return Updated Transcribe object
+     * @throws SaveTranscribeException
+     */
+    public abstract Transcribe complete(Long id) throws SaveTranscribeException;
+
+    /**
+     * This method will cancel the process and set the status to DRAFT
+     *
+     * @param id - ID of Transcribe object
+     * @return Updated Transcribe object
+     * @throws SaveTranscribeException
+     */
+    public abstract Transcribe cancel(Long id) throws SaveTranscribeException;
+
+    /**
      * This method will create TranscribeItem in the Transcribe with given ID
      *
      * @param id - ID of the Transcribe object
@@ -155,6 +182,15 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
      * @return
      */
     public abstract ProcessInstance startBusinessProcess(Transcribe transcribe);
+
+    /**
+     * This method will remove Transcribe object from the waiting state
+     *
+     * @param processInstance
+     * @param status The next status after signal
+     * @param action The action that is performing
+     */
+    public abstract void signal(ProcessInstance processInstance, String status, String action);
 
     /**
      * This method will return factory that provides correct provider service

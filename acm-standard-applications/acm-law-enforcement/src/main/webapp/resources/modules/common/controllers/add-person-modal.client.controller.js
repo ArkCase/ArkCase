@@ -44,7 +44,7 @@ angular
                             $scope.personName = params.personName;
                             $scope.isDefault = params.isDefault;
                             $scope.description = params.description;
-                            $scope.hideNoField = true;
+                            $scope.hideNoField = params.isDefault;
                             $scope.skipPeopleIdsInSearch = params.skipPeopleIdsInSearch;
                             $scope.isInvalid = true;
                             if ($scope.editMode) {
