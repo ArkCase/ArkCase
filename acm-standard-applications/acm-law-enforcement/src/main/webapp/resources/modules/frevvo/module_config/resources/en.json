@@ -33,8 +33,8 @@
             "id": "ID"
         },
         "cancel": "Cancel",
-        "confirm": "Confirm",
+        "ok": "OK",
         "search": "Search",
-        "search-placeholder": "Searching for user or group"
+        "search-placeholder": "Type in to search"
     }
 }
