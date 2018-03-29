@@ -102,7 +102,7 @@
             {
                 "type": "p/COSTSHEET/tasks",
                 "label": "costTracking.tree.nodeTypes.tasks.label",
-                "icon": "fa fa-users",
+                "icon": "fa fa-check-circle",
                 "components": [
                     "tasks"
                 ]
@@ -110,7 +110,7 @@
             {
                 "type": "p/COSTSHEET/documents",
                 "label": "costTracking.tree.nodeTypes.documents.label",
-                "icon": "fa fa-users",
+                "icon": "fa fa-file",
                 "components": [
                     "documents"
                 ]
