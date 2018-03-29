@@ -13,4 +13,9 @@
 
     <bean id="testModuleUsersStateProvider"
           class="com.armedia.acm.service.stateofarkcase.service.TestModuleUsersStateProvider"/>
+
+    <bean id="errorsLogFileService"
+          class="com.armedia.acm.service.stateofarkcase.service.ErrorsLogFileService">
+        <constructor-arg index="0" value="file-errors-log"/>
+    </bean>
 </beans>
