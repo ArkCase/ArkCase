@@ -6,6 +6,7 @@ import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.ConfigurationFileDeletedEvent;
 import com.armedia.acm.spring.events.ContextAddedEvent;
 import com.armedia.acm.spring.events.ContextRemovedEvent;
+import com.armedia.acm.spring.events.ContextReplacedEvent;
 import com.armedia.acm.spring.exceptions.AcmContextHolderException;
 
 import org.slf4j.Logger;
@@ -68,27 +69,99 @@ public class SpringContextHolder
             {
                 try
                 {
-                    removeContext(eventFile.getName());
-                    addContextFromFile(eventFile);
+                    AbstractApplicationContext context = createContextFromFile(eventFile);
+                    replaceContext(eventFile.getName(), context);
                 }
                 catch (IOException e)
                 {
-                    log.error("Could not add context from file: " + e.getMessage(), e);
+                    log.error("Could not add context from file: {}. Error message:{}", eventFile.getName(), e.getMessage(), e);
                 }
             }
             else if (isSpringConfigFolderModified(eventFile))
             {
                 try
                 {
-                    removeContext(eventFile.getParentFile().getName());
-                    addContextFromFolder(eventFile.getParentFile());
+                    AbstractApplicationContext context = createContextFromFolder(eventFile.getParentFile());
+                    replaceContext(eventFile.getParentFile().getName(), context);
                 }
                 catch (IOException e)
                 {
-                    log.error("Could not add context from folder: " + e.getMessage(), e);
+                    log.error("Could not add context from folder: {}. Error message: {}", eventFile.getParentFile().getName(),
+                            e.getMessage(), e);
                 }
             }
         }
+    }
+
+    private AbstractApplicationContext createContextFromFiles(String name, String... filesPaths) throws IOException
+    {
+        if (filesPaths == null || filesPaths.length < 1)
+        {
+            throw new AcmContextHolderException("files must not be null or empty. Reason[" + (filesPaths == null ? "null" : "empty") + "]");
+        }
+        log.info("Creating context with name {} and files.length = {}", name, filesPaths.length);
+
+        try
+        {
+            return new FileSystemXmlApplicationContext(filesPaths, true, toplevelContext);
+        }
+        catch (BeansException be)
+        {
+            log.error("Could not load Spring context from files '{}' due to '{}'", Arrays.toString(filesPaths), be.getMessage(), be);
+            return null;
+            // throw be;
+        }
+    }
+
+    private AbstractApplicationContext createContextFromFolder(File configFile) throws IOException
+    {
+        log.info("Creating context from folder: {}", configFile.getCanonicalPath());
+
+        List<String> configFiles = Files.walk(configFile.toPath(), 1)
+                .filter(p -> p.toFile().isFile() && p.toFile().getName().startsWith("spring-") && p.toFile().getName().endsWith("xml"))
+                .map(p -> {
+                    try
+                    {
+                        // the canonical path will be an absolute path. But it will start with a / on Linux,
+                        // which Spring will treat as a relative path. Must start with file: to force an absolute path.
+                        return "file:" + p.toFile().getCanonicalPath();
+                    }
+                    catch (IOException e)
+                    {
+                        throw new UncheckedIOException(e);
+                    }
+                }).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        if (configFiles.size() < 1)
+        {
+            return null;
+        }
+        return createContextFromFiles(configFile.getName(), configFiles.toArray(new String[configFiles.size()]));
+    }
+
+    private void replaceContext(String contextName, AbstractApplicationContext context)
+    {
+        if (context == null)
+        {
+            log.warn("Will not replace existing context with name {} with null! Use removeContext method to remove a context!",
+                    contextName);
+            return;
+        }
+
+        log.info("Replacing context: {}", contextName);
+
+        AbstractApplicationContext oldContext = childContextMap.get(contextName);
+        childContextMap.put(contextName, context);
+        oldContext.close();
+        applicationEventPublisher.publishEvent(new ContextReplacedEvent(this, contextName));
+    }
+
+    private AbstractApplicationContext createContextFromFile(File configFile) throws BeansException, IOException
+    {
+        log.info("Creating context from file: {}", configFile.getCanonicalPath());
+
+        // the canonical path will be an absolute path. But it will start with a / on Linux,
+        // which Spring will treat as a relative path. Must start with file: to force an absolute path.
+        return createContextFromFiles(configFile.getName(), "file:" + configFile.getCanonicalPath());
     }
 
     private void checkIfSpringConfigWasDeleted(AbstractConfigurationFileEvent fileEvent, File eventFile)
@@ -116,7 +189,7 @@ public class SpringContextHolder
             }
             catch (IOException e)
             {
-                log.error("Could not add context from file: " + e.getMessage(), e);
+                log.error("Could not add context from file: {}", e.getMessage(), e);
             }
         }
     }
@@ -158,7 +231,7 @@ public class SpringContextHolder
 
     public <T> Map<String, T> getAllBeansOfType(Class<T> type)
     {
-        log.debug("Looking for beans of type: " + type.getName());
+        log.debug("Looking for beans of type: {}", type.getName());
         Map<String, T> beans = toplevelContext.getBeansOfType(type);
 
         for (AbstractApplicationContext childContext : childContextMap.values())
@@ -167,13 +240,19 @@ public class SpringContextHolder
             beans.putAll(childBeans);
         }
 
-        log.debug("Returning " + beans.size() + " beans of type " + type.getName());
+        log.debug("Returning {} beans of type {}", beans.size(), type.getName());
         return Collections.unmodifiableMap(beans);
+    }
+
+    public void replaceContextFromFile(File configFile) throws IOException, BeansException
+    {
+        AbstractApplicationContext context = createContextFromFile(configFile);
+        replaceContext(configFile.getName(), context);
     }
 
     public void addContextFromFolder(File configFile) throws IOException, BeansException
     {
-        log.info("Adding context from folder " + configFile.getCanonicalPath());
+        log.info("Adding context from folder: {}", configFile.getCanonicalPath());
 
         List<String> configFiles = Files.walk(configFile.toPath(), 1)
                 .filter(p -> p.toFile().isFile() && p.toFile().getName().startsWith("spring-") && p.toFile().getName().endsWith("xml"))
@@ -198,7 +277,7 @@ public class SpringContextHolder
 
     public void addContextFromFile(File configFile) throws IOException, BeansException
     {
-        log.info("Adding context from file " + configFile.getCanonicalPath());
+        log.info("Adding context from file: {}", configFile.getCanonicalPath());
 
         // the canonical path will be an absolute path. But it will start with a / on Linux,
         // which Spring will treat as a relative path. Must start with file: to force an absolute path.
@@ -211,7 +290,7 @@ public class SpringContextHolder
         {
             throw new AcmContextHolderException("files must not be null or empty. Reason[" + (filesPaths == null ? "null" : "empty") + "]");
         }
-        log.info("Adding context with name" + name + " and files.length = " + filesPaths.length);
+        log.info("Adding context with name: {} and files.length = {}", name, filesPaths.length);
 
         try
         {
@@ -221,8 +300,7 @@ public class SpringContextHolder
         }
         catch (BeansException be)
         {
-            log.error("Could not load Spring context from files '" + Arrays.toString(filesPaths) + "' due to " + "error '" + be.getMessage()
-                    + "'", be);
+            log.error("Could not load Spring context from files: '{}' due to error '{}'", Arrays.toString(filesPaths), be.getMessage(), be);
             // throw be;
         }
     }
@@ -231,7 +309,7 @@ public class SpringContextHolder
     {
         if (childContextMap.containsKey(configFileName))
         {
-            log.info("Removing child context created from file " + configFileName);
+            log.info("Removing child context created from file: {}", configFileName);
             AbstractApplicationContext child = childContextMap.get(configFileName);
             childContextMap.remove(configFileName);
             child.close();
@@ -258,7 +336,6 @@ public class SpringContextHolder
             return toplevelContext.getBean(name, type);
         }
 
-        T retval = null;
         for (Map.Entry<String, AbstractApplicationContext> c : childContextMap.entrySet())
         {
             log.debug("context name: {}", c.getKey());

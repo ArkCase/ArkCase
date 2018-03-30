@@ -45,4 +45,28 @@ public class SpringContextHolderIT
         allStrings = springContextHolder.getAllBeansOfType(String.class);
         assertTrue(allStrings.isEmpty());
     }
+
+    @Test
+    public void replaceContext() throws Exception
+    {
+        Resource contextResource1 = new ClassPathResource("spring/spring-config-context-holder-test-context.xml");
+        assertTrue(contextResource1.exists());
+
+        springContextHolder.addContextFromFile(contextResource1.getFile());
+
+        Map<String, String> allStrings = springContextHolder.getAllBeansOfType(String.class);
+        assertTrue(allStrings.size() == 1);
+        assertTrue(allStrings.get("string-bean").equals("Grateful Dead"));
+
+        Resource contextResource2 = new ClassPathResource("spring/spring-config-context-holder-test-context-v2.xml");
+        assertTrue(contextResource2.exists());
+
+        springContextHolder.replaceContextFromFile(contextResource2.getFile());
+
+        allStrings = springContextHolder.getAllBeansOfType(String.class);
+        assertTrue(allStrings.size() == 2);
+        assertTrue(allStrings.get("string-bean").equals("Grateful Dead Alive"));
+        assertTrue(allStrings.get("string-bean-2").equals("Grateful Dead 2"));
+    }
+
 }
