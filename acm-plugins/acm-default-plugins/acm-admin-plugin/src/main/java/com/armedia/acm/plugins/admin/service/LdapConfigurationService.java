@@ -128,11 +128,10 @@ public class LdapConfigurationService implements InitializingBean
 
         writePropertiesFile(dirId, props);
         String ldapFileName = getLdapFileName(dirId);
-        contextHolder.removeContext(ldapFileName);
         File ldapFile = new File(ldapFileName);
         try
         {
-            contextHolder.addContextFromFile(ldapFile);
+            contextHolder.replaceContextFromFile(ldapFile);
         }
         catch (IOException e)
         {
