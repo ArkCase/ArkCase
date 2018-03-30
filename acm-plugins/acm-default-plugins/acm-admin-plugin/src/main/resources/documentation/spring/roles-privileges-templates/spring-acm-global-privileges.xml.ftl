@@ -994,4 +994,42 @@
             </list>
         </property>
     </bean>
+
+    <!--State Of Arkcase Plugin-->
+    <bean id="generateStateOfArkcasePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="generate-state-of-arkcase-privilege"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+            <#if generateStateOfArkcasePrivilege??>
+                <#list generateStateOfArkcasePrivilege as role>
+                    <value>${role}</value>
+                </#list>
+            </#if>
+            </list>
+        </property>
+    </bean>
+    <bean id="listStateOfArkcasePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="list-state-of-arkcase-privilege"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+            <#if listStateOfArkcasePrivilege??>
+                <#list listStateOfArkcasePrivilege as role>
+                    <value>${role}</value>
+                </#list>
+            </#if>
+            </list>
+        </property>
+    </bean>
+    <bean id="getStateOfArkcasePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="get-state-of-arkcase-privilege"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+            <#if getStateOfArkcasePrivilege??>
+                <#list getStateOfArkcasePrivilege as role>
+                    <value>${role}</value>
+                </#list>
+            </#if>
+            </list>
+        </property>
+    </bean>
 </beans>

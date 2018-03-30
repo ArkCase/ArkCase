@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 /**
  * Generates state of arkcase report
  */
-class StateOfArkcaseReportGenerator
+public class StateOfArkcaseReportGenerator
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private StateOfArkcaseRegistry stateOfArkcaseRegistry;
