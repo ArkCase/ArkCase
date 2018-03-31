@@ -47,7 +47,7 @@
                         <span translate>profile.company.fax</span>
                     </small>
 
-                    <h4 ng-hide="editDisabled"><a href="{{profileCompanyWebsite}}" target="_blank">
+                    <h4 ng-hide="editDisabled"><a ng-href="{{profileCompanyWebsite}}" target="_blank">
                         {{profileCompanyWebsite || 'profile.unknown' | translate}}</a>
                     </h4>
                     <h4 ng-show="editDisabled"><a editable-text="profileCompanyWebsite" onaftersave="update()" oncancel="disableEdit()">

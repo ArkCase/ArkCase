@@ -157,6 +157,7 @@ angular
                                     arr.unshift(map);
                                     return this._goodMapValueArr(arr, replacedWith);
                                 },
+
                                 _goodMapValueArr : function(arr, replacedWith) {
                                     if (!this.isArray(arr)) {
                                         return replacedWith;
@@ -359,6 +360,38 @@ angular
                                         return this.isEmpty(right);
                                     }
                                     return left == right;
+                                }
+
+                                /**
+                                 * @ngdoc method
+                                 * @name objectsComparisonByGivenProperties
+                                 * @methodOf services.service:UtilService
+                                 *
+                                 * @param {Object} objectA - Object that is compared
+                                 * @param {Object} objectB - Object that is compared
+                                 * @param {Object} comparisonProperties - An array with properties for comparison
+                                 *
+                                 * @description
+                                 * Returns true if the values of the mutual properties (comparisonProperties) of the
+                                 * objects are equal.
+                                 */
+                                ,
+                                objectsComparisonByGivenProperties : function(objectA, objectB, comparisonProperties) {
+                                    var isEqual = false;
+
+                                    if (!objectA || !objectB)
+                                        return false;
+
+                                    var i = 0;
+                                    for (i in comparisonProperties) {
+                                        var key = comparisonProperties[i];
+                                        if (objectA[key] === objectB[key]) {
+                                            isEqual = true;
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+                                    return isEqual;
                                 }
 
                                 ///**
@@ -657,6 +690,9 @@ angular
                                         return this;
                                     },
                                     _addNode : function(node, isLast) {
+                                        if (node.hidden) {
+                                            return this;
+                                        }
                                         if (0 == this._depth) {
                                             this._nodes.push(node);
                                         } else {

@@ -1,0 +1,123 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1-create-transcribe-table" author="riste.tutureski">
+        <createTable tableName="acm_transcribe">
+            <column name="cm_transcribe_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_transcribe"/>
+            </column>
+            <column name="cm_transcribe_remote_id" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_transcribe_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_language" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_media_file_version_id" type="${idType}">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_media_file_version_id"/>
+            </column>
+            <column name="cm_transcribe_file_id" type="${idType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_transcribe_status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_process_id" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_transcribe_word_count" type="INTEGER">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_transcribe_creator" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_modifier" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_class_name" type="VARCHAR(400)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2-create-transcribe-id-table" author="riste.tutureski">
+        <createTable tableName="acm_transcribe_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_transcribe_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_transcribe"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="3-create-transcribe-item-table" author="riste.tutureski">
+        <createTable tableName="acm_transcribe_item">
+            <column name="cm_transcribe_item_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_transcribe_item"/>
+            </column>
+            <column name="cm_transcribe_id" type="${idType}">
+                <constraints nullable="false" foreignKeyName="fk_transcribe_id" referencedTableName="acm_transcribe" referencedColumnNames="cm_transcribe_id"/>
+            </column>
+            <column name="cm_transcribe_item_start_time" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_item_end_time" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_item_confidence" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_item_corrected" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_item_text" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_item_creator" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_item_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_item_modifier" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_item_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_transcribe_item_class_name" type="VARCHAR(400)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4-create-transcribe-item-id-table" author="riste.tutureski">
+        <createTable tableName="acm_transcribe_item_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_transcribe_item_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_transcribe_item"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="5-add-confidence-transcribe-table" author="riste.tutureski">
+        <addColumn tableName="acm_transcribe">
+            <column name="cm_transcribe_confidence" type="INTEGER">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

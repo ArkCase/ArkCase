@@ -5,6 +5,14 @@
             "leftnav.item": "ダッシュボード"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "ja_Select your preferred row count.",
+                    "fiveRows": "ja_5",
+                    "tenRows": "ja_10",
+                    "twentyFiveRows": "ja_25"
+                }
+            },
             "casesByQueue": {
                 "title": "キューによるアクティブ案件文書",
                 "description": "アクティブな案件文書をキューで表示する",

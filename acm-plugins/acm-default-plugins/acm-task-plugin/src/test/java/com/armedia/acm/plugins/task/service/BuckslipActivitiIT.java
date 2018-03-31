@@ -116,15 +116,22 @@ public class BuckslipActivitiIT extends EasyMockSupport
 
     public void basicPath(boolean nonConcurEndsApprovals, String lastTaskOutcome)
     {
-        expect(userDaoMock.findByUserId("jerry")).andReturn(new AcmUser());
-        expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
+        AcmUser addedByUser = new AcmUser();
+        addedByUser.setFullName("Added By User");
+
+        AcmUser jerry = new AcmUser();
+        jerry.setFullName("jerry Full");
+
+        AcmUser bob = new AcmUser();
+        bob.setFullName("bob Full");
+        expect(userDaoMock.findByUserId("jerry")).andReturn(jerry);
+        expect(userDaoMock.findByUserId("bob")).andReturn(bob);
+        expect(userDaoMock.findByUserId("addedByUser")).andReturn(addedByUser).atLeastOnce();
         if (!"WITHDRAW".equals(lastTaskOutcome)
                 && !(nonConcurEndsApprovals && "NON_CONCUR".equals(lastTaskOutcome)))
         {
             expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
         }
-
-
 
         replayAll();
 
@@ -148,6 +155,7 @@ public class BuckslipActivitiIT extends EasyMockSupport
         processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
         processVariables.put("documentType", documentType);
         processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, strFutureTasks);
+        processVariables.put("approverFullName", "Bill Graham");
 
         // nonconcur is false by default
         if (nonConcurEndsApprovals)
@@ -245,6 +253,7 @@ public class BuckslipActivitiIT extends EasyMockSupport
         expect(userDaoMock.findByUserId("jerry")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
+        expect(userDaoMock.findByUserId("addedByUser")).andReturn(new AcmUser()).atLeastOnce();
 
         replayAll();
 
@@ -332,8 +341,10 @@ public class BuckslipActivitiIT extends EasyMockSupport
         task.put("taskName", taskName);
         task.put("groupName", groupName);
         task.put("details", "Task Details");
-        task.put("addedBy", "user");
+        task.put("addedBy", "addedByUser");
         task.put("maxTaskDurationInDays", taskDuration);
+        task.put("approverFullName", approverId + " Full");
+        task.put("addedByFullName", "Added By User");
         futureTasks.put(task);
     }
 
@@ -346,6 +357,7 @@ public class BuckslipActivitiIT extends EasyMockSupport
         expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("bill")).andReturn(new AcmUser());
+        expect(userDaoMock.findByUserId("addedByUser")).andReturn(new AcmUser()).atLeastOnce();
 
         replayAll();
 
