@@ -8,7 +8,8 @@ angular.module('services').factory(
                 'Acm.StoreService',
                 'Object.AuditService',
                 'TimeTracking.InfoService',
-                function($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService) {
+                'ObjectService',
+                function($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService, ObjectService) {
                     var Service = {};
 
                     Service.handleMessage = handleMessage;
@@ -144,7 +145,8 @@ angular.module('services').factory(
                     function handleChildItemsData(objectType, objectId) {
                         //for casefile and complaint we have ChildTaskData, CostSheets and TimeSheets
 
-                        if (objectType === 'CASE_FILE' || objectType === 'COMPLAINT') {
+                        if (objectType === 'CASE_FILE' || objectType === 'COMPLAINT' || objectType === ObjectService.ObjectTypes.TIMESHEET
+                                || objectType === ObjectService.ObjectTypes.COSTSHEET) {
                             //subKey is objecttype.objectid and some other things like sorting
                             var subKey = objectType + "." + objectId;
                             removeFromCache(subKey, 'ChildTaskData');

@@ -100,7 +100,7 @@
             },
             {
                 "type": "p/TIMESHEET/tasks",
-                "icon": "fa fa-users",
+                "icon": "fa fa-check-circle",
                 "label": "timeTracking.tree.nodeTypes.tasks.label",
                 "components": [
                     "tasks"
@@ -355,9 +355,20 @@
                     "headerCellFilter": "translate"
                 },
                 {
+                    "name": "chargeRole",
+                    "displayName": "timeTracking.comp.summary.table.columns.role",
+                    "headerCellFilter": "translate"
+                },
+                {
                     "name": "value",
                     "displayName": "timeTracking.comp.summary.table.columns.value",
                     "headerCellFilter": "translate"
+                },
+                {
+                    "name": "totalCost",
+                    "displayName": "timeTracking.comp.summary.table.columns.cost",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>${{ row.entity.totalCost | number : 2}}</div>"
                 },
                 {
                     "name": "date",

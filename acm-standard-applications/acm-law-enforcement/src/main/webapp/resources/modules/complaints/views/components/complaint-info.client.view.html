@@ -5,7 +5,7 @@
                 <h4>
                     <a href="#" editable-text="objectInfo.complaintTitle" onaftersave="saveComplaint()" permission="editComplaint"
                             permission-object-type="COMPLAINT" permission-properties="objectInfo" permission-action="disable" e-required>
-                        {{objectInfo.complaintTitle || "Unknown" }}
+                        {{objectInfo.complaintTitle || 'common.value.unknown' | translate }}
                     </a>
                     <a ng-href="#" editable-select="objectInfo.status" onaftersave="saveComplaint()" permission="editComplaintStatus"
                             permission-object-type="COMPLAINT" permission-properties="objectInfo" permission-action="disable"
@@ -51,7 +51,7 @@
                     <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()"
                             permission="editComplaintOwningGroup" permission-object-type="COMPLAINT" permission-properties="objectInfo"
                             permission-action="disable">
-                        <user-full-name userId="assignee" fallback="{{complaints.comp.approvalRouting.assigne.none | translate}}" />
+                        <user-full-name userId="assignee" fallback="{{'common.value.none' | translate}}" />
                     </a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.assignee.label</span></small>
@@ -61,7 +61,7 @@
                     <a href="javascript:;" class="editable-click no-outline" ng-click="openGroupPickerModal()"
                             permission="editComplaintOwningGroup" permission-object-type="COMPLAINT" permission-properties="objectInfo"
                             permission-action="disable">
-                        {{owningGroup || 'None'}}</a>
+                        {{owningGroup || 'common.value.none' | translate}}</a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.owningGroup.label</span></small>
             </div>

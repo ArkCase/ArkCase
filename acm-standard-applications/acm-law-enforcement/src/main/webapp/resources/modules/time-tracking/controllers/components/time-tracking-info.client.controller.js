@@ -11,6 +11,14 @@ angular.module('time-tracking').controller(
                         moduleId : "time-tracking",
                         componentId : "info",
                         retrieveObjectInfo : TimeTrackingInfoService.getTimesheetInfo,
-                        validateObjectInfo : TimeTrackingInfoService.validateTimesheet
+                        validateObjectInfo : TimeTrackingInfoService.validateTimesheet,
+                        onObjectInfoRetrieved: function (objectInfo) {
+                            onObjectInfoRetrieved(objectInfo);
+                        }
                     });
+
+                var onObjectInfoRetrieved = function (objectInfo) {
+                    $scope.objectInfo = objectInfo;
+                }
+
                 } ]);

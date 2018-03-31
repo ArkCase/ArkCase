@@ -9,7 +9,7 @@
         "security.ldapConfig.addNewMember": "Agrege un miembro nuevo",
         "security.ldapConfig.addMembers": "Agrege miembros",
         "security.ldapConfig.addSubgroup": "Agrege un subgrupo",
-		"security.ldapConfig.addExistingSubgroup": "Agregar grupo existente",
+        "security.ldapConfig.addExistingSubgroup": "Agregar grupo existente",
         "security.ldapConfig.addExistingMembers": "Agrege miembros existentes",
         "security.ldapConfig.addLdapSubgroup": "Agrege un subgrupo LDAP",
         "security.ldapConfig.deleteLdapGroup": "Elimine un grupo LDAP",
@@ -19,11 +19,11 @@
         "security.ldapConfig.removeMember": "Elimine el miembro",
         "security.ldapConfig.table.ldapUrl": "LDAP URL",
         "security.ldapConfig.table.directoryName": "Nombre del directorio",
-		"security.ldapConfig.table.userAttributesConfig": "LDAP Configuración de usuario",
+        "security.ldapConfig.table.userAttributesConfig": "LDAP Configuración de usuario",
         "security.ldapConfig.table.groupAttributesConfig": "LDAP Configuración de grupo",
         "security.ldapConfig.table.action.partialSync": "Iniciar sincronización LDAP parcial",
         "security.ldapConfig.data": {
-		    "sync.dialog.header": "Ejecutar sincronización",
+            "sync.dialog.header": "Ejecutar sincronización",
             "sync.dialog.type.partial": " Sincronización diferencial",
             "sync.dialog.type.full": "Sincronización completa",
             "userAttributesTemplate": "Plantilla de atributos de usuario Ldap",
@@ -145,7 +145,7 @@
             },
             "addMembers": {
                 "title": "Agregación de miembros",
-				"group.title": "Agregar un grupo existente como miembro",
+                "group.title": "Agregar un grupo existente como miembro",
                 "btn": {
                     "search": "¡Ir!",
                     "cancel": "Cancelar",
@@ -166,9 +166,9 @@
                     "email": "Ingrese el correo electrónico",
                     "password": "Ingrese la contraseña",
                     "confirmation": "Ingrese su contraseña nuevamente",
-					"_1_": "Los valores numéricos no son válidos en el archivo de recursos. _Ser_Eliminado_",
-					"_2_": "If 'minLengthForPassword' si es necesario, por favor muévelo a config.json",
-					"_minLengthForPassword": "7"
+                    "_1_": "Los valores numéricos no son válidos en el archivo de recursos. _Ser_Eliminado_",
+                    "_2_": "If 'minLengthForPassword' si es necesario, por favor muévelo a config.json",
+                    "_minLengthForPassword": "7"
                 },
                 "editLdapMember": {
                     "title": "Edición de miembro LDAP",
@@ -243,7 +243,7 @@
                 "supervisorName": "Nombre del supervisor",
                 "actions": "Acciones"
             },
-			"searchFilter.placeholder": "Búsqueda"
+            "searchFilter.placeholder": "Búsqueda"
         },
         "security.selectPrivileges": "Crear funciones e instaurar privilegios",
         "security.selectPrivileges.applicationRole": "una función en la aplicación",
@@ -261,6 +261,10 @@
             "deleteUserBtn": "Eliminar el Usuario",
             "deleteUserMsg": "¿Está seguro que desea eliminar a este usuario?",
             "user": "un usuario"
+        },
+        "security.group.management": {
+            "title": "es_Group Management",
+            "group": "es_Group"
         },
         "security.calendarConfiguration": {
             "title": "Configuración del calendario",
@@ -351,7 +355,7 @@
                 "validate.button": "Validar",
                 "smtpValid": "La configuración de SMTP es válida",
                 "smtpNotValid": "La configuración de SMTP es no válida",
-				"errorMsg": "Por favor seleccione cómo se enviarán los documentos"
+                "errorMsg": "Por favor seleccione cómo se enviarán los documentos"
             }
         },
         "security.emailTemplates": {
@@ -370,7 +374,7 @@
                 "templateName.label": "Nombre de la plantilla",
                 "templateName.placeholder": "Ingrese el nombre de la plantilla",
                 "emailPattern.label": "Patrón de correo electrónico",
-				"emailPattern.description": "Use '.*' para todos los destinatarios, use '.+@armedia.com' para armedia.com destinatarios o alguna otra expresión regular. Tenga en cuenta que dot(.) debe ser escapado con barra invertida!",
+                "emailPattern.description": "Use '.*' para todos los destinatarios, use '.+@armedia.com' para armedia.com destinatarios o alguna otra expresión regular. Tenga en cuenta que dot(.) debe ser escapado con barra invertida!",
                 "emailPattern.placeholder": "Ingrese el patrón de correo electrónico",
                 "source.label": "Fuente",
                 "objectTypes.label": "Tipos de objetos",
@@ -381,9 +385,8 @@
                 "download": "Descargar",
                 "save": "Salvar",
                 "cancel": "Cancelar",
-				"validationResponse": "La plantilla de correo electrónico ya existe con los parámetros seleccionados",
-                "uploadError": "Carga de archivo cancelada debido a un tipo de archivo incorrecto. Solo puedes subir archivos html.",
-                "invalidTemplateName": "El nombre de la plantilla debe terminar en '.html' y solo puede contener caracteres, dígitos o guiones bajos."
+                "validationResponse": "La plantilla de correo electrónico ya existe con los parámetros seleccionados",
+                "uploadError": "Carga de archivo cancelada debido a un tipo de archivo incorrecto. Solo puedes subir archivos html."
             },
             "objectTypes": {
                 "caseFile": "Expediente",
@@ -441,11 +444,11 @@
         "reports": {
             "title": "Informes",
             "config": "Configuración de informes",
-			"btn": {
+            "btn": {
                 "reportDesigner": "Diseñador de informes",
                 "sync": "Sincronizar"
             },
-			"schedule": {
+            "schedule": {
                 "title": "Programación de Informes",
                 "selectReportType": "Seleccionar tipo de informe",
                 "emailAddress": {
@@ -590,20 +593,20 @@
                     "btnCancel.text": "Cancelar",
                     "btnOk.text": "Salvar la entrada"
                 },
-				"addLookup": "Agregar Búsqueda",
-				"label": "Tipo de búsqueda",
+                "addLookup": "Agregar Búsqueda",
+                "label": "Tipo de búsqueda",
                 "lookupName": "Nombre de Búsqueda",
-                "placeholder": "Ingrese el nombre de la búsqueda",				
+                "placeholder": "Ingrese el nombre de la búsqueda",
                 "btnSave.text": "Salvar",
                 "deleteLookupMsg": "¿Seguro que quieres eliminar esta búsqueda?",
                 "deleteEntryMsg": "¿Seguro que quieres eliminar esta entrada?",
                 "delete.success": "La búsqueda fue eliminada exitosamente",
                 "delete.error": "La búsqueda no puede ser eliminada",
                 "lookupExists.error": "La búsqueda con este nombre ya existe"
-			},	
+            },
             "module.config": {
                 "title": "Configuración de módulos",
-				"btnDisabled": "Discapacitado",
+                "btnDisabled": "Discapacitado",
                 "btnEnabled": "Habilitado",
                 "message": "No se encontraron módulos en el sistema"
             },
@@ -627,6 +630,20 @@
                 "historyDays.label": "Mantener eventos de auditoría y notificación (en días)",
                 "inform": "Configuración salvada correctamente",
                 "apply.label": "Aplicar"
+            },
+            "holiday": {
+                "title": "es_Holiday Schedule",
+                "grid": {
+                    "holidayName": "es_Name of Holiday",
+                    "holidayDate": "es_Date of holiday"
+                },
+                "cancel": "es_Cancel",
+                "save": "es_Save",
+                "message": "es_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "es_Enter Name of Holiday",
+                    "date": "es_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "Marca",
@@ -813,7 +830,7 @@
                 "insert.error": "Hubo un error configurando la fila nueva de configuración",
                 "update.success": "Fila de configuración actualizada con éxito.",
                 "update.error": "Hubo un error actualizando la fila de configuración",
-				"test.conection.success": "Conectado con éxito."
+                "test.conection.success": "Conectado con éxito."
             }
         }
     },

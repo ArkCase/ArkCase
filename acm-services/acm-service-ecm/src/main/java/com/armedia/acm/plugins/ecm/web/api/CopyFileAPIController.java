@@ -61,7 +61,7 @@ public class CopyFileAPIController
             {
                 log.info("File with id: " + in.getId() + " successfully copied to the location with id: " + in.getFolderId());
             }
-            getFileEventPublisher().publishFileCopiedEvent(copyFile, authentication, ipAddress, true);
+            getFileEventPublisher().publishFileCopiedEvent(copyFile, source, authentication, ipAddress, true);
             FileDTO fileDTO = new FileDTO();
             fileDTO.setNewFile(copyFile);
             fileDTO.setOriginalId(Long.toString(in.getId()));
@@ -74,7 +74,7 @@ public class CopyFileAPIController
                 log.error("Exception occurred while trying to copy file with id: " + in.getId() + " to the location with id:"
                         + in.getFolderId());
             }
-            getFileEventPublisher().publishFileCopiedEvent(source, authentication, ipAddress, false);
+            getFileEventPublisher().publishFileCopiedEvent(source, null, authentication, ipAddress, false);
             throw e;
         }
         catch (AcmObjectNotFoundException e)
@@ -83,7 +83,7 @@ public class CopyFileAPIController
             {
                 log.debug("File with id: " + in.getId() + " not found in the DB");
             }
-            getFileEventPublisher().publishFileCopiedEvent(source, authentication, ipAddress, false);
+            getFileEventPublisher().publishFileCopiedEvent(source, null, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, in.getId(),
                     "File not found.", e);
         }

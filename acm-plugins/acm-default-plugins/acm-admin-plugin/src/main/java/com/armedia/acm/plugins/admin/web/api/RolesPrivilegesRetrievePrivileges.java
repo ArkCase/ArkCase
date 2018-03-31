@@ -8,11 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by sergey.kolomiets on 6/2/15.
@@ -28,7 +31,6 @@ public class RolesPrivilegesRetrievePrivileges
     @RequestMapping(value = "/rolesprivileges/privileges", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
-
     @ResponseBody
     public String retrievePrivileges() throws IOException, AcmRolesPrivilegesException
     {
@@ -37,6 +39,51 @@ public class RolesPrivilegesRetrievePrivileges
         {
             JSONObject jsonPrivileges = new JSONObject(rolesPrivilegesService.retrievePrivileges());
             return jsonPrivileges.toString();
+        }
+        catch (Exception e)
+        {
+            log.error("Can't retrieve privileges", e);
+            throw new AcmRolesPrivilegesException("Can't retrieve privileges", e);
+        }
+    }
+
+    @RequestMapping(value = "/{roleName:.+}/privileges", method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+    })
+    @ResponseBody
+    public Map<String, String> findPrivilegesByRolePaged(
+            @PathVariable(value = "roleName") String roleName,
+            @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws IOException, AcmRolesPrivilegesException
+    {
+        try
+        {
+            return rolesPrivilegesService.getPrivilegesByRolePaged(roleName, sortDirection, startRow, maxRows, authorized);
+        }
+        catch (Exception e)
+        {
+            log.error("Can't retrieve privileges", e);
+            throw new AcmRolesPrivilegesException("Can't retrieve privileges", e);
+        }
+    }
+
+    @RequestMapping(value = "/{roleName:.+}/privileges", params = { "fq" }, method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+    })
+    @ResponseBody
+    public Map<String, String> findPrivilegesByRole(
+            @PathVariable(value = "roleName") String roleName,
+            @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "fq") String filterQuery,
+            @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws IOException, AcmRolesPrivilegesException
+    {
+        try
+        {
+            return rolesPrivilegesService.getPrivilegesByRole(roleName, authorized, filterQuery, sortDirection, startRow, maxRows);
         }
         catch (Exception e)
         {

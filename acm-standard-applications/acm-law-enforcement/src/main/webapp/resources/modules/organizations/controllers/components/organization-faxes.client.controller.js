@@ -181,19 +181,9 @@ angular.module('organizations').controller(
                         return promiseSaveInfo;
                     }
 
-                    $scope.isDefault = function(data) {
-                        return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultFax");
+                    $scope.isDefault = function(fax) {
+                        var defaultFax = $scope.objectInfo.defaultFax;
+                        var comparisonProperties = [ "description", "id", "subType", "type", "value" ];
+                        return Util.objectsComparisonByGivenProperties(defaultFax, fax, comparisonProperties);
                     }
-
-                    // $scope.isDefault = function (data) {
-                    //     var id = 0;
-                    //     if ($scope.objectInfo.defaultFax) {
-                    //         id = $scope.objectInfo.defaultFax.id
-                    //     }
-                    //     var faxes = _.filter($scope.objectInfo.contactMethods, {type: 'fax'});
-                    //     if (faxes && faxes.length == 0) {
-                    //         return true;
-                    //     }
-                    //     return data.id == id;
-                    // };
                 } ]);

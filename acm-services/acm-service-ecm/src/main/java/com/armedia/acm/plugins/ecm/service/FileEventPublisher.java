@@ -3,13 +3,14 @@ package com.armedia.acm.plugins.ecm.service;
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileActiveVersionSetEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileCreatedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileDeletedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileMovedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileRenamedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileReplacedEvent;
-import com.armedia.acm.plugins.ecm.model.event.EcmFiledCopiedEvent;
+import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,11 +55,11 @@ public class FileEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(fileDeletedEvent);
     }
 
-    public void publishFileCopiedEvent(EcmFile source, Authentication auth, String ipAddress, boolean succeeded)
+    public void publishFileCopiedEvent(EcmFile source, EcmFile original, Authentication auth, String ipAddress, boolean succeeded)
     {
 
         log.debug("Publishing a file copied event.");
-        EcmFiledCopiedEvent filedCopiedEvent = new EcmFiledCopiedEvent(source, auth.getName(), ipAddress);
+        EcmFileCopiedEvent filedCopiedEvent = new EcmFileCopiedEvent(source, original, auth.getName(), ipAddress);
         filedCopiedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(filedCopiedEvent);
@@ -84,11 +85,11 @@ public class FileEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(fileRenamedEvent);
     }
 
-    public void publishFileReplacedEvent(EcmFile source, Authentication auth, String ipAddress, boolean succeeded)
+    public void publishFileReplacedEvent(EcmFile source, EcmFileVersion previousActiveFileVersion, Authentication auth, String ipAddress, boolean succeeded)
     {
 
         log.debug("Publishing a file replaced event.");
-        EcmFileReplacedEvent fileReplacedEvent = new EcmFileReplacedEvent(source, auth.getName(), ipAddress);
+        EcmFileReplacedEvent fileReplacedEvent = new EcmFileReplacedEvent(source, previousActiveFileVersion, auth.getName(), ipAddress);
         fileReplacedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(fileReplacedEvent);

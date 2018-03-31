@@ -308,6 +308,10 @@
                     "deleteUserMsg": "Are you sure you want to delete this user?",
                     "user": "User"
                 },
+                "security.group.management": {
+                    "title": "Group Management",
+                    "group": "Group"
+                },
                 "security.calendarConfiguration": {
                     "title": "Calendar Configuration",
                     "calendarConfigForm": {
@@ -426,8 +430,7 @@
                         "save": "Save",
                         "cancel": "Cancel",
                         "validationResponse": "Email Template already exists with selected parameters",
-                        "uploadError": "File upload canceled due to incorrect type of file. You can only upload html file.",
-                        "invalidTemplateName": "Template name must end on '.html', '.htm' or '.xhtml' and can only consist of characters, digits or underscores."
+                        "uploadError": "File upload canceled due to incorrect type of file. You can only upload html file."
                     },
                     "objectTypes": {
                         "caseFile": "en-in_Case File",
@@ -632,6 +635,20 @@
                         "historyDays.label": "Keep Audit and Notification events (in days)",
                         "inform": "Setting successfully saved",
                         "apply.label": "Apply"
+                    },
+                    "holiday": {
+                        "title": "en-in_Holiday Schedule",
+                        "grid": {
+                            "holidayName": "en-in_Name of Holiday",
+                            "holidayDate": "en-in_Date of holiday"
+                        },
+                        "cancel": "en-in_Cancel",
+                        "save": "en-in_Save",
+                        "message": "en-in_The holiday you entered is not saved! Date of Holiday already exist!",
+                        "placeholder": {
+                            "name": "en-in_Enter Name of Holiday",
+                            "date": "en-in_Enter Date of Holiday"
+                        }
                     }
                 },
                 "branding.title": "Branding",

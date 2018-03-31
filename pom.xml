@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.2.6-SNAPSHOT</version>
+    <version>3.2.8-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -83,6 +83,7 @@
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
         <!--<mule-cmis-connector.version>2.0.0</mule-cmis-connector.version> -->
         <org.json.version>20140107</org.json.version>
+        <json-simple.version>1.1.1</json-simple.version>
         <org.mvel.version>2.2.1.Final</org.mvel.version>
         <rome.version>1.0</rome.version>
         <slf4j.version>1.7.7</slf4j.version>
@@ -127,6 +128,7 @@
         <magic.matcher.version>0.1.2</magic.matcher.version>
         <springfox-version>2.5.0</springfox-version>
         <solr-solrj.version>6.6.0</solr-solrj.version>
+        <amazon.sdk.version>1.11.292</amazon.sdk.version>
     </properties>
 
     <organization>
@@ -939,6 +941,11 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
                 <version>${spring.version}</version>
             </dependency>
@@ -1529,6 +1536,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.googlecode.json-simple</groupId>
+                <artifactId>json-simple</artifactId>
+                <version>${json-simple.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>${fasterxml-jackson-core.version}</version>
@@ -1958,6 +1971,15 @@
                 <groupId>org.apache.solr</groupId>
                 <artifactId>solr-solrj</artifactId>
                 <version>${solr-solrj.version}</version>
+            </dependency>
+
+            <!-- Amazon -->
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-bom</artifactId>
+                <version>${amazon.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
         </dependencies>
