@@ -5,7 +5,6 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.ldap.PasswordValidationService;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +26,7 @@ public class SecureLdapController
 
         if (!violations.isEmpty())
         {
-            String errorMsg = violations.stream().collect(Collectors.joining("<br/>"));
+            String errorMsg = violations.stream().collect(Collectors.joining("\n"));
             AcmAppErrorJsonMsg e = new AcmAppErrorJsonMsg(errorMsg, null, "password", null);
             userDTO.setPassword(null);
             e.putExtra("userForm", userDTO);
