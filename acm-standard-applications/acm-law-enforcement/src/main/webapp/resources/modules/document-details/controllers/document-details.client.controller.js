@@ -202,8 +202,6 @@ angular.module('document-details').controller(
                     if (!Util.isEmpty(activeVersion)) {
                         durationInSeconds = activeVersion.durationSeconds;
                     }
-                    var formatTime = moment.duration(durationInSeconds, 'seconds'); //get the seconds
-                    $scope.durationFormatted = moment.utc(formatTime.asMilliseconds()).format('HH:mm:ss');
 
                     var key = $scope.ecmFile.fileType + ".name";
                     // Search for descriptive file type in acm-forms.properties
