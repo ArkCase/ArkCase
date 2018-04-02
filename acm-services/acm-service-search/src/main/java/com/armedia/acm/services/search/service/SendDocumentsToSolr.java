@@ -12,6 +12,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.jms.JmsException;
+import org.springframework.jms.core.JmsTemplate;
+
+import javax.jms.ConnectionFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,12 +26,21 @@ import java.util.Map;
 /**
  * Created by armdev on 10/21/14.
  */
-public class SendDocumentsToSolr
+public class SendDocumentsToSolr implements InitializingBean
 {
     private MuleContextManager muleContextManager;
     private ObjectConverter objectConverter;
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private ConnectionFactory jmsConnectionFactory;
+    private JmsTemplate jmsTemplate;
+
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        jmsTemplate = new JmsTemplate(getJmsConnectionFactory());
+    }
 
     // this method is used from Mule, do not delete it!
     public String asJsonArray(SolrBaseDocument document) throws JsonProcessingException
@@ -39,12 +53,12 @@ public class SendDocumentsToSolr
 
     public void sendSolrAdvancedSearchDocuments(List<SolrAdvancedSearchDocument> solrDocuments)
     {
-        sendToJmsQueue(solrDocuments, "jms://solrAdvancedSearch.in");
+        sendToJmsQueue(solrDocuments, "solrAdvancedSearch.in");
     }
 
     public void sendSolrQuickSearchDocuments(List<SolrDocument> solrDocuments)
     {
-        sendToJmsQueue(solrDocuments, "jms://solrQuickSearch.in");
+        sendToJmsQueue(solrDocuments, "solrQuickSearch.in");
     }
 
     public void sendSolrContentFileIndexDocuments(List<SolrContentDocument> solrDocuments)
@@ -107,7 +121,7 @@ public class SendDocumentsToSolr
 
             log.debug("Sending JSON to SOLR with hash {}", json.hashCode());
 
-            getMuleContextManager().dispatch(queueName, json);
+            getMuleContextManager().dispatch(queueName, solrDocument);
             log.debug("Sent JSON to SOLR with hash {}", json.hashCode());
 
             log.trace("Returning JSON: {}", json);
@@ -115,7 +129,7 @@ public class SendDocumentsToSolr
         }
         catch (MuleException e)
         {
-            log.error("Could not send document to SOLR: " + e.getMessage(), e);
+            log.error("Could not send document to SOLR: {}", e.getMessage(), e);
         }
     }
 
@@ -146,13 +160,13 @@ public class SendDocumentsToSolr
             String json = objectConverter.getJsonMarshaller().marshal(solrDocuments);
 
             log.debug("Sending json to Solr via JMS with hash {}", json.hashCode());
-            getMuleContextManager().dispatch(queueName, json);
+            getJmsTemplate().convertAndSend(queueName, json);
             log.debug("Sent json to Solr via JMS with hash {}", json.hashCode());
 
             log.trace("Returning JSON: {}", json);
 
         }
-        catch (MuleException e)
+        catch (JmsException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
@@ -177,4 +191,25 @@ public class SendDocumentsToSolr
     {
         this.objectConverter = objectConverter;
     }
+
+    public ConnectionFactory getJmsConnectionFactory()
+    {
+        return jmsConnectionFactory;
+    }
+
+    public void setJmsConnectionFactory(ConnectionFactory jmsConnectionFactory)
+    {
+        this.jmsConnectionFactory = jmsConnectionFactory;
+    }
+
+    public JmsTemplate getJmsTemplate()
+    {
+        return jmsTemplate;
+    }
+
+    public void setJmsTemplate(JmsTemplate jmsTemplate)
+    {
+        this.jmsTemplate = jmsTemplate;
+    }
+
 }

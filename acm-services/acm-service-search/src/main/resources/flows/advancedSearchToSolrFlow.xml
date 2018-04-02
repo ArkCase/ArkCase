@@ -16,7 +16,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
                            string consisting of an array of documents.  Each element of the array must be a JSON
                            object with property names corresponding to valid SOLR field names.">
 
-        <jms:inbound-endpoint queue="solrAdvancedSearch.in" exchange-pattern="request-response" connector-ref="ActiveMQ-ACM"
+        <jms:inbound-endpoint queue="solrAdvancedSearch.in.deprecated" exchange-pattern="request-response" connector-ref="ActiveMQ-ACM"
             doc:name="JMS"/>
 
         <timer-interceptor/>
