@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    xmlns:jms="http://www.springframework.org/schema/jms"
+    xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 
-            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
+            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
+            http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.2.xsd">
 
     <!-- keeping this bean for now even though we are not using any properties yet.  -->
     <bean id="searchPluginProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -64,11 +66,38 @@
     <bean id="csvReportGenerator" class="com.armedia.acm.services.search.service.CSVReportGenerator">
         <property name="propertyMap" ref="pluginSearch"/>
     </bean>
+    
+    <jms:annotation-driven/>
+    
+    <import resource="file:${user.home}/.arkcase/acm/activeMqSpringConfig.xml"/>    
+
+    <bean id="destinationResolver" class="org.springframework.jms.support.destination.DynamicDestinationResolver"/>    
+
+    <bean id="jmsListenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
+        <property name="connectionFactory" ref="jmsConnectionFactory"/>
+        <property name="destinationResolver" ref="destinationResolver"/>
+        <property name="concurrency" value="3-10"/>
+    </bean>
+    
+    <bean id="solrPostClient" class="com.armedia.acm.services.search.service.solr.DefaultSolrPostClient">
+    <!--  https://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.updateHandler} -->
+        <property name="solrHost" value="${solr.host}"/>
+        <property name="solrPort" value="${solr.port}"/>
+        <property name="solrContextRoot" value="${solr.contextRoot}"/>
+        <property name="solrUpdateHandler" value="${solr.updateHandler}"/>
+    </bean>
+    
+    <bean id="solrPostQueueListener" class="com.armedia.acm.services.search.service.solr.SolrPostQueueListener">
+        <property name="solrPostClient" ref="solrPostClient"/>
+    </bean>
 
     <bean id="sendDocumentsToSolr" class="com.armedia.acm.services.search.service.SendDocumentsToSolr">
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="jmsConnectionFactory" ref="jmsConnectionFactory"/>
     </bean>
+    
+    
     <bean id="searchResults" class="com.armedia.acm.services.search.service.SearchResults"/>
     <bean id="jpaObjectsToSearchService" class="com.armedia.acm.services.search.service.JpaObjectsToSearchService">
         <property name="springContextHolder" ref="acmContextHolder"/>
