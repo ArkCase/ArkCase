@@ -76,12 +76,12 @@ public class SendDocumentsToSolr implements InitializingBean
     public void sendSolrContentFileIndexDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
     {
         // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
-        // queue.
+        // index.
         if (deletes != null)
         {
             for (SolrDeleteDocumentByIdRequest doc : deletes)
             {
-                sendToJmsQueue(doc, "jms://solrAdvancedSearch.in");
+                sendToJmsQueue(doc, "solrAdvancedSearch.in");
             }
         }
     }
@@ -89,12 +89,12 @@ public class SendDocumentsToSolr implements InitializingBean
     public void sendSolrQuickSearchDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
     {
         // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
-        // queue.
+        // index.
         if (deletes != null)
         {
             for (SolrDeleteDocumentByIdRequest doc : deletes)
             {
-                sendToJmsQueue(doc, "jms://solrQuickSearch.in");
+                sendToJmsQueue(doc, "solrQuickSearch.in");
             }
         }
     }
@@ -103,12 +103,12 @@ public class SendDocumentsToSolr implements InitializingBean
     {
         log.debug("Received [{}] to be deleted.", deletes.size());
         // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
-        // queue.
+        // index.
         if (deletes != null)
         {
             for (SolrDeleteDocumentByIdRequest doc : deletes)
             {
-                sendToJmsQueue(doc, "jms://solrAdvancedSearch.in");
+                sendToJmsQueue(doc, "solrAdvancedSearch.in");
             }
         }
     }
@@ -121,13 +121,13 @@ public class SendDocumentsToSolr implements InitializingBean
 
             log.debug("Sending JSON to SOLR with hash {}", json.hashCode());
 
-            getMuleContextManager().dispatch(queueName, solrDocument);
+            getJmsTemplate().convertAndSend(queueName, json);
             log.debug("Sent JSON to SOLR with hash {}", json.hashCode());
 
             log.trace("Returning JSON: {}", json);
 
         }
-        catch (MuleException e)
+        catch (JmsException e)
         {
             log.error("Could not send document to SOLR: {}", e.getMessage(), e);
         }
