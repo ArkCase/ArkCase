@@ -53,12 +53,9 @@ angular.module('document-details').controller(
                 selectedIds : $stateParams['selectedIds']
             };
             $scope.showVideoPlayer = false;
+            $scope.transcriptionTabActive = false;
 
-            TranscriptionManagementService.getTranscribeConfiguration().then(function(res) {
-                $scope.transcribeEnabled = res.data.enabled;
-            }, function(err) {
-                MessageService.error(err.data);
-            });
+            var transcriptionConfigurationPromise = TranscriptionManagementService.getTranscribeConfiguration();
 
             $scope.getEcmFileActiveVersion = function(ecmFile) {
                 if (Util.isEmpty(ecmFile) || Util.isEmpty(ecmFile.activeVersionTag) || Util.isArrayEmpty(ecmFile.versions)) {
@@ -183,7 +180,7 @@ angular.module('document-details').controller(
 
             $q.all(
                 [ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise,
-                    ecmFileParticipants.$promise, formsConfig ]).then(
+                    ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise ]).then(
                 function(data) {
                     $scope.acmTicket = data[0].data;
                     $scope.userId = data[1].userId;
@@ -193,6 +190,10 @@ angular.module('document-details').controller(
                     $scope.ecmFileEvents = data[5];
                     $scope.ecmFileParticipants = data[6];
                     $scope.formsConfig = data[7];
+                    $scope.transcriptionConfiguration = data[8];
+
+                    $scope.transcribeEnabled = $scope.transcriptionConfiguration.data.enabled;
+
                     $timeout(function() {
                         $scope.$broadcast('document-data', $scope.ecmFile);
                     }, 1000);
@@ -202,8 +203,6 @@ angular.module('document-details').controller(
                     if (!Util.isEmpty(activeVersion)) {
                         durationInSeconds = activeVersion.durationSeconds;
                     }
-                    var formatTime = moment.duration(durationInSeconds, 'seconds'); //get the seconds
-                    $scope.durationFormatted = moment.utc(formatTime.asMilliseconds()).format('HH:mm:ss');
 
                     var key = $scope.ecmFile.fileType + ".name";
                     // Search for descriptive file type in acm-forms.properties
@@ -234,5 +233,6 @@ angular.module('document-details').controller(
                         $scope.openSnowboundViewer();
                     }
 
+                    $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
                 });
         } ]);
