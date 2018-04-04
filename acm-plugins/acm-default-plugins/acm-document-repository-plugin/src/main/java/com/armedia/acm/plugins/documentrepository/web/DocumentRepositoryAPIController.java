@@ -34,6 +34,7 @@ public class DocumentRepositoryAPIController
     private DocumentRepositoryEventPublisher documentRepositoryEventPublisher;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public DocumentRepository saveDocumentRepository(@RequestBody DocumentRepository in, Authentication auth)
             throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg

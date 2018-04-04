@@ -171,9 +171,6 @@ angular.module('services').factory(
                         if (!Util.isArray(data.participants)) {
                             return false;
                         }
-                        if (!ObjectModelService.getParticipantByType(data, "assignee")) {
-                            return false;
-                        }
                         return true;
                     };
 
