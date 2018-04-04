@@ -36,16 +36,12 @@ angular
                         'ObjectService',
                         'Object.LookupService',
                         function(Util, ObjectService, ObjectLookupService) {
-                            var defaults = {
-                                isParent : false,
-                                isViewerLink : false
-                            };
                             return {
                                 restrict : 'A',
                                 scope : {
                                     objectData : '=',
                                     isParent : '=',
-                                    isViewerLink : '=',
+                                    isViewerLink : '=?',
                                     url : '='
                                 },
                                 link : function(scope, element, attrs) {
@@ -60,6 +56,9 @@ angular
                                                     : Util.goodMapValue(objectData, "object_type_s");
                                             var objectId = scope.isParent ? parentReference.substring(0, parentReference.indexOf('-'))
                                                     : Util.goodMapValue(objectData, "object_id_s");
+                                            if (objectType == ObjectService.ObjectTypes.TRANSCRIBE || objectType == ObjectService.ObjectTypes.TRANSCRIBE_ITEM) {
+                                                objectId = Util.goodMapValue(objectData, "parent_file_id_s");
+                                            }
                                             var objectUrlKey = 'url';
                                             var pathVariables = {
                                                 ":id" : objectId
@@ -81,6 +80,24 @@ angular
                                                     pathVariables[":selectedIds"] = objectId;
                                                 }
                                             }
+
+                                            if (objectType == ObjectService.ObjectTypes.TRANSCRIBE || objectType == ObjectService.ObjectTypes.TRANSCRIBE_ITEM) {
+                                                scope.isViewerLink = true;
+                                                var containerType = Util.goodMapValue(objectData, "parent_root_type_s");
+                                                var containerId = Util.goodMapValue(objectData, "parent_root_id_s");
+                                                var name = Util.goodMapValue(objectData, "title_parseable");
+                                                if (objectType == ObjectService.ObjectTypes.TRANSCRIBE_ITEM) {
+                                                    name = Util.goodMapValue(objectData, "parent_name_t");
+                                                    pathVariables[":seconds"] = Util.goodMapValue(objectData, "start_time_s");
+                                                }
+                                                objectUrlKey = "viewerUrl";
+                                                pathVariables[":containerId"] = containerId;
+                                                pathVariables[":containerType"] = containerType;
+                                                pathVariables[":name"] = encodeURIComponent(name);
+                                                pathVariables[":selectedIds"] = objectId;
+
+                                            }
+
                                             ObjectLookupService.getObjectTypes().then(function(objectTypes) {
                                                 var objectUrl = '';
                                                 var foundObjectType = _.find(objectTypes, {
@@ -94,6 +111,9 @@ angular
                                             });
                                         } else {
                                             element.attr('href', scope.url);
+                                        }
+                                        if (objectType == ObjectService.ObjectTypes.FILE || objectType == ObjectService.ObjectTypes.TRANSCRIBE_ITEM || objectType == ObjectService.ObjectTypes.TRANSCRIBE) {
+                                            element.attr('target', "_blank");
                                         }
                                     }
 

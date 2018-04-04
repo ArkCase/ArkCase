@@ -101,6 +101,9 @@ angular.module('document-details').controller(
                     }
                 };
 
+                if(!Util.isEmpty($stateParams.seconds)){
+                    $scope.playAt($stateParams.seconds);
+                }
             });
 
 
@@ -197,12 +200,6 @@ angular.module('document-details').controller(
                     $timeout(function() {
                         $scope.$broadcast('document-data', $scope.ecmFile);
                     }, 1000);
-
-                    var durationInSeconds = 0;
-                    var activeVersion = $scope.getEcmFileActiveVersion($scope.ecmFile);
-                    if (!Util.isEmpty(activeVersion)) {
-                        durationInSeconds = activeVersion.durationSeconds;
-                    }
 
                     var key = $scope.ecmFile.fileType + ".name";
                     // Search for descriptive file type in acm-forms.properties
