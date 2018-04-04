@@ -208,6 +208,13 @@
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
         <property name="folderService" ref="acmFolderService"/>
     </bean>
+    
+    <bean id="solrPostContentFileQueueListener" class="com.armedia.acm.plugins.ecm.service.impl.SolrPostContentFileQueueListener">
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="solrPostClient" ref="solrPostClient"/>
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
+    </bean>
 
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule"
         parent="simpleStatelessSingleObjectRuleManager">
