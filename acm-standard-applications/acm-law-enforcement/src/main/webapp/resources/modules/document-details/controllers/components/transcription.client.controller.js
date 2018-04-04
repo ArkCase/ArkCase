@@ -13,6 +13,11 @@ angular.module('document-details').controller(
                     $scope.transcribeDataModel = null;
 
                     $scope.readonlyInputs = false;
+                    $scope.isCompileLoading = false;
+                    $scope.isTranscribeLoading = false;
+                    $scope.isSaveLoading = false;
+                    $scope.isCancelLoading = false;
+                    $scope.isCompleteLoading = false;
 
                     $scope.$on('document-data', function(event, ecmFile) {
                         var isMediaFile = !Util.isEmpty(ecmFile) && (ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 || ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0);
@@ -116,11 +121,14 @@ angular.module('document-details').controller(
                     };
 
                     var createManualTranscription = function() {
+                        $scope.isSaveLoading = true;
                         TranscriptionAppService.createTranscription($scope.transcribeDataModel).then(function(data) {
+                            $scope.isSaveLoading = false;
                             $scope.$emit('transcribe-data-model', data);
                             $scope.transcribeDataModel = data;
                             MessageService.succsessAction();
                         }, function(err) {
+                            $scope.isSaveLoading = false;
                             MessageService.error(err.data);
                         });
 
@@ -168,11 +176,14 @@ angular.module('document-details').controller(
                                     }
                                 });
                             } else if (!Util.isEmpty($scope.transcribeDataModel.id)) { //update transcription
+                                $scope.isSaveLoading = true;
                                 TranscriptionAppService.updateTranscription($scope.transcribeDataModel).then(function(data) {
+                                    $scope.isSaveLoading = false;
                                     $scope.$emit('transcribe-data-model', data);
                                     $scope.transcribeDataModel = data;
                                     MessageService.succsessAction();
                                 }, function(err) {
+                                    $scope.isSaveLoading = false;
                                     MessageService.error(err.data);
                                 });
                             }
@@ -203,11 +214,14 @@ angular.module('document-details').controller(
                     $scope.complete = function () {
                         var completeManualTranscription = function(){
                                 if (!Util.isEmpty($scope.transcribeDataModel.id)) {
+                                    $scope.isCompleteLoading = true;
                                     TranscriptionAppService.completeManualTranscription($scope.transcribeDataModel.id).then(function (data) {
+                                        $scope.isCompleteLoading = false;
                                         $scope.$emit('transcribe-data-model', data);
                                         $scope.transcribeDataModel = data;
                                         MessageService.succsessAction();
                                     }, function (err) {
+                                        $scope.isCompleteLoading = false;
                                         MessageService.error(err.data);
                                     });
                                 }
@@ -218,11 +232,14 @@ angular.module('document-details').controller(
                     $scope.cancel = function () {
                         var cancelManualTranscription = function(){
                                 if (!Util.isEmpty($scope.transcribeDataModel.id)) {
+                                    $scope.isCancelLoading = true;
                                     TranscriptionAppService.cancelManualTranscription($scope.transcribeDataModel.id).then(function (data) {
+                                        $scope.isCancelLoading = false;
                                         $scope.$emit('transcribe-data-model', data);
                                         $scope.transcribeDataModel = data;
                                         MessageService.succsessAction();
                                     }, function(err) {
+                                        $scope.isCancelLoading = false;
                                         MessageService.error(err.data);
                                     });
                                 }
@@ -233,11 +250,14 @@ angular.module('document-details').controller(
                     $scope.transcribe = function () {
                         var startAutomaticTranscription = function() {
                                 if (!Util.isEmpty(activeVersion)) {
+                                    $scope.isTranscribeLoading = true;
                                     TranscriptionAppService.startAutomaticTranscription(activeVersion.id).then(function (data) {
+                                        $scope.isTranscribeLoading = false;
                                         $scope.$emit('transcribe-data-model', data);
                                         $scope.transcribeDataModel = data;
                                         MessageService.succsessAction();
                                     }, function (err) {
+                                        $scope.isTranscribeLoading = false;
                                         MessageService.error(err.data);
                                     });
                                 }
@@ -254,10 +274,15 @@ angular.module('document-details').controller(
                     $scope.compile = function () {
                         var compileTranscription = function(){
                             if (!Util.isEmpty($scope.transcribeDataModel.id)) {
+                                $scope.isCompileLoading = true;
                                 TranscriptionAppService.compileTranscription($scope.transcribeDataModel.id).then(function (data){
+                                    $scope.isCompileLoading = false;
                                     MessageService.succsessAction();
+                                    $scope.transcribeDataModel.transcribeEcmFile = data;
+                                    $scope.$emit('transcribe-data-model', $scope.transcribeDataModel);
                                 }, function(err){
                                     MessageService.error(err.data);
+                                    $scope.isCompileLoading = false;
                                 });
                             }
                         };
