@@ -19,9 +19,10 @@ angular.module('cases').controller(
                 'Case.MergeSplitService',
                 'Helper.ObjectBrowserService',
                 'Profile.UserInfoService',
+                '$timeout',
                 function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, CaseLookupService,
                         ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService,
-                        UserInfoService) {
+                        UserInfoService, $timeout) {
 
                     new HelperObjectBrowserService.Component({
                         scope : $scope,
@@ -38,6 +39,9 @@ angular.module('cases').controller(
                     $scope.showBtnChildOutcomes = false;
                     $scope.availableChildOutcomes = [];
 
+                    $scope.merging = false;                    
+                    $scope.splitting = false;
+                    
                     ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
                         $scope.caseFileSearchConfig = _.find(moduleConfig.components, {
                             id : "merge"
@@ -128,19 +132,24 @@ angular.module('cases').controller(
                             resolve : {
                                 config : function() {
                                     return $scope.caseFileSearchConfig;
+                                },
+                                filter: function () {
+                                    return '"Object Type": CASE_FILE' + '&fq="!status_lcs":"CLOSED"&fq="!object_id_s":' + caseInfo.id;
                                 }
-                            //filter: function () {
-                            //    return $scope.caseFileSearchConfig.caseInfoFilter;
-                            //}
                             }
                         });
                         modalInstance.result.then(function(caseSummary) {
                             if (caseSummary) {
-
+                                $scope.merging = true;
                                 MergeSplitService.mergeCaseFile(caseInfo.id, caseSummary.object_id_s).then(function(data) {
-                                    ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, data.id);
+                                    $timeout(function() {
+                                        ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, data.id);
+                                        $scope.merging = false;
+                                        //4 seconds delay so solr can index the new case file
+                                    }, 4000);
+                                }, function() {
+                                    $scope.merging = false;
                                 });
-
                             }
                         });
                     };
@@ -154,9 +163,16 @@ angular.module('cases').controller(
                         });
                         modalInstance.result.then(function(caseSummary) {
                             if (caseSummary) {
+                                $scope.splitting = true;
                                 if (caseSummary != null) {
                                     MergeSplitService.splitCaseFile(caseSummary).then(function(data) {
-                                        ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, data.id);
+                                        $timeout(function() {
+                                            ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, data.id);
+                                            $scope.splitting = false;
+                                            //4 seconds delay so solr can index the new case file
+                                        }, 4000);
+                                    }, function() {
+                                        $scope.merging = false;
                                     });
                                 }
                             }
