@@ -81,7 +81,10 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 
         return pipelineManager.executeOperation(documentRepository, pipelineContext, () -> {
             log.debug("Saving document repository: {}", documentRepository.getName());
-
+            if (documentRepository.getCreator() == null)
+            {
+                documentRepository.setCreator(authentication.getName());
+            }
             DocumentRepository savedDocumentRepository = documentRepositoryDao.save(documentRepository);
 
             publishAuditEvents(pipelineContext.getAuditEventTypes(), savedDocumentRepository);
