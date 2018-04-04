@@ -36,7 +36,8 @@ angular
                                     PERSON : "PERSON",
                                     ORGANIZATION : "ORGANIZATION",
                                     FOLDER: "FOLDER",
-                                    TRANSCRIPTION: "TRANSCRIPTION"
+                                    TRANSCRIBE: "TRANSCRIBE",
+                                    TRANSCRIBE_ITEM: "TRANSCRIBE_ITEM"
                                 }
 
                                 ,
