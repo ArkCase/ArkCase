@@ -126,6 +126,8 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     /////////////////////// for content files /////////////////////////////////////////
     private String content_type;
     private String ecmFileId;
+
+    private String cmis_version_series_id_s;
     private List<String> tags_ss;
 
     /////////////////////// for notification /////////////////////////////////////////
@@ -146,6 +148,16 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     public void setEcmFileId(String ecmFileId)
     {
         this.ecmFileId = ecmFileId;
+    }
+
+    public String getCmis_version_series_id_s()
+    {
+        return cmis_version_series_id_s;
+    }
+
+    public void setCmis_version_series_id_s(String cmis_version_series_id_s)
+    {
+        this.cmis_version_series_id_s = cmis_version_series_id_s;
     }
 
     public String getContent_type()

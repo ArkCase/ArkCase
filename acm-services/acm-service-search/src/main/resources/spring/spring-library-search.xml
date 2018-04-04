@@ -80,11 +80,11 @@
     </bean>
     
     <bean id="solrPostClient" class="com.armedia.acm.services.search.service.solr.DefaultSolrPostClient">
-    <!--  https://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.updateHandler} -->
         <property name="solrHost" value="${solr.host}"/>
         <property name="solrPort" value="${solr.port}"/>
         <property name="solrContextRoot" value="${solr.contextRoot}"/>
         <property name="solrUpdateHandler" value="${solr.updateHandler}"/>
+        <property name="solrContentFileHandler" value="${solr.contentFileHandler}"/>
     </bean>
     
     <bean id="solrPostQueueListener" class="com.armedia.acm.services.search.service.solr.SolrPostQueueListener">
@@ -92,7 +92,6 @@
     </bean>
 
     <bean id="sendDocumentsToSolr" class="com.armedia.acm.services.search.service.SendDocumentsToSolr">
-        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="jmsConnectionFactory" ref="jmsConnectionFactory"/>
     </bean>

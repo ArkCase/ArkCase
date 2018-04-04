@@ -1,6 +1,5 @@
 package com.armedia.acm.services.search.service;
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
@@ -9,7 +8,6 @@ import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -19,16 +17,13 @@ import org.springframework.jms.core.JmsTemplate;
 import javax.jms.ConnectionFactory;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by armdev on 10/21/14.
  */
 public class SendDocumentsToSolr implements InitializingBean
 {
-    private MuleContextManager muleContextManager;
     private ObjectConverter objectConverter;
 
     private ConnectionFactory jmsConnectionFactory;
@@ -67,7 +62,8 @@ public class SendDocumentsToSolr implements InitializingBean
         {
             for (SolrContentDocument doc : solrDocuments)
             {
-                sendToJmsQueue(doc, "jms://solrContentFile.in");
+                log.debug("sending to solrContentFile.in");
+                sendToJmsQueue(doc, "solrContentFile.in");
             }
 
         }
@@ -113,6 +109,11 @@ public class SendDocumentsToSolr implements InitializingBean
         }
     }
 
+    public void sendSolrDocuments(String queueName, String json)
+    {
+        getJmsTemplate().convertAndSend(queueName, json);
+    }
+
     private void sendToJmsQueue(SolrDeleteDocumentByIdRequest solrDocument, String queueName)
     {
         try
@@ -139,15 +140,13 @@ public class SendDocumentsToSolr implements InitializingBean
         {
             log.trace("Sending POJO to SOLR: {}", solrDocument);
 
-            Map<String, Object> messageProperties = new HashMap<>();
-            messageProperties.put("additionalProperties", solrDocument.getAdditionalProperties());
-            messageProperties.put("url", solrDocument.getUrl());
+            String json = objectConverter.getJsonMarshaller().marshal(solrDocument);
 
             log.debug("Sending a doc to Solr with hash {}", solrDocument.hashCode());
-            getMuleContextManager().dispatch(queueName, solrDocument, messageProperties);
+            getJmsTemplate().convertAndSend(queueName, json);
             log.debug("Sent a doc to Solr with hash {}", solrDocument.hashCode());
         }
-        catch (MuleException e)
+        catch (JmsException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
@@ -170,16 +169,6 @@ public class SendDocumentsToSolr implements InitializingBean
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public ObjectConverter getObjectConverter()
