@@ -79,12 +79,15 @@
         <property name="concurrency" value="3-10"/>
     </bean>
     
-    <bean id="solrPostClient" class="com.armedia.acm.services.search.service.solr.DefaultSolrPostClient">
+    <bean id="solrRestClient" class="com.armedia.acm.services.search.service.solr.SolrRestClient">
         <property name="solrHost" value="${solr.host}"/>
         <property name="solrPort" value="${solr.port}"/>
         <property name="solrContextRoot" value="${solr.contextRoot}"/>
+    </bean>
+    
+    <bean id="solrPostClient" class="com.armedia.acm.services.search.service.solr.DefaultSolrPostClient">
         <property name="solrUpdateHandler" value="${solr.updateHandler}"/>
-        <property name="solrContentFileHandler" value="${solr.contentFileHandler}"/>
+        <property name="solrRestClient" ref="solrRestClient"/>
     </bean>
     
     <bean id="solrPostQueueListener" class="com.armedia.acm.services.search.service.solr.SolrPostQueueListener">
