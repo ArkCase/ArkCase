@@ -20,7 +20,7 @@ angular.module('cases').controller(
                     var promiseFileTypes = ObjectLookupService.getFileTypes();
                     ConfigService.getComponentConfig("cases", "documents").then(function(componentConfig) {
                         $scope.config = componentConfig;
-                        $scope.treeConfig = config.docTree;
+                        $scope.treeConfig = $scope.config.docTree;
                         $q.all([ promiseFormTypes, promiseFileTypes ]).then(function(data) {
                             $scope.treeConfig.formTypes = data[0];
                             $scope.treeConfig.fileTypes = data[1];
