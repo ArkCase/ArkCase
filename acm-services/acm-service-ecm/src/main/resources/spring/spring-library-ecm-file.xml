@@ -209,11 +209,16 @@
         <property name="folderService" ref="acmFolderService"/>
     </bean>
     
-    <bean id="solrPostContentFileQueueListener" class="com.armedia.acm.plugins.ecm.service.impl.SolrPostContentFileQueueListener">
+    <bean id="contentFileSolrPostClient" class="com.armedia.acm.plugins.ecm.service.impl.ContentFileSolrPostClient">
         <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="objectConverter" ref="objectConverter"/>
-        <property name="solrPostClient" ref="solrPostClient"/>
+        <property name="objectConverter" ref="objectConverter"/>        
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
+        <property name="solrContentFileHandler" value="${solr.contentFileHandler}"/>
+        <property name="solrRestClient" ref="solrRestClient"/>
+    </bean>
+    
+    <bean id="solrPostContentFileQueueListener" class="com.armedia.acm.plugins.ecm.service.impl.SolrPostContentFileQueueListener">
+        <property name="solrPostClient" ref="contentFileSolrPostClient"/>
     </bean>
 
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule"
