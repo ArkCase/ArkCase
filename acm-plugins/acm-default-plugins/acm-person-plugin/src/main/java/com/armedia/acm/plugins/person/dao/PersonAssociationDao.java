@@ -6,7 +6,6 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -15,7 +14,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
 {
@@ -30,22 +28,6 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
         return PersonAssociation.class;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
-    @Override
-    public PersonAssociation save(PersonAssociation toSave)
-    {
-        if (toSave.getId() != null && toSave.getPerson() != null)
-        {
-            Optional<PersonAssociation> found = toSave.getPerson().getAssociationsFromObjects().stream()
-                    .filter(pa -> pa.getId().equals(toSave.getId())).findFirst();
-            if (found == null || !found.isPresent())
-            {
-                toSave.getPerson().getAssociationsFromObjects().add(toSave);
-            }
-        }
-        return super.save(toSave);
-    }
-
     public List<Person> findPersonByParentIdAndParentType(String parentType, Long parentId)
     {
 
@@ -58,7 +40,7 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
         personInAssociation.setParameter("parentType", parentType.toUpperCase());
         personInAssociation.setParameter("parentId", parentId);
 
-        List<Person> retrival = (List<Person>) personInAssociation.getResultList();
+        List<Person> retrival = personInAssociation.getResultList();
 
         return retrival;
 
