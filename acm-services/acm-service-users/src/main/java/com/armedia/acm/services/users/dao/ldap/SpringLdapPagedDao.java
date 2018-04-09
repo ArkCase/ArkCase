@@ -5,7 +5,6 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,6 @@ import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.LdapTemplate;
 
 import javax.naming.directory.SearchControls;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +26,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
     private PagedResultsDirContextProcessorBuilder builder = new PagedResultsDirContextProcessorBuilder();
 
     private <T> List<T> fetchLdapPaged(LdapTemplate template, String searchBase, String searchFilter,
-            SearchControls searchControls, int pageSize, ContextMapper contextMapper)
+                                       SearchControls searchControls, int pageSize, ContextMapper contextMapper)
     {
         List<T> result = new ArrayList<>();
         // for the first paged-search request we pass null cookie
@@ -67,7 +65,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
     }
 
     public List<LdapUser> findUsers(LdapTemplate template, AcmLdapSyncConfig syncConfig,
-            String[] attributes, Optional<String> ldapLastSyncDate)
+                                    String[] attributes, Optional<String> ldapLastSyncDate)
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -114,9 +112,9 @@ public class SpringLdapPagedDao implements SpringLdapDao
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        searchControls.setReturningAttributes(new String[] { "cn", "member" });
+        searchControls.setReturningAttributes(new String[]{"cn", "member"});
 
-        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(syncConfig);
+        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(syncConfig, template);
 
         Optional<String> lastSyncTimestamp = ldapLastSyncDate
                 .map(it -> convertToDirectorySpecificTimestamp(it, syncConfig.getDirectoryType()));
