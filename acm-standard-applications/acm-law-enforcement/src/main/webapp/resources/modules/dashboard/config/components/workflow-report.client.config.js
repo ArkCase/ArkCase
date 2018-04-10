@@ -3,7 +3,7 @@
 angular.module('dashboard.workflow-report', [ 'adf.provider' ]).config(function(ArkCaseDashboardProvider) {
     ArkCaseDashboardProvider.widget('workflowReport', {
         title : 'dashboard.widgets.workflowReport.title',
-        description : 'dashboard.widgets.workflowReport.title.description',
+        description : 'dashboard.widgets.workflowReport.description',
         controller : 'Dashboard.WorkflowReportController',
         controllerAs : 'workflowReport',
         reload : true,

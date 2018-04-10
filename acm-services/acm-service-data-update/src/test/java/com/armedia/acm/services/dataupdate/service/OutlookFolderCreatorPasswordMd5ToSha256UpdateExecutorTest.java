@@ -73,7 +73,7 @@ public class OutlookFolderCreatorPasswordMd5ToSha256UpdateExecutorTest extends E
                 .andReturn(mockQuery);
         expect(mockQuery.getResultList()).andReturn(found);
 
-        expect(mockEntityManager.merge(first)).andReturn(first);
+        expect(mockEntityManager.merge(first)).andReturn(first).atLeastOnce();
 
         replayAll();
 

@@ -100,7 +100,7 @@
             },
             {
                 "type": "p/TIMESHEET/tasks",
-                "icon": "fa fa-users",
+                "icon": "fa fa-check-circle",
                 "label": "timeTracking.tree.nodeTypes.tasks.label",
                 "components": [
                     "tasks"
@@ -426,7 +426,7 @@
         {
             "id": "tasks",
             "title": "timeTracking.comp.tasks.title",
-            "icon": "fa fa-users",
+            "icon": "fa fa-check-circle",
             "enabled": true,
             "configurable": true,
             "type": "grid",

@@ -294,8 +294,8 @@ angular.module('directives').directive(
                                         paginationPageSizes : scope.config().paginationPageSizes,
                                         paginationPageSize : scope.config().paginationPageSize,
                                         columnDefs : scope.config().selectedItemsGrid.columnDefs,
-                                        deleteRow: function (rowEntity) {
-                                            var index = scope.gridSelectedItems.data.findIndex(function (el) {
+                                        deleteRow : function(rowEntity) {
+                                            var index = scope.gridSelectedItems.data.findIndex(function(el) {
                                                 return el.object_id_s === rowEntity.object_id_s;
                                             });
                                             scope.gridSelectedItems.data.splice(index, 1);
@@ -318,33 +318,32 @@ angular.module('directives').directive(
                                     columnDefs : scope.config().columnDefs,
                                     onRegisterApi : function(gridApi) {
                                         scope.gridApi = gridApi;
-                                        gridApi.selection.on.rowSelectionChanged(scope,
-                                                function(row) {
-                                                    scope.selectedItems = gridApi.selection.getSelectedRows();
-                                                    scope.selectedItem = row.entity;
-                                                    if (scope.onItemsSelected) {
-                                                        scope.onItemsSelected(scope.selectedItems, [ scope.selectedItem ], row.isSelected);
-                                                    }
-                                                    if (scope.secondGrid) {
-                                                        scope.setSecondGridData();
-                                                    }
-                                                    if (scope.showSelectedItemsGrid && !_.isEmpty(scope.selectedItems)) {
-                                                        scope.gridSelectedItems.data = scope.gridSelectedItems.data
-                                                                .concat(scope.selectedItems);
-                                                    }
-                                                });
+                                        gridApi.selection.on.rowSelectionChanged(scope, function(row) {
+                                            scope.selectedItems = gridApi.selection.getSelectedRows();
+                                            scope.selectedItem = row.entity;
+                                            if (scope.onItemsSelected) {
+                                                scope.onItemsSelected(scope.selectedItems, [ scope.selectedItem ], row.isSelected);
+                                            }
+                                            if (scope.secondGrid) {
+                                                scope.setSecondGridData();
+                                            }
 
-                                        gridApi.selection.on.rowSelectionChangedBatch(scope,
-                                                function(rows) {
-                                                    scope.selectedItems = gridApi.selection.getSelectedRows();
-                                                    if (scope.onItemsSelected) {
-                                                        scope.onItemsSelected(scope.selectedItems, scope.selectedItems, true);
-                                                    }
-                                                    if (scope.showSelectedItemsGrid && !_.isEmpty(scope.selectedItems)) {
-                                                        scope.gridSelectedItems.data = scope.gridSelectedItems.data
-                                                                .concat(scope.selectedItems);
-                                                    }
-                                                });
+                                            if (scope.showSelectedItemsGrid && !_.isEmpty(scope.selectedItems)) {
+                                                scope.gridSelectedItems.data = _.uniq(scope.gridSelectedItems.data
+                                                        .concat(scope.selectedItems));
+                                            }
+                                        });
+
+                                        gridApi.selection.on.rowSelectionChangedBatch(scope, function(rows) {
+                                            scope.selectedItems = gridApi.selection.getSelectedRows();
+                                            if (scope.onItemsSelected) {
+                                                scope.onItemsSelected(scope.selectedItems, scope.selectedItems, true);
+                                            }
+                                            if (scope.showSelectedItemsGrid && !_.isEmpty(scope.selectedItems)) {
+                                                scope.gridSelectedItems.data = _.uniq(scope.gridSelectedItems.data
+                                                        .concat(scope.selectedItems));
+                                            }
+                                        });
 
                                         // Get the sorting info from UI grid
                                         gridApi.core.on.sortChanged(scope, function(grid, sortColumns) {

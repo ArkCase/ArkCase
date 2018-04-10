@@ -43,6 +43,11 @@ angular.module('document-details').factory('DocumentDetails.TranscriptionAppServ
                 method : 'PUT',
                 url : 'api/v1/service/transcribe/:id/cancel',
                 cache: true
+            },
+            compile: {
+                method : 'PUT',
+                url : 'api/v1/service/transcribe/:id/compile',
+                cache: true
             }
 
         });
@@ -223,6 +228,39 @@ angular.module('document-details').factory('DocumentDetails.TranscriptionAppServ
         Service.cancelManualTranscription = function(transcribeObjId){
             return Util.serviceCall({
                 service: Service.cancel,
+                param: {
+                    id: transcribeObjId
+                },
+                data: {},
+                onSuccess: function(data){
+                    if(data.id){
+                        transcriptionCache.put(transcriptionBaseUrl + data.id, data);
+                    }
+                    return data;
+                },
+                onError: function (error) {
+                    MessageService.error(error.data);
+                    return error;
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name compileTranscription
+         * @methodOf services:DocumentDetails.TranscriptionAppService
+         *
+         * @description
+         * Compile word document with transcription
+         *
+         * @param {Object} transcribeObjId  Transcribe object id
+         *
+         * @returns {Object} Promise
+         */
+
+        Service.compileTranscription = function(transcribeObjId){
+            return Util.serviceCall({
+                service: Service.compile,
                 param: {
                     id: transcribeObjId
                 },

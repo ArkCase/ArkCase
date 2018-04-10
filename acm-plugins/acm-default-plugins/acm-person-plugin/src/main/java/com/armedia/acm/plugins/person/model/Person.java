@@ -153,23 +153,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "person")
     private List<PersonAlias> personAliases = new ArrayList<>();
 
-    @OneToMany(cascade = {
-            CascadeType.DETACH,
-            CascadeType.REFRESH,
-            CascadeType.REMOVE,
-            CascadeType.PERSIST }, orphanRemoval = true, mappedBy = "person")
-    private List<PersonAssociation> associationsFromObjects = new ArrayList<>();
-
-    @OneToMany(cascade = {
-            CascadeType.DETACH,
-            CascadeType.REFRESH,
-            CascadeType.REMOVE })
-    @JoinColumns({
-            @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_person_id"),
-            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type") })
-    @OrderBy("created ASC")
-    private List<PersonAssociation> associationsToObjects = new ArrayList<>();
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "acm_person_identification", joinColumns = {
             @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
@@ -289,10 +272,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
             pa.setPerson(this);
         }
 
-        for (PersonAssociation pa : getAssociationsFromObjects())
-        {
-            pa.setPerson(this);
-        }
         for (PersonOrganizationAssociation poa : getOrganizationAssociations())
         {
             poa.setPerson(this);
@@ -529,23 +508,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         }
     }
 
-    // use @XmlTransient to prevent recursive XML when serializing containers that refer to this person
-    @XmlTransient
-    public List<PersonAssociation> getAssociationsFromObjects()
-    {
-        return associationsFromObjects;
-    }
-
-    public void setAssociationsFromObjects(List<PersonAssociation> associationsFromObjects)
-    {
-        this.associationsFromObjects = associationsFromObjects;
-
-        for (PersonAssociation personAssoc : associationsFromObjects)
-        {
-            personAssoc.setPerson(this);
-        }
-    }
-
     @XmlTransient
     public String getHairColor()
     {
@@ -761,16 +723,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         this.details = details;
     }
 
-    public List<PersonAssociation> getAssociationsToObjects()
-    {
-        return associationsToObjects;
-    }
-
-    public void setAssociationsToObjects(List<PersonAssociation> associationsToObjects)
-    {
-        this.associationsToObjects = associationsToObjects;
-    }
-
     public List<PersonOrganizationAssociation> getOrganizationAssociations()
     {
         return organizationAssociations;
@@ -787,6 +739,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         return participants;
     }
 
+    @Override
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;

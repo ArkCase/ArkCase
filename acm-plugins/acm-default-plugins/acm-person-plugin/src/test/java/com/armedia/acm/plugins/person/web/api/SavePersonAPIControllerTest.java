@@ -111,7 +111,6 @@ public class SavePersonAPIControllerTest extends EasyMockSupport
 
         person.getAddresses().add(address);
         person.getPersonAliases().add(personAlias);
-        person.getAssociationsFromObjects().add(perAssoc);
 
         Person saved = new Person();
         saved.setId(person.getId());
@@ -214,7 +213,6 @@ public class SavePersonAPIControllerTest extends EasyMockSupport
 
         person.getAddresses().add(address);
         person.getPersonAliases().add(personAlias);
-        person.getAssociationsFromObjects().add(perAssoc);
         Person saved = new Person();
         saved.setId(person.getId());
 

@@ -1316,6 +1316,20 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         if (documentFolder.getParentFolder() == null)
         {
             // recreate folder structure as on source
+            if (rootFolderOfCopy.getId() == null)
+            {
+                AcmFolder savedRootFolderOfCopy = getFolderDao().save(rootFolderOfCopy);
+                if (containerOfCopy.getFolder().equals(rootFolderOfCopy))
+                {
+                    containerOfCopy.setFolder(savedRootFolderOfCopy);
+                }
+                if (containerOfCopy.getAttachmentFolder().equals(rootFolderOfCopy))
+                {
+                    containerOfCopy.setAttachmentFolder(savedRootFolderOfCopy);
+                }
+                rootFolderOfCopy = savedRootFolderOfCopy;
+            }
+
             // document is under root folder, no need to create additional folders
             fileService.copyFile(documentId, rootFolderOfCopy, containerOfCopy);
         }
