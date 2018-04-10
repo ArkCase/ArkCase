@@ -160,7 +160,7 @@ var CustomEventHandlers = {
                                 updateElement(element, 'personType', e.data.data.personType);
                                 updateElement(element, 'title', e.data.data.title);
 
-                                var groupElement = getHtmlElementsByCssClass('userOrGroupSearchPicker_participant_owningGroup', 'input')[0];
+                                var groupElement = getHtmlElementsByCssClass('userOrGroupSearchPicker_participant_owningGroupHidden', 'input')[0];
                                 if(!isEmpty(e.data.data.groupName)) {
                                     groupElement.value = e.data.data.groupName;
                                     dispatchChangeEvent(groupElement);
