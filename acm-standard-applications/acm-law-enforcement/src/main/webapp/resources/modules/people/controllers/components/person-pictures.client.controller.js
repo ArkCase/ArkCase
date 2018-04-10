@@ -175,7 +175,6 @@ angular.module('people').controller(
                     }
 
                     $scope.isDefault = function(data) {
-                        console.log("Is Default");
                         if (data && data.object_id_s) {
                             var id = 0;
                             if ($scope.objectInfo.defaultPicture) {
@@ -197,7 +196,6 @@ angular.module('people').controller(
                     };
 
                     $scope.reloadGrid = function() {
-                        console.log("Reload grid");
                         if ($scope.objectInfo.id) {
                             $scope.gridOptions.data = [];
                             PersonPicturesService.listPersonPictures($scope.objectInfo.id).then(function(result) {
