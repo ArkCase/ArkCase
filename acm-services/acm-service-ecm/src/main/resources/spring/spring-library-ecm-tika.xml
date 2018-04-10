@@ -19,6 +19,11 @@
                 <entry key="xmpDM:duration" value="durationSeconds"/>
             </map>
         </property>
+        <property name="contentTypeFixes">
+            <map>
+                <entry key="audio/vnd.wave" value="audio/wav"/>
+            </map>
+        </property>
     </bean>
 
 </beans>
