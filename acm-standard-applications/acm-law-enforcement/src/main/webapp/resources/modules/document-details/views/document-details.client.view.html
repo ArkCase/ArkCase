@@ -7,7 +7,7 @@
                         <div class="pull-right">
                             <div class="col-xs-12">
                                 <a class="btn btn-default" href="" ng-click="expand()">
-                                    <i class="fa fa-external-link"></i>
+                                    <i class="a fa-expand"></i>
                                 </a>
                                 <a class="btn btn-default" href="javascript:window.close();">
                                     <i class="fa fa-times"></i>
@@ -53,35 +53,40 @@
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.wordCount</small>
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold">{{confidenceAverage}}%</div>
+                        <div class="h4 font-bold">{{transcribeObjectModel.confidence || 0}}%</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.confidence</small>
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus()}">{{transcribeObjectModel.status || 'documentDetails.comp.transcription.mediaViewer.readyForTranscription' | translate}}</div>
+                        <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus()}">{{transcribeObjectModel.status ||
+                            'documentDetails.comp.transcription.mediaViewer.readyForTranscription' | translate}}
+                        </div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.transcriptStatus</small>
                     </div>
                 </div>
-
-                <div class="row" ng-if="showVideoPlayer">
-                    <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold">{{fileType}}</div>
-                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.fileType</small>
-                    </div>
-                    <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold">{{durationFormatted}}</div>
-                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.length</small>
-                    </div>
-                </div>
-
             </div>
         </div>
-
+        <div class="module-header" ng-if="viewerOnly">
+            <div class="row">
+                <div class="col-sm-6 col-md-12">
+                    <div class="pull-right">
+                        <div class="col-xs-12">
+                            <a class="btn btn-default" href="" ng-click="compress()">
+                                <i class="fa fa-compress"></i>
+                            </a>
+                            <a class="btn btn-default" href="javascript:window.close();">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div ng-class="viewerOnly? 'content-body well-sm full-docview' : 'content-body well-sm'">
             <div ng-include="'modules/document-details/views/document-viewer.client.view.html'"></div>
         </div>
 
         <div class="right-sidebar well-sm documentDetails" ng-if="!viewerOnly"
-                ng-style="showVideoPlayer && transcribeEnabled ? {'top': '245px'} : {'top': '205px'}">
+                ng-style="showVideoPlayer && transcribeEnabled ? {'top': '205px'} : {'top': '172px'}">
             <ng-form name="docDetails" novalidate>
                 <tabset>
                     <tab heading="{{'documentDetails.comp.details.title' | translate}}">
@@ -104,7 +109,7 @@
                     <tab heading="{{'documentDetails.comp.tags.title' | translate}}">
                         <div ng-include="'modules/document-details/views/components/tags.client.view.html'"></div>
                     </tab>
-                    <tab ng-show="showVideoPlayer && transcribeEnabled"
+                    <tab active="transcriptionTabActive" ng-show="showVideoPlayer && transcribeEnabled"
                             heading="{{'documentDetails.comp.transcription.title' | translate}}">
                         <div ng-include="'modules/document-details/views/components/transcription.client.view.html'"></div>
                     </tab>
