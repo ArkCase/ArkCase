@@ -160,23 +160,11 @@ angular.module('people').controller(
 
                                             if (data.isDefault) {
                                                 $scope.objectInfo.defaultPicture = $scope.image;
-                                                $scope.$emit("report-object-refreshed", $scope.objectInfo.id);
                                             }
+                                            $timeout(function() {
+                                                $scope.$emit("report-object-updated", $scope.objectInfo);
+                                            }, 2000);
                                         });
-
-                                        //------
-                                        // MessageService.succsessAction();
-                                        // $scope.refresh();
-                                        // $scope.reloadGrid();
-                                        //-----
-
-                                        // $timeout(function() {
-                                        //     $scope.refresh(); //se pojavuva novoto, bez da e primary
-                                        //     //     // onConfigRetrieved($scope.config);
-                                        // }, 2000);
-                                        // $timeout(function() {
-                                        //     $scope.reloadGrid(); //se pojavuva novoto, bez da e primary
-                                        // }, 2000);
 
                                     }, function() {
                                         MessageService.errorAction();
@@ -187,6 +175,7 @@ angular.module('people').controller(
                     }
 
                     $scope.isDefault = function(data) {
+                        console.log("Is Default");
                         if (data && data.object_id_s) {
                             var id = 0;
                             if ($scope.objectInfo.defaultPicture) {
@@ -208,7 +197,7 @@ angular.module('people').controller(
                     };
 
                     $scope.reloadGrid = function() {
-
+                        console.log("Reload grid");
                         if ($scope.objectInfo.id) {
                             $scope.gridOptions.data = [];
                             PersonPicturesService.listPersonPictures($scope.objectInfo.id).then(function(result) {
@@ -221,9 +210,4 @@ angular.module('people').controller(
                     $scope.refresh = function() {
                         $scope.$emit('report-object-refreshed', $stateParams.id);
                     };
-
-                    // $rootScope.$bus.subscribe("object.changed/PERSON/" + $stateParams.id, function() {
-                    //     $scope.$emit("report-object-updated", $scope.objectInfo);
-                    // });
-
                 } ]);
