@@ -25,7 +25,7 @@ public class SearchUserAPIController
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getNUsers(Authentication auth,
-            @RequestParam(value = "s", required = true, defaultValue = "name_lcs") String sortBy,
+            @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int n) throws MuleException
