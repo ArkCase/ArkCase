@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDate;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/spring/spring-library-data-source.xml",
         "/spring/spring-library-user-service.xml",
@@ -29,6 +31,6 @@ public class UserDaoIT
     public void getUserCount()
     {
         assertNotNull(userDao);
-        assertTrue(userDao.getUserCount() > 0);
+        assertTrue(userDao.getUserCount(LocalDate.now().atTime(23, 59, 59)) >= 0);
     }
 }

@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDate;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-library-object-converter.xml",
@@ -32,7 +34,7 @@ public class StateOfArkcaseReportGeneratorTest
     public void generateReportAsJSON()
     {
         assertNotNull(stateOfArkcaseReportGenerator);
-        JsonNode reportJson = stateOfArkcaseReportGenerator.generateReportAsJSON();
+        JsonNode reportJson = stateOfArkcaseReportGenerator.generateReportAsJSON(LocalDate.now());
 
         assertNotNull(reportJson.get("dateGenerated"));
         JsonNode testModuleUsersJsonNode = reportJson.get("test_module_users");

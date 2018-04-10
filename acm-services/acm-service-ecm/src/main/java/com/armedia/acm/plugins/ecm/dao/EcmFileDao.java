@@ -15,6 +15,9 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -169,12 +172,12 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return query.getResultList();
     }
 
-    public Long getFilesCount()
+    public Long getFilesCount(LocalDateTime createdUntil)
     {
-        String queryText = "SELECT COUNT(entity) FROM EcmFile entity";
+        String queryText = "SELECT COUNT(ecmFile) FROM EcmFile ecmFile WHERE ecmFile.created < :until";
 
         Query query = getEm().createQuery(queryText);
-
+        query.setParameter("until", Date.from(ZonedDateTime.of(createdUntil, ZoneId.systemDefault()).toInstant()));
         return (Long) query.getSingleResult();
     }
 }

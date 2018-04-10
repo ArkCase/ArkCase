@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -68,8 +68,8 @@ public class AuditDaoIT
     @Test
     public void getCountAuditEventSince()
     {
-        Long countSince = dao.getCountAuditEventSince("com.armedia.acm.login", LocalDate.now().minus(7, ChronoUnit.DAYS));
+        Long countSince = dao.getCountAuditEventSince("com.armedia.acm.login", LocalDateTime.now().minus(7, ChronoUnit.DAYS),
+                LocalDateTime.now());
         assertNotNull(countSince);
-        System.out.println(countSince);
     }
 }

@@ -28,6 +28,9 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -342,12 +345,12 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         this.configList = configList;
     }
 
-    public Long getUserCount()
+    public Long getUserCount(LocalDateTime until)
     {
-        String queryText = "SELECT COUNT(acmUser) FROM AcmUser acmUser";
+        String queryText = "SELECT COUNT(acmUser) FROM AcmUser acmUser where acmUser.created < :until";
 
         Query query = getEm().createQuery(queryText);
-
+        query.setParameter("until", Date.from(ZonedDateTime.of(until, ZoneId.systemDefault()).toInstant()));
         return (Long) query.getSingleResult();
     }
 }

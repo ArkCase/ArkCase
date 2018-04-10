@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import java.time.LocalDateTime;
+
 /**
  * Created by armdev on 4/22/14.
  */
@@ -114,6 +116,6 @@ public class EcmFileDaoIT
     public void getFilesCount()
     {
         assertNotNull(ecmFileDao);
-        assertNotNull(ecmFileDao.getFilesCount());
+        assertNotNull(ecmFileDao.getFilesCount(LocalDateTime.now()));
     }
 }

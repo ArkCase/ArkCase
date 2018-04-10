@@ -39,15 +39,18 @@ public class StateOfArkcaseRegistryImpl implements StateOfArkcaseRegistry, Appli
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event)
     {
-        // after application is started, i.e. context is loaded, all the registered modules which provide state will be
-        // collected
-        ApplicationContext applicationContext = event.getApplicationContext();
-        Map<String, StateOfModuleProvider> registeredbeans = applicationContext.getBeansOfType(StateOfModuleProvider.class);
-        log.info("Mapping [{}] registered module state providers:", registeredbeans.entrySet().size());
-        for (StateOfModuleProvider stateOfModuleProvider : registeredbeans.values())
+        if (((ApplicationContext) event.getSource()).getParent() == null)
         {
-            log.info("Mapping state provider for: [{}] module.", stateOfModuleProvider.getModuleName());
-            moduleStateProviders.put(stateOfModuleProvider.getModuleName(), stateOfModuleProvider);
+            // after application is started, i.e. context is loaded, all the registered modules which provide state will
+            // be collected
+            ApplicationContext applicationContext = event.getApplicationContext();
+            Map<String, StateOfModuleProvider> registeredbeans = applicationContext.getBeansOfType(StateOfModuleProvider.class);
+            log.info("Mapping [{}] registered module state providers:", registeredbeans.entrySet().size());
+            for (StateOfModuleProvider stateOfModuleProvider : registeredbeans.values())
+            {
+                log.info("Mapping state provider for: [{}] module.", stateOfModuleProvider.getModuleName());
+                moduleStateProviders.put(stateOfModuleProvider.getModuleName(), stateOfModuleProvider);
+            }
         }
     }
 }
