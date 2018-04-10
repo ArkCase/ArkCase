@@ -36,7 +36,8 @@ public class TranscribeQueueJob implements AcmSchedulableBean
 
             TranscribeConfiguration configuration = getArkCaseTranscribeService().getConfiguration();
             List<Transcribe> processingTranscribeObjects = getArkCaseTranscribeService().getAllByStatus(TranscribeStatusType.PROCESSING.toString());
-            List<Transcribe> processingTranscribeObjectsDistinctByProcessId = processingTranscribeObjects.stream().filter(TranscribeUtils.distinctByProperty(Transcribe::getProcessId)).collect(Collectors.toList());
+            List<Transcribe> processingTranscribeAutomaticObjects = processingTranscribeObjects.stream().filter(t -> TranscribeType.AUTOMATIC.toString().equalsIgnoreCase(t.getType())).collect(Collectors.toList());
+            List<Transcribe> processingTranscribeObjectsDistinctByProcessId = processingTranscribeAutomaticObjects.stream().filter(TranscribeUtils.distinctByProperty(Transcribe::getProcessId)).collect(Collectors.toList());
 
             if (configuration.getNumberOfFilesForProcessing() > processingTranscribeObjectsDistinctByProcessId.size())
             {

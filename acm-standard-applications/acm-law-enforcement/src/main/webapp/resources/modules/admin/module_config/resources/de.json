@@ -250,6 +250,10 @@
             "deleteUserMsg": "Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?",
             "user": "Benutzer"
         },
+        "security.group.management": {
+            "title": "de_Group Management",
+            "group": "de_Group"
+        },
         "security.calendarConfiguration": {
             "title": "Kalender-Konfiguration",
             "calendarConfigForm": {
@@ -574,6 +578,20 @@
                 "historyDays.label": "Audit- und Benachrichtigungsereignisse (in Tagen)",
                 "inform": "Einstellung erfolgreich gespeichert",
                 "apply.label": "Sich bewerben"
+            },
+            "holiday": {
+                "title": "de_Holiday Schedule",
+                "grid": {
+                    "holidayName": "de_Name of Holiday",
+                    "holidayDate": "de_Date of holiday"
+                },
+                "cancel": "de_Cancel",
+                "save": "de_Save",
+                "message": "de_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "de_Enter Name of Holiday",
+                    "date": "de_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "Branding",

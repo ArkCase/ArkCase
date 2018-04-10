@@ -3,6 +3,7 @@ package com.armedia.acm.services.transcribe.service;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
 import com.armedia.acm.services.transcribe.model.Transcribe;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public interface TranscribeService
      * @return Transcribe
      * @throws CreateTranscribeException
      */
+    @Transactional
     public Transcribe create(Transcribe transcribe) throws CreateTranscribeException;
 
     /**

@@ -75,6 +75,24 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
     public abstract Transcribe copy(Transcribe transcribe, EcmFileVersion ecmFileVersion) throws CreateTranscribeException;
 
     /**
+     * This method will complete the process and set the status to COMPLETED
+     *
+     * @param id - ID of Transcribe object
+     * @return Updated Transcribe object
+     * @throws SaveTranscribeException
+     */
+    public abstract Transcribe complete(Long id) throws SaveTranscribeException;
+
+    /**
+     * This method will cancel the process and set the status to DRAFT
+     *
+     * @param id - ID of Transcribe object
+     * @return Updated Transcribe object
+     * @throws SaveTranscribeException
+     */
+    public abstract Transcribe cancel(Long id) throws SaveTranscribeException;
+
+    /**
      * This method will create TranscribeItem in the Transcribe with given ID
      *
      * @param id - ID of the Transcribe object
