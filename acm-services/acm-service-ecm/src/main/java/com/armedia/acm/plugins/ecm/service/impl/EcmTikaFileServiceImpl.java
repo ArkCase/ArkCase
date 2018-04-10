@@ -56,6 +56,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     private transient final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Map<String, String> tikaMetadataToFilePropertiesMap;
+    private Map<String, String> contentTypeFixes;
 
     static
     {
@@ -187,7 +188,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
             TikaInputStream stream = TikaInputStream.get(fileInputStream);
             MediaType mediaType = detector.detect(stream, metadata);
             MimeType mimeType = defaultConfig.getMimeRepository().forName(mediaType.toString());
-            contentType = mediaType.toString();
+            contentType = fixContentType(mediaType.toString());
             extension = mimeType.getExtension();
         }
 
@@ -277,6 +278,16 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
 
     }
 
+    private String fixContentType(String contentType)
+    {
+        if (getContentTypeFixes() != null && getContentTypeFixes().containsKey(contentType))
+        {
+            return getContentTypeFixes().get(contentType);
+        }
+
+        return contentType;
+    }
+
     protected PointLocation pointLocationFromLatLong(Map<String, Object> extractedFromStream)
     {
         String geoLat = (String) extractedFromStream.get("geo:lat");
@@ -352,5 +363,15 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     public void setTikaMetadataToFilePropertiesMap(Map<String, String> tikaMetadataToFilePropertiesMap)
     {
         this.tikaMetadataToFilePropertiesMap = tikaMetadataToFilePropertiesMap;
+    }
+
+    public Map<String, String> getContentTypeFixes()
+    {
+        return contentTypeFixes;
+    }
+
+    public void setContentTypeFixes(Map<String, String> contentTypeFixes)
+    {
+        this.contentTypeFixes = contentTypeFixes;
     }
 }

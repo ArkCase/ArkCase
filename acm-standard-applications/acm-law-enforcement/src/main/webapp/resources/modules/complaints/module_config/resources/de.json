@@ -289,7 +289,7 @@
         "searchGroupHeader": "Suchgruppe"
     },
     "complaints.comp.approvalRouting": {
-        "title": "Toekomstige Goedkeuringen",
+        "title": "Genehmiger",
         "addNewTooltip": "Neuen Genehmiger hinzufügen",
         "noBuckslipMessage": "Keine Daten",
         "button": {
