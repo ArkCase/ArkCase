@@ -155,13 +155,11 @@ var CustomEventHandlers = {
                             var element = frevvoMessaging.elements[e.data.elementId];
                             if (!isEmpty(element)) {
 
-                                //TODO CHECK HOW TO POPULATE THE MODEL FOR USER-GROUP PICKER
                                 updateElement(element, 'fullName', e.data.data.fullName);
                                 updateElement(element, 'id', e.data.data.personId);
-                                //updateElement(element, 'personType', e.data.data.personType);
+                                updateElement(element, 'personType', e.data.data.personType);
                                 updateElement(element, 'title', e.data.data.title);
 
-                                // if(owningType is assignee only then populate the Group field)
                                 var groupElement = getHtmlElementsByCssClass('userOrGroupSearchPicker_participant_owningGroupHidden', 'input')[0];
                                 if(!isEmpty(e.data.data.groupName)) {
                                     groupElement.value = e.data.data.groupName;
@@ -311,15 +309,8 @@ var CustomEventHandlers = {
             message.elementId = element.id;
 
             frevvoMessaging.elements[element.id] = element;
-            /*var selectElement = document.getElementsByClassName('participantType');
-            var participantTypeArray = new Array();
-
-            for(var i=0; i<selectElement.options.length; i++){
-                participantTypeArray.push(selectElement.options[i].value);
-            }*/
 
             var participantType;
-
             var participantType = findElement(element, 'participantType');
             if(!isEmpty(participantType)) {
                 message.data = {
@@ -327,7 +318,6 @@ var CustomEventHandlers = {
                 }
             }
 
-            // Open user and group picker
             frevvoMessaging.send(message);
         }
     }
