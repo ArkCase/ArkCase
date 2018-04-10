@@ -289,7 +289,7 @@
         "searchGroupHeader": "Группа поиска"
     },
     "complaints.comp.approvalRouting": {
-        "title": "Будущие утверждения",
+        "title": "Одобритель",
         "addNewTooltip": "Добавить новый одобритель",
         "noBuckslipMessage": "Нет данных",
         "button": {
