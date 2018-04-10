@@ -262,6 +262,10 @@
             "deleteUserMsg": "Are you sure you want to delete this user?",
             "user": "User"
         },
+        "security.group.management": {
+            "title": "Group Management",
+            "group": "Group"
+        },
         "security.calendarConfiguration": {
             "title": "Calendar Configuration",
             "calendarConfigForm": {
@@ -640,6 +644,20 @@
                 "historyDays.label": "Keep Audit and Notification events (in days)",
                 "inform": "Setting successfully saved",
                 "apply.label": "Apply"
+            },
+            "holiday": {
+                "title": "Holiday Schedule",
+                "grid": {
+                    "holidayName": "Name of Holiday",
+                    "holidayDate": "Date of holiday"
+                },
+                "cancel": "Cancel",
+                "save": "Save",
+                "message": "The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "Enter Name of Holiday",
+                    "date": "Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "Branding",

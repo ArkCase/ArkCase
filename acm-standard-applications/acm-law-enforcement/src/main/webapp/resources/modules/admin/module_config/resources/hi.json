@@ -250,6 +250,10 @@
             "deleteUserMsg": "क्या आप वाकई इस उपयोगकर्ता को हटाना चाहते हैं?",
             "user": "उपयोगकर्ता"
         },
+        "security.group.management": {
+            "title": "hi_Group Management",
+            "group": "hi_Group"
+        },
         "security.calendarConfiguration": {
             "title": "कैलेंडर कॉन्फ़िगरेशन",
             "calendarConfigForm": {
@@ -573,6 +577,20 @@
                 "historyDays.label": "ऑडिट और अधिसूचना ईवेंट (दिनों में) रखें",
                 "inform": "सेटिंग सफलतापूर्वक सहेजी गई",
                 "apply.label": "लागू करें"
+            },
+            "holiday": {
+                "title": "hi_Holiday Schedule",
+                "grid": {
+                    "holidayName": "hi_Name of Holiday",
+                    "holidayDate": "hi_Date of holiday"
+                },
+                "cancel": "hi_Cancel",
+                "save": "hi_Save",
+                "message": "hi_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "hi_Enter Name of Holiday",
+                    "date": "hi_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "ब्रांडिंग",

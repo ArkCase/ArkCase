@@ -985,6 +985,35 @@
                     "headerCellFilter": "translate"
                 }
             ]
+        },
+        {
+            "id": "holiday",
+            "title": "admin.application.holiday.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "holidayName",
+                    "displayName": "admin.application.holiday.grid.holidayName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "holidayDate",
+                    "displayName": "admin.application.holiday.grid.holidayDate",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20
         }
     ],
     "tree": {
@@ -1041,6 +1070,13 @@
                 "label": "admin.security.ldap.user.management.title",
                 "components": [
                     "security.ldap-user-management"
+                ]
+            },
+            {
+                "type": "p/security/ldapGroup",
+                "label": "admin.security.group.management.title",
+                "components": [
+                    "security.group-management"
                 ]
             },
             {
@@ -1203,6 +1239,13 @@
                 "label": "admin.application.auditHistory.config.title",
                 "components": [
                     "application-audit-history.config"
+                ]
+            },
+            {
+                "type": "p/application/holiday",
+                "label": "admin.application.holiday.title",
+                "components": [
+                    "application-holiday.config"
                 ]
             },
             {

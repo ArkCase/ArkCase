@@ -88,10 +88,70 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
+    public String buildGroupsSolrQuery()
+    {
+        String query = "object_type_s:GROUP AND status_lcs:ACTIVE";
+
+        return query;
+    }
+
+    @Override
+    public String buildGroupsSolrQuery(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection)
+            throws MuleException
+    {
+        String query = "object_type_s:GROUP AND status_lcs:ACTIVE";
+
+        log.debug("User [{}] is searching for [{}]", auth.getName(), query);
+
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                sortBy + " " + sortDirection);
+    }
+
+    @Override
+    public String buildGroupsAdHocSolrQuery()
+    {
+        String query = "object_type_s:GROUP AND object_sub_type_s:ADHOC_GROUP AND status_lcs:ACTIVE";
+
+        return query;
+    }
+
+    @Override
+    public String buildGroupsAdHocByNameSolrQuery(String fq)
+    {
+        String query = "object_type_s:GROUP AND object_sub_type_s:ADHOC_GROUP AND status_lcs:ACTIVE AND name_partial:" + fq;
+
+        return query;
+    }
+
+    @Override
+    public String buildGroupsByNameSolrQuery(String fq)
+    {
+        String query = "object_type_s:GROUP AND status_lcs:ACTIVE AND name_partial:"
+                + fq;
+
+        return query;
+    }
+
+    @Override
     public String buildGroupsForUserByNameSolrQuery(Boolean authorized, String userId, String searchFilter)
     {
-        String query = buildGroupsForUserSolrQuery(authorized, userId);
-        return query.isEmpty() ? "" : query + " AND name_partial:" + searchFilter;
+        String query = buildGroupsForUserSolrQuery(authorized, userId) + " AND name_partial:" + searchFilter;
+
+        return query;
+    }
+
+    @Override
+    public String getAdHocMemberGroupsByMatchingName(Authentication auth, Integer startRow, Integer maxRows, String sortBy,
+            String sortDirection,
+            Boolean authorized, String groupId, String searchFilter, String groupType) throws MuleException
+    {
+        String query = getAdHocMemberGroups(auth, startRow, maxRows, sortBy, sortDirection, authorized, groupId, groupType)
+                + " AND name_partial:" + searchFilter;
+
+        log.debug("User [{}] is searching for [{}]", auth.getName(), query);
+
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                sortBy + " " + sortDirection);
     }
 
     @Override
@@ -110,10 +170,24 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
+    public String getAdHocMemberGroups(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection,
+            Boolean authorized, String groupId, String groupType) throws MuleException
+    {
+        String query = "object_type_s:GROUP AND -object_id_s:" + groupId + " AND status_lcs:ACTIVE AND object_sub_type_s:"
+                + groupType + (authorized ? " AND ascendants_id_ss:" + groupId : " AND -ascendants_id_ss:" + groupId);
+
+        log.debug("User [{}] is searching for [{}]", auth.getName(), query);
+
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                sortBy + " " + sortDirection);
+    }
+
+    @Override
     public String getGroupsByNameFilter(Authentication authentication, String nameFilter, int start, int max, String sortBy, String sortDir)
             throws MuleException
     {
-        String query = "object_type_s:GROUP AND status_lcs:ACTIVE AND -ascendants_id_ss:* AND name_partial:" + nameFilter;
+        String query = "object_type_s:GROUP AND status_lcs:ACTIVE AND -ascendants_id_ss:* AND name_partial:"
+                + nameFilter;
         return executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, start, max,
                 sortBy + " " + sortDir);
     }
@@ -121,7 +195,6 @@ public class GroupServiceImpl implements GroupService
     @Override
     public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException
     {
-
         log.info("Taking all groups and ascendant groups from Solr. Authenticated user is [{}]",
                 usernamePasswordAuthenticationToken.getName());
 
@@ -224,6 +297,64 @@ public class GroupServiceImpl implements GroupService
     public AcmGroup removeGroupMembership(String groupName, String parentGroupName) throws AcmObjectNotFoundException
     {
         return removeGroupMembership(groupName, parentGroupName, false);
+    }
+
+    @Override
+    @Transactional
+    public List<AcmGroup> removeGroupsMembership(String parentGroupName, List<String> subGroups) throws AcmObjectNotFoundException
+    {
+        List<AcmGroup> result = new ArrayList<>();
+        subGroups.forEach(group -> {
+            try
+            {
+                log.warn("Removing group [{}] from parent [{}]", group, parentGroupName);
+                result.add(removeGroupFromParent(group, parentGroupName, false));
+            }
+            catch (AcmObjectNotFoundException e)
+            {
+                log.warn("Group [{}] cannot be removed", group);
+                e.printStackTrace();
+            }
+        });
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public AcmGroup removeGroupFromParent(String groupName, String parentGroupName, boolean flushInstructions)
+            throws AcmObjectNotFoundException
+    {
+        AcmGroup acmGroup = findByName(groupName);
+        AcmGroup parentGroup = findByName(parentGroupName);
+
+        if (acmGroup == null || parentGroup == null)
+        {
+            String groupNotFound = acmGroup == null ? groupName : parentGroupName;
+            log.warn("Group [{}] not found", groupNotFound);
+            throw new AcmObjectNotFoundException("GROUP", null, "Group with name " + groupNotFound + " not found");
+        }
+
+        log.debug("Remove group member [{}] from group [{}]", groupName, parentGroupName);
+        parentGroup.removeGroupMember(acmGroup);
+
+        log.debug("Build ancestors string for group: [{}]", groupName);
+        acmGroup.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(acmGroup));
+        save(acmGroup);
+
+        Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
+
+        descendantGroups.forEach(group -> {
+            log.debug("Build ancestors string for descendants group: [{}]", groupName);
+            String ancestorsStringList = AcmGroupUtils.buildAncestorsStringForAcmGroup(group);
+            group.setAscendantsList(ancestorsStringList);
+            save(group);
+        });
+
+        if (flushInstructions)
+        {
+            groupDao.getEm().flush();
+        }
+        return acmGroup;
     }
 
     @Override

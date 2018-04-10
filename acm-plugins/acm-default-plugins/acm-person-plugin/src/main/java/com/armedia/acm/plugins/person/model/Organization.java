@@ -31,7 +31,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -108,24 +107,6 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
             @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") }, inverseJoinColumns = {
                     @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") })
     private List<ContactMethod> contactMethods = new ArrayList<>();
-
-    @OneToMany(cascade = {
-            CascadeType.DETACH,
-            CascadeType.REFRESH,
-            CascadeType.REMOVE,
-            CascadeType.PERSIST })
-    @JoinColumns({
-            @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_organization_id"),
-            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
-    @OrderBy("created ASC")
-    private List<OrganizationAssociation> associationsToObjects = new ArrayList<>();
-
-    @OneToMany(cascade = {
-            CascadeType.DETACH,
-            CascadeType.REFRESH,
-            CascadeType.REMOVE,
-            CascadeType.PERSIST }, orphanRemoval = true, mappedBy = "organization")
-    private List<OrganizationAssociation> associationsFromObjects = new ArrayList<>();
 
     @Column(name = "cm_status")
     private String status;
@@ -236,11 +217,6 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
      */
     private void updateChildObjectsWithParentObjectReference()
     {
-        for (OrganizationAssociation pa : getAssociationsFromObjects())
-        {
-            pa.setOrganization(this);
-        }
-
         for (OrganizationDBA dba : getOrganizationDBAs())
         {
             dba.setOrganization(this);
@@ -471,16 +447,6 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
         return defaultFax;
     }
 
-    public List<OrganizationAssociation> getAssociationsToObjects()
-    {
-        return associationsToObjects;
-    }
-
-    public void setAssociationsToObjects(List<OrganizationAssociation> associationsToObjects)
-    {
-        this.associationsToObjects = associationsToObjects;
-    }
-
     @Override
     @JsonIgnore
     public Long getId()
@@ -497,16 +463,6 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
     public void setObjectType(String objectType)
     {
         this.objectType = objectType;
-    }
-
-    public List<OrganizationAssociation> getAssociationsFromObjects()
-    {
-        return associationsFromObjects;
-    }
-
-    public void setAssociationsFromObjects(List<OrganizationAssociation> associationsFromObjects)
-    {
-        this.associationsFromObjects = associationsFromObjects;
     }
 
     public List<OrganizationDBA> getOrganizationDBAs()
@@ -565,6 +521,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
         return participants;
     }
 
+    @Override
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
@@ -582,6 +539,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
         this.status = status;
     }
 
+    @Override
     public Boolean getRestricted()
     {
         return restricted;
