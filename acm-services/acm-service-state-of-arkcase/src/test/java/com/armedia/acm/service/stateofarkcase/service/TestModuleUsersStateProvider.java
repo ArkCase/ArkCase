@@ -4,6 +4,8 @@ import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModule;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModuleProvider;
 import com.armedia.acm.service.stateofarkcase.model.TestModuleState;
 
+import java.time.LocalDate;
+
 public class TestModuleUsersStateProvider implements StateOfModuleProvider
 {
     @Override
@@ -14,6 +16,12 @@ public class TestModuleUsersStateProvider implements StateOfModuleProvider
 
     @Override
     public StateOfModule getModuleState()
+    {
+        return getModuleState(LocalDate.now());
+    }
+
+    @Override
+    public StateOfModule getModuleState(LocalDate day)
     {
         TestModuleState state = new TestModuleState();
         state.addProperty("numberOfUsers", 5)

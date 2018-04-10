@@ -14,7 +14,7 @@
         <property name="urlPrivileges">
             <list>
                 <bean id="generateReportUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
+                    <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/v1/plugin/state-of-arkcase/generate"/>
                     <property name="requiredPrivilege" ref="stateOfArkcasePrivilege"/>
                 </bean>

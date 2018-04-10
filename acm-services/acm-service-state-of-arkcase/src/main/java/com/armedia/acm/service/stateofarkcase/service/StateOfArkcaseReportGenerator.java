@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -24,12 +25,17 @@ public class StateOfArkcaseReportGenerator
     /**
      * method for generating StateOfArkcase report.
      * Collects all the data from all registered status providers
-     * 
+     *
+     * If day is provided(can be null), all records are collected also including that day
+     *
+     * @param day
+     *            for which day should be generated
+     *
      * @return StateOfArkcase as json string
      */
-    public JsonNode generateReportAsJSON()
+    public JsonNode generateReportAsJSON(LocalDate day)
     {
-        StateOfArkcase stateOfArkcase = generateReport();
+        StateOfArkcase stateOfArkcase = generateReport(day);
         return mapper.valueToTree(stateOfArkcase);
     }
 
@@ -37,9 +43,14 @@ public class StateOfArkcaseReportGenerator
      * method for generating StateOfArkcase report.
      * Collects all the data from all registered status providers
      *
+     * If day is provided(can be null), all records are collected also including that day
+     *
+     * @param day
+     *            for which day should be generated
+     *
      * @return StateOfArkcase object
      */
-    public StateOfArkcase generateReport()
+    public StateOfArkcase generateReport(LocalDate day)
     {
         long stateOfArkcaseStartTime = System.currentTimeMillis();
         log.debug("Generating of state of arkcase report started.");
@@ -48,12 +59,12 @@ public class StateOfArkcaseReportGenerator
         for (StateOfModuleProvider provider : stateOfArkcaseRegistry.getStateOfModuleProviders())
         {
             long moduleStartTime = System.currentTimeMillis();
-            StateOfModule moduleState = provider.getModuleState();
+            StateOfModule moduleState = day != null ? provider.getModuleState(day) : provider.getModuleState();
             log.debug("State of module [{}] generated in [{}] milliseconds.", provider.getModuleName(),
                     System.currentTimeMillis() - moduleStartTime);
             stateOfArkcase.addModuleState(provider.getModuleName(), moduleState);
         }
-        log.info("Generating of state of arkcase report finished in [{}] milliseconds.",
+        log.debug("Generating of state of arkcase report finished in [{}] milliseconds.",
                 System.currentTimeMillis() - stateOfArkcaseStartTime);
         return stateOfArkcase;
     }

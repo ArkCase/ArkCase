@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.stateofarkcaseplugin.service;
 
+import java.io.File;
+import java.time.LocalDate;
+
 public interface AcmStateOfArkcaseService
 {
     /**
-     * Generates state of Arkcase report and save is provided folder
+     * Generates state of Arkcase report as zip file
      */
-    void generateDailyReport();
+    File generateReportForDay(LocalDate day);
 }

@@ -5,6 +5,8 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModule;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModuleProvider;
 
+import java.time.LocalDate;
+
 public class AcmFilesStateProvider implements StateOfModuleProvider
 {
     private EcmFileVersionDao ecmFileVersionDao;
@@ -19,9 +21,15 @@ public class AcmFilesStateProvider implements StateOfModuleProvider
     @Override
     public StateOfModule getModuleState()
     {
+        return getModuleState(LocalDate.now());
+    }
+
+    @Override
+    public StateOfModule getModuleState(LocalDate day)
+    {
         AcmFilesState acmFilesState = new AcmFilesState();
-        acmFilesState.setNumberOfDocuments(ecmFileDao.getFilesCount());
-        acmFilesState.setSizeOfRepository(ecmFileVersionDao.getTotalSizeOfFiles());
+        acmFilesState.setNumberOfDocuments(ecmFileDao.getFilesCount(day.atTime(23, 59, 59)));
+        acmFilesState.setSizeOfRepository(ecmFileVersionDao.getTotalSizeOfFiles(day.atTime(23, 59, 59)));
         return acmFilesState;
     }
 

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-http="http://www.springframework.org/schema/integration/http"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <!--Channels-->
+    <int:channel id="httpRequestChannel"/>
+
+    <!-- Gateways -->
+    <int:gateway id="multipartRequestGateway"
+                 service-interface="com.armedia.acm.plugins.phonehome.service.MultipartRequestGateway"
+                 default-request-channel="httpRequestChannel"/>
+
+    <!-- Outbound channel adapter-->
+    <int-http:outbound-channel-adapter url="https://phonehome.arkcase.com:8443/api/reports"
+                                       http-method="POST"
+                                       channel="httpRequestChannel">
+        <int-http:request-handler-advice-chain>
+            <!--Advice for handling retry-->
+            <bean id="retryAdvice" class="org.springframework.integration.handler.advice.RequestHandlerRetryAdvice">
+                <property name="retryTemplate">
+                    <bean class="org.springframework.retry.support.RetryTemplate">
+                        <property name="backOffPolicy">
+                            <bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+                                <property name="initialInterval" value="5000"/>
+                                <property name="multiplier" value="3"/>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </int-http:request-handler-advice-chain>
+    </int-http:outbound-channel-adapter>
+
+    <!-- Beans -->
+    <bean id="phoneHomeService" class="com.armedia.acm.plugins.phonehome.service.PhoneHomeService">
+        <property name="gateway" ref="multipartRequestGateway"/>
+        <property name="stateOfArkcaseService" ref="acmStateOfArkcaseService"/>
+    </bean>
+
+    <!-- Scheduler -->
+    <task:scheduled-tasks scheduler="phoneHomeStateOfArkcaseScheduler">
+        <!-- checks and removes expired url from database every day at 04:00 AM-->
+        <task:scheduled ref="phoneHomeService" method="generateAndUploadReportFile" cron="0 5 0 * * ?"/>
+    </task:scheduled-tasks>
+
+    <task:scheduler id="phoneHomeStateOfArkcaseScheduler" pool-size="1"/>
+</beans>

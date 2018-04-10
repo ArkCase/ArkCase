@@ -10,11 +10,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +25,6 @@ import java.util.Map;
 public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private String stateOfArkcaseFolderPath;
     private StateOfArkcaseReportGenerator stateOfArkcaseReportGenerator;
     private ErrorsLogFileService errorsLogFileService;
     private int deleteReportsOlderThanDays = 7;
@@ -34,9 +34,9 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
      * Generates state of Arkcase report and save is provided folder
      */
     @Override
-    public void generateDailyReport()
+    public File generateReportForDay(LocalDate day)
     {
-        StateOfArkcase stateOfArkcase = stateOfArkcaseReportGenerator.generateReport();
+        StateOfArkcase stateOfArkcase = stateOfArkcaseReportGenerator.generateReport(LocalDate.now());
 
         LocalDate now = LocalDate.now();
         String stateReportName = String.format("state-of-arkcase-%s", now.format(DateTimeFormatter.ISO_DATE));
@@ -44,44 +44,42 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
 
         Map<String, String> env = new HashMap<>();
         env.put("create", "true");
-        // locate file system by using the syntax
-        // defined in java.net.JarURLConnection
-        URI uri = URI.create(String.format("jar:file:/%s/%s.zip", stateOfArkcaseFolderPath, stateReportName));
-        File zipFile = new File(String.format("%s/%s.zip", stateOfArkcaseFolderPath, stateReportName));
-        // Path zipfilePath = zipFile.toPath()
-        try (FileSystem zipfs = FileSystems.newFileSystem(zipFile.toURI(), env))
+
+        Path tempFile = null;
+        try
+        {
+            tempFile = Files.createTempFile(stateReportName, ".zip");
+        }
+        catch (IOException e)
+        {
+            log.error("Error creating temp file for state of arkcase dally report.", e);
+        }
+
+        URI uri = URI.create(String.format("jar:%s", tempFile.toUri().toString()));
+        try (FileSystem zipfs = FileSystems.newFileSystem(uri, env))
         {
             // create byte array input stream from report
             ByteArrayInputStream stateReportBytesStream = new ByteArrayInputStream(objectMapper.writeValueAsBytes(stateOfArkcase));
 
             // copy a state of arkcase report file
-            Files.copy(stateReportBytesStream, Paths.get("/" + stateReportName),
+            Files.copy(stateReportBytesStream, zipfs.getPath(stateReportName),
                     StandardCopyOption.REPLACE_EXISTING);
             // TODO check if already exist file for previous day
             File errorsLogFile = errorsLogFileService.getCurrentFile();
             // copy error log
-            Files.copy(errorsLogFile.toPath(), Paths.get("/" + errorsLogName),
+            Files.copy(errorsLogFile.toPath(), zipfs.getPath(errorsLogName),
                     StandardCopyOption.REPLACE_EXISTING);
         }
         catch (Exception e)
         {
             log.error("Error creating state of arkcase dally report.", e);
         }
+        return tempFile.toFile();
     }
 
     public void setStateOfArkcaseReportGenerator(StateOfArkcaseReportGenerator stateOfArkcaseReportGenerator)
     {
         this.stateOfArkcaseReportGenerator = stateOfArkcaseReportGenerator;
-    }
-
-    public void setStateOfArkcaseFolderPath(String stateOfArkcaseFolderPath)
-    {
-        this.stateOfArkcaseFolderPath = stateOfArkcaseFolderPath;
-        File reportDirectory = new File(stateOfArkcaseFolderPath);
-        if (!reportDirectory.exists())
-        {
-            reportDirectory.mkdirs();
-        }
     }
 
     public void setDeleteReportsOlderThanDays(int deleteReportsOlderThanDays)
