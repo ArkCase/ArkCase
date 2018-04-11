@@ -6,8 +6,8 @@
                     <div class="col-sm-6 col-md-12">
                         <div class="pull-right">
                             <div class="col-xs-12">
-                                <a class="btn btn-default" href="" ng-click="expand()">
-                                    <i class="a fa-expand"></i>
+                                <a class="btn btn-default" href="" ng-click="showVideoPlayer ? videoExpand() : documentExpand()">
+                                    <i class="fa fa-expand"></i>
                                 </a>
                                 <a class="btn btn-default" href="javascript:window.close();">
                                     <i class="fa fa-times"></i>
@@ -70,7 +70,7 @@
                 <div class="col-sm-6 col-md-12">
                     <div class="pull-right">
                         <div class="col-xs-12">
-                            <a class="btn btn-default" href="" ng-click="compress()">
+                            <a class="btn btn-default" href="" ng-click="documentCompress()">
                                 <i class="fa fa-compress"></i>
                             </a>
                             <a class="btn btn-default" href="javascript:window.close();">
