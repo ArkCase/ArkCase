@@ -29,3 +29,4 @@ ${user.home}
 rebel.xml
 **/rebel.xml
 .rebel.xml.bak
+/.derived
