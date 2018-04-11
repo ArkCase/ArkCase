@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import com.armedia.acm.services.transcribe.exception.GetTranscribeConfigurationException;
+import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.model.TranscribeServiceProvider;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
@@ -101,7 +101,7 @@ public class GetTranscribeConfigurationAPIControllerTest extends EasyMockSupport
     @Test
     public void getConfiguration_Exception() throws Exception
     {
-        GetTranscribeConfigurationException exception = new GetTranscribeConfigurationException("error");
+        GetConfigurationException exception = new GetConfigurationException("error");
 
         when(mockAuthentication.getName()).thenReturn("user");
         when(mockArkCaseTranscribeService.getConfiguration()).thenThrow(exception);
@@ -117,7 +117,7 @@ public class GetTranscribeConfigurationAPIControllerTest extends EasyMockSupport
         catch (Exception e)
         {
             assertNotNull(e);
-            assertTrue(e.getCause() instanceof GetTranscribeConfigurationException);
+            assertTrue(e.getCause() instanceof GetConfigurationException);
             assertEquals("error", e.getCause().getMessage());
         }
     }

@@ -51,6 +51,10 @@ public class AcmAuthenticationManager implements AuthenticationManager
             {
                 if (providerEntry.getValue() instanceof AcmLdapAuthenticationProvider)
                 {
+                    if (principal.isEmpty())
+                    {
+                        throw new BadCredentialsException("Empty Username");
+                    }
                     AcmLdapAuthenticationProvider provider = (AcmLdapAuthenticationProvider) providerEntry.getValue();
                     String userDomain = provider.getLdapSyncService().getLdapSyncConfig().getUserDomain();
                     if (principal.endsWith(userDomain))

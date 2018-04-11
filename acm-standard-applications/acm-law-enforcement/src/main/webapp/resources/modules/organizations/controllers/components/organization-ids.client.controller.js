@@ -94,9 +94,15 @@ angular.module('organizations').controller(
                             identificationID : rowEntity.identificationID,
                             identificationType : rowEntity.identificationType,
                             identificationNumber : rowEntity.identificationNumber,
-                            identificationIssuer : rowEntity.identificationIssuer,
-                            identificationYearIssued : new Date(rowEntity.identificationYearIssued)
+                            identificationIssuer : rowEntity.identificationIssuer
                         };
+
+                        if (Util.isEmpty(rowEntity.identificationYearIssued)) {
+                            item.identificationYearIssued = '';
+                        } else {
+                            item.identificationYearIssued = new Date(rowEntity.identificationYearIssued);
+                        }
+
                         showModal(item, true);
                     };
 
@@ -172,8 +178,11 @@ angular.module('organizations').controller(
                         return promiseSaveInfo;
                     }
 
-                    $scope.isDefault = function(data) {
-                        return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultIdentification");
+                    $scope.isDefault = function(identification) {
+                        var defaultIdentification = $scope.objectInfo.defaultIdentification;
+                        var comparisonProperties = [ "identificationID", "identificationType", "identificationNumber",
+                                "identificationIssuer" ];
+                        return Util.objectsComparisonByGivenProperties(defaultIdentification, identification, comparisonProperties);
                     }
                 }
 

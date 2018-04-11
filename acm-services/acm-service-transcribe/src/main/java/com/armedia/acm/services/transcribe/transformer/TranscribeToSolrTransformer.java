@@ -51,6 +51,7 @@ public class TranscribeToSolrTransformer implements AcmObjectToSolrDocTransforme
 
         solr.setAdditionalProperty("process_id_s", in.getProcessId());
         solr.setAdditionalProperty("word_count_l", in.getWordCount());
+        solr.setAdditionalProperty("confidence_l", in.getConfidence());
 
         return solr;
     }

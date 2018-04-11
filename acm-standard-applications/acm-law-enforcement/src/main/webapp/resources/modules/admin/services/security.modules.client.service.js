@@ -14,9 +14,11 @@
  *
  * The Admin.ModulesService provides Modules REST calls functionality
  */
-angular.module('admin').service('Admin.ModulesService', function($http) {
+angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService", function($http, Util) {
     return ({
         getAppModules : getAppModules,
+        getAppModulesPaged : getAppModulesPaged,
+        getAppModulesByName : getAppModulesByName,
         getRolesForModulePrivilege : getRolesForModulePrivilege,
         addRolesToModule : addRolesToModule,
         removeRolesFromModule : removeRolesFromModule
@@ -38,7 +40,57 @@ angular.module('admin').service('Admin.ModulesService', function($http) {
             url : 'api/latest/plugin/admin/moduleconfiguration/modules'
         });
     }
-    ;
+
+    /**
+     * @ngdoc method
+     * @name getAppModulesPaged
+     * @methodOf admin.service:Admin.ModulesService
+     *
+     * @description
+     * Performs retrieving N application modules with info:
+     *      String: name
+     *      String: id
+     *      String: privilege
+     *
+     * @returns {Array} List of application modules objects
+     *
+     */
+    function getAppModulesPaged(data) {
+        return $http({
+            method : 'GET',
+            url : 'api/latest/plugin/admin/moduleconfiguration/modules/paged',
+            params : {
+                dir : (data.dir ? data.dir : "name_lcs ASC"),
+                n : (data.n ? data.n : 50),
+                start : (data.start ? data.start : 0)
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name getAppModulesByName
+     * @methodOf admin.service:Admin.ModulesService
+     *
+     * @description
+     * Performs retrieving filtered application modules by name with info:
+     *      String: name
+     *      String: id
+     *      String: privilege
+     *
+     * @returns {Array} List of application modules objects
+     *
+     */
+    function getAppModulesByName(data) {
+        return $http({
+            method : 'GET',
+            url : 'api/latest/plugin/admin/moduleconfiguration/modules',
+            params : {
+                fn : (data.filterWord ? data.filterWord : ""),
+                n : (Util.isEmpty(data.filterWord) ? 50 : 10000)
+            }
+        });
+    }
 
     /**
      * @ngdoc method
@@ -58,7 +110,6 @@ angular.module('admin').service('Admin.ModulesService', function($http) {
             url : 'api/latest/plugin/admin/rolesprivileges/privileges/' + modulePrivilege + '/roles'
         });
     }
-    ;
 
     /**
      * @ngdoc method
@@ -84,7 +135,6 @@ angular.module('admin').service('Admin.ModulesService', function($http) {
             }
         });
     }
-    ;
 
     /**
      * @ngdoc method
@@ -106,6 +156,4 @@ angular.module('admin').service('Admin.ModulesService', function($http) {
             url : url
         });
     }
-    ;
-
-});
+} ]);

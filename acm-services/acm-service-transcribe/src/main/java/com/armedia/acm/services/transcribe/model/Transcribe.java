@@ -11,11 +11,33 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.*;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/27/2018
@@ -51,6 +73,10 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     @JoinColumn(name = "cm_transcribe_media_file_version_id")
     private EcmFileVersion mediaEcmFileVersion;
 
+    @OneToOne
+    @JoinColumn(name = "cm_transcribe_file_id")
+    private EcmFile transcribeEcmFile;
+
     @Column(name = "cm_transcribe_status")
     private String status;
 
@@ -59,6 +85,9 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
 
     @Column(name = "cm_transcribe_word_count")
     private long wordCount;
+
+    @Column(name = "cm_transcribe_confidence")
+    private int confidence;
 
     @Column(name = "cm_transcribe_creator")
     private String creator;
@@ -91,9 +120,22 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
 
     private void setUpTranscribeItems()
     {
-        if (getTranscribeItems() != null)
+        wordCount = 0;
+        confidence = 0;
+        if (getTranscribeItems() != null && !getTranscribeItems().isEmpty())
         {
-            getTranscribeItems().forEach(item -> item.setTranscribe(this));
+            getTranscribeItems().forEach(item -> {
+                item.setTranscribe(this);
+                if (StringUtils.isNotEmpty(item.getText()))
+                {
+                    String[] textAsArray = item.getText().split(" ");
+                    wordCount += textAsArray.length;
+                }
+
+                confidence += item.getConfidence();
+            });
+
+            confidence = confidence / getTranscribeItems().size();
         }
     }
 
@@ -140,11 +182,19 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
 
     public List<TranscribeItem> getTranscribeItems()
     {
+        if (transcribeItems != null)
+        {
+            Collections.sort(transcribeItems);
+        }
         return transcribeItems;
     }
 
     public void setTranscribeItems(List<TranscribeItem> transcribeItems)
     {
+        if (transcribeItems != null)
+        {
+            Collections.sort(transcribeItems);
+        }
         this.transcribeItems = transcribeItems;
     }
 
@@ -156,6 +206,16 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     public void setMediaEcmFileVersion(EcmFileVersion mediaEcmFileVersion)
     {
         this.mediaEcmFileVersion = mediaEcmFileVersion;
+    }
+
+    public EcmFile getTranscribeEcmFile()
+    {
+        return transcribeEcmFile;
+    }
+
+    public void setTranscribeEcmFile(EcmFile transcribeEcmFile)
+    {
+        this.transcribeEcmFile = transcribeEcmFile;
     }
 
     public String getProcessId()
@@ -176,6 +236,16 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     public void setWordCount(long wordCount)
     {
         this.wordCount = wordCount;
+    }
+
+    public int getConfidence()
+    {
+        return confidence;
+    }
+
+    public void setConfidence(int confidence)
+    {
+        this.confidence = confidence;
     }
 
     @Override

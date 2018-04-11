@@ -5,7 +5,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.2.7-SNAPSHOT</version>
+    <version>3.2.9-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -129,6 +129,7 @@
         <magic.matcher.version>0.1.2</magic.matcher.version>
         <springfox-version>2.5.0</springfox-version>
         <solr-solrj.version>6.6.0</solr-solrj.version>
+        <amazon.sdk.version>1.11.292</amazon.sdk.version>
     </properties>
 
     <organization>
@@ -937,6 +938,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
@@ -1971,6 +1977,15 @@
                 <groupId>org.apache.solr</groupId>
                 <artifactId>solr-solrj</artifactId>
                 <version>${solr-solrj.version}</version>
+            </dependency>
+
+            <!-- Amazon -->
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-bom</artifactId>
+                <version>${amazon.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
         </dependencies>

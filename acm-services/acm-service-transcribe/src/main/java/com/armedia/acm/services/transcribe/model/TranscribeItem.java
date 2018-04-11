@@ -3,14 +3,14 @@ package com.armedia.acm.services.transcribe.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
-import com.armedia.acm.services.transcribe.converter.DurationConverter;
+import com.armedia.acm.services.transcribe.converter.BigDecimalConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.Duration;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -23,7 +23,7 @@ import java.util.Date;
 @DiscriminatorColumn(name = "cm_transcribe_item_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.services.transcribe.model.TranscribeItem")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class TranscribeItem implements AcmObject, AcmEntity, Serializable
+public class TranscribeItem implements AcmObject, AcmEntity, Serializable, Comparable<TranscribeItem>
 {
     @Id
     @TableGenerator(name = "transcribe_item_gen", table = "acm_transcribe_item_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_transcribe_item", initialValue = 100, allocationSize = 1)
@@ -36,12 +36,12 @@ public class TranscribeItem implements AcmObject, AcmEntity, Serializable
     private Transcribe transcribe;
 
     @Column(name = "cm_transcribe_item_start_time")
-    @Convert(converter = DurationConverter.class)
-    private Duration startTime;
+    @Convert(converter = BigDecimalConverter.class)
+    private BigDecimal startTime;
 
     @Column(name = "cm_transcribe_item_end_time")
-    @Convert(converter = DurationConverter.class)
-    private Duration endTime;
+    @Convert(converter = BigDecimalConverter.class)
+    private BigDecimal endTime;
 
     @Column(name = "cm_transcribe_item_confidence")
     private int confidence;
@@ -90,23 +90,31 @@ public class TranscribeItem implements AcmObject, AcmEntity, Serializable
         this.transcribe = transcribe;
     }
 
-    public Duration getStartTime()
+    public BigDecimal getStartTime()
     {
         return startTime;
     }
 
-    public void setStartTime(Duration startTime)
+    public void setStartTime(BigDecimal startTime)
     {
+        if (startTime == null)
+        {
+            startTime = new BigDecimal("0");
+        }
         this.startTime = startTime;
     }
 
-    public Duration getEndTime()
+    public BigDecimal getEndTime()
     {
         return endTime;
     }
 
-    public void setEndTime(Duration endTime)
+    public void setEndTime(BigDecimal endTime)
     {
+        if (endTime == null)
+        {
+            endTime = new BigDecimal("0");
+        }
         this.endTime = endTime;
     }
 
@@ -202,5 +210,26 @@ public class TranscribeItem implements AcmObject, AcmEntity, Serializable
     public String getObjectType()
     {
         return TranscribeConstants.OBJECT_TYPE_ITEM;
+    }
+
+    @Override
+    public int compareTo(TranscribeItem item)
+    {
+        // First show nulls items in the list
+        if (item == null)
+        {
+            return 1;
+        }
+
+        // If startTime of the caller is null, add it first in the list
+        // This step is not necessary because in the setter, I explicitly setting 0 if it's null
+        // But let's have as guard
+        if (startTime == null)
+        {
+            return -1;
+        }
+
+        // Proceed with regular compareTo
+        return startTime.compareTo(item.startTime);
     }
 }
