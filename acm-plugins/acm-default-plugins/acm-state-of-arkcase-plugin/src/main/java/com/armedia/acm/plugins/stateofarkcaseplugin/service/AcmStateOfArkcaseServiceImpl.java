@@ -48,6 +48,7 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
         Path tempFile = null;
         try
         {
+
             tempFile = Files.createTempFile(stateReportName, ".zip");
         }
         catch (IOException e)
