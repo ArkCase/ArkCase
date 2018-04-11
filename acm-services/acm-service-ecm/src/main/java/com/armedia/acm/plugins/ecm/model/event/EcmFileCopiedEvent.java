@@ -7,9 +7,12 @@ public class EcmFileCopiedEvent extends EcmFilePersistenceEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.ecm.file.copied";
 
-    public EcmFileCopiedEvent(EcmFile source, String userId, String ipAddress)
+    private EcmFile original;
+
+    public EcmFileCopiedEvent(EcmFile source, EcmFile original, String userId, String ipAddress)
     {
         super(source, userId, ipAddress);
+        setOriginal(original);
         setParentObjectType(source.getContainer().getContainerObjectType());
         setParentObjectId(source.getContainer().getContainerObjectId());
     }
@@ -18,5 +21,15 @@ public class EcmFileCopiedEvent extends EcmFilePersistenceEvent
     public String getEventType()
     {
         return EVENT_TYPE;
+    }
+
+    public EcmFile getOriginal()
+    {
+        return original;
+    }
+
+    public void setOriginal(EcmFile original)
+    {
+        this.original = original;
     }
 }

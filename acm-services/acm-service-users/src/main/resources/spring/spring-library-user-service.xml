@@ -271,7 +271,7 @@
     <bean id="passwordLengthValidationRule"
           class="com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule">
         <constructor-arg type="int" name="minLength" value="7"/>
-        <constructor-arg type="java.lang.String" name="message" value="Password must be of minimum length of 7."/>
+        <constructor-arg type="java.lang.String" name="message" value="Password must be of minimum length of 7"/>
     </bean>
     <!-- end of password validation -->
 

@@ -2,12 +2,26 @@
     "common": {
         "select.option.none": "(Wähle Eins)",
         "value.unknown": "Unbekannt",
-        "defaultDateFormat": "De_MM/DD/YYYY",
-        "defaultTimeFormat": "De_hh:mm:ss",
-        "defaultDateTimeFormat": "De_MM/DD/YYYY hh:mm",
-        "defaultDatePickerFormat": "De_MM/dd/yyyy",
-        "defaultDateUIFormat": "De_MM/dd/yyyy",
-        "defaultDateTimeUIFormat": "De_MM/dd/yyyy HH:mm"
+        "value.none": "Keiner",
+		"_1_": "Bitte verwenden Sie keine benutzerdefinierten Datumsformate oder fügen Sie sie hinzu, da sie fehleranfällig sind.",
+        "_2_": "Bitte verwenden Sie eines der vordefinierten Formate: ",
+        "_3_": "'mittel'            - entspricht 'MMM t, j u:mm:ss a' für das Gebietsschema en_US (z.B. 3. Sep 2010 12:05:08 Uhr)",
+        "_4_": "'kurz'              - entspricht 'M/t/jj u:mm a' für das Gebietsschema en_US (z.B. 3/9/10 12:05 Uhr)",
+        "_5_": "'vollständigesDatum'- entspricht 'EEEE, MMMM t, j' für das Gebietsschema en_US (z.B. Freitag, 3. September 2010)",
+        "_6_": "'langesDatum'       - entspricht 'MMMM t, j' für das Gebietsschema en_US (z.B. 3. September 2010)",
+        "_7_": "'mittleresDatum'    - entspricht 'MMM t, j' für das Gebietsschema en_US (z.B. 3. Sep 2010)",
+        "_8_": "'kurzesDatum'       - entspricht 'M/t/jj' für das Gebietsschema en_US (z.B. 03/09/10)",
+        "_9_": "'mittlereZeit'      - entspricht 'u:mm:ss a' für das Gebietsschema en_US (z.B. 12:05:08 Uhr)",
+        "_10": "'kurzeZeit'         - entspricht 'u:mm a' für das Gebietsschema en_US (z.B. 12:05 Uhr)",
+        "_11": " ",
+        "_12": "Die folgenden Datumsformate werden auslaufen. Wenn Kunden ein benutzerdefiniertes Format benötigen, brauchen wir das ",
+        "_13": "um sie zu erziehen, um dies zu vermeiden, weil sie Bedenken haben",
+        "defaultDateFormat": "MM/TT/JJJJ",
+        "defaultTimeFormat": "uu:mm:ss",
+        "defaultDateTimeFormat": "MM/TT/JJJJ uu:mm",
+        "defaultDatePickerFormat": "MM/tt/jjjj",
+        "defaultDateUIFormat": "MM/tt/jjjj",
+        "defaultDateTimeUIFormat": "MM/tt/jjjj UU:mm"   
     },
     "common.frevvo": {
         "defaultDateFormat": "JJJJ-MM-TT"
@@ -52,7 +66,7 @@
             "newCorrespondence": "Neue Korrespondenz",
             "open": "Öffnen",
             "email": "Email",
-            "newTask": "de_New Task",
+            "newTask": "Neue Aufgabe",
             "download": "Herunterladen",
             "copy": "Kopieren",
             "cut": "Schnitt",
@@ -95,6 +109,10 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "Als Anhang und Hyperlink senden",
             "btnCancel.text": "Stornieren",
             "btnOk.text": "E-Mail senden"
+		},
+		"participantsDialog": {
+            "titlePart": "Teilnehmer für ",
+            "title": "Teilnehmer"
         },
         "recipientsDialog": {
             "title": "Empfänger auswählen",
@@ -167,7 +185,7 @@
         "authorized": "Autorisiert"
     },
     "common.directive.objectAuthorizationRolesFilter": {
-        "pattern.title": "de_Error, 2 characters required."
+        "pattern.title": "Fehler, 2 Zeichen erforderlich."
     },
     "common.directive.searchModal": {
         "header": "Suche",
@@ -175,7 +193,10 @@
         "btnOk.text": "Bestätigen",
         "btnCancel.text": "Abbrechen",
         "edtPlaceholder": "In die Suche eingeben",
-        "noData.text": "Keine Ergebnisse"
+        "noData.text": "Keine Ergebnisse",
+		"pickUserLabel": "Wählen Sie den zugeordneten Benutzer aus",
+        "pickGroupLabel": "Wählen Sie Zugehörige Gruppe",
+		"selectedItemsGrid.label": "Ausgewählte Einträge"
     },
     "common.directive.search": {
         "showMore.button.text": "Mehr Werte anzeigen",
@@ -472,7 +493,9 @@
             "day.label": "Tag",
             "week.label": "Woche",
             "month.label": "Monat",
-            "on.label": "Auf",
+            "_1_": "'auf.etikette 'wird nicht verwendet._ENTFERNT_WERDEN_",
+            "_2_": "Schreiben Sie die Nachricht ggf. neu, um eine englischsprachige Grammatik in der Nachricht zu vermeiden",
+            "_on.label": "Auf",
             "day.placeholder": "Tag",
             "year.placeholder": "Jahr",
             "dailyRecurrence": {
@@ -566,7 +589,7 @@
     },
     "common.directive.coreParticipants": {
         "title": "Teilnehmer",
-        "replaceFolderChildrenParticipants": "de_Replace child documents participants",
+        "replaceFolderChildrenParticipants": "Ersetzen Sie die Teilnehmer der untergeordneten Dokumente",
         "modal": {
             "addParticipant.label": "Teilnehmer hinzufügen",
             "editParticipant.label": "Datensatz bearbeiten",
@@ -576,7 +599,7 @@
             "btnCancel.text": "Stornieren",
             "dialogUserPicker.header": "Benutzer suchen",
             "dialogGroupPicker.header": "Suchgruppe",
-            "replaceChildrenParticipant": "de_replace children participant"
+            "replaceChildrenParticipant": "Ersetzen Kinder Teilnehmer"
         },
         "message": {
             "error.groupType": "Die besitzende Gruppe kann keine Person sein.",
@@ -588,6 +611,8 @@
             "error.noAccessCombo": "Die Kombination von No Access und Assignee ist nicht zulässig.",
             "error.duplicateUserOrGroup": "Ungültiger Teilnehmer Doppelte Einträge für den Teilnehmer gefunden",
             "error.userOrGroupNotFound": "Ungültiger Teilnehmer Teilnehmer fehlt im System.",
+			"error.emptyParticipantLdapId": "Der Name des Teilnehmers darf nicht leer sein",
+            "error.emptyParticipantType": "Der Teilnehmertyp darf nicht leer sein",
             "error.ownerUnique": "Nur ein Besitzer ist erlaubt."
         }
     },
@@ -620,11 +645,11 @@
         "DOC_REPO": "Dokumenten-Repository",
         "ORGANIZATION": "Organisation",
         "PERSON": "Person",
-        "PERSON-ASSOCIATION": "de_Person-Association",
-        "PARTICIPANT": "de_Participant",
-        "NOTE": "de_Note",
-        "PARTICIPANT-ASSOCIATION": "de_Participant-Association",
-        "ASSIGNMENT": "de_Assignment"
+        "PERSON-ASSOCIATION": "Person-Verband",
+        "PARTICIPANT": "Teilnehmer",
+        "NOTE": "Hinweis",
+        "PARTICIPANT-ASSOCIATION": "Teilnehmer-Verband",
+        "ASSIGNMENT": "Zuordnung"
     },
     "frevvo.dialogUserPicker": {
         "header": "Wähle Benutzer",
@@ -880,8 +905,3 @@
         }
     }
 }
-
-
-
-
-

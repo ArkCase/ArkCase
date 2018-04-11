@@ -213,7 +213,8 @@
             "type.label": "网址类型",
             "type.placeholder": "键入网址类型",
             "value.label": "网址",
-            "value.placeholder": "键入网址"
+            "value.placeholder": "键入网址",
+            "value.title": "zh-cn_Url must be valid (e.g. https://www.google.com)"
         }
     },
     "organizations.comp.participants": {

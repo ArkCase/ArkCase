@@ -17,8 +17,10 @@ angular.module('document-details').controller(
                 'Helper.LocaleService',
                 'Admin.TranscriptionManagementService',
                 'MessageService',
+                'UtilService',
+                '$log',
                 function($scope, $stateParams, $sce, $q, $timeout, TicketService, ConfigService, LookupService, SnowboundService,
-                        Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService) {
+                        Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, $log) {
 
                     new LocaleHelper.Locale({
                         scope : $scope
@@ -28,7 +30,9 @@ angular.module('document-details').controller(
                     $scope.expand = function() {
                         $scope.viewerOnly = true;
                     };
-
+                    $scope.compress = function() {
+                        $scope.viewerOnly = false;
+                    };
                     $scope.checkEscape = function(event) {
                         if (27 == event.keyCode) { //27 is Escape key code
                             $scope.viewerOnly = false;
@@ -51,12 +55,83 @@ angular.module('document-details').controller(
                         selectedIds : $stateParams['selectedIds']
                     };
                     $scope.showVideoPlayer = false;
+                    $scope.transcriptionTabActive = false;
 
-                    TranscriptionManagementService.getTranscribeConfiguration().then(function(res) {
-                        $scope.transcribeEnabled = res.data.enabled;
-                    }, function(err) {
-                        MessageService.error(err.data);
+                    var transcriptionConfigurationPromise = TranscriptionManagementService.getTranscribeConfiguration();
+
+                    $scope.getEcmFileActiveVersion = function(ecmFile) {
+                        if (Util.isEmpty(ecmFile) || Util.isEmpty(ecmFile.activeVersionTag) || Util.isArrayEmpty(ecmFile.versions)) {
+                            return null;
+                        }
+
+                        var activeVersion = _.find(ecmFile.versions, function(version) {
+                            return ecmFile.activeVersionTag === version.versionTag;
+                        });
+
+                        return activeVersion;
+                    };
+
+                    $scope.$on('transcribe-data-model', function(event, transcribeObj) {
+                        $scope.transcribeObjectModel = transcribeObj;
+
+                        var track = null;
+                        var videoElement = angular.element(document.getElementsByTagName("video")[0])[0];
+                        if (videoElement) {
+                            track = videoElement.addTextTrack("subtitles", "Transcription", $scope.transcribeObjectModel.language);
+                            videoElement.addEventListener("play", function() {
+                                track.mode = "showing";
+                            });
+                        }
+
+                        angular.forEach($scope.transcribeObjectModel.transcribeItems, function(value, key) {
+                            if (track != null) {
+                                addCue(track, value);
+                            }
+                        });
+
+                        //color the status
+                        $scope.colorTranscribeStatus = function() {
+                            switch ($scope.transcribeObjectModel.status) {
+                            case 'QUEUED':
+                                return '#dcce22';
+                            case 'PROCESSING':
+                                return 'orange';
+                            case 'COMPLETED':
+                                return '#05a205';
+                            case 'FAILED':
+                                return 'red';
+                            }
+                        };
+
                     });
+
+                    var addCue = function(track, value) {
+                        var cueAdded = false;
+                        try {
+                            track.addCue(new VTTCue(value.startTime, value.endTime, value.text));
+                            cueAdded = true;
+                        } catch (e) {
+                            $log.warn("Browser does not support VTTCue");
+                        }
+
+                        if (!cueAdded) {
+                            try {
+                                track.addCue(new TextTrackCue(value.startTime, value.endTime, value.text));
+                                cueAdded = true;
+                            } catch (e) {
+                                $log.warn("Browser does not support TextTrackCue");
+                            }
+                        }
+                    }
+
+                    $scope.playAt = function(seconds) {
+                        var videoElement = angular.element(document.getElementsByTagName("video")[0])[0];
+                        if (videoElement) {
+                            videoElement.pause();
+                            videoElement.currentTime = seconds;
+                            videoElement.play();
+                        }
+                    }
 
                     /**
                      * Builds the snowbound url based on the parameters passed into the controller state and opens the
@@ -106,7 +181,7 @@ angular.module('document-details').controller(
 
                     $q.all(
                             [ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise,
-                                    ecmFileParticipants.$promise, formsConfig ]).then(
+                                    ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise ]).then(
                             function(data) {
                                 $scope.acmTicket = data[0].data;
                                 $scope.userId = data[1].userId;
@@ -116,9 +191,19 @@ angular.module('document-details').controller(
                                 $scope.ecmFileEvents = data[5];
                                 $scope.ecmFileParticipants = data[6];
                                 $scope.formsConfig = data[7];
+                                $scope.transcriptionConfiguration = data[8];
+
+                                $scope.transcribeEnabled = $scope.transcriptionConfiguration.data.enabled;
+
                                 $timeout(function() {
                                     $scope.$broadcast('document-data', $scope.ecmFile);
                                 }, 1000);
+
+                                var durationInSeconds = 0;
+                                var activeVersion = $scope.getEcmFileActiveVersion($scope.ecmFile);
+                                if (!Util.isEmpty(activeVersion)) {
+                                    durationInSeconds = activeVersion.durationSeconds;
+                                }
 
                                 var key = $scope.ecmFile.fileType + ".name";
                                 // Search for descriptive file type in acm-forms.properties
@@ -149,5 +234,6 @@ angular.module('document-details').controller(
                                     $scope.openSnowboundViewer();
                                 }
 
+                                $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
                             });
                 } ]);

@@ -6,4 +6,23 @@
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
     </bean>
 
+    <bean id="getTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.GetTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
+    <bean id="updateTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.UpdateTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
+    <bean id="completeTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.CompleteTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
+    <bean id="cancelTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.CancelTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
+    <bean id="compileTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.CompileTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
 </beans>

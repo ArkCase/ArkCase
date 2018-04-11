@@ -8,7 +8,7 @@ import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.transcribe.dao.TranscribeDao;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
-import com.armedia.acm.services.transcribe.exception.GetTranscribeConfigurationException;
+import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
 import com.armedia.acm.services.transcribe.model.*;
 import com.armedia.acm.services.transcribe.pipline.TranscribePipelineContext;
 import com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor;
@@ -73,7 +73,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         transcribeConfigurationPropertiesService.setPropertyFileManager(propertyFileManager);
 
         arkCaseTranscribeService = new ArkCaseTranscribeService();
-        arkCaseTranscribeService.setTranscribeConfigurationService(transcribeConfigurationPropertiesService);
+        arkCaseTranscribeService.setTranscribeConfigurationPropertiesService(transcribeConfigurationPropertiesService);
         arkCaseTranscribeService.setTranscribeDao(transcribeDao);
         arkCaseTranscribeService.setPipelineManager(pipelineManager);
         arkCaseTranscribeService.setEcmFileVersionDao(ecmFileVersionDao);
@@ -114,7 +114,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         Transcribe created = arkCaseTranscribeService.create(version.getId(), TranscribeType.AUTOMATIC);
 
         verify(ecmFileVersionDao).find(version.getId());
-        verify(propertyFileManager, times(3)).loadMultiple(any(), any());
+        verify(propertyFileManager, times(2)).loadMultiple(any(), any());
         verify(transcribeDao).findByMediaVersionId(version.getId());
         verify(pipelineManager).executeOperation(any(), any(), any());
 
@@ -153,7 +153,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
 
         Transcribe created = arkCaseTranscribeService.create(version, TranscribeType.AUTOMATIC);
 
-        verify(propertyFileManager, times(3)).loadMultiple(any(), any());
+        verify(propertyFileManager, times(2)).loadMultiple(any(), any());
         verify(transcribeDao).findByMediaVersionId(version.getId());
         verify(pipelineManager).executeOperation(any(), any(), any());
 
@@ -321,7 +321,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         }
         catch (Exception e)
         {
-            verify(propertyFileManager, times(3)).loadMultiple(any(), any());
+            verify(propertyFileManager, times(2)).loadMultiple(any(), any());
             verify(transcribeDao).findByMediaVersionId(version.getId());
 
             assertTrue(e instanceof CreateTranscribeException);
@@ -365,7 +365,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         }
         catch (Exception e)
         {
-            verify(propertyFileManager, times(3)).loadMultiple(any(), any());
+            verify(propertyFileManager, times(2)).loadMultiple(any(), any());
             verify(transcribeDao).findByMediaVersionId(version.getId());
             verify(pipelineManager).executeOperation(any(), any(), any());
 
@@ -434,8 +434,8 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("IDS", ids);
         processVariables.put("REMOTE_ID", transcribe.getRemoteId());
-        processVariables.put("STATUS", StatusType.QUEUED);
-        processVariables.put("ACTION", ActionType.QUEUED);
+        processVariables.put("STATUS", TranscribeStatusType.QUEUED);
+        processVariables.put("ACTION", TranscribeActionType.QUEUED);
 
         TranscribeBusinessProcessModel model = new TranscribeBusinessProcessModel();
         model.setType(transcribe.getType());
@@ -740,7 +740,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
             verify(propertyFileManager).loadMultiple(any(), any());
 
             assertNotNull(e);
-            assertTrue(e instanceof GetTranscribeConfigurationException);
+            assertTrue(e instanceof GetConfigurationException);
             assertTrue(e.getCause() instanceof NumberFormatException);
         }
     }

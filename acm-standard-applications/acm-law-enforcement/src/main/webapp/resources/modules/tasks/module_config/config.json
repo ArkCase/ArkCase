@@ -1398,6 +1398,10 @@
                     "id": "COMPLAINT"
                 },
                 {
+                    "name": "Cost Tracking",
+                    "id": "COSTSHEET"
+                },
+                {
                     "name": "Timesheet",
                     "id": "TIMESHEET"
                 }

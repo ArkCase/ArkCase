@@ -250,6 +250,10 @@
             "deleteUserMsg": "このユーザーを削除してもよろしいですか？",
             "user": "ユーザー"
         },
+        "security.group.management": {
+            "title": "ja_Group Management",
+            "group": "ja_Group"
+        },
         "security.calendarConfiguration": {
             "title": "カレンダー設定",
             "calendarConfigForm": {
@@ -368,8 +372,7 @@
                 "save": "保存する",
                 "cancel": "キャンセル",
                 "validationResponse": "ja_Email Template already exists with selected parameters",
-                "uploadError": "ja_File upload canceled due to incorrect type of file. You can only upload html file.",
-                "invalidTemplateName": "ja_Template name must end on '.html', '.htm' or '.xhtml' and can only consist of characters, digits or underscores."
+                "uploadError": "ja_File upload canceled due to incorrect type of file. You can only upload html file."
             },
             "objectTypes": {
                 "caseFile": "ja_Case File",
@@ -574,6 +577,20 @@
                 "historyDays.label": "監査および通知イベントの保存（日単位）",
                 "inform": "設定が保存されました",
                 "apply.label": "適用"
+            },
+            "holiday": {
+                "title": "ja_Holiday Schedule",
+                "grid": {
+                    "holidayName": "ja_Name of Holiday",
+                    "holidayDate": "ja_Date of holiday"
+                },
+                "cancel": "ja_Cancel",
+                "save": "ja_Save",
+                "message": "ja_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "ja_Enter Name of Holiday",
+                    "date": "ja_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "ブランディング",

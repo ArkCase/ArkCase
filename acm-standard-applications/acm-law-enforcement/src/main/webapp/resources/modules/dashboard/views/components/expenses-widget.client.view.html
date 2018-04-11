@@ -1,14 +1,13 @@
 <div>
-    <div ng-if="expenses.showChart">
+    <div ng-if="data.length > 0">
         <div class="panel-body">
-            </br>
             <div class="chart-container">
-                <canvas id="bar" class="chart chart-bar" chart-data="expenses.data" chart-labels="expenses.labels"
-                        chart-series="expenses.series" chart-responsive="true" chart-legend="true"></canvas>
+                <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
+                     adjust-table-height="gridOptions.data.length" class="grid"></div>
             </div>
         </div>
     </div>
-    <div class="alert" ng-if="!expenses.showChart">
+    <div class="alert" ng-if="data.length == 0">
         <p class="text-center">
             <span translate>dashboard.widgets.expenses.noDataMessage</span>
         </p>

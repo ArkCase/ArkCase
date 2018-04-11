@@ -213,7 +213,8 @@
             "type.label": "Type",
             "type.placeholder": "Enter Type",
             "value.label": "URL",
-            "value.placeholder": "Enter URL"
+            "value.placeholder": "Enter URL",
+            "value.title": "Url must be valid (e.g. https://www.google.com)"
         }
     },
     "organizations.comp.participants": {
