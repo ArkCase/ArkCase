@@ -27,11 +27,18 @@ angular.module('document-details').controller(
                     var promiseUsers = gridHelper.getUsers();
 
                     ConfigService.getComponentConfig("document-details", "tags").then(function(config) {
-                        gridHelper.addButton(config, "delete");
-                        gridHelper.setColumnDefs(config);
-                        gridHelper.setBasicOptions(config);
-                        gridHelper.disableGridScrolling(config);
-                        gridHelper.setUserNameFilter(promiseUsers);
+                        $scope.config = config;
+                        //first the filter is set, and after that everything else,
+                        //so that the data loads with the new filter applied
+                        gridHelper.setUserNameFilterToConfig(promiseUsers).then(function(updatedConfig) {
+                            $scope.config = updatedConfig;
+                            if ($scope.gridApi != undefined)
+                                $scope.gridApi.core.refresh();
+                            gridHelper.addButton(updatedConfig, "delete");
+                            gridHelper.setColumnDefs(updatedConfig);
+                            gridHelper.setBasicOptions(updatedConfig);
+                            gridHelper.disableGridScrolling(updatedConfig);
+                        });
 
                         $scope.retrieveGridData();
                     });

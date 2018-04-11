@@ -294,17 +294,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     {
         personAssoc.setParentId(getId());
         personAssoc.setParentType(getObjectType());
-
-        if (personAssoc.getPerson().getAssociationsFromObjects() == null)
-        {
-            personAssoc.getPerson().setAssociationsFromObjects(new ArrayList<>());
-        }
-
-        if (!personAssoc.getPerson().getAssociationsFromObjects().contains(personAssoc))
-        {
-            personAssoc.getPerson().getAssociationsFromObjects().add(personAssoc);
-        }
-
     }
 
     @Override
@@ -559,6 +548,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         return participants;
     }
 
+    @Override
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
