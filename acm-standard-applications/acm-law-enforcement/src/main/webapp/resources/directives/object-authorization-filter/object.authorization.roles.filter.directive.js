@@ -14,7 +14,7 @@
  *
  * @example
  <example>
- <object-authorization-roles-filter ng-show="true" filter="exampleFunction(data)" />
+ <object-authorization-roles-filter ng-hide="true" filter="exampleFunction(data)" />
  </example>
  **/
 

@@ -18,7 +18,6 @@ angular.module('admin').controller('Admin.ReportsConfigController',
             $scope.reportsUnauthorizedScroll = reportsUnauthorizedScroll;
             $scope.reportsAuthorizedScroll = reportsAuthorizedScroll;
 
-            $scope.showFilter = true;
             $scope.reportsData = {
                 "chooseObject" : [],
                 "selectedNotAuthorized" : [],

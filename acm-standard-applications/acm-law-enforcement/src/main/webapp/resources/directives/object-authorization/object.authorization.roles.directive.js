@@ -17,10 +17,12 @@
  * @param {string} objectDisplayName name of the field which we want to display in the list.
  * @param {string} roleDisplayName name of the field which we want to display in the list.
  * @param {string} objectTitle value for the title Choose {{objectTitle}} in selecting objects.
- * @param {boolean} showFilter true/false, on this variable depends the visibility of the directive "objectAuthorizationRolesFilter"
+ * @param {boolean} hideFilter true/false, on this variable depends the visibility of the directive "objectAuthorizationRolesFilter", default value is false,
+ *                  usage: <object-authorization-roles-filter ng-hide="hideFilter" />
  * @param {object} paginationDataControl - An object that contains functions for pagination
  * @param {object} filterDataControl - An object that contains functions for search/filter
  * @param {object} selectedObject - An object that has information for the pre-selected/selected user
+ * @param {boolean} member - An object that has information if an adhoc group is a member of another adhoc group
  *
  * @scope
  *
@@ -81,10 +83,11 @@ angular.module('directives').directive(
                             objectDisplayName : "@",
                             roleDisplayName : "@",
                             objectTitle : "@",
-                            showFilter : "=?",
+                            hideFilter : "=?",
                             paginationDataControl : "=?",
                             filterDataControl : "=?",
-                            selectedObject : "=?"
+                            selectedObject : "=?",
+                            member : "=?"
                         },
                         templateUrl : 'directives/object-authorization/object.authorization.roles.html',
                         link : function(scope) {
@@ -151,6 +154,7 @@ angular.module('directives').directive(
                                 }
                                 scope.$bus.publish('refreshLeftMenu', null);
                             };
+
                         }
                     };
                 } ]);

@@ -105,10 +105,11 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
         return $http({
             method : 'GET',
             url : 'api/latest/users/' + data.member.key + '/groups/adhoc',
+            cache : false,
             params : {
                 n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
-                authorized : data.isAuthorized,
+                authorized : true,
                 groupType : (data.member.type ? data.member.type : "")
             }
         });

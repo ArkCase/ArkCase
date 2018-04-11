@@ -168,6 +168,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         return $http({
             method : 'GET',
             url : 'api/latest/users/' + data.member.key + '/groups/',
+            cache : false,
             params : {
                 n : (data.n ? data.n : 18),
                 start : (data.start ? data.start : 0),

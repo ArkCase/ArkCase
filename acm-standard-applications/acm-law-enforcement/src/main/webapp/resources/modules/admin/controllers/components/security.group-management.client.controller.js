@@ -20,7 +20,6 @@ angular.module('admin').controller(
                     $scope.groupUnauthorizedFilter = groupUnauthorizedFilter;
                     $scope.groupAuthorizedFilter = groupAuthorizedFilter;
 
-                    $scope.showFilter = true;
                     var makePaginationRequest = true;
                     var currentAuthGroups;
                     $scope.objectTitle = $translate.instant('admin.security.group.management.group');
@@ -66,22 +65,18 @@ angular.module('admin').controller(
                         if (!_.isEmpty($scope.userData.chooseObject)) {
                             var data = {};
                             data.member = selectedObject;
-                            data.isAuthorized = false;
-                            var unAuthorizedGroupsForUser = LdapGroupManagementService.getAdhocGroupsForAdhocGroup(data);
-                            data.isAuthorized = true;
-                            var authorizedGroupsForUser = LdapGroupManagementService.getAdhocGroupsForAdhocGroup(data);
                             currentAuthGroups = [];
                             $scope.lastSelectedGroup = {};
                             $scope.lastSelectedGroup = selectedObject;
-                            $q.all([ authorizedGroupsForUser, unAuthorizedGroupsForUser ]).then(function(result) {
-                                _.forEach(result[0].data.response.docs, function(group) {
+                            LdapGroupManagementService.getAdhocGroupsForAdhocGroup(data).then(function(result) {
+                                _.forEach(JSON.parse(result.data.authorized).response.docs, function(group) {
                                     var authObject = {};
                                     authObject.key = group.name;
                                     authObject.name = group.name;
                                     $scope.userData.selectedAuthorized.push(authObject);
                                     currentAuthGroups.push(authObject.key);
                                 });
-                                _.forEach(result[1].data.response.docs, function(group) {
+                                _.forEach(JSON.parse(result.data.unauthorized).response.docs, function(group) {
                                     var authObject = {};
                                     authObject.key = group.name;
                                     authObject.name = group.name;

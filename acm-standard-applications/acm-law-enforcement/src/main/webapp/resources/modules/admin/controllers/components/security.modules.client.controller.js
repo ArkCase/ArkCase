@@ -15,7 +15,7 @@ angular.module('admin').controller(
                     $scope.appRoleUnauthorizedFilter = appRoleUnauthorizedFilter;
                     $scope.appRoleAuthorizedFilter = appRoleAuthorizedFilter;
                     $scope.appRoles = [];
-                    $scope.showFilter = true;
+                    $scope.lastSelectedPrivilege = {};
                     // Loaded data after the initialization
                     var initModulesData = {
                         "notAuthorized" : [],
@@ -51,14 +51,14 @@ angular.module('admin').controller(
                         data.start = $scope.modulesData.chooseObject.length;
                         modulesService.getAppModulesPaged(data).then(function(response) {
                             $scope.modulesData.chooseObject = $scope.modulesData.chooseObject.concat(response.data);
-                            $scope.onObjSelect($scope.lastSelectedPrivilege);
+                            // $scope.onObjSelect($scope.lastSelectedPrivilege);
                         });
                     }
 
                     function chooseAppRoleFilter(data) {
                         modulesService.getAppModulesByName(data).then(function(response) {
                             $scope.modulesData.chooseObject = response.data;
-                            $scope.onObjSelect($scope.modulesData.chooseObject[0]);
+                            // $scope.onObjSelect($scope.modulesData.chooseObject[0]);
                         });
                     }
 
@@ -96,7 +96,11 @@ angular.module('admin').controller(
                         //get all app roles
                         $scope.appRoles = payload[1].data;
 
-                        $scope.onObjSelect($scope.modulesData.chooseObject[0]);
+                        // $scope.onObjSelect($scope.modulesData.chooseObject[0]);
+                    });
+
+                    $scope.$watch('lastSelectedPrivilege', function(value) {
+                        cconsole.log(value);
                     });
 
                     //callback function when app role is selected
