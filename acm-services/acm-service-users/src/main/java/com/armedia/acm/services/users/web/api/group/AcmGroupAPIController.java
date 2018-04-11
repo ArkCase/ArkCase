@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.Valid;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -262,7 +261,7 @@ public class AcmGroupAPIController
 
     @RequestMapping(value = "/group/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup saveGroup(@RequestBody @Valid AcmGroup group) throws AcmAppErrorJsonMsg
+    public AcmGroup saveGroup(@RequestBody AcmGroup group) throws AcmAppErrorJsonMsg
     {
         LOG.info("Saving ad-hoc group [{}]", group.getName());
         try
@@ -302,7 +301,7 @@ public class AcmGroupAPIController
 
     @RequestMapping(value = "/group/save/{parentId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup saveSubGroup(@RequestBody @Valid AcmGroup subGroup,
+    public AcmGroup saveSubGroup(@RequestBody AcmGroup subGroup,
             @PathVariable("parentId") String parentId) throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException
     {
 
