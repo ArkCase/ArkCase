@@ -18,11 +18,7 @@ import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by marst on 5/23/16.
@@ -96,10 +92,6 @@ public class DashboardServiceTest extends EasyMockSupport
         casesByQueue.setWidgetId(1209L);
         casesByQueue.setWidgetName("casesByQueue");
 
-        Widget weather = new Widget();
-        weather.setWidgetId(1211L);
-        weather.setWidgetName("weather");
-
         List<Widget> widgetsByUserRoles = new ArrayList<>();
         widgetsByUserRoles.add(news);
         widgetsByUserRoles.add(teamWorkload);
@@ -109,7 +101,6 @@ public class DashboardServiceTest extends EasyMockSupport
         listOfDashboardWidgetOnly.add(news);
         listOfDashboardWidgetOnly.add(teamWorkload);
         listOfDashboardWidgetOnly.add(casesByQueue);
-        listOfDashboardWidgetOnly.add(weather);
 
         expect(mockUserDao.findByUserId(user.getUserId())).andReturn(user);
         expect(mockDashboardDao.getDashboardConfigForUserAndModuleName(user, "DASHBOARD")).andReturn(dashboard).anyTimes();
