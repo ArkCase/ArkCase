@@ -132,8 +132,10 @@ angular.module('admin').controller(
                     function openAdHocGroupModal(group, parentGroup, errorMessage) {
                         return groupModal(adHocGroupController(group, errorMessage, parentGroup, function(scope, modal) {
                             return function() {
+                                var group = scope.group;
+                                group.type = "ADHOC_GROUP";
                                 scope.data = {
-                                    "group" : scope.group,
+                                    "group" : group,
                                     "parent" : parentGroup
                                 };
                                 modal.close(scope.data);
@@ -704,6 +706,7 @@ angular.module('admin').controller(
                         return function($scope, $modalInstance) {
                             $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.ldapGroup.title";
                             $scope.addLdapGroupModal = seeDirectorySelect;
+                            $scope.maxLdapGroupNameLength = 64;
                             $scope.group = group;
                             $scope.error = errorMessage;
                             $scope.directoryServers = directoryServers;
@@ -727,8 +730,10 @@ angular.module('admin').controller(
                     function openLdapSubGroupModal(group, parentGroup, errorMessage) {
                         return groupModal(groupController(false, group, errorMessage, parentGroup, function(scope, modal) {
                             return function() {
+                                var group = scope.group;
+                                group.type = "LDAP_GROUP";
                                 scope.data = {
-                                    "subgroup" : scope.group,
+                                    "subgroup" : group,
                                     "parentGroupName" : parentGroup.object_id_s,
                                     "parentGroupDirectoryName" : parentGroup.directory_name_s
                                 };
@@ -751,7 +756,9 @@ angular.module('admin').controller(
 
                     function onLdapGroupAdd(data, deferred) {
                         //button ok
-                        organizationalHierarchyService.createLdapGroup(data.group, data.selectedDirectory.id).then(function(group) {
+                        var group = data.group;
+                        group.type = "LDAP_GROUP";
+                        organizationalHierarchyService.createLdapGroup(group, data.selectedDirectory.id).then(function(group) {
                             //added successfully
                             var newGroup = {};
                             newGroup.object_sub_type_s = group.type;

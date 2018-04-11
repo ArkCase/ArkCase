@@ -12,12 +12,12 @@ import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.Optional;
 import java.util.Set;
 
@@ -38,7 +38,7 @@ public class LdapGroupService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException
+    public AcmGroup createLdapGroup(@Valid AcmGroup group, String directoryName) throws AcmLdapActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
                 .get(String.format("%s_sync", directoryName));
@@ -86,7 +86,7 @@ public class LdapGroupService
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmGroup createLdapSubgroup(AcmGroup group, String parentGroupName, String directoryName)
+    public AcmGroup createLdapSubgroup(@Valid AcmGroup group, String parentGroupName, String directoryName)
             throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
