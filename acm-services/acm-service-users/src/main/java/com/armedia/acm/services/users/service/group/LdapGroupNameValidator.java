@@ -32,17 +32,10 @@ public class LdapGroupNameValidator implements ConstraintValidator<LdapGroupName
 
         if(groupType.equals(AcmGroupType.LDAP_GROUP))
         {
-            if(groupName.length() <= 64){
-                return true;
-            }
-            else{
+            if(groupName.length() > 64){
                 return false;
             }
         }
-        else if(groupType.equals(AcmGroupType.ADHOC_GROUP))
-        {
-            return true;
-        }
-        return false;
+        return true;
     }
 }
