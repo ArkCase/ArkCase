@@ -27,15 +27,23 @@ angular.module('document-details').controller(
                     });
 
                     $scope.viewerOnly = false;
-                    $scope.expand = function() {
+                    $scope.documentExpand = function() {
                         $scope.viewerOnly = true;
                     };
-                    $scope.compress = function() {
+                    $scope.documentCompress = function() {
                         $scope.viewerOnly = false;
                     };
                     $scope.checkEscape = function(event) {
                         if (27 == event.keyCode) { //27 is Escape key code
                             $scope.viewerOnly = false;
+                        }
+                    };
+
+                    $scope.videoAPI = null;
+
+                    $scope.videoExpand = function() {
+                        if (!Util.isEmpty($scope.videoAPI)) {
+                            $scope.videoAPI.toggleFullScreen();
                         }
                     };
 
@@ -236,4 +244,8 @@ angular.module('document-details').controller(
 
                                 $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
                             });
+
+                    $scope.onPlayerReady = function(API) {
+                        $scope.videoAPI = API;
+                    }
                 } ]);
