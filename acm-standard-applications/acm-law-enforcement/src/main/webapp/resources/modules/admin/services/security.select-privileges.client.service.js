@@ -37,6 +37,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
     function getAppRoles() {
         return $http({
             method : 'GET',
+            cache : false,
             url : 'api/latest/plugin/admin/rolesprivileges/roles'
         });
     }
@@ -126,6 +127,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
         return $http({
             method : 'GET',
             url : url,
+            cache : false,
             params : {
                 authorized : data.isAuthorized,
                 n : (data.n ? data.n : 18),

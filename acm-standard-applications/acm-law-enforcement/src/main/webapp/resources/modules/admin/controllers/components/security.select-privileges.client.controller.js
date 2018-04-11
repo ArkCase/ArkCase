@@ -25,7 +25,6 @@ angular.module('admin').controller(
                     $scope.retrieveDataScroll = retrieveDataScroll;
 
                     $scope.lastSelectedRole = null;
-                    $scope.showFilter = true;
                     // Loaded data after the initialization
                     var initRolesData = {
                         "chooseObject" : []

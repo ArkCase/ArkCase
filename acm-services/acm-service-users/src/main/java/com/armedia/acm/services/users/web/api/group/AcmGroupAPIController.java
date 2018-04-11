@@ -93,7 +93,8 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/{groupName:.+}/groups/adhoc", params = {
             "authorized" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getMemberGroups(@PathVariable("groupName") String groupName, @RequestParam(value = "authorized") Boolean authorized,
+    public Map<String, String> getMemberGroups(@PathVariable("groupName") String groupName,
+            @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "groupType") String groupType,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
@@ -102,9 +103,15 @@ public class AcmGroupAPIController
             Authentication auth) throws MuleException
     {
         LOG.info("Taking groups from Solr for specific group.");
+        System.out.println("===========================================IZBRISI VARIABLA AUTHORIZED=====================================");
 
-        return groupService.getAdHocMemberGroups(auth, startRow, maxRows, sortBy, sortDirection, authorized, groupName,
-                groupType);
+        Map<String, String> result = new HashMap<>();
+        result.put("authorized", groupService.getAdHocMemberGroups(auth, startRow, maxRows, sortBy, sortDirection, true, groupName,
+                groupType));
+        result.put("unauthorized", groupService.getAdHocMemberGroups(auth, startRow, maxRows, sortBy, sortDirection, false, groupName,
+                groupType));
+
+        return result;
     }
 
     @RequestMapping(value = "/{userId:.+}/groups", params = {

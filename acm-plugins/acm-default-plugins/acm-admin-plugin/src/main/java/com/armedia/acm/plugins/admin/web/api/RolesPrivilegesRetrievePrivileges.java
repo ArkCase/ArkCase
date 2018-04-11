@@ -83,6 +83,7 @@ public class RolesPrivilegesRetrievePrivileges
     {
         try
         {
+            System.out.println("================================================================================");
             return rolesPrivilegesService.getPrivilegesByRole(roleName, authorized, filterQuery, sortDirection, startRow, maxRows);
         }
         catch (Exception e)

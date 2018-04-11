@@ -8,7 +8,8 @@ angular.module('admin').controller(
                 '$q',
                 '$log',
                 'UtilService',
-                function($scope, functionalAccessControlService, $q, $log, Util) {
+                'MessageService',
+                function($scope, functionalAccessControlService, $q, $log, Util, MessageService) {
                     var tempAppRolesPromise = functionalAccessControlService.getAppRoles();
                     var tempUserGroupsPromise = functionalAccessControlService.getUserGroups();
                     var tempAppRolesUserGroupsPromise = functionalAccessControlService.getAppUserToGroups();
@@ -27,7 +28,6 @@ angular.module('admin').controller(
                     $scope.appRoleAuthorizedFilter = appRoleAuthorizedFilter;
 
                     $scope.lastSelectedRole = "";
-                    $scope.showFilter = true;
                     $scope.userGroupsAll = [];
                     // Loaded data after the initialization
                     var initRolesData = {
@@ -114,7 +114,6 @@ angular.module('admin').controller(
 
                     //callback function when groups are moved
                     function onAuthRoleSelected(selectedObject, authorized, notAuthorized) {
-
                         //get authorized user groups for selected app role and save all app roles user groups
                         initRolesData.appRolesUserGroups[selectedObject.key] = [];
                         angular.forEach(authorized, function(element) {

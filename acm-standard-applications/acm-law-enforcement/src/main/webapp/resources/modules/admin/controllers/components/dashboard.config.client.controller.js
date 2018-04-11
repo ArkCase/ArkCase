@@ -23,7 +23,6 @@ angular.module('admin')
                             $scope.appRoleUnauthorizedFilter = appRoleUnauthorizedFilter;
                             $scope.appRoleAuthorizedFilter = appRoleAuthorizedFilter;
 
-                            $scope.showFilter = true;
                             // Loaded data after the initialization
                             var initWidgetsData = {
                                 "chooseObject" : [],
@@ -75,18 +74,21 @@ angular.module('admin')
                             }
 
                             function chooseAppRoleFilter(searchData) {
-                                $scope.widgetsData.chooseObject = filterArrayByProperty(searchData.filterWord, initWidgetsData.chooseObject, "name");
-                                if(_.isArray($scope.widgetsData.chooseObject)){
+                                $scope.widgetsData.chooseObject = filterArrayByProperty(searchData.filterWord,
+                                        initWidgetsData.chooseObject, "name");
+                                if (_.isArray($scope.widgetsData.chooseObject)) {
                                     $scope.onObjSelect($scope.widgetsData.chooseObject[0]);
                                 }
                             }
 
                             function appRoleUnauthorizedFilter(searchData) {
-                                $scope.widgetsData.selectedNotAuthorized = filterArrayByProperty(searchData.filterWord, initWidgetsData.selectedNotAuthorized, "name");
+                                $scope.widgetsData.selectedNotAuthorized = filterArrayByProperty(searchData.filterWord,
+                                        initWidgetsData.selectedNotAuthorized, "name");
                             }
 
                             function appRoleAuthorizedFilter(searchData) {
-                                $scope.widgetsData.selectedAuthorized = filterArrayByProperty(searchData.filterWord, initWidgetsData.selectedAuthorized, "name");
+                                $scope.widgetsData.selectedAuthorized = filterArrayByProperty(searchData.filterWord,
+                                        initWidgetsData.selectedAuthorized, "name");
                             }
 
                             $scope.onObjSelect = function(selectedObject, authorized, notAuthorized) {

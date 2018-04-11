@@ -34,7 +34,6 @@ angular.module('admin').controller(
                     $scope.userAuthorizedFilter = userAuthorizedFilter;
                     $scope.retrieveDataFilter = retrieveDataFilter;
 
-                    $scope.showFilter = true;
                     var makePaginationRequest = true;
                     var currentAuthGroups;
                     var selectedUser;
@@ -82,7 +81,7 @@ angular.module('admin').controller(
                         if (!_.isEmpty($scope.userData.chooseObject)) {
                             var data = {};
                             data.member = selectedObject;
-                            $scope.lastSelectedUser = [];
+                            $scope.lastSelectedUser = {};
                             $scope.lastSelectedUser = selectedObject;
                             selectedUser = selectedObject;
                             currentAuthGroups = [];
