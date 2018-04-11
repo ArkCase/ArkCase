@@ -13,5 +13,9 @@ angular.module('document-details').config([ '$stateProvider', function($statePro
                 return $translate.refresh();
             } ]
         }
-    });
+    })
+        .state('viewer.media', {
+            url : '/:seconds',
+            templateUrl : 'modules/document-details/views/document-details.client.view.html'
+        });
 } ]);
