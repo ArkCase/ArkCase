@@ -246,7 +246,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
 
         try
         {
-            return save(transcribe);
+            return getTranscribeDao().save(transcribe);
         }
         catch(Exception e)
         {
@@ -365,15 +365,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                             if (ecmFile != null)
                             {
                                 transcribe.setTranscribeEcmFile(ecmFile);
-                                Transcribe saved = null;
-                                try
-                                {
-                                    saved = save(transcribe);
-                                }
-                                catch (SaveTranscribeException e)
-                                {
-                                    throw new CompileTranscribeException(String.format("Could not compile Transcribe with ID=[%d]. Word file not generated. REASON=[%s]", id, e.getMessage()));
-                                }
+                                Transcribe saved = getTranscribeDao().save(transcribe);
                                 getTranscribeEventPublisher().publish(saved, TranscribeActionType.COMPILED.toString());
                                 return ecmFile;
                             }
