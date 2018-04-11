@@ -20,7 +20,6 @@
         <property name="errorsLogFileService" ref="errorsLogFileService"/>
         <property name="objectMapper" ref="sourceObjectMapper"/>
         <property name="stateOfArkcaseReportGenerator" ref="stateOfArkcaseReport"/>
-        <property name="stateOfArkcaseFolderPath" value="${user.home}/.arkcase/stateReports"/>
         <property name="deleteReportsOlderThanDays" value="7"/>
     </bean>
 

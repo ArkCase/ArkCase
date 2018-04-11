@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="acmArkcaseIdentityService"
+          class="com.armedia.acm.service.identifier.service.AcmArkcaseIdentityServiceImpl">
+        <property name="localIdentityDao" ref="localIdentityDao"/>
+        <property name="globalIdentityDao" ref="globaldentityDao"/>
+    </bean>
+
+    <bean id="localIdentityDao" class="com.armedia.acm.service.identifier.dao.AcmArkcaseLocalIdentityDao">
+        <property name="identityFilePath" value="${user.home}/.arkcase/acm/arkcase-instance-identity.properties"/>
+    </bean>
+
+    <bean id="globaldentityDao" class="com.armedia.acm.service.identifier.dao.AcmArkcaseGlobalIdentityDao"/>
+
+</beans>
