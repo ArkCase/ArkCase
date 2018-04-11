@@ -649,7 +649,8 @@
         "PARTICIPANT": "参加者",
         "NOTE": "注意",
         "PARTICIPANT-ASSOCIATION": "参加者-協会",
-        "ASSIGNMENT": "割り当て"
+        "ASSIGNMENT": "割り当て",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "ユーザーを選択",
