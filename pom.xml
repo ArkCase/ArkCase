@@ -852,6 +852,12 @@
                 <groupId>io.milton</groupId>
                 <artifactId>milton-server-ent</artifactId>
                 <version>${milton.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- frevvo forms -->
@@ -1196,6 +1202,12 @@
                 <artifactId>activiti-engine</artifactId>
                 <version>${activiti.version}</version>
                 <scope>compile</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.activiti</groupId>
@@ -1582,6 +1594,12 @@
                 <artifactId>json-schema-validator</artifactId>
                 <version>${json-schema-validator.version}</version>
                 <scope>compile</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mailapi</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- xml -->
