@@ -649,7 +649,8 @@
         "PARTICIPANT": "Участник",
         "NOTE": "Заметка",
         "PARTICIPANT-ASSOCIATION": "Участник-Aссоциация",
-        "ASSIGNMENT": "Назначение"
+        "ASSIGNMENT": "Назначение",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "Выберите пользователя",

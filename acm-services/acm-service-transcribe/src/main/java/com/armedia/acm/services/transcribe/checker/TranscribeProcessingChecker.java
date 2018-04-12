@@ -28,7 +28,7 @@ public class TranscribeProcessingChecker implements JavaDelegate
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception
     {
-        getAuditPropertyEntityAdapter().setUserId("TRANSCRIBE_SERVICE");
+        getAuditPropertyEntityAdapter().setUserId(TranscribeConstants.TRANSCRIBE_SYSTEM_USER);
 
         List<Long> ids = (List<Long>) delegateExecution.getVariable(TranscribeBusinessProcessVariableKey.IDS.toString());
 

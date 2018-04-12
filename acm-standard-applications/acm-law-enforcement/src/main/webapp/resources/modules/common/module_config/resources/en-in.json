@@ -649,7 +649,8 @@
         "PARTICIPANT": "Participant",
         "NOTE": "Note",
         "PARTICIPANT-ASSOCIATION": "Participant-Association",
-        "ASSIGNMENT": "Assignment"
+        "ASSIGNMENT": "Assignment",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",

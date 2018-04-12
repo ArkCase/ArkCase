@@ -93,6 +93,15 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
     public abstract Transcribe cancel(Long id) throws SaveTranscribeException;
 
     /**
+     * This method will fail the process and set the status to FAILED
+     *
+     * @param id - ID of Transcribe object
+     * @return Updated Transcribe object
+     * @throws SaveTranscribeException
+     */
+    public abstract Transcribe fail(Long id) throws SaveTranscribeException;
+
+    /**
      * This method will create TranscribeItem in the Transcribe with given ID
      *
      * @param id - ID of the Transcribe object
