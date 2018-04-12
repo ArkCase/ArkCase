@@ -55,6 +55,7 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     private TranscribeServiceFactory transcribeServiceFactory;
     private ArkCaseBeanUtils transcribeArkCaseBeanUtils;
     private EcmFileService ecmFileService;
+    private TranscribeEventPublisher transcribeEventPublisher;
 
     @Override
     @Transactional
@@ -91,7 +92,11 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     @Override
     public Transcribe save(Transcribe transcribe) throws SaveTranscribeException
     {
-        return getTranscribeDao().save(transcribe);
+        Transcribe saved = getTranscribeDao().save(transcribe);
+        String action = transcribe.getId() == null ? TranscribeActionType.CREATED.toString() : TranscribeActionType.UPDATED.toString();
+        getTranscribeEventPublisher().publish(saved, action);
+
+        return saved;
     }
 
     @Override
@@ -111,7 +116,15 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
 
         if (copy != null)
         {
-            Transcribe savedCopy = getTranscribeDao().save(copy);
+            Transcribe savedCopy = null;
+            try
+            {
+                savedCopy = save(copy);
+            }
+            catch (SaveTranscribeException e)
+            {
+                throw new CreateTranscribeException(String.format("Could not create copy for Transcribe object with ID=[{}]. REASON=[%s]", transcribe != null ? transcribe.getId() : null, e.getMessage()));
+            }
 
             if (StringUtils.isNotEmpty(transcribe.getProcessId()))
             {
@@ -169,6 +182,32 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         }
 
         throw new SaveTranscribeException(String.format("Could not cancel Transcribe object with ID=[%d]", id));
+    }
+
+    @Override
+    public Transcribe fail(Long id) throws SaveTranscribeException
+    {
+        Transcribe transcribe = getTranscribeDao().find(id);
+        if (transcribe != null && StringUtils.isNotEmpty(transcribe.getProcessId()))
+        {
+            ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables().processInstanceId(transcribe.getProcessId()).singleResult();
+            if (processInstance != null)
+            {
+                String statusKey = TranscribeBusinessProcessVariableKey.STATUS.toString();
+                String actionKey = TranscribeBusinessProcessVariableKey.ACTION.toString();
+                String status = TranscribeStatusType.FAILED.toString();
+                String action = TranscribeActionType.FAILED.toString();
+
+                getActivitiRuntimeService().setVariable(processInstance.getId(), statusKey, status);
+                getActivitiRuntimeService().setVariable(processInstance.getId(), actionKey, action);
+
+                transcribe.setStatus(TranscribeStatusType.FAILED.toString());
+
+                return transcribe;
+            }
+        }
+
+        throw new SaveTranscribeException(String.format("Could not set as failed Transcribe object with ID=[%d]", id));
     }
 
     @Override
@@ -258,13 +297,23 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     @Override
     public void audit(Long id, String action)
     {
-
+        if (id != null && action != null)
+        {
+            Transcribe transcribe = getTranscribeDao().find(id);
+            if (transcribe != null)
+            {
+                getTranscribeEventPublisher().publish(transcribe, action);
+            }
+        }
     }
 
     @Override
     public void auditMultiple(List<Long> ids, String action)
     {
-
+        if (ids != null)
+        {
+            ids.forEach(id -> audit(id, action));
+        }
     }
 
     @Override
@@ -316,7 +365,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                             if (ecmFile != null)
                             {
                                 transcribe.setTranscribeEcmFile(ecmFile);
-                                getTranscribeDao().save(transcribe);
+                                Transcribe saved = getTranscribeDao().save(transcribe);
+                                getTranscribeEventPublisher().publish(saved, TranscribeActionType.COMPILED.toString());
                                 return ecmFile;
                             }
 
@@ -458,10 +508,18 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         try
         {
             Transcribe transcribeForProcessing = existingTranscribe != null ? existingTranscribe : transcribe;
-            return getPipelineManager().executeOperation(transcribeForProcessing, context, () -> {
-                Transcribe saved = getTranscribeDao().save(transcribeForProcessing);
-                return saved;
+            Transcribe created = getPipelineManager().executeOperation(transcribeForProcessing, context, () -> {
+                try
+                {
+                    return save(transcribeForProcessing);
+                }
+                catch (SaveTranscribeException e)
+                {
+                    throw new PipelineProcessException(String.format("Transcribe for MEDIA_VERSION_ID=[%d] was not created successfully. REASON=[%s]", transcribeForProcessing.getMediaEcmFileVersion() != null ? transcribeForProcessing.getMediaEcmFileVersion().getId() : null, e.getMessage()));
+                }
             });
+
+            return created;
         }
         catch (PipelineProcessException e)
         {
@@ -731,5 +789,15 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
+    }
+
+    public TranscribeEventPublisher getTranscribeEventPublisher()
+    {
+        return transcribeEventPublisher;
+    }
+
+    public void setTranscribeEventPublisher(TranscribeEventPublisher transcribeEventPublisher)
+    {
+        this.transcribeEventPublisher = transcribeEventPublisher;
     }
 }
