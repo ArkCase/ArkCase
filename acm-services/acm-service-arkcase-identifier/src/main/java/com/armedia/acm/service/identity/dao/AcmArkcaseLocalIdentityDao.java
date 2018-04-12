@@ -1,6 +1,6 @@
-package com.armedia.acm.service.identifier.dao;
+package com.armedia.acm.service.identity.dao;
 
-import com.armedia.acm.service.identifier.exceptions.AcmIdentityException;
+import com.armedia.acm.service.identity.exceptions.AcmIdentityException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +36,11 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
         {
             properties.load(inputStream);
             // check if all properties exists
-            if (!properties.contains(PROPERTY_IDENTITY) || !properties.contains(PROPERTY_DIGEST))
+            if (!properties.containsKey(PROPERTY_IDENTITY) || !properties.containsKey(PROPERTY_DIGEST))
             {
                 log.error("Some properties are missing. contains_identity=[{}], contains_digest=[{}]",
-                        properties.contains(PROPERTY_IDENTITY),
-                        properties.contains(PROPERTY_DIGEST));
+                        properties.containsKey(PROPERTY_IDENTITY),
+                        properties.containsKey(PROPERTY_DIGEST));
                 throw new AcmIdentityException("Missing some of the properties.");
             }
             String identity = properties.getProperty(PROPERTY_IDENTITY);
@@ -48,14 +48,14 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
             // check if identity is valid
             if (!Arrays.equals(digest, getMD5(identity)))
             {
-                // identity has bean changed
-                throw new AcmIdentityException("Identity has bean changed.");
+                // identity has been changed
+                throw new AcmIdentityException("Identity has been changed.");
             }
             return identity;
         }
         catch (IOException e)
         {
-            log.error("Error generating digest for arkcase identity", e);
+            log.error("Error generating digest for arkcase identity", e.getMessage());
             throw new AcmIdentityException("Error reading file " + identityFilePath, e);
         }
     }
@@ -76,7 +76,7 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
             }
             catch (IOException e)
             {
-                log.error("Error writing to file arkcase identity.", e);
+                log.error("Error writing to file arkcase identity.", e.getMessage());
             }
         }
         else
@@ -96,7 +96,7 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
         }
         catch (NoSuchAlgorithmException e)
         {
-            log.error("Error generating digest for arkcase identity", e);
+            log.error("Error generating digest for arkcase identity", e.getMessage());
         }
         return md.digest(identity.getBytes());
     }

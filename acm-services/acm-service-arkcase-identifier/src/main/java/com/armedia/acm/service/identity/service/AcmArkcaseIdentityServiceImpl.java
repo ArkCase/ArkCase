@@ -1,9 +1,10 @@
-package com.armedia.acm.service.identifier.service;
+package com.armedia.acm.service.identity.service;
 
-import com.armedia.acm.service.identifier.dao.AcmArkcaseGlobalIdentityDao;
-import com.armedia.acm.service.identifier.dao.AcmArkcaseLocalIdentityDao;
-import com.armedia.acm.service.identifier.exceptions.AcmIdentityException;
-import com.armedia.acm.service.identifier.model.AcmArkcaseIdentity;
+import com.armedia.acm.service.identity.dao.AcmArkcaseGlobalIdentityDao;
+import com.armedia.acm.service.identity.dao.AcmArkcaseLocalIdentityDao;
+import com.armedia.acm.service.identity.exceptions.AcmIdentityException;
+import com.armedia.acm.service.identity.exceptions.AcmIdentityNotReadyException;
+import com.armedia.acm.service.identity.model.AcmArkcaseIdentity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 /**
- *
+ * Provides creating and retrieving arkcase identity
  */
 public class AcmArkcaseIdentityServiceImpl implements AcmArkcaseIdentityService, ApplicationListener<ContextRefreshedEvent>
 {
@@ -27,7 +28,7 @@ public class AcmArkcaseIdentityServiceImpl implements AcmArkcaseIdentityService,
     {
         if (!initialized)
         {
-            throw new AcmIdentityException("Not initialized yet.");
+            throw new AcmIdentityNotReadyException("Not initialized yet.");
         }
 
         return identity;
@@ -51,7 +52,7 @@ public class AcmArkcaseIdentityServiceImpl implements AcmArkcaseIdentityService,
             }
             catch (AcmIdentityException e)
             {
-                log.error("Couldn't set local identity.", e);
+                log.error("Couldn't set local identity.", e.getMessage());
             }
             try
             {
@@ -59,7 +60,7 @@ public class AcmArkcaseIdentityServiceImpl implements AcmArkcaseIdentityService,
             }
             catch (AcmIdentityException e)
             {
-                log.error("Couldn't set global identity.", e);
+                log.error("Couldn't set global identity.", e.getMessage());
             }
             initialized = true;
         }

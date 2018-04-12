@@ -1,5 +1,5 @@
 /**
- * Created by nebojsha on 11/19/2015.
+ * Created by nebojsha on 02/04/2018.
  */
 
 'use strict';
@@ -21,20 +21,21 @@ angular.module('admin').service('Admin.StateOfArkcaseService', function($http) {
     /**
      * @ngdoc method
      * @name getStateOfArkcase
-     * @methodOf admin.service:Admin.BrandingCustomCssService
+     * @methodOf admin.service:Admin.StateOfArkcaseService
      *
      * @description
-     * Performs retrieving css data
+     * Performs retrieving state of arkcase as zip
      *
-     * @returns {HttpPromise} Future info about Custom CSS data
+     * @returns {HttpPromise} returns binary data
      */
     function getStateOfArkcase(date) {
         return $http({
             method : "GET",
-            url : "api/v1/plugin/state-of-arkcase",
+            url : "api/v1/plugin/state-of-arkcase/generate",
             params : {
                 date : date
-            }
+            },
+            responseType : "arraybuffer"
         });
     }
 });

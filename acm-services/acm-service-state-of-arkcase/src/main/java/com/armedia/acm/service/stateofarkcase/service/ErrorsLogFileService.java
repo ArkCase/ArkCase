@@ -116,6 +116,10 @@ public class ErrorsLogFileService
      */
     public String getFileNameInPastDays(int days) throws ErrorLogFileException
     {
+        // PatternProcessor calculates days minus 1.
+        // Example if we provide 0 days in past, gives file name pattern for previous day.
+        // because of above we need to adjust days
+        days--;
         days = days * -1;
         PatternProcessor filePatternProcessor = new PatternProcessor(errorsLogAppender.getFilePattern());
         if (filePatternProcessor == null || errorsLogAppender == null)

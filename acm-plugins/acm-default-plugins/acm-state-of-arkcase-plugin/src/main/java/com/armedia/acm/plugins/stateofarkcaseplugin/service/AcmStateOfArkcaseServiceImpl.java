@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.stateofarkcaseplugin.service;
 
+import com.armedia.acm.service.stateofarkcase.exceptions.ErrorLogFileException;
 import com.armedia.acm.service.stateofarkcase.model.StateOfArkcase;
 import com.armedia.acm.service.stateofarkcase.service.ErrorsLogFileService;
 import com.armedia.acm.service.stateofarkcase.service.StateOfArkcaseReportGenerator;
@@ -19,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,9 +40,8 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
     {
         StateOfArkcase stateOfArkcase = stateOfArkcaseReportGenerator.generateReport(LocalDate.now());
 
-        LocalDate now = LocalDate.now();
-        String stateReportName = String.format("state-of-arkcase-%s", now.format(DateTimeFormatter.ISO_DATE));
-        String errorsLogName = String.format("errors-log-%s.txt", now.format(DateTimeFormatter.ISO_DATE));
+        String stateReportName = String.format("state-of-arkcase-%s", day.format(DateTimeFormatter.ISO_DATE));
+        String errorsLogName = String.format("errors-log-%s.json", day.format(DateTimeFormatter.ISO_DATE));
 
         Map<String, String> env = new HashMap<>();
         env.put("create", "true");
@@ -50,10 +51,23 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
         {
 
             tempFile = Files.createTempFile(stateReportName, ".zip");
+            // files must be removed since FileSystem complains if file exists, however we will use generated file path
+            // in the temp folder
+            Files.deleteIfExists(tempFile);
         }
         catch (IOException e)
         {
-            log.error("Error creating temp file for state of arkcase dally report.", e);
+            log.error("Error creating temp file for state of arkcase dally report.", e.getMessage());
+        }
+
+        File errorsLogFile = null;
+        try
+        {
+            errorsLogFile = getErrorsLogFile(day);
+        }
+        catch (ErrorLogFileException e)
+        {
+            log.error("Error retrieving errors log file.", e.getMessage());
         }
 
         URI uri = URI.create(String.format("jar:%s", tempFile.toUri().toString()));
@@ -63,19 +77,42 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
             ByteArrayInputStream stateReportBytesStream = new ByteArrayInputStream(objectMapper.writeValueAsBytes(stateOfArkcase));
 
             // copy a state of arkcase report file
-            Files.copy(stateReportBytesStream, zipfs.getPath(stateReportName),
+            Files.copy(stateReportBytesStream, zipfs.getPath(stateReportName + ".json"),
                     StandardCopyOption.REPLACE_EXISTING);
-            // TODO check if already exist file for previous day
-            File errorsLogFile = errorsLogFileService.getCurrentFile();
-            // copy error log
-            Files.copy(errorsLogFile.toPath(), zipfs.getPath(errorsLogName),
-                    StandardCopyOption.REPLACE_EXISTING);
+
+            // copy error log if not null
+            if (errorsLogFile != null)
+            {
+                Files.copy(errorsLogFile.toPath(), zipfs.getPath(errorsLogName),
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
         }
         catch (Exception e)
         {
-            log.error("Error creating state of arkcase dally report.", e);
+            log.error("Error creating state of arkcase dally report.", e.getMessage());
         }
         return tempFile.toFile();
+    }
+
+    private File getErrorsLogFile(LocalDate day) throws ErrorLogFileException
+    {
+
+        LocalDate today = LocalDate.now();
+        if (day.isEqual(today))
+        {
+            return errorsLogFileService.getCurrentFile();
+        }
+
+        if (day.isAfter(today))
+        {
+            // date is in future and there is no errors logged
+            return null;
+        }
+
+        long numberOfDaysInPast = ChronoUnit.DAYS.between(day, today);
+
+        return errorsLogFileService.getFileInPastDays(Long.valueOf(numberOfDaysInPast).intValue());
+
     }
 
     public void setStateOfArkcaseReportGenerator(StateOfArkcaseReportGenerator stateOfArkcaseReportGenerator)
