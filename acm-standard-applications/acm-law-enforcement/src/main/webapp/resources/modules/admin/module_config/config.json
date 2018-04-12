@@ -1317,6 +1317,12 @@
       {
         "type": "p/stateOfArkcase",
         "label": "admin.stateOfArkcase.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/stateOfArkcase/stateOfArkcase",
+        "label": "admin.stateOfArkcase.title",
         "components": [
           "state-of-arkcase"
         ]
