@@ -1,4 +1,4 @@
-package com.armedia.acm.service.identifier.exceptions;
+package com.armedia.acm.service.identity.exceptions;
 
 public class AcmIdentityException extends Exception
 {

@@ -4,18 +4,19 @@ import com.armedia.acm.plugins.stateofarkcaseplugin.service.AcmStateOfArkcaseSer
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletResponse;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 
 /**
@@ -35,20 +36,23 @@ public class AcmStateOfArkcaseAPIController
      *
      * @param date
      *            date in ISO-8601 format
-     * @param response
-     *            injected instance of httpServletResponse
      * @return generated file
      */
     @RequestMapping(value = "/generate", method = RequestMethod.GET)
-    public @ResponseBody Resource generateStateOfArkcase(@RequestParam(value = "date", required = false) LocalDate date,
-            HttpServletResponse response)
+    public ResponseEntity<InputStreamResource> generateStateOfArkcase(
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "date", required = false) LocalDate date)
+            throws FileNotFoundException
     {
-        log.debug("Generating state of arkcase report.");
+
         File file = acmStateOfArkcaseService.generateReportForDay(date != null ? date : LocalDate.now());
-        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
-        response.setHeader("Content-Length", String.valueOf(file.length()));
-        return new FileSystemResource(file);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+
+        log.debug("Generating state of arkcase report.");
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment;filename=" + file.getName())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM).contentLength(file.length())
+                .body(resource);
     }
 
     public void setAcmStateOfArkcaseService(AcmStateOfArkcaseService acmStateOfArkcaseService)

@@ -3,16 +3,16 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.2.7-SNAPSHOT</version>
+        <version>3.2.9-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-services</groupId>
-    <artifactId>acm-service-arkcase-identifier</artifactId>
+    <artifactId>acm-service-arkcase-identity</artifactId>
     <packaging>jar</packaging>
 
-    <name>ACM Service: Arkcase Identifier</name>
-    <description>Service for identifying Arkcase installation and node instance</description>
+    <name>ACM Service: Arkcase Identity</name>
+    <description>Service for providing unique identity for Arkcase installation and node instance</description>
 
     <dependencies>
         <!-- Spring-->
@@ -43,6 +43,11 @@
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-object-converter</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-state-of-arkcase</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

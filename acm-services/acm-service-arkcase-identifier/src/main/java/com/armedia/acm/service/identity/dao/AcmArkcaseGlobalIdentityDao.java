@@ -1,8 +1,6 @@
-package com.armedia.acm.service.identifier.dao;
+package com.armedia.acm.service.identity.dao;
 
-import com.armedia.acm.service.identifier.exceptions.AcmIdentityException;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.armedia.acm.service.identity.exceptions.AcmIdentityException;
 
 /**
  * Provides information of global identity. All instances of arkcase must share same identity.
@@ -14,6 +12,6 @@ public class AcmArkcaseGlobalIdentityDao implements AcmArkcaseIdentityDao
     {
         // TODO we currently don't have mechanism for centralized properties,
         // as soon as we create or use some server for containing all properties identity should be set there
-        throw new NotImplementedException();
+        throw new AcmIdentityException("Not implemented yet!");
     }
 }

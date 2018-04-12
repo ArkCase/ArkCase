@@ -1,4 +1,4 @@
-package com.armedia.acm.service.identifier.model;
+package com.armedia.acm.service.identity.model;
 
 import java.io.Serializable;
 
