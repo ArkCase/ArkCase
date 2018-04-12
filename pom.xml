@@ -501,10 +501,6 @@
             <id>mulesoft-master</id>
             <url>https://repository-master.mulesoft.org/nexus/content/groups/public/</url>
         </repository>
-        <repository>
-            <id>codehaus</id>
-            <url>http://repository.codehaus.org</url>
-        </repository>
 
         <!-- The Activiti repository -->
         <repository>
@@ -547,12 +543,6 @@
             <id>Camunda</id>
             <name>Camunda mule deps host</name>
             <url>https://app.camunda.com/nexus/content/repositories/public/</url>
-        </repository>
-
-        <repository>
-            <id>spring-extensions-milestone</id>
-            <name>Spring Extensions Milestone Repository</name>
-            <url>http://extensions.springframework.org/milestone</url>
         </repository>
 
         <repository>
@@ -852,12 +842,6 @@
                 <groupId>io.milton</groupId>
                 <artifactId>milton-server-ent</artifactId>
                 <version>${milton.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.mail</groupId>
-                        <artifactId>mail</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <!-- frevvo forms -->
@@ -1202,12 +1186,6 @@
                 <artifactId>activiti-engine</artifactId>
                 <version>${activiti.version}</version>
                 <scope>compile</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.mail</groupId>
-                        <artifactId>mail</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.activiti</groupId>
@@ -1594,12 +1572,6 @@
                 <artifactId>json-schema-validator</artifactId>
                 <version>${json-schema-validator.version}</version>
                 <scope>compile</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.mail</groupId>
-                        <artifactId>mailapi</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <!-- xml -->
