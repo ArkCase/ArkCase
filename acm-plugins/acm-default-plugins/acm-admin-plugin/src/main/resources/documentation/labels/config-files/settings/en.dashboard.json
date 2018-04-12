@@ -37,40 +37,6 @@
         }
     },
     "plugins": {
-        "weather": {
-            "title": {
-                "value": "Weather",
-                "defaultValue": "Weather",
-                "description": ""
-            },
-            "label": {
-                "description": {
-                    "value": "Display the current temperature of a city",
-                    "defaultValue": "Display the current temperature of a city",
-                    "description": ""
-                },
-                "location": {
-                    "value": "Location",
-                    "defaultValue": "Location",
-                    "description": ""
-                },
-                "enter-location": {
-                    "value": "Enter Location",
-                    "defaultValue": "Enter Location",
-                    "description": ""
-                },
-                "insert-location-in-configuration": {
-                    "value": "Please insert a location in the widget configuration",
-                    "defaultValue": "Please insert a location in the widget configuration",
-                    "description": ""
-                },
-                "current": {
-                    "value": "Current:",
-                    "defaultValue": "Current:",
-                    "description": ""
-                }
-            }
-        },
         "casessum": {
             "title": {
                 "value": "Cases by Status",

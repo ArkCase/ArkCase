@@ -154,22 +154,6 @@
                 "configDescription": "説明",
                 "configDescriptionPlaceholder": "ウィジェットの説明を入力"
             },
-            "weather": {
-                "description": "天気を表示する",
-                "label": {
-                    "current": "現在：",
-                    "enterLocation": "場所を入力",
-                    "description": "都市の現在の温度を表示する",
-                    "location": "場所",
-                    "insertLocationInConfiguration": "ウィジェット設定に場所を挿入してください",
-                    "zip": "郵便番号",
-                    "enterZip": "郵便番号を入力" 
-                },
-                "title": "天気",
-                "noDataMessage": "現在、天気情報はありません",
-                "configDescription": "説明",
-                "configDescriptionPlaceholder": "ウィジェットの説明を入力"
-            },
             "news": {
                 "description": "ニュースを表示する",
                 "label": {
@@ -369,9 +353,6 @@
     },
     "dashboard.comp.news": {
         "title": "ニュースウィジェット"
-    },
-    "dashboard.comp.weather": {
-        "title": "天気ウィジェット"
     },
     "dashboard.comp.myCases": {
         "title": "私のケースウィジェット"
