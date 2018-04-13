@@ -1,0 +1,7 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Feb 08 13:17:08 EST 2018
+forms-java-6.3.jar>=
+forms-java-6.3.pom>=
+forms-java-6.3-mailfix.jar>armedia-shared=
+forms-java-6.3.jar>armedia-shared=
+forms-java-6.3.pom>armedia-shared=
