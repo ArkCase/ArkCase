@@ -3,7 +3,7 @@
 angular.module('admin').controller(
         'Admin.GroupManagementController',
         [ '$scope', '$q', 'Admin.GroupManagementService', 'MessageService', 'UtilService', '$log', '$translate',
-                function($scope, $q, LdapGroupManagementService, MessageService, Util, $log, $translate) {
+                function($scope, $q, groupManagementService, MessageService, Util, $log, $translate) {
 
                     $scope.onObjSelect = onObjSelect;
                     $scope.onAuthRoleSelected = onAuthRoleSelected;
@@ -44,7 +44,7 @@ angular.module('admin').controller(
                         if (makePaginationRequest) {
                             var userRequestInfo = {};
                             userRequestInfo.start = Util.isEmpty(userNumber) ? 0 : $scope.userData.chooseObject.length;
-                            LdapGroupManagementService.getAdHocGroups(userRequestInfo).then(function(response) {
+                            groupManagementService.getAdHocGroups(userRequestInfo).then(function(response) {
                                 $scope.fillList($scope.userData.chooseObject, response.data.response.docs);
                                 if (_.isEmpty($scope.lastSelectedGroup)) {
                                     $scope.lastSelectedGroup = $scope.userData.chooseObject[0];
@@ -65,18 +65,22 @@ angular.module('admin').controller(
                         if (!_.isEmpty($scope.userData.chooseObject)) {
                             var data = {};
                             data.member = selectedObject;
+                            data.isAuthorized = false;
+                            var unAuthorizedGroupsForUser = groupManagementService.getAdhocGroupsForAdhocGroup(data);
+                            data.isAuthorized = true;
+                            var authorizedGroupsForUser = groupManagementService.getAdhocGroupsForAdhocGroup(data);
                             currentAuthGroups = [];
                             $scope.lastSelectedGroup = {};
                             $scope.lastSelectedGroup = selectedObject;
-                            LdapGroupManagementService.getAdhocGroupsForAdhocGroup(data).then(function(result) {
-                                _.forEach(JSON.parse(result.data.authorized).response.docs, function(group) {
+                            $q.all([ authorizedGroupsForUser, unAuthorizedGroupsForUser ]).then(function(result) {
+                                _.forEach(result[0].data.response.docs, function(group) {
                                     var authObject = {};
                                     authObject.key = group.name;
                                     authObject.name = group.name;
                                     $scope.userData.selectedAuthorized.push(authObject);
                                     currentAuthGroups.push(authObject.key);
                                 });
-                                _.forEach(JSON.parse(result.data.unauthorized).response.docs, function(group) {
+                                _.forEach(result[1].data.response.docs, function(group) {
                                     var authObject = {};
                                     authObject.key = group.name;
                                     authObject.name = group.name;
@@ -111,7 +115,7 @@ angular.module('admin').controller(
                                 groups : toBeAdded
                             };
 
-                            LdapGroupManagementService.addGroupSubGroups(data).then(function(data) {
+                            groupManagementService.addGroupSubGroups(data).then(function(data) {
                                 MessageService.succsessAction();
                             }, function() {
                                 //error adding group
@@ -129,7 +133,7 @@ angular.module('admin').controller(
                                 groups : toBeRemoved
                             };
 
-                            LdapGroupManagementService.deleteGroupSubGroups(data).then(function(data) {
+                            groupManagementService.deleteGroupSubGroups(data).then(function(data) {
                                 MessageService.succsessAction();
                             }, function() {
                                 //error adding group
@@ -151,11 +155,17 @@ angular.module('admin').controller(
                     }
 
                     function retrieveDataScroll(data, methodName, panelName) {
-                        LdapGroupManagementService[methodName](data).then(function(response) {
+                        groupManagementService[methodName](data).then(function(response) {
                             if (_.isArray(response.data)) {
                                 $scope.fillList($scope.userData[panelName], response.data);
                             } else {
                                 $scope.fillList($scope.userData[panelName], response.data.response.docs);
+                            }
+                            if (panelName === "selectedAuthorized") {
+                                currentAuthGroups = [];
+                                _.forEach($scope.userData[panelName], function(obj) {
+                                    currentAuthGroups.push(obj.key);
+                                });
                             }
                         }, function() {
                             $log.error('Error during calling the method ' + methodName);
@@ -183,7 +193,7 @@ angular.module('admin').controller(
                     }
 
                     function retrieveDataFilter(data, methodName, panelName) {
-                        LdapGroupManagementService[methodName](data).then(function(response) {
+                        groupManagementService[methodName](data).then(function(response) {
                             $scope.userData[panelName] = [];
                             if (_.isArray(response.data)) {
                                 $scope.fillList($scope.userData[panelName], response.data);

@@ -115,7 +115,7 @@ angular.module('admin').controller(
                     function authorizedScroll() {
                         var data = {};
                         data.role = $scope.lastSelectedRole;
-                        data.n = Util.isArrayEmpty($scope.rolesData.selectedAuthorized) ? 18 : $scope.rolesData.selectedAuthorized.length;
+                        data.n = Util.isArrayEmpty($scope.rolesData.selectedAuthorized) ? 50 : $scope.rolesData.selectedAuthorized.length;
                         data.start = $scope.rolesData.selectedAuthorized.length;
                         data.isAuthorized = true;
                         $scope.retrieveDataScroll(data, "getRolePrivilegesByName", "selectedAuthorized");
@@ -124,7 +124,7 @@ angular.module('admin').controller(
                     function unauthorizedScroll() {
                         var data = {};
                         data.role = $scope.lastSelectedRole;
-                        data.n = Util.isArrayEmpty($scope.rolesData.selectedNotAuthorized) ? 18
+                        data.n = Util.isArrayEmpty($scope.rolesData.selectedNotAuthorized) ? 50
                                 : $scope.rolesData.selectedNotAuthorized.length;
                         data.start = $scope.rolesData.selectedNotAuthorized.length;
                         data.isAuthorized = false;
@@ -132,7 +132,7 @@ angular.module('admin').controller(
                     }
 
                     //callback function when app role is selected
-                    function onObjSelect(selectedObject, authorized, notAuthorized) {
+                    function onObjSelect(selectedObject) {
                         $scope.rolesData.selectedAuthorized = [];
                         $scope.rolesData.selectedNotAuthorized = [];
                         if (!_.isEmpty($scope.rolesData.chooseObject)) {

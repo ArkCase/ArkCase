@@ -109,7 +109,7 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
             params : {
                 n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
-                authorized : true,
+                authorized : data.isAuthorized,
                 groupType : (data.member.type ? data.member.type : "")
             }
         });

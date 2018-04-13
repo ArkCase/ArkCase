@@ -143,7 +143,7 @@ angular.module('admin').controller('Admin.ReportsConfigController',
             }
 
             //callback function when report is selected
-            $scope.onObjSelect = function(selectedObject, authorized, notAuthorized) {
+            $scope.onObjSelect = function(selectedObject) {
                 $scope.reportsData.selectedAuthorized = [];
                 $scope.reportsData.selectedNotAuthorized = [];
 

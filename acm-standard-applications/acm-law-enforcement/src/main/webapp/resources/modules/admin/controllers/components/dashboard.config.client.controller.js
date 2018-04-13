@@ -91,7 +91,7 @@ angular.module('admin')
                                         initWidgetsData.selectedAuthorized, "name");
                             }
 
-                            $scope.onObjSelect = function(selectedObject, authorized, notAuthorized) {
+                            $scope.onObjSelect = function(selectedObject) {
                                 $scope.lastSelectedRole = [];
                                 $scope.lastSelectedRole = selectedObject;
 
