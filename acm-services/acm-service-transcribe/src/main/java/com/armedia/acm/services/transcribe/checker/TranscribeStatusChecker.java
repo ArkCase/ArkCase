@@ -28,12 +28,13 @@ public class TranscribeStatusChecker implements JavaDelegate
     {
         LOG.debug("Check the status");
 
-        getAuditPropertyEntityAdapter().setUserId("TRANSCRIBE_SERVICE");
+        getAuditPropertyEntityAdapter().setUserId(TranscribeConstants.TRANSCRIBE_SYSTEM_USER);
 
         List<Long> ids = (List<Long>) delegateExecution.getVariable(TranscribeBusinessProcessVariableKey.IDS.toString());
         String action = TranscribeActionType.PROCESSING.toString();
+        String previousAction = (String) delegateExecution.getVariable(TranscribeBusinessProcessVariableKey.ACTION.toString());
 
-        if (ids != null && ids.size() > 0)
+        if (ids != null && ids.size() > 0 && action.equalsIgnoreCase(previousAction))
         {
             // Because all IDs are follow the same business process (Transcribe objects for these IDS have the same information, just different ids),
             // we need just to take one of them (if there are many), check if we need to proceed, and proceed if yes.
@@ -67,7 +68,7 @@ public class TranscribeStatusChecker implements JavaDelegate
                                     }
                                     catch (GetTranscribeException | SaveTranscribeException e)
                                     {
-                                        LOG.warn("Changing status for Transcribe with ID=[{}] in bulk operation failed. REASON=[{}]", id, e.getMessage());
+                                        LOG.warn("Taking items for Transcribe with ID=[{}] failed. REASON=[{}]", id, e.getMessage());
                                     }
                                 });
                                 break;
@@ -82,7 +83,7 @@ public class TranscribeStatusChecker implements JavaDelegate
                 }
             } catch (GetTranscribeException | GetConfigurationException e)
             {
-                LOG.warn("Could not check if Transcribe should be processed. REASON=[{}]", e.getMessage());
+                LOG.warn("Could not check if Transcribe should be completed. REASON=[{}]", e.getMessage());
             }
 
             delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(), action);
