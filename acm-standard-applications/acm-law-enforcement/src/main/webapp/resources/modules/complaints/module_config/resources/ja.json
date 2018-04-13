@@ -289,7 +289,7 @@
         "searchGroupHeader": "検索グループ"
     },
     "complaints.comp.approvalRouting": {
-        "title": "将来の承認者",
+        "title": "承認者",
         "addNewTooltip": "新しい承認者を追加",
         "noBuckslipMessage": "データなし",
         "button": {

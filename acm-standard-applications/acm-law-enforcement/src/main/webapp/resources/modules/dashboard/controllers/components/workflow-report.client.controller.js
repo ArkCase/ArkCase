@@ -2,15 +2,21 @@
 
 angular.module('dashboard.workflow-report').controller(
         'Dashboard.WorkflowReportController',
-        [ '$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state', 'UtilService',
-                'Util.DateService', 'params',
-                function($scope, $translate, Authentication, DashboardService, ObjectService, $state, Util, UtilDateService, params) {
+        [
+                '$scope',
+                '$translate',
+                '$state',
+                'Authentication',
+                'Dashboard.DashboardService',
+                'ObjectService',
+                'ConfigService',
+                'UtilService',
+                'Util.DateService',
+                'params',
+                function($scope, $translate, $state, Authentication, DashboardService, ObjectService, ConfigService, Util, UtilDateService,
+                        params) {
 
                     var vm = this;
-
-                    $scope.$on('component-config', applyConfig);
-                    $scope.$emit('req-component-config', 'workflowReport');
-
                     vm.config = null;
 
                     if (!Util.isEmpty(params.description)) {
@@ -18,6 +24,16 @@ angular.module('dashboard.workflow-report').controller(
                     } else {
                         $scope.$parent.model.description = "";
                     }
+
+                    ConfigService.getComponentConfig("dashboard", "workflowReport").then(function(config) {
+                        vm.config = config;
+                        vm.gridOptions.columnDefs = config.columnDefs;
+                        vm.gridOptions.enableFiltering = config.enableFiltering;
+                        vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
+                        vm.gridOptions.paginationPageSize = config.paginationPageSize;
+                        paginationOptions.pageSize = config.paginationPageSize;
+                        getPage();
+                    });
 
                     var paginationOptions = {
                         pageNumber : 1,
@@ -55,18 +71,6 @@ angular.module('dashboard.workflow-report').controller(
                             });
                         }
                     };
-
-                    function applyConfig(e, componentId, config) {
-                        if (componentId == 'workflowReport') {
-                            vm.config = config;
-                            vm.gridOptions.columnDefs = config.columnDefs;
-                            vm.gridOptions.enableFiltering = config.enableFiltering;
-                            vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
-                            vm.gridOptions.paginationPageSize = config.paginationPageSize;
-                            paginationOptions.pageSize = config.paginationPageSize;
-                            getPage();
-                        }
-                    }
 
                     function getPage() {
                         DashboardService.queryWorkflowReport({
