@@ -180,9 +180,11 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "選択する",
         "not_authorized": "許可されていません",
+        "not_member": "ja_Not Member",
         "tooltip.move_right": "右に動く",
         "tooltip.move_left": "左に移動",
-        "authorized": "認可された"
+        "authorized": "認可された",
+        "member": "ja_Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "エラー、2文字必要."
