@@ -76,21 +76,21 @@ angular.module('admin').controller(
                     });
 
                     //callback function when app role is selected
-                    function onObjSelect(selectedObject, authorized, notAuthorized) {
-                        $scope.rolesData.selectedNotAuthorized = [];
-                        $scope.rolesData.selectedAuthorized = [];
+                    function onObjSelect(selectedObject) {
                         if (!_.isEmpty($scope.rolesData.chooseObject)) {
-                            var data = {};
-                            data.roleName = selectedObject;
-                            data.isAuthorized = true;
                             $scope.lastSelectedRole = [];
                             $scope.lastSelectedRole = selectedObject;
+                            var data = {};
+                            data.roleName = selectedObject;
 
+                            data.isAuthorized = true;
                             var authorizedGroupsForRole = functionalAccessControlService.getGroupsForRole(data);
                             data.isAuthorized = false;
                             var unAuthorizedGroupsForRole = functionalAccessControlService.getGroupsForRole(data);
 
                             $q.all([ authorizedGroupsForRole, unAuthorizedGroupsForRole ]).then(function(result) {
+                                $scope.rolesData.selectedNotAuthorized = [];
+                                $scope.rolesData.selectedAuthorized = [];
                                 //set authorized groups
                                 angular.forEach(result[0].data, function(element) {
                                     //we need to create wrapper, since appRolesUserGroups doesn't have name which directive expect to have
@@ -143,8 +143,6 @@ angular.module('admin').controller(
                     function authorizedScroll() {
                         var data = {};
                         data.roleName = $scope.lastSelectedRole;
-                        data.n = Util.isArrayEmpty($scope.rolesData.selectedAuthorized) ? 18
-                                : $scope.rolesData.selectedAuthorized.length * 2;
                         data.start = $scope.rolesData.selectedAuthorized.length;
                         data.isAuthorized = true;
                         $scope.retrieveDataScroll(data, "getGroupsForRole", "selectedAuthorized");
@@ -153,8 +151,6 @@ angular.module('admin').controller(
                     function unauthorizedScroll() {
                         var data = {};
                         data.roleName = $scope.lastSelectedRole;
-                        data.n = Util.isArrayEmpty($scope.rolesData.selectedNotAuthorized) ? 18
-                                : $scope.rolesData.selectedNotAuthorized.length * 2;
                         data.start = $scope.rolesData.selectedNotAuthorized.length;
                         data.isAuthorized = false;
                         $scope.retrieveDataScroll(data, "getGroupsForRole", "selectedNotAuthorized");
