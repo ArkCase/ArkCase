@@ -289,7 +289,7 @@
         "searchGroupHeader": "搜索组"
     },
     "complaints.comp.approvalRouting": {
-        "title": "未来审批",
+        "title": "审批",
         "addNewTooltip": "添加新审批",
         "noBuckslipMessage": "没有数据",
         "button": {

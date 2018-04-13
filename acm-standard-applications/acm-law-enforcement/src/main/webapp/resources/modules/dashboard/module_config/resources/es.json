@@ -154,22 +154,6 @@
                 "configDescription": "Descripción",
                 "configDescriptionPlaceholder": "Ingrese la descripción del widget"
             },
-            "weather": {
-                "description": "Muestra el tiempo",
-                "label": {
-                    "current": "Actual:",
-                    "enterLocation": "Introducir ubicación",
-                    "description": "Mostrar la temperatura actual de una ciudad",
-                    "location": "Ubicación",
-                    "insertLocationInConfiguration": "Por favor, inserte una ubicación en la configuración del widget",
-                    "zip": "es_Zip Code",
-                    "enterZip": "es_Enter Zip Code"
-                },
-                "title": "Tiempo",
-                "noDataMessage": "Actualmente no hay información del tiempo",
-                "configDescription": "Descripción",
-                "configDescriptionPlaceholder": "Ingrese la descripción del widget"
-            },
             "news": {
                 "description": "Muestra noticias",
                 "label": {
@@ -369,9 +353,6 @@
     },
     "dashboard.comp.news": {
         "title": "Widget de noticias"
-    },
-    "dashboard.comp.weather": {
-        "title": "Widget de tiempo"
     },
     "dashboard.comp.myCases": {
         "title": "Mi widget de casos"

@@ -344,25 +344,6 @@ angular
 
                                 /**
                                  * @ngdoc method
-                                 * @name setUserNameFilter
-                                 * @methodOf services:Helper.UiGridService
-                                 *
-                                 * @param {Object} promiseUsers Promise of acquiring list of user full names
-                                 *
-                                 * @description
-                                 * Set 'mapKeyValue' filter of user full name column when user full names are ready for current grid configuration
-                                 */
-                                ,
-                                setUserNameFilter : function(promiseUsers) {
-
-                                    var that = this;
-
-                                    this.setUserNameFilterToConfig(promiseUsers, that.scope.config);
-
-                                }
-
-                                /**
-                                 * @ngdoc method
                                  * @name setUserNameFilterToConfig
                                  * @methodOf services:Helper.UiGridService
                                  *
@@ -374,6 +355,11 @@ angular
                                  */
                                 ,
                                 setUserNameFilterToConfig : function(promiseUsers, config) {
+                                    var that = this;
+                                    var config = (config === undefined) ? that.scope.config : config;
+
+                                    var deferred = $q.defer();
+
                                     $q.all(
                                             [ ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME),
                                                     promiseUsers ]).then(
@@ -390,7 +376,10 @@ angular
                                                         }
                                                     }
                                                 }
+
+                                                deferred.resolve(config);
                                             });
+                                    return deferred.promise;
                                 }
 
                                 /**

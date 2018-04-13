@@ -103,17 +103,6 @@ public class DashboardPage extends ArkCaseTestBase
     WebElement feedUrlInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[3]/button[2]")
     WebElement newsApply;
-    // weather
-    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/div/dl/dt[7]/a")
-    WebElement weather;
-    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[1]/h4")
-    WebElement weatherTitle;
-    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div/input")
-    WebElement weatherTitleInput;
-    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/div/adf-widget-content/form/div/input")
-    WebElement weatherLocationInput;
-    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[3]/button[2]")
-    WebElement weatherApply;
     // Team Workload
     @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/div/dl/dt[6]/a")
     WebElement teamWorkload;
@@ -491,46 +480,6 @@ public class DashboardPage extends ArkCaseTestBase
     {
 
         newsApply.click();
-
-    }
-
-    public void weatherClick()
-    {
-
-        weather.click();
-
-    }
-
-    public void verifyWeatherTitle()
-    {
-
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(weatherTitle.getText(), "Weather", "Weather title name is wrong");
-        softAssert.assertAll();
-
-    }
-
-    public void weatherTitleInput(String title)
-    {
-
-        weatherTitleInput.click();
-        weatherTitleInput.clear();
-        weatherTitleInput.sendKeys(title);
-
-    }
-
-    public void weatherLocationInput(String title)
-    {
-
-        weatherLocationInput.click();
-        weatherLocationInput.clear();
-        weatherLocationInput.sendKeys(title);
-    }
-
-    public void weatherApplyButtonClick()
-    {
-
-        weatherApply.click();
 
     }
 

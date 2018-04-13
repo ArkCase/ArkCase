@@ -289,7 +289,7 @@
         "searchGroupHeader": "搜索組"
     },
     "complaints.comp.approvalRouting": {
-        "title": "未來審批",
+        "title": "審批",
         "addNewTooltip": "添加新審批",
         "noBuckslipMessage": "沒有數據",
         "button": {
