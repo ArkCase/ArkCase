@@ -7,11 +7,18 @@ angular.module('common').controller(
                 function($scope, $stateParams, $q, Util, ConfigService, ObjectService, ObjectAuditService, HelperUiGridService, $modal) {
 
                     var onConfigRetrieved = function(config) {
-                        gridHelper.setColumnDefs(config);
-                        gridHelper.setBasicOptions(config);
-                        gridHelper.disableGridScrolling(config);
-                        gridHelper.setExternalPaging(config, retrieveGridData);
-                        gridHelper.setUserNameFilter(promiseUsers);
+                        $scope.config = config;
+                        //first the filter is set, and after that everything else,
+                        //so that the data loads with the new filter applied
+                        gridHelper.setUserNameFilterToConfig(promiseUsers).then(function(updatedConfig) {
+                            $scope.config = updatedConfig;
+                            if ($scope.gridApi != undefined)
+                                $scope.gridApi.core.refresh();
+                            gridHelper.setColumnDefs(updatedConfig);
+                            gridHelper.setBasicOptions(updatedConfig);
+                            gridHelper.disableGridScrolling(updatedConfig);
+                            gridHelper.setExternalPaging(updatedConfig, retrieveGridData);
+                        });
                         retrieveGridData();
                     };
 

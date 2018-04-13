@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.2.8-SNAPSHOT</version>
+    <version>3.2.9-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -501,10 +501,6 @@
             <id>mulesoft-master</id>
             <url>https://repository-master.mulesoft.org/nexus/content/groups/public/</url>
         </repository>
-        <repository>
-            <id>codehaus</id>
-            <url>http://repository.codehaus.org</url>
-        </repository>
 
         <!-- The Activiti repository -->
         <repository>
@@ -547,12 +543,6 @@
             <id>Camunda</id>
             <name>Camunda mule deps host</name>
             <url>https://app.camunda.com/nexus/content/repositories/public/</url>
-        </repository>
-
-        <repository>
-            <id>spring-extensions-milestone</id>
-            <name>Spring Extensions Milestone Repository</name>
-            <url>http://extensions.springframework.org/milestone</url>
         </repository>
 
         <repository>

@@ -36,16 +36,12 @@ angular
                         'ObjectService',
                         'Object.LookupService',
                         function(Util, ObjectService, ObjectLookupService) {
-                            var defaults = {
-                                isParent : false,
-                                isViewerLink : false
-                            };
                             return {
                                 restrict : 'A',
                                 scope : {
                                     objectData : '=',
                                     isParent : '=',
-                                    isViewerLink : '=',
+                                    isViewerLink : '=?',
                                     url : '='
                                 },
                                 link : function(scope, element, attrs) {
@@ -60,6 +56,10 @@ angular
                                                     : Util.goodMapValue(objectData, "object_type_s");
                                             var objectId = scope.isParent ? parentReference.substring(0, parentReference.indexOf('-'))
                                                     : Util.goodMapValue(objectData, "object_id_s");
+                                            if (objectData.object_type_s == ObjectService.ObjectTypes.TRANSCRIBE || objectData.object_type_s == ObjectService.ObjectTypes.TRANSCRIBE_ITEM) {
+                                                objectId = Util.goodMapValue(objectData, "parent_file_id_s");
+                                                objectType = objectData.object_type_s;
+                                            }
                                             var objectUrlKey = 'url';
                                             var pathVariables = {
                                                 ":id" : objectId
@@ -81,6 +81,23 @@ angular
                                                     pathVariables[":selectedIds"] = objectId;
                                                 }
                                             }
+
+                                            if (objectData.object_type_s == ObjectService.ObjectTypes.TRANSCRIBE || objectData.object_type_s == ObjectService.ObjectTypes.TRANSCRIBE_ITEM) {
+                                                var containerType = Util.goodMapValue(objectData, "parent_root_type_s");
+                                                var containerId = Util.goodMapValue(objectData, "parent_root_id_s");
+                                                var name = Util.goodMapValue(objectData, "title_parseable");
+                                                if (objectType == ObjectService.ObjectTypes.TRANSCRIBE_ITEM) {
+                                                    name = Util.goodMapValue(objectData, "parent_name_t");
+                                                    pathVariables[":seconds"] = Util.goodMapValue(objectData, "start_time_s");
+                                                }
+                                                objectUrlKey = "viewerUrl";
+                                                pathVariables[":containerId"] = containerId;
+                                                pathVariables[":containerType"] = containerType;
+                                                pathVariables[":name"] = encodeURIComponent(name);
+                                                pathVariables[":selectedIds"] = objectId;
+
+                                            }
+
                                             ObjectLookupService.getObjectTypes().then(function(objectTypes) {
                                                 var objectUrl = '';
                                                 var foundObjectType = _.find(objectTypes, {
@@ -89,6 +106,9 @@ angular
                                                 if (Util.goodMapValue(foundObjectType, objectUrlKey, false)) {
                                                     objectUrl = foundObjectType[objectUrlKey];
                                                     objectUrl = replacePathVariables(pathVariables, objectUrl);
+                                                }
+                                                if(!Util.isEmpty(foundObjectType.target)){
+                                                    element.attr('target', foundObjectType.target);
                                                 }
                                                 element.attr('href', objectUrl);
                                             });

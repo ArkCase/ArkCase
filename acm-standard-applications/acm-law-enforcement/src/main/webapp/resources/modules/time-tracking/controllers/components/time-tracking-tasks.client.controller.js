@@ -42,12 +42,18 @@ angular.module('time-tracking').controller(
 
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
-                        gridHelper.setColumnDefs(config);
-                        gridHelper.setBasicOptions(config);
-                        gridHelper.disableGridScrolling(config);
-                        gridHelper.setExternalPaging(config, retrieveGridData);
-                        gridHelper.setUserNameFilter(promiseUsers);
-                        gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
+                        //first the filter is set, and after that everything else,
+                        //so that the data loads with the new filter applied
+                        gridHelper.setUserNameFilterToConfig(promiseUsers).then(function(updatedConfig) {
+                            $scope.config = updatedConfig;
+                            if ($scope.gridApi != undefined)
+                                $scope.gridApi.core.refresh();
+                            gridHelper.setColumnDefs(updatedConfig);
+                            gridHelper.setBasicOptions(updatedConfig);
+                            gridHelper.disableGridScrolling(updatedConfig);
+                            gridHelper.setExternalPaging(updatedConfig, retrieveGridData);
+                            gridHelper.addButton(updatedConfig, "delete", null, null, "isDeleteDisabled");
+                        });
 
                         componentHelper.doneConfig(config);
                     };

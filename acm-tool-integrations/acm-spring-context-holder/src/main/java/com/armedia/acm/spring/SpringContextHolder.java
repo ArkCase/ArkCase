@@ -151,7 +151,10 @@ public class SpringContextHolder
 
         AbstractApplicationContext oldContext = childContextMap.get(contextName);
         childContextMap.put(contextName, context);
-        oldContext.close();
+        if (oldContext != null)
+        {
+            oldContext.close();
+        }
         applicationEventPublisher.publishEvent(new ContextReplacedEvent(this, contextName));
     }
 

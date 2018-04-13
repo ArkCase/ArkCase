@@ -154,22 +154,6 @@
                 "configDescription": "Description",
                 "configDescriptionPlaceholder": "Enter widget description"
             },
-            "weather": {
-                "description": "Displays weather",
-                "label": {
-                    "current": "Current:",
-                    "enterLocation": "Enter Location",
-                    "description": "Display the current temperature of a city",
-                    "location": "Location",
-                    "insertLocationInConfiguration": "Please insert a location in the widget configuration",
-                    "zip": "Zip Code",
-                    "enterZip": "Enter Zip Code"
-                },
-                "title": "Weather",
-                "noDataMessage": "Currently there are no weather info",
-                "configDescription": "Description",
-                "configDescriptionPlaceholder": "Enter widget description"
-            },
             "news": {
                 "description": "Displays news",
                 "label": {
@@ -369,9 +353,6 @@
     },
     "dashboard.comp.news": {
         "title": "News Widget"
-    },
-    "dashboard.comp.weather": {
-        "title": "Weather Widget"
     },
     "dashboard.comp.myCases": {
         "title": "My Cases Widget"

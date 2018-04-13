@@ -66,6 +66,9 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
     @Mock
     private ProcessInstanceQuery processInstanceQuery;
 
+    @Mock
+    private TranscribeEventPublisher transcribeEventPublisher;
+
     @Before
     public void setUp()
     {
@@ -79,6 +82,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         arkCaseTranscribeService.setEcmFileVersionDao(ecmFileVersionDao);
         arkCaseTranscribeService.setTranscribeBusinessProcessRulesExecutor(transcribeBusinessProcessRulesExecutor);
         arkCaseTranscribeService.setActivitiRuntimeService(activitiRuntimeService);
+        arkCaseTranscribeService.setTranscribeEventPublisher(transcribeEventPublisher);
     }
 
     @Test

@@ -22,14 +22,6 @@
             "format": "json"
         },
         {
-            "id": "weather",
-            "title": "dashboard.comp.weather.title",
-            "configurable": true,
-            "APPID": "672e193bbf022bdc749986f7be4c0364",
-            "units": "imperial",
-            "type": "like"
-        },
-        {
             "id": "myCases",
             "title": "dashboard.comp.myCases.title",
             "configurable": true,

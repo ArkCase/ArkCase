@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.UploadImageRequest;
 import com.armedia.acm.plugins.person.service.PersonService;
@@ -22,7 +23,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
@@ -148,8 +155,9 @@ public class PeopleAPIController
         {
             log.debug("Insert Image for a Person: [{}];", personId);
 
-            personService.insertImageForPerson(person, image, data.isDefault(), data.getDescription(), auth);
-            return new ResponseEntity<>(HttpStatus.OK);
+            EcmFile uploadedFile = personService.insertImageForPerson(person, image, data.isDefault(), data.getDescription(), auth);
+
+            return new ResponseEntity<>(uploadedFile, HttpStatus.OK);
         }
         catch (PipelineProcessException | PersistenceException e)
         {

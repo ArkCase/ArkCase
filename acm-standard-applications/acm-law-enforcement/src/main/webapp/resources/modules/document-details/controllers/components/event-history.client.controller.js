@@ -19,11 +19,18 @@ angular.module('document-details').controller(
                     var promiseUsers = gridHelper.getUsers();
 
                     var promiseConfig = ConfigService.getComponentConfig("document-details", "eventHistory").then(function(config) {
-                        gridHelper.setColumnDefs(config);
-                        gridHelper.setBasicOptions(config);
-                        gridHelper.disableGridScrolling(config);
-                        gridHelper.setExternalPaging(config, $scope.retrieveGridData);
-                        gridHelper.setUserNameFilter(promiseUsers);
+                        $scope.config = config;
+                        //first the filter is set, and after that everything else,
+                        //so that the data loads with the new filter applied
+                        gridHelper.setUserNameFilterToConfig(promiseUsers).then(function(updatedConfig) {
+                            $scope.config = updatedConfig;
+                            if ($scope.gridApi != undefined)
+                                $scope.gridApi.core.refresh();
+                            gridHelper.setColumnDefs(config);
+                            gridHelper.setBasicOptions(config);
+                            gridHelper.disableGridScrolling(config);
+                            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+                        });
 
                         $scope.retrieveGridData();
                         return config;
