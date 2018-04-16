@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
+import com.armedia.acm.objectdiff.model.AcmDiff;
+import com.armedia.acm.objectdiff.service.AcmDiffService;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintApprovalWorkflowRequestedEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
@@ -14,6 +16,7 @@ import com.armedia.acm.plugins.complaint.model.ComplaintSearchResultEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
 import com.armedia.acm.plugins.complaint.model.FindComplaintByIdEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
     private ApplicationEventPublisher eventPublisher;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private AcmDiffService acmDiffService;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -38,18 +42,32 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         eventPublisher = applicationEventPublisher;
     }
 
-    public void publishComplaintEvent(Complaint source, Authentication authentication, boolean newComplaint, boolean succeeded)
+    public void publishComplaintEvent(Complaint updatedComplaint, Complaint oldComplaint, Authentication authentication,
+            boolean isNewComplaint,
+            boolean succeeded)
     {
         log.debug("Publishing a complaint event.");
 
-        ComplaintPersistenceEvent complaintPersistenceEvent = newComplaint ? new ComplaintCreatedEvent(source)
-                : new ComplaintUpdatedEvent(source);
+        ComplaintPersistenceEvent complaintPersistenceEvent = isNewComplaint ? new ComplaintCreatedEvent(updatedComplaint)
+                : new ComplaintUpdatedEvent(updatedComplaint);
         complaintPersistenceEvent.setSucceeded(succeeded);
         if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {
             complaintPersistenceEvent.setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
         }
 
+        AcmDiff acmDiff = acmDiffService.compareObjects(oldComplaint, updatedComplaint);
+        if (acmDiff != null)
+        {
+            try
+            {
+                complaintPersistenceEvent.setDiffDetailsAsJson(acmDiff.getChangesAsListJson());
+            }
+            catch (JsonProcessingException e)
+            {
+                log.warn("can't process diff details for [{}].", complaintPersistenceEvent, e);
+            }
+        }
         eventPublisher.publishEvent(complaintPersistenceEvent);
     }
 
@@ -126,5 +144,10 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         ComplaintUpdatedEvent event = new ComplaintUpdatedEvent(in);
         event.setUserId(userId);
         eventPublisher.publishEvent(event);
+    }
+
+    public void setAcmDiffService(AcmDiffService acmDiffService)
+    {
+        this.acmDiffService = acmDiffService;
     }
 }

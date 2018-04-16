@@ -368,5 +368,63 @@
             "nameAsc": "सॉर्ट इन एएनएससी एसी",
             "noSort": "(कोई सॉर्ट नहीं)"
         }
+    },
+    "changes": {
+        "object_replaced": {
+            "complaint": {
+                "defaultAddress": "hi_Default Address Changed"
+            }
+        },
+        "value_changed": {
+            "complaint": {
+                "details": "hi_Complaint - Details Changed",
+                "complaintTitle": "hi_Complaint - Title Changed",
+                "complaintType": "hi_Complaint - Type Changed",
+                "priority": "hi_Complaint - Priority Changed",
+                "status": "hi_Complaint - Status Changed",
+                "complaintNumber": "hi_Complaint - Number Changed",
+                "dueDate": "hi_Complaint - Due Date Changed",
+                "tag": "hi_Complaint - Tag Changed",
+                "modifier": "hi_Complaint - Modifier Changed",
+                "addresses.address": {
+                    "city": "पता - शहर बदल गया",
+                    "zip": "पता - ज़िप कोड परिवर्तित",
+                    "streetAddress": "पता - सड़क बदल गई",
+                    "streetAddress2": "पता - सड़क 2 बदल गया",
+                    "type": "पता - प्रकार परिवर्तित",
+                    "country": "पता - देश परिवर्तित",
+                    "state": "पता - राज्य बदल गया"
+                },
+                "defaultAddress": {
+                    "city": "पता - शहर बदल गया",
+                    "zip": "पता - ज़िप कोड परिवर्तित",
+                    "streetAddress": "पता - सड़क बदल गई",
+                    "streetAddress2": "पता - सड़क 2 बदल गया",
+                    "type": "पता - प्रकार परिवर्तित",
+                    "country": "पता - देश परिवर्तित",
+                    "state": "पता - राज्य बदल गया"
+                }
+            }
+        },
+        "collection_element_added": {
+            "complaint": {
+                "addresses.address": "hi_Address Added",
+                "personAssociations.personAssociation": "hi_Person Added",
+                "organizationAssociations.organizationAssociation": "hi_Organization Added",
+                "childObjects": "hi_Association Added",
+                "associationsToObjects": "hi_Association Added",
+                "associationsFromObjects": "hi_Association Added"
+            }
+        },
+        "collection_element_removed": {
+            "complaint": {
+                "addresses.address": "hi_Address Removed",
+                "personAssociations.personAssociation": "hi_Person Removed",
+                "organizationAssociations.organizationAssociation": "hi_Organization Removed",
+                "childObjects": "hi_Association Removed",
+                "associationsToObjects": "hi_Association Removed",
+                "associationsFromObjects": "hi_Association Removed"
+            }
+        }
     }
 }

@@ -146,9 +146,17 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         boolean isNew = acmComplaint.getComplaintId() == null;
 
+        Complaint oldComplaint = null;
+        if (!isNew)
+        {
+            String old = getObjectConverter().getJsonMarshaller()
+                    .marshal(saveComplaintTransaction.getComplaint(complaint.getComplaintId()));
+            oldComplaint = getObjectConverter().getJsonUnmarshaller().unmarshall(old, Complaint.class);
+        }
+
         acmComplaint = getSaveComplaintTransaction().saveComplaint(acmComplaint, getAuthentication());
 
-        getComplaintEventPublisher().publishComplaintEvent(acmComplaint, getAuthentication(), isNew, true);
+        getComplaintEventPublisher().publishComplaintEvent(acmComplaint, oldComplaint, getAuthentication(), isNew, true);
 
         complaint = getComplaintFactory().asFrevvoComplaint(acmComplaint, complaint);
 
@@ -163,6 +171,14 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         boolean isNew = acmComplaint.getComplaintId() == null;
 
+        Complaint oldComplaint = null;
+        if (!isNew)
+        {
+            String old = getObjectConverter().getJsonMarshaller()
+                    .marshal(saveComplaintTransaction.getComplaint(complaint.getComplaintId()));
+            oldComplaint = getObjectConverter().getJsonUnmarshaller().unmarshall(old, Complaint.class);
+        }
+
         acmComplaint = getSaveComplaintTransaction().saveComplaint(acmComplaint, getAuthentication());
 
         if (acmComplaint.getTag() != null)
@@ -174,7 +190,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
                     complaintTag);
         }
 
-        getComplaintEventPublisher().publishComplaintEvent(acmComplaint, getAuthentication(), isNew, true);
+        getComplaintEventPublisher().publishComplaintEvent(acmComplaint, oldComplaint, getAuthentication(), isNew, true);
 
         return acmComplaint;
     }

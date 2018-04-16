@@ -124,7 +124,6 @@
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-object-diff</artifactId>
             <version>${acm.version}</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
