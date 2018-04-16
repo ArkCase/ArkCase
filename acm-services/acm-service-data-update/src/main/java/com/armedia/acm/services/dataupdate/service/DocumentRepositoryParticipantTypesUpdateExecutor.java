@@ -10,14 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TriggerDocumentRepositoryParticipantsExecutor implements AcmDataUpdateExecutor
+public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmDataUpdateExecutor
 {
     private DocumentRepositoryDao documentDao;
 
     @Override
     public String getUpdateId()
     {
-        return "document-repository-change-participant-update";
+        return "document-repository-participant-types-update";
     }
 
     @Override
