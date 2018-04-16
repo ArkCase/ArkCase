@@ -65,4 +65,9 @@ public class SaveComplaintTransaction
     {
         this.pipelineManager = pipelineManager;
     }
+
+    public Complaint getComplaint(Long complaintId)
+    {
+        return complaintDao.find(complaintId);
+    }
 }
