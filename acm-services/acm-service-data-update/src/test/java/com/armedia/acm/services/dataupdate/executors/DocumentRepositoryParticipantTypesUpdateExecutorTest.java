@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.plugins.documentrepository.dao.DocumentRepositoryDao;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
-import com.armedia.acm.services.dataupdate.service.TriggerDocumentRepositoryParticipantsExecutor;
+import com.armedia.acm.services.dataupdate.service.DocumentRepositoryParticipantTypesUpdateExecutor;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.easymock.EasyMockSupport;
@@ -16,16 +16,16 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DocumentRepositoryParticipantsExecutorTest extends EasyMockSupport
+public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMockSupport
 {
 
     DocumentRepositoryDao documentDao;
-    TriggerDocumentRepositoryParticipantsExecutor executor;
+    DocumentRepositoryParticipantTypesUpdateExecutor executor;
 
     @Before
     public void setUp() throws Exception
     {
-        executor = new TriggerDocumentRepositoryParticipantsExecutor();
+        executor = new DocumentRepositoryParticipantTypesUpdateExecutor();
         documentDao = createMock(DocumentRepositoryDao.class);
         executor.setDocumentDao(documentDao);
 
