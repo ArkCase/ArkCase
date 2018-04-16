@@ -649,7 +649,8 @@
         "PARTICIPANT": "प्रतिभागी",
         "NOTE": "ध्यान दें",
         "PARTICIPANT-ASSOCIATION": "प्रतिभागी-एसोसिएशन",
-        "ASSIGNMENT": "असाइनमेंट"
+        "ASSIGNMENT": "असाइनमेंट",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "उपयोगकर्ता चुनें",

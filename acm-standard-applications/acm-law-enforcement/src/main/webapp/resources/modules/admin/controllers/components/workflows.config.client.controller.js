@@ -26,10 +26,18 @@ angular
                             var promiseUsers = gridHelper.getUsers();
 
                             var onConfigRetrieved = function(config) {
-                                gridHelper.setColumnDefs(config);
-                                gridHelper.setBasicOptions(config);
-                                gridHelper.disableGridScrolling(config);
-                                gridHelper.setUserNameFilter(promiseUsers);
+                                $scope.config = config;
+                                //first the filter is set, and after that everything else,
+                                //so that the data loads with the new filter applied
+                                gridHelper.setUserNameFilterToConfig(promiseUsers).then(function(updatedConfig) {
+                                    $scope.config = updatedConfig;
+                                    if ($scope.gridApi != undefined)
+                                        $scope.gridApi.core.refresh();
+
+                                    gridHelper.setColumnDefs(updatedConfig);
+                                    gridHelper.setBasicOptions(updatedConfig);
+                                    gridHelper.disableGridScrolling(updatedConfig);
+                                });
                             };
 
                             ConfigService.getComponentConfig("admin", "workflowsHistoryDialogConfig").then(function(componentConfig) {
@@ -209,10 +217,17 @@ angular
                                                     var promiseUsers = gridHelper.getUsers();
 
                                                     var onConfigRetrieved = function(config) {
-                                                        gridHelper.setColumnDefs(config);
-                                                        gridHelper.setBasicOptions(config);
-                                                        gridHelper.disableGridScrolling(config);
-                                                        gridHelper.setUserNameFilter(promiseUsers);
+                                                        $scope.config = config;
+                                                        //first the filter is set, and after that everything else,
+                                                        //so that the data loads with the new filter applied
+                                                        gridHelper.setUserNameFilterToConfig(promiseUsers).then(function(updatedConfig) {
+                                                            $scope.config = updatedConfig;
+                                                            if ($scope.gridApi != undefined)
+                                                                $scope.gridApi.core.refresh();
+                                                            gridHelper.setColumnDefs(updatedConfig);
+                                                            gridHelper.setBasicOptions(updatedConfig);
+                                                            gridHelper.disableGridScrolling(updatedConfig);
+                                                        });
                                                     };
 
                                                     onConfigRetrieved(params.config);
