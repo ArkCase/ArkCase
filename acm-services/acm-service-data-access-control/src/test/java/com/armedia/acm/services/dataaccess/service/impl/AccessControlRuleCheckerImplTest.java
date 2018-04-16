@@ -8,7 +8,11 @@ import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.easymock.*;
+import org.easymock.EasyMock;
+import org.easymock.EasyMockRunner;
+import org.easymock.EasyMockSupport;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +26,12 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Petar Ilin <petar.ilin@armedia.com> on 06.11.2015.
@@ -151,6 +160,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
 
         ObjectMapper mapper = new ObjectMapper();
         AccessControlRule accessControlRule = mapper.readValue(rule.toString(), AccessControlRule.class);
+        accessControlRule.setObjectSubType("ORDER");
 
         GrantedAuthority grantedAuthority1 = new SimpleGrantedAuthority("ROLE_ADMINISTRATOR");
         GrantedAuthority grantedAuthority2 = new SimpleGrantedAuthority("ROLE_ANALYST");
@@ -503,6 +513,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         List<String> userIsParticipantTypeAny = Arrays.asList("assignee", "supervisor", "owning group");
         AccessControlRule accessControlRule = getAccessControlRuleForParticipantTypesTest();
         accessControlRule.setUserIsParticipantTypeAny(userIsParticipantTypeAny);
+        accessControlRule.setObjectSubType("ORDER");
 
         Collection grantedAuthorities = getGrantedAuthoritiesMockList();
 
@@ -522,6 +533,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         accessControlRule.setUserIsParticipantTypeAny(userIsParticipantTypeAny);
         accessControlRule.setObjectType("CASE_FILE");
         accessControlRule.setActionName("restrictCase");
+        accessControlRule.setObjectSubType("ORDER");
 
         Collection grantedAuthorities = getGrantedAuthoritiesMockList();
 
@@ -543,6 +555,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         List<String> userIsParticipantTypeAny = Arrays.asList("assignee", "supervisor", "owning group");
         AccessControlRule accessControlRule = getAccessControlRuleForParticipantTypesTest();
         accessControlRule.setUserIsParticipantTypeAny(userIsParticipantTypeAny);
+        accessControlRule.setObjectSubType("ORDER");
 
         Collection grantedAuthorities = getGrantedAuthoritiesMockList();
 
@@ -584,6 +597,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
     {
         AccessControlRule accessControlRule = getAccessControlRuleForParticipantTypesTest();
         accessControlRule.setUserIsParticipantTypeAny(null);
+        accessControlRule.setObjectSubType("ORDER");
 
         Collection grantedAuthorities = getGrantedAuthoritiesMockList();
 
@@ -600,6 +614,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
     {
         AccessControlRule accessControlRule = getAccessControlRuleForParticipantTypesTest();
         accessControlRule.setUserIsParticipantTypeAny(new ArrayList<>());
+        accessControlRule.setObjectSubType("ORDER");
 
         Collection grantedAuthorities = getGrantedAuthoritiesMockList();
 
