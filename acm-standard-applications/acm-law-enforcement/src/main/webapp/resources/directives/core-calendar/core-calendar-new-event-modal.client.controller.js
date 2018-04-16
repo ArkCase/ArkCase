@@ -189,7 +189,6 @@ angular.module('directives').controller(
                             remindIn : -1
                         };
 
-                        $scope.minStartDatee = new Date();
                         $scope.minEndDate = new Date();
                         $scope.recurrentEvent = false;
 
