@@ -1,0 +1,15 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Sat Feb 03 17:04:40 EST 2018
+https\://maven.alfresco.com/nexus/content/groups/public/.lastUpdated=1517695474858
+http\://10.20.20.71\:8081/nexus/content/groups/armedia/.lastUpdated=1517695480456
+https\://repository.jboss.org/nexus/content/groups/public/.lastUpdated=1517695472590
+https\://repository-master.mulesoft.org/nexus/content/groups/public/.error=
+https\://maven.alfresco.com/nexus/content/groups/public/.error=
+http\://repository.mulesoft.org/nexus/content/repositories/releases/.error=
+http\://repository.mulesoft.org/nexus/content/repositories/releases/.lastUpdated=1517695475084
+http\://repository.codehaus.org/.error=Could not transfer artifact org.eclipse.persistence\:logging-slf4j\:jar\:1.0.1 from/to codehaus (http\://repository.codehaus.org)\: repository.codehaus.org\: Name or service not known
+@default-codehaus-http\://repository.codehaus.org/.lastUpdated=1517695473806
+http\://repo1.maven.org/maven2/.error=
+http\://repo1.maven.org/maven2/.lastUpdated=1517695471198
+https\://repository-master.mulesoft.org/nexus/content/groups/public/.lastUpdated=1517695473767
+https\://repository.jboss.org/nexus/content/groups/public/.error=
