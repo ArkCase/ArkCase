@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 public class SolrRestClient
@@ -46,7 +46,7 @@ public class SolrRestClient
 
             logger.debug("Posted to Solr: [{}], got response code {}", logText, response.getStatusCode().value());
         }
-        catch (HttpClientErrorException e)
+        catch (HttpStatusCodeException e)
         {
             if (isRecoverable(e.getStatusCode()))
             {
@@ -57,7 +57,7 @@ public class SolrRestClient
                 logger.error("Could not send [{}] to Solr, got an unrecoverable error {}", logText, e.getStatusCode());
             }
         }
-        catch (ResourceAccessException e)
+        catch (RestClientException e)
         {
             throw new SolrPostException(String.format("Could not post [%s] to Solr: %s", logText, e.getMessage()));
         }
