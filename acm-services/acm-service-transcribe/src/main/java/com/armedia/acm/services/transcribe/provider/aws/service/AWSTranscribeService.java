@@ -17,16 +17,14 @@ import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
 import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
 import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
-import com.armedia.acm.services.transcribe.model.Transcribe;
-import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
-import com.armedia.acm.services.transcribe.model.TranscribeItem;
-import com.armedia.acm.services.transcribe.model.TranscribeStatusType;
+import com.armedia.acm.services.transcribe.model.*;
 import com.armedia.acm.services.transcribe.provider.aws.credentials.ArkCaseAWSCredentialsProviderChain;
 import com.armedia.acm.services.transcribe.provider.aws.model.AWSTranscribeConfiguration;
 import com.armedia.acm.services.transcribe.provider.aws.model.transcript.AWSTranscript;
 import com.armedia.acm.services.transcribe.provider.aws.model.transcript.AWSTranscriptAlternative;
 import com.armedia.acm.services.transcribe.provider.aws.model.transcript.AWSTranscriptItem;
 import com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService;
+import com.armedia.acm.services.transcribe.service.TranscribeEventPublisher;
 import com.armedia.acm.services.transcribe.service.TranscribeService;
 import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -58,6 +56,7 @@ public class AWSTranscribeService implements TranscribeService
     private MuleContextManager muleContextManager;
     private TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
     private String credentialConfigurationFileLocation;
+    private TranscribeEventPublisher transcribeEventPublisher;
 
     public void init() throws GetConfigurationException
     {
@@ -78,20 +77,19 @@ public class AWSTranscribeService implements TranscribeService
         }
         catch (GetConfigurationException e)
         {
+            getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
             throw new CreateTranscribeException(String.format("Transcribe failed to create on Amazon. REASON=[%s]", e.getMessage()), e);
         }
 
         String key = transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension();
         if (getS3Client().doesObjectExist(configuration.getBucket(), key))
         {
+            getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
             throw new CreateTranscribeException(String.format("The file with KEY=[%s] already exist on Amazon.", key));
         }
 
-        PutObjectResult putObjectResult = uploadMedia(transcribe);
-        if (putObjectResult != null)
-        {
-            startTranscribeJob(transcribe);
-        }
+        uploadMedia(transcribe);
+        startTranscribeJob(transcribe);
 
         return transcribe;
     }
@@ -136,7 +134,7 @@ public class AWSTranscribeService implements TranscribeService
             }
             catch (MuleException | AmazonServiceException e)
             {
-                throw new GetTranscribeException(String.format("Unable to upload media file to Amazon. REASON=[%s].", e.getMessage()), e);
+                throw new GetTranscribeException(String.format("Unable to get transcribe job on Amazon. REASON=[%s].", e.getMessage()), e);
             }
         }
 
@@ -198,8 +196,9 @@ public class AWSTranscribeService implements TranscribeService
 
                 return getS3Client().putObject(configuration.getBucket(), key, inputStream, metadata);
             }
-            catch (GetConfigurationException | MuleException | AmazonServiceException e)
+            catch (Exception e)
             {
+                getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
                 throw new CreateTranscribeException(String.format("Unable to upload media file to Amazon. REASON=[%s].", e.getMessage()), e);
             }
         }
@@ -229,8 +228,9 @@ public class AWSTranscribeService implements TranscribeService
 
                 return getTranscribeClient().startTranscriptionJob(request);
             }
-            catch (GetConfigurationException | BadRequestException | LimitExceededException | InternalFailureException | ConflictException e)
+            catch (Exception e)
             {
+                getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
                 throw new CreateTranscribeException(String.format("Unable to start transcribe job on Amazon. REASON=[%s]", e.getMessage()), e);
             }
         }
@@ -465,5 +465,15 @@ public class AWSTranscribeService implements TranscribeService
     public void setCredentialConfigurationFileLocation(String credentialConfigurationFileLocation)
     {
         this.credentialConfigurationFileLocation = credentialConfigurationFileLocation;
+    }
+
+    public TranscribeEventPublisher getTranscribeEventPublisher()
+    {
+        return transcribeEventPublisher;
+    }
+
+    public void setTranscribeEventPublisher(TranscribeEventPublisher transcribeEventPublisher)
+    {
+        this.transcribeEventPublisher = transcribeEventPublisher;
     }
 }
