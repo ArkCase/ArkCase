@@ -3,7 +3,7 @@
 angular.module('document-details').factory('DocumentDetails.TranscriptionAppService', [ '$resource', 'ObjectService', 'CacheFactory', 'UtilService', 'MessageService',
     function($resource, ObjectService, CacheFactory, Util, MessageService) {
 
-        var transcriptionCache = CacheFactory(ObjectService.ObjectTypes.TRANSCRIPTION, {
+        var transcriptionCache = CacheFactory(ObjectService.ObjectTypes.TRANSCRIBE, {
             maxAge : 1 * 60 * 1000, // Items added to this cache expire after 1 minute
             cacheFlushInterval : 60 * 60 * 1000, // This cache will clear itself every hour
             deleteOnExpire : 'aggressive', // Items will be deleted from this cache when they expire
