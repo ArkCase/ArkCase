@@ -127,7 +127,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             { // no permissions found add fallback parent permission
                 String fallbackPermission = getFallbackPermissionName(permission);
                 permissionRules = accessControlRules.getAccessControlRuleList().stream()
-                        .filter(rule -> targetType.contains(rule.getObjectType()) && fallbackPermission.equals(rule.getActionName()))
+                        .filter(rule -> targetType.contains(rule.getObjectType()) && rule.getActionName().equals(fallbackPermission))
                         .collect(Collectors.toList());
             }
             for (AccessControlRule rule : permissionRules)
@@ -176,7 +176,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             parentActionName = "getObject";
         }
         else if (permission.toLowerCase()
-                .matches("(save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename).*"))
+                .matches("(save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename|write).*"))
         {
             // write parent permission
             parentActionName = "editObject";
