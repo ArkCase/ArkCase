@@ -151,7 +151,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
         }
         catch (Exception e)
         {
-            LOG.info("There are no any results.");
+            LOG.warn("No case file has case number {}", caseNumber);
         }
         return result;
     }
