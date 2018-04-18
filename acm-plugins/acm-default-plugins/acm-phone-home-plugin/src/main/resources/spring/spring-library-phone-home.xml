@@ -9,17 +9,17 @@
 		http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!--Channels-->
-    <int:channel id="httpRequestChannel"/>
+    <int:channel id="phonehomeRequestChannel"/>
 
     <!-- Gateways -->
     <int:gateway id="multipartRequestGateway"
                  service-interface="com.armedia.acm.plugins.phonehome.service.MultipartRequestGateway"
-                 default-request-channel="httpRequestChannel"/>
+                 default-request-channel="phonehomeRequestChannel"/>
 
     <!-- Outbound channel adapter-->
     <int-http:outbound-channel-adapter url="https://phonehome.arkcase.com:8443/api/reports"
                                        http-method="POST"
-                                       channel="httpRequestChannel">
+                                       channel="phonehomeRequestChannel">
         <int-http:request-handler-advice-chain>
             <!--Advice for handling retry-->
             <bean id="retryAdvice" class="org.springframework.integration.handler.advice.RequestHandlerRetryAdvice">

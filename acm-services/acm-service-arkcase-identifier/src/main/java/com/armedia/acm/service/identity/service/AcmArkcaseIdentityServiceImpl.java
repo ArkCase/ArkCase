@@ -52,7 +52,7 @@ public class AcmArkcaseIdentityServiceImpl implements AcmArkcaseIdentityService,
             }
             catch (AcmIdentityException e)
             {
-                log.error("Couldn't set local identity.", e.getMessage());
+                log.error("Couldn't set local identity. [{}]", e.getMessage());
             }
             try
             {
@@ -60,7 +60,7 @@ public class AcmArkcaseIdentityServiceImpl implements AcmArkcaseIdentityService,
             }
             catch (AcmIdentityException e)
             {
-                log.error("Couldn't set global identity.", e.getMessage());
+                log.error("Couldn't set global identity. [{}]", e.getMessage());
             }
             initialized = true;
         }
