@@ -1,7 +1,6 @@
 package com.armedia.acm.services.functionalaccess.service;
 
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
@@ -24,6 +23,8 @@ public interface FunctionalAccessService
     public Map<String, List<String>> getApplicationRolesToGroups();
 
     public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, Authentication auth);
+
+    public boolean saveApplicationRolesToGroupsOnDeletingGroup(Map<String, List<String>> rolesToGroups, String userId);
 
     public Set<AcmUser> getUsersByRolesAndGroups(List<String> roles, Map<String, List<String>> rolesToGroups, String group,
             String currentAssignee);
