@@ -3,7 +3,7 @@
 angular.module('admin').controller(
         'Admin.GroupManagementController',
         [ '$scope', '$q', 'Admin.GroupManagementService', 'MessageService', 'UtilService', '$log', '$translate',
-                function($scope, $q, groupManagementService, MessageService, Util, $log, $translate) {
+                function($scope, $q, GroupManagementService, MessageService, Util, $log, $translate) {
 
                     $scope.onObjSelect = onObjSelect;
                     $scope.onAuthRoleSelected = onAuthRoleSelected;
@@ -44,7 +44,7 @@ angular.module('admin').controller(
                         if (makePaginationRequest) {
                             var userRequestInfo = {};
                             userRequestInfo.start = Util.isEmpty(userNumber) ? 0 : $scope.userData.chooseObject.length;
-                            groupManagementService.getAdHocGroups(userRequestInfo).then(function(response) {
+                            GroupManagementService.getAdHocGroups(userRequestInfo).then(function(response) {
                                 $scope.fillList($scope.userData.chooseObject, response.data.response.docs);
                                 if (_.isEmpty($scope.lastSelectedGroup)) {
                                     $scope.lastSelectedGroup = $scope.userData.chooseObject[0];
@@ -66,12 +66,11 @@ angular.module('admin').controller(
                             var data = {};
                             data.member = selectedObject;
                             data.isAuthorized = false;
-                            var unAuthorizedGroupsForUser = groupManagementService.getAdhocGroupsForAdhocGroup(data);
+                            var unAuthorizedGroupsForUser = GroupManagementService.getAdhocGroupsForAdhocGroup(data);
                             data.isAuthorized = true;
-                            var authorizedGroupsForUser = groupManagementService.getAdhocGroupsForAdhocGroup(data);
+                            var authorizedGroupsForUser = GroupManagementService.getAdhocGroupsForAdhocGroup(data);
                             currentAuthGroups = [];
-                            $scope.lastSelectedGroup = {};
-                            $scope.lastSelectedGroup = selectedObject;
+                            $scope.lastSelectedGroup = angular.copy(selectedObject);
                             $q.all([ authorizedGroupsForUser, unAuthorizedGroupsForUser ]).then(function(result) {
                                 _.forEach(result[0].data.response.docs, function(group) {
                                     var authObject = {};
@@ -115,7 +114,7 @@ angular.module('admin').controller(
                                 groups : toBeAdded
                             };
 
-                            groupManagementService.addGroupSubGroups(data).then(function(data) {
+                            GroupManagementService.addGroupSubGroups(data).then(function(data) {
                                 MessageService.succsessAction();
                             }, function() {
                                 //error adding group
@@ -133,7 +132,7 @@ angular.module('admin').controller(
                                 groups : toBeRemoved
                             };
 
-                            groupManagementService.deleteGroupSubGroups(data).then(function(data) {
+                            GroupManagementService.deleteGroupSubGroups(data).then(function(data) {
                                 MessageService.succsessAction();
                             }, function() {
                                 //error adding group
@@ -155,7 +154,7 @@ angular.module('admin').controller(
                     }
 
                     function retrieveDataScroll(data, methodName, panelName) {
-                        groupManagementService[methodName](data).then(function(response) {
+                        GroupManagementService[methodName](data).then(function(response) {
                             if (_.isArray(response.data)) {
                                 $scope.fillList($scope.userData[panelName], response.data);
                             } else {
@@ -193,7 +192,7 @@ angular.module('admin').controller(
                     }
 
                     function retrieveDataFilter(data, methodName, panelName) {
-                        groupManagementService[methodName](data).then(function(response) {
+                        GroupManagementService[methodName](data).then(function(response) {
                             $scope.userData[panelName] = [];
                             if (_.isArray(response.data)) {
                                 $scope.fillList($scope.userData[panelName], response.data);
