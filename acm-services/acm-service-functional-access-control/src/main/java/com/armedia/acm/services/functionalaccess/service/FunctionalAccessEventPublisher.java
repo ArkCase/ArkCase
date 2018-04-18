@@ -21,6 +21,12 @@ public class FunctionalAccessEventPublisher implements ApplicationEventPublisher
         getEventPublisher().publishEvent(event);
     }
 
+    public void publishFunctionalAccessUpdateEventOnRolesToGroupMap(Object source, String userId)
+    {
+        FunctionalAccessUpdatedEvent event = new FunctionalAccessUpdatedEvent(source, userId);
+        getEventPublisher().publishEvent(event);
+    }
+
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {

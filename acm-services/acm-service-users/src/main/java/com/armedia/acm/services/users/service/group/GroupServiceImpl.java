@@ -14,7 +14,7 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
-
+import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +36,7 @@ public class GroupServiceImpl implements GroupService
     private UserDao userDao;
     private AcmGroupDao groupDao;
     private ExecuteSolrQuery executeSolrQuery;
+    private AcmGroupEventPublisher acmGroupEventPublisher;
 
     @Override
     public AcmGroup findByName(String name)
@@ -288,7 +289,10 @@ public class GroupServiceImpl implements GroupService
         {
             groupDao.getEm().flush();
         }
-
+        
+        if (acmGroup.getType() == AcmGroupType.ADHOC_GROUP) {
+            acmGroupEventPublisher.publishAdHocGroupDeletedEvent(acmGroup);
+        }
         return acmGroup;
     }
 
@@ -677,5 +681,9 @@ public class GroupServiceImpl implements GroupService
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher) {
+        this.acmGroupEventPublisher = acmGroupEventPublisher;
     }
 }

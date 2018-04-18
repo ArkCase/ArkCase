@@ -9,13 +9,15 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.event.AdHocGroupDeletedEvent;
+import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 
@@ -34,7 +36,7 @@ import java.util.stream.Collectors;
 /**
  * @author riste.tutureski
  */
-public class FunctionalAccessServiceImpl implements FunctionalAccessService, ApplicationListener<ConfigurationFileChangedEvent>
+public class FunctionalAccessServiceImpl implements FunctionalAccessService, ApplicationListener<ApplicationEvent>
 {
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -49,40 +51,46 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     private ExecuteSolrQuery executeSolrQuery;
 
     @Override
-    public void onApplicationEvent(ConfigurationFileChangedEvent configurationFileChangedEvent)
-    {
-        File eventFile = configurationFileChangedEvent.getConfigFile();
-        if ("applicationRoles.properties".equals(eventFile.getName()))
-        {
-            String filename = eventFile.getName();
-            LOG.debug("[{}] has changed!", filename);
+    public void onApplicationEvent(ApplicationEvent event) {
+        if (event instanceof ConfigurationFileChangedEvent) {
+            File eventFile = ((ConfigurationFileChangedEvent) event).getConfigFile();
 
-            try
-            {
-                applicationRolesProperties = getPropertyFileManager().readFromFile(eventFile);
-            }
-            catch (IOException e)
-            {
-                LOG.info("Could not read new properties; keeping the old properties.");
+            if ("applicationRoles.properties".equals(eventFile.getName())) {
+                String filename = eventFile.getName();
+                LOG.debug("[{}] has changed!", filename);
+
+                try {
+                    applicationRolesProperties = getPropertyFileManager().readFromFile(eventFile);
+                } catch (IOException e) {
+                    LOG.info("Could not read new properties; keeping the old properties.");
+                }
+
             }
 
+            if ("applicationRoleToUserGroup.properties".equals(eventFile.getName())) {
+                String filename = eventFile.getName();
+                LOG.info("[{}] has changed!", filename);
+
+                try {
+                    applicationRolesToGroupsProperties = getPropertyFileManager().readFromFile(eventFile);
+                    roleToGroupMapping.reloadRoleToGroupMap(applicationRolesToGroupsProperties);
+                } catch (IOException e) {
+                    LOG.info("Could not read new properties; keeping the old properties.");
+                }
+            }
+
+        } else if (event instanceof LdapGroupDeletedEvent || event instanceof AdHocGroupDeletedEvent) {
+            AcmGroup group = (AcmGroup) event.getSource();
+            String groupName = group.getName();
+            Map<String, Set<String>> roleToGroupsMap = roleToGroupMapping.getRoleToGroupsMapIgnoreCaseSensitive();
+            Map<String, List<String>> x = roleToGroupsMap.entrySet().stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey, entry ->
+                            entry.getValue().stream().filter(name -> !name.equals(groupName)).collect(Collectors.toList())
+                    ));
+
+            saveApplicationRolesToGroupsOnDeletingGroup(x, group.getModifier());
         }
 
-        if ("applicationRoleToUserGroup.properties".equals(eventFile.getName()))
-        {
-            String filename = eventFile.getName();
-            LOG.info("[{}] has changed!", filename);
-
-            try
-            {
-                applicationRolesToGroupsProperties = getPropertyFileManager().readFromFile(eventFile);
-                roleToGroupMapping.reloadRoleToGroupMap(applicationRolesToGroupsProperties);
-            }
-            catch (IOException e)
-            {
-                LOG.info("Could not read new properties; keeping the old properties.");
-            }
-        }
     }
 
     @Override
@@ -164,24 +172,38 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     }
 
     @Override
-    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, Authentication auth)
-    {
+    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, Authentication auth) {
         boolean success = false;
-        try
-        {
+        try {
             getPropertyFileManager().storeMultiple(prepareRoleToGroupsForSaving(rolesToGroups), getRolesToGroupsPropertyFileLocation(),
                     true);
             success = true;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             LOG.error("Cannot save roles to groups mapping.", e);
             success = false;
         }
 
-        if (success)
-        {
+        if (success) {
             getEventPublisher().publishFunctionalAccessUpdateEvent(rolesToGroups, auth);
+        }
+
+        return success;
+    }
+
+    @Override
+    public boolean saveApplicationRolesToGroupsOnDeletingGroup(Map<String, List<String>> rolesToGroups, String user) {
+        boolean success = false;
+        try {
+            getPropertyFileManager().storeMultiple(prepareRoleToGroupsForSaving(rolesToGroups), getRolesToGroupsPropertyFileLocation(),
+                    true);
+            success = true;
+        } catch (Exception e) {
+            LOG.error("Cannot save roles to groups mapping.", e);
+            success = false;
+        }
+
+        if (success) {
+            getEventPublisher().publishFunctionalAccessUpdateEventOnRolesToGroupMap(rolesToGroups, user);
         }
 
         return success;
