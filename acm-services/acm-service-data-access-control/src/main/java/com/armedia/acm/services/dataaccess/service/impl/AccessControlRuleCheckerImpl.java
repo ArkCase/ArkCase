@@ -111,7 +111,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             List<AccessControlRule> permissionRules = accessControlRules.getAccessControlRuleList().stream().filter(rule -> {
                 if (targetType.equals(rule.getObjectType()) && permission.equals(rule.getActionName()))
                 {
-                    if (rule.getObjectType() != null) // optional field in rule
+                    if (rule.getObjectSubType() != null) // optional field in rule
                     {
                         String targetSubType = (String) targetObjectProperties.get("objectSubType");
                         if (targetSubType == null || !targetSubType.equals(rule.getObjectSubType()))
@@ -127,7 +127,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             { // no permissions found add fallback parent permission
                 String fallbackPermission = getFallbackPermissionName(permission);
                 permissionRules = accessControlRules.getAccessControlRuleList().stream()
-                        .filter(rule -> targetType.contains(rule.getObjectType()) && rule.getActionName().equals(fallbackPermission))
+                        .filter(rule -> rule.getObjectType().contains(targetType) && rule.getActionName().equals(fallbackPermission))
                         .collect(Collectors.toList());
             }
             for (AccessControlRule rule : permissionRules)
