@@ -21,14 +21,7 @@ import org.springframework.security.core.Authentication;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -125,17 +118,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             String sortDirection,
             Boolean authorized) throws MuleException
     {
-        List<String> retrieveGroupsByRole = new ArrayList<>();
         Set<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().get(roleName.toUpperCase());
-
-        if (groupsByRole == null)
-        {
-            retrieveGroupsByRole = new ArrayList<>();
-        }
-        else
-        {
-            retrieveGroupsByRole = new ArrayList<>(groupsByRole);
-        }
+        List<String> retrieveGroupsByRole = groupsByRole == null ? new ArrayList<>() : new ArrayList<>(groupsByRole);
 
         if (authorized)
         {
