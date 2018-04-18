@@ -24,7 +24,7 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
     public static final String PROPERTY_IDENTITY = "identity";
     public static final String PROPERTY_DIGEST = "digest";
     public static final String PROPERTY_DATE_CREATED = "date_created";
-    public static final String ALGORITHM_MD5 = "MD5";
+    public static final String HASH_ALGORITHM = "SHA-256";
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private Path identityFilePath;
 
@@ -45,8 +45,14 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
             }
             String identity = properties.getProperty(PROPERTY_IDENTITY);
             byte[] digest = properties.getProperty(PROPERTY_DIGEST).getBytes();
+            /*
+             * FIXME using hash is not secure at all, anyone with some knowledge can change identity and change the
+             * hash.
+             * If needs to be more secure, than we should handle it differently like using encryption or signing the
+             * file.
+             */
             // check if identity is valid
-            if (!Arrays.equals(digest, getMD5(identity)))
+            if (!Arrays.equals(digest, getIdentityDigest(identity)))
             {
                 // identity has been changed
                 throw new AcmIdentityException("Identity has been changed.");
@@ -55,7 +61,7 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
         }
         catch (IOException e)
         {
-            log.error("Error generating digest for arkcase identity", e.getMessage());
+            log.error("Error generating digest for arkcase identity. [{}]", e.getMessage());
             throw new AcmIdentityException("Error reading file " + identityFilePath, e);
         }
     }
@@ -69,14 +75,14 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
         {
             properties.setProperty(PROPERTY_IDENTITY, identity);
             properties.setProperty(PROPERTY_DATE_CREATED, LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-            properties.setProperty(PROPERTY_DIGEST, new String(getMD5(identity)));
+            properties.setProperty(PROPERTY_DIGEST, new String(getIdentityDigest(identity)));
             try (OutputStream out = Files.newOutputStream(identityFilePath))
             {
                 properties.store(out, null);
             }
             catch (IOException e)
             {
-                log.error("Error writing to file arkcase identity.", e.getMessage());
+                log.error("Error writing to file arkcase identity. [{}]", e.getMessage());
             }
         }
         else
@@ -87,16 +93,16 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
         return identity;
     }
 
-    private byte[] getMD5(String identity)
+    private byte[] getIdentityDigest(String identity)
     {
         MessageDigest md = null;
         try
         {
-            md = MessageDigest.getInstance(ALGORITHM_MD5);
+            md = MessageDigest.getInstance(HASH_ALGORITHM);
         }
         catch (NoSuchAlgorithmException e)
         {
-            log.error("Error generating digest for arkcase identity", e.getMessage());
+            log.error("Error generating digest for arkcase identity. [{}]", e.getMessage());
         }
         return md.digest(identity.getBytes());
     }
