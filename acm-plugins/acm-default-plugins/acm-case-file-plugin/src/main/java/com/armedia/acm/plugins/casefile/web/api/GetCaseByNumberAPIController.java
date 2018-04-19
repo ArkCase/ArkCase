@@ -39,7 +39,7 @@ public class GetCaseByNumberAPIController
             throws AcmAccessControlException
     {
         CaseFile caseFile = getCaseByNumberService.getCaseByNumber(caseNumber);
-        if (!getArkPermissionEvaluator().hasPermission(auth, caseFile.getId(), "CASE_FILE", "read"))
+        if (caseFile != null && !getArkPermissionEvaluator().hasPermission(auth, caseFile.getId(), "CASE_FILE", "read"))
         {
             throw new AcmAccessControlException(Arrays.asList(""),
                     "The user {" + auth.getName() + "} is not allowed to read case file with id=" + caseFile.getId());
