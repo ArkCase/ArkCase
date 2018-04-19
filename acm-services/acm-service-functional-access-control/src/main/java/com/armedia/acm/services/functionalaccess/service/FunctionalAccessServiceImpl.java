@@ -23,14 +23,7 @@ import org.springframework.security.core.Authentication;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -133,32 +126,26 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             String sortDirection,
             Boolean authorized) throws MuleException
     {
-        List<String> retrieveGroupsByRole = new ArrayList<>();
-        Set<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().get(roleName);
-
-        if (groupsByRole == null)
-        {
-            return retrieveGroupsByRole;
-        }
-
-        retrieveGroupsByRole = new ArrayList<>(groupsByRole);
-
-        if (groupsByRole.isEmpty())
-        {
-            return retrieveGroupsByRole;
-        }
+        Set<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().get(roleName.toUpperCase());
+        List<String> retrieveGroupsByRole = groupsByRole == null ? new ArrayList<>() : new ArrayList<>(groupsByRole);
 
         if (authorized)
         {
+            if (retrieveGroupsByRole.isEmpty())
+            {
+                return retrieveGroupsByRole;
+            }
             String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
-                    + retrieveGroupsByRole.stream().collect(Collectors.joining(" OR name_lcs:", "(name_lcs:", ")"));
-
+                    + retrieveGroupsByRole.stream().collect(Collectors.joining("\" OR name_lcs:\"", "(name_lcs:\"", "\")"));
             return getGroupsBySolrQuery(auth, sortDirection, startRow, maxRows, query);
         }
         else
         {
-            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
-                    + retrieveGroupsByRole.stream().collect(Collectors.joining(" AND -name_lcs:", "-name_lcs:", ""));
+            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+            if (!retrieveGroupsByRole.isEmpty())
+            {
+                query += " AND " + retrieveGroupsByRole.stream().collect(Collectors.joining("\" AND -name_lcs:\"", "-name_lcs:\"", "\""));
+            }
 
             return getGroupsBySolrQuery(auth, sortDirection, startRow, maxRows, query);
         }

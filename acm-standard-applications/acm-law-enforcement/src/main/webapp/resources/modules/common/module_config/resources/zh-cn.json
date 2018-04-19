@@ -180,9 +180,11 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "选择",
         "not_authorized": "未经授权",
+        "not_member": "zh-cn_Not Member",
         "tooltip.move_right": "向右移",
         "tooltip.move_left": "向左移动",
-        "authorized": "合法"
+        "authorized": "合法",
+        "member": "Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "错误，需要2个字符."
