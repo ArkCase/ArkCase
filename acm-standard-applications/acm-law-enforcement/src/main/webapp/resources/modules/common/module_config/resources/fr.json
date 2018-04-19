@@ -3,7 +3,7 @@
         "select.option.none": "(Sélectionnez un)",
         "value.unknown": "Inconnu",
         "value.none": "Aucun",
-		"_1_": "Merci de ne pas utiliser les styles de date personnalisés ou de les ajouter car ils sont susceptibles d'erreur.",
+        "_1_": "Merci de ne pas utiliser les styles de date personnalisés ou de les ajouter car ils sont susceptibles d'erreur.",
         "_2_": "Veuillez utiliser l'un des formats prédéfinis: ",
         "_3_": "'moyen'       - équivalent à 'MMM j, a h:mm:ss a' pour local en_US (par ex. 3 septembre 2010 12:05:08)",
         "_4_": "'court'       - équivalent à 'M/j/aa h:mm a' pour local en_US (par ex. 9/3/10 12:05)",
@@ -109,10 +109,10 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "Envoyer en tant que pièce jointe et lien hypertexte",
             "btnCancel.text": "Annuler",
             "btnOk.text": "Envoyer un email"
-		},
+        },
         "participantsDialog": {
             "titlePart": "Participants pour ",
-            "title": "Participants"	
+            "title": "Participants"
         },
         "recipientsDialog": {
             "title": "Choisir les destinataires",
@@ -180,9 +180,11 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "Choisir",
         "not_authorized": "Pas autorisé",
+        "not_member": "fr_Not Member",
         "tooltip.move_right": "Déplacer vers la droite",
         "tooltip.move_left": "Se déplacer à gauche",
-        "authorized": "Autorisé"
+        "authorized": "Autorisé",
+        "member": "fr_Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "Erreur, 2 caractères requis."
@@ -194,9 +196,9 @@
         "btnCancel.text": "Annuler",
         "edtPlaceholder": "Entrez pour rechercher",
         "noData.text": "Aucun résultat",
-		"pickUserLabel": "Choisissez un utilisateur associé",
+        "pickUserLabel": "Choisissez un utilisateur associé",
         "pickGroupLabel": "Choisissez un groupe associé",
-		"selectedItemsGrid.label": "Entrées sélectionnées"
+        "selectedItemsGrid.label": "Entrées sélectionnées"
     },
     "common.directive.search": {
         "showMore.button.text": "Afficher plus de valeurs",
@@ -611,7 +613,7 @@
             "error.noAccessCombo": "La combinaison de No Access et Assignee n'est pas autorisée.",
             "error.duplicateUserOrGroup": "Participant invalide Entrées en double trouvées pour le participant.",
             "error.userOrGroupNotFound": "Participant invalide L'entrée du participant est manquante dans le système.",
-			"error.emptyParticipantLdapId": "Le nom du participant ne peut pas être vide",
+            "error.emptyParticipantLdapId": "Le nom du participant ne peut pas être vide",
             "error.emptyParticipantType": "Le type de participant ne peut pas être vide",
             "error.ownerUnique": "Un seul propriétaire est autorisé."
         }

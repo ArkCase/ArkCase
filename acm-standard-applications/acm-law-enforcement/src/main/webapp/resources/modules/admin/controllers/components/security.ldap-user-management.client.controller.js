@@ -34,7 +34,6 @@ angular.module('admin').controller(
                     $scope.userAuthorizedFilter = userAuthorizedFilter;
                     $scope.retrieveDataFilter = retrieveDataFilter;
 
-                    $scope.showFilter = true;
                     var makePaginationRequest = true;
                     var currentAuthGroups;
                     var selectedUser;
@@ -58,7 +57,7 @@ angular.module('admin').controller(
 
                     function initUser(userNumber) {
                         var userRequestInfo = {};
-                        userRequestInfo.n = Util.isEmpty(userNumber) ? 18 : userNumber;
+                        userRequestInfo.n = Util.isEmpty(userNumber) ? 50 : userNumber;
                         userRequestInfo.start = Util.isEmpty(userNumber) ? 0 : $scope.userData.chooseObject.length;
                         if (makePaginationRequest) {
                             LdapUserManagementService.getNUsers(userRequestInfo).then(function(response) {
@@ -75,14 +74,14 @@ angular.module('admin').controller(
                     $scope.initUser();
 
                     //callback function when user is selected
-                    function onObjSelect(selectedObject, authorized, notAuthorized) {
+                    function onObjSelect(selectedObject) {
                         $scope.userData.selectedAuthorized = [];
                         $scope.userData.selectedNotAuthorized = [];
 
                         if (!_.isEmpty($scope.userData.chooseObject)) {
                             var data = {};
                             data.member = selectedObject;
-                            $scope.lastSelectedUser = [];
+                            $scope.lastSelectedUser = {};
                             $scope.lastSelectedUser = selectedObject;
                             selectedUser = selectedObject;
                             currentAuthGroups = [];
@@ -281,6 +280,12 @@ angular.module('admin').controller(
                                 $scope.fillList($scope.userData[panelName], response.data);
                             } else {
                                 $scope.fillList($scope.userData[panelName], response.data.response.docs);
+                            }
+                            if (panelName === "selectedAuthorized") {
+                                currentAuthGroups = [];
+                                _.forEach($scope.userData[panelName], function(obj) {
+                                    currentAuthGroups.push(obj.key);
+                                });
                             }
                         }, function() {
                             $log.error('Error during calling the method ' + methodName);
