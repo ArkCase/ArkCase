@@ -5,6 +5,7 @@ public class ModuleItem
     private String name;
     private String id;
     private String privilege;
+    private String key;
 
     public String getName()
     {
@@ -34,5 +35,15 @@ public class ModuleItem
     public void setPrivilege(String privilege)
     {
         this.privilege = privilege;
+    }
+
+    public String getKey()
+    {
+        return key;
+    }
+
+    public void setKey(String key)
+    {
+        this.key = key;
     }
 }
