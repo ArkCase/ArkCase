@@ -1,0 +1,17 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Thu Feb 08 13:06:31 EST 2018
+https\://maven.alfresco.com/nexus/content/groups/public/.lastUpdated=1517695395419
+http\://10.20.20.71\:8081/nexus/content/groups/armedia/.lastUpdated=1517695395835
+https\://repository.jboss.org/nexus/content/groups/public/.lastUpdated=1517695394171
+https\://repository-master.mulesoft.org/nexus/content/groups/public/.error=
+https\://maven.alfresco.com/nexus/content/groups/public/.error=
+http\://repository.mulesoft.org/nexus/content/repositories/releases/.error=
+http\://repository.mulesoft.org/nexus/content/repositories/releases/.lastUpdated=1517695395561
+https\://repo.maven.apache.org/maven2/.lastUpdated=1518113191624
+http\://repository.codehaus.org/.error=Could not transfer artifact com.frevvo\:forms-java\:pom\:6.3 from/to codehaus (http\://repository.codehaus.org)\: repository.codehaus.org\: Name or service not known
+https\://repo.maven.apache.org/maven2/.error=
+@default-codehaus-http\://repository.codehaus.org/.lastUpdated=1517695395143
+http\://repo1.maven.org/maven2/.lastUpdated=1517695393687
+http\://repo1.maven.org/maven2/.error=
+https\://repository-master.mulesoft.org/nexus/content/groups/public/.lastUpdated=1517695395103
+https\://repository.jboss.org/nexus/content/groups/public/.error=

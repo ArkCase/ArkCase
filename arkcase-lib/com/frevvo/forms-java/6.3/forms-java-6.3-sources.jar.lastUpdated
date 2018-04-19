@@ -1,0 +1,26 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Thu Mar 29 13:26:35 EDT 2018
+http\://repo1.maven.org/maven2/.lastUpdated=1522344381215
+http\://repository.mulesoft.org/nexus/content/repositories/releases/.error=
+https\://repo.maven.apache.org/maven2/.lastUpdated=1522339583683
+http\://repository.codehaus.org/.error=Could not transfer artifact com.frevvo\:forms-java\:jar\:sources\:6.3 from/to codehaus (http\://repository.codehaus.org)\: repository.codehaus.org
+https\://repository.jboss.org/nexus/content/groups/public/.error=
+https\://jcenter.bintray.com/.error=
+http\://extensions.springframework.org/milestone/.error=Could not transfer artifact com.frevvo\:forms-java\:jar\:sources\:6.3 from/to spring-extensions-milestone (http\://extensions.springframework.org/milestone)\: Access denied to http\://extensions.springframework.org/milestone/com/frevvo/forms-java/6.3/forms-java-6.3-sources.jar. Error code 403, Forbidden
+https\://app.camunda.com/nexus/content/repositories/public/.lastUpdated=1522344392357
+https\://repo.maven.apache.org/maven2/.error=
+https\://repository.jboss.org/nexus/content/groups/public/.lastUpdated=1522344382013
+@default-codehaus-http\://repository.codehaus.org/.lastUpdated=1522344384277
+https\://maven.alfresco.com/nexus/content/groups/public/.lastUpdated=1522344385092
+https\://jcenter.bintray.com/.lastUpdated=1522344395136
+https\://repository-master.mulesoft.org/nexus/content/groups/public/.error=
+https\://app.camunda.com/nexus/content/repositories/public/.error=
+https\://maven.alfresco.com/nexus/content/groups/public/.error=
+https\://repository-master.mulesoft.org/nexus/content/groups/public/.lastUpdated=1522344383314
+http\://dl.bintray.com/milton/Milton/.lastUpdated=1522344393501
+http\://10.20.20.71\:8081/nexus/content/groups/armedia/.lastUpdated=1522344388731
+http\://repository.mulesoft.org/nexus/content/repositories/releases/.lastUpdated=1522344386389
+http\://10.20.20.71\:8081/nexus/content/groups/armedia/.error=
+@default-spring-extensions-milestone-http\://extensions.springframework.org/milestone/.lastUpdated=1522344392462
+http\://repo1.maven.org/maven2/.error=
+http\://dl.bintray.com/milton/Milton/.error=

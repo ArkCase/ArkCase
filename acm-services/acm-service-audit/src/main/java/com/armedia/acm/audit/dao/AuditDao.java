@@ -63,7 +63,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                 "WHERE  ae.objectType = :objectType " +
                 "AND    ae.objectId = :objectId " +
                 "AND 	ae.status != 'DELETE' " +
-                "ORDER BY ae.eventDate";
+                "ORDER BY ae.eventDate, ae.id";
 
         Query findAudits = getEm().createQuery(queryText);
         findAudits.setParameter("objectId", objectId);
@@ -114,7 +114,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                 " JOIN acm_audit_log al" +
                 "    ON al.cm_audit_id = tmp.id" +
                 "  LEFT OUTER JOIN acm_audit_event_type_lu lu ON al.cm_audit_activity = lu.cm_key" +
-                " ORDER BY " + sortBy + " " + direction;
+                " ORDER BY " + sortBy + " " + direction + ", al.cm_audit_id " + direction;
         Query query = getEm().createNativeQuery(queryText, AuditEvent.class);
         query.setFirstResult(startRow);
         query.setMaxResults(maxRows);
@@ -153,7 +153,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         String queryText = "SELECT ae " +
                 "FROM   AuditEvent ae " +
                 "WHERE ae.status != 'DELETE' " +
-                "ORDER BY ae." + sortBy + " " + sort;
+                "ORDER BY ae." + sortBy + " " + sort + ", ae.id " + sort;
         Query query = getEm().createQuery(queryText);
         query.setFirstResult(startRow);
         query.setMaxResults(maxRows);

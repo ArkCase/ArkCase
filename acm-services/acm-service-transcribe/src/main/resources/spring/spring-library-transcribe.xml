@@ -39,10 +39,12 @@
     <!-- post-save handlers -->
     <bean id="transcribeRulesHandler" class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeRulesHandler">
         <property name="transcribeBusinessRulesExecutor" ref="transcribeBusinessRulesExecutor"/>
+        <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
     </bean>
     <bean id="transcribeBusinessProcessHandler" class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeBusinessProcessHandler">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
     </bean>
 
     <bean id="transcribePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -65,11 +67,14 @@
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="transcribeConfigurationPropertiesService" ref="transcribeConfigurationPropertiesService"/>
         <property name="credentialConfigurationFileLocation" value="${user.home}/.arkcase/acm/aws/credentials.properties"/>
+        <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
     </bean>
 
     <bean id="transcribeServiceFactory" class="com.armedia.acm.services.transcribe.factory.TranscribeServiceFactory">
         <property name="awsTranscribeService" ref="awsTranscribeService"/>
     </bean>
+
+    <bean id="transcribeEventPublisher" class="com.armedia.acm.services.transcribe.service.TranscribeEventPublisher"/>
 
     <bean id="arkCaseTranscribeService" class="com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService">
         <property name="transcribeDao" ref="transcribeDao"/>
@@ -81,6 +86,7 @@
         <property name="transcribeServiceFactory" ref="transcribeServiceFactory"/>
         <property name="transcribeArkCaseBeanUtils" ref="transcribeArkCaseBeanUtils"/>
         <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
         <aop:scoped-proxy proxy-target-class="true"/>
     </bean>
 
@@ -105,6 +111,11 @@
     <bean id="ecmFileCopiedListener" class="com.armedia.acm.services.transcribe.listener.EcmFileCopiedListener">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+    </bean>
+
+    <bean id="transcribeProviderFailedListener" class="com.armedia.acm.services.transcribe.listener.TranscribeProviderFailedListener">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="transcribeProcessingChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeProcessingChecker">
