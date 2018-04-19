@@ -17,8 +17,7 @@ public class FunctionalAccessEventPublisher implements ApplicationEventPublisher
 
     public void publishFunctionalAccessUpdateEvent(Object source, Authentication auth)
     {
-        FunctionalAccessUpdatedEvent event = new FunctionalAccessUpdatedEvent(source, auth);
-        getEventPublisher().publishEvent(event);
+        publishFunctionalAccessUpdateEventOnRolesToGroupMap(source, auth.getName());
     }
 
     public void publishFunctionalAccessUpdateEventOnRolesToGroupMap(Object source, String userId)

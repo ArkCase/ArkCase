@@ -52,42 +52,53 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     private ExecuteSolrQuery executeSolrQuery;
 
     @Override
-    public void onApplicationEvent(ApplicationEvent event) {
-        if (event instanceof ConfigurationFileChangedEvent) {
+    public void onApplicationEvent(ApplicationEvent event)
+    {
+        if (event instanceof ConfigurationFileChangedEvent)
+        {
             File eventFile = ((ConfigurationFileChangedEvent) event).getConfigFile();
 
-            if ("applicationRoles.properties".equals(eventFile.getName())) {
+            if ("applicationRoles.properties".equals(eventFile.getName()))
+            {
                 String filename = eventFile.getName();
                 LOG.debug("[{}] has changed!", filename);
 
-                try {
+                try
+                {
                     applicationRolesProperties = getPropertyFileManager().readFromFile(eventFile);
-                } catch (IOException e) {
+                }
+                catch (IOException e)
+                {
                     LOG.info("Could not read new properties; keeping the old properties.");
                 }
 
             }
 
-            if ("applicationRoleToUserGroup.properties".equals(eventFile.getName())) {
+            if ("applicationRoleToUserGroup.properties".equals(eventFile.getName()))
+            {
                 String filename = eventFile.getName();
                 LOG.info("[{}] has changed!", filename);
 
-                try {
+                try
+                {
                     applicationRolesToGroupsProperties = getPropertyFileManager().readFromFile(eventFile);
                     roleToGroupMapping.reloadRoleToGroupMap(applicationRolesToGroupsProperties);
-                } catch (IOException e) {
+                }
+                catch (IOException e)
+                {
                     LOG.info("Could not read new properties; keeping the old properties.");
                 }
             }
 
-        } else if (event instanceof LdapGroupDeletedEvent || event instanceof AdHocGroupDeletedEvent) {
+        }
+        else if (event instanceof LdapGroupDeletedEvent || event instanceof AdHocGroupDeletedEvent)
+        {
             AcmGroup group = (AcmGroup) event.getSource();
             String groupName = group.getName();
             Map<String, Set<String>> roleToGroupsMap = roleToGroupMapping.getRoleToGroupsMapIgnoreCaseSensitive();
             Map<String, List<String>> roleToGroupsMapToPropertyFile = roleToGroupsMap.entrySet().stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey, entry ->
-                            entry.getValue().stream().filter(name -> !name.equals(groupName)).collect(Collectors.toList())
-                    ));
+                    .collect(Collectors.toMap(Map.Entry::getKey,
+                            entry -> entry.getValue().stream().filter(name -> !name.equals(groupName)).collect(Collectors.toList())));
 
             saveApplicationRolesToGroups(roleToGroupsMapToPropertyFile, group.getModifier());
         }
@@ -167,37 +178,30 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     }
 
     @Override
-    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, Authentication auth) {
-        boolean success = false;
-        try {
-            getPropertyFileManager().storeMultiple(prepareRoleToGroupsForSaving(rolesToGroups), getRolesToGroupsPropertyFileLocation(),
-                    true);
-            success = true;
-        } catch (Exception e) {
-            LOG.error("Cannot save roles to groups mapping.", e);
-            success = false;
-        }
-
-        if (success) {
-            getEventPublisher().publishFunctionalAccessUpdateEvent(rolesToGroups, auth);
-        }
-
-        return success;
+    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, Authentication auth)
+    {
+        return saveApplicationRolesToGroups(rolesToGroups, auth.getName());
     }
 
     @Override
-    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, String user) {
+    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, String user)
+    {
+
         boolean success = false;
-        try {
+        try
+        {
             getPropertyFileManager().storeMultiple(prepareRoleToGroupsForSaving(rolesToGroups), getRolesToGroupsPropertyFileLocation(),
                     true);
             success = true;
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             LOG.error("Cannot save roles to groups mapping.", e);
             success = false;
         }
 
-        if (success) {
+        if (success)
+        {
             getEventPublisher().publishFunctionalAccessUpdateEventOnRolesToGroupMap(rolesToGroups, user);
         }
 
