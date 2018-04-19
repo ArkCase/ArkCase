@@ -12,6 +12,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.event.AdHocGroupDeletedEvent;
 import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.mule.api.MuleException;
@@ -23,7 +24,14 @@ import org.springframework.security.core.Authentication;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -76,12 +84,12 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             AcmGroup group = (AcmGroup) event.getSource();
             String groupName = group.getName();
             Map<String, Set<String>> roleToGroupsMap = roleToGroupMapping.getRoleToGroupsMapIgnoreCaseSensitive();
-            Map<String, List<String>> x = roleToGroupsMap.entrySet().stream()
+            Map<String, List<String>> roleToGroupsMapToPropertyFile = roleToGroupsMap.entrySet().stream()
                     .collect(Collectors.toMap(Map.Entry::getKey, entry ->
                             entry.getValue().stream().filter(name -> !name.equals(groupName)).collect(Collectors.toList())
                     ));
 
-            saveApplicationRolesToGroupsOnDeletingGroup(x, group.getModifier());
+            saveApplicationRolesToGroups(roleToGroupsMapToPropertyFile, group.getModifier());
         }
 
     }
@@ -178,7 +186,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     }
 
     @Override
-    public boolean saveApplicationRolesToGroupsOnDeletingGroup(Map<String, List<String>> rolesToGroups, String user) {
+    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, String user) {
         boolean success = false;
         try {
             getPropertyFileManager().storeMultiple(prepareRoleToGroupsForSaving(rolesToGroups), getRolesToGroupsPropertyFileLocation(),
