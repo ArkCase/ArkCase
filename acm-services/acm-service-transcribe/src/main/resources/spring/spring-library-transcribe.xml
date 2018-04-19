@@ -87,6 +87,12 @@
         <property name="transcribeArkCaseBeanUtils" ref="transcribeArkCaseBeanUtils"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
+        <property name="templateService" ref="filesystemTemplateConfigurationService"/>
+        <property name="emailSenderService" ref="smtpService"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="labelManagementService" ref="labelManagementService"/>
+        <property name="acmApplication" ref="acmApplication"/>
         <aop:scoped-proxy proxy-target-class="true"/>
     </bean>
 

@@ -100,6 +100,12 @@
                 "save.success": "文件元数据已成功更新",
                 "save.error": "无法更新文件元数据"
             }
+        },
+        "transcribe":{
+            "email": {
+                "subject": "Transcription Status",
+                "body": "Action :action is performed under Transcription with ID :transcribeId for media file with name ':name'. Please check the status <a style=\"letter-spacing: 1px; text-align: center; font-size:44px;  font-family: Raleway , 'times new roman'; font-weight:400;\" href=\":host/home.html#!/viewer/:id/:containerId/:containerType/:name/:id\">here</a>."
+            }
         }
     }
 }

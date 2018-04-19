@@ -155,6 +155,10 @@
         <property name="acmObjectLockService" ref="objectLockService"/>
     </bean>
 
+    <bean id="getCaseByNumberService" class="com.armedia.acm.plugins.casefile.service.GetCaseByNumberServiceImpl">
+        <property name="caseFileDao" ref="caseFileDao"/>
+    </bean>
+
     <bean id="acmCasesStateProvider" class="com.armedia.acm.plugins.casefile.state.AcmCasesStateProvider">
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
