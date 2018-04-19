@@ -5,6 +5,6 @@ package com.armedia.acm.services.transcribe.model;
  */
 public enum TranscribeUserType
 {
-    OWNER_OF_MEDIA_FILE,
+    OWNER_OF_MEDIA,
     OWNER_OF_PARENT_OBJECT
 }
