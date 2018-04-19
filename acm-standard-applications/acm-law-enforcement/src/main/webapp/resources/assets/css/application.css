@@ -292,23 +292,6 @@ span.fancytree-title {
     margin-right: 10px;
 }
 
-.dashboard .weather {
-    text-align: left;
-}
-
-.dashboard .weather h4 {
-    margin: 0px;
-    padding-top: 20px;
-}
-
-.dashboard .weather h3 {
-    font-weight: bold;
-}
-
-.dashboard .weather .pull-left img {
-    padding: 15px;
-}
-
 .container-fluid {
     margin: 0px;
     padding: 0px;

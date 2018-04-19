@@ -3,7 +3,7 @@
         "select.option.none": "(Wähle Eins)",
         "value.unknown": "Unbekannt",
         "value.none": "Keiner",
-		"_1_": "Bitte verwenden Sie keine benutzerdefinierten Datumsformate oder fügen Sie sie hinzu, da sie fehleranfällig sind.",
+        "_1_": "Bitte verwenden Sie keine benutzerdefinierten Datumsformate oder fügen Sie sie hinzu, da sie fehleranfällig sind.",
         "_2_": "Bitte verwenden Sie eines der vordefinierten Formate: ",
         "_3_": "'mittel'            - entspricht 'MMM t, j u:mm:ss a' für das Gebietsschema en_US (z.B. 3. Sep 2010 12:05:08 Uhr)",
         "_4_": "'kurz'              - entspricht 'M/t/jj u:mm a' für das Gebietsschema en_US (z.B. 3/9/10 12:05 Uhr)",
@@ -21,7 +21,7 @@
         "defaultDateTimeFormat": "MM/TT/JJJJ uu:mm",
         "defaultDatePickerFormat": "MM/tt/jjjj",
         "defaultDateUIFormat": "MM/tt/jjjj",
-        "defaultDateTimeUIFormat": "MM/tt/jjjj UU:mm"   
+        "defaultDateTimeUIFormat": "MM/tt/jjjj UU:mm"
     },
     "common.frevvo": {
         "defaultDateFormat": "JJJJ-MM-TT"
@@ -109,8 +109,8 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "Als Anhang und Hyperlink senden",
             "btnCancel.text": "Stornieren",
             "btnOk.text": "E-Mail senden"
-		},
-		"participantsDialog": {
+        },
+        "participantsDialog": {
             "titlePart": "Teilnehmer für ",
             "title": "Teilnehmer"
         },
@@ -180,9 +180,11 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "Wählen",
         "not_authorized": "Nicht berechtigt",
+        "not_member": "de_Not Member",
         "tooltip.move_right": "Nach rechts bewegen",
         "tooltip.move_left": "Geh nach links",
-        "authorized": "Autorisiert"
+        "authorized": "Autorisiert",
+        "member": "de_Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "Fehler, 2 Zeichen erforderlich."
@@ -194,9 +196,9 @@
         "btnCancel.text": "Abbrechen",
         "edtPlaceholder": "In die Suche eingeben",
         "noData.text": "Keine Ergebnisse",
-		"pickUserLabel": "Wählen Sie den zugeordneten Benutzer aus",
+        "pickUserLabel": "Wählen Sie den zugeordneten Benutzer aus",
         "pickGroupLabel": "Wählen Sie Zugehörige Gruppe",
-		"selectedItemsGrid.label": "Ausgewählte Einträge"
+        "selectedItemsGrid.label": "Ausgewählte Einträge"
     },
     "common.directive.search": {
         "showMore.button.text": "Mehr Werte anzeigen",
@@ -611,7 +613,7 @@
             "error.noAccessCombo": "Die Kombination von No Access und Assignee ist nicht zulässig.",
             "error.duplicateUserOrGroup": "Ungültiger Teilnehmer Doppelte Einträge für den Teilnehmer gefunden",
             "error.userOrGroupNotFound": "Ungültiger Teilnehmer Teilnehmer fehlt im System.",
-			"error.emptyParticipantLdapId": "Der Name des Teilnehmers darf nicht leer sein",
+            "error.emptyParticipantLdapId": "Der Name des Teilnehmers darf nicht leer sein",
             "error.emptyParticipantType": "Der Teilnehmertyp darf nicht leer sein",
             "error.ownerUnique": "Nur ein Besitzer ist erlaubt."
         }

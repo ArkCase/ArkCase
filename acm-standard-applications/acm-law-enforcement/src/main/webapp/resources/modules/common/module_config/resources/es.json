@@ -3,7 +3,7 @@
         "select.option.none": "(Seleccionar uno)",
         "value.unknown": "Desconocido",
         "value.none": "Ninguna",
-		"_1_": "No utilice estilos de fecha personalizados ni los agregue, ya que son propensos a errores.",
+        "_1_": "No utilice estilos de fecha personalizados ni los agregue, ya que son propensos a errores.",
         "_2_": "Use uno de los formatos predefinidos: ",
         "_3_": "'medio'     - equivalente a 'MMM d, a h:mm:ss a' para la configuración en_US (p.ej. 3 de septiembre de 2010, 12:05:08 p.m.)",
         "_4_": "'corto'     - equivalente a 'M/d/aa h:mm a' para la configuración en_US (p.ej. 9/3/10 12:05 PM)",
@@ -110,10 +110,10 @@
             "btnCancel.text": "Cancelar",
             "btnOk.text": "Enviar correo electrónico"
         },
-		"participantsDialog": {
+        "participantsDialog": {
             "titlePart": "Participantes para ",
             "title": "Participantes"
-		},	
+        },
         "recipientsDialog": {
             "title": "Elija destinatarios",
             "search.placeholder": "Destinatarios de búsqueda",
@@ -180,9 +180,11 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "Elija",
         "not_authorized": "No autorizado",
+        "not_member": "es_Not Member",
         "tooltip.move_right": "Mover a la derecha",
         "tooltip.move_left": "Mover hacia la izquierda",
-        "authorized": "Autorizado"
+        "authorized": "Autorizado",
+        "member": "es_Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "Error, se requieren 2 caracteres."
@@ -194,9 +196,9 @@
         "btnCancel.text": "Cancelar",
         "edtPlaceholder": "Escriba para buscar",
         "noData.text": "Sin resultados",
-		"pickUserLabel": "Elige usuario asociado",
+        "pickUserLabel": "Elige usuario asociado",
         "pickGroupLabel": "Elige un grupo asociado",
-		"selectedItemsGrid.label": "Entradas seleccionadas"
+        "selectedItemsGrid.label": "Entradas seleccionadas"
     },
     "common.directive.search": {
         "showMore.button.text": "Mostrar más valores",
@@ -493,9 +495,9 @@
             "day.label": "Día",
             "week.label": "Semana",
             "month.label": "Mes",
-		    "_1_": "'en.etiqueta' parece no estar en uso. _Ser_Eliminado_",
+            "_1_": "'en.etiqueta' parece no estar en uso. _Ser_Eliminado_",
             "_2_": "Si es necesario, reformule el mensaje para evitar la gramática centrada en inglés en el mensaje",
-            "_on.label": "En", 
+            "_on.label": "En",
             "day.placeholder": "Día",
             "year.placeholder": "Año",
             "dailyRecurrence": {
@@ -611,7 +613,7 @@
             "error.noAccessCombo": "La combinación de No Access y Assignee no está permitida.",
             "error.duplicateUserOrGroup": "Participante inválido Entradas duplicadas encontradas para el participante.",
             "error.userOrGroupNotFound": "Participante inválido Falta la entrada del participante en el sistema.",
-			"error.emptyParticipantLdapId": "El nombre del participante no puede estar vacío",
+            "error.emptyParticipantLdapId": "El nombre del participante no puede estar vacío",
             "error.emptyParticipantType": "El tipo de participante no puede estar vacío",
             "error.ownerUnique": "Solo se permite un dueño."
         }
