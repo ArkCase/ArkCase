@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180319104431" modeler:modelId="1043074" modeler:modelVersion="1" modeler:modelLastUpdated="1521456265929">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180418073659" modeler:modelId="1043074" modeler:modelVersion="1" modeler:modelLastUpdated="1524033397336">
   <process id="TranscribeWorkflow" name="TranscribeWorkflow" isExecutable="true">
     <startEvent id="start" name="Start">
       <extensionElements>
@@ -21,14 +21,9 @@
         <modeler:editor-resource-id><![CDATA[sid-0F6C7B0A-A659-4EC3-A5E4-C4B67AEA4D4C]]></modeler:editor-resource-id>
       </extensionElements>
     </parallelGateway>
-    <serviceTask id="notifyOwnerOfTheMedia" name="Notify owner of the Media file for ${ACTION} for all IDS" activiti:expression="#{arkCaseTranscribeService.notifyMultiple(IDS, 'OWNER_OF_MEDIA', ACTION)}">
+    <serviceTask id="notifyOwnerOfTheMedia" name="Notify owner of the Media file and owner of the parent object for ${ACTION} for all IDS" activiti:expression="#{arkCaseTranscribeService.notifyMultiple(IDS, ACTION)}">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-75FA9C84-3070-48C3-84C2-3FAF9B779393]]></modeler:editor-resource-id>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="notifyOwnerOfTheParentObject" name="Notify owner of the Parent object for ${ACTION} for all IDS" activiti:expression="#{arkCaseTranscribeService.notifyMultiple(IDS, 'OWNER_OF_PARENT_OBJECT', ACTION)}">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-C069098E-83C3-4F00-AF4D-6A2811774C68]]></modeler:editor-resource-id>
       </extensionElements>
     </serviceTask>
     <serviceTask id="auditEvent" name="Audit Event for ${ACTION} for all IDS" activiti:expression="#{arkCaseTranscribeService.auditMultiple(IDS, ACTION)}">
@@ -72,11 +67,6 @@
         <modeler:editor-resource-id><![CDATA[sid-9816D97E-8F70-4803-A50D-5F438A473162]]></modeler:editor-resource-id>
       </extensionElements>
     </receiveTask>
-    <sequenceFlow id="parallelActionsToNotifyOwnerOfParentObject" sourceRef="parallelActionsStart" targetRef="notifyOwnerOfTheParentObject">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-A5682786-F668-4337-8047-CC88FEC16C03]]></modeler:editor-resource-id>
-      </extensionElements>
-    </sequenceFlow>
     <sequenceFlow id="parallelActionsToAuditEvent" sourceRef="parallelActionsStart" targetRef="auditEvent">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-780E45B3-188F-4C49-9FDC-1FEF32707D2D]]></modeler:editor-resource-id>
@@ -117,11 +107,6 @@
         <modeler:editor-resource-id><![CDATA[sid-5514F989-6FCB-4D07-9897-194164DF4F37]]></modeler:editor-resource-id>
       </extensionElements>
     </serviceTask>
-    <sequenceFlow id="notifyOwnerOfTheParentObjectToParalelActions" sourceRef="notifyOwnerOfTheParentObject" targetRef="parallelActionsEnd">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-FA6912F8-1F57-41D0-AD1C-D249878C0936]]></modeler:editor-resource-id>
-      </extensionElements>
-    </sequenceFlow>
     <exclusiveGateway id="parallelOrExclusiveGatewayDecision">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-1C1093BB-95E9-45D5-A2B5-B681CC161120]]></modeler:editor-resource-id>
@@ -267,10 +252,7 @@
         <omgdc:Bounds height="40.0" width="40.0" x="555.0" y="398.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="notifyOwnerOfTheMedia" id="BPMNShape_notifyOwnerOfTheMedia">
-        <omgdc:Bounds height="103.0" width="126.0" x="650.0" y="240.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="notifyOwnerOfTheParentObject" id="BPMNShape_notifyOwnerOfTheParentObject">
-        <omgdc:Bounds height="102.0" width="128.0" x="650.0" y="367.0"/>
+        <omgdc:Bounds height="103.0" width="126.0" x="650.0" y="280.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="auditEvent" id="BPMNShape_auditEvent">
         <omgdc:Bounds height="105.0" width="133.0" x="647.5" y="495.0"/>
@@ -342,12 +324,8 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="parallelActionsToNotifyOwnerOfTheMedia" id="BPMNEdge_parallelActionsToNotifyOwnerOfTheMedia">
         <omgdi:waypoint x="575.5" y="398.5"/>
-        <omgdi:waypoint x="575.5" y="291.5"/>
-        <omgdi:waypoint x="650.0" y="291.5"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="notifyOwnerOfTheParentObjectToParalelActions" id="BPMNEdge_notifyOwnerOfTheParentObjectToParalelActions">
-        <omgdi:waypoint x="778.0" y="418.0"/>
-        <omgdi:waypoint x="870.0" y="418.0"/>
+        <omgdi:waypoint x="575.5" y="331.5"/>
+        <omgdi:waypoint x="650.0" y="331.5"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="automaticOrManualDecisionToWaitToComplete" id="BPMNEdge_automaticOrManualDecisionToWaitToComplete">
         <omgdi:waypoint x="1175.4181034482758" y="437.5818965517241"/>
@@ -410,8 +388,8 @@
         <omgdi:waypoint x="647.5" y="521.25"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="notifyOwnerOfTheMediaToParalelActions" id="BPMNEdge_notifyOwnerOfTheMediaToParalelActions">
-        <omgdi:waypoint x="776.0" y="291.5"/>
-        <omgdi:waypoint x="890.0" y="291.5"/>
+        <omgdi:waypoint x="776.0" y="331.5"/>
+        <omgdi:waypoint x="890.0" y="331.5"/>
         <omgdi:waypoint x="890.0" y="398.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="auditEventToParallelOrExclusiveGatewayDecision" id="BPMNEdge_auditEventToParallelOrExclusiveGatewayDecision">
@@ -437,10 +415,6 @@
         <omgdi:waypoint x="1175.0" y="211.0"/>
         <omgdi:waypoint x="290.0" y="211.0"/>
         <omgdi:waypoint x="290.0" y="378.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="parallelActionsToNotifyOwnerOfParentObject" id="BPMNEdge_parallelActionsToNotifyOwnerOfParentObject">
-        <omgdi:waypoint x="594.6266122098023" y="418.37338779019774"/>
-        <omgdi:waypoint x="650.0" y="418.00683322656414"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

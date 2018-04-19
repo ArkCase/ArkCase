@@ -12,6 +12,8 @@ import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.TimePeriod;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,8 @@ import java.util.List;
 @Transactional
 public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotificationDao, AcmNameDao
 {
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public CaseFile save(CaseFile toSave)
@@ -138,12 +142,21 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
     public CaseFile findByCaseNumber(String caseNumber)
     {
+        CaseFile result = null;
         String queryText = "SELECT cf FROM CaseFile cf WHERE cf.caseNumber = :caseNumber";
 
         Query findByCaseNumber = getEm().createQuery(queryText);
         findByCaseNumber.setParameter("caseNumber", caseNumber);
 
-        return (CaseFile) findByCaseNumber.getSingleResult();
+        try
+        {
+            result = (CaseFile) findByCaseNumber.getSingleResult();
+        }
+        catch (Exception e)
+        {
+            LOG.warn("No case file has case number {}", caseNumber);
+        }
+        return result;
     }
 
     public List<CaseFile> findByCaseNumberKeyword(String expression)

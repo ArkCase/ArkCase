@@ -54,6 +54,8 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setStatus_lcs(in.getStatus().name());
 
         solr.getAdditionalProperties().put("ascendants_id_ss", in.getAscendantsStream().collect(Collectors.toList()));
+        solr.getAdditionalProperties().put("groups_member_of_id_ss",
+                in.getMemberOfGroups().stream().map(AcmGroup::getName).collect(Collectors.toList()));
 
         if (in.getSupervisor() != null)
         {
