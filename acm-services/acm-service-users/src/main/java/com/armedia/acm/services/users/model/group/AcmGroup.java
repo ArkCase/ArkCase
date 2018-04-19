@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
-
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -25,7 +24,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
@@ -41,6 +39,7 @@ import java.util.stream.Stream;
 @Entity
 @Table(name = "acm_group")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
+@LdapGroupNameValidation(message = "Ldap group name validation")
 public class AcmGroup implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = -2729731595684630823L;

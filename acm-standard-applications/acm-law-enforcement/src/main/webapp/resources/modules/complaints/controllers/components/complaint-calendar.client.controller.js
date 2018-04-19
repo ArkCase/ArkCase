@@ -29,7 +29,7 @@ angular.module('complaints').controller(
 
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
-                        $scope.objectId = objectInfo.id;
+                        $scope.objectId = objectInfo.complaintId;
                         $scope.eventSources = [];
                         CalendarService.isCalendarConfigurationEnabled('COMPLAINT').then(function(data) {
                             $scope.objectInfoRetrieved = data;

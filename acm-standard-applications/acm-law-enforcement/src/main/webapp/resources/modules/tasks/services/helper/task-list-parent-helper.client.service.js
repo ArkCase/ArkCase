@@ -67,12 +67,19 @@ angular
                                     };
                                     that.promiseUsers = arg.promiseUsers || that.gridHelper.getUsers();
                                     that.scope.onConfigRetrieved = arg.onConfigRetrieved || function(config) {
-                                        that.gridHelper.setColumnDefs(config);
-                                        that.gridHelper.setBasicOptions(config);
-                                        that.gridHelper.disableGridScrolling(config);
-                                        that.gridHelper.setExternalPaging(config, that.scope.populateGridData);
-                                        that.gridHelper.setUserNameFilter(that.promiseUsers);
-                                        that.gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
+                                        that.scope.config = config;
+                                        //first the filter is set, and after that everything else,
+                                        //so that the data loads with the new filter applied
+                                        that.gridHelper.setUserNameFilterToConfig(that.promiseUsers).then(function(updatedConfig) {
+                                            that.scope.config = updatedConfig;
+                                            if (that.scope.gridApi != undefined)
+                                                that.scope.gridApi.core.refresh();
+                                            that.gridHelper.setColumnDefs(updatedConfig);
+                                            that.gridHelper.setBasicOptions(updatedConfig);
+                                            that.gridHelper.disableGridScrolling(updatedConfig);
+                                            that.gridHelper.setExternalPaging(updatedConfig, that.scope.populateGridData);
+                                            that.gridHelper.addButton(updatedConfig, "delete", null, null, "isDeleteDisabled");
+                                        });
                                         that.scope.componentHelper.doneConfig(config);
                                     };
                                     that.scope.onObjectInfoRetrieved = arg.onObjectInfoRetrieved || function(object) {

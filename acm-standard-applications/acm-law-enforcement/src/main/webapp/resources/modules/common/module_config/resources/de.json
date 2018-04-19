@@ -649,7 +649,8 @@
         "PARTICIPANT": "Teilnehmer",
         "NOTE": "Hinweis",
         "PARTICIPANT-ASSOCIATION": "Teilnehmer-Verband",
-        "ASSIGNMENT": "Zuordnung"
+        "ASSIGNMENT": "Zuordnung",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "Wähle Benutzer",

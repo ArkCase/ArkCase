@@ -150,6 +150,8 @@
         <property name="acmGroupEventPublisher" ref="acmGroupEventPublisher"/>
     </bean>
 
+    <bean id="ldapGroupNameValidator" class="com.armedia.acm.services.users.service.group.LdapGroupNameValidator"/>
+
     <bean id="ldapAddUserPropertiesFile" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the

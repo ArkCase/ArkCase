@@ -122,8 +122,4 @@
                   value="${audit.mule.flows.logging.message.properties.enabled}"/>
         <property name="contentTypesToLog" value="#{'${audit.contentTypesToLog}'.split(',')}"/>
     </bean>
-
-    <bean id="acmAuditStateProvider" class="com.armedia.acm.audit.state.AcmAuditStateProvider">
-        <property name="auditDao" ref="auditDao"/>
-    </bean>
 </beans>

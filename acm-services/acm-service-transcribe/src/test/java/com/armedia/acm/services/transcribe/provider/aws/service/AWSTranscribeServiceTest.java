@@ -13,6 +13,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.model.Transcribe;
 import com.armedia.acm.services.transcribe.model.TranscribeType;
+import com.armedia.acm.services.transcribe.service.TranscribeEventPublisher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,6 +57,9 @@ public class AWSTranscribeServiceTest
     @Mock
     private InputStream inputStream;
 
+    @Mock
+    private TranscribeEventPublisher transcribeEventPublisher;
+
     @Before
     public void setUp()
     {
@@ -67,6 +71,7 @@ public class AWSTranscribeServiceTest
         awsTranscribeService.setTranscribeClient(transcribeClient);
         awsTranscribeService.setEcmFileTransaction(ecmFileTransaction);
         awsTranscribeService.setAwsTranscribeConfigurationPropertiesService(awsTranscribeConfigurationPropertiesService);
+        awsTranscribeService.setTranscribeEventPublisher(transcribeEventPublisher);
     }
 
     @Test
