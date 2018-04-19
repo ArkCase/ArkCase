@@ -4,6 +4,7 @@ import com.armedia.acm.services.users.model.event.AdHocGroupDeletedEvent;
 import com.armedia.acm.services.users.model.event.LdapGroupCreatedEvent;
 import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -36,7 +37,8 @@ public class AcmGroupEventPublisher implements ApplicationEventPublisherAware
     }
 
     @Async
-    public void publishAdHocGroupDeletedEvent(AcmGroup source) {
+    public void publishAdHocGroupDeletedEvent(AcmGroup source)
+    {
         log.debug("Publishing ADHOC group: [{}] deleted event.", source.getName());
         AdHocGroupDeletedEvent event = new AdHocGroupDeletedEvent(source);
         event.setSucceeded(true);
