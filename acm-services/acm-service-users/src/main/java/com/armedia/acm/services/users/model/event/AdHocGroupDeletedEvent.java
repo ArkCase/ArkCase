@@ -2,11 +2,12 @@ package com.armedia.acm.services.users.model.event;
 
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
-public class LdapGroupDeletedEvent extends GroupPersistenceEvent
+public class AdHocGroupDeletedEvent extends GroupPersistenceEvent
 {
-    private static final String EVENT_TYPE = "com.armedia.acm.ldapGroup.deleted";
 
-    public LdapGroupDeletedEvent(AcmGroup source)
+    private static final String EVENT_TYPE = "com.armedia.acm.adHocGroup.deleted";
+
+    public AdHocGroupDeletedEvent(AcmGroup source)
     {
         super(source);
         setUserId(source.getModifier());
