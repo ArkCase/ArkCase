@@ -109,13 +109,7 @@ angular.module('cases').controller(
                     };
 
                     $scope.isDeleteDisabled = function(rowEntity) {
-                        if (rowEntity.adhocTask_b) {
-                            return false;
-                        } else if (!Util.isEmpty(rowEntity.task_owner_s) && rowEntity.task_owner_s === rowEntity.author_s) {
-                            return false;
-                        } else {
-                            return true;
-                        }
+                        return (Util.isEmpty(rowEntity.task_owner_s) || (rowEntity.task_owner_s !== rowEntity.author_s));
                     };
 
                     $scope.onClickObjLink = function(event, rowEntity) {
