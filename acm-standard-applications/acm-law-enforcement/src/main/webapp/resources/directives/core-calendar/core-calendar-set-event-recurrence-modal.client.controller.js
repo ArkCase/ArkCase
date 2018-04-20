@@ -14,8 +14,10 @@ angular
                         'Util.DateService',
                         'Directives.CalendarUtilService',
                         'Helper.LocaleService',
+                        'Util.DateService',
+                        'UtilService',
                         function($scope, $params, $modal, $modalInstance, CalendarService, MessageService, DateService,
-                                CalendarUtilService, LocaleHelper) {
+                                CalendarUtilService, LocaleHelper, UtilDateService, Util) {
                             new LocaleHelper.Locale({
                                 scope : $scope
                             });
@@ -560,6 +562,40 @@ angular
                                 };
 
                                 $modalInstance.close(modalActionData);
+                            };
+
+                            $scope.startDateChanged = function() {
+                                var todayDate = new Date();
+                                if (Util.isEmpty($scope.recurrenceTmpModel.start)
+                                        || moment($scope.recurrenceTmpModel.start).isBefore(todayDate)) {
+                                    $scope.recurrenceTmpModel.start = todayDate;
+                                }
+
+                                if (moment($scope.recurrenceTmpModel.start).isAfter($scope.recurrenceTmpModel.end)) {
+                                    $scope.recurrenceTmpModel.end = UtilDateService.convertToCurrentTime($scope.recurrenceTmpModel.start);
+                                }
+
+                                $scope.recurrenceTmpModel.end = UtilDateService.setSameTime($scope.recurrenceTmpModel.start,
+                                        $scope.recurrenceTmpModel.end);
+                                $scope.minEndDate = $scope.recurrenceTmpModel.start;
+                            };
+
+                            $scope.endDateChanged = function() {
+                                var validateDate = DateService.validateToDate($scope.recurrenceTmpModel.start,
+                                        $scope.recurrenceTmpModel.end);
+                                $scope.recurrenceTmpModel.start = validateDate.from;
+                                $scope.recurrenceTmpModel.end = validateDate.to;
+                                var todayDate = new Date();
+                                if (Util.isEmpty($scope.recurrenceTmpModel.end)) {
+                                    $scope.recurrenceTmpModel.end = todayDate;
+                                }
+
+                                if (moment($scope.recurrenceTmpModel.end).isBefore($scope.recurrenceTmpModel.start)) {
+                                    $scope.recurrenceTmpModel.end = UtilDateService.convertToCurrentTime($scope.recurrenceTmpModel.start);
+                                }
+
+                                $scope.recurrenceTmpModel.start = UtilDateService.setSameTime($scope.recurrenceTmpModel.start,
+                                        $scope.recurrenceTmpModel.end);
                             };
 
                             /*Cancel the modal dialog*/
