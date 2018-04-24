@@ -18,6 +18,11 @@
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
+    <bean id="getCaseByNumberAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCaseByNumberAPIController">
+        <property name="getCaseByNumberService" ref="getCaseByNumberService"/>
+        <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
+    </bean>
+
     <bean id="getCasesByStatusAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCasesByStatusAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>

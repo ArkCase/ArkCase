@@ -59,6 +59,7 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
         return $http({
             method : 'GET',
             url : 'api/latest/plugin/admin/moduleconfiguration/modules/paged',
+            cache : false,
             params : {
                 dir : (data.dir ? data.dir : "name_lcs ASC"),
                 n : (data.n ? data.n : 50),
@@ -107,6 +108,7 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
     function getRolesForModulePrivilege(modulePrivilege) {
         return $http({
             method : 'GET',
+            cache : false,
             url : 'api/latest/plugin/admin/rolesprivileges/privileges/' + modulePrivilege + '/roles'
         });
     }
