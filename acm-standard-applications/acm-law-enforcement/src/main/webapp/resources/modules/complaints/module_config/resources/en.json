@@ -416,6 +416,8 @@
                 "dueDate": "Complaint - Due Date Changed",
                 "tag": "Complaint - Tag Changed",
                 "modifier": "Complaint - Modifier Changed",
+                "personAssociations.personAssociation.personType": "Person Association - Type Changed",
+                "organizationAssociations.organizationAssociation.associationType": "Organization Association - Type Changed",
                 "addresses.address": {
                     "city": "Address - City Changed",
                     "zip": "Address - Zip Code Changed",
