@@ -524,14 +524,14 @@ angular
 
                             if(!Util.isEmpty(selected.masterSelectedItem)) {
                                 message.data.fullName = selected.masterSelectedItem.name;
-                                message.data.personId = selected.masterSelectedItem.id;
+                                message.data.personId = selected.masterSelectedItem.object_id_s;
                                 message.data.personType = selected.masterSelectedItem.object_type_s;
                                 message.data.title = selected.masterSelectedItem.title_parseable;
                             }
 
                             else if(!Util.isEmpty(selected)) {
                                 message.data.fullName = selected.name;
-                                message.data.personId = selected.id;
+                                message.data.personId = selected.object_id_s;
                                 message.data.personType = selected.object_type_s;
                                 message.data.title = selected.title_parseable;
                             }

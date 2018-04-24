@@ -24,6 +24,13 @@ public class FunctionalAccessUpdatedEvent extends AcmEvent
         setUserId(auth.getName());
     }
 
+    public FunctionalAccessUpdatedEvent(Object source, String userId)
+    {
+        super(source);
+        setEventDate(new Date());
+        setUserId(userId);
+    }
+
     @Override
     public String getEventType()
     {

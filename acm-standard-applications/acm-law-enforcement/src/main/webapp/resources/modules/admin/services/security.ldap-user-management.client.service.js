@@ -39,6 +39,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         return $http({
             method : 'PUT',
             url : url,
+            cache : false,
             data : groups
         });
     }
@@ -50,6 +51,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         return $http({
             method : 'DELETE',
             url : url,
+            cache : false,
             params : groupNames
         });
     }
@@ -168,8 +170,9 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         return $http({
             method : 'GET',
             url : 'api/latest/users/' + data.member.key + '/groups/',
+            cache : false,
             params : {
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
                 authorized : data.isAuthorized
             }
