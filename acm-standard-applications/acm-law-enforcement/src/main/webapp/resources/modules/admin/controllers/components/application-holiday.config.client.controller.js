@@ -37,8 +37,10 @@ angular.module('admin').controller(
                         };
                     });
 
+                    $scope.holidaySchedule = {};
                     var reloadGrid = function(data) {
-                        $scope.gridOptions.data = data;
+                        $scope.holidaySchedule.weekends = data.weekends;
+                        $scope.gridOptions.data = data.holidays;
                     };
 
                     AdminHolidayService.getHolidays().then(function(response) {
@@ -47,9 +49,21 @@ angular.module('admin').controller(
                             reloadGrid(response.data);
                         }
                     });
+                    $scope.save = function() {
+                        var holidayConfig = {
+                            "weekends" : $scope.holidaySchedule.weekends,
+                            "holidays" : $scope.gridOptions.data
+                        };
+                        saveConfig(holidayConfig);
 
-                    var saveConfig = function(holidayConfig) {
-                        AdminHolidayService.saveHolidays(holidayConfig).then(function(data) {
+                    };
+                    var saveConfig = function() {
+                        var holidayConfiguration = {
+                            "weekends" : $scope.holidaySchedule.weekends,
+                            "holidays" : $scope.gridOptions.data
+
+                        };
+                        AdminHolidayService.saveHolidays(holidayConfiguration).then(function(data) {
                             MessageService.succsessAction();
                             reloadGrid(data.config.data);
                         }, function() {
@@ -59,7 +73,7 @@ angular.module('admin').controller(
 
                     function showModal(holiday, isEdit) {
                         var params = {};
-                        params.holiday = holiday;
+                        params.holidays = holiday;
                         params.isEdit = isEdit;
 
                         var modalInstance = $modal.open({
