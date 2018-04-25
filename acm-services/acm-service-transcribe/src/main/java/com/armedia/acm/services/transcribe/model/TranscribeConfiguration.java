@@ -44,8 +44,11 @@ public class TranscribeConfiguration implements Serializable
     @ConfigurationProperty(key = "transcribe.providers", write = false)
     private List<TranscribeServiceProvider> providers;
 
-    @ConfigurationProperty(key = "transcribe.allowed.media.duration.in.seconds", write = false)
+    @ConfigurationProperty(key = "transcribe.allowed.media.duration.in.seconds")
     private long allowedMediaDuration;
+
+    @ConfigurationProperty(key = "transcribe.silent.between.words.in.seconds")
+    private BigDecimal silentBetweenWords;
 
     public boolean isEnabled()
     {
@@ -165,6 +168,16 @@ public class TranscribeConfiguration implements Serializable
         this.allowedMediaDuration = allowedMediaDuration;
     }
 
+    public BigDecimal getSilentBetweenWords()
+    {
+        return silentBetweenWords;
+    }
+
+    public void setSilentBetweenWords(BigDecimal silentBetweenWords)
+    {
+        this.silentBetweenWords = silentBetweenWords;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -182,14 +195,15 @@ public class TranscribeConfiguration implements Serializable
                 numberOfFilesForProcessing == that.numberOfFilesForProcessing &&
                 wordCountPerItem == that.wordCountPerItem &&
                 provider == that.provider &&
-                allowedMediaDuration == that.allowedMediaDuration;
+                allowedMediaDuration == that.allowedMediaDuration &&
+                that.silentBetweenWords != null ? that.silentBetweenWords.equals(silentBetweenWords) : silentBetweenWords == null;
     }
 
     @Override
     public int hashCode()
     {
         return Objects.hash(enabled, automaticEnabled, newTranscriptionForNewVersion, copyTranscriptionForNewVersion, cost, confidence,
-                numberOfFilesForProcessing, wordCountPerItem, provider, allowedMediaDuration);
+                numberOfFilesForProcessing, wordCountPerItem, provider, allowedMediaDuration, silentBetweenWords);
     }
 
     @Override
@@ -206,6 +220,7 @@ public class TranscribeConfiguration implements Serializable
                 ", wordCountPerItem=" + wordCountPerItem +
                 ", provider=" + provider +
                 ", allowedMediaDuration=" + allowedMediaDuration +
+                ", silentBetweenWords=" + silentBetweenWords +
                 '}';
     }
 }
