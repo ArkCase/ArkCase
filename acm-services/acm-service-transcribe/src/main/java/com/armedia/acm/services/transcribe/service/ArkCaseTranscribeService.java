@@ -707,6 +707,11 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         try
         {
             Transcribe transcribeForProcessing = existingTranscribe != null ? existingTranscribe : transcribe;
+            if (transcribeForProcessing.getId() != null)
+            {
+                // Reset 'remoteId' for existing Transcriptions that we want to be transcribed again
+                transcribe.setRemoteId(null);
+            }
             Transcribe created = getPipelineManager().executeOperation(transcribeForProcessing, context, () -> {
                 try
                 {
