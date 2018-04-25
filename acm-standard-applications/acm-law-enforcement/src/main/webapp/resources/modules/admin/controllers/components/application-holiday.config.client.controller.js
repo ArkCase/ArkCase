@@ -43,12 +43,17 @@ angular.module('admin').controller(
                         $scope.gridOptions.data = data.holidays;
                     };
 
-                    AdminHolidayService.getHolidays().then(function(response) {
-                        if (!Util.isEmpty(response.data)) {
+                    $scope.loadPage();
 
-                            reloadGrid(response.data);
-                        }
-                    });
+                    $scope.loadPage = function() {
+                        AdminHolidayService.getHolidays().then(function(response) {
+                            if (!Util.isEmpty(response.data)) {
+
+                                reloadGrid(response.data);
+                            }
+                        });
+                    };
+
                     $scope.save = function() {
                         var holidayConfig = {
                             "weekends" : $scope.holidaySchedule.weekends,
