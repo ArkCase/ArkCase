@@ -9,15 +9,15 @@ angular.module('admin').controller(
                 '$log',
                 'UtilService',
                 'MessageService',
-                function($scope, functionalAccessControlService, $q, $log, Util, MessageService) {
-                    var tempAppRolesPromise = functionalAccessControlService.getAppRoles();
-                    var tempUserGroupsPromise = functionalAccessControlService.getUserGroups();
-                    var tempAppRolesUserGroupsPromise = functionalAccessControlService.getAppUserToGroups();
-                    var deferred = $q.defer();
+                function($scope, FunctionalAccessControlService, $q, $log, Util, MessageService) {
+                    var tempAppRolesPromise = FunctionalAccessControlService.getAppRolesPaged({});
+                    var tempUserGroupsPromise = FunctionalAccessControlService.getUserGroups();
+                    var tempAppRolesUserGroupsPromise = FunctionalAccessControlService.getAppUserToGroups();
 
                     $scope.onObjSelect = onObjSelect;
                     $scope.fillList = fillList;
                     //scroll functions
+                    $scope.rolesScroll = rolesScroll;
                     $scope.unauthorizedScroll = unauthorizedScroll;
                     $scope.authorizedScroll = authorizedScroll;
                     $scope.retrieveDataScroll = retrieveDataScroll;
@@ -27,6 +27,7 @@ angular.module('admin').controller(
                     $scope.appRoleUnauthorizedFilter = appRoleUnauthorizedFilter;
                     $scope.appRoleAuthorizedFilter = appRoleAuthorizedFilter;
 
+                    var currentAuthGroups = [];
                     $scope.lastSelectedRole = "";
                     $scope.userGroupsAll = [];
                     // Loaded data after the initialization
@@ -42,6 +43,7 @@ angular.module('admin').controller(
                         "selectedAuthorized" : []
                     };
                     $scope.scrollLoadData = {
+                        "loadObjectsScroll" : $scope.rolesScroll,
                         "loadUnauthorizedScroll" : $scope.unauthorizedScroll,
                         "loadAuthorizedScroll" : $scope.authorizedScroll
                     };
@@ -54,23 +56,7 @@ angular.module('admin').controller(
                     //wait all promises to resolve
                     $q.all([ tempAppRolesPromise, tempUserGroupsPromise, tempAppRolesUserGroupsPromise ]).then(function(payload) {
                         //get all appRoles
-                        angular.forEach(payload[0].data, function(appRole) {
-                            var element = new Object;
-                            element.name = appRole;
-                            element.key = appRole;
-                            initRolesData.chooseObject.push(element);
-                        });
-
-                        //get all user groups
-                        angular.forEach(payload[1].data.response.docs, function(userGroup) {
-                            initRolesData.userGroupsAll[userGroup['object_id_s']] = userGroup;
-                        });
-
-                        //get all app roles to groups
-                        initRolesData.appRolesUserGroups = payload[2].data;
-
-                        //init the displaying object
-                        $scope.rolesData.chooseObject = angular.copy(initRolesData.chooseObject);
+                        $scope.fillList($scope.rolesData.chooseObject, payload[0].data);
 
                         $scope.onObjSelect($scope.rolesData.chooseObject[0]);
                     });
@@ -82,11 +68,12 @@ angular.module('admin').controller(
                             $scope.lastSelectedRole = selectedObject;
                             var data = {};
                             data.roleName = selectedObject;
+                            currentAuthGroups = [];
 
                             data.isAuthorized = true;
-                            var authorizedGroupsForRole = functionalAccessControlService.getGroupsForRole(data);
+                            var authorizedGroupsForRole = FunctionalAccessControlService.getGroupsForRolePaged(data);
                             data.isAuthorized = false;
-                            var unAuthorizedGroupsForRole = functionalAccessControlService.getGroupsForRole(data);
+                            var unAuthorizedGroupsForRole = FunctionalAccessControlService.getGroupsForRolePaged(data);
 
                             $q.all([ authorizedGroupsForRole, unAuthorizedGroupsForRole ]).then(function(result) {
                                 $scope.rolesData.selectedNotAuthorized = [];
@@ -98,6 +85,7 @@ angular.module('admin').controller(
                                     authObject.key = element;
                                     authObject.name = element;
                                     $scope.rolesData.selectedAuthorized.push(authObject);
+                                    currentAuthGroups.push(authObject.key);
                                 });
 
                                 //set unauthorized groups
@@ -114,30 +102,74 @@ angular.module('admin').controller(
 
                     //callback function when groups are moved
                     function onAuthRoleSelected(selectedObject, authorized, notAuthorized) {
-                        //get authorized user groups for selected app role and save all app roles user groups
-                        initRolesData.appRolesUserGroups[selectedObject.key] = [];
-                        angular.forEach(authorized, function(element) {
-                            initRolesData.appRolesUserGroups[selectedObject.key].push(element.key);
+                        var toBeAdded = [];
+                        var toBeRemoved = [];
+                        var deferred = $q.defer();
+
+                        //get roles which needs to be added
+                        _.forEach(authorized, function(group) {
+                            if (currentAuthGroups.indexOf(group.key) === -1) {
+                                toBeAdded.push(group.key);
+                            }
                         });
-                        functionalAccessControlService.saveAppRolesToGroups(initRolesData.appRolesUserGroups).then(function() {
-                            deferred.resolve();
-                        }, function() {
-                            deferred.reject();
+                        _.forEach(notAuthorized, function(group) {
+                            if (currentAuthGroups.indexOf(group.key) !== -1) {
+                                toBeRemoved.push(group.key);
+                            }
                         });
 
-                        return deferred.promise;
+                        //perform adding on server
+                        if (toBeAdded.length > 0) {
+                            currentAuthGroups = currentAuthGroups.concat(toBeAdded);
+
+                            FunctionalAccessControlService.addGroupsToApplicationRole(selectedObject.key, toBeAdded).then(function(data) {
+                                MessageService.succsessAction();
+                            }, function() {
+                                //error adding group
+                                MessageService.errorAction();
+                            });
+                            return deferred.promise;
+                        }
+
+                        if (toBeRemoved.length > 0) {
+                            _.forEach(toBeRemoved, function(element) {
+                                currentAuthGroups.splice(currentAuthGroups.indexOf(element), 1);
+                            });
+
+                            FunctionalAccessControlService.deleteGroupsFromApplicationRole(selectedObject.key, toBeRemoved).then(
+                                    function(data) {
+                                        MessageService.succsessAction();
+                                    }, function() {
+                                        //error adding group
+                                        MessageService.errorAction();
+                                    });
+                            return deferred.promise;
+                        }
                     }
 
                     function retrieveDataScroll(data, methodName, panelName) {
-                        functionalAccessControlService[methodName](data).then(function(response) {
+                        FunctionalAccessControlService[methodName](data).then(function(response) {
                             if (_.isArray(response.data)) {
                                 $scope.fillList($scope.rolesData[panelName], response.data);
                             } else {
                                 $scope.fillList($scope.rolesData[panelName], response.data.response.docs);
                             }
+                            if (panelName === "selectedAuthorized") {
+                                currentAuthGroups = [];
+                                _.forEach($scope.rolesData[panelName], function(obj) {
+                                    currentAuthGroups.push(obj.key);
+                                });
+                            }
                         }, function() {
                             $log.error('Error during calling the method ' + methodName);
                         });
+                    }
+
+                    function rolesScroll() {
+                        var data = {
+                            start : $scope.rolesData.chooseObject.length
+                        };
+                        $scope.retrieveDataScroll(data, "getAppRolesPaged", "chooseObject");
                     }
 
                     function authorizedScroll() {
@@ -145,7 +177,7 @@ angular.module('admin').controller(
                         data.roleName = $scope.lastSelectedRole;
                         data.start = $scope.rolesData.selectedAuthorized.length;
                         data.isAuthorized = true;
-                        $scope.retrieveDataScroll(data, "getGroupsForRole", "selectedAuthorized");
+                        $scope.retrieveDataScroll(data, "getGroupsForRolePaged", "selectedAuthorized");
                     }
 
                     function unauthorizedScroll() {
@@ -153,7 +185,7 @@ angular.module('admin').controller(
                         data.roleName = $scope.lastSelectedRole;
                         data.start = $scope.rolesData.selectedNotAuthorized.length;
                         data.isAuthorized = false;
-                        $scope.retrieveDataScroll(data, "getGroupsForRole", "selectedNotAuthorized");
+                        $scope.retrieveDataScroll(data, "getGroupsForRolePaged", "selectedNotAuthorized");
                     }
 
                     function fillList(listToFill, data) {
@@ -165,56 +197,41 @@ angular.module('admin').controller(
                         });
                     }
 
-                    function chooseAppRoleFilter(data) {
-                        if (!_.isEmpty(data)) {
-                            $scope.rolesData.chooseObject = _.filter(initRolesData.chooseObject, function(item) {
-                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
-                            });
-                        } else {
-                            $scope.rolesData.chooseObject = angular.copy(initRolesData.chooseObject);
-                        }
-                        $scope.onObjSelect($scope.rolesData.chooseObject[0]);
+                    function chooseAppRoleFilter(searchData) {
+                        var data = {
+                            filterWord : searchData.filterWord
+                        };
+                        FunctionalAccessControlService.getAppRolesByName(data).then(function(response) {
+                            $scope.rolesData.chooseObject = [];
+                            $scope.fillList($scope.rolesData.chooseObject, response.data);
+                        });
                     }
 
-                    function appRoleUnauthorizedFilter(data) {
+                    function appRoleUnauthorizedFilter(searchData) {
                         $scope.rolesData.selectedNotAuthorized = [];
-                        var selectedNotAuthorized = [];
-                        //set not authorized groups.
-                        // Logic: iterate all user groups and if not already exists in selected app role user groups, add to the array
-                        for ( var key in initRolesData.userGroupsAll) {
-                            // appRolesUserGroups might not have this particular selected object at all.
-                            if (initRolesData.appRolesUserGroups[$scope.lastSelectedRole.key] === undefined
-                                    || initRolesData.appRolesUserGroups[$scope.lastSelectedRole.key].indexOf(key) == -1) {
-                                var notAuthObject = {};
-                                notAuthObject.key = key;
-                                notAuthObject.name = key;
-                                selectedNotAuthorized.push(notAuthObject);
-                            }
-                        }
 
-                        //filter
-                        if (!_.isEmpty(data)) {
-                            $scope.rolesData.selectedNotAuthorized = _.filter(selectedNotAuthorized, function(item) {
-                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
-                            });
-                        } else {
-                            $scope.rolesData.selectedNotAuthorized = angular.copy(selectedNotAuthorized);
-                        }
+                        var data = {
+                            isAuthorized : false,
+                            roleName : $scope.lastSelectedRole,
+                            filterWord : searchData.filterWord
+                        };
+                        FunctionalAccessControlService.getGroupsForRoleByName(data).then(function(response) {
+                            $scope.rolesData.selectedNotAuthorized = [];
+                            $scope.fillList($scope.rolesData.selectedNotAuthorized, response.data);
+                        });
                     }
 
-                    function appRoleAuthorizedFilter(data) {
+                    function appRoleAuthorizedFilter(searchData) {
                         $scope.rolesData.selectedAuthorized = [];
-                        var selectedAuthorized = [];
-                        //set authorized groups
-                        fillList(selectedAuthorized, initRolesData.appRolesUserGroups[$scope.lastSelectedRole.key]);
 
-                        //filter
-                        if (!_.isEmpty(data)) {
-                            $scope.rolesData.selectedAuthorized = _.filter(selectedAuthorized, function(item) {
-                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
-                            });
-                        } else {
-                            $scope.rolesData.selectedAuthorized = angular.copy(selectedAuthorized);
-                        }
+                        var data = {
+                            isAuthorized : true,
+                            roleName : $scope.lastSelectedRole,
+                            filterWord : searchData.filterWord
+                        };
+                        FunctionalAccessControlService.getGroupsForRoleByName(data).then(function(response) {
+                            $scope.rolesData.selectedAuthorized = [];
+                            $scope.fillList($scope.rolesData.selectedAuthorized, response.data);
+                        });
                     }
                 } ]);

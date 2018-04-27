@@ -57,7 +57,7 @@ angular.module('admin').controller(
 
                     function initUser(userNumber) {
                         var userRequestInfo = {};
-                        userRequestInfo.n = Util.isEmpty(userNumber) ? 50 : userNumber;
+                        userRequestInfo.n = Util.isEmpty(userNumber) ? 18 : userNumber;
                         userRequestInfo.start = Util.isEmpty(userNumber) ? 0 : $scope.userData.chooseObject.length;
                         if (makePaginationRequest) {
                             LdapUserManagementService.getNUsers(userRequestInfo).then(function(response) {
@@ -326,7 +326,7 @@ angular.module('admin').controller(
 
                     function userManagementFilter(data) {
                         if (Util.isEmpty(data.filterWord)) {
-                            data.n = Util.isEmpty(data.n) ? 50 : data.n;
+                            data.n = Util.isEmpty(data.n) ? 18 : data.n;
                             $scope.retrieveDataFilter(data, "getNUsers", "chooseObject");
                         } else {
                             $scope.retrieveDataFilter(data, "getUsersFiltered", "chooseObject");
@@ -337,7 +337,7 @@ angular.module('admin').controller(
                         data.member = $scope.lastSelectedUser;
                         data.isAuthorized = false;
                         if (Util.isEmpty(data.filterWord)) {
-                            data.n = Util.isEmpty(data.n) ? 50 : data.n;
+                            data.n = Util.isEmpty(data.n) ? 18 : data.n;
                             $scope.retrieveDataFilter(data, "getGroupsForUser", "selectedNotAuthorized");
                         } else {
                             $scope.retrieveDataFilter(data, "getGroupsFiltered", "selectedNotAuthorized");
@@ -348,7 +348,7 @@ angular.module('admin').controller(
                         data.member = $scope.lastSelectedUser;
                         data.isAuthorized = true;
                         if (Util.isEmpty(data.filterWord)) {
-                            data.n = Util.isEmpty(data.n) ? 50 : data.n;
+                            data.n = Util.isEmpty(data.n) ? 18 : data.n;
                             $scope.retrieveDataFilter(data, "getGroupsForUser", "selectedAuthorized");
                         } else {
                             $scope.retrieveDataFilter(data, "getGroupsFiltered", "selectedAuthorized");

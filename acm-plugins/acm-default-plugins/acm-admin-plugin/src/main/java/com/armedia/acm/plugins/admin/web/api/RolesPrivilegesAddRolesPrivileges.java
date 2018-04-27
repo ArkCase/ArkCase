@@ -30,7 +30,6 @@ public class RolesPrivilegesAddRolesPrivileges implements RolePrivilegesConstant
     @RequestMapping(value = "/rolesprivileges/roles/{rolesNames}/privileges/{privilegesNames}", method = RequestMethod.PUT, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
-
     @ResponseBody
     public String addRolesPrivileges(
             @PathVariable(PROP_ROLES_NAMES) String rolesNames,

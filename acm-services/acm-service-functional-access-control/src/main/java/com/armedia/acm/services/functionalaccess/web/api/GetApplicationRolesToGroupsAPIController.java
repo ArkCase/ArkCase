@@ -9,11 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -53,8 +49,29 @@ public class GetApplicationRolesToGroupsAPIController
     {
         LOG.debug("Taking application to groups by role name {}: ", roleName);
 
-        List<String> retval = getFunctionalAccessService().getGroupsByRole(auth, roleName, startRow, maxRows, sortDirection,
+        List<String> retval = getFunctionalAccessService().getGroupsByRolePaged(auth, roleName, startRow, maxRows, sortDirection,
                 authorized);
+
+        LOG.debug("Application groups number {} by role name {} ", retval.size(), roleName);
+
+        return retval;
+    }
+
+    @RequestMapping(value = "/{roleName:.+}/groups", params = {
+            "fq" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<String> findGroupsByRoleByName(Authentication auth,
+            @PathVariable(value = "roleName") String roleName,
+            @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "fq") String filterQuery,
+            @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws MuleException, AcmEncryptionException
+    {
+        LOG.debug("Taking application to groups by role name {}: ", roleName);
+
+        List<String> retval = getFunctionalAccessService().getGroupsByRoleByName(auth, roleName, startRow, maxRows, sortDirection,
+                authorized, filterQuery);
 
         LOG.debug("Application groups number {} by role name {} ", retval.size(), roleName);
 

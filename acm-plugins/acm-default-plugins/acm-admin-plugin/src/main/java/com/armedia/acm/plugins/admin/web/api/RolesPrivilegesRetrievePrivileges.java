@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
+import com.armedia.acm.plugins.admin.model.PrivilegeItem;
 import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
 
 import org.json.JSONObject;
@@ -8,14 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by sergey.kolomiets on 6/2/15.
@@ -51,7 +48,7 @@ public class RolesPrivilegesRetrievePrivileges
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public Map<String, String> findPrivilegesByRolePaged(
+    public List<PrivilegeItem> findPrivilegesByRolePaged(
             @PathVariable(value = "roleName") String roleName,
             @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
@@ -73,7 +70,7 @@ public class RolesPrivilegesRetrievePrivileges
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public Map<String, String> findPrivilegesByRole(
+    public List<PrivilegeItem> findPrivilegesByRole(
             @PathVariable(value = "roleName") String roleName,
             @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "fq") String filterQuery,

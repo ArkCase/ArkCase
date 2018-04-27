@@ -4,6 +4,7 @@ import static com.armedia.acm.plugins.admin.model.RolePrivilegesConstants.PROP_A
 import static com.armedia.acm.plugins.admin.model.RolePrivilegesConstants.ROLE_PREFIX;
 
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
+import com.armedia.acm.plugins.admin.model.PrivilegeItem;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmRoleType;
@@ -15,27 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TransactionRequiredException;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.function.Supplier;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import freemarker.template.Configuration;
@@ -110,7 +93,7 @@ public class RolesPrivilegesService
      * @return map of privileges and descriptions
      * @throws AcmRolesPrivilegesException
      */
-    public Map<String, String> getPrivilegesByRolePaged(String roleName, String sortDirection, Integer startRow, Integer maxRows,
+    public List<PrivilegeItem> getPrivilegesByRolePaged(String roleName, String sortDirection, Integer startRow, Integer maxRows,
             Boolean authorized)
             throws AcmRolesPrivilegesException
     {
@@ -125,7 +108,7 @@ public class RolesPrivilegesService
      * @return map of privileges and descriptions
      * @throws AcmRolesPrivilegesException
      */
-    public Map<String, String> getPrivilegesByRole(String roleName, Boolean authorized, String filterQuery, String sortDirection,
+    public List<PrivilegeItem> getPrivilegesByRole(String roleName, Boolean authorized, String filterQuery, String sortDirection,
             Integer startRow, Integer maxRows)
             throws AcmRolesPrivilegesException
     {
@@ -134,25 +117,25 @@ public class RolesPrivilegesService
         return getPrivilegesPaged(privileges, sortDirection, startRow, maxRows, filterQuery);
     }
 
-    public Map<String, String> getPrivilegesPaged(Map<String, String> privileges, String sortDirection,
+    public List<PrivilegeItem> getPrivilegesPaged(Map<String, String> privileges, String sortDirection,
             Integer startRow, Integer maxRows, String filterQuery)
     {
-        Map<String, String> result;
-        Supplier<Map<String, String>> sortSupplier;
+        List<PrivilegeItem> result = new ArrayList<>();
+        privileges.forEach((key, value) -> {
+            PrivilegeItem privilegeItem = new PrivilegeItem();
+            privilegeItem.setKey(key);
+            privilegeItem.setValue(value);
+            result.add(privilegeItem);
+        });
+
         if (sortDirection.contains("DESC"))
         {
-            sortSupplier = () -> new TreeMap<>((o1, o2) -> o2.toLowerCase().compareTo(o1.toLowerCase()));
-            result = sortSupplier.get();
+            Collections.sort(result, Collections.reverseOrder());
         }
         else
         {
-            sortSupplier = () -> new TreeMap<>(Comparator.comparing(String::toLowerCase));
-            result = sortSupplier.get();
+            Collections.sort(result);
         }
-
-        privileges.entrySet().forEach(entry -> {
-            result.put(entry.getValue(), entry.getKey());
-        });
 
         if (startRow > result.size())
         {
@@ -162,19 +145,10 @@ public class RolesPrivilegesService
 
         if (!filterQuery.isEmpty())
         {
-            Iterator<Map.Entry<String, String>> it = result.entrySet().iterator();
-            while (it.hasNext())
-            {
-                Map.Entry<String, String> privilege = it.next();
-                if (!privilege.getKey().toLowerCase().contains(filterQuery.toLowerCase()))
-                {
-                    it.remove();
-                }
-            }
+            result.removeIf(privilegeItem -> !(privilegeItem.getValue().toLowerCase().contains(filterQuery.toLowerCase())));
         }
 
-        return result.entrySet().stream().skip(startRow).limit(maxRows)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1, sortSupplier));
+        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
     /**
@@ -227,6 +201,78 @@ public class RolesPrivilegesService
     }
 
     /**
+     * Retrieve roles of privilege paged
+     *
+     * @param privilegeName
+     * @return
+     */
+    public List<String> getRolesByWidgetPaged(String privilegeName, String sortBy, String sortDirection, Integer startRow, Integer maxRows,
+            Boolean authorized) throws AcmRolesPrivilegesException
+    {
+        return getRolesPaged(privilegeName, sortBy, sortDirection, startRow, maxRows, authorized, "");
+    }
+
+    /**
+     * Retrieve roles of privilege by name
+     *
+     * @param privilegeName
+     * @return
+     */
+    public List<String> getRolesByWidgetByName(String privilegeName, String sortBy, String sortDirection, Integer startRow, Integer maxRows,
+            Boolean authorized, String filterQuery) throws AcmRolesPrivilegesException
+    {
+        return getRolesPaged(privilegeName, sortBy, sortDirection, startRow, maxRows, authorized, filterQuery);
+    }
+
+    /**
+     * Retrieve roles paged
+     *
+     * @param privilegeName
+     * @return
+     */
+    public List<String> getRolesPaged(String privilegeName, String sortBy, String sortDirection, Integer startRow, Integer maxRows,
+            Boolean authorized, String filterQuery) throws AcmRolesPrivilegesException
+    {
+        List<String> rolesByPrivilege = retrieveRolesByPrivilege(privilegeName);
+        List<String> allRoles = loadRoles();
+        List<String> result = null;
+
+        if (authorized)
+        {
+            result = new ArrayList<>(rolesByPrivilege);
+        }
+        else
+        {
+            rolesByPrivilege.forEach(roleByPrivilege -> {
+                allRoles.removeIf(role -> role.equalsIgnoreCase(roleByPrivilege));
+            });
+            result = new ArrayList<>(allRoles);
+        }
+
+        if (sortDirection.contains("DESC"))
+        {
+            result.sort(Collections.reverseOrder());
+        }
+        else
+        {
+            Collections.sort(result);
+        }
+
+        if (startRow > result.size())
+        {
+            return result;
+        }
+        maxRows = maxRows > result.size() ? result.size() : maxRows;
+
+        if (!filterQuery.isEmpty())
+        {
+            result.removeIf(role -> !(role.toLowerCase().contains(filterQuery.toLowerCase())));
+        }
+
+        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
+    }
+
+    /**
      * Update Role Privileges
      *
      * @param roleName
@@ -250,6 +296,40 @@ public class RolesPrivilegesService
         if (!rolePresent)
         {
             throw new AcmRolesPrivilegesException(String.format("Can't update role's privileges. Role '%s' is absent", roleName));
+        }
+
+        // Save new role privileges
+        saveRolePrivileges(roleName, privileges);
+
+        // Re-generate Roles Privileges XML file
+        updateRolesPrivilegesConfig();
+    }
+
+    /**
+     * Update Role Privilege
+     *
+     * @param roleName
+     *            Updated role name
+     * @param privileges
+     *            List of role's privileges
+     */
+    public void savePrivilegesToApplicationRole(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
+    {
+        // Check if role present in system
+        List<String> roles = loadRoles();
+        boolean rolePresent = false;
+        for (String roleIter : roles)
+        {
+            if (roleIter.equals(roleName))
+            {
+                rolePresent = true;
+                break;
+            }
+        }
+        if (!rolePresent)
+        {
+            throw new AcmRolesPrivilegesException(String.format("Can't update role's privileges. Role '%s' is absent",
+                    roleName));
         }
 
         // Save new role privileges
@@ -587,7 +667,9 @@ public class RolesPrivilegesService
         {
             Properties props = new Properties();
             props.load(applicationInputStream);
-            String propPrivileges = String.join(",", privileges);
+            // String propPrivileges = String.join(",", privileges);
+            String propPrivileges = props.getProperty(roleName);
+            propPrivileges += (propPrivileges.isEmpty() ? "" : ",") + String.join(",", privileges);
             props.setProperty(roleName, propPrivileges);
             try (OutputStream applicationOutputStream = FileUtils.openOutputStream(new File(applicationRolesPrivilegesPropertiesFile)))
             {

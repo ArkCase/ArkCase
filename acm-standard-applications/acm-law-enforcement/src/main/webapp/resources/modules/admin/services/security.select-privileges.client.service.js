@@ -19,6 +19,8 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
         getAppRoles : getAppRoles,
         getAllPrivileges : getAllPrivileges,
         addRolePrivileges : addRolePrivileges,
+        addPrivilegeToApplicationRole : addPrivilegeToApplicationRole,
+        removePrivilegeFromApplicationRole : removePrivilegeFromApplicationRole,
         getRolePrivileges : getRolePrivileges,
         getRolePrivilegesByName : getRolePrivilegesByName,
         upsertRole : upsertRole
@@ -88,6 +90,56 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
 
     /**
      * @ngdoc method
+     * @name addPrivilegeToApplicationRole
+     * @methodOf admin.service:Admin.SelectPrivilegesService
+     *
+     * @description
+     * Performs adding privileges to application role
+     *
+     * @param {string} roleName role name which privileges to be added
+     * @param {array} privileges to be added
+     *
+     * @returns {HttpPromise} Future info add role privileges
+     */
+    function addPrivilegeToApplicationRole(roleName, privileges) {
+        var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roleName + '/privileges/natokmiGoSo';
+        return $http({
+            method : 'PUT',
+            url : url,
+            data : privileges,
+            headers : {
+                'Content-Type' : 'application/json'
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name removePrivilegeFromApplicationRole
+     * @methodOf admin.service:Admin.SelectPrivilegesService
+     *
+     * @description
+     * Performs removing privileges from application role
+     *
+     * @param {string} roleName role name which privileges to be added
+     * @param {array} privileges to be added
+     *
+     * @returns {HttpPromise} Future info add role privileges
+     */
+    function removePrivilegeFromApplicationRole(roleName, privileges) {
+        var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roleName + '/privileges/natokmiGoSo';
+        return $http({
+            method : 'DELETE',
+            url : url,
+            data : privileges,
+            headers : {
+                'Content-Type' : 'application/json'
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
      * @name getRolePrivileges
      * @methodOf admin.service:Admin.SelectPrivilegesService
      *
@@ -130,7 +182,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
             cache : false,
             params : {
                 authorized : data.isAuthorized,
-                n : (data.n ? data.n : 50),
+                n : (data.n ? data.n : 18),
                 start : (data.start ? data.start : 0),
                 fq : (data.filterWord ? data.filterWord : "")
             }
