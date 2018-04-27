@@ -39,11 +39,11 @@ angular.module('admin').controller(
 
                     $scope.holidaySchedule = {};
                     var reloadGrid = function(data) {
-                        $scope.holidaySchedule.weekends = data.weekends;
+                        $scope.holidaySchedule.includeWeekends = data.includeWeekends;
                         $scope.gridOptions.data = data.holidays;
                     };
 
-                    $scope.loadPage();
+                    
 
                     $scope.loadPage = function() {
                         AdminHolidayService.getHolidays().then(function(response) {
@@ -53,10 +53,11 @@ angular.module('admin').controller(
                             }
                         });
                     };
+                    $scope.loadPage();
 
                     $scope.save = function() {
                         var holidayConfig = {
-                            "weekends" : $scope.holidaySchedule.weekends,
+                            "includeWeekends" : $scope.holidaySchedule.includeWeekends,
                             "holidays" : $scope.gridOptions.data
                         };
                         saveConfig(holidayConfig);
@@ -64,7 +65,7 @@ angular.module('admin').controller(
                     };
                     var saveConfig = function() {
                         var holidayConfiguration = {
-                            "weekends" : $scope.holidaySchedule.weekends,
+                            "includeWeekends" : $scope.holidaySchedule.includeWeekends,
                             "holidays" : $scope.gridOptions.data
 
                         };
