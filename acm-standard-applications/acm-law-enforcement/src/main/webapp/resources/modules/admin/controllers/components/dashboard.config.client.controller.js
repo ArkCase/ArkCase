@@ -146,7 +146,7 @@ angular.module('admin')
 
                             function authorizedScroll() {
                                 var data = {};
-                                data.role = $scope.lastSelectedWidget;
+                                data.widget = $scope.lastSelectedWidget;
                                 data.start = $scope.widgetsData.selectedAuthorized.length;
                                 data.isAuthorized = true;
                                 $scope.retrieveDataScroll(data, "getRoleSGroupsByName", "selectedAuthorized");
@@ -154,7 +154,7 @@ angular.module('admin')
 
                             function unauthorizedScroll() {
                                 var data = {};
-                                data.role = $scope.lastSelectedWidget;
+                                data.widget = $scope.lastSelectedWidget;
                                 data.start = $scope.widgetsData.selectedNotAuthorized.length;
                                 data.isAuthorized = false;
                                 $scope.retrieveDataScroll(data, "getRoleSGroupsByName", "selectedNotAuthorized");
