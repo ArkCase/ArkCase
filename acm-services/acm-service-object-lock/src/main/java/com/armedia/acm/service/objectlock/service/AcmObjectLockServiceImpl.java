@@ -36,6 +36,12 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     }
 
     @Override
+    public AcmObjectLock findLock(Long lockId)
+    {
+        return acmObjectLockDao.find(lockId);
+    }
+
+    @Override
     @Transactional
     public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Authentication auth)
     {

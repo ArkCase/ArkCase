@@ -12,6 +12,8 @@ public interface AcmObjectLockService
 {
     AcmObjectLock findLock(Long objectId, String objectType);
 
+    AcmObjectLock findLock(Long lockId);
+
     AcmObjectLock createLock(Long objectId, String objectType, String lockType, Boolean lockInDB, Authentication auth);
 
     /**

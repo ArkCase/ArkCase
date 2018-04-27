@@ -58,8 +58,7 @@ public class ReplaceFileAPIController
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
 
         EcmFile fileToBeReplaced = getFileService().findById(fileToBeReplacedId);
-        EcmFileVersion fileToBeReplacedVersion = getFolderAndFilesUtils().getVersion(fileToBeReplaced, fileToBeReplaced.getActiveVersionTag());
-        EcmFile replacedFile;
+
         if (fileToBeReplaced == null)
         {
             log.debug("File, fileId: {} does not exist, and can not be replaced", fileToBeReplacedId);
@@ -67,6 +66,9 @@ public class ReplaceFileAPIController
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                     fileToBeReplacedId, "File not found.", null);
         }
+
+        EcmFileVersion fileToBeReplacedVersion = getFolderAndFilesUtils().getVersion(fileToBeReplaced, fileToBeReplaced.getActiveVersionTag());
+        EcmFile replacedFile;
 
         try (InputStream replacementStream = getInputStreamFromAttachment(request, fileToBeReplacedId))
         {
