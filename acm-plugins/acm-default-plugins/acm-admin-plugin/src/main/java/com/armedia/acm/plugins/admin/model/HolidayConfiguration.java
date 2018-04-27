@@ -5,17 +5,17 @@ import java.util.List;
 public class HolidayConfiguration
 {
 
-    private Boolean weekends;
+    private Boolean includeWeekends;
     private List<HolidayItem> holidays;
 
-    public Boolean getWeekends()
+    public Boolean getIncludeWeekends()
     {
-        return weekends;
+        return includeWeekends;
     }
 
-    public void setWeekends(Boolean weekends)
+    public void setIncludeWeekends(Boolean includeWeekends)
     {
-        this.weekends = weekends;
+        this.includeWeekends = includeWeekends;
     }
 
     public List<HolidayItem> getHolidays()
