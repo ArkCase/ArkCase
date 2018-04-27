@@ -10,14 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,7 +37,6 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
             @RequestBody String resource,
             @PathVariable(PROP_ROLE_NAME) String roleName) throws IOException, AcmRolesPrivilegesException
     {
-
         try
         {
             if (roleName == null || "".equals(roleName))
@@ -57,6 +53,60 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
             }
 
             rolesPrivilegesService.updateRolePrivileges(roleName, privileges);
+            return "{}";
+        }
+        catch (Exception e)
+        {
+            log.error("Can't update role [{}] privileges", roleName, e);
+            throw new AcmRolesPrivilegesException(String.format("Can't update role '%s' privileges", roleName), e);
+        }
+    }
+
+    @RequestMapping(value = "/rolesprivileges/roles/{roleName}/privileges/natokmiGoSo", method = RequestMethod.PUT, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+    })
+    @ResponseBody
+    public String addPrivilegesToApplicationRole(
+            @PathVariable(PROP_ROLE_NAME) String roleName,
+            @RequestBody List<String> privileges) throws IOException, AcmRolesPrivilegesException
+    {
+
+        try
+        {
+            if (roleName == null || "".equals(roleName))
+            {
+                throw new AcmRolesPrivilegesException("Role name is undefined");
+            }
+
+            log.debug("Adding privileges to an application role [{}]", roleName);
+            rolesPrivilegesService.updateRolePrivileges(roleName, privileges);
+            return "{}";
+        }
+        catch (Exception e)
+        {
+            log.error("Can't update role [{}] privileges", roleName, e);
+            throw new AcmRolesPrivilegesException(String.format("Can't update role '%s' privileges", roleName), e);
+        }
+    }
+
+    @RequestMapping(value = "/rolesprivileges/roles/{roleName}/privileges/natokmiGoSo", method = RequestMethod.DELETE, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+    })
+    @ResponseBody
+    public String removePrivilegesToApplicationRole(
+            @PathVariable(PROP_ROLE_NAME) String roleName,
+            @RequestBody List<String> privileges) throws IOException, AcmRolesPrivilegesException
+    {
+
+        try
+        {
+            if (roleName == null || "".equals(roleName))
+            {
+                throw new AcmRolesPrivilegesException("Role name is undefined");
+            }
+
+            log.debug("Removing privileges from an application role [{}]", roleName);
+            rolesPrivilegesService.removeRolesPrivileges(new ArrayList<>(Arrays.asList(roleName)), privileges);
             return "{}";
         }
         catch (Exception e)

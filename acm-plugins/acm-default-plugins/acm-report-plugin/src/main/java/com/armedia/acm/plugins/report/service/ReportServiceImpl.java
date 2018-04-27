@@ -34,15 +34,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ReportServiceImpl implements ReportService
@@ -268,6 +265,53 @@ public class ReportServiceImpl implements ReportService
     }
 
     @Override
+    public List<String> saveAdhocGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth)
+    {
+        String reportUpdated = "";
+        try
+        {
+            reportUpdated += getPropertyFileManager().load(getReportToGroupsMapPropertiesFileLocation(), reportName, null);
+            reportUpdated += (reportUpdated.isEmpty() ? "" : ",") + adhocGroups.stream().collect(Collectors.joining(","));
+            getPropertyFileManager().store(reportName, reportUpdated, getReportToGroupsMapPropertiesFileLocation(), false);
+        }
+        catch (AcmEncryptionException e)
+        {
+            LOG.error("Cannot save groups to application role", e);
+        }
+
+        return Arrays.asList(reportUpdated.split(","));
+    }
+
+    @Override
+    public List<String> removeAdhocGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth)
+    {
+        List<String> reportGroups;
+        String reportUpdated = "";
+        try
+        {
+            reportGroups = new ArrayList<>(
+                    Arrays.asList(
+                            getPropertyFileManager().load(getReportToGroupsMapPropertiesFileLocation(), reportName, null).split(",")));
+
+            for (String group : adhocGroups)
+            {
+                reportGroups.remove(group);
+            }
+
+            reportUpdated += reportGroups.stream().collect(Collectors.joining(","));
+
+            getPropertyFileManager().store(reportName, reportUpdated, getReportToGroupsMapPropertiesFileLocation(), false);
+
+        }
+        catch (AcmEncryptionException e)
+        {
+            LOG.error("Cannot save groups to application role", e);
+        }
+
+        return Arrays.asList(reportUpdated.split(","));
+    }
+
+    @Override
     public List<Report> sync() throws Exception
     {
         List<Report> reports = getPentahoReports();
@@ -297,6 +341,48 @@ public class ReportServiceImpl implements ReportService
     {
         Map<String, String> reportsToGroupsMap = getReportToGroupsMapProperties();
         return prepareReportToGroupsMapForRetrieving(reportsToGroupsMap);
+    }
+
+    @Override
+    public List<String> getReportToGroupsPaged(String sortDirection, Integer startRow, Integer maxRows) throws IOException
+    {
+        return getReportToGroups(sortDirection, startRow, maxRows, "");
+    }
+
+    @Override
+    public List<String> getReportToGroupsByName(String sortDirection, Integer startRow, Integer maxRows, String filterQuery)
+            throws IOException
+    {
+        return getReportToGroups(sortDirection, startRow, maxRows, filterQuery);
+    }
+
+    @Override
+    public List<String> getReportToGroups(String sortDirection, Integer startRow, Integer maxRows, String filterQuery) throws IOException
+    {
+        Properties reportsToGroups = propertyFileManager.readFromFile(new File(getReportToGroupsMapPropertiesFileLocation()));
+        List<String> result = new ArrayList<>(reportsToGroups.stringPropertyNames());
+
+        if (sortDirection.contains("DESC"))
+        {
+            Collections.sort(result, Collections.reverseOrder());
+        }
+        else
+        {
+            Collections.sort(result);
+        }
+
+        if (startRow > result.size())
+        {
+            return result;
+        }
+        maxRows = maxRows > result.size() ? result.size() : maxRows;
+
+        if (!filterQuery.isEmpty())
+        {
+            result.removeIf(report -> !(report.toLowerCase().contains(filterQuery.toLowerCase())));
+        }
+
+        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
     @Override
@@ -421,18 +507,18 @@ public class ReportServiceImpl implements ReportService
     }
 
     @Override
-    public String buildGroupsForReportSolrQuery(Boolean authorized, String reportId, String filterQuery)
+    public String buildGroupsForReportSolrQuery(Boolean authorized, String reportId, String filterQuery) throws AcmEncryptionException
     {
         StringBuilder solrQuery = new StringBuilder();
-        Map<String, List<String>> groupsForReports = getReportToGroupsMap();
-        List<String> groupsForReport = groupsForReports.get(reportId);
+        String groupsForReportttt = propertyFileManager.load(getReportToGroupsMapPropertiesFileLocation(), reportId, null);
+        List<String> groupsForReport = new ArrayList<>(Arrays.asList(groupsForReportttt.split(",")));
 
         solrQuery.append(
                 "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED");
 
         if (groupsForReport != null)
         {
-            solrQuery.append(authorized ? " AND object_id_s:" : " AND -object_id_s:");
+            solrQuery.append(authorized ? " AND name_lcs:" : " AND -name_lcs:");
             solrQuery.append(groupsForReport.stream().collect(Collectors.joining("\" OR \"", "(\"", "\")")));
         }
         else if (authorized)

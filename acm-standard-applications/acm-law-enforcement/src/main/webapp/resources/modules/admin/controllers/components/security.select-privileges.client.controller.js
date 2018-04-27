@@ -10,8 +10,9 @@ angular.module('admin').controller(
                 '$translate',
                 '$log',
                 'UtilService',
-                function($scope, selectPrivilegesService, $q, $modal, $translate, $log, Util) {
-                    var tempAppRolesPromise = selectPrivilegesService.getAppRoles();
+                'MessageService',
+                function($scope, SelectPrivilegesService, $q, $modal, $translate, $log, Util, MessageService) {
+                    var tempAppRolesPromise = SelectPrivilegesService.getAppRoles();
 
                     $scope.fillList = fillList;
                     $scope.onObjSelect = onObjSelect;
@@ -24,6 +25,7 @@ angular.module('admin').controller(
                     $scope.authorizedScroll = authorizedScroll;
                     $scope.retrieveDataScroll = retrieveDataScroll;
 
+                    var currentAuthGroups = [];
                     $scope.lastSelectedRole = null;
                     // Loaded data after the initialization
                     var initRolesData = {
@@ -63,10 +65,10 @@ angular.module('admin').controller(
                     });
 
                     function fillList(listToFill, data) {
-                        _.forEach(data, function(key, value) {
+                        _.forEach(data, function(item) {
                             var element = {};
-                            element.key = key;
-                            element.name = value;
+                            element.key = item.key;
+                            element.name = item.value;
                             listToFill.push(element);
                         });
                     }
@@ -85,7 +87,7 @@ angular.module('admin').controller(
                     function appRoleUnauthorizedFilter(data) {
                         data.isAuthorized = false;
                         data.role = $scope.lastSelectedRole;
-                        selectPrivilegesService.getRolePrivilegesByName(data).then(function(response) {
+                        SelectPrivilegesService.getRolePrivilegesByName(data).then(function(response) {
                             $scope.rolesData.selectedNotAuthorized = [];
                             $scope.fillList($scope.rolesData.selectedNotAuthorized, response.data);
                         });
@@ -94,18 +96,25 @@ angular.module('admin').controller(
                     function appRoleAuthorizedFilter(data) {
                         data.isAuthorized = true;
                         data.role = $scope.lastSelectedRole;
-                        selectPrivilegesService.getRolePrivilegesByName(data).then(function(response) {
+                        SelectPrivilegesService.getRolePrivilegesByName(data).then(function(response) {
                             $scope.rolesData.selectedAuthorized = [];
                             $scope.fillList($scope.rolesData.selectedAuthorized, response.data);
                         });
                     }
 
                     function retrieveDataScroll(data, methodName, panelName) {
-                        selectPrivilegesService[methodName](data).then(function(response) {
+                        SelectPrivilegesService[methodName](data).then(function(response) {
                             if (_.isArray(response.data)) {
                                 $scope.fillList($scope.rolesData[panelName], response.data);
                             } else {
                                 $scope.fillList($scope.rolesData[panelName], response.data);
+                            }
+
+                            if (panelName === "selectedAuthorized") {
+                                currentAuthGroups = [];
+                                _.forEach($scope.rolesData[panelName], function(obj) {
+                                    currentAuthGroups.push(obj.key);
+                                });
                             }
                         }, function() {
                             $log.error('Error during calling the method ' + methodName);
@@ -115,7 +124,6 @@ angular.module('admin').controller(
                     function authorizedScroll() {
                         var data = {};
                         data.role = $scope.lastSelectedRole;
-                        data.n = Util.isArrayEmpty($scope.rolesData.selectedAuthorized) ? 50 : $scope.rolesData.selectedAuthorized.length;
                         data.start = $scope.rolesData.selectedAuthorized.length;
                         data.isAuthorized = true;
                         $scope.retrieveDataScroll(data, "getRolePrivilegesByName", "selectedAuthorized");
@@ -124,8 +132,6 @@ angular.module('admin').controller(
                     function unauthorizedScroll() {
                         var data = {};
                         data.role = $scope.lastSelectedRole;
-                        data.n = Util.isArrayEmpty($scope.rolesData.selectedNotAuthorized) ? 50
-                                : $scope.rolesData.selectedNotAuthorized.length;
                         data.start = $scope.rolesData.selectedNotAuthorized.length;
                         data.isAuthorized = false;
                         $scope.retrieveDataScroll(data, "getRolePrivilegesByName", "selectedNotAuthorized");
@@ -141,13 +147,21 @@ angular.module('admin').controller(
                             var data = {};
                             data.role = selectedObject;
                             data.isAuthorized = true;
-                            var unAuthorizedGroupsForUserPromise = selectPrivilegesService.getRolePrivilegesByName(data);
+                            var unAuthorizedGroupsForUserPromise = SelectPrivilegesService.getRolePrivilegesByName(data);
                             data.isAuthorized = false;
-                            var authorizedGroupsForUserPromise = selectPrivilegesService.getRolePrivilegesByName(data);
+                            var authorizedGroupsForUserPromise = SelectPrivilegesService.getRolePrivilegesByName(data);
 
                             //wait all promises to resolve
                             $q.all([ unAuthorizedGroupsForUserPromise, authorizedGroupsForUserPromise ]).then(function(payload) {
-                                fillList($scope.rolesData.selectedAuthorized, payload[0].data);
+                                currentAuthGroups = [];
+                                _.forEach(payload[0].data, function(item) {
+                                    var element = {};
+                                    element.key = item.key;
+                                    element.name = item.value;
+                                    $scope.rolesData.selectedAuthorized.push(element);
+                                    currentAuthGroups.push(element.key);
+                                });
+
                                 fillList($scope.rolesData.selectedNotAuthorized, payload[1].data);
                             });
                         }
@@ -155,19 +169,49 @@ angular.module('admin').controller(
 
                     //callback function when groups are moved
                     $scope.onAuthRoleSelected = function(selectedObject, authorized, notAuthorized, isClicked) {
-
+                        var toBeAdded = [];
+                        var toBeRemoved = [];
                         var deferred = $q.defer();
-                        var privileges = [];
-                        angular.forEach(authorized, function(element) {
-                            privileges.push(element.key);
+
+                        //get roles which needs to be added
+                        _.forEach(authorized, function(group) {
+                            if (currentAuthGroups.indexOf(group.key) === -1) {
+                                toBeAdded.push(group.key);
+                            }
                         });
-                        selectPrivilegesService.addRolePrivileges(selectedObject.key, privileges).then(function() {
-                            deferred.resolve();
-                        }, function() {
-                            deferred.reject();
+                        _.forEach(notAuthorized, function(group) {
+                            if (currentAuthGroups.indexOf(group.key) !== -1) {
+                                toBeRemoved.push(group.key);
+                            }
                         });
 
-                        return deferred.promise;
+                        //perform adding on server
+                        if (toBeAdded.length > 0) {
+                            currentAuthGroups = currentAuthGroups.concat(toBeAdded);
+
+                            SelectPrivilegesService.addPrivilegeToApplicationRole(selectedObject.key, toBeAdded).then(function(data) {
+                                MessageService.succsessAction();
+                            }, function() {
+                                //error adding group
+                                MessageService.errorAction();
+                            });
+                            return deferred.promise;
+                        }
+
+                        if (toBeRemoved.length > 0) {
+                            _.forEach(toBeRemoved, function(element) {
+                                currentAuthGroups.splice(currentAuthGroups.indexOf(element), 1);
+                            });
+
+                            SelectPrivilegesService.removePrivilegeFromApplicationRole(selectedObject.key, toBeRemoved).then(
+                                    function(data) {
+                                        MessageService.succsessAction();
+                                    }, function() {
+                                        //error adding group
+                                        MessageService.errorAction();
+                                    });
+                            return deferred.promise;
+                        }
                     };
 
                     $scope.newRole = function() {
@@ -219,7 +263,7 @@ angular.module('admin').controller(
                             //button ok
                             if (value == null) {
                                 //handle create new item
-                                selectPrivilegesService.upsertRole(result).then(function() {
+                                SelectPrivilegesService.upsertRole(result).then(function() {
                                     var element = new Object;
                                     element.name = result;
                                     element.key = result;
@@ -227,7 +271,7 @@ angular.module('admin').controller(
                                 });
                             } else {
                                 //handle edit item
-                                selectPrivilegesService.upsertRole(result, value).then(function() {
+                                SelectPrivilegesService.upsertRole(result, value).then(function() {
                                     $scope.lastSelectedRole.key = result;
                                     $scope.lastSelectedRole.name = result;
                                 });

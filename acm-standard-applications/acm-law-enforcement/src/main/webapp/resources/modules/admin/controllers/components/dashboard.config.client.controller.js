@@ -12,16 +12,22 @@ angular.module('admin')
                         '$q',
                         'UtilService',
                         '$translate',
-                        function($scope, dashboardConfigService, ConfigService, $q, Util, $translate) {
+                        'MessageService',
+                        function($scope, DashboardConfigService, ConfigService, $q, Util, $translate, MessageService) {
 
-                            var tempWidgetsPromise = dashboardConfigService.getRolesByWidgets();
+                            var tempWidgetsPromise = DashboardConfigService.getRolesByWidgets();
                             var tempDashboardModulePromise = ConfigService.getModuleConfig("dashboard");
 
                             $scope.filterArrayByProperty = filterArrayByProperty;
+                            $scope.fillList = fillList;
                             //filter functions
                             $scope.chooseAppRoleFilter = chooseAppRoleFilter;
                             $scope.appRoleUnauthorizedFilter = appRoleUnauthorizedFilter;
                             $scope.appRoleAuthorizedFilter = appRoleAuthorizedFilter;
+                            //scroll functions
+                            $scope.unauthorizedScroll = unauthorizedScroll;
+                            $scope.authorizedScroll = authorizedScroll;
+                            $scope.retrieveDataScroll = retrieveDataScroll;
 
                             // Loaded data after the initialization
                             var initWidgetsData = {
@@ -40,7 +46,12 @@ angular.module('admin')
                                 "unauthorizedFilter" : $scope.appRoleUnauthorizedFilter,
                                 "authorizedFilter" : $scope.appRoleAuthorizedFilter
                             };
+                            $scope.scrollLoadData = {
+                                "loadUnauthorizedScroll" : $scope.unauthorizedScroll,
+                                "loadAuthorizedScroll" : $scope.authorizedScroll
+                            };
                             $scope.widgetsMap = [];
+                            var currentAuthRolesGroups = [];
 
                             $q.all([ tempWidgetsPromise, tempDashboardModulePromise ]).then(function(payload) {
                                 angular.forEach(payload[0].data, function(widget) {
@@ -61,6 +72,15 @@ angular.module('admin')
                                 $scope.onObjSelect($scope.widgetsData.chooseObject[0]);
                             });
 
+                            function fillList(listToFill, data) {
+                                _.forEach(data, function(item) {
+                                    var element = {};
+                                    element.key = item.name;
+                                    element.name = item.name;
+                                    listToFill.push(element);
+                                });
+                            }
+
                             function filterArrayByProperty(filterWord, arrayFrom, property) {
                                 var result = [];
                                 if (!Util.isEmpty(filterWord)) {
@@ -76,45 +96,142 @@ angular.module('admin')
                             function chooseAppRoleFilter(searchData) {
                                 $scope.widgetsData.chooseObject = filterArrayByProperty(searchData.filterWord,
                                         initWidgetsData.chooseObject, "name");
-                                if (_.isArray($scope.widgetsData.chooseObject)) {
+                                if (_.isArray($scope.widgetsData.chooseObject) && $scope.widgetsData.chooseObject.length > 0) {
                                     $scope.onObjSelect($scope.widgetsData.chooseObject[0]);
                                 }
                             }
 
                             function appRoleUnauthorizedFilter(searchData) {
-                                $scope.widgetsData.selectedNotAuthorized = filterArrayByProperty(searchData.filterWord,
-                                        initWidgetsData.selectedNotAuthorized, "name");
+                                var data = {
+                                    isAuthorized : false,
+                                    widget : $scope.lastSelectedWidget,
+                                    filterWord : searchData.filterWord
+                                };
+                                DashboardConfigService.getRoleSGroupsByName(data).then(function(response) {
+                                    $scope.widgetsData.selectedNotAuthorized = [];
+                                    $scope.fillList($scope.widgetsData.selectedNotAuthorized, response.data);
+                                });
                             }
 
                             function appRoleAuthorizedFilter(searchData) {
-                                $scope.widgetsData.selectedAuthorized = filterArrayByProperty(searchData.filterWord,
-                                        initWidgetsData.selectedAuthorized, "name");
+                                var data = {
+                                    isAuthorized : true,
+                                    widget : $scope.lastSelectedWidget,
+                                    filterWord : searchData.filterWord
+                                };
+                                DashboardConfigService.getRoleSGroupsByName(data).then(function(response) {
+                                    $scope.widgetsData.selectedAuthorized = [];
+                                    $scope.fillList($scope.widgetsData.selectedAuthorized, response.data);
+                                });
+                            }
+
+                            function retrieveDataScroll(data, methodName, panelName) {
+                                DashboardConfigService[methodName](data).then(function(response) {
+                                    if (_.isArray(response.data)) {
+                                        $scope.fillList($scope.widgetsData[panelName], response.data);
+                                    } else {
+                                        $scope.fillList($scope.widgetsData[panelName], response.data);
+                                    }
+
+                                    if (panelName === "selectedAuthorized") {
+                                        currentAuthRolesGroups = [];
+                                        _.forEach($scope.widgetsData[panelName], function(obj) {
+                                            currentAuthRolesGroups.push(obj.key);
+                                        });
+                                    }
+                                }, function() {
+                                    $log.error('Error during calling the method ' + methodName);
+                                });
+                            }
+
+                            function authorizedScroll() {
+                                var data = {};
+                                data.role = $scope.lastSelectedWidget;
+                                data.start = $scope.widgetsData.selectedAuthorized.length;
+                                data.isAuthorized = true;
+                                $scope.retrieveDataScroll(data, "getRoleSGroupsByName", "selectedAuthorized");
+                            }
+
+                            function unauthorizedScroll() {
+                                var data = {};
+                                data.role = $scope.lastSelectedWidget;
+                                data.start = $scope.widgetsData.selectedNotAuthorized.length;
+                                data.isAuthorized = false;
+                                $scope.retrieveDataScroll(data, "getRoleSGroupsByName", "selectedNotAuthorized");
                             }
 
                             $scope.onObjSelect = function(selectedObject) {
-                                $scope.lastSelectedRole = [];
-                                $scope.lastSelectedRole = selectedObject;
+                                $scope.lastSelectedWidget = [];
+                                $scope.lastSelectedWidget = selectedObject;
 
-                                initWidgetsData.selectedAuthorized = angular
-                                        .copy($scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles);
-                                initWidgetsData.selectedNotAuthorized = angular
-                                        .copy($scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles);
+                                var data = {};
+                                data.role = selectedObject;
+                                data.isAuthorized = true;
+                                var unAuthorizedRolesGroupsForWidgetPromise = DashboardConfigService.getRolesGroups(data);
+                                data.isAuthorized = false;
+                                var authorizedRolesGroupsForWidgetPromise = DashboardConfigService.getRolesGroups(data);
 
-                                $scope.widgetsData.selectedAuthorized = $scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles;
-                                $scope.widgetsData.selectedNotAuthorized = $scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles;
+                                //wait all promises to resolve
+                                $q.all([ unAuthorizedRolesGroupsForWidgetPromise, authorizedRolesGroupsForWidgetPromise ]).then(
+                                        function(payload) {
+                                            $scope.widgetsData.selectedAuthorized = [];
+                                            $scope.widgetsData.selectedNotAuthorized = [];
+                                            currentAuthRolesGroups = [];
+                                            _.forEach(payload[0].data, function(item) {
+                                                var element = {};
+                                                element.key = item.name;
+                                                element.name = item.name;
+                                                $scope.widgetsData.selectedAuthorized.push(element);
+                                                currentAuthRolesGroups.push(element.key);
+                                            });
+
+                                            fillList($scope.widgetsData.selectedNotAuthorized, payload[1].data);
+                                        });
                             };
 
                             $scope.onAuthRoleSelected = function(selectedObject, authorized, notAuthorized) {
+                                var toBeAdded = [];
+                                var toBeRemoved = [];
                                 var deferred = $q.defer();
-                                $scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles = authorized;
-                                $scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles = notAuthorized;
 
-                                dashboardConfigService.authorizeRolesForWidget($scope.widgetsMap[selectedObject.key]).then(function() {
-                                    deferred.resolve();
-                                }, function() {
-                                    deferred.reject();
+                                //get roles which needs to be added
+                                _.forEach(authorized, function(group) {
+                                    if (currentAuthRolesGroups.indexOf(group.key) === -1) {
+                                        toBeAdded.push(group.key);
+                                    }
+                                });
+                                _.forEach(notAuthorized, function(group) {
+                                    if (currentAuthRolesGroups.indexOf(group.key) !== -1) {
+                                        toBeRemoved.push(group.key);
+                                    }
                                 });
 
-                                return deferred.promise;
+                                //perform adding on server
+                                if (toBeAdded.length > 0) {
+                                    currentAuthRolesGroups = currentAuthRolesGroups.concat(toBeAdded);
+
+                                    DashboardConfigService.addRoleGroupToWidget(selectedObject.key, toBeAdded, true).then(function(data) {
+                                        MessageService.succsessAction();
+                                    }, function() {
+                                        //error adding group
+                                        MessageService.errorAction();
+                                    });
+                                    return deferred.promise;
+                                }
+
+                                if (toBeRemoved.length > 0) {
+                                    _.forEach(toBeRemoved, function(element) {
+                                        currentAuthRolesGroups.splice(currentAuthRolesGroups.indexOf(element), 1);
+                                    });
+
+                                    DashboardConfigService.removeRoleGroupToWidget(selectedObject.key, toBeRemoved, false).then(
+                                            function(data) {
+                                                MessageService.succsessAction();
+                                            }, function() {
+                                                //error adding group
+                                                MessageService.errorAction();
+                                            });
+                                    return deferred.promise;
+                                }
                             };
                         } ]);

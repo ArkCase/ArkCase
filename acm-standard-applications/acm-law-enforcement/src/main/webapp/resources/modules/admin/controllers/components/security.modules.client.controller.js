@@ -3,19 +3,22 @@
 angular.module('admin').controller(
         'Admin.ModulesController',
         [ '$scope', 'Admin.ModulesService', 'Admin.SelectPrivilegesService', '$q',
-                function($scope, modulesService, selectPrivilegesService, $q) {
-                    var tempAppModulesPromise = modulesService.getAppModulesPaged({});
-                    var tempAppRolesPromise = selectPrivilegesService.getAppRoles();
+                function($scope, ModulesService, SelectPrivilegesService, $q) {
+                    var tempAppModulesPromise = ModulesService.getAppModulesPaged({});
+                    var tempAppRolesPromise = SelectPrivilegesService.getAppRoles();
 
                     $scope.fillList = fillList;
+                    $scope.retrieveDataScroll = retrieveDataScroll;
                     //scroll functions
                     $scope.privilegeScroll = privilegeScroll;
+                    $scope.unauthorizedScroll = unauthorizedScroll;
+                    $scope.authorizedScroll = authorizedScroll;
                     //filter functions
                     $scope.chooseAppRoleFilter = chooseAppRoleFilter;
                     $scope.appRoleUnauthorizedFilter = appRoleUnauthorizedFilter;
                     $scope.appRoleAuthorizedFilter = appRoleAuthorizedFilter;
                     $scope.appRoles = [];
-                    $scope.lastSelectedPrivilege = {};
+                    $scope.lastSelectedModule = {};
                     // Loaded data after the initialization
                     var initModulesData = {
                         "notAuthorized" : [],
@@ -27,7 +30,9 @@ angular.module('admin').controller(
                         "selectedAuthorized" : []
                     };
                     $scope.scrollLoadData = {
-                        "loadObjectsScroll" : $scope.privilegeScroll
+                        "loadObjectsScroll" : $scope.privilegeScroll,
+                        "loadUnauthorizedScroll" : $scope.unauthorizedScroll,
+                        "loadAuthorizedScroll" : $scope.authorizedScroll
                     };
                     $scope.filterData = {
                         "objectsFilter" : $scope.chooseAppRoleFilter,
@@ -35,7 +40,7 @@ angular.module('admin').controller(
                         "authorizedFilter" : $scope.appRoleAuthorizedFilter
                     };
 
-                    $scope.currentAuthRoles = [];
+                    var currentAuthRoles = [];
 
                     function fillList(listToFill, data) {
                         _.forEach(data, function(obj) {
@@ -46,46 +51,86 @@ angular.module('admin').controller(
                         });
                     }
 
-                    function privilegeScroll() {
-                        var data = {};
-                        data.start = $scope.modulesData.chooseObject.length;
-                        modulesService.getAppModulesPaged(data).then(function(response) {
-                            $scope.modulesData.chooseObject = $scope.modulesData.chooseObject.concat(response.data);
-                            $scope.onObjSelect($scope.lastSelectedPrivilege);
+                    function retrieveDataScroll(data, methodName, panelName) {
+                        ModulesService[methodName](data).then(function(response) {
+                            if (_.isArray(response.data)) {
+                                $scope.fillList($scope.modulesData[panelName], response.data);
+                            } else {
+                                $scope.fillList($scope.modulesData[panelName], response.data);
+                            }
+
+                            if (panelName === "selectedAuthorized") {
+                                currentAuthRoles = [];
+                                _.forEach($scope.modulesData[panelName], function(obj) {
+                                    currentAuthRoles.push(obj.key);
+                                });
+                            }
+                        }, function() {
+                            $log.error('Error during calling the method ' + methodName);
                         });
                     }
 
+                    function privilegeScroll() {
+                        var data = {
+                            start : $scope.modulesData.chooseObject.length
+                        };
+                        ModulesService.getAppModulesPaged(data).then(function(response) {
+                            $scope.modulesData.chooseObject = $scope.modulesData.chooseObject.concat(response.data);
+                            $scope.onObjSelect($scope.lastSelectedModule);
+                        });
+                    }
+
+                    function authorizedScroll() {
+                        var data = {
+                            module : $scope.lastSelectedModule,
+                            start : $scope.modulesData.selectedAuthorized.length,
+                            isAuthorized : true
+                        };
+                        $scope.retrieveDataScroll(data, "getRolesForModulePaged", "selectedAuthorized");
+                    }
+
+                    function unauthorizedScroll() {
+                        var data = {
+                            module : $scope.lastSelectedModule,
+                            start : $scope.modulesData.selectedNotAuthorized.length,
+                            isAuthorized : false
+                        };
+                        $scope.retrieveDataScroll(data, "getRolesForModulePaged", "selectedNotAuthorized");
+                    }
+
                     function chooseAppRoleFilter(data) {
-                        modulesService.getAppModulesByName(data).then(function(response) {
+                        ModulesService.getAppModulesByName(data).then(function(response) {
                             $scope.modulesData.chooseObject = response.data;
                             $scope.onObjSelect($scope.modulesData.chooseObject[0]);
                         });
                     }
 
-                    function appRoleUnauthorizedFilter(data) {
+                    function appRoleUnauthorizedFilter(searchData) {
                         $scope.modulesData.selectedNotAuthorized = [];
 
-                        //filter
-                        if (!_.isEmpty(data)) {
-                            $scope.modulesData.selectedNotAuthorized = _.filter(initModulesData.notAuthorized, function(item) {
-                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
-                            });
-                        } else {
-                            $scope.modulesData.selectedNotAuthorized = angular.copy(initModulesData.notAuthorized);
-                        }
+                        var data = {
+                            isAuthorized : false,
+                            module : $scope.lastSelectedModule,
+                            filterWord : searchData.filterWord
+                        };
+                        ModulesService.getRolesForModuleByName(data).then(function(response) {
+                            $scope.modulesData.selectedNotAuthorized = [];
+                            $scope.fillList($scope.modulesData.selectedNotAuthorized, response.data);
+                        });
                     }
 
-                    function appRoleAuthorizedFilter(data) {
+                    function appRoleAuthorizedFilter(searchData) {
                         $scope.modulesData.selectedAuthorized = [];
 
-                        //filter
-                        if (!_.isEmpty(data)) {
-                            $scope.modulesData.selectedAuthorized = _.filter(initModulesData.authorized, function(item) {
-                                return (item.name.toLowerCase().indexOf(data.filterWord.toLowerCase()) >= 0);
-                            });
-                        } else {
-                            $scope.modulesData.selectedAuthorized = angular.copy(initModulesData.authorized);
-                        }
+                        var data = {
+                            isAuthorized : true,
+                            module : $scope.lastSelectedModule,
+                            filterWord : searchData.filterWord
+                        };
+                        ModulesService.getRolesForModuleByName(data).then(function(response) {
+                            $scope.modulesData.selectedAuthorized = [];
+                            $scope.fillList($scope.modulesData.selectedAuthorized, response.data);
+                        });
                     }
 
                     //wait all promises to resolve
@@ -101,31 +146,30 @@ angular.module('admin').controller(
 
                     //callback function when app role is selected
                     $scope.onObjSelect = function(selectedObject) {
-                        $scope.lastSelectedPrivilege = {};
-                        $scope.lastSelectedPrivilege = selectedObject;
+                        $scope.lastSelectedModule = {};
+                        $scope.lastSelectedModule = selectedObject;
 
-                        var rolesForModulePromise = modulesService.getRolesForModulePrivilege(selectedObject['privilege']);
-                        rolesForModulePromise.then(function(payload) {
-                            $scope.currentAuthRoles = payload.data;
-                            initModulesData.authorized = [];
-                            initModulesData.notAuthorized = [];
+                        var data = {
+                            module : selectedObject,
+                            isAuthorized : false
+                        };
+                        var unAuthorizedRolesGroupsForWidgetPromise = ModulesService.getRolesForModulePaged(data);
+                        data.isAuthorized = true;
+                        var authorizedRolesGroupsForWidgetPromise = ModulesService.getRolesForModulePaged(data);
 
-                            //set authorized roles
-                            fillList(initModulesData.authorized, $scope.currentAuthRoles);
-                            $scope.modulesData.selectedAuthorized = angular.copy(initModulesData.authorized);
-
-                            //set not authorized roles
-                            angular.forEach($scope.appRoles, function(role) {
-                                if ($scope.currentAuthRoles.indexOf(role) == -1) {
-                                    //we need to create wrapper to provide a name property
-                                    var notAuthorizedRole = {};
-                                    notAuthorizedRole.key = role;
-                                    notAuthorizedRole.name = role;
-                                    initModulesData.notAuthorized.push(notAuthorizedRole);
-                                }
+                        $q.all([ authorizedRolesGroupsForWidgetPromise, unAuthorizedRolesGroupsForWidgetPromise ]).then(function(payload) {
+                            $scope.modulesData.selectedAuthorized = [];
+                            $scope.modulesData.selectedNotAuthorized = [];
+                            currentAuthRoles = [];
+                            _.forEach(payload[0].data, function(item) {
+                                var element = {};
+                                element.key = item;
+                                element.name = item;
+                                $scope.modulesData.selectedAuthorized.push(element);
+                                currentAuthRoles.push(element.key);
                             });
-                            $scope.modulesData.selectedNotAuthorized = angular.copy(initModulesData.notAuthorized);
 
+                            fillList($scope.modulesData.selectedNotAuthorized, payload[1].data);
                         });
                     };
 
@@ -137,39 +181,39 @@ angular.module('admin').controller(
 
                         //get roles which needs to be added
                         angular.forEach(authorized, function(role) {
-                            if ($scope.currentAuthRoles.indexOf(role.key) == -1) {
+                            if (currentAuthRoles.indexOf(role.key) == -1) {
                                 toBeAdded.push(role.key);
                             }
                         });
                         //perform adding on server
                         if (toBeAdded.length > 0) {
-                            modulesService.addRolesToModule(selectedObject['privilege'], toBeAdded).then(function() {
+                            ModulesService.addRolesToModule(selectedObject['privilege'], toBeAdded).then(function() {
                                 deferred.resolve();
                             }, function() {
                                 deferred.reject();
                             });
 
-                            $scope.currentAuthRoles = $scope.currentAuthRoles.concat(toBeAdded);
+                            currentAuthRoles = currentAuthRoles.concat(toBeAdded);
                             return deferred.promise;
                         }
 
                         //get roles which needs to be removed
                         angular.forEach(notAuthorized, function(role) {
-                            if ($scope.currentAuthRoles.indexOf(role.key) != -1) {
+                            if (currentAuthRoles.indexOf(role.key) != -1) {
                                 toBeRemoved.push(role.key);
                             }
                         });
                         if (toBeRemoved.length > 0) {
                             //perform removing on server
-                            modulesService.removeRolesFromModule(selectedObject['privilege'], toBeRemoved).then(function() {
+                            ModulesService.removeRolesFromModule(selectedObject['privilege'], toBeRemoved).then(function() {
                                 deferred.resolve();
                             }, function() {
                                 deferred.reject();
                             });
 
-                            //remove from $scope.currentAuthRoles
+                            //remove from currentAuthRoles
                             angular.forEach(toBeRemoved, function(element) {
-                                $scope.currentAuthRoles.splice($scope.currentAuthRoles.indexOf(element), 1);
+                                currentAuthRoles.splice(currentAuthRoles.indexOf(element), 1);
                             });
 
                             return deferred.promise;

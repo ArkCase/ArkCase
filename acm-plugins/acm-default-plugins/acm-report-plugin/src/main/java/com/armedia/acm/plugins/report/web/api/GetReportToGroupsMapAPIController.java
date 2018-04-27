@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.report.web.api;
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.report.service.ReportService;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -10,12 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +41,45 @@ public class GetReportToGroupsMapAPIController
         return retval;
     }
 
+    @RequestMapping(value = "/reportstogroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<String> getReportsPaged(
+            @RequestParam(value = "sortBy", required = false, defaultValue = "name_lcs") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws IOException
+    {
+        LOG.debug("Getting reports ...");
+
+        List<String> retval = getReportService().getReportToGroupsPaged(sortDirection, startRow, maxRows);
+        if (null == retval)
+        {
+            LOG.warn("Properties not available..");
+        }
+        LOG.debug("Reports to groups map : " + retval.toString());
+        return retval;
+    }
+
+    @RequestMapping(value = "/reportstogroups", params = { "fq" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<String> getReportsByName(
+            @RequestParam(value = "fq") String filterQuery,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "name_lcs") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws IOException
+    {
+        LOG.debug("Getting reports ...");
+
+        List<String> retval = getReportService().getReportToGroupsByName(sortDirection, startRow, maxRows, filterQuery);
+        if (null == retval)
+        {
+            LOG.warn("Properties not available..");
+        }
+        LOG.debug("Reports to groups map : " + retval.toString());
+        return retval;
+    }
+
     @RequestMapping(value = "/{reportId:.+}/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String findGroupsForReport(@PathVariable("reportId") String reportId,
@@ -51,7 +88,7 @@ public class GetReportToGroupsMapAPIController
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
             @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
-            Authentication auth) throws MuleException
+            Authentication auth) throws MuleException, AcmEncryptionException
     {
         LOG.debug("Taking groups from Solr for specific report");
 
@@ -73,7 +110,7 @@ public class GetReportToGroupsMapAPIController
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
             @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
-            Authentication auth) throws MuleException
+            Authentication auth) throws MuleException, AcmEncryptionException
     {
         LOG.debug("Taking groups from Solr for specific report");
 
