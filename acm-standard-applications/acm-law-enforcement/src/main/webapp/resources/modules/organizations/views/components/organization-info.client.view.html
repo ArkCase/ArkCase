@@ -13,15 +13,11 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-md-4">
-                        <span class="h4 font-bold">
-                            {{objectInfo.organizationType || 'common.value.unknown' | translate}}
-                        </span>
                         <a href="#" editable-select="objectInfo.organizationType" onaftersave="saveOrganization()"
                                 e-ng-options="o.key as (o.key | translateData: 'core.lookups.organizationTypes' : lang) for o in organizationTypes">
                             {{ (objectInfo.organizationType | translateData: 'core.lookups.organizationTypes' : lang) ||
-                            ('common.value.unknown' |
-                            translate)
-                            }}</a>
+                            ('common.value.unknown' | translate)
+                            }}</a><br>
                         <small class="text-muted"><span translate>organizations.comp.info.type.label</span></small>
                     </div>
                     <div class="col-xs-12 col-md-4">
