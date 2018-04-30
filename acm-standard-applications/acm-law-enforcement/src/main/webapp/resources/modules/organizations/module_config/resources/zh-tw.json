@@ -21,7 +21,8 @@
         "identification.label": "身份號碼",
         "primary.label": "主要聯繫人",
         "parent.label": "上層組織",
-        "parent.placeholder": "鍵入上層組織"
+        "parent.placeholder": "鍵入上層組織",
+        "type.label": "zh-tw_Type"
     },
     "organizations.comp.actions": {
         "title": "行動",
