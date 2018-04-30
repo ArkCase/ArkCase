@@ -21,7 +21,8 @@
         "identification.label": "ID",
         "primary.label": "Primary Contact",
         "parent.label": "Parent Organization",
-        "parent.placeholder": "Enter Parent Organization"
+        "parent.placeholder": "Enter Parent Organization",
+        "type.label": "Type"
     },
     "organizations.comp.actions": {
         "title": "Actions",
