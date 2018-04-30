@@ -647,6 +647,7 @@
             },
             "holiday": {
                 "title": "Holiday Schedule",
+                "label": "Include Weekends as Working Days",
                 "grid": {
                     "holidayName": "Name of Holiday",
                     "holidayDate": "Date of holiday"
