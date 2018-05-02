@@ -41,6 +41,7 @@ public interface FunctionalAccessService
     public boolean saveGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth) throws AcmEncryptionException;
 
     public boolean removeGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth);
+    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, String userId);
 
     public Set<AcmUser> getUsersByRolesAndGroups(List<String> roles, Map<String, List<String>> rolesToGroups, String group,
             String currentAssignee);
