@@ -14,10 +14,12 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.SendDocumentsToSolr;
 
+import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +38,7 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
     private TaskToSolrTransformer taskToSolrTransformer;
     private List<String> eventList;
     private Logger log = LoggerFactory.getLogger(getClass());
+    private TaskService taskService;
 
     @Override
     public void onApplicationEvent(AcmTaskActivitiEvent event)
@@ -59,6 +62,18 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
                 {
                     log.error("Failed to create task container folder!", e.getMessage(), e);
                 }
+
+                Task task = (Task) event.getSource();
+
+                String user = SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null
+                        ? SecurityContextHolder.getContext().getAuthentication().getName()
+                        : "";
+
+                log.debug("Setting OWNER=[{}] for Task ID=[{}]", user, task.getId());
+
+                taskService.setOwner(task.getId(), user);
+                acmTask.setOwner(user);
+
             }
             // next if blocks make sure Solr gets the right task status
             else if ("delete".equals(event.getTaskEvent()))
@@ -171,4 +186,13 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
         this.eventList = eventList;
     }
 
+    public TaskService getTaskService()
+    {
+        return taskService;
+    }
+
+    public void setTaskService(TaskService taskService)
+    {
+        this.taskService = taskService;
+    }
 }

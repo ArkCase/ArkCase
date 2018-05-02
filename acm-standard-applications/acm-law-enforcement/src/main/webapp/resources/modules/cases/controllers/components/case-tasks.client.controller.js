@@ -117,7 +117,7 @@ angular.module('cases').controller(
                     };
 
                     $scope.isDeleteDisabled = function(rowEntity) {
-                        return !rowEntity.adhocTask_b;
+                        return (Util.isEmpty(rowEntity.task_owner_s) || (rowEntity.task_owner_s !== rowEntity.author_s));
                     };
 
                     $scope.onClickObjLink = function(event, rowEntity) {

@@ -37,19 +37,39 @@ angular.module('admin').controller(
                         };
                     });
 
+                    $scope.holidaySchedule = {};
                     var reloadGrid = function(data) {
-                        $scope.gridOptions.data = data;
+                        $scope.holidaySchedule.includeWeekends = data.includeWeekends;
+                        $scope.gridOptions.data = data.holidays;
                     };
 
-                    AdminHolidayService.getHolidays().then(function(response) {
-                        if (!Util.isEmpty(response.data)) {
+                    
 
-                            reloadGrid(response.data);
-                        }
-                    });
+                    $scope.loadPage = function() {
+                        AdminHolidayService.getHolidays().then(function(response) {
+                            if (!Util.isEmpty(response.data)) {
 
-                    var saveConfig = function(holidayConfig) {
-                        AdminHolidayService.saveHolidays(holidayConfig).then(function(data) {
+                                reloadGrid(response.data);
+                            }
+                        });
+                    };
+                    $scope.loadPage();
+
+                    $scope.save = function() {
+                        var holidayConfig = {
+                            "includeWeekends" : $scope.holidaySchedule.includeWeekends,
+                            "holidays" : $scope.gridOptions.data
+                        };
+                        saveConfig(holidayConfig);
+
+                    };
+                    var saveConfig = function() {
+                        var holidayConfiguration = {
+                            "includeWeekends" : $scope.holidaySchedule.includeWeekends,
+                            "holidays" : $scope.gridOptions.data
+
+                        };
+                        AdminHolidayService.saveHolidays(holidayConfiguration).then(function(data) {
                             MessageService.succsessAction();
                             reloadGrid(data.config.data);
                         }, function() {
@@ -59,7 +79,7 @@ angular.module('admin').controller(
 
                     function showModal(holiday, isEdit) {
                         var params = {};
-                        params.holiday = holiday;
+                        params.holidays = holiday;
                         params.isEdit = isEdit;
 
                         var modalInstance = $modal.open({
