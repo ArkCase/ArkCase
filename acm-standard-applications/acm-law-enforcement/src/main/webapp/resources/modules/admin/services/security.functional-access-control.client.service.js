@@ -1,5 +1,5 @@
 /**
- * Created by nebojsha on 11/10/2015.
+ * Created by nebojsha on 11/50/2015.
  */
 
 'use strict';
@@ -61,7 +61,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
             url : 'api/latest/functionalaccess/appRoles',
             cache : false,
             params : {
-                n : (data.n ? data.n : 10),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0)
             }
         });
@@ -84,7 +84,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
             cache : false,
             params : {
                 fq : (data.filterWord ? data.filterWord : ""),
-                n : (data.n ? data.n : 10)
+                n : (data.n ? data.n : 50)
             }
         });
     }
@@ -213,7 +213,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
             cache : false,
             params : {
                 start : (data.start ? data.start : 0),
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 authorized : data.isAuthorized
             }
         });
@@ -239,7 +239,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
             cache : false,
             params : {
                 start : (data.start ? data.start : 0),
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 fq : (data.filterWord ? data.filterWord : ""),
                 authorized : data.isAuthorized
             }

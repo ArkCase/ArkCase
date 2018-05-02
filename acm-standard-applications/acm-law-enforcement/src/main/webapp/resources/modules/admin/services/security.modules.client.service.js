@@ -1,5 +1,5 @@
 /**
- * Created by nebojsha on 11/9/2015.
+ * Created by nebojsha on 11/50/2015.
  */
 
 'use strict';
@@ -65,7 +65,7 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
             cache : false,
             params : {
                 dir : (data.dir ? data.dir : "name_lcs ASC"),
-                n : (data.n ? data.n : 9),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0)
             }
         });
@@ -92,7 +92,7 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
             cache : false,
             params : {
                 fn : (data.filterWord ? data.filterWord : ""),
-                n : (data.n ? data.n : 9)
+                n : (data.n ? data.n : 50)
             }
         });
     }
@@ -135,7 +135,7 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
             cache : false,
             url : 'api/latest/plugin/admin/rolesprivileges/' + data.module.key + '/roles',
             params : {
-                n : (data.n ? data.n : 9),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
                 authorized : data.isAuthorized
             }
@@ -160,7 +160,7 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
             cache : false,
             url : 'api/latest/plugin/admin/rolesprivileges/' + data.module.key + '/roles',
             params : {
-                n : (data.n ? data.n : 9),
+                n : (data.n ? data.n : 50),
                 authorized : data.isAuthorized,
                 fq : (data.filterWord ? data.filterWord : "")
             }

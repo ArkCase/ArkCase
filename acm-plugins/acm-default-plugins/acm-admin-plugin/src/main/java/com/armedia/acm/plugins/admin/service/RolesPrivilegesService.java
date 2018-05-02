@@ -201,75 +201,51 @@ public class RolesPrivilegesService
     }
 
     /**
-     * Retrieve roles of privilege paged
-     *
-     * @param privilegeName
-     * @return
-     */
-    public List<String> getRolesByWidgetPaged(String privilegeName, String sortBy, String sortDirection, Integer startRow, Integer maxRows,
-            Boolean authorized) throws AcmRolesPrivilegesException
-    {
-        return getRolesPaged(privilegeName, sortBy, sortDirection, startRow, maxRows, authorized, "");
-    }
-
-    /**
-     * Retrieve roles of privilege by name
-     *
-     * @param privilegeName
-     * @return
-     */
-    public List<String> getRolesByWidgetByName(String privilegeName, String sortBy, String sortDirection, Integer startRow, Integer maxRows,
-            Boolean authorized, String filterQuery) throws AcmRolesPrivilegesException
-    {
-        return getRolesPaged(privilegeName, sortBy, sortDirection, startRow, maxRows, authorized, filterQuery);
-    }
-
-    /**
      * Retrieve roles paged
      *
      * @param privilegeName
      * @return
      */
-    public List<String> getRolesPaged(String privilegeName, String sortBy, String sortDirection, Integer startRow, Integer maxRows,
+    public List<String> getRolesByNamePaged(String privilegeName, String sortBy, String sortDirection, Integer startRow, Integer maxRows,
             Boolean authorized, String filterQuery) throws AcmRolesPrivilegesException
     {
         List<String> rolesByPrivilege = retrieveRolesByPrivilege(privilegeName);
         List<String> allRoles = loadRoles();
-        List<String> result = null;
+        List<String> rolesByPrivilegePaged;
 
         if (authorized)
         {
-            result = new ArrayList<>(rolesByPrivilege);
+            rolesByPrivilegePaged = new ArrayList<>(rolesByPrivilege);
         }
         else
         {
             rolesByPrivilege.forEach(roleByPrivilege -> {
                 allRoles.removeIf(role -> role.equalsIgnoreCase(roleByPrivilege));
             });
-            result = new ArrayList<>(allRoles);
+            rolesByPrivilegePaged = new ArrayList<>(allRoles);
         }
 
         if (sortDirection.contains("DESC"))
         {
-            result.sort(Collections.reverseOrder());
+            rolesByPrivilegePaged.sort(Collections.reverseOrder());
         }
         else
         {
-            Collections.sort(result);
+            Collections.sort(rolesByPrivilegePaged);
         }
 
-        if (startRow > result.size())
+        if (startRow > rolesByPrivilegePaged.size())
         {
-            return result;
+            return rolesByPrivilegePaged;
         }
-        maxRows = maxRows > result.size() ? result.size() : maxRows;
+        maxRows = maxRows > rolesByPrivilegePaged.size() ? rolesByPrivilegePaged.size() : maxRows;
 
         if (!filterQuery.isEmpty())
         {
-            result.removeIf(role -> !(role.toLowerCase().contains(filterQuery.toLowerCase())));
+            rolesByPrivilegePaged.removeIf(role -> !(role.toLowerCase().contains(filterQuery.toLowerCase())));
         }
 
-        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
+        return rolesByPrivilegePaged.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
     /**
@@ -316,16 +292,8 @@ public class RolesPrivilegesService
     public void savePrivilegesToApplicationRole(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
     {
         // Check if role present in system
-        List<String> roles = loadRoles();
-        boolean rolePresent = false;
-        for (String roleIter : roles)
-        {
-            if (roleIter.equals(roleName))
-            {
-                rolePresent = true;
-                break;
-            }
-        }
+        boolean rolePresent = loadRoles().stream().anyMatch(role -> role.equalsIgnoreCase(roleName));
+
         if (!rolePresent)
         {
             throw new AcmRolesPrivilegesException(String.format("Can't update role's privileges. Role '%s' is absent",
@@ -667,7 +635,6 @@ public class RolesPrivilegesService
         {
             Properties props = new Properties();
             props.load(applicationInputStream);
-            // String propPrivileges = String.join(",", privileges);
             String propPrivileges = props.getProperty(roleName);
             propPrivileges += (propPrivileges.isEmpty() ? "" : ",") + String.join(",", privileges);
             props.setProperty(roleName, propPrivileges);

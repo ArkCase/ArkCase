@@ -49,7 +49,7 @@ public class RolesPrivilegesServiceTest extends EasyMockSupport
         List<PrivilegeItem> listToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "ASC", 0, 7, "");
 
         // then
-        assertTrue(listToVerify.toString().equals(expectedValue.toString()));
+        assertTrue(listToVerify.equals(expectedValue));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class RolesPrivilegesServiceTest extends EasyMockSupport
         List<PrivilegeItem> listToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "DESC", 0, 7, "");
 
         // then
-        assertTrue(expectedValue.toString().equals(listToVerify.toString()));
+        assertTrue(expectedValue.equals(listToVerify));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class RolesPrivilegesServiceTest extends EasyMockSupport
         List<PrivilegeItem> listToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "ASC", 0, 3, "");
 
         // then
-        assertTrue(expectedValue.toString().equals(listToVerify.toString()));
+        assertTrue(expectedValue.equals(listToVerify));
     }
 
     @Test
@@ -95,10 +95,10 @@ public class RolesPrivilegesServiceTest extends EasyMockSupport
         expectedValue.add(new PrivilegeItem("dashboardPrivilege", "Dashboard Privilege"));
 
         // when
-        List<PrivilegeItem> mapToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "ASC", 0, 7, "da");
+        List<PrivilegeItem> listToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "ASC", 0, 7, "da");
 
         // then
-        assertTrue(expectedValue.toString().equals(mapToVerify.toString()));
+        assertTrue(expectedValue.equals(listToVerify));
     }
 
 }

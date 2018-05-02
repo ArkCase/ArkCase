@@ -29,7 +29,7 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
             method : 'GET',
             url : 'api/latest/users/groups/get',
             params : {
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0)
             }
         });
@@ -54,7 +54,7 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
             method : 'GET',
             url : 'api/latest/users/groups/adhoc',
             params : {
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0)
             }
         });
@@ -80,7 +80,7 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
             method : 'GET',
             url : 'api/latest/users/groups/adhoc',
             params : {
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
                 fq : (data.filterWord ? data.filterWord : "")
             }
@@ -107,7 +107,7 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
             url : 'api/latest/users/' + data.member.key + '/groups/adhoc',
             cache : false,
             params : {
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
                 authorized : data.isAuthorized,
                 groupType : (data.member.type ? data.member.type : "")
@@ -135,7 +135,7 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
             method : 'GET',
             url : 'api/latest/users/' + data.member.key + '/groups/adhoc',
             params : {
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
                 authorized : data.isAuthorized,
                 fq : (data.filterWord ? data.filterWord : ""),

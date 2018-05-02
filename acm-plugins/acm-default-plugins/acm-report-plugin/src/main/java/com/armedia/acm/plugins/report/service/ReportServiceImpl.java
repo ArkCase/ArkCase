@@ -510,8 +510,8 @@ public class ReportServiceImpl implements ReportService
     public String buildGroupsForReportSolrQuery(Boolean authorized, String reportId, String filterQuery) throws AcmEncryptionException
     {
         StringBuilder solrQuery = new StringBuilder();
-        String groupsForReportttt = propertyFileManager.load(getReportToGroupsMapPropertiesFileLocation(), reportId, null);
-        List<String> groupsForReport = new ArrayList<>(Arrays.asList(groupsForReportttt.split(",")));
+        List<String> groupsForReport = new ArrayList<>(
+                Arrays.asList(propertyFileManager.load(getReportToGroupsMapPropertiesFileLocation(), reportId, null).split(",")));
 
         solrQuery.append(
                 "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED");

@@ -8,7 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,11 +64,11 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
         }
     }
 
-    @RequestMapping(value = "/rolesprivileges/roles/{roleName}/privileges/natokmiGoSo", method = RequestMethod.PUT, produces = {
+    @RequestMapping(value = "/rolesprivileges/{roleName}/privileges", method = RequestMethod.PUT, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public String addPrivilegesToApplicationRole(
+    public ResponseEntity<?> addPrivilegesToApplicationRole(
             @PathVariable(PROP_ROLE_NAME) String roleName,
             @RequestBody List<String> privileges) throws IOException, AcmRolesPrivilegesException
     {
@@ -80,7 +82,7 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
 
             log.debug("Adding privileges to an application role [{}]", roleName);
             rolesPrivilegesService.updateRolePrivileges(roleName, privileges);
-            return "{}";
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -89,11 +91,11 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
         }
     }
 
-    @RequestMapping(value = "/rolesprivileges/roles/{roleName}/privileges/natokmiGoSo", method = RequestMethod.DELETE, produces = {
+    @RequestMapping(value = "/rolesprivileges/{roleName}/privileges", method = RequestMethod.DELETE, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public String removePrivilegesToApplicationRole(
+    public ResponseEntity<?> removePrivilegesToApplicationRole(
             @PathVariable(PROP_ROLE_NAME) String roleName,
             @RequestBody List<String> privileges) throws IOException, AcmRolesPrivilegesException
     {
@@ -107,7 +109,7 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
 
             log.debug("Removing privileges from an application role [{}]", roleName);
             rolesPrivilegesService.removeRolesPrivileges(new ArrayList<>(Arrays.asList(roleName)), privileges);
-            return "{}";
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception e)
         {

@@ -73,7 +73,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
                 fn : (data.filterWord ? data.filterWord : ""),
                 dir : (data.dir ? data.dir : "ASC"),
                 start : (data.start ? data.start : 0),
-                n : (data.n ? data.n : 18)
+                n : (data.n ? data.n : 50)
             }
         });
     }
@@ -99,7 +99,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
             params : {
                 dir : (data.dir ? data.dir : "ASC"),
                 start : (data.start ? data.start : 0),
-                n : (data.n ? data.n : 18)
+                n : (data.n ? data.n : 50)
             }
         });
     }
@@ -144,7 +144,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
             params : {
                 authorized : data.isAuthorized,
                 dir : (data.dir ? data.dir : ""),
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0)
             }
         });
@@ -172,7 +172,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
             params : {
                 authorized : data.isAuthorized,
                 dir : (data.dir ? data.dir : ""),
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
                 fq : (data.filterWord ? data.filterWord : "")
             }
@@ -213,7 +213,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
             cache : false,
             url : "api/latest/plugin/report/reportstogroups",
             params : {
-                n : (data.n ? data.n : 12),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0)
             }
         });
@@ -235,7 +235,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
             cache : false,
             url : "api/latest/plugin/report/reportstogroups",
             params : {
-                n : (data.n ? data.n : 12),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
                 fq : (data.filterWord ? data.filterWord : "")
             }
