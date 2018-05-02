@@ -5,7 +5,11 @@
     <bean id="wopiUsersApiController" class="com.armedia.acm.services.wopi.api.WopiUserApiController"/>
 
     <bean id="wopiFilesApiController" class="com.armedia.acm.services.wopi.api.WopiFilesApiController">
-       <property name="wopiService" ref="wopiAcmService"/>
+        <property name="wopiService" ref="wopiAcmService"/>
+    </bean>
+
+    <bean id="wopiResourceApiController" class="com.armedia.acm.services.wopi.api.WopiResourceApiController">
+        <property name="resourceLocations" ref="wopiServiceProperties"/>
     </bean>
 
 </beans>
