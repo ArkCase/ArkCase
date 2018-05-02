@@ -49,7 +49,7 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public List<String> findRolesByModulePaged(
+    public List<String> findRolesByPrivilegePaged(
             @PathVariable(PROP_PRIVILEGE_NAME) String privilegeName,
             @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "sortBy", required = false, defaultValue = "widgetName") String sortBy,
@@ -60,7 +60,7 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
     {
         try
         {
-            return rolesPrivilegesService.getRolesByWidgetPaged(privilegeName, sortBy, sortDirection, startRow, maxRows, authorized);
+            return rolesPrivilegesService.getRolesByNamePaged(privilegeName, sortBy, sortDirection, startRow, maxRows, authorized, "");
         }
         catch (Exception e)
         {
@@ -73,7 +73,7 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public List<String> findRolesByModuleByName(
+    public List<String> findRolesByPrivilegeByName(
             @PathVariable(PROP_PRIVILEGE_NAME) String privilegeName,
             @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "fq") String filterQuery,
@@ -83,10 +83,9 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows, Authentication authentication)
             throws IOException, AcmRolesPrivilegesException
     {
-
         try
         {
-            return rolesPrivilegesService.getRolesByWidgetByName(privilegeName, sortBy, sortDirection, startRow, maxRows, authorized,
+            return rolesPrivilegesService.getRolesByNamePaged(privilegeName, sortBy, sortDirection, startRow, maxRows, authorized,
                     filterQuery);
         }
         catch (Exception e)

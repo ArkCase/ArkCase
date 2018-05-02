@@ -81,7 +81,7 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
             cache : false,
             params : {
                 authorized : data.isAuthorized,
-                n : (data.n ? data.n : 12)
+                n : (data.n ? data.n : 50)
             }
         });
     }
@@ -157,7 +157,7 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
             cache : false,
             params : {
                 authorized : data.isAuthorized,
-                n : (data.n ? data.n : 12),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
                 fq : (data.filterWord ? data.filterWord : "")
             }

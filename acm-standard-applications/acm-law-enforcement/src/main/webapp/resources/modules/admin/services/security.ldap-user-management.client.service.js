@@ -93,7 +93,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             url : url,
             params : {
                 fq : data.filterWord,
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 start : 0
             }
         });
@@ -118,7 +118,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             url : url,
             params : {
                 start : (data.start ? data.start : 0),
-                n : (data.n ? data.n : 18)
+                n : (data.n ? data.n : 50)
             }
         });
     }
@@ -143,7 +143,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             method : 'GET',
             url : 'api/latest/users/' + data.member.key + '/groups/',
             params : {
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 q : data.member.key,
                 fq : data.filterWord,
                 start : (data.start ? data.start : 0),
@@ -172,7 +172,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             url : 'api/latest/users/' + data.member.key + '/groups/',
             cache : false,
             params : {
-                n : (data.n ? data.n : 18),
+                n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
                 authorized : data.isAuthorized
             }

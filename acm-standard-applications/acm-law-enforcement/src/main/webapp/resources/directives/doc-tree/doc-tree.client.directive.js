@@ -4720,7 +4720,8 @@ angular
                                     uploadForm : '&',
                                     onInitTree : '&',
                                     readOnly : '@',
-                                    topNodeExpanded : '='
+                                    topNodeExpanded : '=',
+                                    searchModal : '&'
                                 }
 
                                 ,
