@@ -1,5 +1,6 @@
 package com.armedia.acm.services.wopi.service;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -39,56 +40,32 @@ public class WopiAcmService
         }
         boolean userCanWrite = permissionEvaluator.hasPermission(authentication, file.getId(),
                 "FILE", "write|group-write");
-        try
-        {
-            Optional<EcmFileVersion> ecmFileVersion = file.getVersions().stream()
-                    .filter(fileVersion -> fileVersion.getVersionTag().equals(file.getActiveVersionTag()))
-                    .findFirst();
-            Long fileSize = ecmFileVersion.map(EcmFileVersion::getFileSizeBytes).orElse(0L);
 
-            return Optional.of(new WopiFileInfo(file.getFileId(), file.getFileName(),
-                    file.getFileExtension(), file.getCreator(), file.getActiveVersionTag(),
-                    fileSize, authentication.getName(), userCanWrite));
-        }
-        catch (Exception e)
-        {
-            log.error("File with id [{}] is not found", id);
-            return Optional.empty();
-        }
+        Optional<EcmFileVersion> ecmFileVersion = file.getVersions().stream()
+                .filter(fileVersion -> fileVersion.getVersionTag().equals(file.getActiveVersionTag()))
+                .findFirst();
+        Long fileSize = ecmFileVersion.map(EcmFileVersion::getFileSizeBytes).orElse(0L);
+
+        return Optional.of(new WopiFileInfo(file.getFileId(), file.getFileName(),
+                file.getFileExtension(), file.getCreator(), file.getActiveVersionTag(),
+                fileSize, authentication.getName(), userCanWrite));
     }
 
-    public Optional<InputStreamResource> getFileContents(Long id)
+    public InputStreamResource getFileContents(Long id) throws AcmUserActionFailedException, MuleException
     {
-        try
-        {
-            InputStream fileContent = ecmFileService.downloadAsInputStream(id);
-            return Optional.of(new InputStreamResource(fileContent));
-        }
-        catch (MuleException | AcmUserActionFailedException e)
-        {
-            log.error("Failed to download file with id [{}]", id);
-            return Optional.empty();
-        }
+        InputStream fileContent = ecmFileService.downloadAsInputStream(id);
+        return new InputStreamResource(fileContent);
     }
 
-    public boolean putFile(Long id, InputStreamResource resource, Authentication authentication)
+    public void putFile(Long id, InputStreamResource resource, Authentication authentication)
+            throws AcmObjectNotFoundException, IOException, MuleException
     {
         EcmFile fileToBeReplaced = ecmFileService.findById(id);
         if (fileToBeReplaced == null)
         {
-            log.error("File with id [{}] is not found", id);
-            return false;
+            throw new AcmObjectNotFoundException("FILE", id, "File not found");
         }
-        try
-        {
-            fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, resource.getInputStream());
-            return true;
-        }
-        catch (MuleException | IOException e)
-        {
-            log.error("Can't update file with id [{}]", id);
-            return false;
-        }
+        fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, resource.getInputStream());
     }
 
     public Long getLock(Long fileId)
@@ -107,7 +84,7 @@ public class WopiAcmService
     public Long refreshLock(String lockKey)
     {
         AcmObjectLock lock = objectLockService.findLock(Long.parseLong(lockKey));
-        return lock.getId();
+        return lock != null ? lock.getId() : null;
     }
 
     public Long unlock(Long fileId, String lockKey, Authentication authentication)
@@ -117,21 +94,15 @@ public class WopiAcmService
         return 0L;
     }
 
-    public Long manageLock(String overrideType, Long fileId, String lockKey, Authentication authentication)
+    public void renameFile(Long fileId, String newName)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
-        switch (overrideType)
-        {
-        case "LOCK":
-            return lock(fileId, authentication);
-        case "GET_LOCK":
-            return getLock(fileId);
-        case "REFRESH_LOCK":
-            return refreshLock(lockKey);
-        case "UNLOCK":
-            return unlock(fileId, lockKey, authentication);
-        default:
-            return null;
-        }
+        ecmFileService.renameFile(fileId, newName);
+    }
+
+    public void deleteFile(Long fileId) throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
+        ecmFileService.deleteFile(fileId);
     }
 
     public void setEcmFileService(EcmFileService ecmFileService)

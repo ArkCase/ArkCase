@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping(value = "/api/latest/wopi")
+@RequestMapping(value = "/api/latest/wopi/users")
 public class WopiUserApiController
 {
     private static final Logger log = LoggerFactory.getLogger(WopiUserApiController.class);
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public WopiUserInfo getUserInfo(@RequestParam("acm_ticket") String token, HttpSession session)
     {
