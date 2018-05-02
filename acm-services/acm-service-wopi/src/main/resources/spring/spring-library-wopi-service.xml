@@ -10,4 +10,13 @@
         <property name="objectLockService" ref="objectLockService"/>
     </bean>
 
+    <bean id="wopiServiceProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.arkcase/acm/wopiService.properties"/>
+        <property name="ignoreResourceNotFound" value="false"/>
+        <property name="localOverride" value="false"/>
+    </bean>
+
 </beans>

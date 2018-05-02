@@ -91,7 +91,7 @@ public class WopiFilesApiController
     }
 
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
-    @RequestMapping(value = "/{id}/lock", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/locks", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<Long> lockFile(@PathVariable Long id, Authentication authentication)
     {
@@ -100,7 +100,7 @@ public class WopiFilesApiController
     }
 
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
-    @RequestMapping(value = "/{id}/lock", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/locks", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Long> getLock(@PathVariable Long id, Authentication authentication)
     {
@@ -109,7 +109,7 @@ public class WopiFilesApiController
     }
 
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
-    @RequestMapping(value = "/files/{id}/lock/{lockKey}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/files/{id}/locks/{lockKey}", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<Long> refreshLock(@PathVariable Long id, @PathVariable String lockKey, Authentication authentication)
     {
@@ -118,7 +118,7 @@ public class WopiFilesApiController
     }
 
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
-    @RequestMapping(value = "/{id}/lock", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}/locks", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity<Long> unlock(@PathVariable Long id, @RequestParam String lockKey, Authentication authentication)
     {
