@@ -4,7 +4,9 @@
             <div class="col-xs-12 col-md-12">
                 <div class="row">
                     <div class="col-xs-6">
-                        <h4><a href="#" editable-text="objectInfo.organizationValue" onaftersave="saveOrganization()" e-required>
+                        <h4><a href="#" permission="editObject" permission-object-type="ORGANIZATION" permission-action="disable"
+                                permission-properties="objectInfo" editable-text="objectInfo.organizationValue"
+                                onaftersave="saveOrganization()" e-required>
                             {{objectInfo.organizationValue || 'common.value.unknown' | translate}}</a>
                         </h4></div>
                     <div class="col-xs-6 text-right">
@@ -13,7 +15,9 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-md-4">
-                        <a href="#" editable-select="objectInfo.organizationType" onaftersave="saveOrganization()"
+                        <a href="#" permission="editObject" permission-object-type="ORGANIZATION" permission-action="disable"
+                                editable-select="objectInfo.organizationType" permission-properties="objectInfo"
+                                onaftersave="saveOrganization()"
                                 e-ng-options="o.key as (o.key | translateData: 'core.lookups.organizationTypes' : lang) for o in organizationTypes">
                             {{ (objectInfo.organizationType | translateData: 'core.lookups.organizationTypes' : lang) ||
                             ('common.value.unknown' | translate)
