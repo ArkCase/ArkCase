@@ -761,6 +761,12 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         return null;
     }
 
+    @Override
+    public boolean purge(Transcribe transcribe)
+    {
+        return false;
+    }
+
     /**
      * This method will return true if all conditions are reached for proceeding with automatic transcription
      *

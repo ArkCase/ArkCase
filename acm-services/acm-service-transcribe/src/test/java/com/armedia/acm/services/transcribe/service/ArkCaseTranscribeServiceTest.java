@@ -108,6 +108,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -150,6 +151,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -186,6 +188,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -223,6 +226,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -278,6 +282,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -319,6 +324,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -362,6 +368,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -522,6 +529,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -548,6 +556,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -574,6 +583,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -600,6 +610,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -631,6 +642,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -662,6 +674,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -713,6 +726,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -744,6 +758,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         properties.put("transcribe.word.count.per.item", "20");
         properties.put("transcribe.provider", "AWS");
         properties.put("transcribe.providers", "AWS");
+        properties.put("transcribe.provider.purge.attempts", 5);
         properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
         properties.put("transcribe.silent.between.words.in.seconds", "2");
 
@@ -780,6 +795,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         configuration.setWordCountPerItem(20);
         configuration.setProvider(TranscribeServiceProvider.AWS);
         configuration.setProviders(providers);
+        configuration.setProviderPurgeAttempts(5);
         configuration.setAllowedMediaDuration(7200);
         configuration.setSilentBetweenWords(new BigDecimal("2"));
 
