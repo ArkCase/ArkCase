@@ -53,7 +53,7 @@
                         <span translate>documentDetails.comp.transcription.buttons.save</span>
                     </button>
                     <div class="pull-right">
-                        <a ng-click="diagram()" href="" class="inline animated btn btn-default btn-xs ng-scope" ng-if="transcribeDataModel.processId != null && transcribeDataModel.status != 'DRAFT' && transcribeDataModel.status != 'COMPLETED' && transcribeDataModel.status != 'FAILED'">
+                        <a ng-click="diagram()" href="" class="inline animated btn btn-default btn-xs ng-scope" ng-if="transcribeDataModel.processId != null">
                             <i class="fa fa-sitemap"></i>
                         </a>
                         <button class="btn btn-xs btn-default" ng-click="cancel()" ng-disabled="transcribeDataModel.status != 'QUEUED' || isCancelLoading" ng-if="transcribeDataModel.type === 'AUTOMATIC'">
@@ -62,7 +62,7 @@
                              </span>
                             <span translate>documentDetails.comp.transcription.buttons.cancel</span>
                         </button>
-                        <button class="btn btn-xs btn-default" ng-click="transcribe()" ng-disabled="transcribeDataModel.status === 'QUEUED' || transcribeDataModel.status === 'PROCESSING' || isTranscribeLoading">
+                        <button class="btn btn-xs btn-default" ng-click="transcribe()" ng-disabled="transcribeDataModel.status === 'QUEUED' || transcribeDataModel.status === 'PROCESSING' || (transcribeDataModel.status === 'COMPLETED' && transcribeDataModel.processId !== null) || isTranscribeLoading">
                             <span ng-if="isTranscribeLoading">
                             <i class="fa fa-circle-o-notch fa-spin"></i>
                             </span>

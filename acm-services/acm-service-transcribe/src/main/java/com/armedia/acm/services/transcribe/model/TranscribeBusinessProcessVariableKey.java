@@ -10,5 +10,6 @@ public enum TranscribeBusinessProcessVariableKey
     STATUS,
     ACTION,
     TYPE,
-    CREATED
+    CREATED,
+    PURGE_ATTEMPTS
 }
