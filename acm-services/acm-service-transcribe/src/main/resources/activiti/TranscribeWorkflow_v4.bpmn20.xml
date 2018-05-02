@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180418073659" modeler:modelId="1043074" modeler:modelVersion="1" modeler:modelLastUpdated="1524033397336">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180430171854" modeler:modelId="1043074" modeler:modelVersion="1" modeler:modelLastUpdated="1525105110298">
   <process id="TranscribeWorkflow" name="TranscribeWorkflow" isExecutable="true">
     <startEvent id="start" name="Start">
       <extensionElements>
@@ -38,6 +38,7 @@
     </parallelGateway>
     <endEvent id="end">
       <extensionElements>
+        <activiti:executionListener event="start" delegateExpression="#{transcribeRemoveProcessIdDelegate}"/>
         <modeler:editor-resource-id><![CDATA[sid-FE9B8C3B-0726-4F4E-BA30-6DD7D45621A1]]></modeler:editor-resource-id>
       </extensionElements>
     </endEvent>
@@ -48,7 +49,7 @@
     </exclusiveGateway>
     <serviceTask id="checkProcessing" name="Check if there are less Transcribe objects with status 'PROCESSING' (distinct by process ID) than configured limit in Admin" activiti:expression="${execution.getId()}">
       <extensionElements>
-        <activiti:executionListener event="start" delegateExpression="#{transcribeProcessingChecker}"/>
+        <activiti:executionListener event="start" delegateExpression="#{transcribeProcessDelegate}"/>
         <modeler:editor-resource-id><![CDATA[sid-7AA5CB10-6776-45A9-9C39-15C4EA0D7ECF]]></modeler:editor-resource-id>
       </extensionElements>
     </serviceTask>
@@ -103,7 +104,7 @@
     </receiveTask>
     <serviceTask id="checkStatus" name="Check Status" activiti:expression="${execution.getId()}">
       <extensionElements>
-        <activiti:executionListener event="start" delegateExpression="#{transcribeStatusChecker}"/>
+        <activiti:executionListener event="start" delegateExpression="#{transcribeCheckStatusDelegate}"/>
         <modeler:editor-resource-id><![CDATA[sid-5514F989-6FCB-4D07-9897-194164DF4F37]]></modeler:editor-resource-id>
       </extensionElements>
     </serviceTask>
@@ -144,12 +145,6 @@
         <modeler:editor-resource-id><![CDATA[sid-ADA1197D-598D-423F-980A-290948571B89]]></modeler:editor-resource-id>
       </extensionElements>
     </sequenceFlow>
-    <sequenceFlow id="endOrCheckProcessingDecisionToEnd" sourceRef="endOrCheckProcessingDecision" targetRef="end">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-B46ECE78-4B9E-4CA8-89F7-D6259487377D]]></modeler:editor-resource-id>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'CANCELLED' || ACTION == 'FAILED' || ACTION == 'COMPLETED'}]]></conditionExpression>
-    </sequenceFlow>
     <sequenceFlow id="endOrCheckProcessingDecisionToCheckProcessing" sourceRef="endOrCheckProcessingDecision" targetRef="checkProcessing">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-5B8FF7CC-73D5-4B2F-BC59-CB72AF607B72]]></modeler:editor-resource-id>
@@ -173,18 +168,6 @@
       </extensionElements>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PROCESSING'}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="automaticOrManualDecisionToWaitToComplete" sourceRef="automaticOrManualDecision" targetRef="waitToCompleteForManual">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-092ED66B-F8EA-49A3-A431-C4F64CE771D4]]></modeler:editor-resource-id>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${TYPE == 'MANUAL'}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="automaticOrManualDecisionToWaitToCheckStatus" sourceRef="automaticOrManualDecision" targetRef="waitToCheckStatus">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-D99E7458-32F8-4883-828E-F6634F84F095]]></modeler:editor-resource-id>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${TYPE == 'AUTOMATIC'}]]></conditionExpression>
-    </sequenceFlow>
     <sequenceFlow id="waitOrProcessDecisionToSetStatus" sourceRef="waitOrProcessDecision" targetRef="setStatus">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-1D8F1FFF-4141-4E1B-AE89-241617F9894B]]></modeler:editor-resource-id>
@@ -203,11 +186,6 @@
       </extensionElements>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION != 'PROCESSING'}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="waitToCheckStatusToCheckStatus" sourceRef="waitToCheckStatus" targetRef="checkStatus">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-BA8DA548-3363-4803-AA74-A9113C5554B5]]></modeler:editor-resource-id>
-      </extensionElements>
-    </sequenceFlow>
     <sequenceFlow id="waitToCompleteToSetStatus" sourceRef="waitToCompleteForManual" targetRef="setStatus">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-2CA66E7C-04BB-409F-9718-DAF6F333E4D6]]></modeler:editor-resource-id>
@@ -219,11 +197,6 @@
         <modeler:editor-resource-id><![CDATA[sid-B129543D-340D-46E4-956C-33799F4ABE0A]]></modeler:editor-resource-id>
       </extensionElements>
     </exclusiveGateway>
-    <sequenceFlow id="sid-69A7E93C-EF6B-4AF1-8ECA-48C2520971FF" sourceRef="checkStatus" targetRef="cehckStatusDecision">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-69A7E93C-EF6B-4AF1-8ECA-48C2520971FF]]></modeler:editor-resource-id>
-      </extensionElements>
-    </sequenceFlow>
     <sequenceFlow id="checkStatusToWaitToCheckStatus" sourceRef="cehckStatusDecision" targetRef="waitToCheckStatus">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-DCC2BA77-DBB2-42DE-A64B-33E3A81F18A8]]></modeler:editor-resource-id>
@@ -235,6 +208,92 @@
         <modeler:editor-resource-id><![CDATA[sid-31AFD25E-87AB-43C6-B5D4-37AE44094D39]]></modeler:editor-resource-id>
       </extensionElements>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'FAILED' || ACTION == 'COMPLETED'}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="purgeOrEndDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-2C400B62-E23E-4CE4-84AA-B5F38132842B]]></modeler:editor-resource-id>
+      </extensionElements>
+    </exclusiveGateway>
+    <sequenceFlow id="endOrCheckProcessingDecisionToEnd" sourceRef="endOrCheckProcessingDecision" targetRef="purgeOrEndDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-B46ECE78-4B9E-4CA8-89F7-D6259487377D]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'CANCELLED' || ACTION == 'FAILED' || ACTION == 'COMPLETED'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-D2E1AF55-6D70-42F1-B7EA-E080A9775C1F" sourceRef="purgeOrEndDecision" targetRef="end">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-D2E1AF55-6D70-42F1-B7EA-E080A9775C1F]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${TYPE == 'MANUAL'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="automaticOrManualDecisionToWaitToCheckStatus" sourceRef="automaticOrManualDecision" targetRef="waitToCheckStatus">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-D99E7458-32F8-4883-828E-F6634F84F095]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${TYPE == 'AUTOMATIC'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="automaticOrManualDecisionToWaitToComplete" sourceRef="automaticOrManualDecision" targetRef="waitToCompleteForManual">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-092ED66B-F8EA-49A3-A431-C4F64CE771D4]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${TYPE == 'MANUAL'}]]></conditionExpression>
+    </sequenceFlow>
+    <intermediateCatchEvent id="waitToPurge">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-42C4634F-757F-4C63-8E0F-73A411C88BC9]]></modeler:editor-resource-id>
+      </extensionElements>
+      <timerEventDefinition>
+        <timeDuration>PT1M</timeDuration>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <sequenceFlow id="sid-CB2E429E-A3FF-499A-AF61-C4864A947790" sourceRef="purgeOrEndDecision" targetRef="waitToPurge">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-CB2E429E-A3FF-499A-AF61-C4864A947790]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${TYPE == 'AUTOMATIC'}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="purge" name="Purge" activiti:expression="${execution.getId()}">
+      <extensionElements>
+        <activiti:executionListener event="start" delegateExpression="#{transcribePurgeDelegate}"/>
+        <modeler:editor-resource-id><![CDATA[sid-02B50CF2-612A-4FFD-B148-FE45F67D6AB9]]></modeler:editor-resource-id>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="waitToCheckStatusToCheckStatus" sourceRef="waitToCheckStatus" targetRef="checkStatus">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-BA8DA548-3363-4803-AA74-A9113C5554B5]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="sid-15DBC599-2712-4F0D-B696-D1091D9CAD9D" sourceRef="waitToPurge" targetRef="purge">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-15DBC599-2712-4F0D-B696-D1091D9CAD9D]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <exclusiveGateway id="purgeDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-2F3740C6-08DB-4B0A-99CB-2D57B2C19247]]></modeler:editor-resource-id>
+      </extensionElements>
+    </exclusiveGateway>
+    <sequenceFlow id="sid-6670E89E-FC35-42EA-8669-57CE0AA00994" sourceRef="purge" targetRef="purgeDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-6670E89E-FC35-42EA-8669-57CE0AA00994]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="sid-69A7E93C-EF6B-4AF1-8ECA-48C2520971FF" sourceRef="checkStatus" targetRef="cehckStatusDecision">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-69A7E93C-EF6B-4AF1-8ECA-48C2520971FF]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="sid-61993B1A-ADC7-4D74-94E2-B530A64A775F" sourceRef="purgeDecision" targetRef="waitToPurge">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-61993B1A-ADC7-4D74-94E2-B530A64A775F]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PURGE_FAILED'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-3054A3B5-4883-4FD5-B5FD-54B6249823BC" sourceRef="purgeDecision" targetRef="end">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-3054A3B5-4883-4FD5-B5FD-54B6249823BC]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PURGE_SUCCESS' || ACTION == 'PURGE_TERMINATE'}]]></conditionExpression>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_TranscribeWorkflow">
@@ -293,6 +352,18 @@
       <bpmndi:BPMNShape bpmnElement="cehckStatusDecision" id="BPMNShape_cehckStatusDecision">
         <omgdc:Bounds height="40.0" width="40.0" x="1440.0" y="398.0"/>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="purgeOrEndDecision" id="BPMNShape_purgeOrEndDecision">
+        <omgdc:Bounds height="40.0" width="40.0" x="967.25" y="600.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="waitToPurge" id="BPMNShape_waitToPurge">
+        <omgdc:Bounds height="31.0" width="31.0" x="874.5" y="604.5"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="purge" id="BPMNShape_purge">
+        <omgdc:Bounds height="80.0" width="100.0" x="840.0" y="660.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="purgeDecision" id="BPMNShape_purgeDecision">
+        <omgdc:Bounds height="40.0" width="40.0" x="735.0" y="680.0"/>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="endOrCheckProcessingDecisionToAutomaticOrManualDecision" id="BPMNEdge_endOrCheckProcessingDecisionToAutomaticOrManualDecision">
         <omgdi:waypoint x="1006.8008701472556" y="418.4491298527443"/>
         <omgdi:waypoint x="1155.0532623169108" y="418.0532623169108"/>
@@ -319,17 +390,31 @@
         <omgdi:waypoint x="987.2562111801242" y="339.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="endOrCheckProcessingDecisionToEnd" id="BPMNEdge_endOrCheckProcessingDecisionToEnd">
-        <omgdi:waypoint x="987.7227793696275" y="437.5272206303725"/>
-        <omgdi:waypoint x="987.2700285918074" y="754.0000143265962"/>
+        <omgdi:waypoint x="987.75" y="437.5"/>
+        <omgdi:waypoint x="987.75" y="600.5"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="parallelActionsToNotifyOwnerOfTheMedia" id="BPMNEdge_parallelActionsToNotifyOwnerOfTheMedia">
         <omgdi:waypoint x="575.5" y="398.5"/>
         <omgdi:waypoint x="575.5" y="331.5"/>
         <omgdi:waypoint x="650.0" y="331.5"/>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-CB2E429E-A3FF-499A-AF61-C4864A947790" id="BPMNEdge_sid-CB2E429E-A3FF-499A-AF61-C4864A947790">
+        <omgdi:waypoint x="967.6471722365038" y="620.3971722365038"/>
+        <omgdi:waypoint x="905.4997972318882" y="620.079282850291"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-3054A3B5-4883-4FD5-B5FD-54B6249823BC" id="BPMNEdge_sid-3054A3B5-4883-4FD5-B5FD-54B6249823BC">
+        <omgdi:waypoint x="755.5" y="719.5"/>
+        <omgdi:waypoint x="755.5" y="768.0"/>
+        <omgdi:waypoint x="973.25" y="768.0"/>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="automaticOrManualDecisionToWaitToComplete" id="BPMNEdge_automaticOrManualDecisionToWaitToComplete">
         <omgdi:waypoint x="1175.4181034482758" y="437.5818965517241"/>
         <omgdi:waypoint x="1175.1716738197424" y="495.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-61993B1A-ADC7-4D74-94E2-B530A64A775F" id="BPMNEdge_sid-61993B1A-ADC7-4D74-94E2-B530A64A775F">
+        <omgdi:waypoint x="755.5" y="680.5"/>
+        <omgdi:waypoint x="755.5" y="620.0"/>
+        <omgdi:waypoint x="874.5" y="620.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="paralelActionsDecisionToParalelActions" id="BPMNEdge_paralelActionsDecisionToParalelActions">
         <omgdi:waypoint x="464.5736434108527" y="418.4263565891473"/>
@@ -344,6 +429,10 @@
       <bpmndi:BPMNEdge bpmnElement="automaticOrManualDecisionToWaitToCheckStatus" id="BPMNEdge_automaticOrManualDecisionToWaitToCheckStatus">
         <omgdi:waypoint x="1194.612426035503" y="418.38757396449705"/>
         <omgdi:waypoint x="1245.0002681591309" y="418.09117489318163"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-D2E1AF55-6D70-42F1-B7EA-E080A9775C1F" id="BPMNEdge_sid-D2E1AF55-6D70-42F1-B7EA-E080A9775C1F">
+        <omgdi:waypoint x="987.6853741496599" y="639.5646258503401"/>
+        <omgdi:waypoint x="987.2974573544543" y="754.0000804359629"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="setStatusToParallelActionsDecision" id="BPMNEdge_setStatusToParallelActionsDecision">
         <omgdi:waypoint x="315.0" y="418.1385041551247"/>
@@ -361,6 +450,10 @@
         <omgdi:waypoint x="186.5" y="398.0"/>
         <omgdi:waypoint x="215.0" y="398.0"/>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-6670E89E-FC35-42EA-8669-57CE0AA00994" id="BPMNEdge_sid-6670E89E-FC35-42EA-8669-57CE0AA00994">
+        <omgdi:waypoint x="840.0" y="700.0"/>
+        <omgdi:waypoint x="775.0" y="700.0"/>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="auditEventToExclusiveGateway" id="BPMNEdge_auditEventToExclusiveGateway">
         <omgdi:waypoint x="849.5" y="548.0"/>
         <omgdi:waypoint x="940.0" y="548.0"/>
@@ -371,6 +464,10 @@
         <omgdi:waypoint x="445.5" y="437.5"/>
         <omgdi:waypoint x="445.5" y="573.75"/>
         <omgdi:waypoint x="647.5" y="573.75"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-15DBC599-2712-4F0D-B696-D1091D9CAD9D" id="BPMNEdge_sid-15DBC599-2712-4F0D-B696-D1091D9CAD9D">
+        <omgdi:waypoint x="890.399373059332" y="636.4996835662088"/>
+        <omgdi:waypoint x="890.2515723270441" y="660.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-69A7E93C-EF6B-4AF1-8ECA-48C2520971FF" id="BPMNEdge_sid-69A7E93C-EF6B-4AF1-8ECA-48C2520971FF">
         <omgdi:waypoint x="1420.0" y="418.0"/>

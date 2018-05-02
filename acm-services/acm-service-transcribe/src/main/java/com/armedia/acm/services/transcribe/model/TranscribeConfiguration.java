@@ -44,6 +44,9 @@ public class TranscribeConfiguration implements Serializable
     @ConfigurationProperty(key = "transcribe.providers", write = false)
     private List<TranscribeServiceProvider> providers;
 
+    @ConfigurationProperty(key = "transcribe.provider.purge.attempts")
+    private int providerPurgeAttempts;
+
     @ConfigurationProperty(key = "transcribe.allowed.media.duration.in.seconds")
     private long allowedMediaDuration;
 
@@ -158,6 +161,16 @@ public class TranscribeConfiguration implements Serializable
         this.providers = providers;
     }
 
+    public int getProviderPurgeAttempts()
+    {
+        return providerPurgeAttempts;
+    }
+
+    public void setProviderPurgeAttempts(int providerPurgeAttempts)
+    {
+        this.providerPurgeAttempts = providerPurgeAttempts;
+    }
+
     public long getAllowedMediaDuration()
     {
         return allowedMediaDuration;
@@ -195,6 +208,7 @@ public class TranscribeConfiguration implements Serializable
                 numberOfFilesForProcessing == that.numberOfFilesForProcessing &&
                 wordCountPerItem == that.wordCountPerItem &&
                 provider == that.provider &&
+                providerPurgeAttempts == that.providerPurgeAttempts &&
                 allowedMediaDuration == that.allowedMediaDuration &&
                 that.silentBetweenWords != null ? that.silentBetweenWords.equals(silentBetweenWords) : silentBetweenWords == null;
     }
@@ -203,7 +217,7 @@ public class TranscribeConfiguration implements Serializable
     public int hashCode()
     {
         return Objects.hash(enabled, automaticEnabled, newTranscriptionForNewVersion, copyTranscriptionForNewVersion, cost, confidence,
-                numberOfFilesForProcessing, wordCountPerItem, provider, allowedMediaDuration, silentBetweenWords);
+                numberOfFilesForProcessing, wordCountPerItem, provider, providerPurgeAttempts, allowedMediaDuration, silentBetweenWords);
     }
 
     @Override
@@ -219,6 +233,7 @@ public class TranscribeConfiguration implements Serializable
                 ", numberOfFilesForProcessing=" + numberOfFilesForProcessing +
                 ", wordCountPerItem=" + wordCountPerItem +
                 ", provider=" + provider +
+                ", providerPurgeAttempts=" + providerPurgeAttempts +
                 ", allowedMediaDuration=" + allowedMediaDuration +
                 ", silentBetweenWords=" + silentBetweenWords +
                 '}';
