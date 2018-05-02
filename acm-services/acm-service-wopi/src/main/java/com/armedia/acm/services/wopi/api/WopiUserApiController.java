@@ -20,7 +20,7 @@ public class WopiUserApiController
 {
     private static final Logger log = LoggerFactory.getLogger(WopiUserApiController.class);
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public WopiUserInfo getUserInfo(@RequestParam("acm_ticket") String token, HttpSession session)
     {

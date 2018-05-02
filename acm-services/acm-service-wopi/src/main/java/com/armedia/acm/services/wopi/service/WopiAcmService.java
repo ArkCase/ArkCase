@@ -81,13 +81,13 @@ public class WopiAcmService
         return lock.getId();
     }
 
-    public Long refreshLock(String lockKey)
+    public Long refreshLock(Long lockKey)
     {
-        AcmObjectLock lock = objectLockService.findLock(Long.parseLong(lockKey));
+        AcmObjectLock lock = objectLockService.findLock(lockKey);
         return lock != null ? lock.getId() : null;
     }
 
-    public Long unlock(Long fileId, String lockKey, Authentication authentication)
+    public Long unlock(Long fileId, Long lockKey, Authentication authentication)
     {
         // should be able to remove lock even if the request did not come from the user who originally created the lock
         objectLockService.removeLock(fileId, "FILE", AcmObjectLockConstants.SHARED_LOCK, authentication);
