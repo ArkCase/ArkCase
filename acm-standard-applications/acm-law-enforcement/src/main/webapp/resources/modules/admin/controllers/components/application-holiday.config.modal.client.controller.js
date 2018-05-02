@@ -5,16 +5,21 @@ angular.module('admin').controller(
         [ '$scope', '$modalInstance', 'params', 'Util.DateService', '$filter',
                 function($scope, $modalInstance, params, UtilDateService, $filter) {
 
-                    $scope.holiday = params.holiday;
-                    $scope.holiday.holidayDate = new Date($scope.holiday.holidayDate);
+                    $scope.holidays = {
+                        holidayName : '',
+                        holidayDate : ''
+                    }
+
+                    $scope.holidays = params.holidays;
+                    $scope.holidays.holidayDate = new Date($scope.holidays.holidayDate);
                     $scope.onClickCancel = function() {
                         $modalInstance.dismiss('Cancel');
                     };
 
                     $scope.onClickOk = function() {
-                        $scope.holiday.holidayDate = $filter('date')($scope.holiday.holidayDate, "yyyy-MM-dd");
+                        $scope.holidays.holidayDate = $filter('date')($scope.holidays.holidayDate, "yyyy-MM-dd");
 
-                        $modalInstance.close($scope.holiday);
+                        $modalInstance.close($scope.holidays);
                     };
 
                 } ]);

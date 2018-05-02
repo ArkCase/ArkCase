@@ -178,6 +178,7 @@
                 <value>unclaim</value>
             </list>
         </property>
+        <property name="taskService" ref="activitiTaskService"/>
     </bean>
 
     <bean id="upcomingTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.UpcomingTasksNotifier">

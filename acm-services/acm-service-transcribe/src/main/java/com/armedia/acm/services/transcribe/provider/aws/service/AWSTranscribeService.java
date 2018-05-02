@@ -81,13 +81,7 @@ public class AWSTranscribeService implements TranscribeService
             throw new CreateTranscribeException(String.format("Transcribe failed to create on Amazon. REASON=[%s]", e.getMessage()), e);
         }
 
-        String key = transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension();
-        if (getS3Client().doesObjectExist(configuration.getBucket(), key))
-        {
-            getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
-            throw new CreateTranscribeException(String.format("The file with KEY=[%s] already exist on Amazon.", key));
-        }
-
+        checkIfMediaExist(transcribe, configuration.getBucket());
         uploadMedia(transcribe);
         startTranscribeJob(transcribe);
 
@@ -238,6 +232,28 @@ public class AWSTranscribeService implements TranscribeService
         throw new CreateTranscribeException("Unable to start transcribe job on Amazon. Transcribe not provided.");
     }
 
+    private void checkIfMediaExist(Transcribe transcribe, String bucket) throws CreateTranscribeException
+    {
+        String key = transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension();
+        boolean exist = false;
+
+        try
+        {
+            exist = getS3Client().doesObjectExist(bucket, key);
+        }
+        catch (Exception e)
+        {
+            getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
+            throw new CreateTranscribeException(String.format("Unable to create Transcribe. REASON=[%s].", e.getMessage()), e);
+        }
+
+        if (exist)
+        {
+            getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
+            throw new CreateTranscribeException(String.format("The file with KEY=[%s] already exist on Amazon.", key));
+        }
+    }
+
     private List<TranscribeItem> generateTranscribeItems(GetTranscriptionJobResult result) throws MuleException
     {
         if (result != null && result.getTranscriptionJob().getTranscript() != null)
@@ -288,12 +304,13 @@ public class AWSTranscribeService implements TranscribeService
             String text = "";
             List<AWSTranscriptItem> awsTranscriptItems = awsTranscript.getResult().getItems();
             int size = awsTranscriptItems.size();
+            boolean silentDetected = false;
             for (int i = 0; i < size; i++)
             {
                 AWSTranscriptItem awsTranscriptItem = awsTranscriptItems.get(i);
                 boolean punctuation = "punctuation".equalsIgnoreCase(awsTranscriptItem.getType());
 
-                if (!punctuation)
+                if (!punctuation && !silentDetected)
                 {
                     if (startTime == null && awsTranscriptItem.getStartTime() != null)
                     {
@@ -306,6 +323,11 @@ public class AWSTranscribeService implements TranscribeService
                     }
 
                     counter++;
+                }
+
+                if (!silentDetected)
+                {
+                    silentDetected = isSilentBetweenWordsBiggerThanConfigured(i, size, awsTranscriptItems);
                 }
 
                 if (awsTranscriptItem.getAlternatives() != null && awsTranscriptItem.getAlternatives().size() > 0)
@@ -326,7 +348,7 @@ public class AWSTranscribeService implements TranscribeService
                     }
                 }
 
-                if (counter >= configuration.getWordCountPerItem() || i == size - 1)
+                if (counter >= configuration.getWordCountPerItem() || i == size - 1 || silentDetected)
                 {
                     if (!isNextPunctuation(i, size, awsTranscriptItems))
                     {
@@ -335,7 +357,7 @@ public class AWSTranscribeService implements TranscribeService
                         item.setEndTime(endTime);
                         item.setText(text);
 
-                        int conf = confidence.intValue() == 0 || confidenceCounter == 0 ? 0 : confidence.multiply(new BigDecimal(100)).intValue() / confidenceCounter;
+                        int conf = confidence.multiply(new BigDecimal(100)).intValue() == 0 || confidenceCounter == 0 ? 0 : confidence.multiply(new BigDecimal(100)).intValue() / confidenceCounter;
                         item.setConfidence(conf);
 
                         items.add(item);
@@ -346,6 +368,7 @@ public class AWSTranscribeService implements TranscribeService
                         confidence = new BigDecimal("0");
                         confidenceCounter = 0;
                         text = "";
+                        silentDetected = false;
                     }
                 }
             }
@@ -364,6 +387,46 @@ public class AWSTranscribeService implements TranscribeService
         {
             return true;
         }
+        return false;
+    }
+
+    private boolean isSilentBetweenWordsBiggerThanConfigured(int i, int size, List<AWSTranscriptItem> awsTranscriptItems)
+    {
+        TranscribeConfiguration configuration;
+        try
+        {
+            configuration = getTranscribeConfigurationPropertiesService().get();
+        }
+        catch (GetConfigurationException e)
+        {
+            LOG.error("Cannot take configuration for 'Silent Between Words'. REASON=[{}]", e.getMessage());
+            return false;
+        }
+
+        if (i <= size - 2 && awsTranscriptItems.get(i) != null && !"punctuation".equalsIgnoreCase(awsTranscriptItems.get(i).getType()))
+        {
+            int j = i;
+            while(isNextPunctuation(j, size, awsTranscriptItems) && j <= size - 2)
+            {
+                j++;
+            }
+            if ((j + 1) < size && !"punctuation".equalsIgnoreCase(awsTranscriptItems.get(j + 1).getType()))
+            {
+                String currentEndTimeAsString = awsTranscriptItems.get(i).getEndTime();
+                String nextStartTimeAsString = awsTranscriptItems.get(j + 1).getStartTime();
+                BigDecimal silentBetweenWords = configuration.getSilentBetweenWords();
+                if (StringUtils.isNotEmpty(currentEndTimeAsString) && StringUtils.isNotEmpty(nextStartTimeAsString) && silentBetweenWords != null)
+                {
+                    BigDecimal currentEndTime = new BigDecimal(currentEndTimeAsString);
+                    BigDecimal nextStartTime = new BigDecimal(nextStartTimeAsString);
+                    if (nextStartTime.subtract(currentEndTime).compareTo(silentBetweenWords) == 1)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
 
