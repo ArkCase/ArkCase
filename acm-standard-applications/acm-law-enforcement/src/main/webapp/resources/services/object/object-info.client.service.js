@@ -95,5 +95,33 @@ angular.module('services').factory('Object.InfoService',
                 return Util.goodMapValue(pa, "person", null);
             };
 
+                        
+
+            /**
+             * @ngdoc method
+             * @name getObjectInfo
+             * @methodOf services:Object.InfoService
+             *
+             * @description
+             * Query association data
+             *
+             * @param {Number} type  Type in REST path. Can be 'casefile', 'complaint', 'task', etc.
+             * @param {Number} id  Object ID
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            Service.getObjectInfo = function(type, id) {
+                return Util.serviceCall({
+                    service : Service.get,
+                    param : {
+                        type : type,
+                        id : id
+                    },
+                    onSuccess : function(data) {
+                        return data;
+                    }
+                });
+            };
+
             return Service;
         } ]);
