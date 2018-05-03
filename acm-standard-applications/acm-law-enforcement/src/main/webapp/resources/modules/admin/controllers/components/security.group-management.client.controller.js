@@ -209,7 +209,7 @@ angular.module('admin').controller(
 
                     function groupManagementFilter(data) {
                         if (Util.isEmpty(data.filterWord)) {
-                            data.n = Util.isEmpty(data.n) ? 18 : data.n;
+                            data.n = Util.isEmpty(data.n) ? 50 : data.n;
                             $scope.retrieveDataFilter(data, "getAdHocGroups", "chooseObject");
                         } else {
                             $scope.retrieveDataFilter(data, "getGroupsAdhocFiltered", "chooseObject");
@@ -230,7 +230,7 @@ angular.module('admin').controller(
                         data.member = $scope.lastSelectedGroup;
                         data.isAuthorized = true;
                         if (Util.isEmpty(data.filterWord)) {
-                            data.n = Util.isEmpty(data.n) ? 18 : data.n;
+                            data.n = Util.isEmpty(data.n) ? 50 : data.n;
                             $scope.retrieveDataFilter(data, "getAdhocGroupsForAdhocGroup", "selectedAuthorized");
                         } else {
                             $scope.retrieveDataFilter(data, "getAdhocGroupsForAdhocGroupFiltered", "selectedAuthorized");
