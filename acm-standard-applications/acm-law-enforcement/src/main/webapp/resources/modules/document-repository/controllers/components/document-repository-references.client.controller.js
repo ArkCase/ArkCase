@@ -38,12 +38,15 @@ angular
                             });
 
                             var onConfigRetrieved = function(config) {
+                                $scope.config = config;
+                                gridHelper.addButton(config, "delete");
                                 gridHelper.setColumnDefs(config);
                                 gridHelper.setBasicOptions(config);
                                 gridHelper.disableGridScrolling(config);
                             };
 
                             var onObjectInfoRetrieved = function(objectInfo) {
+                                $scope.objectInfo = objectInfo;
                                 $scope.gridOptions = $scope.gridOptions || {};
                                 $scope.gridOptions.data = Util.goodArray(objectInfo.references);
                             };
@@ -75,10 +78,6 @@ angular
                                         objectType : targetType
                                     });
                                 }
-                            };
-
-                            $scope.refresh = function() {
-                                $scope.$emit('report-object-refreshed', $stateParams.id);
                             };
 
                             // open add reference modal
@@ -122,7 +121,7 @@ angular
                                         }
 
                                         ObjectAssociationService.saveObjectAssociation(association).then(function(payload) {
-                                            $scope.refresh();
+                                            refresh();
                                             return payload;
                                         }, function(errorResponse) {
                                             MessageService.error(errorResponse.data);
@@ -133,6 +132,23 @@ angular
                                     return [];
                                 });
 
+                            };
+
+                            $scope.deleteRow = function(rowEntity) {
+                                var id = Util.goodMapValue(rowEntity, "associationId", 0);
+                                ObjectAssociationService.deleteAssociationInfo(id).then(function(data) {
+                                    //success
+                                    refresh();
+
+                                    //remove it from the grid
+                                    _.remove($scope.gridOptions.data, function(row) {
+                                        return row === rowEntity;
+                                    });
+                                });
+                            };
+
+                            var refresh = function() {
+                                $scope.$emit('report-object-refreshed', $scope.objectInfo.id ? $scope.objectInfo.id : $stateParams.id);
                             };
 
                         } ]);
