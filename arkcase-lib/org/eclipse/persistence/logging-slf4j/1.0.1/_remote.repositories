@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Mar 29 12:01:11 EDT 2018
+logging-slf4j-1.0.1.jar>armedia-shared=
+logging-slf4j-1.0.1.pom>armedia-shared=
+logging-slf4j-1.0.1-sources.jar>armedia-shared=

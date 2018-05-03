@@ -22,6 +22,19 @@ angular.module('services').factory(
                     // Initial rules loading
                     var rules = queryRules();
                     var userProfile = Authentication.queryUserInfo();
+                    var parentPermissions = [ {
+                        expr : "(get|list|read|download|view|subscribe).*",
+                        parentActionName : "getObject"
+                    }, {
+                        expr : "(save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename).*",
+                        parentActionName : "editObject"
+                    }, {
+                        expr : "(create).*",
+                        parentActionName : "insertObject"
+                    }, {
+                        expr : "(delete).*",
+                        parentActionName : "deleteObject"
+                    } ];
 
                     return {
                         /**
@@ -31,7 +44,7 @@ angular.module('services').factory(
                          *
                          * @param {String} actionName Name of action, for example 'printOrderUI'
                          * @param {Object} objectProperties Object representing current state of application, like orderInfo, queueInfo
-                         * @param {Object} opts other info to be passed to permission checker e.g, objectType, objectSubType
+                         * @param {Object} opts other info to be passed to permission delegate e.g, objectType, objectSubType
                          *
                          * @returns {Promise} Future result of permission : true (enabled) or false (disabled)
                          * @description
@@ -98,24 +111,42 @@ angular.module('services').factory(
                         }
                     };
 
+                    function findParentPermission(rules, actionName, objectType) {
+                        for ( var parentPermission in parentPermissions) {
+                            if (actionName.toLowerCase().match(parentPermission.expr)) {
+                                return _.filter(rules.data.accessControlRuleList, {
+                                    actionName : parentPermission.parentActionName,
+                                    objectType : objectType
+                                });
+                            }
+                        }
+                        return [];
+                    }
+
                     /**
                      *
                      * @param {String }actionName
                      * @param {Object} objectProperties
-                     * @param {Obejct} opts Other info to be passed to permission checker e.g, objectType, objectSubType
+                     * @param {Obejct} opts Other info to be passed to permission delegate e.g, objectType, objectSubType
                      * @returns {Boolean} true if action is enabled, or false if action is disabled
                      */
                     function processAction(actionName, objectProperties, opts) {
                         var isEnabled = true;
-                        if (opts && opts.objectType)
+                        if (opts && opts.objectType) {
+                            //check if can find permission
                             var actions = _.filter(rules.data.accessControlRuleList, {
                                 actionName : actionName,
                                 objectType : opts.objectType
                             });
-                        else
+                            //if not found check for parent fallback permission
+                            if (actions.length <= 0) {
+                                actions = findParentPermission(rules, actionName, opts.objectType);
+                            }
+                        } else {
                             var actions = _.filter(rules.data.accessControlRuleList, {
                                 actionName : actionName
                             });
+                        }
                         // If actions found
                         if (actions.length > 0) {
                             // Process all found actions objects

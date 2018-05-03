@@ -43,12 +43,20 @@ angular.module('cases').controller(
                     var promiseUsers = gridHelper.getUsers();
 
                     var onConfigRetrieved = function(config) {
-                        gridHelper.setColumnDefs(config);
-                        gridHelper.setBasicOptions(config);
-                        gridHelper.disableGridScrolling(config);
-                        gridHelper.setExternalPaging(config, retrieveGridData);
-                        gridHelper.setUserNameFilter(promiseUsers);
-                        gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
+                        $scope.config = config;
+                        //first the filter is set, and after that everything else,
+                        //so that the data loads with the new filter applied
+                        gridHelper.setUserNameFilterToConfig(promiseUsers).then(function(updatedConfig) {
+                            $scope.config = updatedConfig;
+                            if ($scope.gridApi != undefined)
+                                $scope.gridApi.core.refresh();
+
+                            gridHelper.addButton(updatedConfig, "delete", null, null, "isDeleteDisabled");
+                            gridHelper.setColumnDefs(updatedConfig);
+                            gridHelper.setBasicOptions(updatedConfig);
+                            gridHelper.disableGridScrolling(updatedConfig);
+                            gridHelper.setExternalPaging(updatedConfig, retrieveGridData);
+                        });
 
                         componentHelper.doneConfig(config);
 
@@ -109,7 +117,7 @@ angular.module('cases').controller(
                     };
 
                     $scope.isDeleteDisabled = function(rowEntity) {
-                        return !rowEntity.adhocTask_b;
+                        return (Util.isEmpty(rowEntity.task_owner_s) || (rowEntity.task_owner_s !== rowEntity.author_s));
                     };
 
                     $scope.onClickObjLink = function(event, rowEntity) {

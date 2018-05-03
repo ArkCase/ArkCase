@@ -154,22 +154,6 @@
                 "configDescription": "Описание",
                 "configDescriptionPlaceholder": "Введите описание виджета"
             },
-            "weather": {
-                "description": "Отображает погоду",
-                "label": {
-                    "current": "Теперешний:",
-                    "enterLocation": "Введите местоположение",
-                    "description": "Отобразить текущую температуру города",
-                    "location": "Местоположение",
-                    "insertLocationInConfiguration": "Пожалуйста, вставьте местоположение в конфигурацию виджета",
-                    "zip": "Почтовый Индекс",
-                    "enterZip": "Введите почтовый индекс"
-                },
-                "title": "Погода",
-                "noDataMessage": "В настоящее время нет информации о погоде",
-                "configDescription": "Описание",
-                "configDescriptionPlaceholder": "Введите описание виджета"
-            },
             "news": {
                 "description": "Отображает новости",
                 "label": {
@@ -369,9 +353,6 @@
     },
     "dashboard.comp.news": {
         "title": "Виджет новостей"
-    },
-    "dashboard.comp.weather": {
-        "title": "Виджет погоды"
     },
     "dashboard.comp.myCases": {
         "title": "Виджет для моих дел"

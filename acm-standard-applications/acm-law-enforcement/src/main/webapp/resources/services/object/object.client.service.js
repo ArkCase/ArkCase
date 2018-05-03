@@ -36,7 +36,8 @@ angular
                                     PERSON : "PERSON",
                                     ORGANIZATION : "ORGANIZATION",
                                     FOLDER: "FOLDER",
-                                    TRANSCRIPTION: "TRANSCRIPTION"
+                                    TRANSCRIBE: "TRANSCRIBE",
+                                    TRANSCRIBE_ITEM: "TRANSCRIBE_ITEM"
                                 }
 
                                 ,
@@ -46,6 +47,14 @@ angular
                                     CHECKIN_LOCK : "CHECKIN_LOCK",
                                     CANCEL_LOCK : "CANCEL_LOCK",
                                     OBJECT_LOCK : "OBJECT_LOCK"
+                                }
+
+                                ,
+                                ObjectTypesInEndpoints : {
+                                    CASE_FILE : "casefile",
+                                    COMPLAINT : "complaint",
+                                    TASK : "task",
+                                    DOC_REPO : "documentrepository"
                                 }
 
                                 ,

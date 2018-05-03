@@ -616,51 +616,6 @@ public class DashboardTestsWidgets extends ArkCaseTestBase
     }
 
     @Test
-    public void addEditRemoveNewWidgetWeather() throws InterruptedException, IOException
-    {
-
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
-        dash.editButtonClick();
-        Thread.sleep(2000);
-        dash.addNewWidgetButtonClik();
-        Thread.sleep(2000);
-        softAssert.assertEquals(dash.addWidgettitle.getText(), "Add new widget", "Add new widget title is wrong");
-        softAssert.assertAll();
-        dash.weatherClick();
-        Thread.sleep(2000);
-        dash.verifyNewWidgetTitle("Weather");
-        dash.verifyWidgetReloadButton();
-        dash.verifyWidgetEditButton();
-        dash.verifyWidgetChangeLocationButton();
-        dash.verifyWidgetRemoveButton();
-        dash.saveChangesButtonClick();
-        Thread.sleep(3000);
-        dash.verifyNewWidgetTitle("Weather");
-        dash.editButtonClick();
-        Thread.sleep(2000);
-        dash.widgetEditButtonClick();
-        Thread.sleep(2000);
-        dash.verifyWeatherTitle();
-        dash.weatherTitleInput("weather weather");
-        dash.weatherLocationInput("skopje");
-        dash.newsApplyButtonClick();
-        Thread.sleep(2000);
-        dash.verifyNewWidgetTitle("weather weather");
-        dash.saveChangesButtonClick();
-        Thread.sleep(2000);
-        dash.verifyNewWidgetTitle("weather weather");
-        dash.editButtonClick();
-        Thread.sleep(2000);
-        dash.widgetRemoveButtonClick();
-        dash.saveChangesButtonClick();
-        Thread.sleep(2000);
-        Assert.assertFalse("The widget is not removed", dash.widgetTitle.getText().equals("weather weather"));
-        ArkCaseAuthentication.logOut(driver);
-
-    }
-
-    @Test
     public void addEditRemoveNewWidgetNews() throws InterruptedException, IOException, AWTException
     {
 

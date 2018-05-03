@@ -154,22 +154,6 @@
                 "configDescription": "La description",
                 "configDescriptionPlaceholder": "Entrez la description du widget"
             },
-            "weather": {
-                "description": "Affiche la météo",
-                "label": {
-                    "current": "Courant:",
-                    "enterLocation": "Entrez l'emplacement",
-                    "description": "Afficher la température actuelle d'une ville",
-                    "location": "Emplacement",
-                    "insertLocationInConfiguration": "Veuillez insérer un emplacement dans la configuration du widget",
-                    "zip": "Code postal",
-                    "enterZip": "Entrer le code postal"
-                },
-                "title": "Météo",
-                "noDataMessage": "Actuellement, il n'y a pas de météo",
-                "configDescription": "La description",
-                "configDescriptionPlaceholder": "Entrez la description du widget"
-            },
             "news": {
                 "description": "Afficher les nouvelles",
                 "label": {
@@ -369,9 +353,6 @@
     },
     "dashboard.comp.news": {
         "title": "Widget Actualités"
-    },
-    "dashboard.comp.weather": {
-        "title": "Widget météo"
     },
     "dashboard.comp.myCases": {
         "title": "Mon Widget Cas"
