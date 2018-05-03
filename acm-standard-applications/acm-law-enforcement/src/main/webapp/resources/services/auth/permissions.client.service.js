@@ -44,7 +44,7 @@ angular.module('services').factory(
                          *
                          * @param {String} actionName Name of action, for example 'printOrderUI'
                          * @param {Object} objectProperties Object representing current state of application, like orderInfo, queueInfo
-                         * @param {Object} opts other info to be passed to permission checker e.g, objectType, objectSubType
+                         * @param {Object} opts other info to be passed to permission delegate e.g, objectType, objectSubType
                          *
                          * @returns {Promise} Future result of permission : true (enabled) or false (disabled)
                          * @description
@@ -127,7 +127,7 @@ angular.module('services').factory(
                      *
                      * @param {String }actionName
                      * @param {Object} objectProperties
-                     * @param {Obejct} opts Other info to be passed to permission checker e.g, objectType, objectSubType
+                     * @param {Obejct} opts Other info to be passed to permission delegate e.g, objectType, objectSubType
                      * @returns {Boolean} true if action is enabled, or false if action is disabled
                      */
                     function processAction(actionName, objectProperties, opts) {
