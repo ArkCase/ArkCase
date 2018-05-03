@@ -69,4 +69,12 @@ public interface TranscribeService
      * @throws GetTranscribeException
      */
     public List<Transcribe> getPageByStatus(int start, int n, String status) throws GetTranscribeException;
+
+    /**
+     * This method will purge Transcribe information
+     *
+     * @param transcribe - Transcribe object
+     * @return boolean - true/false
+     */
+    public boolean purge(Transcribe transcribe);
 }
