@@ -127,7 +127,7 @@ public class WopiFilesApiController
     }
 
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
-    @RequestMapping(value = "/{id}", params = {"name"}, method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}/rename", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity renameFile(@PathVariable Long id, @RequestParam String name,
             Authentication authentication)
