@@ -90,7 +90,7 @@ public class RolesPrivilegesService
     /**
      * Retrieve application's privileges without role privileges paged
      *
-     * @return map of privileges and descriptions
+     * @return list of privileges and descriptions
      * @throws AcmRolesPrivilegesException
      */
     public List<PrivilegeItem> getPrivilegesByRolePaged(String roleName, String sortDirection, Integer startRow, Integer maxRows,
@@ -105,7 +105,7 @@ public class RolesPrivilegesService
     /**
      * Retrieve application's privileges without role privileges by role name
      *
-     * @return map of privileges and descriptions
+     * @return list of privileges and descriptions
      * @throws AcmRolesPrivilegesException
      */
     public List<PrivilegeItem> getPrivilegesByRole(String roleName, Boolean authorized, String filterQuery, String sortDirection,
@@ -121,12 +121,8 @@ public class RolesPrivilegesService
             Integer startRow, Integer maxRows, String filterQuery)
     {
         List<PrivilegeItem> result = new ArrayList<>();
-        privileges.forEach((key, value) -> {
-            PrivilegeItem privilegeItem = new PrivilegeItem();
-            privilegeItem.setKey(key);
-            privilegeItem.setValue(value);
-            result.add(privilegeItem);
-        });
+        privileges.entrySet().stream().map(privilege -> new PrivilegeItem(privilege.getKey(), privilege.getValue()))
+                .collect(Collectors.toList());
 
         if (sortDirection.contains("DESC"))
         {
@@ -201,7 +197,7 @@ public class RolesPrivilegesService
     }
 
     /**
-     * Retrieve roles paged
+     * Retrieve list of roles filtered by name & paged
      *
      * @param privilegeName
      * @return
