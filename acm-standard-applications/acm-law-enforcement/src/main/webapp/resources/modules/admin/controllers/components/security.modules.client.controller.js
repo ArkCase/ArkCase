@@ -15,7 +15,7 @@ angular.module('admin').controller(
                     $scope.appRoleUnauthorizedFilter = appRoleUnauthorizedFilter;
                     $scope.appRoleAuthorizedFilter = appRoleAuthorizedFilter;
                     $scope.appRoles = [];
-                    $scope.showFilter = true;
+                    $scope.lastSelectedPrivilege = {};
                     // Loaded data after the initialization
                     var initModulesData = {
                         "notAuthorized" : [],
@@ -100,7 +100,7 @@ angular.module('admin').controller(
                     });
 
                     //callback function when app role is selected
-                    $scope.onObjSelect = function(selectedObject, authorized, notAuthorized) {
+                    $scope.onObjSelect = function(selectedObject) {
                         $scope.lastSelectedPrivilege = {};
                         $scope.lastSelectedPrivilege = selectedObject;
 

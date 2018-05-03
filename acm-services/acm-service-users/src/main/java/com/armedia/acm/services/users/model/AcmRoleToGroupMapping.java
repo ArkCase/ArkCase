@@ -58,6 +58,16 @@ public class AcmRoleToGroupMapping
 
     public Map<String, Set<String>> getRoleToGroupsMap()
     {
+        return getStringSetMap(true);
+    }
+
+    public Map<String, Set<String>> getRoleToGroupsMapIgnoreCaseSensitive()
+    {
+        return getStringSetMap(false);
+    }
+
+    private Map<String, Set<String>> getStringSetMap(boolean isUpperCase)
+    {
         Map<String, List<AcmGroup>> groupsCache = new HashMap<>();
 
         Function<String, Set<String>> groupsStringToSet = s -> {
@@ -75,14 +85,15 @@ public class AcmRoleToGroupMapping
                 .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
                 .collect(
                         Collectors.toMap(entry -> {
-                            String roleName = entry.getKey().trim().toUpperCase();
+                            String roleName = isUpperCase ? entry.getKey().trim().toUpperCase() : entry.getKey().trim();
                             if (!roleName.startsWith("ROLE_"))
                             {
                                 roleName = "ROLE_" + roleName;
                             }
                             return roleName;
                         },
-                                entry -> groupsStringToSet.apply(entry.getValue().trim().toUpperCase())));
+                                entry -> groupsStringToSet
+                                        .apply(isUpperCase ? entry.getValue().trim().toUpperCase() : entry.getValue().trim())));
     }
 
     public void setRoleToGroupMap(Map<String, String> roleToGroupMap)

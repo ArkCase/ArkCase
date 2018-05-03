@@ -160,6 +160,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
 
         ObjectMapper mapper = new ObjectMapper();
         AccessControlRule accessControlRule = mapper.readValue(rule.toString(), AccessControlRule.class);
+        accessControlRule.setObjectSubType("ORDER");
 
         GrantedAuthority grantedAuthority1 = new SimpleGrantedAuthority("ROLE_ADMINISTRATOR");
         GrantedAuthority grantedAuthority2 = new SimpleGrantedAuthority("ROLE_ANALYST");
@@ -176,6 +177,48 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
                 "editAttachments", solrDocument);
         assertTrue(granted);
+        verifyAll();
+    }
+
+    @Test
+    public void testMatchingParentFallbackPermission() throws IOException
+    {
+        JSONObject rule = new JSONObject();
+        rule.put("actionName", "editObject");
+        rule.put("objectType", "CASE_FILE");
+        rule.put("objectProperties", new JSONObject("{status : [\"DRAFT\", \"ACTIVE\", \"Quality Control\"]}"));
+
+        ObjectMapper mapper = new ObjectMapper();
+        AccessControlRule accessControlRule = mapper.readValue(rule.toString(), AccessControlRule.class);
+
+        GrantedAuthority grantedAuthority1 = new SimpleGrantedAuthority("ROLE_ADMINISTRATOR");
+        GrantedAuthority grantedAuthority2 = new SimpleGrantedAuthority("ROLE_ANALYST");
+        GrantedAuthority grantedAuthority3 = new SimpleGrantedAuthority("ROLE_TECHNICIAN");
+        Collection grantedAuthorities = Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3);
+
+        // mock the behavior
+        EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping).anyTimes();
+        EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
+        EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
+        replayAll();
+
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "editAttachments", solrDocument);
+        assertTrue(granted);
+
+        granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "mergeCase", solrDocument);
+        assertTrue(granted);
+
+        granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "completeCase", solrDocument);
+        assertTrue(granted);
+
+        granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "saveCase", solrDocument);
+        assertTrue(granted);
+
         verifyAll();
     }
 
@@ -470,6 +513,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         List<String> userIsParticipantTypeAny = Arrays.asList("assignee", "supervisor", "owning group");
         AccessControlRule accessControlRule = getAccessControlRuleForParticipantTypesTest();
         accessControlRule.setUserIsParticipantTypeAny(userIsParticipantTypeAny);
+        accessControlRule.setObjectSubType("ORDER");
 
         Collection grantedAuthorities = getGrantedAuthoritiesMockList();
 
@@ -489,6 +533,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         accessControlRule.setUserIsParticipantTypeAny(userIsParticipantTypeAny);
         accessControlRule.setObjectType("CASE_FILE");
         accessControlRule.setActionName("restrictCase");
+        accessControlRule.setObjectSubType("ORDER");
 
         Collection grantedAuthorities = getGrantedAuthoritiesMockList();
 
@@ -510,6 +555,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         List<String> userIsParticipantTypeAny = Arrays.asList("assignee", "supervisor", "owning group");
         AccessControlRule accessControlRule = getAccessControlRuleForParticipantTypesTest();
         accessControlRule.setUserIsParticipantTypeAny(userIsParticipantTypeAny);
+        accessControlRule.setObjectSubType("ORDER");
 
         Collection grantedAuthorities = getGrantedAuthoritiesMockList();
 
@@ -551,6 +597,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
     {
         AccessControlRule accessControlRule = getAccessControlRuleForParticipantTypesTest();
         accessControlRule.setUserIsParticipantTypeAny(null);
+        accessControlRule.setObjectSubType("ORDER");
 
         Collection grantedAuthorities = getGrantedAuthoritiesMockList();
 
@@ -567,6 +614,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
     {
         AccessControlRule accessControlRule = getAccessControlRuleForParticipantTypesTest();
         accessControlRule.setUserIsParticipantTypeAny(new ArrayList<>());
+        accessControlRule.setObjectSubType("ORDER");
 
         Collection grantedAuthorities = getGrantedAuthoritiesMockList();
 
