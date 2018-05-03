@@ -510,7 +510,7 @@ angular
                                  */
                                 ,
                                 saveNodesStatus : function(node, nodesStatusBeforeRefresh) {
-                                    if (node.children) {
+                                    if (node != null && node.children) {
                                         for (var i = 0; i < node.children.length; i++) {
                                             if (DocTree.isFolderNode(node.children[i])) {
                                                 if (node.children[i].expanded) {
