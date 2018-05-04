@@ -120,7 +120,7 @@
     <field name="subject" type="text_general" indexed="true" stored="true"/>
     <field name="description" type="text_general" indexed="true" stored="true"/>
     <field name="comments" type="text_general" indexed="true" stored="true"/>
-    <field name="author" type="text_general" indexed="true" stored="true"/>
+    <field name="author" type="text_general" indexed="true" stored="true" multiValued="false"/>
     <field name="keywords" type="text_general" indexed="true" stored="true"/>
     <field name="category" type="text_general" indexed="true" stored="true"/>
     <field name="resourcename" type="text_general" indexed="true" stored="true"/>
@@ -164,7 +164,7 @@
     <dynamicField name="*_fs" type="pfloats" indexed="true" stored="true"/>
     <dynamicField name="*_d" type="pdouble" indexed="true" stored="true"/>
     <dynamicField name="*_ds" type="pdoubles" indexed="true" stored="true"/>
-    <dynamicField name="*_t" type="text_general" indexed="true" stored="true"/>
+    <dynamicField name="*_t" type="text_general" indexed="true" stored="true" multiValued="false"/>
 
     <!-- Type used for data-driven schema, to add a string copy for each text field -->
     <dynamicField name="*_str" type="strings" stored="false" docValues="true" indexed="false"/>
@@ -351,7 +351,7 @@
 	       (empty by default), and down cases.  At query time only, it
 	       also applies synonyms.
 	  -->
-    <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
+    <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="false">
         <analyzer type="index">
             <tokenizer class="solr.StandardTokenizerFactory"/>
             <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
