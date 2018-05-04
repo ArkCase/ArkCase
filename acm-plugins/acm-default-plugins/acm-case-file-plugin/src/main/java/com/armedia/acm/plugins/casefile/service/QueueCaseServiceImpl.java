@@ -85,6 +85,7 @@ public class QueueCaseServiceImpl implements QueueCaseService
         // this version of enqueue is to be called from Activiti processes that do their own orchestration, so
         // we will not execute a pipeline here.
         AcmQueue queue = getAcmQueueDao().findByName(queueName);
+        caseFile.setPreviousQueue(caseFile.getQueue());
         caseFile.setQueue(queue);
 
         caseFile = getCaseFileDao().save(caseFile);
