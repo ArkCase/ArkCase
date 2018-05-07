@@ -35,9 +35,16 @@ angular.module('cost-tracking').controller(
 
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
-                        gridHelper.setColumnDefs(config);
-                        gridHelper.setBasicOptions(config);
-                        gridHelper.setUserNameFilter(promiseUsers);
+                        //first the filter is set, and after that everything else,
+                        //so that the data loads with the new filter applied
+                        gridHelper.setUserNameFilterToConfig(promiseUsers).then(function(updatedConfig) {
+                            $scope.config = updatedConfig;
+                            if ($scope.gridApi != undefined)
+                                $scope.gridApi.core.refresh();
+
+                            gridHelper.setColumnDefs(updatedConfig);
+                            gridHelper.setBasicOptions(updatedConfig);
+                        });
                     };
 
                     var onObjectInfoRetrieved = function(objectInfo) {

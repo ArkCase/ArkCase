@@ -250,6 +250,10 @@
             "deleteUserMsg": "Tem certeza de que deseja excluir esse usuário?",
             "user": "Do utilizador"
         },
+        "security.group.management": {
+            "title": "pt_Group Management",
+            "group": "pt_Group"
+        },
         "security.calendarConfiguration": {
             "title": "Configuração do Calendário",
             "calendarConfigForm": {
@@ -573,6 +577,20 @@
                 "historyDays.label": "Manter eventos de auditoria e notificação (em dias)",
                 "inform": "Configuração salva-se com sucesso",
                 "apply.label": "Aplique"
+            },
+            "holiday": {
+                "title": "pt_Holiday Schedule",
+                "grid": {
+                    "holidayName": "pt_Name of Holiday",
+                    "holidayDate": "pt_Date of holiday"
+                },
+                "cancel": "pt_Cancel",
+                "save": "pt_Save",
+                "message": "pt_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "pt_Enter Name of Holiday",
+                    "date": "pt_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "Branding",

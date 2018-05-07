@@ -2,8 +2,10 @@ package com.armedia.acm.tools.activemq;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.armedia.acm.tools.activemq.service.MessageCounter;
+
+import org.apache.activemq.EnhancedConnection;
 import org.apache.activemq.advisory.AdvisorySupport;
-import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.command.ActiveMQMessage;
 import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.activemq.pool.PooledConnectionFactory;
@@ -22,12 +24,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
-import javax.jms.Message;
 import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
 import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.Topic;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -44,20 +47,16 @@ public class ActiveMqIT
 {
     public transient final Logger log = LoggerFactory.getLogger(getClass());
 
+    private final MessageCounter messageCounter = new MessageCounter();
+
     @Autowired
     @Qualifier("jmsConnectionFactory")
     private ConnectionFactory connectionFactory;
-
-    @Autowired
-    @Qualifier("broker")
-    private BrokerService broker;
 
     @Before
     public void setUp()
     {
         assertNotNull(connectionFactory);
-
-        assertNotNull(broker);
 
         log.debug("start connection factory");
         ((PooledConnectionFactory) connectionFactory).start();
@@ -84,20 +83,56 @@ public class ActiveMqIT
         template.setTimeToLive(500L);
 
         Connection c = connectionFactory.createConnection();
-        Session session = c.createSession(false, Session.AUTO_ACKNOWLEDGE);
-
+        Session session = c.createSession(true, Session.SESSION_TRANSACTED);
         Queue testQueue = session.createQueue(destination);
-        ActiveMQTopic fulltopic = AdvisorySupport.getFullAdvisoryTopic(testQueue);
-
-        createTopicListener(session, fulltopic);
-
-        ActiveMQTopic fastTopic = AdvisorySupport.getFastProducerAdvisoryTopic(testQueue);
-        createTopicListener(session, fastTopic);
-
-        ActiveMQTopic slowTopic = AdvisorySupport.getSlowConsumerAdvisoryTopic(testQueue);
-        createTopicListener(session, slowTopic);
 
         c.start();
+
+        if (c instanceof EnhancedConnection)
+        {
+            EnhancedConnection amqConn = (EnhancedConnection) c;
+
+            log.info("# of queues: {}, # of topics: {}, # of temp queues: {}, # of temp topics: {}",
+                    amqConn.getDestinationSource().getQueues().size(),
+                    amqConn.getDestinationSource().getTemporaryQueues().size(),
+                    amqConn.getDestinationSource().getTopics().size(),
+                    amqConn.getDestinationSource().getTemporaryTopics().size());
+            amqConn.getDestinationSource().getQueues().forEach(q -> {
+                try
+                {
+                    ActiveMQTopic fastTopic = AdvisorySupport.getFastProducerAdvisoryTopic(q);
+                    createTopicListener(session, fastTopic);
+
+                    ActiveMQTopic fulltopic = AdvisorySupport.getFullAdvisoryTopic(q);
+                    createTopicListener(session, fulltopic);
+
+                    ActiveMQTopic slowTopic = AdvisorySupport.getSlowConsumerAdvisoryTopic(q);
+                    createTopicListener(session, slowTopic);
+
+                    log.info("created fast producer, slow consumer, and full advisory topics for queue: {}",
+                            q.getQueueName());
+                }
+                catch (Exception e)
+                {
+                    log.error("Could not get queue name, {}", e.getMessage(), e);
+                }
+            });
+            amqConn.getDestinationSource().getTemporaryQueues().forEach(q -> {
+                try
+                {
+                    log.info("temp queue: " + q.getQueueName());
+                }
+                catch (JMSException e)
+                {
+                    log.error("Could not get temp queue name, {}", e.getMessage(), e);
+                }
+            });
+
+        }
+        else
+        {
+            log.info("Connection is not an EnhancedConnection, but is {}", c.getClass().getName());
+        }
 
         String base = "Grateful Dead";
         String kb500message = base;
@@ -110,7 +145,7 @@ public class ActiveMqIT
 
         final String largeMessage = kb500message;
 
-        for (int a = 1; a < 500; a++)
+        for (int a = 1; a < 100; a++)
         {
 
             log.info("Sending message # {}", a);
@@ -119,25 +154,46 @@ public class ActiveMqIT
 
     }
 
-    private void createTopicListener(Session session, Topic topic) throws JMSException
+    private void createTopicListener(Session session, Topic topic) throws Exception
     {
         MessageConsumer consumerAdvisory = session.createConsumer(topic);
-        consumerAdvisory.setMessageListener(new MessageListener()
-        {
-            @Override
-            public void onMessage(Message message)
+        final Pattern p = Pattern.compile("ActiveMQ\\.Advisory\\.([A-Za-z]+)\\.([A-Za-z]+)\\.(.*)");
+        consumerAdvisory.setMessageListener(message -> {
+            log.debug("Got a message on an advisory topic");
+            if (message instanceof ActiveMQMessage)
             {
-                log.debug("Got a message on an advisory topic");
-                if (message instanceof ActiveMQMessage)
+                ActiveMQMessage activeMQMessage = (ActiveMQMessage) message;
+                log.debug("Destination: {}, data structure: {}, # of properties: {}",
+                        activeMQMessage.getDestination().getPhysicalName(),
+                        activeMQMessage.getDataStructure() == null ? "null" : activeMQMessage.getDataStructure().getClass().getName(),
+                        activeMQMessage.getDestination().getProperties().size());
+
+                final String destination = activeMQMessage.getDestination().getPhysicalName();
+                log.debug("destination: {}", destination);
+                final Matcher matcher = p.matcher("ActiveMQ.Advisory.FULL.Queue.testQueue.in");
+
+                if (matcher.matches())
                 {
-                    ActiveMQMessage activeMQMessage = (ActiveMQMessage) message;
-                    log.debug("Destination: {}, data structure: {}",
-                            activeMQMessage.getDestination().getPhysicalName(),
-                            activeMQMessage.getDataStructure() == null ? "null" : activeMQMessage.getDataStructure().getClass().getName());
 
+                    final String advisoryType = matcher.group(1);
+                    final String destinationType = matcher.group(2);
+                    final String targetName = matcher.group(3);
+
+                    log.debug("Advisory: {}, destination: {}, target: {}", advisoryType, destinationType, targetName);
+
+                    long count = 0;
+                    try
+                    {
+                        count = messageCounter.countMessages(activeMQMessage.getConnection(), destinationType, targetName);
+                    }
+                    catch (Exception e)
+                    {
+                        log.error("could not count messages: {}", e.getMessage(), e);
+                    }
+                    log.debug("# of messages in queue now: {}", count);
                 }
-
             }
+
         });
     }
 

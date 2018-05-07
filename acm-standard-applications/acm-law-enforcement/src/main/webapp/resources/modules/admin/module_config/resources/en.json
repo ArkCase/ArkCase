@@ -262,6 +262,10 @@
             "deleteUserMsg": "Are you sure you want to delete this user?",
             "user": "User"
         },
+        "security.group.management": {
+            "title": "Group Management",
+            "group": "Group"
+        },
         "security.calendarConfiguration": {
             "title": "Calendar Configuration",
             "calendarConfigForm": {
@@ -640,6 +644,21 @@
                 "historyDays.label": "Keep Audit and Notification events (in days)",
                 "inform": "Setting successfully saved",
                 "apply.label": "Apply"
+            },
+            "holiday": {
+                "title": "Holiday Schedule",
+                "label": "Include Weekends as Working Days",
+                "grid": {
+                    "holidayName": "Name of Holiday",
+                    "holidayDate": "Date of holiday"
+                },
+                "cancel": "Cancel",
+                "save": "Save",
+                "message": "The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "Enter Name of Holiday",
+                    "date": "Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "Branding",
@@ -847,11 +866,14 @@
                 "wordCount.label": "Word Count",
                 "costPerSecond.label": "Cost Per Second",
                 "confidenceThreshold.label": "Confidence Threshold",
+                "mediaDurationInSeconds.label": "Media duration threshold in seconds",
+                "silenceBetweenWords.label": "Silence between words in seconds",
                 "validation.messages": {
                     "requiredErrorMsg": "This field is required",
                     "maxErrorMsg": "Value must be less than or equal to 100",
                     "minZeroValueErrorMsg": "Value must be greater than or equal to 0",
-                    "minOneValueErrorMsg": "Value must be greater than or equal to 1"
+                    "minOneValueErrorMsg": "Value must be greater than or equal to 1",
+                    "minPositiveValueErrorMsg": "Value must be greater than 0"
                 }
             }
         }

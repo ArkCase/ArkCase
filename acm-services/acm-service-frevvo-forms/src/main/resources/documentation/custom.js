@@ -6,9 +6,9 @@ document.writeln('<script type="text/javascript">var frevvo_jQuery = jQuery.noCo
 
 // Import jQuery UI
 document
-        .writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.js"></script>');
+    .writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.js"></script>');
 document
-        .writeln('<link href="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" />');
+    .writeln('<link href="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" />');
 
 // Import Bootstrap
 document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/bootstrap-3.1.1/js/bootstrap.js"></script>');
@@ -19,11 +19,11 @@ document.writeln('<link rel="stylesheet" href="/frevvo/js-28315/arkcase/libs/fon
 
 // Import Rich TextArea Plugin
 document
-        .writeln('<link rel="stylesheet" href="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.css" type="text/css">');
+    .writeln('<link rel="stylesheet" href="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.css" type="text/css">');
 document
-        .writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.js"></script>');
+    .writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.js"></script>');
 document
-        .writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/richtextarea.plugin.js"></script>');
+    .writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/richtextarea.plugin.js"></script>');
 
 // Import ArkCase libs
 // Still we need these libraries because for Advanced User Picker we are taking more information for the user using REST call (please see method "doAdvancedUserPicker(..)")
@@ -74,6 +74,8 @@ var CustomEventHandlers = {
             FEvent.observe(el, 'click', this.showUserPicker.bindAsObserver(this, el));
         } else if (isObjectPicker(el)) {
             FEvent.observe(el, 'click', this.showObjectPicker.bindAsObserver(this, el));
+        } else if (isUserOrGroupSearchPicker(el)) {
+            FEvent.observe(el, 'click', this.showUserOrGroupPicker.bindAsObserver(this, el));
         } else if (isCasePersonPicker(el)) {
             FEvent.observe(el, 'click', this.showPersonPicker.bindAsObserver(this, el, 'CASE_FILE'));
         } else if (isComplaintPersonPicker(el)) {
@@ -147,6 +149,22 @@ var CustomEventHandlers = {
                                 updateElement(element, 'zip', e.data.data.zip);
                                 updateElement(element, 'phone', e.data.data.phone);
                                 updateElement(element, 'email', e.data.data.email);
+                            }
+                        }
+                        if (e.data.action == "fill-user-group-picker-data") {
+                            var element = frevvoMessaging.elements[e.data.elementId];
+                            if (!isEmpty(element)) {
+
+                                updateElement(element, 'fullName', e.data.data.fullName);
+                                updateElement(element, 'id', e.data.data.personId);
+                                updateElement(element, 'personType', e.data.data.personType);
+                                updateElement(element, 'title', e.data.data.title);
+
+                                var groupElement = getHtmlElementsByCssClass('userOrGroupSearchPicker_participant_owningGroupHidden', 'input')[0];
+                                if(!isEmpty(e.data.data.groupName)) {
+                                    groupElement.value = e.data.data.groupName;
+                                    dispatchChangeEvent(groupElement);
+                                }
                             }
                         }
                     }
@@ -280,7 +298,30 @@ var CustomEventHandlers = {
             // Open organization picker
             frevvoMessaging.send(message);
         }
+    },
+
+    showUserOrGroupPicker : function(event, element) {
+        if (!isEmpty(frevvoMessaging)) {
+            var message = {};
+            message.source = "frevvo";
+            message.data = "";
+            message.action = "open-user-or-group-picker";
+            message.elementId = element.id;
+
+            frevvoMessaging.elements[element.id] = element;
+
+            var participantType;
+            var participantType = findElement(element, 'participantType');
+            if(!isEmpty(participantType)) {
+                message.data = {
+                    participantType: participantType.getAttribute('ovalue')
+                }
+            }
+
+            frevvoMessaging.send(message);
+        }
     }
+
 };
 
 function findObjectType(element) {
@@ -405,6 +446,10 @@ function isComplaintOrganizationPicker(element) {
     return (cssClass && cssClass.indexOf('complaintOrganizationPicker') > -1);
 }
 
+function isUserOrGroupSearchPicker(element) {
+    var cssClass = getCssClass(element);
+    return (cssClass && cssClass.indexOf('userOrGroupSearchPicker') > -1);
+}
 /**
  * Taking CSS class from the element. This CSS class is the class entered in the Frevvo form while designing the form with Frevvo Engine.
  * It can be "userPickerSimple_<RECOGNITIONTEXT>_<FIELDNAME>" - for simple user picker or
@@ -459,7 +504,7 @@ function updateElement(element, fieldName, value) {
         } else if (elements && elements.length > 1) {
             try {
                 elementToUpdate = element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('.' + cssClassDivided + '_'
-                        + fieldName + ' input')[0];
+                    + fieldName + ' input')[0];
             } catch (e) {
                 // Normal behaviour - element is not found
             }
@@ -586,8 +631,8 @@ var rtaSelector = 'div.rta_container span.f-message:not([style="display: none;"]
 
 var rtaSummernoteOptions = {
     toolbar : [ [ 'style', [ 'style' ] ], [ 'font', [ 'bold', 'italic', 'underline', 'clear' ] ], [ 'fontsize', [ 'fontsize' ] ],
-            [ 'color', [ 'color' ] ], [ 'para', [ 'ul', 'ol', 'paragraph' ] ], [ 'height', [ 'height' ] ], [ 'table', [ 'table' ] ],
-            [ 'view', [ 'fullscreen', 'codeview' ] ], [ 'help', [ 'help' ] ] ],
+        [ 'color', [ 'color' ] ], [ 'para', [ 'ul', 'ol', 'paragraph' ] ], [ 'height', [ 'height' ] ], [ 'table', [ 'table' ] ],
+        [ 'view', [ 'fullscreen', 'codeview' ] ], [ 'help', [ 'help' ] ] ],
 
     height : 280
 };

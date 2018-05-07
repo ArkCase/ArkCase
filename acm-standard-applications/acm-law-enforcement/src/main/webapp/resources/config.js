@@ -13,12 +13,6 @@ var ApplicationConfiguration = (function() {
             "com.2fdevs.videogular.plugins.controls", "com.2fdevs.videogular.plugins.overlayplay", "com.2fdevs.videogular.plugins.poster",
             "com.2fdevs.videogular.plugins.buffering", "tmh.dynamicLocale", "ab-base64", "angular-cache" ];
 
-    // Init list of errors that should not be shown to the end user
-    var suppressedErrorList = [ {
-        "url" : "http://api.openweathermap.org/data/2.5/weather",
-        "status" : 404
-    } ];
-
     // Add a new vertical module
     var registerModule = function(moduleName, dependencies) {
         // Create angular module
@@ -31,7 +25,6 @@ var ApplicationConfiguration = (function() {
     return {
         applicationModuleName : applicationModuleName,
         applicationModuleVendorDependencies : applicationModuleVendorDependencies,
-        registerModule : registerModule,
-        suppressedErrorList : suppressedErrorList
+        registerModule : registerModule
     };
 })();

@@ -43,14 +43,20 @@ angular.module('complaints').controller(
                     var promiseUsers = gridHelper.getUsers();
 
                     var onConfigRetrieved = function(config) {
+                        $scope.config = config;
+                        //first the filter is set, and after that everything else,
+                        //so that the data loads with the new filter applied
+                        gridHelper.setUserNameFilterToConfig(promiseUsers).then(function(updatedConfig) {
+                            $scope.config = updatedConfig;
+                            if ($scope.gridApi != undefined)
+                                $scope.gridApi.core.refresh();
 
-                        gridHelper.setColumnDefs(config);
-                        gridHelper.setBasicOptions(config);
-                        gridHelper.disableGridScrolling(config);
-                        gridHelper.setExternalPaging(config, $scope.retrieveGridData);
-                        gridHelper.setUserNameFilter(promiseUsers);
-                        gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
-
+                            gridHelper.addButton(updatedConfig, "delete", null, null, "isDeleteDisabled");
+                            gridHelper.setColumnDefs(updatedConfig);
+                            gridHelper.setBasicOptions(updatedConfig);
+                            gridHelper.disableGridScrolling(updatedConfig);
+                            gridHelper.setExternalPaging(updatedConfig, $scope.retrieveGridData);
+                        });
                         componentHelper.doneConfig(config);
                         return false;
                     };
@@ -117,7 +123,7 @@ angular.module('complaints').controller(
                     };
 
                     $scope.isDeleteDisabled = function(rowEntity) {
-                        return !rowEntity.adhocTask_b;
+                        return (Util.isEmpty(rowEntity.task_owner_s) || (rowEntity.task_owner_s !== rowEntity.author_s));
                     };
 
                 } ]);

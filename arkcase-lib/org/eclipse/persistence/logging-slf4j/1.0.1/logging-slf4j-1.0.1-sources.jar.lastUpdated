@@ -1,0 +1,17 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Mar 29 12:06:33 EDT 2018
+https\://maven.alfresco.com/nexus/content/groups/public/.lastUpdated=1522339270919
+http\://10.20.20.71\:8081/nexus/content/groups/armedia/.lastUpdated=1522339271918
+https\://repository.jboss.org/nexus/content/groups/public/.lastUpdated=1522339269296
+https\://repository-master.mulesoft.org/nexus/content/groups/public/.error=
+https\://maven.alfresco.com/nexus/content/groups/public/.error=
+http\://repository.mulesoft.org/nexus/content/repositories/releases/.error=
+http\://repository.mulesoft.org/nexus/content/repositories/releases/.lastUpdated=1522339270992
+https\://repo.maven.apache.org/maven2/.lastUpdated=1522339593029
+http\://repository.codehaus.org/.error=Could not transfer artifact org.eclipse.persistence\:logging-slf4j\:jar\:sources\:1.0.1 from/to codehaus (http\://repository.codehaus.org)\: repository.codehaus.org
+https\://repo.maven.apache.org/maven2/.error=
+@default-codehaus-http\://repository.codehaus.org/.lastUpdated=1522339270369
+http\://repo1.maven.org/maven2/.lastUpdated=1522339269044
+http\://repo1.maven.org/maven2/.error=
+https\://repository-master.mulesoft.org/nexus/content/groups/public/.lastUpdated=1522339270367
+https\://repository.jboss.org/nexus/content/groups/public/.error=

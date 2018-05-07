@@ -29,4 +29,14 @@ public class AcmFolderException extends Exception
     {
         super(message, cause, enableSuppression, writableStackTrace);
     }
+
+    public AcmFolderException(Exception e)
+    {
+        super(e);
+    }
+
+    public AcmFolderException(Long folderId)
+    {
+        super(String.format("No folder with id %d was found!", folderId));
+    }
 }

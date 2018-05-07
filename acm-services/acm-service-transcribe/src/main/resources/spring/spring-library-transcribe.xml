@@ -39,10 +39,12 @@
     <!-- post-save handlers -->
     <bean id="transcribeRulesHandler" class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeRulesHandler">
         <property name="transcribeBusinessRulesExecutor" ref="transcribeBusinessRulesExecutor"/>
+        <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
     </bean>
     <bean id="transcribeBusinessProcessHandler" class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeBusinessProcessHandler">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
     </bean>
 
     <bean id="transcribePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -65,11 +67,14 @@
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="transcribeConfigurationPropertiesService" ref="transcribeConfigurationPropertiesService"/>
         <property name="credentialConfigurationFileLocation" value="${user.home}/.arkcase/acm/aws/credentials.properties"/>
+        <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
     </bean>
 
     <bean id="transcribeServiceFactory" class="com.armedia.acm.services.transcribe.factory.TranscribeServiceFactory">
         <property name="awsTranscribeService" ref="awsTranscribeService"/>
     </bean>
+
+    <bean id="transcribeEventPublisher" class="com.armedia.acm.services.transcribe.service.TranscribeEventPublisher"/>
 
     <bean id="arkCaseTranscribeService" class="com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService">
         <property name="transcribeDao" ref="transcribeDao"/>
@@ -80,6 +85,14 @@
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="transcribeServiceFactory" ref="transcribeServiceFactory"/>
         <property name="transcribeArkCaseBeanUtils" ref="transcribeArkCaseBeanUtils"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
+        <property name="templateService" ref="filesystemTemplateConfigurationService"/>
+        <property name="emailSenderService" ref="smtpService"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="labelManagementService" ref="labelManagementService"/>
+        <property name="acmApplication" ref="acmApplication"/>
         <aop:scoped-proxy proxy-target-class="true"/>
     </bean>
 
@@ -106,12 +119,27 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 
-    <bean id="transcribeProcessingChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeProcessingChecker">
+    <bean id="transcribeProviderFailedListener" class="com.armedia.acm.services.transcribe.listener.TranscribeProviderFailedListener">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
-    <bean id="transcribeStatusChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeStatusChecker">
+    <bean id="transcribeProcessDelegate" class="com.armedia.acm.services.transcribe.delegate.TranscribeProcessDelegate">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="transcribeCheckStatusDelegate" class="com.armedia.acm.services.transcribe.delegate.TranscribeCheckStatusDelegate">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="transcribePurgeDelegate" class="com.armedia.acm.services.transcribe.delegate.TranscribePurgeDelegate">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="transcribeRemoveProcessIdDelegate" class="com.armedia.acm.services.transcribe.delegate.TranscribeRemoveProcessIdDelegate">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>

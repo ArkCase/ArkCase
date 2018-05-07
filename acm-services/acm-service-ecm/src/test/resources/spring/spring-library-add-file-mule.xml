@@ -6,11 +6,25 @@
         <property name="specificConfigFiles">
             <list>
                 <value>/flows/MuleCmisConnectorFlow.xml</value>
+                <value>/flows/MuleActiveMqConnectorFlow.xml</value>
                 <value>/flows/addFileFlow.xml</value>
                 <value>/flows/ecmFileTestFlow.xml</value>
                 <value>/flows/downloadFileFlow.xml</value>
+                <value>/flows/getObjectByIdFlow.xml</value>
             </list>
         </property>
+    </bean>
+    
+    <bean id="logoutUrl" class="java.lang.String" factory-method="valueOf">
+        <constructor-arg value="logoutUrl"/>
+    </bean>
+    
+    <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
+
+    <bean id="configList" class="java.util.ArrayList">
+        <constructor-arg>
+            <list/>
+        </constructor-arg>
     </bean>
 
 </beans>

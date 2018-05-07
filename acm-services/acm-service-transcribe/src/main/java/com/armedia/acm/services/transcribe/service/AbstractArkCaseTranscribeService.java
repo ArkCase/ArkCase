@@ -75,6 +75,33 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
     public abstract Transcribe copy(Transcribe transcribe, EcmFileVersion ecmFileVersion) throws CreateTranscribeException;
 
     /**
+     * This method will complete the process and set the status to COMPLETED
+     *
+     * @param id - ID of Transcribe object
+     * @return Updated Transcribe object
+     * @throws SaveTranscribeException
+     */
+    public abstract Transcribe complete(Long id) throws SaveTranscribeException;
+
+    /**
+     * This method will cancel the process and set the status to DRAFT
+     *
+     * @param id - ID of Transcribe object
+     * @return Updated Transcribe object
+     * @throws SaveTranscribeException
+     */
+    public abstract Transcribe cancel(Long id) throws SaveTranscribeException;
+
+    /**
+     * This method will fail the process and set the status to FAILED
+     *
+     * @param id - ID of Transcribe object
+     * @return Updated Transcribe object
+     * @throws SaveTranscribeException
+     */
+    public abstract Transcribe fail(Long id) throws SaveTranscribeException;
+
+    /**
      * This method will create TranscribeItem in the Transcribe with given ID
      *
      * @param id - ID of the Transcribe object
@@ -118,19 +145,17 @@ public abstract class AbstractArkCaseTranscribeService implements TranscribeServ
      * This method will notify user for the action performed under Transcribe object
      *
      * @param id - ID of the Transcribe object
-     * @param userType - Type of the user (owner of the media file, or owner of the parent object)
      * @param action - Action that is performed
      */
-    public abstract void notify(Long id, String userType, String action);
+    public abstract void notify(Long id, String action);
 
     /**
      * This method will notify user for the action performed under list of Transcribe objects
      *
      * @param ids - List of IDs of the Transcribe objects
-     * @param userType - Type of the user (owner of the media file, or owner of the parent object)
      * @param action - Action that is performed
      */
-    public abstract void notifyMultiple(List<Long> ids, String userType, String action);
+    public abstract void notifyMultiple(List<Long> ids, String action);
 
     /**
      * This method will audit performed action for Transcribe object

@@ -180,9 +180,11 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "Escolher",
         "not_authorized": "Não autorizado",
+        "not_member": "pt_Not Member",
         "tooltip.move_right": "Mover para a direita",
         "tooltip.move_left": "Mova para a esquerda",
-        "authorized": "Autorizado"
+        "authorized": "Autorizado",
+        "member": "Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "Erro, são necessários 2 caracteres."
@@ -649,7 +651,8 @@
         "PARTICIPANT": "Participante",
         "NOTE": "Nota",
         "PARTICIPANT-ASSOCIATION": "Participante-Associação",
-        "ASSIGNMENT": "Tarefa"
+        "ASSIGNMENT": "Tarefa",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "Escolha Usuário",

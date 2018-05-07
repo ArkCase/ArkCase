@@ -36,7 +36,7 @@ angular.module('directives').directive('paginationOnScroll', [ 'UtilService', fu
                     var scrolledpx = elem.context.clientHeight + elem.context.scrollTop;
                 }
 
-                if (scrolledpx === elem.context.scrollHeight) {
+                if (!(elem.context.clientHeight === elem.context.scrollHeight) && scrolledpx === elem.context.scrollHeight) {
                     scope.loadMore();
                 }
             });
