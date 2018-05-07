@@ -896,6 +896,15 @@ angular
                                         DocTree.scope.$bus.publish('docTreeNodeChecked', data.node);
                                     }
 
+                                    if (data.targetType === 'title') {
+                                        if (DocTree.isFileNode(data.node)) {
+                                            DocTree.scope.$bus.publish('docTreeFileNodeSelected', data.node);
+                                        }
+                                        else if (DocTree.isFolderNode(data.node)) {
+                                             DocTree.scope.$bus.publish('docTreeFolderNodeSelected', data.node);
+                                        }
+                                    }
+
                                     var setting = DocTree.Config.getSetting();
                                     if (data.targetType === "expander" && setting.search.enabled) {
                                         if (DocTree.isFolderNode(data.node)) {

@@ -4,8 +4,8 @@
 package com.armedia.acm.compressfolder.web.api;
 
 import com.armedia.acm.compressfolder.FolderCompressor;
-import com.armedia.acm.compressfolder.FolderCompressorException;
 import com.armedia.acm.compressfolder.model.CompressNode;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.io.FilenameUtils;
@@ -41,7 +41,7 @@ public class FolderCompressorAPIController
     @RequestMapping(value = "/{folderId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
-    public FolderCompressorResponse compressFolder(@PathVariable(value = "folderId") long folderId) throws FolderCompressorException
+    public FolderCompressorResponse compressFolder(@PathVariable(value = "folderId") long folderId) throws AcmFolderException
     {
         String fileName = folderCompressor.compressFolder(folderId);
 
@@ -51,7 +51,7 @@ public class FolderCompressorAPIController
     @RequestMapping(value = "/download/{folderId}", method = RequestMethod.GET)
     @ResponseBody
     public void getCompressedFolder(@PathVariable(value = "folderId") long folderId, HttpServletResponse response)
-            throws FolderCompressorException, IOException
+            throws IOException, AcmFolderException
     {
         log.info("Downloading compressed folder by ID '{}'", folderId);
 
@@ -66,7 +66,7 @@ public class FolderCompressorAPIController
     @RequestMapping(value = "/download", method = RequestMethod.POST)
     @ResponseBody
     public void getCompressedSelectedFolderAndFiles(@RequestBody CompressNode compressNode, HttpServletResponse response)
-            throws FolderCompressorException, IOException
+            throws IOException, AcmFolderException
     {
         String filePath = folderCompressor.compressFolder(compressNode);
         String fileName = FilenameUtils.getName(filePath);
