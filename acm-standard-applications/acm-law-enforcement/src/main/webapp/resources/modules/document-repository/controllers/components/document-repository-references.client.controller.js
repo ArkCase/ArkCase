@@ -8,6 +8,7 @@ angular
                         '$scope',
                         '$stateParams',
                         '$modal',
+                        '$translate',
                         'UtilService',
                         'DocumentRepository.InfoService',
                         'Helper.UiGridService',
@@ -15,8 +16,9 @@ angular
                         'ObjectAssociation.Service',
                         'ObjectService',
                         'ConfigService',
-                        function($scope, $stateParams, $modal, Util, DocumentRepositoryInfoService, HelperUiGridService,
-                                HelperObjectBrowserService, ObjectAssociationService, ObjectService, ConfigService) {
+                        'MessageService',
+                        function($scope, $stateParams, $modal, $translate, Util, DocumentRepositoryInfoService, HelperUiGridService,
+                                HelperObjectBrowserService, ObjectAssociationService, ObjectService, ConfigService, MessageService) {
 
                             new HelperObjectBrowserService.Component({
                                 scope : $scope,
@@ -136,7 +138,8 @@ angular
 
                             $scope.deleteRow = function(rowEntity) {
                                 var id = Util.goodMapValue(rowEntity, "associationId", 0);
-                                ObjectAssociationService.deleteAssociationInfo(id).then(function(data) {
+                                ObjectAssociationService.deleteAssociationInfo(id).then(function() {
+
                                     //success
                                     refresh();
 
@@ -144,6 +147,10 @@ angular
                                     _.remove($scope.gridOptions.data, function(row) {
                                         return row === rowEntity;
                                     });
+
+                                    MessageService.info($translate.instant('document-repository.comp.references.message.delete.success'));
+                                }, function(error) {
+                                    MessageService.error($translate.instant('document-repository.comp.references.message.delete.error'));
                                 });
                             };
 
