@@ -18,7 +18,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                     doc:name="Issue an advanced search request to SOLR"></https:endpoint>
 
     <flow name="advancedSearchQuery" doc:name="Advanced Search Query Flow">
-        <vm:inbound-endpoint address="vm://advancedSearchQuery.in" exchange-pattern="request-response" doc:name="VM"/>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://advancedSearchQuery.in" exchange-pattern="request-response" doc:name="VM"/>
 
         <timer-interceptor/>
 

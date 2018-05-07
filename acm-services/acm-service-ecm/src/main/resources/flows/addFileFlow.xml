@@ -14,7 +14,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
             - "cmisFolderId" - a string with the CMIS ID of the parent folder. The file will be added to this folder.
             The return payload is the new CMIS document.
         </description>
-        <vm:inbound-endpoint address="vm://addFile.in" exchange-pattern="request-response" doc:name="Add File"></vm:inbound-endpoint>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://addFile.in" exchange-pattern="request-response" doc:name="Add File"></vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 
