@@ -50,6 +50,14 @@ angular
                                 }
 
                                 ,
+                                ObjectTypesInEndpoints : {
+                                    CASE_FILE : "casefile",
+                                    COMPLAINT : "complaint",
+                                    TASK : "task",
+                                    DOC_REPO : "documentrepository"
+                                }
+
+                                ,
                                 gotoUrl : function(objType, objId) {
                                     $log
                                             .warn("WARNING: Object.ObjectService.gotoUrl() is phasing out. Please use Object.ObjectService.showObject() instead");

@@ -510,7 +510,7 @@ angular
                                  */
                                 ,
                                 saveNodesStatus : function(node, nodesStatusBeforeRefresh) {
-                                    if (node.children) {
+                                    if (node != null && node.children) {
                                         for (var i = 0; i < node.children.length; i++) {
                                             if (DocTree.isFolderNode(node.children[i])) {
                                                 if (node.children[i].expanded) {
@@ -894,6 +894,15 @@ angular
                                     // publish event that a node in the DocTree has been checked
                                     if (data.targetType === 'checkbox') {
                                         DocTree.scope.$bus.publish('docTreeNodeChecked', data.node);
+                                    }
+
+                                    if (data.targetType === 'title') {
+                                        if (DocTree.isFileNode(data.node)) {
+                                            DocTree.scope.$bus.publish('docTreeFileNodeSelected', data.node);
+                                        }
+                                        else if (DocTree.isFolderNode(data.node)) {
+                                             DocTree.scope.$bus.publish('docTreeFolderNodeSelected', data.node);
+                                        }
                                     }
 
                                     var setting = DocTree.Config.getSetting();

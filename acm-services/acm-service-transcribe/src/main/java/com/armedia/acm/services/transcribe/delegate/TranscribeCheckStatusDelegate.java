@@ -1,4 +1,4 @@
-package com.armedia.acm.services.transcribe.checker;
+package com.armedia.acm.services.transcribe.delegate;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/08/2018
  */
-public class TranscribeStatusChecker implements JavaDelegate
+public class TranscribeCheckStatusDelegate implements JavaDelegate
 {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private ArkCaseTranscribeService arkCaseTranscribeService;

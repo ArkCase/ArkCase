@@ -159,6 +159,24 @@ public class AWSTranscribeService implements TranscribeService
         return null;
     }
 
+    @Override
+    public boolean purge(Transcribe transcribe)
+    {
+        try
+        {
+            AWSTranscribeConfiguration configuration = getConfiguration();
+            String key = transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension();
+            getS3Client().deleteObject(configuration.getBucket(), key);
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            LOG.error("Error while purging Transcribe information on Amazon side for Transcribe with REMOTE_ID=[{}]. REASON=[{}]", transcribe.getRemoteId(), e.getMessage());
+            return false;
+        }
+    }
+
     public AWSTranscribeConfiguration getConfiguration() throws GetConfigurationException
     {
         return getAwsTranscribeConfigurationPropertiesService().get();

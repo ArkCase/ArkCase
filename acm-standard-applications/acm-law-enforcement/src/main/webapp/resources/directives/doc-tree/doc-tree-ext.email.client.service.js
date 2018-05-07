@@ -188,9 +188,11 @@ angular.module('directives').controller(
                 'UtilService',
                 'params',
                 'DocTreeExt.Email',
+                'ObjectService',
+                'Object.InfoService',
                 '$modal',
                 '$translate',
-                function($scope, $modalInstance, Util, params, DocTreeExtEmail, $modal, $translate) {
+                function($scope, $modalInstance, Util, params, DocTreeExtEmail, ObjectService, ObjectInfoService, $modal, $translate) {
                     $scope.modalInstance = $modalInstance;
                     $scope.config = params.config;
                     $scope.DocTree = params.DocTree;
@@ -205,7 +207,25 @@ angular.module('directives').controller(
                     $scope.emailDataModel = {};
                     $scope.emailDataModel.selectedFilesToEmail = DocTreeExtEmail._extractFileIds($scope.nodes);
                     $scope.emailDataModel.deliveryMethod = 'SEND_ATTACHMENTS';
+
                     $scope.recipients = [];
+                    $scope.recipientsStr = [];
+                    var objectId = params.DocTree._objId;
+                    var objectType = params.DocTree._objType;
+                    var objectTypeInEndpoint = ObjectService.ObjectTypesInEndpoints[objectType];
+                    if (objectType == ObjectService.ObjectTypes.CASE_FILE || objectType == ObjectService.ObjectTypes.COMPLAINT) {
+                        ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
+                            var originator = data.originator;
+                            if (originator != undefined) {
+                                var emailOfOriginator = originator.person.contactMethods[2].value;
+                                if (emailOfOriginator != null) {
+                                    $scope.recipients.push(emailOfOriginator);
+                                    $scope.recipientsStr.push(emailOfOriginator);
+                                }
+                            }
+                        });
+                    }
+
 
                     var processDeliveryMethods = function() {
                         $scope.emailSendConfiguration.allowDocuments = $scope.nodes.length > 0 ? true : false;

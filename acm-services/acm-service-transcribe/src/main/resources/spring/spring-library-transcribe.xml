@@ -124,12 +124,22 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
-    <bean id="transcribeProcessingChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeProcessingChecker">
+    <bean id="transcribeProcessDelegate" class="com.armedia.acm.services.transcribe.delegate.TranscribeProcessDelegate">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
-    <bean id="transcribeStatusChecker" class="com.armedia.acm.services.transcribe.checker.TranscribeStatusChecker">
+    <bean id="transcribeCheckStatusDelegate" class="com.armedia.acm.services.transcribe.delegate.TranscribeCheckStatusDelegate">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="transcribePurgeDelegate" class="com.armedia.acm.services.transcribe.delegate.TranscribePurgeDelegate">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="transcribeRemoveProcessIdDelegate" class="com.armedia.acm.services.transcribe.delegate.TranscribeRemoveProcessIdDelegate">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
