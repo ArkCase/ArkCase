@@ -335,12 +335,24 @@ angular.module('directives').controller(
 
 angular.module('directives').controller(
         'directives.DocTreeEmailRecipientsDialogController',
-        [ '$scope', '$modalInstance', 'DocTreeExt.Email', 'config', 'recipients',
-                function($scope, $modalInstance, DocTreeExtEmail, config, recipients) {
+        [ '$scope', '$modalInstance', 'DocTreeExt.Email', 'Object.LookupService', 'config', 'recipients',
+                function($scope, $modalInstance, DocTreeExtEmail, ObjectLookupService, config, recipients) {
                     $scope.config = config;
                     $scope.recipients = angular.copy(recipients);
 
                     $scope.onSelectRecipient = function(selectedItems, lastSelectedItems, isSelected) {
+                        if (lastSelectedItems[0].object_type_s == "PERSON") {
+                            var contactMethod = lastSelectedItems[0].contact_method_ss[0];
+                            if (contactMethod) {
+                                contactMethod = contactMethod.slice(0, contactMethod.indexOf("-"));
+                            }
+                            ObjectLookupService.getContactMethodTypes().then(function(contactMethodTypes) {
+                                $scope.emailTypes = _.find(contactMethodTypes, {
+                                    key : 'email'
+                                }).subLookup;
+                                return contactMethodTypes;
+                            });
+                        }
                         var selectedRecipientEmail = lastSelectedItems[0].email_lcs;
                         var isRecipientSelected = _.find($scope.recipients, function(recipient) {
                             return recipient.email === selectedRecipientEmail;
