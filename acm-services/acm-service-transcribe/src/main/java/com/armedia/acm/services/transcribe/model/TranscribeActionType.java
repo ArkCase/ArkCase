@@ -14,5 +14,8 @@ public enum TranscribeActionType
     CANCELLED,
     COMPILED,
     ROLLBACK,
-    PROVIDER_FAILED
+    PROVIDER_FAILED,
+    PURGE_SUCCESS,
+    PURGE_FAILED,
+    PURGE_TERMINATE
 }

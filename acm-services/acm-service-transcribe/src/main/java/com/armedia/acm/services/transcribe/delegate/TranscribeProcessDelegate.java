@@ -1,4 +1,4 @@
-package com.armedia.acm.services.transcribe.checker;
+package com.armedia.acm.services.transcribe.delegate;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/08/2018
  */
-public class TranscribeProcessingChecker implements JavaDelegate
+public class TranscribeProcessDelegate implements JavaDelegate
 {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private ArkCaseTranscribeService arkCaseTranscribeService;
