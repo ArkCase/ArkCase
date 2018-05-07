@@ -112,6 +112,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
         return $http({
             method : 'GET',
             url : 'api/latest/functionalaccess/' + data.roleName.key + '/groups/',
+            cache : false,
             params : {
                 start : (data.start ? data.start : 0),
                 n : (data.n ? data.n : 50),

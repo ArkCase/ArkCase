@@ -9,6 +9,8 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.event.AdHocGroupDeletedEvent;
+import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.apache.commons.lang.StringUtils;
@@ -16,6 +18,7 @@ import org.json.JSONArray;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 
@@ -34,7 +37,7 @@ import java.util.stream.Collectors;
 /**
  * @author riste.tutureski
  */
-public class FunctionalAccessServiceImpl implements FunctionalAccessService, ApplicationListener<ConfigurationFileChangedEvent>
+public class FunctionalAccessServiceImpl implements FunctionalAccessService, ApplicationListener<ApplicationEvent>
 {
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -49,40 +52,57 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     private ExecuteSolrQuery executeSolrQuery;
 
     @Override
-    public void onApplicationEvent(ConfigurationFileChangedEvent configurationFileChangedEvent)
+    public void onApplicationEvent(ApplicationEvent event)
     {
-        File eventFile = configurationFileChangedEvent.getConfigFile();
-        if ("applicationRoles.properties".equals(eventFile.getName()))
+        if (event instanceof ConfigurationFileChangedEvent)
         {
-            String filename = eventFile.getName();
-            LOG.debug("[{}] has changed!", filename);
+            File eventFile = ((ConfigurationFileChangedEvent) event).getConfigFile();
 
-            try
+            if ("applicationRoles.properties".equals(eventFile.getName()))
             {
-                applicationRolesProperties = getPropertyFileManager().readFromFile(eventFile);
+                String filename = eventFile.getName();
+                LOG.debug("[{}] has changed!", filename);
+
+                try
+                {
+                    applicationRolesProperties = getPropertyFileManager().readFromFile(eventFile);
+                }
+                catch (IOException e)
+                {
+                    LOG.info("Could not read new properties; keeping the old properties.");
+                }
+
             }
-            catch (IOException e)
+
+            if ("applicationRoleToUserGroup.properties".equals(eventFile.getName()))
             {
-                LOG.info("Could not read new properties; keeping the old properties.");
+                String filename = eventFile.getName();
+                LOG.info("[{}] has changed!", filename);
+
+                try
+                {
+                    applicationRolesToGroupsProperties = getPropertyFileManager().readFromFile(eventFile);
+                    roleToGroupMapping.reloadRoleToGroupMap(applicationRolesToGroupsProperties);
+                }
+                catch (IOException e)
+                {
+                    LOG.info("Could not read new properties; keeping the old properties.");
+                }
             }
 
         }
-
-        if ("applicationRoleToUserGroup.properties".equals(eventFile.getName()))
+        else if (event instanceof LdapGroupDeletedEvent || event instanceof AdHocGroupDeletedEvent)
         {
-            String filename = eventFile.getName();
-            LOG.info("[{}] has changed!", filename);
+            AcmGroup group = (AcmGroup) event.getSource();
+            String groupName = group.getName();
+            Map<String, Set<String>> roleToGroupsMap = roleToGroupMapping.getRoleToGroupsMapIgnoreCaseSensitive();
+            Map<String, List<String>> roleToGroupsMapToPropertyFile = roleToGroupsMap.entrySet().stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey,
+                            entry -> entry.getValue().stream().filter(name -> !name.equals(groupName)).collect(Collectors.toList())));
 
-            try
-            {
-                applicationRolesToGroupsProperties = getPropertyFileManager().readFromFile(eventFile);
-                roleToGroupMapping.reloadRoleToGroupMap(applicationRolesToGroupsProperties);
-            }
-            catch (IOException e)
-            {
-                LOG.info("Could not read new properties; keeping the old properties.");
-            }
+            saveApplicationRolesToGroups(roleToGroupsMapToPropertyFile, group.getModifier());
         }
+
     }
 
     @Override
@@ -125,32 +145,26 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             String sortDirection,
             Boolean authorized) throws MuleException
     {
-        List<String> retrieveGroupsByRole = new ArrayList<>();
-        Set<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().get(roleName);
-
-        if (groupsByRole == null)
-        {
-            return retrieveGroupsByRole;
-        }
-
-        retrieveGroupsByRole = new ArrayList<>(groupsByRole);
-
-        if (groupsByRole.isEmpty())
-        {
-            return retrieveGroupsByRole;
-        }
+        Set<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().get(roleName.toUpperCase());
+        List<String> retrieveGroupsByRole = groupsByRole == null ? new ArrayList<>() : new ArrayList<>(groupsByRole);
 
         if (authorized)
         {
+            if (retrieveGroupsByRole.isEmpty())
+            {
+                return retrieveGroupsByRole;
+            }
             String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
-                    + retrieveGroupsByRole.stream().collect(Collectors.joining(" OR name_lcs:", "(name_lcs:", ")"));
-
+                    + retrieveGroupsByRole.stream().collect(Collectors.joining("\" OR name_lcs:\"", "(name_lcs:\"", "\")"));
             return getGroupsBySolrQuery(auth, sortDirection, startRow, maxRows, query);
         }
         else
         {
-            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
-                    + retrieveGroupsByRole.stream().collect(Collectors.joining(" AND -name_lcs:", "-name_lcs:", ""));
+            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+            if (!retrieveGroupsByRole.isEmpty())
+            {
+                query += " AND " + retrieveGroupsByRole.stream().collect(Collectors.joining("\" AND -name_lcs:\"", "-name_lcs:\"", "\""));
+            }
 
             return getGroupsBySolrQuery(auth, sortDirection, startRow, maxRows, query);
         }
@@ -166,6 +180,13 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     @Override
     public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, Authentication auth)
     {
+        return saveApplicationRolesToGroups(rolesToGroups, auth.getName());
+    }
+
+    @Override
+    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, String user)
+    {
+
         boolean success = false;
         try
         {
@@ -181,7 +202,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
         if (success)
         {
-            getEventPublisher().publishFunctionalAccessUpdateEvent(rolesToGroups, auth);
+            getEventPublisher().publishFunctionalAccessUpdateEventOnRolesToGroupMap(rolesToGroups, user);
         }
 
         return success;

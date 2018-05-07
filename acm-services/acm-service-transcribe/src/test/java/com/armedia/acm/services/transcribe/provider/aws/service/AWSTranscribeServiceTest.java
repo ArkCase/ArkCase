@@ -4,26 +4,33 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.transcribe.AmazonTranscribe;
-import com.amazonaws.services.transcribe.model.LimitExceededException;
-import com.amazonaws.services.transcribe.model.StartTranscriptionJobResult;
+import com.amazonaws.services.transcribe.model.*;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.model.Transcribe;
+import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.model.TranscribeType;
+import com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService;
+import com.armedia.acm.services.transcribe.service.TranscribeEventPublisher;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mule.api.MuleMessage;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -56,6 +63,18 @@ public class AWSTranscribeServiceTest
     @Mock
     private InputStream inputStream;
 
+    @Mock
+    private TranscribeEventPublisher transcribeEventPublisher;
+
+    @Mock
+    private MuleContextManager muleContextManager;
+
+    @Mock
+    private MuleMessage muleMessage;
+
+    @Mock
+    private TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
+
     @Before
     public void setUp()
     {
@@ -67,6 +86,9 @@ public class AWSTranscribeServiceTest
         awsTranscribeService.setTranscribeClient(transcribeClient);
         awsTranscribeService.setEcmFileTransaction(ecmFileTransaction);
         awsTranscribeService.setAwsTranscribeConfigurationPropertiesService(awsTranscribeConfigurationPropertiesService);
+        awsTranscribeService.setTranscribeEventPublisher(transcribeEventPublisher);
+        awsTranscribeService.setMuleContextManager(muleContextManager);
+        awsTranscribeService.setTranscribeConfigurationPropertiesService(transcribeConfigurationPropertiesService);
     }
 
     @Test
@@ -273,5 +295,60 @@ public class AWSTranscribeServiceTest
             assertTrue(e instanceof CreateTranscribeException);
             assertEquals(expectedErrorMessage, e.getMessage());
         }
+    }
+
+    @Test
+    public void get() throws Exception
+    {
+        String remoteId = "transcribe-remote-id";
+        String jsonString = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("aws/output/asrOutput.json"));
+
+        TranscribeConfiguration configuration = new TranscribeConfiguration();
+        configuration.setWordCountPerItem(20);
+        configuration.setSilentBetweenWords(new BigDecimal("2"));
+
+        Transcript transcript = new Transcript();
+        transcript.setTranscriptFileUri("https://www.amazon.test.example.com");
+
+        TranscriptionJob transcriptionJob = new TranscriptionJob();
+        transcriptionJob.setTranscriptionJobStatus(TranscriptionJobStatus.COMPLETED.toString());
+        transcriptionJob.setTranscript(transcript);
+
+        GetTranscriptionJobResult getTranscriptionJobResult = new GetTranscriptionJobResult();
+        getTranscriptionJobResult.setTranscriptionJob(transcriptionJob);
+
+        when(transcribeClient.getTranscriptionJob(any())).thenReturn(getTranscriptionJobResult);
+        when(muleContextManager.send("vm://getProviderTranscribe.in", "www.amazon.test.example.com")).thenReturn(muleMessage);
+        when(muleMessage.getInboundProperty("getProviderTranscribeException")).thenReturn(null);
+        when(muleMessage.getPayloadAsString()).thenReturn(jsonString);
+        when(transcribeConfigurationPropertiesService.get()).thenReturn(configuration);
+
+        Transcribe transcribe = awsTranscribeService.get(remoteId);
+
+        verify(transcribeClient).getTranscriptionJob(any());
+        verify(muleContextManager).send("vm://getProviderTranscribe.in", "www.amazon.test.example.com");
+        verify(muleMessage).getInboundProperty("getProviderTranscribeException");
+        verify(muleMessage).getPayloadAsString();
+        verify(transcribeConfigurationPropertiesService, times(346)).get();
+
+        assertNotNull(transcribe);
+        assertNotNull(transcribe.getTranscribeItems());
+        assertEquals(22, transcribe.getTranscribeItems().size());
+        assertEquals(new BigDecimal("1.390"), transcribe.getTranscribeItems().get(0).getStartTime());
+        assertEquals(new BigDecimal("7.720"), transcribe.getTranscribeItems().get(0).getEndTime());
+        assertEquals(98, transcribe.getTranscribeItems().get(0).getConfidence());
+        assertEquals("I've often said that i wish people could realize all their dreams and wealth fame and so that they could", transcribe.getTranscribeItems().get(0).getText());
+        assertEquals(new BigDecimal("169.120"), transcribe.getTranscribeItems().get(21).getStartTime());
+        assertEquals(new BigDecimal("177.730"), transcribe.getTranscribeItems().get(21).getEndTime());
+        assertEquals(61, transcribe.getTranscribeItems().get(21).getConfidence());
+        assertEquals("Wait", transcribe.getTranscribeItems().get(21).getText());
+
+        assertEquals(configuration.getWordCountPerItem(), transcribe.getTranscribeItems().get(0).getText().split(" ").length);
+
+        // There is a silent between words, new item is created
+        assertEquals(13, transcribe.getTranscribeItems().get(1).getText().split(" ").length);
+
+        // ... Also at the end there is silent between words. New item is created
+        assertEquals(1, transcribe.getTranscribeItems().get(21).getText().split(" ").length);
     }
 }

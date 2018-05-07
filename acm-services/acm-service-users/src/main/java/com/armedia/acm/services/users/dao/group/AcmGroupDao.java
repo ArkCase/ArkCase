@@ -134,5 +134,4 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     {
         return AcmGroup.class;
     }
-
 }

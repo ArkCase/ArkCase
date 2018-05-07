@@ -180,9 +180,11 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "選擇",
         "not_authorized": "未經授權",
+        "not_member": "Not Member",
         "tooltip.move_right": "向右移",
         "tooltip.move_left": "向左移動",
-        "authorized": "合法"
+        "authorized": "合法",
+        "member": "zh-tw_Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "錯誤，需要2個字符."
@@ -649,7 +651,8 @@
         "PARTICIPANT": "參加者",
         "NOTE": "注意",
         "PARTICIPANT-ASSOCIATION": "參加者-協會",
-        "ASSIGNMENT": "分配"
+        "ASSIGNMENT": "分配",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "選擇用戶",

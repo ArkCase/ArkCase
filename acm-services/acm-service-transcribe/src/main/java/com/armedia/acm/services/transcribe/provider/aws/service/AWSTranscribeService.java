@@ -17,16 +17,14 @@ import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
 import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
 import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
-import com.armedia.acm.services.transcribe.model.Transcribe;
-import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
-import com.armedia.acm.services.transcribe.model.TranscribeItem;
-import com.armedia.acm.services.transcribe.model.TranscribeStatusType;
+import com.armedia.acm.services.transcribe.model.*;
 import com.armedia.acm.services.transcribe.provider.aws.credentials.ArkCaseAWSCredentialsProviderChain;
 import com.armedia.acm.services.transcribe.provider.aws.model.AWSTranscribeConfiguration;
 import com.armedia.acm.services.transcribe.provider.aws.model.transcript.AWSTranscript;
 import com.armedia.acm.services.transcribe.provider.aws.model.transcript.AWSTranscriptAlternative;
 import com.armedia.acm.services.transcribe.provider.aws.model.transcript.AWSTranscriptItem;
 import com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService;
+import com.armedia.acm.services.transcribe.service.TranscribeEventPublisher;
 import com.armedia.acm.services.transcribe.service.TranscribeService;
 import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -58,6 +56,7 @@ public class AWSTranscribeService implements TranscribeService
     private MuleContextManager muleContextManager;
     private TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
     private String credentialConfigurationFileLocation;
+    private TranscribeEventPublisher transcribeEventPublisher;
 
     public void init() throws GetConfigurationException
     {
@@ -78,20 +77,13 @@ public class AWSTranscribeService implements TranscribeService
         }
         catch (GetConfigurationException e)
         {
+            getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
             throw new CreateTranscribeException(String.format("Transcribe failed to create on Amazon. REASON=[%s]", e.getMessage()), e);
         }
 
-        String key = transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension();
-        if (getS3Client().doesObjectExist(configuration.getBucket(), key))
-        {
-            throw new CreateTranscribeException(String.format("The file with KEY=[%s] already exist on Amazon.", key));
-        }
-
-        PutObjectResult putObjectResult = uploadMedia(transcribe);
-        if (putObjectResult != null)
-        {
-            startTranscribeJob(transcribe);
-        }
+        checkIfMediaExist(transcribe, configuration.getBucket());
+        uploadMedia(transcribe);
+        startTranscribeJob(transcribe);
 
         return transcribe;
     }
@@ -136,7 +128,7 @@ public class AWSTranscribeService implements TranscribeService
             }
             catch (MuleException | AmazonServiceException e)
             {
-                throw new GetTranscribeException(String.format("Unable to upload media file to Amazon. REASON=[%s].", e.getMessage()), e);
+                throw new GetTranscribeException(String.format("Unable to get transcribe job on Amazon. REASON=[%s].", e.getMessage()), e);
             }
         }
 
@@ -165,6 +157,24 @@ public class AWSTranscribeService implements TranscribeService
     public List<Transcribe> getPageByStatus(int start, int n, String status) throws GetTranscribeException
     {
         return null;
+    }
+
+    @Override
+    public boolean purge(Transcribe transcribe)
+    {
+        try
+        {
+            AWSTranscribeConfiguration configuration = getConfiguration();
+            String key = transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension();
+            getS3Client().deleteObject(configuration.getBucket(), key);
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            LOG.error("Error while purging Transcribe information on Amazon side for Transcribe with REMOTE_ID=[{}]. REASON=[{}]", transcribe.getRemoteId(), e.getMessage());
+            return false;
+        }
     }
 
     public AWSTranscribeConfiguration getConfiguration() throws GetConfigurationException
@@ -198,8 +208,9 @@ public class AWSTranscribeService implements TranscribeService
 
                 return getS3Client().putObject(configuration.getBucket(), key, inputStream, metadata);
             }
-            catch (GetConfigurationException | MuleException | AmazonServiceException e)
+            catch (Exception e)
             {
+                getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
                 throw new CreateTranscribeException(String.format("Unable to upload media file to Amazon. REASON=[%s].", e.getMessage()), e);
             }
         }
@@ -229,13 +240,36 @@ public class AWSTranscribeService implements TranscribeService
 
                 return getTranscribeClient().startTranscriptionJob(request);
             }
-            catch (GetConfigurationException | BadRequestException | LimitExceededException | InternalFailureException | ConflictException e)
+            catch (Exception e)
             {
+                getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
                 throw new CreateTranscribeException(String.format("Unable to start transcribe job on Amazon. REASON=[%s]", e.getMessage()), e);
             }
         }
 
         throw new CreateTranscribeException("Unable to start transcribe job on Amazon. Transcribe not provided.");
+    }
+
+    private void checkIfMediaExist(Transcribe transcribe, String bucket) throws CreateTranscribeException
+    {
+        String key = transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension();
+        boolean exist = false;
+
+        try
+        {
+            exist = getS3Client().doesObjectExist(bucket, key);
+        }
+        catch (Exception e)
+        {
+            getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
+            throw new CreateTranscribeException(String.format("Unable to create Transcribe. REASON=[%s].", e.getMessage()), e);
+        }
+
+        if (exist)
+        {
+            getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
+            throw new CreateTranscribeException(String.format("The file with KEY=[%s] already exist on Amazon.", key));
+        }
     }
 
     private List<TranscribeItem> generateTranscribeItems(GetTranscriptionJobResult result) throws MuleException
@@ -288,12 +322,13 @@ public class AWSTranscribeService implements TranscribeService
             String text = "";
             List<AWSTranscriptItem> awsTranscriptItems = awsTranscript.getResult().getItems();
             int size = awsTranscriptItems.size();
+            boolean silentDetected = false;
             for (int i = 0; i < size; i++)
             {
                 AWSTranscriptItem awsTranscriptItem = awsTranscriptItems.get(i);
                 boolean punctuation = "punctuation".equalsIgnoreCase(awsTranscriptItem.getType());
 
-                if (!punctuation)
+                if (!punctuation && !silentDetected)
                 {
                     if (startTime == null && awsTranscriptItem.getStartTime() != null)
                     {
@@ -306,6 +341,11 @@ public class AWSTranscribeService implements TranscribeService
                     }
 
                     counter++;
+                }
+
+                if (!silentDetected)
+                {
+                    silentDetected = isSilentBetweenWordsBiggerThanConfigured(i, size, awsTranscriptItems);
                 }
 
                 if (awsTranscriptItem.getAlternatives() != null && awsTranscriptItem.getAlternatives().size() > 0)
@@ -326,7 +366,7 @@ public class AWSTranscribeService implements TranscribeService
                     }
                 }
 
-                if (counter >= configuration.getWordCountPerItem() || i == size - 1)
+                if (counter >= configuration.getWordCountPerItem() || i == size - 1 || silentDetected)
                 {
                     if (!isNextPunctuation(i, size, awsTranscriptItems))
                     {
@@ -335,7 +375,7 @@ public class AWSTranscribeService implements TranscribeService
                         item.setEndTime(endTime);
                         item.setText(text);
 
-                        int conf = confidence.intValue() == 0 || confidenceCounter == 0 ? 0 : confidence.multiply(new BigDecimal(100)).intValue() / confidenceCounter;
+                        int conf = confidence.multiply(new BigDecimal(100)).intValue() == 0 || confidenceCounter == 0 ? 0 : confidence.multiply(new BigDecimal(100)).intValue() / confidenceCounter;
                         item.setConfidence(conf);
 
                         items.add(item);
@@ -346,6 +386,7 @@ public class AWSTranscribeService implements TranscribeService
                         confidence = new BigDecimal("0");
                         confidenceCounter = 0;
                         text = "";
+                        silentDetected = false;
                     }
                 }
             }
@@ -364,6 +405,46 @@ public class AWSTranscribeService implements TranscribeService
         {
             return true;
         }
+        return false;
+    }
+
+    private boolean isSilentBetweenWordsBiggerThanConfigured(int i, int size, List<AWSTranscriptItem> awsTranscriptItems)
+    {
+        TranscribeConfiguration configuration;
+        try
+        {
+            configuration = getTranscribeConfigurationPropertiesService().get();
+        }
+        catch (GetConfigurationException e)
+        {
+            LOG.error("Cannot take configuration for 'Silent Between Words'. REASON=[{}]", e.getMessage());
+            return false;
+        }
+
+        if (i <= size - 2 && awsTranscriptItems.get(i) != null && !"punctuation".equalsIgnoreCase(awsTranscriptItems.get(i).getType()))
+        {
+            int j = i;
+            while(isNextPunctuation(j, size, awsTranscriptItems) && j <= size - 2)
+            {
+                j++;
+            }
+            if ((j + 1) < size && !"punctuation".equalsIgnoreCase(awsTranscriptItems.get(j + 1).getType()))
+            {
+                String currentEndTimeAsString = awsTranscriptItems.get(i).getEndTime();
+                String nextStartTimeAsString = awsTranscriptItems.get(j + 1).getStartTime();
+                BigDecimal silentBetweenWords = configuration.getSilentBetweenWords();
+                if (StringUtils.isNotEmpty(currentEndTimeAsString) && StringUtils.isNotEmpty(nextStartTimeAsString) && silentBetweenWords != null)
+                {
+                    BigDecimal currentEndTime = new BigDecimal(currentEndTimeAsString);
+                    BigDecimal nextStartTime = new BigDecimal(nextStartTimeAsString);
+                    if (nextStartTime.subtract(currentEndTime).compareTo(silentBetweenWords) == 1)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
 
@@ -465,5 +546,15 @@ public class AWSTranscribeService implements TranscribeService
     public void setCredentialConfigurationFileLocation(String credentialConfigurationFileLocation)
     {
         this.credentialConfigurationFileLocation = credentialConfigurationFileLocation;
+    }
+
+    public TranscribeEventPublisher getTranscribeEventPublisher()
+    {
+        return transcribeEventPublisher;
+    }
+
+    public void setTranscribeEventPublisher(TranscribeEventPublisher transcribeEventPublisher)
+    {
+        this.transcribeEventPublisher = transcribeEventPublisher;
     }
 }

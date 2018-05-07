@@ -14,7 +14,8 @@
                 "transcribe": "Transcribe",
                 "complete": "Complete",
                 "compile": "Compile",
-                "save": "Save"
+                "save": "Save",
+                "ok": "OK"
             },
             "startTime": "Start time",
             "confidence": "Confidence",
@@ -27,7 +28,17 @@
                 "confidence": "Confidence",
                 "wordCount": "Word Count",
                 "language": "Language",
-                "fileType": "File Type"
+                "fileType": "File Type",
+                "readyForTranscription": "Ready for Transcription"
+            },
+            "dialog": {
+                "title": "Is this completed Transcript or you want to save as processing?",
+                "processing": "Processing",
+                "completed": "Completed",
+                "cancel.title": "Do you want to cancel the transcription?",
+                "complete.title": "Do you want to complete the transcription?",
+                "transcribe.title": "This action will override existing transcription. Do you want to proceed?",
+                "compile.title": "This action will override existing file. Do you want to proceed?"
             }
         },
         "comp.eventHistory": {
@@ -122,6 +133,12 @@
             "message": {
                 "save.success": "File metadata are successfully updated",
                 "save.error": "Unable to update file metadata"
+            }
+        },
+        "transcribe":{
+            "email": {
+                "subject": "Transcription Status",
+                "body": "Action :action is performed under Transcription with ID :transcribeId for media file with name ':name'. Please check the status <a style=\"letter-spacing: 1px; text-align: center; font-size:44px;  font-family: Raleway , 'times new roman'; font-weight:400;\" href=\":host/home.html#!/viewer/:id/:containerId/:containerType/:name/:id\">here</a>."
             }
         }
     }

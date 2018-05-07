@@ -14,7 +14,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
             the Mule NullPayload.
         </description>
 
-        <vm:inbound-endpoint address="vm://copyFile.in" exchange-pattern="request-response" doc:name="Copy File"></vm:inbound-endpoint>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://copyFile.in" exchange-pattern="request-response" doc:name="Copy File"></vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 

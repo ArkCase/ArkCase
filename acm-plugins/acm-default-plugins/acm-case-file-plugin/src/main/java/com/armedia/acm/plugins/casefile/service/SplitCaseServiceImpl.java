@@ -128,8 +128,9 @@ public class SplitCaseServiceImpl implements SplitCaseService
         {
             if (participant.getParticipantLdapId().equals(auth.getName()))
                 continue;
-            if (ParticipantTypes.ASSIGNEE.equals(participant.getParticipantType())
+            if ((ParticipantTypes.ASSIGNEE.equals(participant.getParticipantType())
                     || ParticipantTypes.FOLLOWER.equals(participant.getParticipantType()))
+                    && !StringUtils.isEmpty(participant.getParticipantLdapId()))
             {
                 AcmParticipant copyParticipant = new AcmParticipant();
                 copyParticipant.setParticipantType(ParticipantTypes.FOLLOWER);

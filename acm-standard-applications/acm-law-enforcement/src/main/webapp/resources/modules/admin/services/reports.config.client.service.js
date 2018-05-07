@@ -132,6 +132,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
         return $http({
             method : "GET",
             url : "api/latest/plugin/report/" + data.report.key + "/groups",
+            cache : false,
             params : {
                 authorized : data.isAuthorized,
                 dir : (data.dir ? data.dir : ""),

@@ -43,6 +43,11 @@ public class MergeCaseFilesAPIController
 
         Objects.requireNonNull(mergeCaseOptions.getSourceCaseFileId(), "Source Id should not be null");
         Objects.requireNonNull(mergeCaseOptions.getTargetCaseFileId(), "Target Id should not be null");
+        if (mergeCaseOptions.getSourceCaseFileId().equals(mergeCaseOptions.getTargetCaseFileId()))
+        {
+            throw new AcmUserActionFailedException("Merge case file with id:[" + mergeCaseOptions.getSourceCaseFileId() + "]!", "CASE_FILE",
+                    mergeCaseOptions.getSourceCaseFileId(), "Cannot merge a case to itself!", null);
+        }
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         CaseFile targetCaseFile = mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
         return targetCaseFile;

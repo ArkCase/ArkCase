@@ -289,7 +289,7 @@
         "searchGroupHeader": "Grupo de pesquisa"
     },
     "complaints.comp.approvalRouting": {
-        "title": "Futuros aprovadores",
+        "title": "Aprovadores",
         "addNewTooltip": "Adicionar novo aprovador",
         "noBuckslipMessage": "Sem dados",
         "button": {

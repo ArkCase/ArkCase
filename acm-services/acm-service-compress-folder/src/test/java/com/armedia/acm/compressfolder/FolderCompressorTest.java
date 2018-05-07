@@ -10,6 +10,7 @@ import static org.junit.Assert.fail;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -258,7 +259,7 @@ public class FolderCompressorTest extends EasyMockSupport
             compressor.compressFolder(folderId);
             fail("should have gotten an exception");
         }
-        catch (FolderCompressorException expectedException)
+        catch (AcmFolderException expectedException)
         {
             assertEquals(String.format("No folder with id %d was found!", folderId), expectedException.getMessage());
         }
@@ -293,7 +294,7 @@ public class FolderCompressorTest extends EasyMockSupport
             compressor.compressFolder(folderId);
             fail("should have gotten an exception");
         }
-        catch (FolderCompressorException expectedException)
+        catch (AcmFolderException expectedException)
         {
             assertEquals(String.format("java.io.IOException: Resulting compressed file is bigger than %1$s", 1024),
                     expectedException.getMessage());

@@ -154,22 +154,6 @@
                 "configDescription": "Beschreibung",
                 "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
             },
-            "weather": {
-                "description": "Zeigt Wetter",
-                "label": {
-                    "current": "Aktuell:",
-                    "enterLocation": "Ort eingeben",
-                    "description": "Anzeige der aktuellen Temperatur einer Stadt",
-                    "location": "Ort",
-                    "insertLocationInConfiguration": "Bitte einen Ort in die Widget-Konfiguration einfügen",
-                    "zip": "Postleitzahl",
-                    "enterZip": "Postleitzahl eingeben"
-                },
-                "title": "Wetter",
-                "noDataMessage": "Derzeit gibt es keine Wetterinfo",
-                "configDescription": "Beschreibung",
-                "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
-            },
             "news": {
                 "description": "Zeigt Nachrichten",
                 "label": {
@@ -369,9 +353,6 @@
     },
     "dashboard.comp.news": {
         "title": "Nachrichten Widget"
-    },
-    "dashboard.comp.weather": {
-        "title": "Wetter Widget"
     },
     "dashboard.comp.myCases": {
         "title": "Mein Fall-Widget"

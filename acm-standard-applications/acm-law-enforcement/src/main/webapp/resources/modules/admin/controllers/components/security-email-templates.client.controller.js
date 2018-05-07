@@ -29,12 +29,17 @@ angular.module('admin')
                                 $scope.actionList = config.actions;
                                 $scope.sourceList = config.sources;
 
-                                gridHelper.addButton(config, "edit");
-                                gridHelper.addButton(config, "delete");
-                                gridHelper.setColumnDefs(config);
-                                gridHelper.setBasicOptions(config);
-                                gridHelper.disableGridScrolling(config);
-                                gridHelper.setUserNameFilterToConfig(promiseUsers, config);
+                                
+                                gridHelper.setUserNameFilterToConfig(promiseUsers, config).then(function(updatedConfig) {
+                                    $scope.config = updatedConfig;
+                                    if ($scope.gridApi != undefined)
+                                        $scope.gridApi.core.refresh();
+                                    gridHelper.addButton(updatedConfig, "edit");
+                                    gridHelper.addButton(updatedConfig, "delete");
+                                    gridHelper.setColumnDefs(updatedConfig);
+                                    gridHelper.setBasicOptions(updatedConfig);
+                                    gridHelper.disableGridScrolling(updatedConfig);
+                                });
                                 ReloadGrid();
                             });
 

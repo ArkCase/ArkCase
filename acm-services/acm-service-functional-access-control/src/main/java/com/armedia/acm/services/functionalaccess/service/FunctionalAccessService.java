@@ -25,6 +25,8 @@ public interface FunctionalAccessService
 
     public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, Authentication auth);
 
+    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, String userId);
+
     public Set<AcmUser> getUsersByRolesAndGroups(List<String> roles, Map<String, List<String>> rolesToGroups, String group,
             String currentAssignee);
 

@@ -84,6 +84,12 @@
             "modified": "Modificado el",
             "targetType": "Tipo de referencia",
             "status": "Estado"
+        },
+        "message": {
+            "delete": {
+                "success": "es_Reference deleted successfully",
+                "error": "es_Error deleting reference"
+            }
         }
     },
     "document-repository.comp.history": {
