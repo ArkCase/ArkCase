@@ -18,7 +18,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                     doc:name="Issue a quick search request to SOLR"></https:endpoint>
 
     <flow name="quickSearchQuery" doc:name="Quick Search Query Flow">
-        <vm:inbound-endpoint address="vm://quickSearchQuery.in" exchange-pattern="request-response" doc:name="VM"/>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://quickSearchQuery.in" exchange-pattern="request-response" doc:name="VM"/>
 
         <timer-interceptor/>
 

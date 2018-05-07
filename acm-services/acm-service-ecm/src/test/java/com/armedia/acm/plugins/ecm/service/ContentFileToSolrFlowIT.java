@@ -1,71 +1,107 @@
 package com.armedia.acm.plugins.ecm.service;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.search.model.solr.SolrContentDocument;
+import com.armedia.acm.services.search.service.SendDocumentsToSolr;
+import com.armedia.acm.web.api.MDCConstants;
 
-import org.junit.Ignore;
+import org.apache.chemistry.opencmis.client.api.Document;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/spring/spring-library-search-service-test-content-file-mule.xml",
-        "/spring/spring-mule-activemq.xml" })
+@ContextConfiguration(locations = {
+        "/spring/spring-library-add-file-mule.xml",
+        "/spring/spring-mule-activemq.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
+        "/spring/spring-library-object-lock.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-drools-rule-monitor.xml",
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-context-holder.xml"
+})
 public class ContentFileToSolrFlowIT
 {
     @Autowired
     private MuleContextManager muleContextManager;
 
+    @Autowired
+    private SendDocumentsToSolr sendDocumentsToSolr;
+
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    /**
-     * To run this test, just find a CMIS Object ID you want to test (by looking at your Alfresco installation), and
-     * plug that into the EcmFileId.
-     * 
-     * @throws Exception
-     */
     @Test
-    @Ignore
     public void sendFile() throws Exception
     {
-        EcmFile testFile = new EcmFile();
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-        DateFormat solrDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        String created = solrDateFormat.format(new Date());
-        Date date = solrDateFormat.parse(created);
+        String testPath = "/acm/test/folder";
+        Map<String, Object> folderMessageProperties = new HashMap<>();
+        folderMessageProperties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("alfresco"));
+        MuleMessage folderMessage = muleContextManager.send("vm://getTestFolderId.in", testPath, folderMessageProperties);
+        String folderId = folderMessage.getPayloadAsString();
 
-        testFile.setVersionSeriesId("workspace://SpacesStore/2b697afd-6e7a-474b-bf75-5fadcb29fa84");
-        testFile.setFileName("Clearance Denied 2015130-230216-658.docx");
-        testFile.setFileActiveVersionMimeType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        testFile.setFileId(4444444L);
-        testFile.setCreated(date);
-        testFile.setModified(date);
-        testFile.setCreator("ann-acm");
-        testFile.setModifier("marjan-acm");
+        Resource uploadFile = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
+        InputStream is = uploadFile.getInputStream();
 
-        Map<String, Object> headers = new HashMap<>();
+        EcmFile ecmFile = new EcmFile();
 
-        MuleMessage response = muleContextManager.send("jms://solrContentFile.in", testFile, headers);
+        ecmFile.setFileName("spring-library-ecm-plugin-test-mule.xml-" + System.currentTimeMillis());
+        ecmFile.setFileActiveVersionMimeType("text/plain");
 
-        assertTrue(response.getPayload() != null && response.getPayload() instanceof String);
+        Map<String, Object> messageProperties = new HashMap<>();
+        messageProperties.put("cmisFolderId", folderId);
+        messageProperties.put("inputStream", is);
 
-        assertNull(response.getExceptionPayload());
+        messageProperties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("alfresco"));
+        messageProperties.put("versioningState", "MAJOR");
+        MuleMessage message = muleContextManager.send("vm://addFile.in", ecmFile, messageProperties);
 
-        log.debug("response: " + response.getPayloadAsString());
+        assertNotNull(message);
+
+        Document found = message.getPayload(Document.class);
+        assertNotNull(found.getVersionSeriesId());
+        assertNotNull(found.getContentStreamMimeType());
+        assertNotNull(found.getVersionLabel());
+
+        log.debug("doc id: {}", found.getVersionSeriesId());
+
+        SolrContentDocument solrContentDocument = new SolrContentDocument();
+        solrContentDocument.setCmis_version_series_id_s(found.getVersionSeriesId());
+        solrContentDocument.setAdditionalProperty("cmis_repository_id_s", "alfresco");
+        solrContentDocument.setName("/spring/spring-library-ecm-plugin-test-mule" + System.currentTimeMillis() + ".xml");
+
+        sendDocumentsToSolr.sendSolrContentFileIndexDocuments(Collections.singletonList(solrContentDocument));
+
+        // wait for JMS to do its thing
+        Thread.sleep(30000);
 
     }
 }
