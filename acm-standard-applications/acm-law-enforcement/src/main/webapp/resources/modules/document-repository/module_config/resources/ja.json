@@ -84,6 +84,12 @@
             "modified": "変更された",
             "targetType": "参照型",
             "status": "状態"
+        },
+        "message": {
+            "delete": {
+                "success": "ja_Reference deleted successfully",
+                "error": "ja_Error deleting reference"
+            }
         }
     },
     "document-repository.comp.history": {

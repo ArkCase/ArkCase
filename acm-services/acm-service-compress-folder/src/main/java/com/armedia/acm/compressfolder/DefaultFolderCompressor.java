@@ -9,6 +9,7 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
@@ -99,13 +100,13 @@ public class DefaultFolderCompressor implements FolderCompressor
      * @see com.armedia.acm.compressfolder.FolderCompressor#compressFolder(java.lang.Long)
      */
     @Override
-    public String compressFolder(Long folderId) throws FolderCompressorException
+    public String compressFolder(Long folderId) throws AcmFolderException
     {
         return compressFolder(folderId, maxSize, sizeUnit);
     }
 
     @Override
-    public String compressFolder(CompressNode compressNode) throws FolderCompressorException
+    public String compressFolder(CompressNode compressNode) throws AcmFolderException
     {
         return compressFolder(compressNode.getRootFolderId(), compressNode, maxSize, sizeUnit);
     }
@@ -116,16 +117,16 @@ public class DefaultFolderCompressor implements FolderCompressor
      * com.armedia.acm.compressfolder.SizeUnit)
      */
     @Override
-    public String compressFolder(Long folderId, long size, SizeUnit sizeUnit) throws FolderCompressorException
+    public String compressFolder(Long folderId, long size, SizeUnit sizeUnit) throws AcmFolderException
     {
         return compressFolder(folderId, null, size, sizeUnit);
     }
 
     @Override
     public String compressFolder(Long folderId, CompressNode compressNode, long size, SizeUnit sizeUnit)
-            throws FolderCompressorException
+            throws AcmFolderException
     {
-        AcmFolder folder = Optional.ofNullable(folderService.findById(folderId)).orElseThrow(() -> new FolderCompressorException(folderId));
+        AcmFolder folder = Optional.ofNullable(folderService.findById(folderId)).orElseThrow(() -> new AcmFolderException(folderId));
 
         String filename = getCompressedFolderFilePath(folder);
         log.debug("ZIP creation: using [{}] as temporary file name", filename);
@@ -139,7 +140,7 @@ public class DefaultFolderCompressor implements FolderCompressor
         catch (AcmUserActionFailedException | AcmObjectNotFoundException | MuleException | IOException e)
         {
             FileUtils.deleteQuietly(file);
-            throw new FolderCompressorException(e);
+            throw new AcmFolderException(e);
         }
 
         return filename;
