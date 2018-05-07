@@ -84,6 +84,12 @@
             "modified": "更改日期",
             "targetType": "参考类型",
             "status": "状态"
+        },
+        "message": {
+            "delete": {
+                "success": "zh-cn_Reference deleted successfully",
+                "error": "zh-cn_Error deleting reference"
+            }
         }
     },
     "document-repository.comp.history": {
