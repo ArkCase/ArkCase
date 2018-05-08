@@ -22,10 +22,10 @@ angular.module('admin').factory('Admin.CalendarCredentialsConfigurationService',
          *
          * @returns {Object} http promise
          */
-        findInvalidOutlookFolderCreators : function() {
+        findInvalidOutlookFolderCreators: function() {
             return $http({
-                method : 'GET',
-                url : 'api/latest/service/calendar/exchange/configure/credentials/invalid'
+                method: 'GET',
+                url: 'api/latest/service/calendar/exchange/configure/credentials/invalid'
             });
         },
 
@@ -41,11 +41,11 @@ angular.module('admin').factory('Admin.CalendarCredentialsConfigurationService',
          *
          * @returns {Object} http promise
          */
-        saveOutlookFolderCreator : function(creator) {
+        saveOutlookFolderCreator: function(creator) {
             return $http({
-                method : 'PUT',
-                url : 'api/latest/service/calendar/exchange/configure',
-                data : creator
+                method: 'PUT',
+                url: 'api/latest/service/calendar/exchange/configure',
+                data: creator
             });
         }
     };

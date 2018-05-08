@@ -2,17 +2,17 @@
 angular.module('admin').service('Admin.ModalDialogService', [ '$modal', function($modal) {
 
     var modalDefaults = {
-        backdrop : true,
-        keyboard : true,
-        modalFade : true,
-        templateUrl : 'modules/admin/views/components/admin.modal.dialog.html'
+        backdrop: true,
+        keyboard: true,
+        modalFade: true,
+        templateUrl: 'modules/admin/views/components/admin.modal.dialog.html'
     };
 
     var modalOptions = {
-        closeButtonText : 'Close',
-        actionButtonText : 'OK',
-        headerText : 'Proceed?',
-        bodyText : 'Perform this action?'
+        closeButtonText: 'Close',
+        actionButtonText: 'OK',
+        headerText: 'Proceed?',
+        bodyText: 'Perform this action?'
     };
 
     this.showModal = function(customModalDefaults, customModalOptions) {

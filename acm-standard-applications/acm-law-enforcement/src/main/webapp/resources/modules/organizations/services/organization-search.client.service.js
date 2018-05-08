@@ -23,12 +23,12 @@ angular.module('services').factory('Organization.SearchService', [ '$resource', 
          * @param {String} query Query to send to the server
          * @returns {HttpPromise} Future info about faceted search
          */
-        queryFilteredSearch : {
-            method : 'GET',
-            url : "api/v1/plugin/organizations/search/:organizationId?q=:query",
-            cache : false,
-            isArray : false,
-            transformResponse : Util.transformSearchResponse
+        queryFilteredSearch: {
+            method: 'GET',
+            url: "api/v1/plugin/organizations/search/:organizationId?q=:query",
+            cache: false,
+            isArray: false,
+            transformResponse: Util.transformSearchResponse
         }
     });
 

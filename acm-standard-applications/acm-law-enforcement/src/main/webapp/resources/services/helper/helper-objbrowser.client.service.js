@@ -14,28 +14,15 @@
  */
 angular.module('services').factory(
         'Helper.ObjectBrowserService',
-        [
-                '$q',
-                '$resource',
-                '$translate',
-                '$timeout',
-                '$locale',
-                'Acm.StoreService',
-                'UtilService',
-                'ConfigService',
-                'ServCommService',
-                'MessageService',
-                'ObjectService',
-                'Config.LocaleService',
-                function($q, $resource, $translate, $timeout, $locale, Store, Util, ConfigService, ServCommService, MessageService,
-                        ObjectService, LocaleService) {
+        [ '$q', '$resource', '$translate', '$timeout', '$locale', 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService', 'MessageService', 'ObjectService', 'Config.LocaleService',
+                function($q, $resource, $translate, $timeout, $locale, Store, Util, ConfigService, ServCommService, MessageService, ObjectService, LocaleService) {
 
                     var SyncDataLoader = {
-                        data : {},
-                        getKey : function(moduleId, args) {
+                        data: {},
+                        getKey: function(moduleId, args) {
                             return moduleId + "_" + args.join("_");
                         },
-                        load : function(moduleId, dataLoadFunc, args, success, error) {
+                        load: function(moduleId, dataLoadFunc, args, success, error) {
                             var that = this;
                             var key = this.getKey(moduleId, args);
                             var entry = this.data[key];
@@ -60,15 +47,15 @@ angular.module('services').factory(
                             }
                             return entry;
                         },
-                        reset : function(moduleId, args) {
+                        reset: function(moduleId, args) {
                             var key = this.getKey(moduleId, args);
                             this.data[key] = null;
                         }
                     };
 
                     var Service = {
-                        VariableNames : {
-                            CURRENT_OBJECT_SETTING : "CurrentObjectSetting"
+                        VariableNames: {
+                            CURRENT_OBJECT_SETTING: "CurrentObjectSetting"
                         }
 
                         /**
@@ -94,7 +81,7 @@ angular.module('services').factory(
                          * 'tree-control' with $scope.treeControl.
                          */
                         ,
-                        Tree : function(arg) {
+                        Tree: function(arg) {
                             var that = this;
                             that.scope = arg.scope;
                             that.state = arg.state;
@@ -161,8 +148,7 @@ angular.module('services').factory(
                                 if (that.scope.treeControl) {
                                     that.scope.treeControl.setTitle(node.nodeType, node.nodeId, node.nodeTitle, node.nodeToolTip);
                                     if (that.updateTreeData && that.treeParams) {
-                                        that.updateTreeData(that.treeParams.start, that.treeParams.n, that.treeParams.sort,
-                                                that.treeParams.filters, that.treeParams.query, node);
+                                        that.updateTreeData(that.treeParams.start, that.treeParams.n, that.treeParams.sort, that.treeParams.filters, that.treeParams.query, node);
                                     }
                                 }
                             });
@@ -171,9 +157,7 @@ angular.module('services').factory(
                                 if (that.selectedObject && that.scope.treeControl) {
                                     var nodeType = Util.goodValue(that.selectedObject.nodeType);
                                     var nodeId = Util.goodValue(that.selectedObject.nodeId);
-                                    that.scope.treeControl.setTitle(nodeType, nodeId, $translate
-                                            .instant("common.directive.objectTree.errorNode.title"), $translate
-                                            .instant("common.directive.objectTree.errorNode.toolTip"));
+                                    that.scope.treeControl.setTitle(nodeType, nodeId, $translate.instant("common.directive.objectTree.errorNode.title"), $translate.instant("common.directive.objectTree.errorNode.toolTip"));
                                 }
                             });
 
@@ -211,8 +195,8 @@ angular.module('services').factory(
                                     var nodeId = eventData.objectId;
                                     var nodeType = (eventData.objectSubtype) ? eventData.objectSubtype : eventData.objectType;
                                     that.scope.treeControl.select({
-                                        nodeId : nodeId,
-                                        nodeType : nodeType
+                                        nodeId: nodeId,
+                                        nodeType: nodeType
                                     }, true);
                                 }
                             });
@@ -239,7 +223,7 @@ angular.module('services').factory(
                          *   $scope.userFullNames
                          */
                         ,
-                        Content : function(arg) {
+                        Content: function(arg) {
                             var that = this;
                             that.scope = arg.scope;
                             that.state = arg.state;
@@ -290,14 +274,14 @@ angular.module('services').factory(
                                 Service.updateObjectSetting(that.moduleId, linkId, objectId, objectType);
 
                                 var linkParams = {
-                                    objectType : objectType,
-                                    objectId : objectId,
-                                    linkId : linkId
+                                    objectType: objectType,
+                                    objectId: objectId,
+                                    linkId: linkId
                                 };
                                 var rc = that.scope.$broadcast('link-updated', linkParams);
 
                                 var stateParams = {
-                                    id : objectId
+                                    id: objectId
                                 };
                                 if (!Util.isEmpty(objectType)) {
                                     stateParams.type = objectType;
@@ -430,8 +414,7 @@ angular.module('services').factory(
                                             frevvoRequest = ServCommService.popRequest("frevvo", "close-complaint");
                                             break;
                                         case ObjectService.ObjectTypes.TIMESHEET:
-                                            frevvoRequest = ServCommService.popRequest("frevvo", "edit-timesheet")
-                                                    || ServCommService.popRequest("frevvo", "new-timesheet");
+                                            frevvoRequest = ServCommService.popRequest("frevvo", "edit-timesheet") || ServCommService.popRequest("frevvo", "new-timesheet");
                                             break;
                                         }
 
@@ -450,8 +433,7 @@ angular.module('services').factory(
 
                             };
 
-                            var objectSetting = Service
-                                    .updateObjectSetting(that.moduleId, null, that.stateParams.id, that.stateParams.type);
+                            var objectSetting = Service.updateObjectSetting(that.moduleId, null, that.stateParams.id, that.stateParams.type);
                             loadObject(objectSetting.objectId);
                         }
 
@@ -494,7 +476,7 @@ angular.module('services').factory(
                          *
                          */
                         ,
-                        Component : function(arg) {
+                        Component: function(arg) {
                             var that = this;
                             that.scope = arg.scope;
                             that.stateParams = arg.stateParams;
@@ -502,9 +484,9 @@ angular.module('services').factory(
                             that.componentId = arg.componentId;
                             that.retrieveObjectInfo = arg.retrieveObjectInfo;
                             that.currentObjectId = (arg.objectId ? that.scope.currentObjectId = arg.objectId : that.scope.currentObjectId = Service.getCurrentObjectId());
-                            
+
                             if (arg.resetComponentData) {
-                                SyncDataLoader.reset(arg.objectId ? that.moduleId + that.componentId : that.moduleId, [that.currentObjectId]);
+                                SyncDataLoader.reset(arg.objectId ? that.moduleId + that.componentId : that.moduleId, [ that.currentObjectId ]);
                             }
 
                             that.validateObjectInfo = (arg.validateObjectInfo) ? arg.validateObjectInfo : function(data) {
@@ -576,13 +558,13 @@ angular.module('services').factory(
                                 onObjectInfoUpdated(objectInfo, that.currentObjectId, e);
                             });
 
-                            that.scope.$on('report-object-refreshed', function (e, objectId) {
-                                SyncDataLoader.reset(arg.objectId ? that.moduleId + that.componentId : that.moduleId, [objectId]);
-                                SyncDataLoader.load(arg.objectId ? that.moduleId + that.componentId : that.moduleId, that.retrieveObjectInfo, [objectId], function (objectInfo) {
+                            that.scope.$on('report-object-refreshed', function(e, objectId) {
+                                SyncDataLoader.reset(arg.objectId ? that.moduleId + that.componentId : that.moduleId, [ objectId ]);
+                                SyncDataLoader.load(arg.objectId ? that.moduleId + that.componentId : that.moduleId, that.retrieveObjectInfo, [ objectId ], function(objectInfo) {
                                     that.scope.objectInfo = objectInfo;
                                     that.scope.$broadcast('object-refreshed', objectInfo, true);
                                     return objectInfo;
-                                }, function (error) {
+                                }, function(error) {
                                     that.scope.objectInfo = null;
                                     MessageService.error($translate.instant("common.objects.progressError") + " " + objectId);
                                     return error;
@@ -615,7 +597,7 @@ angular.module('services').factory(
                     };
 
                     Service.Tree.prototype = {
-                        onReset : function() {
+                        onReset: function() {
                             var that = this;
                             that.resetTreeData();
                             that.firstLoad = true;
@@ -637,7 +619,7 @@ angular.module('services').factory(
                          * A callback function to respond object tree events to load tree data of a given page
                          */
                         ,
-                        onLoad : function(start, n, sort, filters, query) {
+                        onLoad: function(start, n, sort, filters, query) {
                             var that = this;
 
                             var promiseTreeData = that.getTreeData(start, n, sort, filters, query);
@@ -650,9 +632,9 @@ angular.module('services').factory(
                                     return objectInfo;
                                 }, function(errorData) {
                                     var treeNode = {
-                                        nodeId : that.nodeId,
-                                        nodeType : "ERROR",
-                                        nodeToolTip : Util.goodMapValue(errorData, "data")
+                                        nodeId: that.nodeId,
+                                        nodeType: "ERROR",
+                                        nodeToolTip: Util.goodMapValue(errorData, "data")
                                     };
                                     deferNodeData.resolve(treeNode);
                                     return errorData;
@@ -663,8 +645,8 @@ angular.module('services').factory(
 
                             $q.all([ promiseTreeData, deferNodeData.promise ]).then(function(data) {
                                 var treeData = Util.goodValue(data[0], {
-                                    docs : [],
-                                    total : 0
+                                    docs: [],
+                                    total: 0
                                 });
                                 var treeNode = data[1];
 
@@ -677,8 +659,8 @@ angular.module('services').factory(
                                         var docs = _.clone(treeData.docs);
                                         docs.unshift(treeNode);
                                         treeData = {
-                                            docs : docs,
-                                            total : treeData.total + 1
+                                            docs: docs,
+                                            total: treeData.total + 1
                                         };
                                         selectNode = treeNode;
                                     }
@@ -687,17 +669,17 @@ angular.module('services').factory(
                                 that.scope.treeData = treeData;
                                 if (selectNode) {
                                     that.scope.treeControl.select({
-                                        pageStart : start,
-                                        nodeType : selectNode.nodeType,
-                                        nodeId : selectNode.nodeId,
-                                        subKey : that.subKey
+                                        pageStart: start,
+                                        nodeType: selectNode.nodeType,
+                                        nodeId: selectNode.nodeId,
+                                        subKey: that.subKey
                                     });
                                 }
                             });
                         }
 
                         ,
-                        onSelect : function(selectedObject) {
+                        onSelect: function(selectedObject) {
                             var that = this;
                             that.scope.$emit('req-select-object', selectedObject);
 
@@ -709,29 +691,29 @@ angular.module('services').factory(
                             var stateName = that.moduleId + "." + componentType;
 
                             var params = {
-                                id : selectedObject.nodeId,
-                                type : selectedObject.nodeType
+                                id: selectedObject.nodeId,
+                                type: selectedObject.nodeType
                             };
 
                             that.state.go(stateName, params);
                         }
 
                         ,
-                        findByNodeId : function(docs, nodeId) {
+                        findByNodeId: function(docs, nodeId) {
                             if (nodeId) {
                                 if (_.isNumber(nodeId)) {
                                     nodeId = nodeId.toString();
                                 }
                             }
                             return _.find(docs, {
-                                nodeId : nodeId
+                                nodeId: nodeId
                             });
                         }
                     };
 
                     Service.Content.prototype = {
 
-                        getCurrentObjectSetting : function() {
+                        getCurrentObjectSetting: function() {
                             return Service.getCurrentObjectSetting();
                         }
 
@@ -749,7 +731,7 @@ angular.module('services').factory(
                          * @description
                          * Notify Component Helper that Config data is processed
                          */
-                        doneConfig : function(config) {
+                        doneConfig: function(config) {
                             this.deferConfigDone.resolve(config);
                         }
 
@@ -789,10 +771,10 @@ angular.module('services').factory(
                         var objectSetting = objectSettingCache.get();
                         if (Util.isEmpty(objectSetting) || !Util.compare(objectSetting.moduleId, moduleId)) {
                             objectSetting = {
-                                moduleId : moduleId,
-                                objectId : objectId,
-                                objectType : objectType,
-                                linkId : "main"
+                                moduleId: moduleId,
+                                objectId: objectId,
+                                objectType: objectType,
+                                linkId: "main"
                             };
                         } else if (Util.goodPositive(objectId, false)) {
                             objectSetting.objectId = objectId;
@@ -907,26 +889,26 @@ angular.module('services').factory(
                         var componentLinks = [];
                         var treeConfig = Util.goodMapValue(config, "tree", {});
                         var foundNodeType = _.find(Util.goodMapValue(treeConfig, "nodeTypes", []), {
-                            "type" : "p/" + objType
+                            "type": "p/" + objType
                         });
                         if (foundNodeType) {
                             var componentsConfig = Util.goodMapValue(config, "components", []);
 
                             var leadComponent = Util.goodValue(foundNodeType.leadComponent, "main");
                             var leadConfig = _.find(componentsConfig, {
-                                id : leadComponent
+                                id: leadComponent
                             });
                             if (leadConfig) {
                                 componentLinks.push({
-                                    id : Util.goodValue(leadConfig.id),
-                                    title : Util.goodValue(leadConfig.title),
-                                    icon : Util.goodValue(leadConfig.icon)
+                                    id: Util.goodValue(leadConfig.id),
+                                    title: Util.goodValue(leadConfig.title),
+                                    icon: Util.goodValue(leadConfig.icon)
                                 });
                             }
 
                             _.each(Util.goodMapValue(foundNodeType, "components", []), function(component) {
                                 var foundComponent = _.find(componentsConfig, {
-                                    id : component
+                                    id: component
                                 });
                                 if (foundComponent) {
                                     var title = "";
@@ -937,9 +919,9 @@ angular.module('services').factory(
                                     }
 
                                     componentLinks.push({
-                                        id : Util.goodValue(foundComponent.id),
-                                        title : Util.goodValue(title),
-                                        icon : Util.goodValue(foundComponent.icon)
+                                        id: Util.goodValue(foundComponent.id),
+                                        title: Util.goodValue(title),
+                                        icon: Util.goodValue(foundComponent.icon)
                                     });
                                 }
                             });

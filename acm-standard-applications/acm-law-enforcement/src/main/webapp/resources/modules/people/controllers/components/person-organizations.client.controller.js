@@ -21,9 +21,8 @@ angular.module('people').controller(
                 'Object.LookupService',
                 'PermissionsService',
                 'Object.ModelService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication,
-                        OrganizationInfoService, MessageService, HelperUiGridService, HelperObjectBrowserService, ConfigService,
-                        PersonAssociationService, ObjectLookupService, PermissionsService, ObjectModelService) {
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, OrganizationInfoService, MessageService, HelperUiGridService, HelperObjectBrowserService, ConfigService, PersonAssociationService, ObjectLookupService, PermissionsService,
+                        ObjectModelService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -37,23 +36,23 @@ angular.module('people').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "people",
-                        componentId : "organizations",
-                        retrieveObjectInfo : PersonInfoService.getPersonInfo,
-                        validateObjectInfo : PersonInfoService.validatePersonInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "people",
+                        componentId: "organizations",
+                        retrieveObjectInfo: PersonInfoService.getPersonInfo,
+                        validateObjectInfo: PersonInfoService.validatePersonInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var validateOrganizationAssociation = function(data, rowEntity) {
                         var validationResult = {
-                            valid : true
+                            valid: true
                         };
 
                         $scope.objectInfo.organizationAssociations.filter(function(association) {
@@ -74,17 +73,17 @@ angular.module('people').controller(
                         $scope.organizationTypes = [];
                         for (var i = 0; i < organizationTypes.length; i++) {
                             $scope.organizationTypes.push({
-                                "key" : organizationTypes[i].inverseKey,
-                                "value" : organizationTypes[i].inverseValue,
-                                "inverseKey" : organizationTypes[i].key,
-                                "inverseValue" : organizationTypes[i].value
+                                "key": organizationTypes[i].inverseKey,
+                                "value": organizationTypes[i].inverseValue,
+                                "inverseKey": organizationTypes[i].key,
+                                "inverseValue": organizationTypes[i].value
                             });
                         }
                         return organizationTypes;
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -92,7 +91,7 @@ angular.module('people').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.PERSON
+                            objectType: ObjectService.ObjectTypes.PERSON
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -113,24 +112,24 @@ angular.module('people').controller(
                         };
 
                         var params = {
-                            showSetPrimary : true,
-                            types : $scope.organizationTypes,
-                            organizationId : rowEntity.organization.organizationId,
-                            organizationValue : rowEntity.organization.organizationValue,
-                            type : rowEntity.organizationToPersonAssociationType,
-                            isDefault : rowEntity === $scope.objectInfo.defaultOrganization,
-                            returnValueValidationFunction : validateEditRow
+                            showSetPrimary: true,
+                            types: $scope.organizationTypes,
+                            organizationId: rowEntity.organization.organizationId,
+                            organizationValue: rowEntity.organization.organizationValue,
+                            type: rowEntity.organizationToPersonAssociationType,
+                            isDefault: rowEntity === $scope.objectInfo.defaultOrganization,
+                            returnValueValidationFunction: validateEditRow
                         };
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-organization-modal.client.view.html',
-                            controller : 'Common.AddOrganizationModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                            controller: 'Common.AddOrganizationModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -167,22 +166,22 @@ angular.module('people').controller(
                     $scope.addOrganization = function() {
                         $scope.isFirstOrganization = $scope.gridOptions.data.length == 0 ? true : false;
                         var params = {
-                            showSetPrimary : true,
-                            isDefault : false,
-                            types : $scope.organizationTypes,
-                            returnValueValidationFunction : validateOrganizationAssociation,
-                            isFirstOrganization : $scope.isFirstOrganization
+                            showSetPrimary: true,
+                            isDefault: false,
+                            types: $scope.organizationTypes,
+                            returnValueValidationFunction: validateOrganizationAssociation,
+                            isFirstOrganization: $scope.isFirstOrganization
                         };
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-organization-modal.client.view.html',
-                            controller : 'Common.AddOrganizationModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                            controller: 'Common.AddOrganizationModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -209,7 +208,7 @@ angular.module('people').controller(
 
                     function savePersonAssociation(association, data) {
                         association.person = {
-                            id : $scope.objectInfo.id
+                            id: $scope.objectInfo.id
                         };
                         association.organization = data.organization;
                         association.personToOrganizationAssociationType = data.inverseType;

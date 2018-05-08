@@ -21,9 +21,8 @@ angular.module('organizations').controller(
                 'Object.LookupService',
                 'PermissionsService',
                 'Object.ModelService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, MessageService,
-                        Authentication, PersonInfoService, HelperUiGridService, HelperObjectBrowserService, OrganizationAssociationService,
-                        ConfigService, ObjectLookupService, PermissionsService, ObjectModelService) {
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, MessageService, Authentication, PersonInfoService, HelperUiGridService, HelperObjectBrowserService, OrganizationAssociationService, ConfigService, ObjectLookupService,
+                        PermissionsService, ObjectModelService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -36,22 +35,22 @@ angular.module('organizations').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "organizations",
-                        componentId : "people",
-                        retrieveObjectInfo : OrganizationInfoService.getOrganizationInfo,
-                        validateObjectInfo : OrganizationInfoService.validateOrganizationInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "organizations",
+                        componentId: "people",
+                        retrieveObjectInfo: OrganizationInfoService.getOrganizationInfo,
+                        validateObjectInfo: OrganizationInfoService.validateOrganizationInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -59,7 +58,7 @@ angular.module('organizations').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editOrganization', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.ORGANIZATION
+                            objectType: ObjectService.ObjectTypes.ORGANIZATION
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -79,7 +78,7 @@ angular.module('organizations').controller(
 
                     var validatePersonAssociation = function(data, rowEntity) {
                         var validationResult = {
-                            valid : true
+                            valid: true
                         };
 
                         $scope.objectInfo.personAssociations.filter(function(association) {
@@ -100,10 +99,10 @@ angular.module('organizations').controller(
                         $scope.personAssociationTypes = [];
                         for (var i = 0; i < types.length; i++) {
                             $scope.personAssociationTypes.push({
-                                "key" : types[i].inverseKey,
-                                "value" : types[i].inverseValue,
-                                "inverseKey" : types[i].key,
-                                "inverseValue" : types[i].value
+                                "key": types[i].inverseKey,
+                                "value": types[i].inverseValue,
+                                "inverseKey": types[i].key,
+                                "inverseValue": types[i].value
                             });
                         }
                         return types;
@@ -115,26 +114,26 @@ angular.module('organizations').controller(
                         };
 
                         var params = {
-                            selectExistingEnabled : false,
-                            showSetPrimary : true,
-                            types : $scope.personAssociationTypes,
-                            personId : rowEntity.person.id,
-                            person : rowEntity.person,
-                            personName : rowEntity.person.givenName + ' ' + rowEntity.person.familyName,
-                            type : rowEntity.personToOrganizationAssociationType,
-                            isDefault : $scope.isDefault(rowEntity),
-                            returnValueValidationFunction : validateEditRow
+                            selectExistingEnabled: false,
+                            showSetPrimary: true,
+                            types: $scope.personAssociationTypes,
+                            personId: rowEntity.person.id,
+                            person: rowEntity.person,
+                            personName: rowEntity.person.givenName + ' ' + rowEntity.person.familyName,
+                            type: rowEntity.personToOrganizationAssociationType,
+                            isDefault: $scope.isDefault(rowEntity),
+                            returnValueValidationFunction: validateEditRow
                         };
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-person-modal.client.view.html',
-                            controller : 'Common.AddPersonModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-person-modal.client.view.html',
+                            controller: 'Common.AddPersonModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -143,11 +142,10 @@ angular.module('organizations').controller(
                         modalInstance.result.then(function(data) {
                             if (data.person) {
                                 if (!data.person.id) {
-                                    PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(
-                                            function(savedPerson) {
-                                                data['person'] = savedPerson;
-                                                savePersonAssociation(rowEntity, data);
-                                            });
+                                    PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function(savedPerson) {
+                                        data['person'] = savedPerson;
+                                        savePersonAssociation(rowEntity, data);
+                                    });
                                 } else {
                                     savePersonAssociation(rowEntity, data);
                                 }
@@ -162,22 +160,22 @@ angular.module('organizations').controller(
 
                     $scope.addPerson = function() {
                         var params = {
-                            showSetPrimary : true,
-                            isDefault : !hasPeople(),
-                            types : $scope.personAssociationTypes,
-                            returnValueValidationFunction : validatePersonAssociation,
-                            hideNoField : !hasPeople()
+                            showSetPrimary: true,
+                            isDefault: !hasPeople(),
+                            types: $scope.personAssociationTypes,
+                            returnValueValidationFunction: validatePersonAssociation,
+                            hideNoField: !hasPeople()
                         };
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-person-modal.client.view.html',
-                            controller : 'Common.AddPersonModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-person-modal.client.view.html',
+                            controller: 'Common.AddPersonModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }

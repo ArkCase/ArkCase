@@ -2,7 +2,7 @@
 
 angular.module('cost-tracking').run([ 'Menus', 'ConfigService', function(Menus, ConfigService) {
     var config = ConfigService.getModule({
-        moduleId : 'cost-tracking'
+        moduleId: 'cost-tracking'
     });
     config.$promise.then(function(config) {
         if (config.menus) {

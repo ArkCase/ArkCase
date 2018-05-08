@@ -23,11 +23,11 @@ angular.module('admin').factory('Admin.CalendarConfigurationService', [ '$http',
          *
          * @returns {Object} http promise
          */
-        saveCalendarConfiguration : function(calendarConfig) {
+        saveCalendarConfiguration: function(calendarConfig) {
             return $http({
-                method : 'PUT',
-                url : 'api/v1/service/calendar/configure',
-                data : calendarConfig
+                method: 'PUT',
+                url: 'api/v1/service/calendar/configure',
+                data: calendarConfig
             });
         },
         /**
@@ -41,10 +41,10 @@ angular.module('admin').factory('Admin.CalendarConfigurationService', [ '$http',
          *
          * @returns {Object} http promise
          */
-        getCurrentCalendarConfiguration : function() {
+        getCurrentCalendarConfiguration: function() {
             return $http({
-                method : 'GET',
-                url : 'api/v1/service/calendar/configure'
+                method: 'GET',
+                url: 'api/v1/service/calendar/configure'
             });
         },
         /**
@@ -59,11 +59,11 @@ angular.module('admin').factory('Admin.CalendarConfigurationService', [ '$http',
          *
          * @returns {Object} http promise
          */
-        validateCalendarConfigurationSystemEmail : function(emailCredentials) {
+        validateCalendarConfigurationSystemEmail: function(emailCredentials) {
             return $http({
-                method : 'PUT',
-                url : 'api/v1/service/calendar/configure/validate',
-                data : emailCredentials
+                method: 'PUT',
+                url: 'api/v1/service/calendar/configure/validate',
+                data: emailCredentials
             });
         }
     };
