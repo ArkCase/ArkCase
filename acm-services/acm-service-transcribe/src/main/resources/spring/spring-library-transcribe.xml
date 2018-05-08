@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://www.springframework.org/schema/beans"
-    xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="transcribeArkCaseBeanUtils" class="com.armedia.acm.objectonverter.ArkCaseBeanUtils">
         <property name="excludeFields">
@@ -18,23 +17,23 @@
     <bean id="transcribeItemDao" class="com.armedia.acm.services.transcribe.dao.TranscribeItemDao"/>
 
     <bean id="transcribeConfigurationPropertiesService"
-        class="com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService">
+          class="com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService">
         <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
 
     <bean id="awsTranscribeConfigurationPropertiesService"
-        class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeConfigurationPropertiesService">
+          class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeConfigurationPropertiesService">
         <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
 
     <bean id="transcribeBusinessRulesExecutor" class="com.armedia.acm.services.transcribe.rules.TranscribeBusinessRulesExecutor"
-        parent="simpleStatelessSingleObjectRuleManager">
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-transcribe-rules.xlsx"/>
     </bean>
 
     <bean id="transcribeBusinessProcessRulesExecutor"
-        class="com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor"
-        parent="simpleStatelessSingleObjectRuleManager">
+          class="com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-transcribe-business-process-rules.xlsx"/>
     </bean>
 
@@ -47,7 +46,7 @@
         <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
     </bean>
     <bean id="transcribeBusinessProcessHandler"
-        class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeBusinessProcessHandler">
+          class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeBusinessProcessHandler">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
@@ -68,7 +67,7 @@
     </bean>
 
     <bean id="awsTranscribeService" class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeService"
-        init-method="init">
+          init-method="init">
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="awsTranscribeConfigurationPropertiesService" ref="awsTranscribeConfigurationPropertiesService"/>
         <property name="muleContextManager" ref="muleContextManager"/>
@@ -83,7 +82,7 @@
 
     <bean id="transcribeEventPublisher" class="com.armedia.acm.services.transcribe.service.TranscribeEventPublisher"/>
 
-    <bean id="arkCaseTranscribeService" class="com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService">
+    <bean id="arkCaseTranscribeService" class="com.armedia.acm.services.transcribe.service.ArkCaseTranscribeServiceImpl">
         <property name="transcribeDao" ref="transcribeDao"/>
         <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
         <property name="pipelineManager" ref="transcribePipelineManager"/>
@@ -100,7 +99,6 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="labelManagementService" ref="labelManagementService"/>
         <property name="acmApplication" ref="acmApplication"/>
-        <aop:scoped-proxy proxy-target-class="true"/>
     </bean>
 
     <bean id="transcribeToSolrTransformer" class="com.armedia.acm.services.transcribe.transformer.TranscribeToSolrTransformer">
