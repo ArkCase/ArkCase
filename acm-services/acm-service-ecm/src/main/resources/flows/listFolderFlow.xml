@@ -12,7 +12,8 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
             The children elements will be returned from the folder.
         </description>
 
-        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://listFolder.in" exchange-pattern="request-response" doc:name="List Folder"></vm:inbound-endpoint>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://listFolder.in" exchange-pattern="request-response"
+            doc:name="List Folder"></vm:inbound-endpoint>
 
         <enricher target="#[flowVars['children']]">
             <cmis:folder config-ref="#[message.inboundProperties.configRef]" get="CHILDREN"

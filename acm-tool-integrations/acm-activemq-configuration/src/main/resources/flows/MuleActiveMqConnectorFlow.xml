@@ -17,7 +17,8 @@
         <notification event="MESSAGE-PROCESSOR"/>
     </notifications>
 
-    <jms:activemq-connector name="ActiveMQ-ACM" specification="1.1" brokerURL="${ark.activemq.transportConnectorURI}" validateConnections="true"
+    <jms:activemq-connector name="ActiveMQ-ACM" specification="1.1" brokerURL="${ark.activemq.transportConnectorURI}"
+        validateConnections="true"
         doc:name="Active MQ" connectionFactory-ref="jmsConnectionFactory" maxRedelivery="10" disableTemporaryReplyToDestinations="true"/>
 
     <!-- since we are not using ActiveMQ for the VM transport, we need to setup a vm connector -->
