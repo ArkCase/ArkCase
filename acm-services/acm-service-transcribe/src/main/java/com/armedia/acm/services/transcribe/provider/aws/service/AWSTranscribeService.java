@@ -39,6 +39,7 @@ import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -151,25 +152,25 @@ public class AWSTranscribeService implements TranscribeService
     @Override
     public List<Transcribe> getAll() throws GetTranscribeException
     {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Transcribe> getAllByStatus(String status) throws GetTranscribeException
     {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Transcribe> getPage(int start, int n) throws GetTranscribeException
     {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Transcribe> getPageByStatus(int start, int n, String status) throws GetTranscribeException
     {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
