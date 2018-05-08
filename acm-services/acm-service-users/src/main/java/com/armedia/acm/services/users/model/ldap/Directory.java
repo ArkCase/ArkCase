@@ -11,10 +11,18 @@ import java.util.function.Function;
 
 public enum Directory
 {
-    activedirectory("yyyyMMddHHmmss.0VV", "cn", MapperUtils.convertFileTimeTimestampToDate,
-            MapperUtils.activeDirectoryPasswordToAttribute, MapperUtils.activeDirectoryPasswordToAttribute),
-    openldap("yyyyMMddHHmmssVV", "uid", MapperUtils.calculatePasswordExpirationDateByShadowAccount,
-                    MapperUtils.openLdapPasswordToAttribute, MapperUtils.openLdapCurrentPasswordToAttribute);
+    activedirectory(
+            "yyyyMMddHHmmss.0VV",
+            "cn",
+            MapperUtils.convertFileTimeTimestampToDate,
+            MapperUtils.activeDirectoryPasswordToAttribute,
+            MapperUtils.activeDirectoryPasswordToAttribute),
+    openldap(
+            "yyyyMMddHHmmssVV",
+            "uid",
+            MapperUtils.calculatePasswordExpirationDateByShadowAccount,
+            MapperUtils.openLdapPasswordToAttribute,
+            MapperUtils.openLdapCurrentPasswordToAttribute);
 
     private final String datePattern;
     private final String userRdnAttribute;

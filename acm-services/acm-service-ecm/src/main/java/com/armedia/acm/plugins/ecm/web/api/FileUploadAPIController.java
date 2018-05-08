@@ -43,14 +43,12 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
 public class FileUploadAPIController
 {
+    private final String uploadFileType = "attachment";
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
     private ObjectConverter objectConverter;
     private ArkPermissionEvaluator arkPermissionEvaluator;
-
-    private final String uploadFileType = "attachment";
 
     // #parentObjectType == 'USER_ORG' applies to uploading profile picture
     @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile') or #parentObjectType == 'USER_ORG'")

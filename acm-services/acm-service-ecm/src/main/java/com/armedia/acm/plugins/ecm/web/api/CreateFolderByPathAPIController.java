@@ -41,16 +41,14 @@ import java.util.stream.Collectors;
 public class CreateFolderByPathAPIController
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AcmContainerDao containerDao;
     private AcmFolderService folderService;
     private EcmFileService ecmFileService;
     private FolderAndFilesUtils folderAndFilesUtils;
     private ArkPermissionEvaluator arkPermissionEvaluator;
-
     private FolderEventPublisher folderEventPublisher;
     private FileEventPublisher fileEventPublisher;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/createFolderByPath", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

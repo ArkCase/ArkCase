@@ -29,22 +29,10 @@ import java.util.List;
 public class CalendarFolderHandler
 {
 
-    @FunctionalInterface
-    public static interface CalendarFolderHandlerCallback
-    {
-
-        void callback(AcmOutlookUser outlookUser, Long objectId, String objectType, String folderName, AcmContainer container,
-                List<AcmParticipant> participants);
-
-    }
-
     private Logger log = LoggerFactory.getLogger(getClass());
-
     @PersistenceContext
     private EntityManager em;
-
     private String entityTypeForQuery;
-
     private String entityIdForQuery;
 
     /**
@@ -98,6 +86,15 @@ public class CalendarFolderHandler
     public void setEntityIdForQuery(String entityIdForQuery)
     {
         this.entityIdForQuery = entityIdForQuery;
+    }
+
+    @FunctionalInterface
+    public static interface CalendarFolderHandlerCallback
+    {
+
+        void callback(AcmOutlookUser outlookUser, Long objectId, String objectType, String folderName, AcmContainer container,
+                List<AcmParticipant> participants);
+
     }
 
 }

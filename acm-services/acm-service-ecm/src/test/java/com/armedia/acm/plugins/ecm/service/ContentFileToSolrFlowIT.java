@@ -48,13 +48,11 @@ import java.util.UUID;
 })
 public class ContentFileToSolrFlowIT
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private MuleContextManager muleContextManager;
-
     @Autowired
     private SendDocumentsToSolr sendDocumentsToSolr;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Test
     public void sendFile() throws Exception

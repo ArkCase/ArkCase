@@ -17,19 +17,24 @@
     <bean id="transcribeDao" class="com.armedia.acm.services.transcribe.dao.TranscribeDao"/>
     <bean id="transcribeItemDao" class="com.armedia.acm.services.transcribe.dao.TranscribeItemDao"/>
 
-    <bean id="transcribeConfigurationPropertiesService" class="com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService">
+    <bean id="transcribeConfigurationPropertiesService"
+        class="com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService">
         <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
 
-    <bean id="awsTranscribeConfigurationPropertiesService" class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeConfigurationPropertiesService">
+    <bean id="awsTranscribeConfigurationPropertiesService"
+        class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeConfigurationPropertiesService">
         <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
 
-    <bean id="transcribeBusinessRulesExecutor" class="com.armedia.acm.services.transcribe.rules.TranscribeBusinessRulesExecutor" parent="simpleStatelessSingleObjectRuleManager">
+    <bean id="transcribeBusinessRulesExecutor" class="com.armedia.acm.services.transcribe.rules.TranscribeBusinessRulesExecutor"
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-transcribe-rules.xlsx"/>
     </bean>
 
-    <bean id="transcribeBusinessProcessRulesExecutor" class="com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor" parent="simpleStatelessSingleObjectRuleManager">
+    <bean id="transcribeBusinessProcessRulesExecutor"
+        class="com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor"
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-transcribe-business-process-rules.xlsx"/>
     </bean>
 
@@ -41,7 +46,8 @@
         <property name="transcribeBusinessRulesExecutor" ref="transcribeBusinessRulesExecutor"/>
         <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
     </bean>
-    <bean id="transcribeBusinessProcessHandler" class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeBusinessProcessHandler">
+    <bean id="transcribeBusinessProcessHandler"
+        class="com.armedia.acm.services.transcribe.pipline.postsave.TranscribeBusinessProcessHandler">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="transcribeEventPublisher" ref="transcribeEventPublisher"/>
@@ -61,7 +67,8 @@
         </property>
     </bean>
 
-    <bean id="awsTranscribeService" class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeService" init-method="init">
+    <bean id="awsTranscribeService" class="com.armedia.acm.services.transcribe.provider.aws.service.AWSTranscribeService"
+        init-method="init">
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="awsTranscribeConfigurationPropertiesService" ref="awsTranscribeConfigurationPropertiesService"/>
         <property name="muleContextManager" ref="muleContextManager"/>

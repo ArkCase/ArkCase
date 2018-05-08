@@ -28,10 +28,10 @@ import java.util.stream.Collectors;
  */
 public class GroupRemoveUUIDExecutor implements AcmDataUpdateExecutor
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private AcmGroupDao groupDao;
     private GroupUUIDUpdateDao uuidUpdateDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public String getUpdateId()

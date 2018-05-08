@@ -34,13 +34,11 @@ import java.util.List;
 public class AssociateTagAPIController
 {
 
+    private final static int ZERO = 0;
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AssociatedTagService associatedTagService;
     private TagService tagService;
     private AssociatedTagEventPublisher associatedTagEventPublisher;
-
-    private final static int ZERO = 0;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @PreAuthorize("hasPermission(#objectId, #objectType, 'addTag')")
     @RequestMapping(value = "{objectId}/{objectType}/{objectTitle}/{tagId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)

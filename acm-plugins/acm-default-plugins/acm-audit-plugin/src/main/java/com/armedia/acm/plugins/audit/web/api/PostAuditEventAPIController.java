@@ -42,10 +42,9 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/plugin/audit", "/api/latest/plugin/audit" })
 public class PostAuditEventAPIController implements ApplicationEventPublisherAware
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private ApplicationEventPublisher applicationEventPublisher;
     private EcmFileDao ecmFileDao;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/event", method = RequestMethod.POST)
     @ResponseBody

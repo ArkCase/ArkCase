@@ -97,6 +97,12 @@ public class AcmMilestone implements Serializable, AcmEntity
         return created;
     }
 
+    @Override
+    public void setCreated(Date created)
+    {
+        this.created = created;
+    }
+
     public LocalDate getMilestoneDate()
     {
         return milestoneDate;
@@ -115,12 +121,6 @@ public class AcmMilestone implements Serializable, AcmEntity
     public void setMilestoneName(String milestoneName)
     {
         this.milestoneName = milestoneName;
-    }
-
-    @Override
-    public void setCreated(Date created)
-    {
-        this.created = created;
     }
 
     @Override

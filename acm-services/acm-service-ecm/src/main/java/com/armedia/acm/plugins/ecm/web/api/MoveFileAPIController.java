@@ -31,10 +31,9 @@ import javax.servlet.http.HttpSession;
 public class MoveFileAPIController
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileService fileService;
     private FileEventPublisher fileEventPublisher;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @PreAuthorize("hasPermission(#in.id, 'FILE', 'read|group-read|write|group-write') and hasPermission(#in.folderId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/moveToAnotherContainer/{targetObjectType}/{targetObjectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

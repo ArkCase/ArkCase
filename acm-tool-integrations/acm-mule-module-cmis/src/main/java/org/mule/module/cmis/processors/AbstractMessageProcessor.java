@@ -41,8 +41,17 @@ public abstract class AbstractMessageProcessor<O>
     protected FlowConstruct flowConstruct;
 
     /**
+     * Retrieves muleContext
+     *
+     */
+    public MuleContext getMuleContext()
+    {
+        return this.muleContext;
+    }
+
+    /**
      * Sets muleContext
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -52,32 +61,23 @@ public abstract class AbstractMessageProcessor<O>
     }
 
     /**
-     * Retrieves muleContext
-     * 
+     * Retrieves flowConstruct
+     *
      */
-    public MuleContext getMuleContext()
+    public FlowConstruct getFlowConstruct()
     {
-        return this.muleContext;
+        return this.flowConstruct;
     }
 
     /**
      * Sets flowConstruct
-     * 
+     *
      * @param value
      *            Value to set
      */
     public void setFlowConstruct(FlowConstruct value)
     {
         this.flowConstruct = value;
-    }
-
-    /**
-     * Retrieves flowConstruct
-     * 
-     */
-    public FlowConstruct getFlowConstruct()
-    {
-        return this.flowConstruct;
     }
 
     /**

@@ -29,10 +29,9 @@ import javax.servlet.http.HttpSession;
 public class MoveFolderAPIController
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AcmFolderService folderService;
     private FolderEventPublisher folderEventPublisher;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @PreAuthorize("hasPermission(#folderToMoveId, 'FOLDER', 'read|group-read|write|group-write') and hasPermission(#dstFolderId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/folder/move/{folderToMoveId}/{dstFolderId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

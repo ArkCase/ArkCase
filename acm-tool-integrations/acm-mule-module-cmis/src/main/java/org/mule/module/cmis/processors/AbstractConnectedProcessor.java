@@ -26,8 +26,17 @@ public abstract class AbstractConnectedProcessor
     protected String _cxfPortProviderType;
 
     /**
+     * Retrieves baseUrl
+     *
+     */
+    public Object getBaseUrl()
+    {
+        return this.baseUrl;
+    }
+
+    /**
      * Sets baseUrl
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -37,17 +46,17 @@ public abstract class AbstractConnectedProcessor
     }
 
     /**
-     * Retrieves baseUrl
-     * 
+     * Retrieves username
+     *
      */
-    public Object getBaseUrl()
+    public Object getUsername()
     {
-        return this.baseUrl;
+        return this.username;
     }
 
     /**
      * Sets username
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -57,17 +66,17 @@ public abstract class AbstractConnectedProcessor
     }
 
     /**
-     * Retrieves username
-     * 
+     * Retrieves connectionTimeout
+     *
      */
-    public Object getUsername()
+    public Object getConnectionTimeout()
     {
-        return this.username;
+        return this.connectionTimeout;
     }
 
     /**
      * Sets connectionTimeout
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -77,17 +86,17 @@ public abstract class AbstractConnectedProcessor
     }
 
     /**
-     * Retrieves connectionTimeout
-     * 
+     * Retrieves useAlfrescoExtension
+     *
      */
-    public Object getConnectionTimeout()
+    public Object getUseAlfrescoExtension()
     {
-        return this.connectionTimeout;
+        return this.useAlfrescoExtension;
     }
 
     /**
      * Sets useAlfrescoExtension
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -97,17 +106,17 @@ public abstract class AbstractConnectedProcessor
     }
 
     /**
-     * Retrieves useAlfrescoExtension
-     * 
+     * Retrieves cxfPortProvider
+     *
      */
-    public Object getUseAlfrescoExtension()
+    public Object getCxfPortProvider()
     {
-        return this.useAlfrescoExtension;
+        return this.cxfPortProvider;
     }
 
     /**
      * Sets cxfPortProvider
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -117,17 +126,17 @@ public abstract class AbstractConnectedProcessor
     }
 
     /**
-     * Retrieves cxfPortProvider
-     * 
+     * Retrieves repositoryId
+     *
      */
-    public Object getCxfPortProvider()
+    public Object getRepositoryId()
     {
-        return this.cxfPortProvider;
+        return this.repositoryId;
     }
 
     /**
      * Sets repositoryId
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -137,17 +146,17 @@ public abstract class AbstractConnectedProcessor
     }
 
     /**
-     * Retrieves repositoryId
-     * 
+     * Retrieves password
+     *
      */
-    public Object getRepositoryId()
+    public Object getPassword()
     {
-        return this.repositoryId;
+        return this.password;
     }
 
     /**
      * Sets password
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -157,32 +166,23 @@ public abstract class AbstractConnectedProcessor
     }
 
     /**
-     * Retrieves password
-     * 
+     * Retrieves endpoint
+     *
      */
-    public Object getPassword()
+    public Object getEndpoint()
     {
-        return this.password;
+        return this.endpoint;
     }
 
     /**
      * Sets endpoint
-     * 
+     *
      * @param value
      *            Value to set
      */
     public void setEndpoint(Object value)
     {
         this.endpoint = value;
-    }
-
-    /**
-     * Retrieves endpoint
-     * 
-     */
-    public Object getEndpoint()
-    {
-        return this.endpoint;
     }
 
 }

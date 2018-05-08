@@ -1,5 +1,8 @@
 package com.armedia.acm.plugins.admin.web.api;
 
+import com.armedia.acm.plugins.admin.model.TimesheetConfig;
+import com.armedia.acm.plugins.admin.service.TimesheetConfigurationService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -9,12 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.armedia.acm.plugins.admin.model.TimesheetConfig;
-import com.armedia.acm.plugins.admin.service.TimesheetConfigurationService;
-
 @Controller
-@RequestMapping({"/api/v1/service/timesheet/config", "/api/latest/service/timesheet/config"})
-public class TimesheetConfigurationAPIController {
+@RequestMapping({ "/api/v1/service/timesheet/config", "/api/latest/service/timesheet/config" })
+public class TimesheetConfigurationAPIController
+{
 
     private TimesheetConfigurationService timesheetConfigurationService;
 
@@ -22,7 +23,7 @@ public class TimesheetConfigurationAPIController {
     @ResponseBody
     public ResponseEntity<TimesheetConfig> getTimesheetConfig()
     {
-       return new ResponseEntity<>(getTimesheetConfigurationService().getConfig(), HttpStatus.OK);
+        return new ResponseEntity<>(getTimesheetConfigurationService().getConfig(), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -32,11 +33,13 @@ public class TimesheetConfigurationAPIController {
         getTimesheetConfigurationService().saveConfig(timesheetConfig);
     }
 
-    public TimesheetConfigurationService getTimesheetConfigurationService() {
+    public TimesheetConfigurationService getTimesheetConfigurationService()
+    {
         return timesheetConfigurationService;
     }
 
-    public void setTimesheetConfigurationService(TimesheetConfigurationService timesheetConfigurationService) {
+    public void setTimesheetConfigurationService(TimesheetConfigurationService timesheetConfigurationService)
+    {
         this.timesheetConfigurationService = timesheetConfigurationService;
     }
 }

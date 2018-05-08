@@ -15,11 +15,6 @@ public enum TimePeriodForSearch
         this.period = period;
     }
 
-    public String getPeriod()
-    {
-        return period;
-    }
-
     public static TimePeriodForSearch getTimePeriod(String text)
     {
         for (TimePeriodForSearch attribute : values())
@@ -30,5 +25,10 @@ public enum TimePeriodForSearch
             }
         }
         return TimePeriodForSearch.NONE;
+    }
+
+    public String getPeriod()
+    {
+        return period;
     }
 }

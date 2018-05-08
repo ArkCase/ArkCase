@@ -22,20 +22,18 @@ public class MaxThroughputAwareFileOutputStream extends FileOutputStream
 {
 
     /**
-     * Logger instance.
-     */
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
-     * Total number of bytes written so far.
-     */
-    private long totalBytes;
-
-    /**
      * Calculated maximum number of bytes that this stream is allowed to write. It can not be reset. Negative value
      * means there is no limit to the number of bytes to be written by this stream.
      */
     private final long maxBytes;
+    /**
+     * Logger instance.
+     */
+    private Logger log = LoggerFactory.getLogger(getClass());
+    /**
+     * Total number of bytes written so far.
+     */
+    private long totalBytes;
 
     /**
      * Construct a new instance of the stream with calculating the maximum number of bytes to be written by this stream.

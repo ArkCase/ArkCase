@@ -42,12 +42,10 @@ import java.util.regex.Pattern;
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class ContactMethod implements Serializable, AcmEntity, AcmObject
 {
+    public static final Pattern EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
+            Pattern.CASE_INSENSITIVE);
     private static final long serialVersionUID = 1827685289454605556L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-    public static final Pattern EMAIL_ADDRESS_REGEX =
-            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-
-
     @Id
     @TableGenerator(name = "contact_method_gen", table = "acm_contact_method_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_contact_method", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "contact_method_gen")

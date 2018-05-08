@@ -10,6 +10,8 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 public class WidgetRoleName
 {
 
+    private String name;
+
     public WidgetRoleName()
     {
         super();
@@ -19,8 +21,6 @@ public class WidgetRoleName
     {
         this.name = name;
     }
-
-    private String name;
 
     public String getName()
     {

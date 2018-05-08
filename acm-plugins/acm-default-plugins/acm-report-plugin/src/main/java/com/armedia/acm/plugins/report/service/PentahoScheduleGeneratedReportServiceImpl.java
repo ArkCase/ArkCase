@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.report.model.PentahoFileProperties;
 import com.armedia.acm.plugins.report.model.PentahoReportFiles;
 import com.armedia.acm.scheduler.AcmSchedulableBean;
+
 import org.apache.commons.ssl.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,41 +36,43 @@ public class PentahoScheduleGeneratedReportServiceImpl implements AcmSchedulable
     @Override
     public void executeTask()
     {
-        //create credential for auth
+        // create credential for auth
         createCredentialHeaders();
         restTemplate = new RestTemplate();
 
-        //get generate report metadata
+        // get generate report metadata
         pentahoReportFiles = getPentahoFilePropertiesService().consumeXML(headers, restTemplate);
         if (pentahoReportFiles != null && pentahoReportFiles.getPentahoFilePropertiesList() != null)
         {
-            pentahoReportFiles.getPentahoFilePropertiesList().forEach(pentahoFileProperties ->
-            {
+            pentahoReportFiles.getPentahoFilePropertiesList().forEach(pentahoFileProperties -> {
                 try
                 {
-                    //download generated report
+                    // download generated report
                     LOGGER.info("Downloading report [{}] from Pentaho", pentahoFileProperties.getName());
                     getDownloadService().downloadReport(headers, restTemplate, pentahoFileProperties.getName());
 
-                    //upload report to ArkCase
+                    // upload report to ArkCase
                     EcmFile reportFile = uploadReportToArkCase(pentahoFileProperties);
 
-                    //remove generated report by file id
+                    // remove generated report by file id
                     getPentahoRemoveGeneratedReportService().removeReport(headers, restTemplate, pentahoFileProperties.getId());
 
                     LOGGER.info("Successfully uploaded scheduled report [{}] to ArkCase", reportFile.getFileName());
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     LOGGER.error("Failed to upload generated report to ArkCase", e);
                 }
             });
-        } else
+        }
+        else
         {
             LOGGER.info("Did not find any scheduled report output files to download");
         }
     }
 
-    private EcmFile uploadReportToArkCase(PentahoFileProperties pentahoFileProperties) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    private EcmFile uploadReportToArkCase(PentahoFileProperties pentahoFileProperties)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
         byte[] data = getDownloadService().getResponse().getBody();
         InputStream inputStream = new ByteArrayInputStream(data);

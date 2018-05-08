@@ -35,32 +35,24 @@ import java.util.List;
 @RunWith(EasyMockRunner.class)
 public class CaptureFileWatcherTest extends EasyMockSupport
 {
+    // do not put a period before the extension
+    private final String allowedFileExtensions = "pdf,xml";
     @Mock
     private FileObject mockFileObject;
-
     @Mock
     private ApplicationEventPublisher mockPublisher;
-
     @Mock
     private FileChangeEvent mockFileChangeEvent;
-
     @Mock
     private FileName mockFileName;
-
     private FileWatcher unit;
     private String fileSeparator = File.separator;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     private boolean runningOnWindows = System.getProperty("os.name").startsWith("Windows");
-
     // for this test to pass, Windows and Linux require different file URL prefixes
     private final String fileUrlPrefix = runningOnWindows ? "file:///C:" : "file:///";
-
     private final String baseFolderPath = fileUrlPrefix + fileSeparator + "temp";
-
-    // do not put a period before the extension
-    private final String allowedFileExtensions = "pdf,xml";
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

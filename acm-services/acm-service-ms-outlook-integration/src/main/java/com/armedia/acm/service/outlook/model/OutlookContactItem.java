@@ -13,19 +13,14 @@ public class OutlookContactItem extends OutlookItem
     private String emailAddress2;
     private String completeName;
 
-    public void setSurname(String surname)
-    {
-        this.surname = surname;
-    }
-
     public String getSurname()
     {
         return surname;
     }
 
-    public void setDisplayName(String displayName)
+    public void setSurname(String surname)
     {
-        this.displayName = displayName;
+        this.surname = surname;
     }
 
     public String getDisplayName()
@@ -33,9 +28,9 @@ public class OutlookContactItem extends OutlookItem
         return displayName;
     }
 
-    public void setCompanyName(String companyName)
+    public void setDisplayName(String displayName)
     {
-        this.companyName = companyName;
+        this.displayName = displayName;
     }
 
     public String getCompanyName()
@@ -43,9 +38,9 @@ public class OutlookContactItem extends OutlookItem
         return companyName;
     }
 
-    public void setEmailAddress1(String emailAddress1)
+    public void setCompanyName(String companyName)
     {
-        this.emailAddress1 = emailAddress1;
+        this.companyName = companyName;
     }
 
     public String getEmailAddress1()
@@ -53,9 +48,9 @@ public class OutlookContactItem extends OutlookItem
         return emailAddress1;
     }
 
-    public void setPrimaryTelephone(String primaryTelephone)
+    public void setEmailAddress1(String emailAddress1)
     {
-        this.primaryTelephone = primaryTelephone;
+        this.emailAddress1 = emailAddress1;
     }
 
     public String getPrimaryTelephone()
@@ -63,9 +58,9 @@ public class OutlookContactItem extends OutlookItem
         return primaryTelephone;
     }
 
-    public void setEmailAddress2(String emailAddress2)
+    public void setPrimaryTelephone(String primaryTelephone)
     {
-        this.emailAddress2 = emailAddress2;
+        this.primaryTelephone = primaryTelephone;
     }
 
     public String getEmailAddress2()
@@ -73,14 +68,19 @@ public class OutlookContactItem extends OutlookItem
         return emailAddress2;
     }
 
-    public void setCompleteName(String completeName)
+    public void setEmailAddress2(String emailAddress2)
     {
-        this.completeName = completeName;
+        this.emailAddress2 = emailAddress2;
     }
 
     public String getCompleteName()
     {
         return completeName;
+    }
+
+    public void setCompleteName(String completeName)
+    {
+        this.completeName = completeName;
     }
 
     @Override

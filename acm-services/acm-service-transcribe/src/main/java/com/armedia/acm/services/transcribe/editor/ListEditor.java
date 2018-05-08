@@ -1,6 +1,7 @@
 package com.armedia.acm.services.transcribe.editor;
 
 import com.armedia.acm.services.transcribe.model.TranscribeServiceProvider;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.beans.PropertyEditorSupport;
@@ -18,7 +19,7 @@ public class ListEditor extends PropertyEditorSupport
     {
         if (getValue() instanceof List && getValue() != null)
         {
-            return StringUtils.join((List)getValue(), ", ");
+            return StringUtils.join((List) getValue(), ", ");
         }
 
         return "";
@@ -30,7 +31,8 @@ public class ListEditor extends PropertyEditorSupport
         if (text != null)
         {
             List<String> items = Arrays.asList(text.split("\\s*,\\s*"));
-            List<TranscribeServiceProvider> providers = items.stream().map(item -> TranscribeServiceProvider.valueOf(item)).collect(Collectors.toList());
+            List<TranscribeServiceProvider> providers = items.stream().map(item -> TranscribeServiceProvider.valueOf(item))
+                    .collect(Collectors.toList());
             setValue(providers);
             return;
         }

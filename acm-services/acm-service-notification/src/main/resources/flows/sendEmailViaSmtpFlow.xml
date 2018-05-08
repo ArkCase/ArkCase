@@ -15,7 +15,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
     <flow name="sendEmailViaSmtp" doc:name="Send notification to the user by email using Smtp protocol.">
 
-        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://sendEmailViaSmtp.in" exchange-pattern="request-response"
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://sendEmailViaSmtp.in" exchange-pattern="request-response"
             doc:name="Send Email"></vm:inbound-endpoint>
         <scripting:transformer name="urlEncodeTransformer">
             <scripting:script engine="groovy">

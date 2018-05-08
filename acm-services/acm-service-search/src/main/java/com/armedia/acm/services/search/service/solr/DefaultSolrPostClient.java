@@ -13,10 +13,9 @@ import java.util.Objects;
 public class DefaultSolrPostClient implements SolrPostClient
 {
 
+    private transient final Logger logger = LoggerFactory.getLogger(getClass());
     private String solrUpdateHandler;
     private SolrRestClient solrRestClient;
-
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void sendToSolr(SolrCore core, String json) throws SolrPostException

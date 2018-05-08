@@ -23,17 +23,14 @@ import java.util.Map;
  */
 public class SetRecordMetadataService extends AlfrescoService<String> implements InitializingBean
 {
+    private final RestTemplate restTemplate;
+    private final String service = "/s/api/node";
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     private BigDecimal alfrescoRmaModuleVersion;
     private String publicationDateField;
     private String originatorField;
     private String originatingOrganizationField;
     private String dateReceivedField;
-
-    private final RestTemplate restTemplate;
-
-    private final String service = "/s/api/node";
-
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     public SetRecordMetadataService()
     {

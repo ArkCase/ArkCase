@@ -213,13 +213,13 @@ public class SplitCaseServiceImpl implements SplitCaseService
         this.acmTaskService = acmTaskService;
     }
 
-    public void setSplitCaseFileBusinessRule(SplitCaseFileBusinessRule splitCaseFileBusinessRule)
-    {
-        this.splitCaseFileBusinessRule = splitCaseFileBusinessRule;
-    }
-
     public SplitCaseFileBusinessRule getSplitCaseFileBusinessRule()
     {
         return splitCaseFileBusinessRule;
+    }
+
+    public void setSplitCaseFileBusinessRule(SplitCaseFileBusinessRule splitCaseFileBusinessRule)
+    {
+        this.splitCaseFileBusinessRule = splitCaseFileBusinessRule;
     }
 }

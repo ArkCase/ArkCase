@@ -66,6 +66,11 @@ public class ListCaseFilesByUserAPIController
         return caseFileDao;
     }
 
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
+        this.caseFileDao = caseFileDao;
+    }
+
     public CaseFileEventUtility getCaseFileEventUtility()
     {
         return caseFileEventUtility;
@@ -74,11 +79,6 @@ public class ListCaseFilesByUserAPIController
     public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
     {
         this.caseFileEventUtility = caseFileEventUtility;
-    }
-
-    public void setCaseFileDao(CaseFileDao caseFileDao)
-    {
-        this.caseFileDao = caseFileDao;
     }
 
 }

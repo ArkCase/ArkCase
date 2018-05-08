@@ -34,10 +34,9 @@ import java.util.Map;
 public class UpdateFileMetadataAPIController implements ApplicationEventPublisherAware
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileService ecmFileService;
     private ApplicationEventPublisher applicationEventPublisher;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/metadata/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

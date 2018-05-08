@@ -16,6 +16,8 @@ public class TimeSheetPage extends ArkCaseTestBase
     public WebElement firstIframe;
     @FindBy(how = How.XPATH, using = "/html/body/iframe")
     public WebElement secondIframe;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td[2]/a")
+    public WebElement searchedName;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[9]/div[2]/table/tbody/tr/td[4]/div/div[1]/input[1]")
     WebElement typeDropDown;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[9]/div[2]/table/tbody/tr/td[4]/div/div[1]/ul/li[2]/a")
@@ -52,8 +54,6 @@ public class TimeSheetPage extends ArkCaseTestBase
     WebElement goBtn;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/header/div/div/div/input")
     WebElement seachForUserInput;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td[2]/a")
-    public WebElement searchedName;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td[3]")
     WebElement searchedType;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td[5]")

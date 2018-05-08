@@ -18,10 +18,8 @@ import java.io.IOException;
  */
 public class WindowsEventLogger implements ISystemLogger
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     private static final String level = "Information";
-
+    private Logger log = LoggerFactory.getLogger(getClass());
     private AcmApplication acmApplication;
     private int eventId;
 

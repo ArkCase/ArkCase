@@ -37,16 +37,6 @@ public class AcmObjectReplaced extends AcmObjectChange implements AcmChangeDispl
         this.newObject = newObject;
     }
 
-    public void setOldValue(String displayOldValue)
-    {
-        this.displayOldValue = displayOldValue;
-    }
-
-    public void setNewValue(String displayNewValue)
-    {
-        this.displayNewValue = displayNewValue;
-    }
-
     @Override
     public boolean isLeaf()
     {
@@ -59,9 +49,19 @@ public class AcmObjectReplaced extends AcmObjectChange implements AcmChangeDispl
         return displayOldValue;
     }
 
+    public void setOldValue(String displayOldValue)
+    {
+        this.displayOldValue = displayOldValue;
+    }
+
     @Override
     public String getNewValue()
     {
         return displayNewValue;
+    }
+
+    public void setNewValue(String displayNewValue)
+    {
+        this.displayNewValue = displayNewValue;
     }
 }

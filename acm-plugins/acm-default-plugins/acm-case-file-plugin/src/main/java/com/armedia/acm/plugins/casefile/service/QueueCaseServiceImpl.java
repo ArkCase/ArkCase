@@ -22,15 +22,12 @@ import javax.persistence.EntityNotFoundException;
  */
 public class QueueCaseServiceImpl implements QueueCaseService
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private PipelineManager<CaseFile, CaseFilePipelineContext> queuePipelineManager;
     private CaseFileDao caseFileDao;
-
     private UserTrackerService userTrackerService;
     private AcmQueueDao acmQueueDao;
-
     private CaseFileRulesHandler rulesHandler;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     @Transactional

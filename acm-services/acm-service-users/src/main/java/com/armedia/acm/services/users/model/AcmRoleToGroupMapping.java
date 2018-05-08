@@ -18,26 +18,9 @@ import java.util.stream.Stream;
 
 public class AcmRoleToGroupMapping
 {
+    public static final String GROUP_NAME_WILD_CARD = "@*";
     private Map<String, String> roleToGroupMap;
     private AcmGroupDao groupDao;
-    public static final String GROUP_NAME_WILD_CARD = "@*";
-
-    public void reloadRoleToGroupMap(Properties properties)
-    {
-        roleToGroupMap = properties.entrySet()
-                .stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().toString(), entry -> entry.getValue().toString()));
-    }
-
-    public Map<String, List<String>> getGroupToRolesMap()
-    {
-        // generate all value-key pairs from the original map and then group the keys by these values
-        return getRoleToGroupsMap().entrySet().stream()
-                .flatMap(entry -> entry.getValue().stream()
-                        .map(it -> new AbstractMap.SimpleEntry<>(it, entry.getKey())))
-                .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey,
-                        Collectors.mapping(AbstractMap.SimpleEntry::getValue, Collectors.toList())));
-    }
 
     public static Function<String, Stream<String>> mapGroupsString(Function<String, List<AcmGroup>> findGroup)
     {
@@ -54,6 +37,23 @@ public class AcmRoleToGroupMapping
                 return Stream.of(group);
             }
         };
+    }
+
+    public void reloadRoleToGroupMap(Properties properties)
+    {
+        roleToGroupMap = properties.entrySet()
+                .stream()
+                .collect(Collectors.toMap(entry -> entry.getKey().toString(), entry -> entry.getValue().toString()));
+    }
+
+    public Map<String, List<String>> getGroupToRolesMap()
+    {
+        // generate all value-key pairs from the original map and then group the keys by these values
+        return getRoleToGroupsMap().entrySet().stream()
+                .flatMap(entry -> entry.getValue().stream()
+                        .map(it -> new AbstractMap.SimpleEntry<>(it, entry.getKey())))
+                .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey,
+                        Collectors.mapping(AbstractMap.SimpleEntry::getValue, Collectors.toList())));
     }
 
     public Map<String, Set<String>> getRoleToGroupsMap()

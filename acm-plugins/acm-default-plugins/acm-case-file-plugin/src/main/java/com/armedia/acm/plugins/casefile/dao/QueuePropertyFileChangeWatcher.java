@@ -29,13 +29,10 @@ import java.util.stream.Collectors;
  */
 public class QueuePropertyFileChangeWatcher implements ApplicationListener<AbstractConfigurationFileEvent>
 {
-    private AcmQueueDao acmQueueDao;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     // What should be the value of the user?
     private static final String QUEUE_CREATOR = "SYSTEM_USER";
-
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private AcmQueueDao acmQueueDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     private PlatformTransactionManager txManager;

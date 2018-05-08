@@ -2,7 +2,7 @@
 
 angular.module('tasks').run([ 'Menus', 'ConfigService', function(Menus, ConfigService) {
     var config = ConfigService.getModule({
-        moduleId : 'tasks'
+        moduleId: 'tasks'
     });
     config.$promise.then(function(config) {
         if (config.menus) {

@@ -1,17 +1,17 @@
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-site-widget-user-constraints" author="joseph.mcgrady">
         <addForeignKeyConstraint baseTableName="acm_site"
-                                 baseColumnNames="cm_site_user"
-                                 constraintName="fk_cm_site_user"
-                                 referencedTableName="acm_user"
-                                 referencedColumnNames="cm_user_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            baseColumnNames="cm_site_user"
+            constraintName="fk_cm_site_user"
+            referencedTableName="acm_user"
+            referencedColumnNames="cm_user_id"
+            deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
 </databaseChangeLog>

@@ -2,29 +2,17 @@
 
 angular.module('organizations').controller(
         'Organizations.InfoController',
-        [
-                '$rootScope',
-                '$scope',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'Organization.InfoService',
-                'Helper.ObjectBrowserService',
-                'Object.LookupService',
-                'ObjectAssociation.Service',
-                'Organization.SearchService',
-                'UtilService',
-                function($rootScope, $scope, $stateParams, $translate, $modal, OrganizationInfoService, HelperObjectBrowserService,
-                        ObjectLookupService, ObjectAssociationService, OrganizationSearchService, Util) {
+        [ '$rootScope', '$scope', '$stateParams', '$translate', '$modal', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', 'Organization.SearchService', 'UtilService',
+                function($rootScope, $scope, $stateParams, $translate, $modal, OrganizationInfoService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, OrganizationSearchService, Util) {
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "organizations",
-                        componentId : "info",
-                        retrieveObjectInfo : OrganizationInfoService.getOrganizationInfo,
-                        validateObjectInfo : OrganizationInfoService.validateOrganizationInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "organizations",
+                        componentId: "info",
+                        retrieveObjectInfo: OrganizationInfoService.getOrganizationInfo,
+                        validateObjectInfo: OrganizationInfoService.validateOrganizationInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -33,10 +21,10 @@ angular.module('organizations').controller(
                     ObjectLookupService.getOrganizationRelationTypes().then(function(relationshipTypes) {
                         for (var i = 0; i < relationshipTypes.length; i++) {
                             $scope.relationshipTypes.push({
-                                "key" : relationshipTypes[i].inverseKey,
-                                "value" : relationshipTypes[i].inverseValue,
-                                "inverseKey" : relationshipTypes[i].key,
-                                "inverseValue" : relationshipTypes[i].value
+                                "key": relationshipTypes[i].inverseKey,
+                                "value": relationshipTypes[i].inverseValue,
+                                "inverseKey": relationshipTypes[i].key,
+                                "inverseValue": relationshipTypes[i].value
                             });
                         }
 
@@ -62,12 +50,12 @@ angular.module('organizations').controller(
                         externalSearchParams.organizationId = $scope.organizationId;
 
                         var params = {
-                            showSetPrimary : false,
-                            types : $scope.relationshipTypes,
-                            showDescription : true,
-                            infoType : true,
-                            externalSearchServiceName : "Organization.SearchService",
-                            externalSearchParams : externalSearchParams
+                            showSetPrimary: false,
+                            types: $scope.relationshipTypes,
+                            showDescription: true,
+                            infoType: true,
+                            externalSearchServiceName: "Organization.SearchService",
+                            externalSearchParams: externalSearchParams
                         };
                         if (!!isSelectedParent) {
                             params.organization = $scope.objectInfo;
@@ -75,14 +63,14 @@ angular.module('organizations').controller(
                         }
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-organization-modal.client.view.html',
-                            controller : 'Common.AddOrganizationModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                            controller: 'Common.AddOrganizationModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }

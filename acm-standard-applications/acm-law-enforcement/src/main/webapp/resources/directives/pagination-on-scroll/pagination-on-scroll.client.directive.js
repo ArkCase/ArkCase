@@ -22,12 +22,12 @@
 
 angular.module('directives').directive('paginationOnScroll', [ 'UtilService', function(Util) {
     return {
-        restrict : 'A',
-        scope : {
-            loadMore : "&",
-            resetScrollPx : "=?"
+        restrict: 'A',
+        scope: {
+            loadMore: "&",
+            resetScrollPx: "=?"
         },
-        link : function(scope, elem, attr) {
+        link: function(scope, elem, attr) {
             elem.bind("scroll", function() {
                 if (Util.isEmpty(scope.resetScrollPx) || scope.resetScrollPx) {
                     var scrolledpx = 0;

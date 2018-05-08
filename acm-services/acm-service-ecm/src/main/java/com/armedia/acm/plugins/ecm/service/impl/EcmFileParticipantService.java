@@ -31,17 +31,15 @@ import java.util.stream.Collectors;
  */
 public class EcmFileParticipantService
 {
+    private static List<String> fileParticipantTypes = Arrays.asList("*", "group-write", "group-read", "group-no-access", "write", "read",
+            "no-access");
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     private EcmFileDao fileDao;
     private AcmFolderDao folderDao;
     private AcmFolderService folderService;
     private AcmParticipantService participantService;
     private Properties ecmFileServiceProperties;
     private EcmFileParticipantServiceHelper fileParticipantServiceHelper;
-
-    private static List<String> fileParticipantTypes = Arrays.asList("*", "group-write", "group-read", "group-no-access", "write", "read",
-            "no-access");
 
     /**
      * Sets the file's participants from the parent folder's participants and persists the file instance with the

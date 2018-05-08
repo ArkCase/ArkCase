@@ -3,7 +3,9 @@
  */
 package com.armedi.acm.services.timesheet.service;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.services.pipeline.PipelineManager;

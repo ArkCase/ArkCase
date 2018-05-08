@@ -7,9 +7,9 @@ public interface AcmChangeDisplayable
 {
     String getOldValue();
 
-    String getNewValue();
-
     void setOldValue(String oldValue);
+
+    String getNewValue();
 
     void setNewValue(String oldValue);
 }

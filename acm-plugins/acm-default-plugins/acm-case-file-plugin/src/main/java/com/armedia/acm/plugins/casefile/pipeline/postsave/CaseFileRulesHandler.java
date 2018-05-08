@@ -17,14 +17,13 @@ public class CaseFileRulesHandler implements PipelineHandler<CaseFile, CaseFileP
 {
 
     /**
-     * Business rule manager.
-     */
-    private SaveCaseFileBusinessRule saveRule;
-
-    /**
      * Logger instance.
      */
     private final Logger log = LoggerFactory.getLogger(getClass());
+    /**
+     * Business rule manager.
+     */
+    private SaveCaseFileBusinessRule saveRule;
 
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException

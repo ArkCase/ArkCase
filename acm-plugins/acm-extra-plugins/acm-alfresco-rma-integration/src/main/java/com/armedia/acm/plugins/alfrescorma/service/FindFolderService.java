@@ -16,13 +16,10 @@ import java.util.Properties;
  */
 public class FindFolderService extends AlfrescoService<Folder>
 {
-    private EcmFileService ecmFileService;
-
-    private String rmaRootFolder;
-
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
-
     private static final String BASE_PATH = "/Sites/rm/documentLibrary/";
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private EcmFileService ecmFileService;
+    private String rmaRootFolder;
     private Properties alfrescoRmaPluginProperties;
 
     /**
@@ -104,13 +101,13 @@ public class FindFolderService extends AlfrescoService<Folder>
         this.rmaRootFolder = rmaRootFolder;
     }
 
-    public void setAlfrescoRmaPluginProperties(Properties alfrescoRmaPluginProperties)
-    {
-        this.alfrescoRmaPluginProperties = alfrescoRmaPluginProperties;
-    }
-
     public Properties getAlfrescoRmaPluginProperties()
     {
         return alfrescoRmaPluginProperties;
+    }
+
+    public void setAlfrescoRmaPluginProperties(Properties alfrescoRmaPluginProperties)
+    {
+        this.alfrescoRmaPluginProperties = alfrescoRmaPluginProperties;
     }
 }
