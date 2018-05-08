@@ -1,5 +1,16 @@
 package com.armedia.acm.services.transcribe.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -9,9 +20,16 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.transcribe.dao.TranscribeDao;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
-import com.armedia.acm.services.transcribe.model.*;
+import com.armedia.acm.services.transcribe.model.Transcribe;
+import com.armedia.acm.services.transcribe.model.TranscribeActionType;
+import com.armedia.acm.services.transcribe.model.TranscribeBusinessProcessModel;
+import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
+import com.armedia.acm.services.transcribe.model.TranscribeServiceProvider;
+import com.armedia.acm.services.transcribe.model.TranscribeStatusType;
+import com.armedia.acm.services.transcribe.model.TranscribeType;
 import com.armedia.acm.services.transcribe.pipline.TranscribePipelineContext;
 import com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.runtime.ProcessInstanceQuery;
@@ -27,11 +45,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/01/2018
@@ -341,7 +354,8 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
             verify(transcribeDao).findByMediaVersionId(version.getId());
 
             assertTrue(e instanceof CreateTranscribeException);
-            assertEquals("Creating Transcribe job is aborted. There is already Transcribe object for MEDIA_FILE_VERSION_ID=[101]", e.getMessage());
+            assertEquals("Creating Transcribe job is aborted. There is already Transcribe object for MEDIA_FILE_VERSION_ID=[101]",
+                    e.getMessage());
         }
     }
 
@@ -414,7 +428,8 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         model.setStart(true);
 
         when(transcribeBusinessProcessRulesExecutor.applyRules(any())).thenReturn(model);
-        when(activitiRuntimeService.startProcessInstanceByKey(eq(model.getName()), (Map<String, Object>) any())).thenReturn(processInstance);
+        when(activitiRuntimeService.startProcessInstanceByKey(eq(model.getName()), (Map<String, Object>) any()))
+                .thenReturn(processInstance);
         when(processInstance.getId()).thenReturn("123");
 
         arkCaseTranscribeService.startBusinessProcess(transcribe);

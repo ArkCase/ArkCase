@@ -151,13 +151,13 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
         this.ruleSpreadsheetFilename = ruleSpreadsheetFilename;
     }
 
-    public void setRuleFileLocation(String ruleFileLocation)
-    {
-        this.ruleFileLocation = ruleFileLocation;
-    }
-
     public String getRuleFileLocation()
     {
         return ruleFileLocation;
+    }
+
+    public void setRuleFileLocation(String ruleFileLocation)
+    {
+        this.ruleFileLocation = ruleFileLocation;
     }
 }

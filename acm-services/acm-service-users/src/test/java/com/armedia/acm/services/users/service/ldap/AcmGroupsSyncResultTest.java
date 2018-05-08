@@ -30,6 +30,13 @@ public class AcmGroupsSyncResultTest
 {
     private AcmGroupsSyncResult unit;
 
+    private static Set<String> fromArray(String... elements)
+    {
+        return new HashSet<>(Arrays.asList(elements));
+    }
+
+    // @formatter:off
+
     @Before
     public void setup()
     {
@@ -37,6 +44,7 @@ public class AcmGroupsSyncResultTest
     }
 
     // @formatter:off
+
     /**
      * Group A ->
      * member cn=1,cn=Users
@@ -88,6 +96,7 @@ public class AcmGroupsSyncResultTest
     }
 
     // @formatter:off
+
     /**
      * ldap state db state
      * Group A -> AcmGroup A ->
@@ -145,6 +154,7 @@ public class AcmGroupsSyncResultTest
     }
 
     // @formatter:off
+
     /**
      * Group A -> AcmGroup A ->
      * member cn=1,cn=Users member cn=1,cn=Users
@@ -195,6 +205,7 @@ public class AcmGroupsSyncResultTest
     }
 
     // @formatter:off
+
     /**
      * ldap state db state
      *
@@ -279,6 +290,7 @@ public class AcmGroupsSyncResultTest
     }
 
     // @formatter:off
+
     /**
      * ldap state db state
      * Group A -> AcmGroup A ->
@@ -351,7 +363,6 @@ public class AcmGroupsSyncResultTest
         assertThat("Ascendants string for group C should be", modifiedGroupsByName.get("C").getAscendantsList(), is("A,D"));
     }
 
-    // @formatter:off
     /**
      * ldap state db state
      *
@@ -504,11 +515,6 @@ public class AcmGroupsSyncResultTest
     private Set<AcmGroup> groupSet(AcmGroup... groups)
     {
         return Arrays.stream(groups).collect(Collectors.toSet());
-    }
-
-    private static Set<String> fromArray(String... elements)
-    {
-        return new HashSet<>(Arrays.asList(elements));
     }
 
     private Map<String, AcmGroup> getGroupByName(List<AcmGroup> groups)

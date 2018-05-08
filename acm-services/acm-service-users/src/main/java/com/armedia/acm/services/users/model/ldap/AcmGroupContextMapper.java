@@ -7,6 +7,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.DefaultIncrementalAttributesMapper;
 
 import javax.naming.directory.Attribute;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +53,8 @@ public class AcmGroupContextMapper implements ContextMapper
         {
             // AFDP-5761 Support 'range' in member attribute for large group sizes.
             if (Directory.activedirectory.equals(Directory.valueOf(acmLdapSyncConfig.getDirectoryType()))
-                    && Collections.list(adapter.getAttributes().getAll()).stream().map(Attribute::getID).anyMatch(id -> id.contains("range=")))
+                    && Collections.list(adapter.getAttributes().getAll()).stream().map(Attribute::getID)
+                            .anyMatch(id -> id.contains("range=")))
             {
                 // Incrementally retrieve all members from large groups
                 List<String> members = DefaultIncrementalAttributesMapper.lookupAttributeValues(template, adapter.getDn(), "member");

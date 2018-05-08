@@ -5,6 +5,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.transcribe.dao.TranscribeDao;
 import com.armedia.acm.services.transcribe.model.Transcribe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -46,21 +46,6 @@ import java.util.Map;
 public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
         extends EasyMockSupport
 {
-    private MockMvc mockMvc;
-    private MockHttpSession mockHttpSession;
-    private Map<String, String> mockAuditProperties;
-
-    private GetAuditByObjectTypeAndObjectIdAPIController unit;
-
-    private AuditDao mockAuditDao;
-    private Authentication mockAuthentication;
-    private ReplaceEventTypeNames mockReplaceEventTypeNames;
-
-    @Autowired
-    private ExceptionHandlerExceptionResolver exceptionResolver;
-
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     String ipAddress = null;
     Long objectId = null;
     String objectType = null;
@@ -71,6 +56,16 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
     String key = null;
     String sortBy = "";
     String sort = "";
+    private MockMvc mockMvc;
+    private MockHttpSession mockHttpSession;
+    private Map<String, String> mockAuditProperties;
+    private GetAuditByObjectTypeAndObjectIdAPIController unit;
+    private AuditDao mockAuditDao;
+    private Authentication mockAuthentication;
+    private ReplaceEventTypeNames mockReplaceEventTypeNames;
+    @Autowired
+    private ExceptionHandlerExceptionResolver exceptionResolver;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

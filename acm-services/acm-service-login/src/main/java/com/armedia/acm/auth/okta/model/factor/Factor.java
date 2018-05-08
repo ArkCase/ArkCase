@@ -4,6 +4,7 @@ import com.armedia.acm.auth.okta.model.ErrorResponse;
 import com.armedia.acm.auth.okta.model.ProviderType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -150,9 +151,11 @@ public class Factor extends ErrorResponse
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
+        if (this == o)
+            return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Factor factor = (Factor) o;
 

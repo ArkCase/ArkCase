@@ -19,13 +19,40 @@ import java.util.Objects;
 @Converter
 public class StringEncryptionConverter implements AttributeConverter<String, byte[]>
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     private static AcmCryptoUtils acmCryptoUtils;
-
     private static Boolean encryptionEnabled;
     private static String encryptionPassphrase;
     private static Boolean databaseEncryptionSupported;
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    public static void setAcmDecryptionProperties(Boolean encryptionEnabled, AcmCryptoUtils acmCryptoUtils, String encryptionPassphrase,
+            Boolean databaseEncryptionSupported)
+    {
+        StringEncryptionConverter.acmCryptoUtils = acmCryptoUtils;
+        StringEncryptionConverter.encryptionPassphrase = encryptionPassphrase;
+        StringEncryptionConverter.encryptionEnabled = encryptionEnabled;
+        StringEncryptionConverter.databaseEncryptionSupported = databaseEncryptionSupported;
+    }
+
+    public static AcmCryptoUtils getAcmCryptoUtils()
+    {
+        return acmCryptoUtils;
+    }
+
+    public static Boolean getEncryptionEnabled()
+    {
+        return encryptionEnabled;
+    }
+
+    public static String getEncryptionPassphrase()
+    {
+        return encryptionPassphrase;
+    }
+
+    public static Boolean getDatabaseEncryptionSupported()
+    {
+        return databaseEncryptionSupported;
+    }
 
     @Override
     public byte[] convertToDatabaseColumn(String attribute)
@@ -72,34 +99,5 @@ public class StringEncryptionConverter implements AttributeConverter<String, byt
             log.error("Error decrypting data.", e);
         }
         return null;
-    }
-
-    public static void setAcmDecryptionProperties(Boolean encryptionEnabled, AcmCryptoUtils acmCryptoUtils, String encryptionPassphrase,
-            Boolean databaseEncryptionSupported)
-    {
-        StringEncryptionConverter.acmCryptoUtils = acmCryptoUtils;
-        StringEncryptionConverter.encryptionPassphrase = encryptionPassphrase;
-        StringEncryptionConverter.encryptionEnabled = encryptionEnabled;
-        StringEncryptionConverter.databaseEncryptionSupported = databaseEncryptionSupported;
-    }
-
-    public static AcmCryptoUtils getAcmCryptoUtils()
-    {
-        return acmCryptoUtils;
-    }
-
-    public static Boolean getEncryptionEnabled()
-    {
-        return encryptionEnabled;
-    }
-
-    public static String getEncryptionPassphrase()
-    {
-        return encryptionPassphrase;
-    }
-
-    public static Boolean getDatabaseEncryptionSupported()
-    {
-        return databaseEncryptionSupported;
     }
 }

@@ -66,6 +66,15 @@ public class CorrespondenceMergeFieldVersionConfiguration
     }
 
     /**
+     * @param modifier
+     *            the modifier to set
+     */
+    public void setModifier(String modifier)
+    {
+        this.modifier = modifier;
+    }
+
+    /**
      * @return the mergingType
      */
     public String getMergingType()
@@ -80,15 +89,6 @@ public class CorrespondenceMergeFieldVersionConfiguration
     public void setMergingType(String mergingType)
     {
         this.mergingType = mergingType;
-    }
-
-    /**
-     * @param modifier
-     *            the modifier to set
-     */
-    public void setModifier(String modifier)
-    {
-        this.modifier = modifier;
     }
 
     /**

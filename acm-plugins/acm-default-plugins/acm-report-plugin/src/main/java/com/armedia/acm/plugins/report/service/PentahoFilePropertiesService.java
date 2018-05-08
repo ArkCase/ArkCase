@@ -26,8 +26,8 @@ import java.util.stream.Collectors;
  */
 public class PentahoFilePropertiesService
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private static final Logger LOGGER = LoggerFactory.getLogger(PentahoFilePropertiesService.class);
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private PentahoReportFiles pentahoReportFiles;
     private ResponseEntity<PentahoReportFiles> response;
     private String pentahoUrl;
@@ -194,14 +194,14 @@ public class PentahoFilePropertiesService
         this.propertyFileManager = propertyFileManager;
     }
 
-    public void setReportService(ReportServiceImpl reportService)
-    {
-        this.reportService = reportService;
-    }
-
     public ReportServiceImpl getReportService()
     {
         return reportService;
+    }
+
+    public void setReportService(ReportServiceImpl reportService)
+    {
+        this.reportService = reportService;
     }
 
     public String getReportsPropertyFileLocation()

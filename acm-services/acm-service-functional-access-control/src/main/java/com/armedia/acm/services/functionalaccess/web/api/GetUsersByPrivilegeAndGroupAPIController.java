@@ -101,14 +101,14 @@ public class GetUsersByPrivilegeAndGroupAPIController
         return retval;
     }
 
-    public void setPluginManager(AcmPluginManager pluginManager)
-    {
-        this.pluginManager = pluginManager;
-    }
-
     public AcmPluginManager getPluginManager()
     {
         return pluginManager;
+    }
+
+    public void setPluginManager(AcmPluginManager pluginManager)
+    {
+        this.pluginManager = pluginManager;
     }
 
     public FunctionalAccessService getFunctionalAccessService()

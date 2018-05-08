@@ -1,7 +1,10 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.anyLong;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;

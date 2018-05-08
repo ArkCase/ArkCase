@@ -25,21 +25,19 @@ import java.util.Map;
 public class AcmPluginManagerTest extends EasyMockSupport
 {
 
+    private final String roleAdd = "role_add";
+    private final String roleAdmin = "role_admin";
+    private final String wildCardRole = "ADMIN@*";
+    private final String privilegeAdd = "add";
     private AcmPluginManager unit;
-
     private AcmPlugin pluginOne;
     private AcmPlugin pluginTwo;
     private AcmPlugin pluginThree;
     private AcmPluginPrivileges pluginPrivilegesOne;
     private AcmPluginPrivileges pluginPrivilegesTwo;
     private AcmPluginPrivileges pluginPrivilegesThree;
-
     private ApplicationContext mockContext;
     private SpringContextHolder mockSpringContextHolder;
-    private final String roleAdd = "role_add";
-    private final String roleAdmin = "role_admin";
-    private final String wildCardRole = "ADMIN@*";
-    private final String privilegeAdd = "add";
 
     @Before
     public void setUp() throws Exception

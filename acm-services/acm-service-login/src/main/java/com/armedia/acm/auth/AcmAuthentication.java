@@ -9,10 +9,10 @@ public class AcmAuthentication implements Authentication
 {
     private final Collection<AcmGrantedAuthority> authorities;
     private final Object credentials;
-    private Object details;
     private final Object principal;
-    private boolean authenticated;
     private final String name;
+    private Object details;
+    private boolean authenticated;
 
     public AcmAuthentication(Collection<AcmGrantedAuthority> authorities,
             Object credentials,

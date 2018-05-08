@@ -1,10 +1,13 @@
 package com.armedia.acm.services.transcribe.delegate;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
-import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
-import com.armedia.acm.services.transcribe.model.*;
+import com.armedia.acm.services.transcribe.model.Transcribe;
+import com.armedia.acm.services.transcribe.model.TranscribeActionType;
+import com.armedia.acm.services.transcribe.model.TranscribeBusinessProcessVariableKey;
+import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
+import com.armedia.acm.services.transcribe.model.TranscribeConstants;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -32,7 +35,8 @@ public class TranscribePurgeDelegate implements JavaDelegate
 
         if (ids != null && !ids.isEmpty())
         {
-            // Because all IDs are follow the same business process (Transcribe objects for these IDS have the same information, just different ids),
+            // Because all IDs are follow the same business process (Transcribe objects for these IDS have the same
+            // information, just different ids),
             // we need just to take one of them (if there are many)
             try
             {
@@ -47,36 +51,46 @@ public class TranscribePurgeDelegate implements JavaDelegate
 
                 if (purgeAttempts < purgeAttemptsInConfiguration)
                 {
-                    boolean purged = getArkCaseTranscribeService().getTranscribeServiceFactory().getService(configuration.getProvider()).purge(transcribe);
+                    boolean purged = getArkCaseTranscribeService().getTranscribeServiceFactory().getService(configuration.getProvider())
+                            .purge(transcribe);
 
                     if (purged)
                     {
-                        LOG.debug("Transcribe information for Transcribe with REMOTE_ID=[{}] on provider side are purged.", transcribe.getRemoteId());
-                        delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(), TranscribeActionType.PURGE_SUCCESS.toString());
+                        LOG.debug("Transcribe information for Transcribe with REMOTE_ID=[{}] on provider side are purged.",
+                                transcribe.getRemoteId());
+                        delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(),
+                                TranscribeActionType.PURGE_SUCCESS.toString());
                     }
                     else
                     {
-                        LOG.warn("Transcribe information for Transcribe with REMOTE_ID=[{}] on provider side are not purged.", transcribe.getRemoteId());
-                        delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(), TranscribeActionType.PURGE_FAILED.toString());
+                        LOG.warn("Transcribe information for Transcribe with REMOTE_ID=[{}] on provider side are not purged.",
+                                transcribe.getRemoteId());
+                        delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(),
+                                TranscribeActionType.PURGE_FAILED.toString());
                     }
 
                     delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.PURGE_ATTEMPTS.toString(), purgeAttempts + 1);
                 }
                 else
                 {
-                    LOG.warn("Purging attempts for Transcribe with REMOTE_ID=[{}] exceeded. Terminating purge job.", transcribe.getRemoteId());
-                    delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(), TranscribeActionType.PURGE_TERMINATE.toString());
+                    LOG.warn("Purging attempts for Transcribe with REMOTE_ID=[{}] exceeded. Terminating purge job.",
+                            transcribe.getRemoteId());
+                    delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(),
+                            TranscribeActionType.PURGE_TERMINATE.toString());
                 }
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 LOG.warn("Could not purge Transcribe information on provider side. REASON=[{}]", e.getMessage());
-                delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(), TranscribeActionType.PURGE_TERMINATE.toString());
+                delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(),
+                        TranscribeActionType.PURGE_TERMINATE.toString());
             }
         }
         else
         {
             LOG.warn("Purging job cannot proceed because there is no Transcribe. Terminating purge job.");
-            delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(), TranscribeActionType.PURGE_TERMINATE.toString());
+            delegateExecution.setVariable(TranscribeBusinessProcessVariableKey.ACTION.toString(),
+                    TranscribeActionType.PURGE_TERMINATE.toString());
         }
     }
 

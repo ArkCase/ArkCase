@@ -10,14 +10,14 @@ public class OutlookMailItem extends OutlookItem
     private String sender;
     private Boolean read;
 
-    public void setFrom(String from)
-    {
-        this.from = from;
-    }
-
     public String getFrom()
     {
         return from;
+    }
+
+    public void setFrom(String from)
+    {
+        this.from = from;
     }
 
     public void setSender(String sender)
@@ -25,13 +25,13 @@ public class OutlookMailItem extends OutlookItem
         this.sender = sender;
     }
 
-    public void setRead(Boolean read)
-    {
-        this.read = read;
-    }
-
     public Boolean getRead()
     {
         return read;
+    }
+
+    public void setRead(Boolean read)
+    {
+        this.read = read;
     }
 }

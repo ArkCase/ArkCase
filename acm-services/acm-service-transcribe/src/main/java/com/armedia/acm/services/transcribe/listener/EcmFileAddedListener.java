@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.model.TranscribeType;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -27,7 +28,8 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
         {
             EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(event.getSource(), event.getSource().getActiveVersionTag());
 
-            if (getArkCaseTranscribeService().isFileVersionTranscribable(ecmFileVersion) && getArkCaseTranscribeService().isAutomaticTranscribeOn())
+            if (getArkCaseTranscribeService().isFileVersionTranscribable(ecmFileVersion)
+                    && getArkCaseTranscribeService().isAutomaticTranscribeOn())
             {
                 try
                 {
@@ -35,7 +37,8 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
                 }
                 catch (CreateTranscribeException e)
                 {
-                    LOG.warn("Creating Transcription in automatic way for MEDIA_FILE_VERSION_ID=[{}] was not executed. REASON=[{}]", ecmFileVersion.getId(), e.getMessage());
+                    LOG.warn("Creating Transcription in automatic way for MEDIA_FILE_VERSION_ID=[{}] was not executed. REASON=[{}]",
+                            ecmFileVersion.getId(), e.getMessage());
                 }
             }
         }

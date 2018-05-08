@@ -6,19 +6,19 @@ package com.armedia.acm.plugins.complaint.model;
 public enum ComplaintsByTimePeriod
 {
 
-    LAST_WEEK("lastWeek"), LAST_MONTH("lastMonth"), LAST_THREE_MONTH("lastThreeMonths"), LAST_SIX_MONTH("lastSixMonths"), LAST_YEAR(
-            "lastYear"), NONE("none");
+    LAST_WEEK("lastWeek"),
+    LAST_MONTH("lastMonth"),
+    LAST_THREE_MONTH("lastThreeMonths"),
+    LAST_SIX_MONTH("lastSixMonths"),
+    LAST_YEAR(
+            "lastYear"),
+    NONE("none");
 
     private String period;
 
     private ComplaintsByTimePeriod(String period)
     {
         this.period = period;
-    }
-
-    public String getPeriod()
-    {
-        return period;
     }
 
     public static ComplaintsByTimePeriod getTimePeriod(String text)
@@ -31,5 +31,10 @@ public enum ComplaintsByTimePeriod
             }
         }
         return ComplaintsByTimePeriod.NONE;
+    }
+
+    public String getPeriod()
+    {
+        return period;
     }
 }

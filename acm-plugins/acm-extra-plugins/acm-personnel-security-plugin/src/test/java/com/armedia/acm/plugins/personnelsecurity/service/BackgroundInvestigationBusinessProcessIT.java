@@ -1,7 +1,10 @@
 package com.armedia.acm.plugins.personnelsecurity.service;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.personnelsecurity.casestatus.service.CaseFileStateService;
@@ -37,41 +40,31 @@ import java.util.Map;
 @ContextConfiguration(locations = { "classpath:/spring/spring-library-personnel-security-activiti-test.xml" })
 public class BackgroundInvestigationBusinessProcessIT
 {
+    Map<String, Object> pvars = new HashMap<>();
     @Autowired
     private ProcessEngine pe;
-
     @Autowired
     private RepositoryService repo;
-
     @Autowired
     private RuntimeService rt;
-
     @Autowired
     private TaskService ts;
-
     @Autowired
     private HistoryService hs;
-
     private Logger log = LoggerFactory.getLogger(getClass());
-
     @Autowired
     @Qualifier(value = "milestoneService")
     private MilestoneService mockMilestoneService;
-
     @Autowired
     @Qualifier(value = "caseFileStateService")
     private CaseFileStateService caseFileStateService;
-
     @Autowired
     @Qualifier(value = "clearanceVerificationSystemExportService")
     private ClearanceVerificationSystemExportService clearanceVerificationSystemExportService;
-
     @Autowired
     @Qualifier(value = "correspondenceService")
     private CorrespondenceService correspondenceService;
-
     private Object[] mocks;
-
     private Long caseId = 12345L;
     private String caseNumber = "20140530_001";
     private String folderId = "folderId";
@@ -80,7 +73,6 @@ public class BackgroundInvestigationBusinessProcessIT
     private String defaultAdjudicator = "ann-acm";
     private String taskDueDateExpression = "P1D";
     private int priority = 55;
-    Map<String, Object> pvars = new HashMap<>();
 
     @Before
     public void setUp() throws Exception

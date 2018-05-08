@@ -23,8 +23,9 @@ import com.armedia.acm.auth.okta.services.FactorLifecycleService;
 import com.armedia.acm.auth.okta.services.FactorService;
 import com.armedia.acm.auth.okta.services.FactorVerificationService;
 import com.armedia.acm.auth.okta.services.OktaUserService;
-import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,7 +54,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping({"/mfa"})
+@RequestMapping({ "/mfa" })
 public class AuthLoginController implements ApplicationEventPublisherAware
 {
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
@@ -63,7 +65,6 @@ public class AuthLoginController implements ApplicationEventPublisherAware
     private FactorVerificationService factorVerificationService;
     private UserDao userDao;
     private ApplicationEventPublisher applicationEventPublisher;
-
 
     @RequestMapping(value = "/auth", method = RequestMethod.GET)
     public ModelAndView auth(Model model, HttpServletRequest request, Authentication authentication) throws OktaException
@@ -133,7 +134,8 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             {
                 LOGGER.debug("No factors found for user, redirecting to enrollment page");
                 return new ModelAndView("redirect:" + getMultiFactorConfig().getEnrollmentTargetUrl());
-            } else
+            }
+            else
             {
                 // Only display active factors
                 factors = factors.stream().filter(factor -> FactorStatus.isActive(factor.getStatus())).collect(Collectors.toList());
@@ -148,11 +150,13 @@ public class AuthLoginController implements ApplicationEventPublisherAware
 
             // Update authentication with okta user details
             OktaAuthenticationDetails oktaAuthenticationDetails = new OktaAuthenticationDetails(user, request);
-            AcmAuthentication acmAuthentication = new AcmAuthentication((Collection<AcmGrantedAuthority>) authentication.getAuthorities(), authentication.getCredentials(), oktaAuthenticationDetails, authentication.isAuthenticated(), authentication.getName());
+            AcmAuthentication acmAuthentication = new AcmAuthentication((Collection<AcmGrantedAuthority>) authentication.getAuthorities(),
+                    authentication.getCredentials(), oktaAuthenticationDetails, authentication.isAuthenticated(), authentication.getName());
             SecurityContextHolder.getContext().setAuthentication(acmAuthentication);
 
             return new ModelAndView(getMultiFactorConfig().getSelectMethodTargetUrl(), model.asMap());
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // Don't display error page, return view with error embedded.
             LOGGER.error("Error on /auth page", e);
@@ -191,12 +195,13 @@ public class AuthLoginController implements ApplicationEventPublisherAware
                 throw new OktaException("Failed to send challenge " + result.getErrorSummary());
             }
 
-            //send the known user id and factor id to the new view
+            // send the known user id and factor id to the new view
             model.put("factor", factorId);
             model.put("sendCode", !FactorType.SOFTWARE_TOKEN.equals(factor.getFactorType()));
             return new ModelAndView(getMultiFactorConfig().getVerifyMethodTargetUrl(), model);
 
-        } catch (OktaException e)
+        }
+        catch (OktaException e)
         {
             LOGGER.error("Failed to send challenge code: " + e.getMessage(), e);
             model.put(OktaAPIConstants.ERROR, e.getMessage());
@@ -206,7 +211,8 @@ public class AuthLoginController implements ApplicationEventPublisherAware
 
     @RequestMapping(value = "/getcode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public void getCode(@RequestBody VerifyRequestDTO verifyData, Authentication authentication, HttpServletResponse response) throws OktaException
+    public void getCode(@RequestBody VerifyRequestDTO verifyData, Authentication authentication, HttpServletResponse response)
+            throws OktaException
 
     {
         Object details = authentication.getDetails();
@@ -215,7 +221,6 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             throw new OktaException("Didn't find login details of user");
         }
         OktaUser oktaUser = OktaAuthenticationDetails.class.cast(details).getOktaUser();
-
 
         String userId = oktaUser.getId();
         String factorId = verifyData.getFactorId();
@@ -228,12 +233,14 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             if (result == null)
             {
                 throw new OktaException("Failed to send new code");
-            } else if (result.hasError())
+            }
+            else if (result.hasError())
             {
                 throw new OktaException("Failed to send new code: " + result.getErrorSummary());
             }
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (OktaException e)
+        }
+        catch (OktaException e)
         {
             LOGGER.error("Failed to execute get new challenge code.", e);
             throw e;
@@ -250,7 +257,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
     @RequestMapping(value = "/verify", method = RequestMethod.GET)
     public ModelAndView verify()
     {
-        //If someone refreshes this page, redirect to select auth page, should never come to verify page manually
+        // If someone refreshes this page, redirect to select auth page, should never come to verify page manually
         return new ModelAndView("redirect:" + getMultiFactorConfig().getSelectMethodTargetUrl());
     }
 
@@ -276,7 +283,8 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             {
                 LOGGER.error(OktaAPIConstants.INVALIDATION_FAILED + " Validation result was null");
                 throw new OktaException(OktaAPIConstants.INVALIDATION_FAILED + " Validation result was null");
-            } else
+            }
+            else
             {
                 FactorResult status = result.getFactorResult();
                 if (FactorResult.SUCCESS.equals(status))
@@ -284,16 +292,19 @@ public class AuthLoginController implements ApplicationEventPublisherAware
                     grantSuccessAuthorities();
                     view = "redirect:/home.html#!/welcome";
                     LOGGER.info("/verify status: " + status.name());
-                } else
+                }
+                else
                 {
                     throw new OktaException(OktaAPIConstants.INVALID_PASS_CODE);
                 }
             }
-        } catch (OktaException e)
+        }
+        catch (OktaException e)
         {
             LOGGER.error("Failed to execute 2nd factor challenge: " + e.getMessage(), e);
             handleVerifyError(userId, factorId, model, e);
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             LOGGER.error("Failed to execute 2nd factor challenge: " + ex.getMessage(), ex);
             handleVerifyError(userId, factorId, model, ex);
@@ -313,7 +324,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
      */
     private void handleVerifyError(String userId, String factorId, Map model, Exception error)
     {
-        //send the known user id and factor id to the new view
+        // send the known user id and factor id to the new view
         model.put("factor", factorId);
         model.put("user", userId);
         model.put(OktaAPIConstants.ERROR, error.getMessage());
@@ -332,7 +343,8 @@ public class AuthLoginController implements ApplicationEventPublisherAware
                 model.put("factors", factors);
             }
             return new ModelAndView(getMultiFactorConfig().getEnrollmentTargetUrl(), model);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOGGER.error("Error on /enroll page", e);
             model.put(OktaAPIConstants.ERROR, e.getMessage());
@@ -352,43 +364,44 @@ public class AuthLoginController implements ApplicationEventPublisherAware
 
             switch (factor)
             {
-                case EMAIL:
-                    if (StringUtils.isEmpty(request.getParameter("emailAddress")))
-                    {
-                        throw new OktaException("Email Address is null or empty");
-                    }
-                    profile.setEmail(request.getParameter("emailAddress"));
-                    getFactorLifecycleService().enroll(FactorType.EMAIL, ProviderType.OKTA, profile, user);
-                    break;
-                case SMS:
-                    if (StringUtils.isEmpty(request.getParameter("phoneNumber")))
-                    {
-                        throw new OktaException("Phone Number is null or empty");
-                    }
-                    profile.setPhoneNumber(request.getParameter("phoneNumber"));
-                    Factor factorEnroll = getFactorLifecycleService().enroll(FactorType.SMS, ProviderType.OKTA, profile, user);
-                    if (factorEnroll != null && !FactorStatus.ACTIVE.equals(factorEnroll.getStatus()))
-                    {
-                        model.put("factors", Collections.singletonList(factorEnroll));
-                        model.put("embedded", request.getParameter("phoneNumber"));
-                        return new ModelAndView(getMultiFactorConfig().getEnrollmentTargetUrl(), model);
-                    }
-                    break;
-                case SOFTWARE_TOKEN:
-                    Factor enroll = getFactorLifecycleService().enroll(FactorType.SOFTWARE_TOKEN, ProviderType.OKTA, profile, user);
-                    if (enroll != null)
-                    {
-                        putSharedSecret(enroll, model);
-                        model.put("factors", Collections.singletonList(enroll));
-                        return new ModelAndView(getMultiFactorConfig().getEnrollmentTargetUrl(), model);
-                    }
-                    break;
-                default:
-                    break;
+            case EMAIL:
+                if (StringUtils.isEmpty(request.getParameter("emailAddress")))
+                {
+                    throw new OktaException("Email Address is null or empty");
+                }
+                profile.setEmail(request.getParameter("emailAddress"));
+                getFactorLifecycleService().enroll(FactorType.EMAIL, ProviderType.OKTA, profile, user);
+                break;
+            case SMS:
+                if (StringUtils.isEmpty(request.getParameter("phoneNumber")))
+                {
+                    throw new OktaException("Phone Number is null or empty");
+                }
+                profile.setPhoneNumber(request.getParameter("phoneNumber"));
+                Factor factorEnroll = getFactorLifecycleService().enroll(FactorType.SMS, ProviderType.OKTA, profile, user);
+                if (factorEnroll != null && !FactorStatus.ACTIVE.equals(factorEnroll.getStatus()))
+                {
+                    model.put("factors", Collections.singletonList(factorEnroll));
+                    model.put("embedded", request.getParameter("phoneNumber"));
+                    return new ModelAndView(getMultiFactorConfig().getEnrollmentTargetUrl(), model);
+                }
+                break;
+            case SOFTWARE_TOKEN:
+                Factor enroll = getFactorLifecycleService().enroll(FactorType.SOFTWARE_TOKEN, ProviderType.OKTA, profile, user);
+                if (enroll != null)
+                {
+                    putSharedSecret(enroll, model);
+                    model.put("factors", Collections.singletonList(enroll));
+                    return new ModelAndView(getMultiFactorConfig().getEnrollmentTargetUrl(), model);
+                }
+                break;
+            default:
+                break;
             }
 
             return new ModelAndView("redirect:" + getMultiFactorConfig().getSelectMethodTargetUrl());
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOGGER.error("Error confirming enrollment", e);
             addEnrollErrorData(model, e, authentication);
@@ -410,7 +423,8 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             }
 
             return new ModelAndView("redirect:" + getMultiFactorConfig().getSelectMethodTargetUrl());
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOGGER.error("Failed to confirm secondary enrollment activation", e);
             addEnrollErrorData(model, e, authentication);
@@ -429,7 +443,8 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             {
                 model.put("factors", factors);
             }
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             LOGGER.error("Failed to retrieve available factors while processing previous error", ex);
         }
@@ -446,12 +461,14 @@ public class AuthLoginController implements ApplicationEventPublisherAware
     {
         Authentication contextAuth = SecurityContextHolder.getContext().getAuthentication();
         List<AcmGrantedAuthority> newAuthorities = contextAuth.getAuthorities().stream()
-                .filter(auth -> auth instanceof AcmGrantedAuthority && !OktaAPIConstants.ROLE_PRE_AUTHENTICATED.equalsIgnoreCase(auth.getAuthority()))
+                .filter(auth -> auth instanceof AcmGrantedAuthority
+                        && !OktaAPIConstants.ROLE_PRE_AUTHENTICATED.equalsIgnoreCase(auth.getAuthority()))
                 .map(AcmGrantedAuthority.class::cast).collect(Collectors.toList());
         newAuthorities.add(new AcmGrantedAuthority("ROLE_AUTHENTICATED"));
-        AcmAuthentication acmAuthentication = new AcmAuthentication(newAuthorities, contextAuth.getCredentials(), contextAuth.getDetails(), contextAuth.isAuthenticated(), contextAuth.getName());
+        AcmAuthentication acmAuthentication = new AcmAuthentication(newAuthorities, contextAuth.getCredentials(), contextAuth.getDetails(),
+                contextAuth.isAuthenticated(), contextAuth.getName());
         SecurityContextHolder.getContext().setAuthentication(acmAuthentication);
-        //Publish login event on second factor auth success
+        // Publish login event on second factor auth success
         LoginEvent event = new LoginEvent(acmAuthentication);
         event.setSucceeded(true);
         getApplicationEventPublisher().publishEvent(event);

@@ -28,9 +28,8 @@ import java.util.Date;
  */
 public class ComplaintEventPublisher implements ApplicationEventPublisherAware
 {
-    private ApplicationEventPublisher eventPublisher;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private ApplicationEventPublisher eventPublisher;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)

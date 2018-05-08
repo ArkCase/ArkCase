@@ -179,16 +179,16 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
         return retval;
     }
 
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         log.debug("The application event publisher has been set!");
         this.applicationEventPublisher = applicationEventPublisher;
-    }
-
-    public ApplicationEventPublisher getApplicationEventPublisher()
-    {
-        return applicationEventPublisher;
     }
 
     public FileObject getBaseFolder()
@@ -228,6 +228,11 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
         this.ignoreFolderPath = baseFolderPath.contains("\\") ? baseFolderPath.replaceAll("\\\\", "/") : baseFolderPath;
     }
 
+    public List<String> getIgnoreFolders()
+    {
+        return ignoreFolders;
+    }
+
     public void setIgnoreFolders(List<String> ignoreFolders)
     {
         List<String> ignore = new ArrayList<>(ignoreFolders.size());
@@ -236,11 +241,6 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
             ignore.add(ignoreFolder.replaceAll("\\\\", "/"));
         }
         this.ignoreFolders = ignore;
-    }
-
-    public List<String> getIgnoreFolders()
-    {
-        return ignoreFolders;
     }
 
     public String getIgnoreFolderPath()

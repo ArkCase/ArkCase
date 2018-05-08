@@ -14,19 +14,14 @@ public class BuckslipProcess
     private String objectType;
     private Long objectId;
 
-    public void setBusinessProcessId(String businessProcessId)
-    {
-        this.businessProcessId = businessProcessId;
-    }
-
     public String getBusinessProcessId()
     {
         return businessProcessId;
     }
 
-    public void setBusinessProcessName(String businessProcessName)
+    public void setBusinessProcessId(String businessProcessId)
     {
-        this.businessProcessName = businessProcessName;
+        this.businessProcessId = businessProcessId;
     }
 
     public String getBusinessProcessName()
@@ -34,9 +29,9 @@ public class BuckslipProcess
         return businessProcessName;
     }
 
-    public void setNonConcurEndsApprovals(Boolean nonConcurEndsApprovals)
+    public void setBusinessProcessName(String businessProcessName)
     {
-        this.nonConcurEndsApprovals = nonConcurEndsApprovals;
+        this.businessProcessName = businessProcessName;
     }
 
     public Boolean getNonConcurEndsApprovals()
@@ -44,9 +39,9 @@ public class BuckslipProcess
         return nonConcurEndsApprovals;
     }
 
-    public void setPastTasks(String pastTasks)
+    public void setNonConcurEndsApprovals(Boolean nonConcurEndsApprovals)
     {
-        this.pastTasks = pastTasks;
+        this.nonConcurEndsApprovals = nonConcurEndsApprovals;
     }
 
     public String getPastTasks()
@@ -54,9 +49,9 @@ public class BuckslipProcess
         return pastTasks;
     }
 
-    public void setFutureTasks(List<BuckslipFutureTask> futureTasks)
+    public void setPastTasks(String pastTasks)
     {
-        this.futureTasks = futureTasks;
+        this.pastTasks = pastTasks;
     }
 
     public List<BuckslipFutureTask> getFutureTasks()
@@ -64,9 +59,9 @@ public class BuckslipProcess
         return futureTasks;
     }
 
-    public void setObjectType(String objectType)
+    public void setFutureTasks(List<BuckslipFutureTask> futureTasks)
     {
-        this.objectType = objectType;
+        this.futureTasks = futureTasks;
     }
 
     public String getObjectType()
@@ -74,13 +69,18 @@ public class BuckslipProcess
         return objectType;
     }
 
-    public void setObjectId(Long objectId)
+    public void setObjectType(String objectType)
     {
-        this.objectId = objectId;
+        this.objectType = objectType;
     }
 
     public Long getObjectId()
     {
         return objectId;
+    }
+
+    public void setObjectId(Long objectId)
+    {
+        this.objectId = objectId;
     }
 }

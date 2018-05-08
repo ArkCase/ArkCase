@@ -21,10 +21,9 @@ import java.util.Map;
  */
 public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     public static final String substitutionPrefix = "${";
     public static final String substitutionSuffix = "}";
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * Generate the Word document via direct manipulation of Word paragraph texts. This works seamlessly (user sees

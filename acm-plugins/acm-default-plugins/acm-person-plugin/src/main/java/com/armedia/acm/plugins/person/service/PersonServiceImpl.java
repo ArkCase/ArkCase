@@ -10,7 +10,6 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.frevvo.config.FrevvoFormUtils;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.exceptions.AcmContactMethodValidationException;
-import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.service.ContactMethodsUtil;
 import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -53,7 +52,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -361,9 +359,12 @@ public class PersonServiceImpl implements PersonService
         }
         catch (AcmContactMethodValidationException e)
         {
-            if(in.getId() == null){
+            if (in.getId() == null)
+            {
                 throw new AcmCreateObjectFailedException("Person", e.toString(), null);
-            } else {
+            }
+            else
+            {
                 throw new AcmUpdateObjectFailedException("Person", in.getId(), e.toString(), null);
             }
 

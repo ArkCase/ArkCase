@@ -9,27 +9,33 @@ public class VerifyRequestDTO
     private String userId;
     private String href;
 
-    public String getFactorId() {
+    public String getFactorId()
+    {
         return factorId;
     }
 
-    public void setFactorId(String factorId) {
+    public void setFactorId(String factorId)
+    {
         this.factorId = factorId;
     }
 
-    public String getUserId() {
+    public String getUserId()
+    {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(String userId)
+    {
         this.userId = userId;
     }
 
-    public String getHref() {
+    public String getHref()
+    {
         return href;
     }
 
-    public void setHref(String href) {
+    public void setHref(String href)
+    {
         this.href = href;
     }
 }

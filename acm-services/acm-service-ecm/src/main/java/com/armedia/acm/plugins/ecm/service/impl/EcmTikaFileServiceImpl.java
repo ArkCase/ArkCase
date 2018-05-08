@@ -53,16 +53,15 @@ import us.fatehi.pointlocation6709.parse.PointLocationParser;
 public class EcmTikaFileServiceImpl implements EcmTikaFileService
 {
 
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
-
-    private Map<String, String> tikaMetadataToFilePropertiesMap;
-    private Map<String, String> contentTypeFixes;
-
     static
     {
         // enable BeanUtils to set null to Date field
         ConvertUtils.register(new DateConverter(null), Date.class);
     }
+
+    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+    private Map<String, String> tikaMetadataToFilePropertiesMap;
+    private Map<String, String> contentTypeFixes;
 
     @Override
     @Deprecated

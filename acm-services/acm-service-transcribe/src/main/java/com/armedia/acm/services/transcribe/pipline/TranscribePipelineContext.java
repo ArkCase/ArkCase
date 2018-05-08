@@ -1,6 +1,5 @@
 package com.armedia.acm.services.transcribe.pipline;
 
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import com.armedia.acm.services.transcribe.model.TranscribeType;

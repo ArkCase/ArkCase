@@ -24,12 +24,10 @@ import java.util.List;
  */
 public class SendDocumentsToSolr implements InitializingBean
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private ObjectConverter objectConverter;
-
     private ConnectionFactory jmsConnectionFactory;
     private JmsTemplate jmsTemplate;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void afterPropertiesSet() throws Exception

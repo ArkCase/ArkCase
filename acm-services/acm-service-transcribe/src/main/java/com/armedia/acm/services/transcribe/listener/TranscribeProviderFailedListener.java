@@ -6,7 +6,7 @@ import com.armedia.acm.services.transcribe.model.Transcribe;
 import com.armedia.acm.services.transcribe.model.TranscribeConstants;
 import com.armedia.acm.services.transcribe.model.TranscribeProviderFailedEvent;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
-import org.mule.util.StringUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;

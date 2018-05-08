@@ -38,15 +38,12 @@ import java.util.Set;
  */
 public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
 {
+    private final String[] START_PROCESS_VALUES = new String[] { "", "true", "false" };
     private Logger log = LoggerFactory.getLogger(LdapConfigurationService.class);
-
     private String configurationLocation;
     private String configurationFile;
     private String configurationFileBackupTemplate;
     private String configurationFileBackupRegex;
-
-    private final String[] START_PROCESS_VALUES = new String[] { "", "true", "false" };
-
     private AcmBpmnService acmBpmnService;
     private AcmFileTypesService acmFileTypesService;
 

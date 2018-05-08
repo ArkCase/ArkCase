@@ -28,9 +28,8 @@ import java.util.List;
 public class ListAllParticipantsByObjectTypeAndObjectId
 {
 
-    private AcmParticipantService acmParticipantService;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private AcmParticipantService acmParticipantService;
 
     @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @DecoratedAssignedObjectParticipants(objectTypeIndex = 0, objectIdIndex = 1)

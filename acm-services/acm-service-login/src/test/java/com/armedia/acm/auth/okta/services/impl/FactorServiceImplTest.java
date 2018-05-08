@@ -1,5 +1,9 @@
 package com.armedia.acm.auth.okta.services.impl;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.auth.okta.exceptions.OktaException;
 import com.armedia.acm.auth.okta.model.ProviderType;
 import com.armedia.acm.auth.okta.model.factor.Factor;
@@ -8,6 +12,7 @@ import com.armedia.acm.auth.okta.model.factor.FactorStatus;
 import com.armedia.acm.auth.okta.model.factor.FactorType;
 import com.armedia.acm.auth.okta.model.factor.SecurityQuestion;
 import com.armedia.acm.auth.okta.model.user.OktaUser;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,10 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by joseph.mcgrady on 11/13/2017.
@@ -78,7 +79,7 @@ public class FactorServiceImplTest extends EasyMockSupport
     @Test
     public void getFactorByTypeTest() throws OktaException
     {
-        Factor[] expectedFactors = {expectedFactor};
+        Factor[] expectedFactors = { expectedFactor };
         ResponseEntity<Factor[]> responseEntity = new ResponseEntity<>(expectedFactors, HttpStatus.OK);
 
         expect(mockOktaRestService.doRestCall("/api/v1/users/" + expectedUser.getId() + "/factors",
@@ -101,7 +102,7 @@ public class FactorServiceImplTest extends EasyMockSupport
     @Test
     public void listEnrolledFactorsTest() throws OktaException
     {
-        Factor[] expectedFactors = {expectedFactor};
+        Factor[] expectedFactors = { expectedFactor };
         ResponseEntity<Factor[]> responseEntity = new ResponseEntity<>(expectedFactors, HttpStatus.OK);
 
         expect(mockOktaRestService.doRestCall("/api/v1/users/" + expectedUser.getId() + "/factors",
@@ -126,14 +127,15 @@ public class FactorServiceImplTest extends EasyMockSupport
     @Test
     public void listAvailableFactorsTest() throws OktaException
     {
-        Factor[] expectedFactors = {expectedFactor};
+        Factor[] expectedFactors = { expectedFactor };
         ResponseEntity<Factor[]> responseEntity = new ResponseEntity<>(expectedFactors, HttpStatus.OK);
 
         expect(mockOktaRestService.doRestCall("/api/v1/users/" + expectedUser.getId() + "/factors/catalog",
                 HttpMethod.GET, Factor[].class, "parameters")).andReturn(responseEntity).atLeastOnce();
 
         expect(mockOktaRestService.doRestCall("/api/v1/users/" + expectedUser.getId() + "/factors",
-                HttpMethod.GET, Factor[].class, "parameters")).andReturn(new ResponseEntity<>(new Factor[]{new Factor()}, HttpStatus.OK)).times(1);
+                HttpMethod.GET, Factor[].class, "parameters")).andReturn(new ResponseEntity<>(new Factor[] { new Factor() }, HttpStatus.OK))
+                        .times(1);
 
         replayAll();
         List<Factor> factors = unit.listAvailableFactors(expectedUser);
@@ -157,7 +159,7 @@ public class FactorServiceImplTest extends EasyMockSupport
         SecurityQuestion expectedQuestion = new SecurityQuestion();
         expectedQuestion.setQuestion("first_job");
         expectedQuestion.setQuestionText("programmer");
-        SecurityQuestion[] expectedQuestions = {expectedQuestion};
+        SecurityQuestion[] expectedQuestions = { expectedQuestion };
         ResponseEntity<SecurityQuestion[]> responseEntity = new ResponseEntity<>(expectedQuestions, HttpStatus.OK);
 
         expect(mockOktaRestService.doRestCall("/api/v1/users/" + expectedUser.getId() + "/factors/questions",
@@ -191,7 +193,7 @@ public class FactorServiceImplTest extends EasyMockSupport
     @Test
     public void deleteFactorByTypeTest() throws OktaException
     {
-        Factor[] expectedFactors = {expectedFactor};
+        Factor[] expectedFactors = { expectedFactor };
         ResponseEntity<Factor[]> responseEntity = new ResponseEntity<>(expectedFactors, HttpStatus.OK);
         ResponseEntity<Factor> deleteResponseEntity = new ResponseEntity<>(expectedFactor, HttpStatus.OK);
 

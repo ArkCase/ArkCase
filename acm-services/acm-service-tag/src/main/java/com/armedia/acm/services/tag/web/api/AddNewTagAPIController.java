@@ -23,10 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AddNewTagAPIController
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private TagService tagService;
     private TagEventPublisher tagEventPublisher;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

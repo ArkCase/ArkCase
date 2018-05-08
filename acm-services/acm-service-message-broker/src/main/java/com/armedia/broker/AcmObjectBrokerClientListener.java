@@ -23,10 +23,8 @@ public class AcmObjectBrokerClientListener<E> implements MessageListener
 {
 
     private static final Logger LOG = LogManager.getLogger(AcmObjectBrokerClientListener.class);
-
-    private AcmUnmarshaller jsonUnmarshaller = ObjectConverter.createJSONUnmarshallerForTests();
-
     private final AcmObjectBrokerClient<E> broker;
+    private AcmUnmarshaller jsonUnmarshaller = ObjectConverter.createJSONUnmarshallerForTests();
 
     public AcmObjectBrokerClientListener(AcmObjectBrokerClient<E> broker)
     {

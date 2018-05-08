@@ -28,12 +28,11 @@ import java.util.Map;
 public class AssociatedTagService
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private TagDao tagDao;
     private AssociatedTagDao associatedTagDao;
     private AcmPlugin tagPlugin;
     private ExecuteSolrQuery executeSolrQuery;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     public List<AcmAssociatedTag> getAcmAssociatedTagByTagIdAndObjectIdAndType(Long tagId, Long objectId, String objectType)
     {

@@ -51,21 +51,18 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
 {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-
+    AcmFolder sourceFolder;
+    AcmFolder copiedFolder;
     @Autowired
     private SplitCaseServiceImpl splitCaseService;
-
     private SaveCaseService saveCaseService;
     private CaseFileDao caseFileDao;
     private AcmFolderService acmFolderService;
     private AcmTaskService acmTaskService;
     private SplitCaseFileBusinessRule mockSplitCaseFileBusinessRule;
-
     private Authentication auth;
-    AcmFolder sourceFolder;
     private String ipAddress;
     private Long sourceId;
-    AcmFolder copiedFolder;
     private Map<Long, AcmFolder> folderMap = new HashMap<>();
     private Map<Long, EcmFile> documentMap = new HashMap<>();
 

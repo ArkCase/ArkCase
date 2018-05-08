@@ -241,23 +241,23 @@ public class FolderDocumentCountAPIController
         return 0;
     }
 
-    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
-    {
-        this.executeSolrQuery = executeSolrQuery;
-    }
-
     public ExecuteSolrQuery getExecuteSolrQuery()
     {
         return executeSolrQuery;
     }
 
-    public void setSearchResults(SearchResults searchResults)
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
-        this.searchResults = searchResults;
+        this.executeSolrQuery = executeSolrQuery;
     }
 
     public SearchResults getSearchResults()
     {
         return searchResults;
+    }
+
+    public void setSearchResults(SearchResults searchResults)
+    {
+        this.searchResults = searchResults;
     }
 }

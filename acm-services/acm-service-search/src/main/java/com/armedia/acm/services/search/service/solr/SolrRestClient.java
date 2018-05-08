@@ -12,13 +12,11 @@ import org.springframework.web.client.RestTemplate;
 public class SolrRestClient
 {
 
+    private transient final RestTemplate restTemplate = new RestTemplate();
+    private transient final Logger logger = LoggerFactory.getLogger(getClass());
     private String solrHost;
     private int solrPort;
     private String solrContextRoot;
-
-    private transient final RestTemplate restTemplate = new RestTemplate();
-
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
 
     public void postToSolr(String core, String contentHandler, HttpEntity<? extends Object> entity, String logText, String extraUrlParams)
             throws SolrPostException

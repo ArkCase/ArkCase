@@ -21,19 +21,19 @@ public interface ConnectionManager<K, C extends Connection>
 {
 
     /**
+     * Retrieve the connection pooling profile
+     *
+     * @return PoolingProfile representing the pooling parameters
+     */
+    org.mule.config.PoolingProfile getConnectionPoolingProfile();
+
+    /**
      * Set the connection pooling profile
      *
      * @param value
      *            PoolingProfile representing the pooling parameters
      */
     void setConnectionPoolingProfile(org.mule.config.PoolingProfile value);
-
-    /**
-     * Retrieve the connection pooling profile
-     *
-     * @return PoolingProfile representing the pooling parameters
-     */
-    org.mule.config.PoolingProfile getConnectionPoolingProfile();
 
     /**
      * Borrow a connection from the pool

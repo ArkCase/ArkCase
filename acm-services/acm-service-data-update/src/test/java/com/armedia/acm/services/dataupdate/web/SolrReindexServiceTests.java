@@ -24,8 +24,8 @@ import java.util.Properties;
 public class SolrReindexServiceTests extends EasyMockSupport
 {
     private static final String SOLR_LAST_RUN_DATE_PROPERTY_KEY = "solr.last.run.date";
-    private PropertyFileManager propertyFileManager;
     private final String filePath = getClass().getClassLoader().getResource("properties/solrBatchUpdate.properties").getPath();
+    private PropertyFileManager propertyFileManager;
     private List<String> solrList;
     private Map<String, String> solrMap;
     private SolrReindexService solrReindexService;

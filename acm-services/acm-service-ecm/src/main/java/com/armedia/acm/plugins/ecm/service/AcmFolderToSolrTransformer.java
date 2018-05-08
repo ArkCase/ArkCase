@@ -20,11 +20,9 @@ import java.util.List;
  */
 public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmFolder>
 {
-    private AcmFolderService folderService;
-
-    private SearchAccessControlFields searchAccessControlFields;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private AcmFolderService folderService;
+    private SearchAccessControlFields searchAccessControlFields;
 
     @Override
     public List<AcmFolder> getObjectsModifiedSince(Date lastModified, int start, int pageSize)

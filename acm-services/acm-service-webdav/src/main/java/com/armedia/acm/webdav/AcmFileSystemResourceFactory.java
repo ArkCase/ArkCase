@@ -26,28 +26,18 @@ import io.milton.resource.Resource;
 public class AcmFileSystemResourceFactory implements ResourceFactory
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileDao fileDao;
-
     private EcmFileTransaction ecmFileTransaction;
-
     private FolderAndFilesUtils folderAndFilesUtils;
-
     private MuleContextManager muleContextManager;
-
     private LockManager lockManager;
-
     private AcmWebDAVSecurityManager securityManager;
-
     private Long maxAgeSeconds;
-
     private String filterMapping;
-
     private Pattern fileExtensionPattern;
-
     private AuthenticationTokenService authenticationTokenService;
-
     private CmisConfigUtils cmisConfigUtils;
-
     /**
      * A pattern to distinguish between a file URL and the URL that Microsoft Office sends for an OPTIONS request. An
      * ArkCase WebDAV file URL is assumed to end in (someNumber.someExtension), e.g., "134.docx". If a WebDAV URL does
@@ -56,8 +46,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
      */
 
     private Pattern realDocumentUrl = Pattern.compile("^.*\\/\\d*\\.\\w*$");
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AcmRootResource acmRootResource;
 
     @Override
