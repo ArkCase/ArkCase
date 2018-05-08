@@ -43,6 +43,10 @@ angular.module('organizations').controller(
                         return relationshipTypes;
                     });
 
+                    ObjectLookupService.getOrganizationTypes().then(function(organizationTypes) {
+                        $scope.organizationTypes = organizationTypes;
+                    });
+
                     $scope.organizationId = null;
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.organizationId = objectInfo.organizationId;
