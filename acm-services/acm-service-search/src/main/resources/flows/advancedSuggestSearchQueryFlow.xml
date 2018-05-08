@@ -15,7 +15,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         doc:name="Issue an advanced search request to SOLR"></https:endpoint>
 
     <flow name="advancedSuggestQuery" doc:name="Advanced Suggester Search Query Flow">
-        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://advancedSuggesterQuery.in" exchange-pattern="request-response" doc:name="VM"/>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://advancedSuggesterQuery.in"
+            exchange-pattern="request-response" doc:name="VM"/>
         <logger category="com.armedia.acm.plugins.search" level="DEBUG"/>
 
         <timer-interceptor/>

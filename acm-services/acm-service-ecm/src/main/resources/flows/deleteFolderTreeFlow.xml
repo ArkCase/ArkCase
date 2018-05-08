@@ -12,7 +12,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
             The folder tree will be deleted recursively.
         </description>
 
-        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://deleteFolderTree.in" exchange-pattern="request-response"
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://deleteFolderTree.in" exchange-pattern="request-response"
             doc:name="Delete Folder Tree"></vm:inbound-endpoint>
 
         <cmis:delete-tree config-ref="#[message.inboundProperties.configRef]" folderId="#[message.inboundProperties.acmFolderId]"

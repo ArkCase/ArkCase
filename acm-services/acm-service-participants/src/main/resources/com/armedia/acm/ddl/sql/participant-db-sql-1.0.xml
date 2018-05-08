@@ -1,7 +1,7 @@
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-acm_paticipant-fix-no-access-type" author="bojan.milenkoski">
@@ -18,7 +18,7 @@
 
             INSERT INTO DuplicateParticipantIds (cm_participant_id)
             SELECT MAX(cm_participant_id) FROM acm_participant
-            WHERE cm_participant_type='owner' 
+            WHERE cm_participant_type='owner'
             GROUP BY cm_object_id, cm_object_type HAVING COUNT(*) > 1;
 
             DELETE FROM acm_participant_privilege where cm_participant_id IN (SELECT cm_participant_id FROM DuplicateParticipantIds);
@@ -33,8 +33,9 @@
             CREATE TABLE ParticipantsOwnerWithNoAccess (cm_participant_id bigint);
 
             INSERT INTO ParticipantsOwnerWithNoAccess (cm_participant_id)
-            SELECT p.cm_participant_id FROM acm_participant p 
-            LEFT JOIN acm_participant p1 ON p.cm_object_type=p1.cm_object_type AND p.cm_object_id=p1.cm_object_id AND p.cm_participant_ldap_id = p1.cm_participant_ldap_id
+            SELECT p.cm_participant_id FROM acm_participant p
+            LEFT JOIN acm_participant p1 ON p.cm_object_type=p1.cm_object_type AND p.cm_object_id=p1.cm_object_id AND
+            p.cm_participant_ldap_id = p1.cm_participant_ldap_id
             WHERE p.cm_participant_type='No Access' AND p1.cm_participant_type='owner';
 
             DELETE FROM acm_participant_privilege where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsOwnerWithNoAccess);
@@ -49,11 +50,13 @@
             CREATE TABLE ParticipantsAssigneeWithNoAccess (cm_participant_id bigint);
 
             INSERT INTO ParticipantsAssigneeWithNoAccess (cm_participant_id)
-            SELECT p.cm_participant_id FROM acm_participant p 
-            LEFT JOIN acm_participant p1 ON p.cm_object_type=p1.cm_object_type AND p.cm_object_id=p1.cm_object_id AND p.cm_participant_ldap_id = p1.cm_participant_ldap_id
+            SELECT p.cm_participant_id FROM acm_participant p
+            LEFT JOIN acm_participant p1 ON p.cm_object_type=p1.cm_object_type AND p.cm_object_id=p1.cm_object_id AND
+            p.cm_participant_ldap_id = p1.cm_participant_ldap_id
             WHERE p.cm_participant_type='assignee' AND p1.cm_participant_type='owner';
 
-            DELETE FROM acm_participant_privilege where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsAssigneeWithNoAccess);
+            DELETE FROM acm_participant_privilege where cm_participant_id IN (SELECT cm_participant_id FROM
+            ParticipantsAssigneeWithNoAccess);
             DELETE FROM acm_participant where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsAssigneeWithNoAccess);
 
             DROP TABLE ParticipantsAssigneeWithNoAccess;

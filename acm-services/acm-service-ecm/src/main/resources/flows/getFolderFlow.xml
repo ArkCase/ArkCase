@@ -8,7 +8,8 @@
                http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
 
     <flow name="getFolder">
-        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  doc:name="Get a folder" address="vm://getFolder.in" exchange-pattern="request-response"/>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" doc:name="Get a folder" address="vm://getFolder.in"
+            exchange-pattern="request-response"/>
 
         <enricher target="#[flowVars['folder']]">
             <cmis:get-object-by-id config-ref="#[message.inboundProperties.configRef]"

@@ -14,7 +14,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
             Mule NullPayload.
         </description>
 
-        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://downloadFileFlow.in" exchange-pattern="request-response"
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://downloadFileFlow.in" exchange-pattern="request-response"
             doc:name="Download File"></vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
