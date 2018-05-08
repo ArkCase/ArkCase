@@ -8,10 +8,9 @@ import java.util.Date;
 
 public class ObjectAssociationEvent extends AcmEvent
 {
-    public enum ObjectAssociationState
-    {
-        NEW, UPDATE, DELETE
-    }
+    private static final String EVENT_TYPE = "com.armedia.acm.objectassociation.created";
+    private ObjectAssociationState objectAssociationState;
+    private Authentication authentication;
 
     public ObjectAssociationEvent(ObjectAssociation source)
     {
@@ -20,12 +19,6 @@ public class ObjectAssociationEvent extends AcmEvent
         setObjectType(source.getParentType());
         setEventDate(new Date());
     }
-
-    private static final String EVENT_TYPE = "com.armedia.acm.objectassociation.created";
-
-    private ObjectAssociationState objectAssociationState;
-
-    private Authentication authentication;
 
     @Override
     public String getEventType()
@@ -51,5 +44,10 @@ public class ObjectAssociationEvent extends AcmEvent
     public void setAuthentication(Authentication authentication)
     {
         this.authentication = authentication;
+    }
+
+    public enum ObjectAssociationState
+    {
+        NEW, UPDATE, DELETE
     }
 }

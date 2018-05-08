@@ -12,7 +12,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
             The folder will be deleted if does not contain any children elements.
         </description>
 
-        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://deleteFolder.in" exchange-pattern="request-response"
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://deleteFolder.in" exchange-pattern="request-response"
             doc:name="Delete Folder"></vm:inbound-endpoint>
 
         <enricher target="#[flowVars['children']]">

@@ -2,10 +2,12 @@ package com.armedia.acm.plugins.dashboard.site.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.dashboard.site.model.Site;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.TypedQuery;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,14 +33,17 @@ public class SiteDao extends AcmAbstractDao<Site>
                     "SELECT site " +
                             "FROM Site site " +
                             " WHERE site.user = :user " +
-                            " ORDER BY site.created DESC", Site.class);
+                            " ORDER BY site.created DESC",
+                    Site.class);
             siteTypedQuery.setParameter("user", user);
-        } else
+        }
+        else
         {
             siteTypedQuery = getEm().createQuery(
                     "SELECT site " +
                             "FROM Site site " +
-                            " ORDER BY site.created DESC", Site.class);
+                            " ORDER BY site.created DESC",
+                    Site.class);
         }
 
         List<Site> sites = siteTypedQuery.getResultList();

@@ -93,29 +93,35 @@ public class TimeItem
     }
 
     @XmlElement(name = "chargeRole")
-    public String getChargeRole() {
+    public String getChargeRole()
+    {
         return chargeRole;
     }
 
-    public void setChargeRole(String chargeRole) {
+    public void setChargeRole(String chargeRole)
+    {
         this.chargeRole = chargeRole;
     }
 
     @XmlTransient
-    public List<String> getChargeRoles() {
+    public List<String> getChargeRoles()
+    {
         return chargeRoles;
     }
 
-    public void setChargeRoles(List<String> chargeRoles) {
+    public void setChargeRoles(List<String> chargeRoles)
+    {
         this.chargeRoles = chargeRoles;
     }
 
     @XmlElement(name = "totalCost")
-    public Double getTotalCost() {
+    public Double getTotalCost()
+    {
         return totalCost;
     }
 
-    public void setTotalCost(Double totalCost) {
+    public void setTotalCost(Double totalCost)
+    {
         this.totalCost = totalCost;
     }
 

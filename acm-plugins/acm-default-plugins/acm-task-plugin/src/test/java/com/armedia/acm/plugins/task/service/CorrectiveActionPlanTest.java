@@ -32,22 +32,17 @@ import java.util.Map;
 @ContextConfiguration(locations = { "/spring/spring-library-task-activiti-test.xml" })
 public class CorrectiveActionPlanTest
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private ProcessEngine pe;
-
     @Autowired
     private RepositoryService repo;
-
     @Autowired
     private RuntimeService rt;
-
     @Autowired
     private TaskService ts;
-
     @Autowired
     private HistoryService hs;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

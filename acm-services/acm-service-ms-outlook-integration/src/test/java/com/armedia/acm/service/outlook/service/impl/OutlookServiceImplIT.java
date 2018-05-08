@@ -50,11 +50,9 @@ import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 })
 public class OutlookServiceImplIT
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private OutlookService outlookService;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     private String validUser = "***REMOVED***";
     private String validPassword = "AcMd3v$";
 

@@ -16,12 +16,6 @@ public class AcmLoginFailureEventListener implements ApplicationEventPublisherAw
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
-    {
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
-
-    @Override
     public void onApplicationEvent(AbstractAuthenticationFailureEvent authenticationFailureEvent)
     {
         Authentication auth = authenticationFailureEvent.getAuthentication();
@@ -34,6 +28,12 @@ public class AcmLoginFailureEventListener implements ApplicationEventPublisherAw
     public ApplicationEventPublisher getApplicationEventPublisher()
     {
         return applicationEventPublisher;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
 }

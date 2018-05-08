@@ -26,18 +26,18 @@ import java.util.Map;
 public class DefaultSplashScreenAgent implements Agent, MuleContextAware, SplashScreenAgent
 {
 
+    private static Logger logger = LoggerFactory.getLogger(DefaultSplashScreenAgent.class);
     private int extensionsCount;
     private MuleContext muleContext;
-    private static Logger logger = LoggerFactory.getLogger(DefaultSplashScreenAgent.class);
-
-    public void setName(String name)
-    {
-        throw new UnsupportedOperationException();
-    }
 
     public String getName()
     {
         return "DevKitSplashScreenAgent";
+    }
+
+    public void setName(String name)
+    {
+        throw new UnsupportedOperationException();
     }
 
     public String getDescription()

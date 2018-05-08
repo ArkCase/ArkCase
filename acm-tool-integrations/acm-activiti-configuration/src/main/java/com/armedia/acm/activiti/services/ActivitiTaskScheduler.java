@@ -18,9 +18,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ActivitiTaskScheduler extends ThreadPoolTaskExecutor implements ApplicationContextAware
 {
-    private AtomicBoolean initialized = new AtomicBoolean(false);
-
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private AtomicBoolean initialized = new AtomicBoolean(false);
 
     @Override
     public void afterPropertiesSet()

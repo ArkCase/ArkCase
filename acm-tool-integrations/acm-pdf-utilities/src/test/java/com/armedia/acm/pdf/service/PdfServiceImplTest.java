@@ -34,10 +34,9 @@ import java.util.List;
 })
 public class PdfServiceImplTest
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     PdfService pdfService;
-
+    private Logger log = LoggerFactory.getLogger(getClass());
     private String tiffOutputFileName = System.getProperty("java.io.tmpdir") + File.separator + "multipageImage.tif";
     private File tiffOutputFile = new File(tiffOutputFileName);
 

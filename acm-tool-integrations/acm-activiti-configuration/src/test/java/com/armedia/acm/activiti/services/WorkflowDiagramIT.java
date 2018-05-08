@@ -23,10 +23,9 @@ import net.sf.jmimemagic.MagicMatch;
 public class WorkflowDiagramIT
 {
     @Autowired
-    private RepositoryService repo;
-
-    @Autowired
     AcmBpmnServiceImpl acmBpmnService;
+    @Autowired
+    private RepositoryService repo;
 
     @Before
     public void setUp() throws Exception

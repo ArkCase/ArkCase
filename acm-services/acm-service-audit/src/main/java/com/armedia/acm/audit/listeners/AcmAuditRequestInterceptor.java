@@ -32,10 +32,8 @@ import java.util.UUID;
  */
 public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     public static final String EVENT_TYPE = "com.armedia.acm.audit.request";
-
+    private Logger log = LoggerFactory.getLogger(getClass());
     private AuditService auditService;
     private boolean requestsLoggingEnabled;
     private boolean requestsLoggingHeadersEnabled;

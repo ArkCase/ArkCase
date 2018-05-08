@@ -44,15 +44,13 @@ import java.util.UUID;
 })
 public class CreateOrFindRecordFolderIT
 {
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     @Autowired
     @Qualifier("createOrFindRecordFolderService")
     private AlfrescoService<String> service;
-
     @Autowired
     @Qualifier("findFolderService")
     private AlfrescoService<Folder> findFolderService;
-
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

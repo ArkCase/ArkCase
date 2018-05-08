@@ -60,18 +60,18 @@ public class AcmEventAttachmentDTO
      * @param mediaType
      *            the mediaType to set
      */
-    public void setMediaType(MediaType mediaType)
+    public void setMediaType(String mediaType)
     {
-        this.mediaType = mediaType;
+        this.mediaType = MediaType.parseMediaType(mediaType);
     }
 
     /**
      * @param mediaType
      *            the mediaType to set
      */
-    public void setMediaType(String mediaType)
+    public void setMediaType(MediaType mediaType)
     {
-        this.mediaType = MediaType.parseMediaType(mediaType);
+        this.mediaType = mediaType;
     }
 
     /**

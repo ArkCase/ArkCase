@@ -11,9 +11,9 @@ import java.util.Map;
 
 public class NotificationSenderFactory implements ApplicationListener<AbstractConfigurationFileEvent>
 {
+    String flowType = "smtp";
     private Map<String, NotificationSender> notificationSenderMap;
     private EmailSenderConfigurationServiceImpl emailSenderConfigurationService;
-    String flowType = "smtp";
 
     public NotificationSender getNotificationSender()
     {

@@ -56,24 +56,21 @@ import java.util.Random;
 public class PdfServiceImpl implements PdfService
 {
     /**
-     * Logger instance.
-     */
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
-     * Random number generator.
-     */
-    private Random random = new Random();
-
-    /**
      * Megabyte in bytes.
      */
     public static final long MEGABYTE = 1024 * 1024;
-
     /**
      * Use no more than 32MB of main memory when merging PDFs, the disk is used for the rest.
      */
     public static final int MAX_MAIN_MEMORY_BYTES = 1024 * 1024 * 32;
+    /**
+     * Logger instance.
+     */
+    private Logger log = LoggerFactory.getLogger(getClass());
+    /**
+     * Random number generator.
+     */
+    private Random random = new Random();
 
     /**
      * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is

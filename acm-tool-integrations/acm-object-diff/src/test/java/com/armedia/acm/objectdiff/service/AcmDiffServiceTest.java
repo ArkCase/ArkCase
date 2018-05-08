@@ -1,6 +1,8 @@
 package com.armedia.acm.objectdiff.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.objectdiff.model.AcmChange;
 import com.armedia.acm.objectdiff.model.AcmCollectionElementAdded;

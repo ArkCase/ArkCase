@@ -11,7 +11,8 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 
     <flow name="getPentahoReportsSecure" doc:name="Get Reports from Pentaho server - Secure">
 
-        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://getPentahoReportsSecure.in" exchange-pattern="request-response"
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://getPentahoReportsSecure.in"
+            exchange-pattern="request-response"
             doc:name="Get Pentaho Reports - Secure"></vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.report"/>

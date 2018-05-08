@@ -45,16 +45,12 @@ public class SplitCaseFilesAPIControllerTest extends EasyMockSupport
     MockHttpSession session;
     @Autowired
     MockHttpServletRequest request;
-
+    @Autowired
+    SplitCaseFilesAPIController splitCaseFilesAPIController;
     private Authentication mockAuthentication;
-
     private MockMvc mockMvc;
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
-
-    @Autowired
-    SplitCaseFilesAPIController splitCaseFilesAPIController;
-
     private SplitCaseService splitCaseService;
 
     @Before

@@ -28,7 +28,8 @@ import java.util.Calendar;
  * <p>
  * {
  * "jobName":"MasterList",
- * "simpleJobTrigger":{"uiPassParam":"RUN_ONCE", "repeatInterval":0, "repeatCount":0, "startTime":"2017-06-06T15:59:00.000-04:00", "endTime":null},
+ * "simpleJobTrigger":{"uiPassParam":"RUN_ONCE", "repeatInterval":0, "repeatCount":0,
+ * "startTime":"2017-06-06T15:59:00.000-04:00", "endTime":null},
  * "inputFile":"/public/arkcase/MasterList.prpt",
  * "outputFile":"/public/admin",
  * "jobParameters":[
@@ -59,7 +60,7 @@ public class PentahoScheduleRequest
     private Calendar calendar;
 
     public PentahoScheduleRequest(String scheduleType, String startTime, String endTime, String jobName, String emails,
-                                  String filterStartDate, String filterEndDate, String reportFile, String inputPath, String outputPath)
+            String filterStartDate, String filterEndDate, String reportFile, String inputPath, String outputPath)
     {
         dateConversion(startTime);
         scheduleJob = new JSONObject();
@@ -78,9 +79,11 @@ public class PentahoScheduleRequest
         String fullPath = null;
         if (base != null && path != null)
         {
-            if (base.endsWith("/")) {
+            if (base.endsWith("/"))
+            {
                 fullPath = base + path;
-            } else
+            }
+            else
             {
                 fullPath = base + "/" + path;
             }
@@ -109,7 +112,8 @@ public class PentahoScheduleRequest
         if (scheduleType.equals(PentahoReportScheduleConstants.RUN_ONCE) || scheduleType.equals(PentahoReportScheduleConstants.DAILY))
         {
             triggerName = PentahoReportScheduleConstants.SIMPLE_JOB_TRIGGER;
-        } else
+        }
+        else
         {
             triggerName = PentahoReportScheduleConstants.COMPLEX_JOB_TRIGGER;
         }
@@ -124,9 +128,10 @@ public class PentahoScheduleRequest
             jobTrigger.put(PentahoReportScheduleConstants.REPEAT_INTERVAL, PentahoReportScheduleConstants.DAILY_INTERVAL);
             jobTrigger.put(PentahoReportScheduleConstants.REPEAT_COUNT, "-1");
 
-        } else if (scheduleType.equals(PentahoReportScheduleConstants.WEEKLY))
+        }
+        else if (scheduleType.equals(PentahoReportScheduleConstants.WEEKLY))
         {
-            //Pentaho dayOfWeek starts from 0 - Sunday, thus - 1.
+            // Pentaho dayOfWeek starts from 0 - Sunday, thus - 1.
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
             if (dayOfWeek > 0)
             {
@@ -135,15 +140,17 @@ public class PentahoScheduleRequest
             JSONArray dayOfWeekArray = new JSONArray();
             dayOfWeekArray.add(Integer.toString(dayOfWeek));
             jobTrigger.put(PentahoReportScheduleConstants.DAYS_OF_WEEK, dayOfWeekArray);
-        } else if (scheduleType.equals(PentahoReportScheduleConstants.MONTHLY))
+        }
+        else if (scheduleType.equals(PentahoReportScheduleConstants.MONTHLY))
         {
             int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
             JSONArray dayOfMonthArray = new JSONArray();
             dayOfMonthArray.add(Integer.toString(dayOfMonth));
             jobTrigger.put(PentahoReportScheduleConstants.DAYS_OF_MONTH, dayOfMonthArray);
-        } else
+        }
+        else
         {
-            //RUN_ONCE
+            // RUN_ONCE
             jobTrigger.put(PentahoReportScheduleConstants.REPEAT_COUNT, 0);
             jobTrigger.put(PentahoReportScheduleConstants.REPEAT_INTERVAL, 0);
         }

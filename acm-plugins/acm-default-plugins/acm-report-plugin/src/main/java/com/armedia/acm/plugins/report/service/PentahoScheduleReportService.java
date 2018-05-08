@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.report.service;
 
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
+
 import org.apache.commons.ssl.Base64;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -59,7 +60,8 @@ public class PentahoScheduleReportService implements ScheduleReportService
                 throw new ScheduleReportException(response.getStatusCode().toString());
             }
 
-        } catch (ScheduleReportException e)
+        }
+        catch (ScheduleReportException e)
         {
             LOGGER.debug("Scheduling report encountered error. May be Rest call connection or file not found error: {}", e.getMessage(), e);
             throw e;
@@ -84,7 +86,8 @@ public class PentahoScheduleReportService implements ScheduleReportService
             }
 
             return response.getBody();
-        } catch (ScheduleReportException e)
+        }
+        catch (ScheduleReportException e)
         {
             LOGGER.error("Retrieve schedules rest call error: {}", e.getMessage(), e);
             throw e;
@@ -113,7 +116,8 @@ public class PentahoScheduleReportService implements ScheduleReportService
             }
 
             return response.getBody();
-        } catch (ScheduleReportException e)
+        }
+        catch (ScheduleReportException e)
         {
             LOGGER.error("Delete schedule rest call error: {}", e.getMessage(), e);
             throw e;
@@ -122,17 +126,20 @@ public class PentahoScheduleReportService implements ScheduleReportService
 
     public String buildDeleteScheduleUrl()
     {
-        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "") + getDeleteScheduleApi();
+        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "")
+                + getDeleteScheduleApi();
     }
 
     public String buildRetrieveSchedulesUrl()
     {
-        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "") + getRetrieveSchedulesApi();
+        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "")
+                + getRetrieveSchedulesApi();
     }
 
     public String buildScheduleUrl()
     {
-        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "") + getScheduleApi();
+        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "")
+                + getScheduleApi();
     }
 
     public String getPentahoUser()

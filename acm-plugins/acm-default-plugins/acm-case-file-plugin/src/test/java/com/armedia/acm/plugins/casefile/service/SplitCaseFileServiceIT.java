@@ -100,25 +100,18 @@ public class SplitCaseFileServiceIT extends EasyMock
 {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private CaseFileDao caseFileDao;
-
-    @Autowired
-    private SplitCaseService splitCaseService;
-
-    @Autowired
-    private SaveCaseService saveCaseService;
-
     @Autowired
     AcmFolderService acmFolderService;
-
     @Autowired
     EcmFileService ecmFileService;
-
     @Autowired
     EcmFileDao ecmFileDao;
-
+    @Autowired
+    private CaseFileDao caseFileDao;
+    @Autowired
+    private SplitCaseService splitCaseService;
+    @Autowired
+    private SaveCaseService saveCaseService;
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
 

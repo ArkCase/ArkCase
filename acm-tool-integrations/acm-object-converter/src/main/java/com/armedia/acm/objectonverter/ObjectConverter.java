@@ -24,6 +24,46 @@ public class ObjectConverter
     private XMLMarshaller xmlMarshaller;
     private XMLUnmarshaller xmlUnmarshaller;
 
+    public static AcmMarshaller createJSONMarshallerForTests()
+    {
+        // Make sure all mapper features are in line with the 'sourceObjectMapper' bean defined in servlet-context.xml
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        mapper.setDateFormat(new ISO8601DateFormat());
+        mapper.findAndRegisterModules();
+
+        JSONMarshaller jsonMarshaller = new JSONMarshaller();
+        jsonMarshaller.setMapper(mapper);
+
+        return jsonMarshaller;
+    }
+
+    public static JSONUnmarshaller createJSONUnmarshallerForTests()
+    {
+        // Make sure all mapper features are in line with the 'sourceObjectMapper' bean defined in servlet-context.xml
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        mapper.setDateFormat(new ISO8601DateFormat());
+        mapper.findAndRegisterModules();
+
+        JSONUnmarshaller jsonUnmarshaller = new JSONUnmarshaller();
+        jsonUnmarshaller.setMapper(mapper);
+
+        return jsonUnmarshaller;
+    }
+
+    public static ObjectConverter createObjectConverterForTests()
+    {
+        ObjectConverter objectConverter = new ObjectConverter();
+        objectConverter.setJsonMarshaller((JSONMarshaller) createJSONMarshallerForTests());
+        objectConverter.setJsonUnmarshaller(createJSONUnmarshallerForTests());
+        objectConverter.setXmlMarshaller(new XMLMarshaller());
+        objectConverter.setXmlUnmarshaller(new XMLUnmarshaller());
+        return objectConverter;
+    }
+
     public JSONMarshaller getJsonMarshaller()
     {
         return jsonMarshaller;
@@ -78,45 +118,5 @@ public class ObjectConverter
             }
         }
         return indentedJsonMarshaller;
-    }
-
-    public static AcmMarshaller createJSONMarshallerForTests()
-    {
-        // Make sure all mapper features are in line with the 'sourceObjectMapper' bean defined in servlet-context.xml
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.setDateFormat(new ISO8601DateFormat());
-        mapper.findAndRegisterModules();
-
-        JSONMarshaller jsonMarshaller = new JSONMarshaller();
-        jsonMarshaller.setMapper(mapper);
-
-        return jsonMarshaller;
-    }
-
-    public static JSONUnmarshaller createJSONUnmarshallerForTests()
-    {
-        // Make sure all mapper features are in line with the 'sourceObjectMapper' bean defined in servlet-context.xml
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.setDateFormat(new ISO8601DateFormat());
-        mapper.findAndRegisterModules();
-
-        JSONUnmarshaller jsonUnmarshaller = new JSONUnmarshaller();
-        jsonUnmarshaller.setMapper(mapper);
-
-        return jsonUnmarshaller;
-    }
-
-    public static ObjectConverter createObjectConverterForTests()
-    {
-        ObjectConverter objectConverter = new ObjectConverter();
-        objectConverter.setJsonMarshaller((JSONMarshaller) createJSONMarshallerForTests());
-        objectConverter.setJsonUnmarshaller(createJSONUnmarshallerForTests());
-        objectConverter.setXmlMarshaller(new XMLMarshaller());
-        objectConverter.setXmlUnmarshaller(new XMLUnmarshaller());
-        return objectConverter;
     }
 }

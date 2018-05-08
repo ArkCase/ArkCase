@@ -46,6 +46,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
     private StartBusinessProcessService startBusinessProcessService;
 
     private SaveCaseFileBusinessRule saveCaseFileBusinessRule;
+    private AcmObjectLockService acmObjectLockService;
 
     public CaseFileDao getCaseFileDao()
     {
@@ -61,8 +62,6 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
     {
         return leaveCurrentQueueBusinessRule;
     }
-
-    private AcmObjectLockService acmObjectLockService;
 
     public void setLeaveCurrentQueueBusinessRule(LeaveCurrentQueueBusinessRule leaveCurrentQueueBusinessRule)
     {

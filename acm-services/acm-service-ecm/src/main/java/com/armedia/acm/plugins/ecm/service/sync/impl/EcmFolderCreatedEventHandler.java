@@ -21,9 +21,8 @@ import javax.persistence.PersistenceException;
  */
 public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEvent>
 {
-    private AcmFolderDao folderDao;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private AcmFolderDao folderDao;
     private AcmFolderService folderService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private EcmFileParticipantService fileParticipantService;
@@ -106,19 +105,14 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
         }
     }
 
-    public void setFolderDao(AcmFolderDao folderDao)
-    {
-        this.folderDao = folderDao;
-    }
-
     public AcmFolderDao getFolderDao()
     {
         return folderDao;
     }
 
-    public void setFolderService(AcmFolderService folderService)
+    public void setFolderDao(AcmFolderDao folderDao)
     {
-        this.folderService = folderService;
+        this.folderDao = folderDao;
     }
 
     public AcmFolderService getFolderService()
@@ -126,14 +120,19 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
         return folderService;
     }
 
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    public void setFolderService(AcmFolderService folderService)
     {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+        this.folderService = folderService;
     }
 
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
     {
         return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
     public EcmFileParticipantService getFileParticipantService()

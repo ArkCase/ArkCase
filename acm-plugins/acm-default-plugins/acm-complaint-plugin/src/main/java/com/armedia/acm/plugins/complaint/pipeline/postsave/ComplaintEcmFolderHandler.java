@@ -17,14 +17,13 @@ import org.slf4j.LoggerFactory;
 public class ComplaintEcmFolderHandler implements PipelineHandler<Complaint, ComplaintPipelineContext>
 {
     /**
-     * CMIS service.
-     */
-    private EcmFileService ecmFileService;
-
-    /**
      * Logger instance.
      */
     private final Logger log = LoggerFactory.getLogger(getClass());
+    /**
+     * CMIS service.
+     */
+    private EcmFileService ecmFileService;
 
     @Override
     public void execute(Complaint entity, ComplaintPipelineContext pipelineContext) throws PipelineProcessException

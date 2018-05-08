@@ -31,13 +31,11 @@ import java.time.LocalDateTime;
  */
 abstract class AcmSamlAuthenticationCheckFilterBase extends GenericFilterBean
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    private long authenticationCheckIntervalInSeconds;
-    private RequestCache requestCache = new HttpSessionRequestCache();
-
     private static final String FILTER_APPLIED = "__spring_security_filterAuthenticationCheck_filterApplied";
     private static final String LAST_AUTHENTICATION_CHECK = "acmLastAuthenticationCheck";
+    private Logger log = LoggerFactory.getLogger(getClass());
+    private long authenticationCheckIntervalInSeconds;
+    private RequestCache requestCache = new HttpSessionRequestCache();
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException

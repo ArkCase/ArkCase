@@ -12,10 +12,8 @@ import java.util.List;
 
 public class AcmEntityParticipantsChangedEvent extends AcmEvent
 {
-    private static final long serialVersionUID = 1L;
-
     public static final String EVENT_TYPE = "com.armedia.acm.object.participants.change";
-
+    private static final long serialVersionUID = 1L;
     private List<AcmParticipant> originalParticipants;
 
     public AcmEntityParticipantsChangedEvent(AcmObject source, List<AcmParticipant> originalParticipants)

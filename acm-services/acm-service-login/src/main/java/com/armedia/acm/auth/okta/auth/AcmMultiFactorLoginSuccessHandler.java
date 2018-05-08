@@ -1,6 +1,7 @@
 package com.armedia.acm.auth.okta.auth;
 
 import com.armedia.acm.auth.AcmLoginSuccessOperations;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 public class AcmMultiFactorLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler
@@ -22,7 +24,8 @@ public class AcmMultiFactorLoginSuccessHandler extends SavedRequestAwareAuthenti
     private AcmLoginSuccessOperations loginSuccessOperations;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+            throws ServletException, IOException
     {
         LOGGER.debug("Authentication details is of type: {}",
                 authentication.getDetails() == null ? null : authentication.getDetails().getClass().getName());

@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 public class AcmParticipantService
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AcmParticipantDao participantDao;
     private ParticipantsBusinessRule participantsBusinessRule;
     private AcmParticipantEventPublisher acmParticipantEventPublisher;
-
     private Set<Class<?>> assignedObjectClasses;
 
     public void init()
@@ -37,8 +37,6 @@ public class AcmParticipantService
                 .filter(entityType -> AcmAssignedObject.class.isAssignableFrom(entityType.getJavaType()))
                 .map(entityType -> entityType.getJavaType()).collect(Collectors.toSet());
     }
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     public AcmParticipant saveParticipant(String userId, String participantType, Long objectId, String objectType)
             throws AcmAccessControlException

@@ -94,16 +94,19 @@ public abstract class AcmAbstractDao<T>
                 if ("ASC".equalsIgnoreCase(direction))
                 {
                     queryBuilder.orderBy(criteriaBuilder.asc(site.get(fieldName)));
-                } else
+                }
+                else
                 {
                     queryBuilder.orderBy(criteriaBuilder.desc(site.get(fieldName)));
                 }
-            } else
+            }
+            else
             {
                 // default sort order is descending by created date
                 queryBuilder.orderBy(criteriaBuilder.desc(site.get("created")));
             }
-        } else
+        }
+        else
         {
             queryBuilder.orderBy(criteriaBuilder.desc(site.get("created")));
         }

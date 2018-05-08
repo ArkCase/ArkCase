@@ -15,11 +15,11 @@
  */
 angular.module('admin').service('Admin.WorkflowsConfigService', [ '$http', 'Upload', function($http, Upload) {
     return ({
-        retrieveWorkflows : retrieveWorkflows,
-        retrieveHistory : retrieveHistory,
-        activate : activate,
-        uploadDefinition : uploadDefinition,
-        diagram : diagram
+        retrieveWorkflows: retrieveWorkflows,
+        retrieveHistory: retrieveHistory,
+        activate: activate,
+        uploadDefinition: uploadDefinition,
+        diagram: diagram
     });
     /**
      * @ngdoc method
@@ -33,8 +33,8 @@ angular.module('admin').service('Admin.WorkflowsConfigService', [ '$http', 'Uplo
      */
     function retrieveWorkflows() {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/admin/workflowconfiguration/workflows"
+            method: "GET",
+            url: "api/latest/plugin/admin/workflowconfiguration/workflows"
         });
     }
     ;
@@ -56,8 +56,8 @@ angular.module('admin').service('Admin.WorkflowsConfigService', [ '$http', 'Uplo
      */
     function retrieveHistory(key, version) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/plugin/admin/workflowconfiguration/workflows/' + key + '/versions/' + version + '/history'
+            method: 'GET',
+            url: 'api/latest/plugin/admin/workflowconfiguration/workflows/' + key + '/versions/' + version + '/history'
         });
     }
     ;
@@ -79,11 +79,11 @@ angular.module('admin').service('Admin.WorkflowsConfigService', [ '$http', 'Uplo
      */
     function activate(key, version) {
         return $http({
-            method : 'PUT',
-            url : 'api/latest/plugin/admin/workflowconfiguration/workflows/' + key + '/versions/' + version + '/active',
-            data : {},
-            headers : {
-                'Content-Type' : 'application/json'
+            method: 'PUT',
+            url: 'api/latest/plugin/admin/workflowconfiguration/workflows/' + key + '/versions/' + version + '/active',
+            data: {},
+            headers: {
+                'Content-Type': 'application/json'
             }
         });
     }
@@ -108,11 +108,11 @@ angular.module('admin').service('Admin.WorkflowsConfigService', [ '$http', 'Uplo
      */
     function diagram(deploymentId, key, version) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/plugin/admin/workflowconfiguration/diagram/' + deploymentId + '/' + key + '/' + version,
-            data : {},
-            headers : {
-                'Content-Type' : 'application/json'
+            method: 'GET',
+            url: 'api/latest/plugin/admin/workflowconfiguration/diagram/' + deploymentId + '/' + key + '/' + version,
+            data: {},
+            headers: {
+                'Content-Type': 'application/json'
             }
         });
     }
@@ -134,12 +134,12 @@ angular.module('admin').service('Admin.WorkflowsConfigService', [ '$http', 'Uplo
      */
     function uploadDefinition(file, description) {
         return Upload.upload({
-            url : 'api/latest/plugin/admin/workflowconfiguration/files',
-            method : 'POST',
-            params : {
-                description : description
+            url: 'api/latest/plugin/admin/workflowconfiguration/files',
+            method: 'POST',
+            params: {
+                description: description
             },
-            file : file,
+            file: file,
         });
     }
     ;

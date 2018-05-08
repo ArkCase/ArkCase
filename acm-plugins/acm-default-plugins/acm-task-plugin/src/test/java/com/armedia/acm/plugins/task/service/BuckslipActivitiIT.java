@@ -45,28 +45,21 @@ import java.util.Map;
 @ContextConfiguration(locations = { "/spring/spring-library-task-activiti-test.xml" })
 public class BuckslipActivitiIT extends EasyMockSupport
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private ProcessEngine pe;
-
     @Autowired
     private RepositoryService repo;
-
     @Autowired
     private RuntimeService rt;
-
     @Autowired
     private TaskService ts;
-
     @Autowired
     private HistoryService hs;
-
     @Autowired
     private BuckslipTaskHelper buckslipTaskHelper;
-
     @Autowired
     private BuckslipTaskCompletedListener buckslipTaskCompletedListener;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private UserDao userDaoMock;
 
     private ApplicationEventPublisher mockApplicationEventPublisher;

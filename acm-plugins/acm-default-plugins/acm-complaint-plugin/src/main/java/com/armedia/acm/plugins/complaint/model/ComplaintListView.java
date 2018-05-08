@@ -69,59 +69,14 @@ public class ComplaintListView
         return complaintId;
     }
 
-    public String getComplaintNumber()
-    {
-        return complaintNumber;
-    }
-
-    public String getComplaintType()
-    {
-        return complaintType;
-    }
-
-    public String getPriority()
-    {
-        return priority;
-    }
-
-    public String getComplaintTitle()
-    {
-        return complaintTitle;
-    }
-
-    public Date getIncidentDate()
-    {
-        return incidentDate;
-    }
-
-    public Date getCreated()
-    {
-        return created;
-    }
-
-    public String getCreator()
-    {
-        return creator;
-    }
-
-    public Date getModified()
-    {
-        return modified;
-    }
-
-    public String getModifier()
-    {
-        return modifier;
-    }
-
-    public String getStatus()
-    {
-        return status;
-    }
-
     protected void setComplaintId(Long complaintId)
     {
         this.complaintId = complaintId;
+    }
+
+    public String getComplaintNumber()
+    {
+        return complaintNumber;
     }
 
     protected void setComplaintNumber(String complaintNumber)
@@ -129,9 +84,19 @@ public class ComplaintListView
         this.complaintNumber = complaintNumber;
     }
 
+    public String getComplaintType()
+    {
+        return complaintType;
+    }
+
     protected void setComplaintType(String complaintType)
     {
         this.complaintType = complaintType;
+    }
+
+    public String getPriority()
+    {
+        return priority;
     }
 
     protected void setPriority(String priority)
@@ -139,9 +104,19 @@ public class ComplaintListView
         this.priority = priority;
     }
 
+    public String getComplaintTitle()
+    {
+        return complaintTitle;
+    }
+
     protected void setComplaintTitle(String complaintTitle)
     {
         this.complaintTitle = complaintTitle;
+    }
+
+    public Date getIncidentDate()
+    {
+        return incidentDate;
     }
 
     protected void setIncidentDate(Date incidentDate)
@@ -149,9 +124,19 @@ public class ComplaintListView
         this.incidentDate = incidentDate;
     }
 
+    public Date getCreated()
+    {
+        return created;
+    }
+
     protected void setCreated(Date created)
     {
         this.created = created;
+    }
+
+    public String getCreator()
+    {
+        return creator;
     }
 
     protected void setCreator(String creator)
@@ -159,14 +144,29 @@ public class ComplaintListView
         this.creator = creator;
     }
 
+    public Date getModified()
+    {
+        return modified;
+    }
+
     protected void setModified(Date modified)
     {
         this.modified = modified;
     }
 
+    public String getModifier()
+    {
+        return modifier;
+    }
+
     protected void setModifier(String modifier)
     {
         this.modifier = modifier;
+    }
+
+    public String getStatus()
+    {
+        return status;
     }
 
     protected void setStatus(String status)

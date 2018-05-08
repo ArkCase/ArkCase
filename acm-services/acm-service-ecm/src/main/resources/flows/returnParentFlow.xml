@@ -12,7 +12,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
             The incoming payload is AcmFolder that should be moved to other location. The return payload is the moved CMIS folder.
         </description>
 
-        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://returnParent.in" exchange-pattern="request-response"
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://returnParent.in" exchange-pattern="request-response"
             doc:name="Return Parent Folder"></vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>

@@ -170,24 +170,24 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
         getAssignmentBusinessRule().applyRules(assignedObject);
     }
 
-    public void setAssignmentBusinessRule(AcmAssignedObjectBusinessRule assignmentBusinessRule)
-    {
-        this.assignmentBusinessRule = assignmentBusinessRule;
-    }
-
     public AcmAssignedObjectBusinessRule getAssignmentBusinessRule()
     {
         return assignmentBusinessRule;
     }
 
-    public void setAccessControlBusinessRule(AcmAssignedObjectBusinessRule accessControlBusinessRule)
+    public void setAssignmentBusinessRule(AcmAssignedObjectBusinessRule assignmentBusinessRule)
     {
-        this.accessControlBusinessRule = accessControlBusinessRule;
+        this.assignmentBusinessRule = assignmentBusinessRule;
     }
 
     public AcmAssignedObjectBusinessRule getAccessControlBusinessRule()
     {
         return accessControlBusinessRule;
+    }
+
+    public void setAccessControlBusinessRule(AcmAssignedObjectBusinessRule accessControlBusinessRule)
+    {
+        this.accessControlBusinessRule = accessControlBusinessRule;
     }
 
     public ParticipantsBusinessRule getParticipantsBusinessRule()

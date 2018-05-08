@@ -68,80 +68,12 @@ public class ExchangeCalendarService
 {
 
     static final String PROCESS_USER = "CALENDAR_SERVICE_PURGER";
-
-    /**
-     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 12, 2017
-     */
-    public class ExchangeCalendarExcpetionMapper<CSE extends CalendarServiceException> implements CalendarExceptionMapper<CSE>
-    {
-
-        private CSE exception;
-
-        /*
-         * (non-Javadoc)
-         * @see com.armedia.acm.calendar.service.CalendarExceptionMapper#mapException(com.armedia.acm.calendar.service.
-         * CalendarServiceException)
-         */
-        @Override
-        public Object mapException(CSE ce)
-        {
-            exception = ce;
-            Map<String, Object> errorDetails = new HashMap<>();
-            if (exception instanceof CalendarServiceAccessDeniedException)
-            {
-                errorDetails.put("error_cause", "ACCESS_DENIED");
-            }
-            else if (exception instanceof CalendarServiceConfigurationException)
-            {
-                errorDetails.put("error_cause", "SERVICE_CONFIGURATION");
-            }
-            else if (exception instanceof CalendarServiceBindToRemoteException)
-            {
-                errorDetails.put("error_cause", "INVALID_BIND_TO_SERVICE_CREDENTIALS");
-            }
-            else if (exception instanceof CalendarObjectClosedException)
-            {
-                errorDetails.put("error_cause", "OBJECT_CLOSED");
-            }
-            else
-            {
-                errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
-            }
-            errorDetails.put("error_message", ce.getMessage());
-            return errorDetails;
-        }
-
-        /*
-         * (non-Javadoc)
-         * @see com.armedia.acm.calendar.service.CalendarExceptionMapper#getStatusCode()
-         */
-        @Override
-        public HttpStatus getStatusCode()
-        {
-            if (exception instanceof CalendarServiceAccessDeniedException || exception instanceof CalendarServiceBindToRemoteException)
-            {
-                return HttpStatus.FORBIDDEN;
-            }
-            else
-            {
-                return HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-        }
-
-    }
-
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private CalendarAdminService calendarAdminService;
-
     private Map<String, CalendarEntityHandler> entityHandlers;
-
     private OutlookDao outlookDao;
-
     private AcmOutlookFolderCreatorDao folderCreatorDao;
-
     private Map<String, CalendarConfiguration> configurationsByType;
-
     private OutlookFolderRecreator folderRecreator;
 
     /*
@@ -758,6 +690,67 @@ public class ExchangeCalendarService
     public void setFolderRecreator(OutlookFolderRecreator folderRecreator)
     {
         this.folderRecreator = folderRecreator;
+    }
+
+    /**
+     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 12, 2017
+     */
+    public class ExchangeCalendarExcpetionMapper<CSE extends CalendarServiceException> implements CalendarExceptionMapper<CSE>
+    {
+
+        private CSE exception;
+
+        /*
+         * (non-Javadoc)
+         * @see com.armedia.acm.calendar.service.CalendarExceptionMapper#mapException(com.armedia.acm.calendar.service.
+         * CalendarServiceException)
+         */
+        @Override
+        public Object mapException(CSE ce)
+        {
+            exception = ce;
+            Map<String, Object> errorDetails = new HashMap<>();
+            if (exception instanceof CalendarServiceAccessDeniedException)
+            {
+                errorDetails.put("error_cause", "ACCESS_DENIED");
+            }
+            else if (exception instanceof CalendarServiceConfigurationException)
+            {
+                errorDetails.put("error_cause", "SERVICE_CONFIGURATION");
+            }
+            else if (exception instanceof CalendarServiceBindToRemoteException)
+            {
+                errorDetails.put("error_cause", "INVALID_BIND_TO_SERVICE_CREDENTIALS");
+            }
+            else if (exception instanceof CalendarObjectClosedException)
+            {
+                errorDetails.put("error_cause", "OBJECT_CLOSED");
+            }
+            else
+            {
+                errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
+            }
+            errorDetails.put("error_message", ce.getMessage());
+            return errorDetails;
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see com.armedia.acm.calendar.service.CalendarExceptionMapper#getStatusCode()
+         */
+        @Override
+        public HttpStatus getStatusCode()
+        {
+            if (exception instanceof CalendarServiceAccessDeniedException || exception instanceof CalendarServiceBindToRemoteException)
+            {
+                return HttpStatus.FORBIDDEN;
+            }
+            else
+            {
+                return HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+        }
+
     }
 
 }

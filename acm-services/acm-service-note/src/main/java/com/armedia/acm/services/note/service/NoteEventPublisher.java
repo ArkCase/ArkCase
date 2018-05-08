@@ -9,9 +9,8 @@ import org.springframework.context.ApplicationEventPublisherAware;
 
 public class NoteEventPublisher implements ApplicationEventPublisherAware
 {
-    private ApplicationEventPublisher applicationEventPublisher;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public void publishNoteEvent(ApplicationNoteEvent event)
     {

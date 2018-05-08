@@ -56,12 +56,12 @@ angular.module('directives').directive(
                 'UtilService',
                 function($q, $modal, $translate, Authentication, HelperUiGridService, HelperNoteService, ObjectNoteService, Util) {
                     return {
-                        restrict : 'E',
-                        scope : {
-                            notesInit : '=',
-                            config : '='
+                        restrict: 'E',
+                        scope: {
+                            notesInit: '=',
+                            config: '='
                         },
-                        link : function(scope, element, attrs) {
+                        link: function(scope, element, attrs) {
 
                             Authentication.queryUserInfo().then(function(userInfo) {
                                 scope.userId = userInfo.userId;
@@ -75,7 +75,7 @@ angular.module('directives').directive(
 
                             var noteHelper = new HelperNoteService.Note();
                             var gridHelper = new HelperUiGridService.Grid({
-                                scope : scope
+                                scope: scope
                             });
                             var promiseUsers = gridHelper.getUsers();
 
@@ -133,10 +133,8 @@ angular.module('directives').directive(
                             scope.retrieveGridData = function() {
                                 var info = scope.notesInit;
                                 if (info) {
-                                    var promiseQueryNotes = ObjectNoteService.queryNotesPage(info.objectType, info.currentObjectId,
-                                            info.showAllNotes ? 'ALL' : info.noteType, Util.goodValue(scope.start, 0), Util.goodValue(
-                                                    scope.pageSize, 10), Util.goodMapValue(scope.sort, "by"), Util.goodMapValue(scope.sort,
-                                                    "dir"));
+                                    var promiseQueryNotes = ObjectNoteService.queryNotesPage(info.objectType, info.currentObjectId, info.showAllNotes ? 'ALL' : info.noteType, Util.goodValue(scope.start, 0), Util.goodValue(scope.pageSize, 10), Util.goodMapValue(scope.sort, "by"), Util.goodMapValue(
+                                            scope.sort, "dir"));
 
                                     promiseQueryNotes.then(function(data) {
                                         scope.gridOptions = scope.gridOptions || {};
@@ -148,8 +146,7 @@ angular.module('directives').directive(
 
                             scope.addNew = function() {
                                 var info = scope.notesInit;
-                                var note = noteHelper.createNote(info.currentObjectId, info.objectType, info.parentTitle, info.tag,
-                                        scope.userId, info.noteType);
+                                var note = noteHelper.createNote(info.currentObjectId, info.objectType, info.parentTitle, info.tag, scope.userId, info.noteType);
                                 showModal(note, false);
                             };
                             scope.editRow = function(rowEntity) {
@@ -175,22 +172,22 @@ angular.module('directives').directive(
                                 modalScope.isEdit = isEdit || false;
 
                                 var modalInstance = $modal.open({
-                                    scope : modalScope,
-                                    animation : true,
-                                    templateUrl : 'directives/core-notes/core-notes.modal.client.view.html',
-                                    controller : function($scope, $modalInstance) {
+                                    scope: modalScope,
+                                    animation: true,
+                                    templateUrl: 'directives/core-notes/core-notes.modal.client.view.html',
+                                    controller: function($scope, $modalInstance) {
                                         $scope.onClickOk = function() {
                                             $modalInstance.close({
-                                                note : $scope.note,
-                                                isEdit : $scope.isEdit
+                                                note: $scope.note,
+                                                isEdit: $scope.isEdit
                                             });
                                         };
                                         $scope.onClickCancel = function() {
                                             $modalInstance.dismiss('cancel');
                                         }
                                     },
-                                    size : 'md',
-                                    backdrop : 'static'
+                                    size: 'md',
+                                    backdrop: 'static'
                                 });
 
                                 modalInstance.result.then(function(data) {
@@ -201,6 +198,6 @@ angular.module('directives').directive(
                                 });
                             }
                         },
-                        templateUrl : 'directives/core-notes/core-notes.client.view.html'
+                        templateUrl: 'directives/core-notes/core-notes.client.view.html'
                     };
                 } ]);

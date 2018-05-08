@@ -286,6 +286,11 @@ public class AcmUser implements Serializable
         return groups;
     }
 
+    public void setGroups(Set<AcmGroup> groups)
+    {
+        this.groups = groups;
+    }
+
     @JsonIgnore
     public String getDistinguishedName()
     {
@@ -386,11 +391,6 @@ public class AcmUser implements Serializable
     public void setPasswordResetToken(PasswordResetToken passwordResetToken)
     {
         this.passwordResetToken = passwordResetToken;
-    }
-
-    public void setGroups(Set<AcmGroup> groups)
-    {
-        this.groups = groups;
     }
 
     @Override

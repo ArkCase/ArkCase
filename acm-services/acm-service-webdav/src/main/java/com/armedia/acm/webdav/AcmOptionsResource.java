@@ -16,10 +16,9 @@ import io.milton.resource.PropFindableResource;
  */
 public class AcmOptionsResource implements PropFindableResource
 {
-    private String uniqueId = UUID.randomUUID().toString();
-
-    private Date today = new Date();
     private final AcmFileSystemResourceFactory resourceFactory;
+    private String uniqueId = UUID.randomUUID().toString();
+    private Date today = new Date();
 
     public AcmOptionsResource(AcmFileSystemResourceFactory resourceFactory)
     {

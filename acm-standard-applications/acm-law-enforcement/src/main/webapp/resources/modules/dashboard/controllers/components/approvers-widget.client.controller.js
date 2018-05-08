@@ -2,43 +2,29 @@
 
 angular.module('dashboard.approvers', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('approvers', {
-        title : 'preference.overviewWidgets.approvers.title',
-        description : 'dashboard.widgets.approvers.description',
-        controller : 'Dashboard.ApproversController',
-        controllerAs : 'approvers',
-        reload : true,
-        templateUrl : 'modules/dashboard/views/components/approvers-widget.client.view.html',
-        commonName : 'approvers'
+        title: 'preference.overviewWidgets.approvers.title',
+        description: 'dashboard.widgets.approvers.description',
+        controller: 'Dashboard.ApproversController',
+        controllerAs: 'approvers',
+        reload: true,
+        templateUrl: 'modules/dashboard/views/components/approvers-widget.client.view.html',
+        commonName: 'approvers'
     });
 }).controller(
         'Dashboard.ApproversController',
-        [
-                '$scope',
-                'config',
-                '$state',
-                '$translate',
-                'UtilService',
-                'Dashboard.DashboardService',
-                'CostTracking.InfoService',
-                'TimeTracking.InfoService',
-                'Helper.ObjectBrowserService',
-                '$stateParams',
-                'Helper.UiGridService',
-                'ObjectService',
-                'LookupService',
-                function($scope, config, $state, $translate, Util, DashboardService, CostTrackingInfoService, TimeTrackingInfoService,
-                        HelperObjectBrowserService, $stateParams, HelperUiGridService, ObjectService, LookupService) {
+        [ '$scope', 'config', '$state', '$translate', 'UtilService', 'Dashboard.DashboardService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', '$stateParams', 'Helper.UiGridService', 'ObjectService', 'LookupService',
+                function($scope, config, $state, $translate, Util, DashboardService, CostTrackingInfoService, TimeTrackingInfoService, HelperObjectBrowserService, $stateParams, HelperUiGridService, ObjectService, LookupService) {
 
                     var modules = [ {
-                        name : "COSTSHEET",
-                        configName : "cost-tracking",
-                        getInfo : CostTrackingInfoService.getCostsheetInfo,
-                        validateInfo : CostTrackingInfoService.validateCostsheet
+                        name: "COSTSHEET",
+                        configName: "cost-tracking",
+                        getInfo: CostTrackingInfoService.getCostsheetInfo,
+                        validateInfo: CostTrackingInfoService.validateCostsheet
                     }, {
-                        name : "TIMESHEET",
-                        configName : "time-tracking",
-                        getInfo : TimeTrackingInfoService.getTimesheetInfo,
-                        validateInfo : TimeTrackingInfoService.validateTimesheet
+                        name: "TIMESHEET",
+                        configName: "time-tracking",
+                        getInfo: TimeTrackingInfoService.getTimesheetInfo,
+                        validateInfo: TimeTrackingInfoService.validateTimesheet
                     } ];
 
                     var module = _.find(modules, function(module) {
@@ -46,26 +32,26 @@ angular.module('dashboard.approvers', [ 'adf.provider' ]).config(function(dashbo
                     });
 
                     $scope.gridOptions = {
-                        enableColumnResizing : true,
-                        columnDefs : []
+                        enableColumnResizing: true,
+                        columnDefs: []
                     };
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
                     var promiseUsers = gridHelper.getUsers();
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : module.configName,
-                        componentId : "main",
-                        retrieveObjectInfo : module.getInfo,
-                        validateObjectInfo : module.validateInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: module.configName,
+                        componentId: "main",
+                        retrieveObjectInfo: module.getInfo,
+                        validateObjectInfo: module.validateInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         },
-                        onConfigRetrieved : function(componentConfig) {
+                        onConfigRetrieved: function(componentConfig) {
                             onConfigRetrieved(componentConfig);
                         }
                     });
