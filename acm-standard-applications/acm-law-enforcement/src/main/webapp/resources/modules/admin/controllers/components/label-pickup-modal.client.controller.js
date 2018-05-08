@@ -2,23 +2,11 @@
 
 angular.module('admin').controller(
         'Admin.LabelPickupClientController',
-        [
-                '$scope',
-                '$q',
-                '$modal',
-                '$timeout',
-                'Helper.UiGridService',
-                'UtilService',
-                'Admin.LabelsConfigService',
-                'MessageService',
-                'Config.LocaleService',
-                '$modalInstance',
-                'params',
-                function($scope, $q, $modal, $timeout, HelperUiGridService, Util, LabelsConfigService, messageService, LocaleService,
-                        $modalInstance, params) {
+        [ '$scope', '$q', '$modal', '$timeout', 'Helper.UiGridService', 'UtilService', 'Admin.LabelsConfigService', 'MessageService', 'Config.LocaleService', '$modalInstance', 'params',
+                function($scope, $q, $modal, $timeout, HelperUiGridService, Util, LabelsConfigService, messageService, LocaleService, $modalInstance, params) {
                     $scope.config = params.config;
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     $scope.onClickCancel = function() {
@@ -33,8 +21,8 @@ angular.module('admin').controller(
                         $scope.entry.value = $scope.selectedRow[0].id;
                         $scope.entry.inverseValue = $scope.selectedRow[0].id;
                         $modalInstance.close({
-                            entry : $scope.entry,
-                            isEdit : $scope.isEdit,
+                            entry: $scope.entry,
+                            isEdit: $scope.isEdit,
 
                         });
                     };
@@ -44,18 +32,18 @@ angular.module('admin').controller(
                     $scope.reloadGrid = reloadGrid;
 
                     $scope.gridOptions = {
-                        enableColumnResizing : true,
-                        enableRowSelection : true,
-                        enableRowHeaderSelection : false,
-                        enableFiltering : true,
-                        multiSelect : false,
-                        noUnselect : false,
-                        columnDefs : [],
-                        totalItems : 0,
-                        paginationPageSizes : [],
-                        paginationPageSize : 0,
-                        data : [],
-                        onRegisterApi : function(gridApi) {
+                        enableColumnResizing: true,
+                        enableRowSelection: true,
+                        enableRowHeaderSelection: false,
+                        enableFiltering: true,
+                        multiSelect: false,
+                        noUnselect: false,
+                        columnDefs: [],
+                        totalItems: 0,
+                        paginationPageSizes: [],
+                        paginationPageSize: 0,
+                        data: [],
+                        onRegisterApi: function(gridApi) {
                             $scope.gridApi = gridApi;
                         }
                     };
@@ -67,7 +55,7 @@ angular.module('admin').controller(
                     $q.all([ $scope.config.$promise, nsPromise, settingsPromise, localSettingsPromise ]).then(function(result) {
                         var config = result[0];
                         var labelsConfig = _.find(config.components, {
-                            id : 'labelsChooser'
+                            id: 'labelsChooser'
                         });
                         $scope.gridOptions.columnDefs = labelsConfig.columnDefs;
 
@@ -88,7 +76,7 @@ angular.module('admin').controller(
 
                         $scope.languagesDropdownOptions = locales;
                         $scope.selectedLocale = _.find(locales, {
-                            code : localeCode
+                            code: localeCode
                         });
 
                         reloadGrid();

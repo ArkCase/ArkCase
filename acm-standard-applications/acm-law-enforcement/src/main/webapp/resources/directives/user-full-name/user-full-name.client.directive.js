@@ -2,12 +2,12 @@
 
 angular.module('directives').directive('userFullName', [ 'UtilService', 'Profile.UserInfoService', function(Util, UserInfoService) {
     return {
-        restrict : 'E',
-        scope : {
-            userid : '=',
-            fallback : '@'
+        restrict: 'E',
+        scope: {
+            userid: '=',
+            fallback: '@'
         },
-        link : function(scope, element, attrs) {
+        link: function(scope, element, attrs) {
             scope.$watch('userid', function() {
                 UserInfoService.getUserInfoById(scope.userid).then(function(userInfo) {
                     scope.userFullName = userInfo.fullName;
@@ -16,6 +16,6 @@ angular.module('directives').directive('userFullName', [ 'UtilService', 'Profile
                 })
             });
         },
-        template : "{{userFullName || fallback}}"
+        template: "{{userFullName || fallback}}"
     };
 } ]);

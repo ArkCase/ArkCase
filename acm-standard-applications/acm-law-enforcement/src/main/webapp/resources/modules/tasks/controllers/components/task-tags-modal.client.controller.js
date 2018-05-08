@@ -2,20 +2,8 @@
 
 angular.module('cases').controller(
         'Tasks.TagsModalController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$modalInstance',
-                'ConfigService',
-                'Object.TagsService',
-                'Tags.TagsService',
-                'MessageService',
-                '$translate',
-                'Search.AutoSuggestService',
-                'Task.InfoService',
-                function($scope, $q, stateParams, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService,
-                        $translate, AutoSuggestService, TaskInfoService) {
+        [ '$scope', '$q', '$stateParams', '$modalInstance', 'ConfigService', 'Object.TagsService', 'Tags.TagsService', 'MessageService', '$translate', 'Search.AutoSuggestService', 'Task.InfoService',
+                function($scope, $q, stateParams, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService, $translate, AutoSuggestService, TaskInfoService) {
 
                     $scope.tags = [];
                     $scope.modalInstance = $modalInstance;
@@ -36,12 +24,10 @@ angular.module('cases').controller(
                         // Check if tag is created. If not, create new tag
                         if (!selectedTag.id) {
                             var tagsCreated = _.filter($scope.createdTags, function(tag) {
-                                return tag.tagName == selectedTag.title_parseable || tag.tagDescription == selectedTag.title_parseable
-                                        || tag.tagText == selectedTag.title_parseable;
+                                return tag.tagName == selectedTag.title_parseable || tag.tagDescription == selectedTag.title_parseable || tag.tagText == selectedTag.title_parseable;
                             });
                             if (tagsCreated.length == 0) {
-                                ObjectTagsService.createTag(selectedTag.title_parseable, selectedTag.title_parseable,
-                                        selectedTag.title_parseable).then(function(tagCreated) {
+                                ObjectTagsService.createTag(selectedTag.title_parseable, selectedTag.title_parseable, selectedTag.title_parseable).then(function(tagCreated) {
                                     //add newly created tag
                                     _.remove($scope.tags, function(tag) {
                                         return selectedTag.title_parseable == tag.title_parseable;

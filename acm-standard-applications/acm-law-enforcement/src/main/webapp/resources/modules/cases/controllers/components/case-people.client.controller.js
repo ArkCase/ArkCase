@@ -2,22 +2,8 @@
 
 angular.module('cases').controller(
         'Cases.PeopleController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Case.InfoService',
-                'Authentication',
-                'Object.LookupService',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'Person.InfoService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, CaseInfoService, Authentication,
-                        ObjectLookupService, HelperUiGridService, HelperObjectBrowserService, PersonInfoService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Case.InfoService', 'Authentication', 'Object.LookupService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Person.InfoService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, CaseInfoService, Authentication, ObjectLookupService, HelperUiGridService, HelperObjectBrowserService, PersonInfoService) {
 
                     var initiatorType = 'Initiator';
 
@@ -36,22 +22,22 @@ angular.module('cases').controller(
                     });
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "cases",
-                        componentId : "people",
-                        retrieveObjectInfo : CaseInfoService.getCaseInfo,
-                        validateObjectInfo : CaseInfoService.validateCaseInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "cases",
+                        componentId: "people",
+                        retrieveObjectInfo: CaseInfoService.getCaseInfo,
+                        validateObjectInfo: CaseInfoService.validateCaseInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -78,15 +64,15 @@ angular.module('cases').controller(
 
                     var newPersonAssociation = function() {
                         return {
-                            id : null,
-                            personType : "",
-                            parentId : $scope.objectInfo.id,
-                            parentType : $scope.objectInfo.objectType,
-                            parentTitle : $scope.objectInfo.caseNumber,
-                            personDescription : "",
-                            notes : "",
-                            person : null,
-                            className : "com.armedia.acm.plugins.person.model.PersonAssociation"
+                            id: null,
+                            personType: "",
+                            parentId: $scope.objectInfo.id,
+                            parentType: $scope.objectInfo.objectType,
+                            parentTitle: $scope.objectInfo.caseNumber,
+                            personDescription: "",
+                            notes: "",
+                            person: null,
+                            className: "com.armedia.acm.plugins.person.model.PersonAssociation"
                         };
                     };
 
@@ -106,26 +92,26 @@ angular.module('cases').controller(
                                 params.types = $scope.personTypesInitiator;
                             }
                             angular.extend(params, {
-                                personId : association.person.id,
-                                personName : association.person.givenName + ' ' + association.person.familyName,
-                                type : association.personType,
-                                selectExistingEnabled : association.personType == initiatorType ? true : false,
-                                typeEnabled : association.personType == initiatorType ? false : true,
-                                description : association.personDescription
+                                personId: association.person.id,
+                                personName: association.person.givenName + ' ' + association.person.familyName,
+                                type: association.personType,
+                                selectExistingEnabled: association.personType == initiatorType ? true : false,
+                                typeEnabled: association.personType == initiatorType ? false : true,
+                                description: association.personDescription
                             });
                         } else {
                             association = new newPersonAssociation();
                         }
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-person-modal.client.view.html',
-                            controller : 'Common.AddPersonModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-person-modal.client.view.html',
+                            controller: 'Common.AddPersonModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }

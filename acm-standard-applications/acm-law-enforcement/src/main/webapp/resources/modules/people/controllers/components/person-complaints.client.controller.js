@@ -2,22 +2,8 @@
 
 angular.module('people').controller(
         'People.ComplaintsController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Person.InfoService',
-                'Authentication',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'PersonAssociation.Service',
-                'Object.LookupService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication,
-                        HelperUiGridService, HelperObjectBrowserService, PersonAssociationService, ObjectLookupService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PersonAssociation.Service', 'Object.LookupService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PersonAssociationService, ObjectLookupService) {
 
                     var typeInitiator = 'Initiator1';
 
@@ -32,22 +18,22 @@ angular.module('people').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "people",
-                        componentId : "complaints",
-                        retrieveObjectInfo : PersonInfoService.getPersonInfo,
-                        validateObjectInfo : PersonInfoService.validatePersonInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "people",
+                        componentId: "complaints",
+                        retrieveObjectInfo: PersonInfoService.getPersonInfo,
+                        validateObjectInfo: PersonInfoService.validatePersonInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -71,12 +57,11 @@ angular.module('people').controller(
                         $scope.objectInfo = objectInfo;
                         var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
                         if (Util.goodPositive(currentObjectId, false)) {
-                            PersonAssociationService.getPersonAssociations(currentObjectId, ObjectService.ObjectTypes.COMPLAINT).then(
-                                    function(data) {
-                                        $scope.gridOptions.data = data.response.docs;
-                                        $scope.gridOptions.totalItems = data.response.numFound;
-                                        return data;
-                                    });
+                            PersonAssociationService.getPersonAssociations(currentObjectId, ObjectService.ObjectTypes.COMPLAINT).then(function(data) {
+                                $scope.gridOptions.data = data.response.docs;
+                                $scope.gridOptions.totalItems = data.response.numFound;
+                                return data;
+                            });
                         }
                     };
 
@@ -111,24 +96,24 @@ angular.module('people').controller(
 
                         if (rowEntity) {
                             angular.extend(params, {
-                                objectId : rowEntity.parent_object.object_id_s,
-                                objectName : rowEntity.parent_object.name,
-                                type : rowEntity.type_lcs,
-                                description : association.personDescription
+                                objectId: rowEntity.parent_object.object_id_s,
+                                objectName: rowEntity.parent_object.name,
+                                type: rowEntity.type_lcs,
+                                description: association.personDescription
                             });
                         } else {
                             association = new newPersonAssociation();
                         }
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-object-association-modal.client.view.html',
-                            controller : 'Common.AddObjectAssociationModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-object-association-modal.client.view.html',
+                            controller: 'Common.AddObjectAssociationModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -155,9 +140,9 @@ angular.module('people').controller(
                             } else {
                                 //add row to the grid
                                 rowEntity = {
-                                    object_id_s : response.id,
-                                    type_lcs : response.personType,
-                                    parent_object : data.solrDocument
+                                    object_id_s: response.id,
+                                    type_lcs: response.personType,
+                                    parent_object: data.solrDocument
                                 };
                                 $scope.gridOptions.data.push(rowEntity);
                             }
@@ -166,15 +151,15 @@ angular.module('people').controller(
 
                     var newPersonAssociation = function() {
                         return {
-                            id : null,
-                            personType : "",
-                            parentId : $scope.objectInfo.id,
-                            parentType : $scope.objectInfo.objectType,
-                            parentTitle : $scope.objectInfo.complaintNumber,
-                            personDescription : "",
-                            notes : "",
-                            person : null,
-                            className : "com.armedia.acm.plugins.person.model.PersonAssociation"
+                            id: null,
+                            personType: "",
+                            parentId: $scope.objectInfo.id,
+                            parentType: $scope.objectInfo.objectType,
+                            parentTitle: $scope.objectInfo.complaintNumber,
+                            personDescription: "",
+                            notes: "",
+                            person: null,
+                            className: "com.armedia.acm.plugins.person.model.PersonAssociation"
                         };
                     };
 

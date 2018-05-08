@@ -13,12 +13,12 @@
 angular.module('services').service('DueDate.Service', function() {
 
     return ({
-        dueDateWorkingDays : dueDateWorkingDays,
-        dueDateWithWeekends : dueDateWithWeekends,
-        workingDays : workingDays,
-        workingDaysWithWeekends : workingDaysWithWeekends,
-        daysLeft : daysLeft,
-        daysLeftWithWeekends : daysLeftWithWeekends
+        dueDateWorkingDays: dueDateWorkingDays,
+        dueDateWithWeekends: dueDateWithWeekends,
+        workingDays: workingDays,
+        workingDaysWithWeekends: workingDaysWithWeekends,
+        daysLeft: daysLeft,
+        daysLeftWithWeekends: daysLeftWithWeekends
     });
 
     function dueDateWorkingDays(startDate, days, holidays) {

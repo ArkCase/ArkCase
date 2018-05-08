@@ -2,35 +2,17 @@
 
 angular.module('people').controller(
         'People.ActionsController',
-        [
-                '$scope',
-                '$state',
-                '$stateParams',
-                '$q',
-                'UtilService',
-                'ConfigService',
-                'ObjectService',
-                'Authentication',
-                'Object.LookupService',
-                'Person.LookupService',
-                'Object.SubscriptionService',
-                'Person.InfoService',
-                'Helper.ObjectBrowserService',
-                'Object.ModelService',
-                'Profile.UserInfoService',
-                '$translate',
-                function($scope, $state, $stateParams, $q, Util, ConfigService, ObjectService, Authentication, ObjectLookupService,
-                        PersonLookupService, ObjectSubscriptionService, PersonInfoService, HelperObjectBrowserService, ObjectModelService,
-                        UserInfoService, $translate) {
+        [ '$scope', '$state', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Person.LookupService', 'Object.SubscriptionService', 'Person.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService', 'Profile.UserInfoService',
+                '$translate', function($scope, $state, $stateParams, $q, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, PersonLookupService, ObjectSubscriptionService, PersonInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, $translate) {
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "people",
-                        componentId : "actions",
-                        retrieveObjectInfo : PersonInfoService.getPersonInfo,
-                        validateObjectInfo : PersonInfoService.validatePersonInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "people",
+                        componentId: "actions",
+                        retrieveObjectInfo: PersonInfoService.getPersonInfo,
+                        validateObjectInfo: PersonInfoService.validatePersonInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -44,13 +26,11 @@ angular.module('people').controller(
                         $scope.$bus.subscribe("object.changed/PERSON/" + $stateParams.id, function() {
                             if (activationMode) {
                                 $scope.$emit("report-tree-updated");
-                                $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop"
-                                        : "fa fa-play-circle";
+                                $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
                             }
                         });
                         if ($scope.activationIcon != "fa fa-circle-o-notch fa-spin") {
-                            $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop"
-                                    : "fa fa-play-circle";
+                            $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
                             activationMode = false;
                         }
                     };
