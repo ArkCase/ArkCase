@@ -102,10 +102,11 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
      * @returns {HttpPromise} Future info add role privileges
      */
     function addPrivilegeToApplicationRole(roleName, privileges) {
-        var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roleName + '/privileges/natokmiGoSo';
+        var url = 'api/latest/plugin/admin/rolesprivileges/' + roleName + '/privileges';
         return $http({
             method : 'PUT',
             url : url,
+            cache : false,
             data : privileges,
             headers : {
                 'Content-Type' : 'application/json'
@@ -127,10 +128,11 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
      * @returns {HttpPromise} Future info add role privileges
      */
     function removePrivilegeFromApplicationRole(roleName, privileges) {
-        var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roleName + '/privileges/natokmiGoSo';
+        var url = 'api/latest/plugin/admin/rolesprivileges/' + roleName + '/privileges';
         return $http({
             method : 'DELETE',
             url : url,
+            cache : false,
             data : privileges,
             headers : {
                 'Content-Type' : 'application/json'

@@ -88,9 +88,9 @@ public class RolesPrivilegesService
     }
 
     /**
-     * Retrieve application's privileges without role privileges paged
+     * Retrieve application's privileges for an application role paged
      *
-     * @return list of privileges and descriptions
+     * @return list of objects (PrivilegeItem)
      * @throws AcmRolesPrivilegesException
      */
     public List<PrivilegeItem> getPrivilegesByRolePaged(String roleName, String sortDirection, Integer startRow, Integer maxRows,
@@ -103,9 +103,9 @@ public class RolesPrivilegesService
     }
 
     /**
-     * Retrieve application's privileges without role privileges by role name
+     * Retrieve application's privileges for an application role by role name
      *
-     * @return list of privileges and descriptions
+     * @return list of objects (PrivilegeItem)
      * @throws AcmRolesPrivilegesException
      */
     public List<PrivilegeItem> getPrivilegesByRole(String roleName, Boolean authorized, String filterQuery, String sortDirection,
@@ -121,7 +121,7 @@ public class RolesPrivilegesService
             Integer startRow, Integer maxRows, String filterQuery)
     {
         List<PrivilegeItem> result = new ArrayList<>();
-        privileges.entrySet().stream().map(privilege -> new PrivilegeItem(privilege.getKey(), privilege.getValue()))
+        result = privileges.entrySet().stream().map(privilege -> new PrivilegeItem(privilege.getKey(), privilege.getValue()))
                 .collect(Collectors.toList());
 
         if (sortDirection.contains("DESC"))
@@ -215,10 +215,7 @@ public class RolesPrivilegesService
         }
         else
         {
-            rolesByPrivilege.forEach(roleByPrivilege -> {
-                allRoles.removeIf(role -> role.equalsIgnoreCase(roleByPrivilege));
-            });
-            rolesByPrivilegePaged = new ArrayList<>(allRoles);
+            rolesByPrivilegePaged = allRoles.stream().filter(role -> !rolesByPrivilege.contains(role)).collect(Collectors.toList());
         }
 
         if (sortDirection.contains("DESC"))
@@ -271,7 +268,7 @@ public class RolesPrivilegesService
         }
 
         // Save new role privileges
-        saveRolePrivileges(roleName, privileges);
+        addRolePrivileges(roleName, privileges);
 
         // Re-generate Roles Privileges XML file
         updateRolesPrivilegesConfig();
@@ -297,7 +294,7 @@ public class RolesPrivilegesService
         }
 
         // Save new role privileges
-        saveRolePrivileges(roleName, privileges);
+        addRolePrivileges(roleName, privileges);
 
         // Re-generate Roles Privileges XML file
         updateRolesPrivilegesConfig();
@@ -622,7 +619,7 @@ public class RolesPrivilegesService
      * @param privileges
      *            List of privileges
      */
-    private void saveRolePrivileges(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
+    private void addRolePrivileges(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
     {
         // opening an output stream and input stream for the same file at the same time means the output stream
         // will overwrite the file contents before the input stream can read it... so here, we split into two
@@ -633,7 +630,10 @@ public class RolesPrivilegesService
             props.load(applicationInputStream);
             String propPrivileges = props.getProperty(roleName);
             propPrivileges += (propPrivileges.isEmpty() ? "" : ",") + String.join(",", privileges);
+            Set<String> updatedRole = new TreeSet<>(Arrays.asList(propPrivileges.split(",")));
+            propPrivileges = String.join(",", new ArrayList<>(updatedRole));
             props.setProperty(roleName, propPrivileges);
+
             try (OutputStream applicationOutputStream = FileUtils.openOutputStream(new File(applicationRolesPrivilegesPropertiesFile)))
             {
                 props.store(applicationOutputStream, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));

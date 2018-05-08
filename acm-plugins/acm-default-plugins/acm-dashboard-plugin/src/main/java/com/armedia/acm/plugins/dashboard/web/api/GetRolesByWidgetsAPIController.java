@@ -78,7 +78,7 @@ public class GetRolesByWidgetsAPIController
         }
         catch (Exception e)
         {
-            log.error("Can't retrieve privileges", e);
+            log.warn("Can't retrieve privileges", e);
         }
         return result;
     }
@@ -96,7 +96,6 @@ public class GetRolesByWidgetsAPIController
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows, Authentication authentication,
             HttpSession session)
-            throws IOException
     {
         List<WidgetRoleName> result = null;
         try
@@ -107,7 +106,7 @@ public class GetRolesByWidgetsAPIController
         }
         catch (Exception e)
         {
-            log.error("Can't retrieve privileges", e);
+            log.warn("Can't retrieve privileges {}", e);
         }
         return result;
     }

@@ -49,7 +49,7 @@ public class GetApplicationRolesAPIController
         LOG.debug("Taking application roles paged...");
 
         List<String> retval = getFunctionalAccessService().getApplicationRolesPaged(sortDirection, startRow, maxRows);
-        LOG.debug("Application roles: " + retval.toString());
+        LOG.debug("Application roles size: {}", retval.size());
 
         return retval;
     }
@@ -66,7 +66,7 @@ public class GetApplicationRolesAPIController
         LOG.debug("Taking application roles by name...");
 
         List<String> retval = getFunctionalAccessService().getApplicationRolesByName(sortDirection, startRow, maxRows, filterQuery);
-        LOG.debug("Application roles: " + retval.toString());
+        LOG.debug("Application roles: {}", retval.toString());
 
         return retval;
     }

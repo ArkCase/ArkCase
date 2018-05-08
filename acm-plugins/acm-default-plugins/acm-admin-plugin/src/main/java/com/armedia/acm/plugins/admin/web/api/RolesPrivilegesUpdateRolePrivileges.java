@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +36,7 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
     @ResponseBody
     public String updateRolePrivileges(
             @RequestBody String resource,
-            @PathVariable(PROP_ROLE_NAME) String roleName) throws IOException, AcmRolesPrivilegesException
+            @PathVariable(PROP_ROLE_NAME) String roleName) throws AcmRolesPrivilegesException
     {
         try
         {
@@ -70,16 +69,11 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
     @ResponseBody
     public ResponseEntity<?> addPrivilegesToApplicationRole(
             @PathVariable(PROP_ROLE_NAME) String roleName,
-            @RequestBody List<String> privileges) throws IOException, AcmRolesPrivilegesException
+            @RequestBody List<String> privileges) throws AcmRolesPrivilegesException
     {
 
         try
         {
-            if (roleName == null || "".equals(roleName))
-            {
-                throw new AcmRolesPrivilegesException("Role name is undefined");
-            }
-
             log.debug("Adding privileges to an application role [{}]", roleName);
             rolesPrivilegesService.updateRolePrivileges(roleName, privileges);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -97,7 +91,7 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
     @ResponseBody
     public ResponseEntity<?> removePrivilegesToApplicationRole(
             @PathVariable(PROP_ROLE_NAME) String roleName,
-            @RequestBody List<String> privileges) throws IOException, AcmRolesPrivilegesException
+            @RequestBody List<String> privileges) throws AcmRolesPrivilegesException
     {
 
         try

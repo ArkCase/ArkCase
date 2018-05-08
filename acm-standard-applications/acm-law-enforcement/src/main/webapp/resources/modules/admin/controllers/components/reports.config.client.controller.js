@@ -123,9 +123,9 @@ angular.module('admin').controller('Admin.ReportsConfigController',
                     //get all reports
                     fillListReport($scope.reportsMap, payload[0].data, $scope.reportsData.chooseObject);
 
-                    $scope.reportsConfig = payload[2];
+                    $scope.reportsConfig = payload[1];
 
-                    $scope.reportsUserGroups = payload[3].data;
+                    $scope.reportsUserGroups = payload[2].data;
 
                     var url = $scope.reportsConfig['PENTAHO_SERVER_URL'] + '/pentaho';
                     $scope.reportDesignerUrl = $sce.trustAsResourceUrl(url);
