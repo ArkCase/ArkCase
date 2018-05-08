@@ -276,7 +276,7 @@ public class ReportServiceImpl implements ReportService
         }
         catch (AcmEncryptionException e)
         {
-            LOG.error("Cannot save groups to application role", e);
+            LOG.warn("Cannot save groups to application role", e);
         }
 
         return Arrays.asList(reportUpdated.split(","));

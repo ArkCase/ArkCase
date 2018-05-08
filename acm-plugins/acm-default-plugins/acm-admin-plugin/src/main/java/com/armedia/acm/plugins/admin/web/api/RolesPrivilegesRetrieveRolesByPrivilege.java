@@ -56,17 +56,19 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows, Authentication authentication)
-            throws IOException, AcmRolesPrivilegesException
     {
+        List<String> rolesByNamePaged = null;
         try
         {
-            return rolesPrivilegesService.getRolesByNamePaged(privilegeName, sortBy, sortDirection, startRow, maxRows, authorized, "");
+            rolesByNamePaged = rolesPrivilegesService.getRolesByNamePaged(privilegeName, sortBy, sortDirection, startRow, maxRows,
+                    authorized, "");
         }
-        catch (Exception e)
+        catch (AcmRolesPrivilegesException e)
         {
-            log.error("Can't retrieve roles", e);
-            throw new AcmRolesPrivilegesException("Can't retrieve roles", e);
+            log.warn("Can't retrieve roles {}", e);
         }
+
+        return rolesByNamePaged;
     }
 
     @RequestMapping(value = "/rolesprivileges/{privilegeName:.+}/roles", params = { "fq" }, method = RequestMethod.GET, produces = {

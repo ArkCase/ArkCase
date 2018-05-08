@@ -37,7 +37,7 @@ public class GetReportToGroupsMapAPIController
         {
             LOG.warn("Properties not available..");
         }
-        LOG.debug("Reports to groups map : " + retval.toString());
+        LOG.debug("Reports to groups map : {}", retval.toString());
         return retval;
     }
 
@@ -56,7 +56,7 @@ public class GetReportToGroupsMapAPIController
         {
             LOG.warn("Properties not available..");
         }
-        LOG.debug("Reports to groups map : " + retval.toString());
+        LOG.debug("Reports to groups : {}", retval.toString());
         return retval;
     }
 
@@ -76,7 +76,7 @@ public class GetReportToGroupsMapAPIController
         {
             LOG.warn("Properties not available..");
         }
-        LOG.debug("Reports to groups map : " + retval.toString());
+        LOG.debug("Reports to groups : {}", retval.toString());
         return retval;
     }
 

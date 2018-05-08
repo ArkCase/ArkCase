@@ -79,7 +79,7 @@ public class SetAuthorizedWidgetRolesAPIController
             Authentication authentication,
             HttpSession session) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
-        RolesGroupByWidgetDto result;
+        RolesGroupByWidgetDto result = null;
         List<RolesGroupByWidgetDto> rolesGroupsByWidgetDto;
         RolesGroupByWidgetDto roleGroupByWidgetDtoUpdated;
         try
@@ -88,7 +88,7 @@ public class SetAuthorizedWidgetRolesAPIController
                     .addNotAuthorizedRolesPerWidget(getWidgetDao().getRolesGroupByWidget());
             roleGroupByWidgetDtoUpdated = rolesGroupsByWidgetDto.stream()
                     .filter(roleGroup -> roleGroup.getWidgetName().equalsIgnoreCase(widgetName)).findFirst()
-                    .orElse(null);
+                    .orElseThrow(() -> new AcmWidgetException("There is no widget " + widgetName));
 
             if (authorized)
             {
@@ -108,12 +108,12 @@ public class SetAuthorizedWidgetRolesAPIController
 
             result = updateWidgetRolesAuthorization(roleGroupByWidgetDtoUpdated);
             raiseSetEvent(authentication, session, result, true);
-            return result;
         }
         catch (Exception e)
         {
-            throw e;
+            log.warn("You cannot update the widget {}", e.getMessage());
         }
+        return result;
     }
 
     protected void raiseSetEvent(Authentication authentication, HttpSession session, RolesGroupByWidgetDto rolesPerWidget,
