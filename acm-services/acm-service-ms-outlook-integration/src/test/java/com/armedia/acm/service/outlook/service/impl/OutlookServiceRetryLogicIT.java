@@ -53,11 +53,9 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 })
 public class OutlookServiceRetryLogicIT extends EasyMockSupport
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private OutlookService outlookService;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     private String validUser = "***REMOVED***";
     private String validPassword = "AcMd3v$";
 

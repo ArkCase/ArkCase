@@ -8,6 +8,7 @@ import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
 import com.armedia.acm.services.transcribe.model.Transcribe;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -30,7 +31,8 @@ public class EcmFileCopiedListener implements ApplicationListener<EcmFileCopiedE
             EcmFile copy = (EcmFile) event.getSource();
             EcmFile original = event.getOriginal();
 
-            // I've saw that we are coping only active version, no other versions for the file, so copy Transcribe object only for active version
+            // I've saw that we are coping only active version, no other versions for the file, so copy Transcribe
+            // object only for active version
             EcmFileVersion copyActiveVersion = getFolderAndFilesUtils().getVersion(copy, copy.getActiveVersionTag());
             EcmFileVersion originalActiveVersion = getFolderAndFilesUtils().getVersion(original, original.getActiveVersionTag());
             if (originalActiveVersion != null)
@@ -45,7 +47,8 @@ public class EcmFileCopiedListener implements ApplicationListener<EcmFileCopiedE
                 }
                 catch (GetTranscribeException | CreateTranscribeException e)
                 {
-                    LOG.warn("Could not copy Transcription for EcmFile ID=[{}]. REASON=[{}]", copy != null ? copy.getId() : null, e.getMessage());
+                    LOG.warn("Could not copy Transcription for EcmFile ID=[{}]. REASON=[{}]", copy != null ? copy.getId() : null,
+                            e.getMessage());
                 }
             }
         }

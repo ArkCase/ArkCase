@@ -37,7 +37,9 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 5, 2017
@@ -232,7 +234,8 @@ public class AcmMailTemplateConfigurationServiceAPIControllerTest
      * @throws Exception
      */
     @Test
-    public void getEmailTemplate() throws Exception {
+    public void getEmailTemplate() throws Exception
+    {
 
         // given
         String contentOfTheTemplate = "Html - content";
@@ -240,7 +243,8 @@ public class AcmMailTemplateConfigurationServiceAPIControllerTest
         when(mailService.getTemplate("template_name")).thenReturn(contentOfTheTemplate);
 
         // when
-        MvcResult result = mockMvc.perform(get(CONTROLLER_PATH + "/template_name").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+        MvcResult result = mockMvc
+                .perform(get(CONTROLLER_PATH + "/template_name").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andReturn();
 
         // then

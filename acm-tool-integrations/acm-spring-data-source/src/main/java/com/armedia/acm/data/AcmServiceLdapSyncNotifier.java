@@ -1,13 +1,13 @@
 package com.armedia.acm.data;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 4, 2018
@@ -22,7 +22,6 @@ public class AcmServiceLdapSyncNotifier implements ApplicationListener<AcmServic
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
      */

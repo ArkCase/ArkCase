@@ -45,13 +45,13 @@ public class ChangeCaseStatusForm
         this.approvers = approvers;
     }
 
-    public void setResolutions(List<String> resolutions)
-    {
-        this.resolutions = resolutions;
-    }
-
     public List<String> getResolutions()
     {
         return resolutions;
+    }
+
+    public void setResolutions(List<String> resolutions)
+    {
+        this.resolutions = resolutions;
     }
 }

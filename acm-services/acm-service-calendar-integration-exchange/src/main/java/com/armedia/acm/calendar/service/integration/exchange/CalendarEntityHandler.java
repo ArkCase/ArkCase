@@ -58,46 +58,21 @@ import microsoft.exchange.webservices.data.search.FindItemsResults;
 public class CalendarEntityHandler
 {
 
-    public static enum PermissionType
-    {
-        READ, WRITE, DELETE;
-    }
-
-    @FunctionalInterface
-    public static interface ServiceConnector
-    {
-        Optional<ExchangeService> connect(Long objectId);
-    }
-
+    protected Map<String, PropertyDefinition> sortFields;
     @PersistenceContext
     private EntityManager em;
-
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private OutlookDao outlookDao;
-
     private AcmContainerDao containerEntityDao;
-
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-
-    protected Map<String, PropertyDefinition> sortFields;
-
     private List<String> closedStates;
-
     private String entityType;
-
     private String entityTypeForQuery;
-
     private String entityIdForQuery;
-
     private PermissionEvaluator permissionEvaluator;
-
     private Object readPermission;
-
     private Object writePermission;
-
     private Object deletePermission;
-
     private AcmOutlookFolderCreatorDao folderCreatorDao;
 
     public CalendarEntityHandler()
@@ -522,6 +497,17 @@ public class CalendarEntityHandler
     public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
     {
         this.folderCreatorDao = folderCreatorDao;
+    }
+
+    public static enum PermissionType
+    {
+        READ, WRITE, DELETE;
+    }
+
+    @FunctionalInterface
+    public static interface ServiceConnector
+    {
+        Optional<ExchangeService> connect(Long objectId);
     }
 
 }

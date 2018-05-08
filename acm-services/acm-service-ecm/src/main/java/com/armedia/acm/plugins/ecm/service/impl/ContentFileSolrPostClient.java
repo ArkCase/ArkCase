@@ -26,15 +26,12 @@ import java.util.UUID;
 public class ContentFileSolrPostClient implements SolrPostClient
 {
 
+    private transient final Logger logger = LoggerFactory.getLogger(getClass());
     private ObjectConverter objectConverter;
     private EcmFileService ecmFileService;
     private CmisConfigUtils cmisConfigUtils;
-
     private SolrRestClient solrRestClient;
-
     private String solrContentFileHandler;
-
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void sendToSolr(SolrCore core, String json) throws SolrPostException

@@ -2,9 +2,6 @@ package com.armedia.acm.services.transcribe.editor;
 
 import java.beans.PropertyEditorSupport;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/02/2018

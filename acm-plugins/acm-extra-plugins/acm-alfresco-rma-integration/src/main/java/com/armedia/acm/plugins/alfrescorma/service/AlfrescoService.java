@@ -25,21 +25,17 @@ public abstract class AlfrescoService<T>
 {
     private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
     private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
-
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private String protocol;
     private String host;
     private String port;
     private String contextRoot;
     private String username;
     private String password;
-
     private RestTemplate restTemplate;
     private String basicAuthenticationHeaderValue;
-
     private short maxAttempts = 10;
     private short backoffMillis = 500;
-
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     public String baseUrl()
     {

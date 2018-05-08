@@ -32,25 +32,19 @@ import java.util.Arrays;
 @RunWith(EasyMockRunner.class)
 public class ConfigFileWatcherTest extends EasyMockSupport
 {
-    @Mock
-    private FileObject mockFileObject;
-
-    @Mock
-    private ApplicationEventPublisher mockPublisher;
-
-    @Mock
-    private FileChangeEvent mockFileChangeEvent;
-
-    @Mock
-    private FileName mockFileName;
-
-    private ConfigFileWatcher unit;
-    private String fileSeparator = File.separator;
-
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     // for this test to pass, Windows and Linux require different file URL prefixes
     private final String fileUrlPrefix = "file:" + (File.separator.equals("/") ? "" : "/");
+    @Mock
+    private FileObject mockFileObject;
+    @Mock
+    private ApplicationEventPublisher mockPublisher;
+    @Mock
+    private FileChangeEvent mockFileChangeEvent;
+    @Mock
+    private FileName mockFileName;
+    private ConfigFileWatcher unit;
+    private String fileSeparator = File.separator;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

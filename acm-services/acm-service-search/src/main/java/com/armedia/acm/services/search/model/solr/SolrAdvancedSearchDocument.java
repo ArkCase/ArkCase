@@ -429,19 +429,14 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         this.value_parseable = value_parseable;
     }
 
-    public void setChild_id_s(String child_id_s)
-    {
-        this.child_id_s = child_id_s;
-    }
-
     public String getChild_id_s()
     {
         return child_id_s;
     }
 
-    public void setChild_type_s(String child_type_s)
+    public void setChild_id_s(String child_id_s)
     {
-        this.child_type_s = child_type_s;
+        this.child_id_s = child_id_s;
     }
 
     public String getChild_type_s()
@@ -449,9 +444,9 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         return child_type_s;
     }
 
-    public void setParent_id_s(String parent_id_s)
+    public void setChild_type_s(String child_type_s)
     {
-        this.parent_id_s = parent_id_s;
+        this.child_type_s = child_type_s;
     }
 
     public String getParent_id_s()
@@ -459,14 +454,19 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         return parent_id_s;
     }
 
-    public void setParent_type_s(String parent_type_s)
+    public void setParent_id_s(String parent_id_s)
     {
-        this.parent_type_s = parent_type_s;
+        this.parent_id_s = parent_id_s;
     }
 
     public String getParent_type_s()
     {
         return parent_type_s;
+    }
+
+    public void setParent_type_s(String parent_type_s)
+    {
+        this.parent_type_s = parent_type_s;
     }
 
     public String getParent_name_t()
@@ -604,6 +604,11 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         return dueDate_tdt;
     }
 
+    public void setDueDate_tdt(Date dueDate_tdt)
+    {
+        this.dueDate_tdt = dueDate_tdt;
+    }
+
     public String getDescription_parseable()
     {
         return description_parseable;
@@ -612,11 +617,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     public void setDescription_parseable(String description_parseable)
     {
         this.description_parseable = description_parseable;
-    }
-
-    public void setDueDate_tdt(Date dueDate_tdt)
-    {
-        this.dueDate_tdt = dueDate_tdt;
     }
 
     public String getAssignee_full_name_lcs()
@@ -679,19 +679,14 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         this.groups_id_ss = groups_id_ss;
     }
 
-    public void setAdhocTask_b(boolean adhocTask_b)
-    {
-        this.adhocTask_b = adhocTask_b;
-    }
-
     public boolean isAdhocTask_b()
     {
         return adhocTask_b;
     }
 
-    public void setOwner_lcs(String owner_lcs)
+    public void setAdhocTask_b(boolean adhocTask_b)
     {
-        this.owner_lcs = owner_lcs;
+        this.adhocTask_b = adhocTask_b;
     }
 
     public String getOwner_lcs()
@@ -699,14 +694,19 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         return owner_lcs;
     }
 
-    public void setBusiness_process_name_lcs(String business_process_name_lcs)
+    public void setOwner_lcs(String owner_lcs)
     {
-        this.business_process_name_lcs = business_process_name_lcs;
+        this.owner_lcs = owner_lcs;
     }
 
     public String getBusiness_process_name_lcs()
     {
         return business_process_name_lcs;
+    }
+
+    public void setBusiness_process_name_lcs(String business_process_name_lcs)
+    {
+        this.business_process_name_lcs = business_process_name_lcs;
     }
 
     public Long getBusiness_process_id_i()
@@ -722,6 +722,12 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     public boolean isPublic_doc_b()
     {
         return public_doc_b;
+    }
+
+    @Override
+    public void setPublic_doc_b(boolean public_doc_b)
+    {
+        this.public_doc_b = public_doc_b;
     }
 
     public String getState_lcs()
@@ -762,12 +768,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     public void setNotification_type_lcs(String notification_type_lcs)
     {
         this.notification_type_lcs = notification_type_lcs;
-    }
-
-    @Override
-    public void setPublic_doc_b(boolean public_doc_b)
-    {
-        this.public_doc_b = public_doc_b;
     }
 
     public boolean isProtected_object_b()
@@ -823,24 +823,24 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         this.tag_token_lcs = tag_token_lcs;
     }
 
-    public void setParent_ref_s(String parent_ref_s)
-    {
-        this.parent_ref_s = parent_ref_s;
-    }
-
     public String getParent_ref_s()
     {
         return parent_ref_s;
     }
 
-    public void setHidden_b(boolean hidden_b)
+    public void setParent_ref_s(String parent_ref_s)
     {
-        this.hidden_b = hidden_b;
+        this.parent_ref_s = parent_ref_s;
     }
 
     public boolean isHidden_b()
     {
         return hidden_b;
+    }
+
+    public void setHidden_b(boolean hidden_b)
+    {
+        this.hidden_b = hidden_b;
     }
 
     public String getTitle_parseable_lcs()

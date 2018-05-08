@@ -30,14 +30,12 @@ import java.util.UUID;
 @AsyncApplicationListener
 public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabaseChangesEvent>
 {
+    private static final String EVENT_TYPE = "com.armedia.acm.audit.database";
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private AuditService auditService;
     private boolean databaseChangesLoggingEnabled;
     private boolean databaseChangesLoggingFieldValuesEnabled;
     private ObjectConverter objectConverter;
-
-    private static final String EVENT_TYPE = "com.armedia.acm.audit.database";
 
     /**
      * Handle an {@link AcmDatabaseChangesEvent} event.

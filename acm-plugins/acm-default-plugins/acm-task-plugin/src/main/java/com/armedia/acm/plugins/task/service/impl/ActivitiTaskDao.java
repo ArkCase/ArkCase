@@ -1436,7 +1436,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             InputStream inputStream = null;
             try
             {
-                ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().processInstanceId(processId).singleResult();
+                ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().processInstanceId(processId)
+                        .singleResult();
                 BpmnModel model = getActivitiRepositoryService().getBpmnModel(processInstance.getProcessDefinitionId());
                 List<String> activeActivityIds = getActivitiRuntimeService().getActiveActivityIds(processId);
                 inputStream = ProcessDiagramGenerator.generateDiagram(model, "png", activeActivityIds);

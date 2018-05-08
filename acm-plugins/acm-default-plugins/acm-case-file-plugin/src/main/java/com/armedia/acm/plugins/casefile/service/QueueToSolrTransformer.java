@@ -99,6 +99,11 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         return userDao;
     }
 
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
     public AcmQueueDao getAcmQueueDao()
     {
         return acmQueueDao;
@@ -107,11 +112,6 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     public void setAcmQueueDao(AcmQueueDao acmQueueDao)
     {
         this.acmQueueDao = acmQueueDao;
-    }
-
-    public void setUserDao(UserDao userDao)
-    {
-        this.userDao = userDao;
     }
 
     @Override

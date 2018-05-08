@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
  */
 public class CaseFileQueueHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
-    private AcmQueueDao acmQueueDao;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private AcmQueueDao acmQueueDao;
 
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException

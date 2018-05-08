@@ -55,18 +55,14 @@ import java.util.List;
 @Ignore
 public class CategoryServiceIT
 {
-    @Autowired
-    private CategoryService categoryService;
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Autowired
-    private AuditPropertyEntityAdapter auditAdapter;
-
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
-
+    @Autowired
+    private CategoryService categoryService;
+    @PersistenceContext
+    private EntityManager entityManager;
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
     @Mock
     private Logger mockedLogger;
 

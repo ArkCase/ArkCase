@@ -3,12 +3,13 @@ package com.armedia.acm.services.transcribe.service;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.transcribe.annotation.ConfigurationProperties;
 import com.armedia.acm.services.transcribe.annotation.ConfigurationProperty;
-import com.armedia.acm.services.transcribe.editor.BooleanEditor;
 import com.armedia.acm.services.transcribe.editor.BigDecimalEditor;
+import com.armedia.acm.services.transcribe.editor.BooleanEditor;
 import com.armedia.acm.services.transcribe.editor.ListEditor;
 import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
 import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
 import com.armedia.acm.services.transcribe.model.ConfigurationActionType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,8 @@ public class ConfigurationPropertiesService<T> implements ConfigurationService<T
 
         try
         {
-            T configuration = ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]).newInstance();
+            T configuration = ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0])
+                    .newInstance();
             // Get class level annotation
             ConfigurationProperties configurationProperties = configuration.getClass().getAnnotation(ConfigurationProperties.class);
 
@@ -65,7 +67,8 @@ public class ConfigurationPropertiesService<T> implements ConfigurationService<T
             Map<String, Object> keyValuesMapFromObject = getKeyValuesMapFromObject(configuration, ConfigurationActionType.READ);
 
             // Create map with key-value paris from configuration file
-            Map<String, Object> keyValuesMapFromProperties = getPropertyFileManager().loadMultiple(path, keyValuesMapFromObject.keySet().toArray(new String[0]));
+            Map<String, Object> keyValuesMapFromProperties = getPropertyFileManager().loadMultiple(path,
+                    keyValuesMapFromObject.keySet().toArray(new String[0]));
 
             // Set values taken from configuration file to configuration object
             configuration = setKeyValuesToObject(keyValuesMapFromProperties, configuration);
@@ -74,7 +77,7 @@ public class ConfigurationPropertiesService<T> implements ConfigurationService<T
 
             return configuration;
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             LOG.error("Configuration was not retrieved successfully. REASON=[{}]", e.getMessage());
             throw new GetConfigurationException("Failed to retrieve Configuration.", e);
@@ -96,15 +99,15 @@ public class ConfigurationPropertiesService<T> implements ConfigurationService<T
             // Create map with key-value pairs from the configuration object
             Map<String, Object> keyValuesMapFromObject = getKeyValuesMapFromObject(configuration, ConfigurationActionType.WRITE);
 
-            // Convert previous key-value map of objects to key-value map of strings. We need strings for every kind of object
+            // Convert previous key-value map of objects to key-value map of strings. We need strings for every kind of
+            // object
             // to be able to save in the properties file
             Map<String, String> keyValuesMapAsStrings = keyValuesMapFromObject
                     .entrySet()
                     .stream()
                     .collect(Collectors.toMap(
                             entry -> entry.getKey(),
-                            entry -> getValueSafe(entry.getValue())
-                    ));
+                            entry -> getValueSafe(entry.getValue())));
 
             // Save configuration in the properties file
             getPropertyFileManager().storeMultiple(keyValuesMapAsStrings, path, false);
@@ -141,7 +144,8 @@ public class ConfigurationPropertiesService<T> implements ConfigurationService<T
             boolean read = configurationProperty.read();
             boolean write = configurationProperty.write();
 
-            // Because the field is "private", set accessible to true, get the value, and back accessible to previous state
+            // Because the field is "private", set accessible to true, get the value, and back accessible to previous
+            // state
             boolean accessible = field.isAccessible();
             field.setAccessible(true);
             Object value = field.get(configuration);
@@ -151,19 +155,19 @@ public class ConfigurationPropertiesService<T> implements ConfigurationService<T
             // some of the fields
             switch (action)
             {
-                case READ:
-                    if (read)
-                    {
-                        keyValueMap.put(key, value);
-                    }
-                    break;
+            case READ:
+                if (read)
+                {
+                    keyValueMap.put(key, value);
+                }
+                break;
 
-                case WRITE:
-                    if (write)
-                    {
-                        keyValueMap.put(key, value);
-                    }
-                    break;
+            case WRITE:
+                if (write)
+                {
+                    keyValueMap.put(key, value);
+                }
+                break;
             }
         }
 
@@ -192,7 +196,8 @@ public class ConfigurationPropertiesService<T> implements ConfigurationService<T
 
                 try
                 {
-                    // Because the field is "private", set accessible to true, set the value, and back accessible to previous state
+                    // Because the field is "private", set accessible to true, set the value, and back accessible to
+                    // previous state
                     boolean accessible = field.isAccessible();
                     field.setAccessible(true);
                     field.set(configuration, value);

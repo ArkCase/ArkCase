@@ -326,13 +326,13 @@ public class DashboardService
         this.userRoleService = userRoleService;
     }
 
-    public void setEventPublisher(WidgetEventPublisher eventPublisher)
-    {
-        this.eventPublisher = eventPublisher;
-    }
-
     public WidgetEventPublisher getEventPublisher()
     {
         return eventPublisher;
+    }
+
+    public void setEventPublisher(WidgetEventPublisher eventPublisher)
+    {
+        this.eventPublisher = eventPublisher;
     }
 }

@@ -29,15 +29,11 @@ import java.util.stream.Collectors;
  */
 public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<EcmFileAddedEvent>
 {
-    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-
-    private RuntimeService activitiRuntimeService;
-
-    private ObjectConverter objectConverter;
-
-    private UserDao userDao;
-
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+    private RuntimeService activitiRuntimeService;
+    private ObjectConverter objectConverter;
+    private UserDao userDao;
 
     @Override
     public void onApplicationEvent(EcmFileAddedEvent event)

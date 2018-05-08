@@ -17,6 +17,7 @@ import microsoft.exchange.webservices.data.util.TimeZoneUtils;
  */
 public class DateTimeAdjuster
 {
+    private static final String UTC = "(UTC";
     public static Logger LOG = LoggerFactory.getLogger(DateTimeAdjuster.class);
 
     /**
@@ -54,8 +55,6 @@ public class DateTimeAdjuster
         }
         return dateText.toString();
     }
-
-    private static final String UTC = "(UTC";
 
     /**
      * @param msName

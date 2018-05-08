@@ -25,6 +25,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -144,19 +145,23 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
         this.type = type;
     }
 
-    public String getChargeRole() {
+    public String getChargeRole()
+    {
         return chargeRole;
     }
 
-    public void setChargeRole(String chargeRole) {
+    public void setChargeRole(String chargeRole)
+    {
         this.chargeRole = chargeRole;
     }
 
-    public Double getTotalCost() {
+    public Double getTotalCost()
+    {
         return totalCost;
     }
 
-    public void setTotalCost(Double totalCost) {
+    public void setTotalCost(Double totalCost)
+    {
         this.totalCost = totalCost;
     }
 
@@ -235,11 +240,13 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
         return TimeConstants.OBJECT_TYPE;
     }
 
-    public String getClassName() {
+    public String getClassName()
+    {
         return className;
     }
 
-    public void setClassName(String className) {
+    public void setClassName(String className)
+    {
         this.className = className;
     }
 }

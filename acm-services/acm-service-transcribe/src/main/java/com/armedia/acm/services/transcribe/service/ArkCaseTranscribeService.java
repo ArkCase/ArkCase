@@ -23,15 +23,32 @@ import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.transcribe.dao.TranscribeDao;
-import com.armedia.acm.services.transcribe.exception.*;
+import com.armedia.acm.services.transcribe.exception.CompileTranscribeException;
+import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
+import com.armedia.acm.services.transcribe.exception.CreateTranscribeItemException;
+import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
+import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
+import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
+import com.armedia.acm.services.transcribe.exception.SaveTranscribeException;
+import com.armedia.acm.services.transcribe.exception.SaveTranscribeItemException;
 import com.armedia.acm.services.transcribe.factory.TranscribeServiceFactory;
-import com.armedia.acm.services.transcribe.model.*;
+import com.armedia.acm.services.transcribe.model.Transcribe;
+import com.armedia.acm.services.transcribe.model.TranscribeActionType;
+import com.armedia.acm.services.transcribe.model.TranscribeBusinessProcessModel;
+import com.armedia.acm.services.transcribe.model.TranscribeBusinessProcessVariableKey;
+import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
+import com.armedia.acm.services.transcribe.model.TranscribeConstants;
+import com.armedia.acm.services.transcribe.model.TranscribeItem;
+import com.armedia.acm.services.transcribe.model.TranscribeStatusType;
+import com.armedia.acm.services.transcribe.model.TranscribeType;
+import com.armedia.acm.services.transcribe.model.TranscribeUserType;
 import com.armedia.acm.services.transcribe.pipline.TranscribePipelineContext;
 import com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor;
 import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -51,7 +68,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/28/2018
@@ -131,7 +153,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         }
         catch (IllegalAccessException | InvocationTargetException e)
         {
-            LOG.warn("Could not copy properties for Transcribe object with ID=[{}]. REASON=[{}]", transcribe != null ? transcribe.getId() : null, e.getMessage());
+            LOG.warn("Could not copy properties for Transcribe object with ID=[{}]. REASON=[{}]",
+                    transcribe != null ? transcribe.getId() : null, e.getMessage());
         }
 
         if (copy != null)
@@ -143,29 +166,34 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
             }
             catch (SaveTranscribeException e)
             {
-                throw new CreateTranscribeException(String.format("Could not create copy for Transcribe object with ID=[{}]. REASON=[%s]", transcribe != null ? transcribe.getId() : null, e.getMessage()));
+                throw new CreateTranscribeException(String.format("Could not create copy for Transcribe object with ID=[{}]. REASON=[%s]",
+                        transcribe != null ? transcribe.getId() : null, e.getMessage()));
             }
 
             if (StringUtils.isNotEmpty(transcribe.getProcessId()))
             {
-                ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables().processInstanceId(transcribe.getProcessId()).singleResult();
+                ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables()
+                        .processInstanceId(transcribe.getProcessId()).singleResult();
                 if (processInstance != null)
                 {
-                    List<Long> ids = (List<Long>) processInstance.getProcessVariables().get(TranscribeBusinessProcessVariableKey.IDS.toString());
+                    List<Long> ids = (List<Long>) processInstance.getProcessVariables()
+                            .get(TranscribeBusinessProcessVariableKey.IDS.toString());
                     if (ids == null)
                     {
                         ids = new ArrayList<>();
                     }
 
                     ids.add(savedCopy.getId());
-                    getActivitiRuntimeService().setVariable(processInstance.getId(), TranscribeBusinessProcessVariableKey.IDS.toString(), ids);
+                    getActivitiRuntimeService().setVariable(processInstance.getId(), TranscribeBusinessProcessVariableKey.IDS.toString(),
+                            ids);
                 }
             }
 
             return savedCopy;
         }
 
-        throw new CreateTranscribeException(String.format("Could not create copy for Transcribe object with ID=[{}]", transcribe != null ? transcribe.getId() : null));
+        throw new CreateTranscribeException(
+                String.format("Could not create copy for Transcribe object with ID=[{}]", transcribe != null ? transcribe.getId() : null));
     }
 
     @Override
@@ -174,7 +202,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         Transcribe transcribe = getTranscribeDao().find(id);
         if (transcribe != null && StringUtils.isNotEmpty(transcribe.getProcessId()))
         {
-            ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables().processInstanceId(transcribe.getProcessId()).singleResult();
+            ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables()
+                    .processInstanceId(transcribe.getProcessId()).singleResult();
             if (processInstance != null)
             {
                 signal(processInstance, TranscribeStatusType.COMPLETED.toString(), TranscribeActionType.COMPLETED.toString());
@@ -192,7 +221,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         Transcribe transcribe = getTranscribeDao().find(id);
         if (transcribe != null && StringUtils.isNotEmpty(transcribe.getProcessId()))
         {
-            ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables().processInstanceId(transcribe.getProcessId()).singleResult();
+            ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables()
+                    .processInstanceId(transcribe.getProcessId()).singleResult();
             if (processInstance != null)
             {
                 signal(processInstance, TranscribeStatusType.DRAFT.toString(), TranscribeActionType.CANCELLED.toString());
@@ -210,7 +240,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         Transcribe transcribe = getTranscribeDao().find(id);
         if (transcribe != null && StringUtils.isNotEmpty(transcribe.getProcessId()))
         {
-            ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables().processInstanceId(transcribe.getProcessId()).singleResult();
+            ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables()
+                    .processInstanceId(transcribe.getProcessId()).singleResult();
             if (processInstance != null)
             {
                 String statusKey = TranscribeBusinessProcessVariableKey.STATUS.toString();
@@ -268,9 +299,10 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         {
             return getTranscribeDao().save(transcribe);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
-            String message = String.format("Status of the Transcribe cannot be changed. ID=[%d], STATUS=[%s]. REASON=[%s]", id, status, e.getMessage());
+            String message = String.format("Status of the Transcribe cannot be changed. ID=[%d], STATUS=[%s]. REASON=[%s]", id, status,
+                    e.getMessage());
             LOG.error(message);
             throw new SaveTranscribeException(message, e);
         }
@@ -313,7 +345,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                 // Take users: owner of the media file and owner of the parent object
                 List<AcmUser> users = new ArrayList<>();
                 String userIdOwnerOfMedia = getUserIdForGivenUserType(TranscribeUserType.OWNER_OF_MEDIA.toString(), transcribe);
-                String userIdOwnerOfParentObject = getUserIdForGivenUserType(TranscribeUserType.OWNER_OF_PARENT_OBJECT.toString(), transcribe);
+                String userIdOwnerOfParentObject = getUserIdForGivenUserType(TranscribeUserType.OWNER_OF_PARENT_OBJECT.toString(),
+                        transcribe);
                 AcmUser userOwnerOfMedia = null;
                 AcmUser userOwnerOfParentObject = null;
                 if (StringUtils.isNotEmpty(userIdOwnerOfMedia))
@@ -329,7 +362,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                     userOwnerOfParentObject = getUserDao().findByUserId(userIdOwnerOfParentObject);
                     if (userOwnerOfParentObject != null && StringUtils.isNotEmpty(userOwnerOfParentObject.getMail()))
                     {
-                        // If owner of the media and owner of the parent object have the same email, exclude this user, send email only once
+                        // If owner of the media and owner of the parent object have the same email, exclude this user,
+                        // send email only once
                         final String email = userOwnerOfParentObject.getMail();
                         AcmUser found = users.stream().filter(user -> email.equalsIgnoreCase(user.getMail())).findFirst().orElse(null);
                         if (found == null)
@@ -352,17 +386,19 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
             users.forEach(user -> {
                 try
                 {
-                    JSONObject jsonConfig = getLabelManagementService().getResource("document-details", StringUtils.isNotEmpty(user.getLang()) ? user.getLang() : "en", false);
+                    JSONObject jsonConfig = getLabelManagementService().getResource("document-details",
+                            StringUtils.isNotEmpty(user.getLang()) ? user.getLang() : "en", false);
                     String subject = jsonConfig.getString("documentDetails.transcribe.email.subject");
                     String body = jsonConfig.getString("documentDetails.transcribe.email.body");
                     body = body.replace(":transcribeId", transcribe.getId().toString())
                             .replace(":action", action)
                             .replace(":name", transcribe.getMediaEcmFileVersion().getFile().getFileName())
                             .replace(":id", transcribe.getMediaEcmFileVersion().getFile().getId().toString())
-                            .replace(":containerId", transcribe.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId().toString())
-                            .replace(":containerType", transcribe.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType())
+                            .replace(":containerId",
+                                    transcribe.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId().toString())
+                            .replace(":containerType",
+                                    transcribe.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType())
                             .replace(":host", getAcmApplication().getBaseUrl());
-
 
                     EmailWithAttachmentsDTO emailWithAttachmentsDTO = new EmailWithAttachmentsDTO();
                     emailWithAttachmentsDTO.setSubject(subject);
@@ -370,7 +406,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                     emailWithAttachmentsDTO.setEmailAddresses(Arrays.asList(user.getMail()));
 
                     String objectType = transcribe.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType();
-                    List<EmailTemplateConfiguration> configurations = getTemplateService().getMatchingTemplates(user.getMail(), objectType, EmailSource.MANUAL, Arrays.asList("sendAsLinks"));
+                    List<EmailTemplateConfiguration> configurations = getTemplateService().getMatchingTemplates(user.getMail(), objectType,
+                            EmailSource.MANUAL, Arrays.asList("sendAsLinks"));
 
                     // We'll need only one template. Take the first one
                     if (configurations != null && configurations.size() > 0)
@@ -383,13 +420,16 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                 }
                 catch (Exception e)
                 {
-                    LOG.error("Email notification was not sent to the USER=[{}] for Transcribe with ID=[{}] for the ACTION=[{}]. REASON=[{}]", user, transcribe.getId(), action, e.getMessage());
+                    LOG.error(
+                            "Email notification was not sent to the USER=[{}] for Transcribe with ID=[{}] for the ACTION=[{}]. REASON=[{}]",
+                            user, transcribe.getId(), action, e.getMessage());
                 }
             });
         }
         else
         {
-            LOG.error("Email notification was not sent for Transcribe with ID=[{}] for the ACTION=[{}]. Users not found.", transcribe != null ? transcribe.getId() : null, action);
+            LOG.error("Email notification was not sent for Transcribe with ID=[{}] for the ACTION=[{}]. Users not found.",
+                    transcribe != null ? transcribe.getId() : null, action);
         }
     }
 
@@ -399,44 +439,44 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         TranscribeUserType type = TranscribeUserType.valueOf(userType);
         switch (type)
         {
-            case OWNER_OF_MEDIA:
-                // First try to find assignee
-                userId = ParticipantUtils.getAssigneeIdFromParticipants(transcribe.getMediaEcmFileVersion().getFile().getParticipants());
-                if (StringUtils.isEmpty(userId))
-                {
-                    // If there is no assignee, take the creator
-                    userId = transcribe.getMediaEcmFileVersion().getFile().getCreator();
-                }
-                break;
-            case OWNER_OF_PARENT_OBJECT:
-                Long objectId = transcribe.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId();
-                String objectType = transcribe.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType();
-
-                // First try to find assignee
-                AcmAbstractDao<AcmAssignedObject> acmAssignedObjectDao = getAssignedObjectDao(objectType);
-                if (acmAssignedObjectDao != null)
-                {
-                    AcmAssignedObject assignedObject = acmAssignedObjectDao.find(objectId);
-                    if (assignedObject != null)
-                    {
-                        userId = ParticipantUtils.getAssigneeIdFromParticipants(assignedObject.getParticipants());
-                    }
-                }
-
+        case OWNER_OF_MEDIA:
+            // First try to find assignee
+            userId = ParticipantUtils.getAssigneeIdFromParticipants(transcribe.getMediaEcmFileVersion().getFile().getParticipants());
+            if (StringUtils.isEmpty(userId))
+            {
                 // If there is no assignee, take the creator
-                if (StringUtils.isEmpty(userId))
+                userId = transcribe.getMediaEcmFileVersion().getFile().getCreator();
+            }
+            break;
+        case OWNER_OF_PARENT_OBJECT:
+            Long objectId = transcribe.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId();
+            String objectType = transcribe.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType();
+
+            // First try to find assignee
+            AcmAbstractDao<AcmAssignedObject> acmAssignedObjectDao = getAssignedObjectDao(objectType);
+            if (acmAssignedObjectDao != null)
+            {
+                AcmAssignedObject assignedObject = acmAssignedObjectDao.find(objectId);
+                if (assignedObject != null)
                 {
-                    AcmAbstractDao<AcmEntity> acmEntityDao = getEntityDao(objectType);
-                    if (acmEntityDao != null)
+                    userId = ParticipantUtils.getAssigneeIdFromParticipants(assignedObject.getParticipants());
+                }
+            }
+
+            // If there is no assignee, take the creator
+            if (StringUtils.isEmpty(userId))
+            {
+                AcmAbstractDao<AcmEntity> acmEntityDao = getEntityDao(objectType);
+                if (acmEntityDao != null)
+                {
+                    AcmEntity entity = acmEntityDao.find(objectId);
+                    if (entity != null)
                     {
-                        AcmEntity entity = acmEntityDao.find(objectId);
-                        if (entity != null)
-                        {
-                            userId = entity.getCreator();
-                        }
+                        userId = entity.getCreator();
                     }
                 }
-                break;
+            }
+            break;
         }
 
         return userId;
@@ -538,12 +578,15 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                             run.setText(TranscribeUtils.getText(transcribe.getTranscribeItems()));
                             document.write(out);
 
-                            String fileName = transcribe.getMediaEcmFileVersion().getFile().getFileName() + "_v" + transcribe.getMediaEcmFileVersion().getFile().getActiveVersionTag();
+                            String fileName = transcribe.getMediaEcmFileVersion().getFile().getFileName() + "_v"
+                                    + transcribe.getMediaEcmFileVersion().getFile().getActiveVersionTag();
                             AcmFolder folder = transcribe.getMediaEcmFileVersion().getFile().getFolder();
                             String parentObjectType = transcribe.getMediaEcmFileVersion().getFile().getParentObjectType();
                             Long parentObjectId = transcribe.getMediaEcmFileVersion().getFile().getParentObjectId();
 
-                            Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() : null;
+                            Authentication authentication = SecurityContextHolder.getContext() != null
+                                    ? SecurityContextHolder.getContext().getAuthentication()
+                                    : null;
 
                             // Delete existing file first if exist
                             if (transcribe.getTranscribeEcmFile() != null && transcribe.getTranscribeEcmFile().getId() != null)
@@ -555,11 +598,14 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                                 }
                                 catch (AcmObjectNotFoundException e)
                                 {
-                                    LOG.debug("Silent debug. The file with ID=[{}] is already deleted. Proceed with execution.", transcribe.getTranscribeEcmFile().getId());
+                                    LOG.debug("Silent debug. The file with ID=[{}] is already deleted. Proceed with execution.",
+                                            transcribe.getTranscribeEcmFile().getId());
                                 }
                             }
 
-                            EcmFile ecmFile = getEcmFileService().upload(fileName, transcribe.getObjectType().toLowerCase(), TranscribeConstants.FILE_CATEGORY, in, TranscribeConstants.WORD_MIME_TYPE, fileName, authentication, folder.getCmisFolderId(), parentObjectType, parentObjectId);
+                            EcmFile ecmFile = getEcmFileService().upload(fileName, transcribe.getObjectType().toLowerCase(),
+                                    TranscribeConstants.FILE_CATEGORY, in, TranscribeConstants.WORD_MIME_TYPE, fileName, authentication,
+                                    folder.getCmisFolderId(), parentObjectType, parentObjectId);
 
                             if (ecmFile != null)
                             {
@@ -569,12 +615,14 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                                 return ecmFile;
                             }
 
-                            throw new CompileTranscribeException(String.format("Could not compile Transcribe with ID=[%d]. Word file not generated.", id));
+                            throw new CompileTranscribeException(
+                                    String.format("Could not compile Transcribe with ID=[%d]. Word file not generated.", id));
                         }
                     }
                     catch (IOException | AcmCreateObjectFailedException | AcmUserActionFailedException e)
                     {
-                        throw new CompileTranscribeException(String.format("Could not compile Transcribe with ID=[%d]. REASON=[%s].", id, e.getMessage()));
+                        throw new CompileTranscribeException(
+                                String.format("Could not compile Transcribe with ID=[%d]. REASON=[%s].", id, e.getMessage()));
                     }
                     finally
                     {
@@ -582,10 +630,12 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                     }
                 }
 
-                throw new CompileTranscribeException(String.format("Could not compile Transcribe with ID=[%d]. Transcribe items not found.", id));
+                throw new CompileTranscribeException(
+                        String.format("Could not compile Transcribe with ID=[%d]. Transcribe items not found.", id));
             }
 
-            throw new CompileTranscribeException(String.format("Could not compile Transcribe with ID=[%d]. Transcribe object not found.", id));
+            throw new CompileTranscribeException(
+                    String.format("Could not compile Transcribe with ID=[%d]. Transcribe object not found.", id));
         }
 
         throw new CompileTranscribeException("Could not compile Transcribe because ID is not provided");
@@ -602,7 +652,9 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
             TranscribeBusinessProcessModel transcribeBusinessProcessModel = new TranscribeBusinessProcessModel();
             transcribeBusinessProcessModel.setType(transcribe.getType());
 
-            LOG.debug("Executing Drools Business rules for [{}] Transcribe with ID=[{}], MEDIA_FILE_ID=[{}] and MEDIA_FILE_VERSION_ID=[{}]", transcribe.getType(), transcribe.getMediaEcmFileVersion().getFile().getId(), transcribe.getMediaEcmFileVersion().getId());
+            LOG.debug("Executing Drools Business rules for [{}] Transcribe with ID=[{}], MEDIA_FILE_ID=[{}] and MEDIA_FILE_VERSION_ID=[{}]",
+                    transcribe.getType(), transcribe.getMediaEcmFileVersion().getFile().getId(),
+                    transcribe.getMediaEcmFileVersion().getId());
 
             transcribeBusinessProcessModel = getTranscribeBusinessProcessRulesExecutor().applyRules(transcribeBusinessProcessModel);
 
@@ -611,12 +663,15 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
             if (transcribeBusinessProcessModel.isStart())
             {
                 // Check if there is already startes business process. This can be the case when we replace media file
-                // and in the Transcribe Configuration (properties file) we have set "copy transcription" instead of "new transcription".
-                // In that case we have complete two copies of Transcribe object, just different IDS. So we should use the same Process
+                // and in the Transcribe Configuration (properties file) we have set "copy transcription" instead of
+                // "new transcription".
+                // In that case we have complete two copies of Transcribe object, just different IDS. So we should use
+                // the same Process
                 // for both Transcribe objects
                 if (StringUtils.isNotEmpty(transcribe.getProcessId()))
                 {
-                    processInstance = getActivitiRuntimeService().createProcessInstanceQuery().processInstanceId(transcribe.getProcessId()).includeProcessVariables().singleResult();
+                    processInstance = getActivitiRuntimeService().createProcessInstanceQuery().processInstanceId(transcribe.getProcessId())
+                            .includeProcessVariables().singleResult();
                 }
 
                 if (processInstance == null)
@@ -656,6 +711,11 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         return transcribeServiceFactory;
     }
 
+    public void setTranscribeServiceFactory(TranscribeServiceFactory transcribeServiceFactory)
+    {
+        this.transcribeServiceFactory = transcribeServiceFactory;
+    }
+
     @Override
     public TranscribeConfiguration getConfiguration() throws GetConfigurationException
     {
@@ -666,11 +726,6 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     public TranscribeConfiguration saveConfiguration(TranscribeConfiguration configuration) throws SaveConfigurationException
     {
         return getTranscribeConfigurationPropertiesService().save(configuration);
-    }
-
-    public void setTranscribeServiceFactory(TranscribeServiceFactory transcribeServiceFactory)
-    {
-        this.transcribeServiceFactory = transcribeServiceFactory;
     }
 
     @Override
@@ -693,11 +748,12 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
             throw new CreateTranscribeException(String.format("Creating Transcribe job is aborted. REASON=[%s]", e.getMessage()), e);
         }
 
-
         if (existingTranscribe != null && (TranscribeStatusType.QUEUED.toString().equalsIgnoreCase(existingTranscribe.getStatus()) ||
                 TranscribeStatusType.PROCESSING.toString().equalsIgnoreCase(existingTranscribe.getStatus())))
         {
-            throw new CreateTranscribeException(String.format("Creating Transcribe job is aborted. There is already Transcribe object for MEDIA_FILE_VERSION_ID=[%d]", transcribe.getMediaEcmFileVersion().getId()));
+            throw new CreateTranscribeException(
+                    String.format("Creating Transcribe job is aborted. There is already Transcribe object for MEDIA_FILE_VERSION_ID=[%d]",
+                            transcribe.getMediaEcmFileVersion().getId()));
         }
 
         TranscribePipelineContext context = new TranscribePipelineContext();
@@ -719,7 +775,12 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
                 }
                 catch (SaveTranscribeException e)
                 {
-                    throw new PipelineProcessException(String.format("Transcribe for MEDIA_VERSION_ID=[%d] was not created successfully. REASON=[%s]", transcribeForProcessing.getMediaEcmFileVersion() != null ? transcribeForProcessing.getMediaEcmFileVersion().getId() : null, e.getMessage()));
+                    throw new PipelineProcessException(
+                            String.format("Transcribe for MEDIA_VERSION_ID=[%d] was not created successfully. REASON=[%s]",
+                                    transcribeForProcessing.getMediaEcmFileVersion() != null
+                                            ? transcribeForProcessing.getMediaEcmFileVersion().getId()
+                                            : null,
+                                    e.getMessage()));
                 }
             });
 
@@ -727,7 +788,9 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         }
         catch (PipelineProcessException e)
         {
-            throw new CreateTranscribeException(String.format("Transcribe for MEDIA_VERSION_ID=[%d] was not created successfully. REASON=[%s]", transcribe.getMediaEcmFileVersion() != null ? transcribe.getMediaEcmFileVersion().getId() : null, e.getMessage()), e);
+            throw new CreateTranscribeException(String.format(
+                    "Transcribe for MEDIA_VERSION_ID=[%d] was not created successfully. REASON=[%s]",
+                    transcribe.getMediaEcmFileVersion() != null ? transcribe.getMediaEcmFileVersion().getId() : null, e.getMessage()), e);
         }
     }
 
@@ -770,7 +833,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     /**
      * This method will return true if all conditions are reached for proceeding with automatic transcription
      *
-     * @param ecmFileVersion - File version
+     * @param ecmFileVersion
+     *            - File version
      * @return true/false
      */
     private boolean allow(EcmFileVersion ecmFileVersion)
@@ -817,14 +881,14 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         try
         {
             TranscribeConfiguration configuration = getConfiguration();
-            boolean allow =  configuration != null && configuration.isAutomaticEnabled();
+            boolean allow = configuration != null && configuration.isAutomaticEnabled();
 
             if (!allow)
             {
                 LOG.warn("Automatic Transcribe is not enabled. It will be terminated.");
             }
 
-            return  allow;
+            return allow;
         }
         catch (GetConfigurationException e)
         {
@@ -836,7 +900,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     /**
      * This method will return if provided media duration is less than configured duration
      *
-     * @param ecmFileVersion - Media file version
+     * @param ecmFileVersion
+     *            - Media file version
      * @return true/false
      */
     public boolean isMediaDurationAllowed(EcmFileVersion ecmFileVersion)
@@ -844,14 +909,16 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         try
         {
             TranscribeConfiguration configuration = getConfiguration();
-            boolean allow = configuration != null && ecmFileVersion != null && ecmFileVersion.getDurationSeconds() <= configuration.getAllowedMediaDuration();
+            boolean allow = configuration != null && ecmFileVersion != null
+                    && ecmFileVersion.getDurationSeconds() <= configuration.getAllowedMediaDuration();
 
             if (!allow)
             {
-                LOG.warn("The duration of the media file is more than allowed [{}] seconds. Automatic Transcription will be terminated.", configuration.getAllowedMediaDuration());
+                LOG.warn("The duration of the media file is more than allowed [{}] seconds. Automatic Transcription will be terminated.",
+                        configuration.getAllowedMediaDuration());
             }
 
-            return  allow;
+            return allow;
         }
         catch (GetConfigurationException e)
         {
@@ -863,18 +930,17 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
     /**
      * This method will return if provided file is audio or video
      *
-     * @param ecmFileVersion - File version
+     * @param ecmFileVersion
+     *            - File version
      * @return true/false
      */
     public boolean isFileVersionTranscribable(EcmFileVersion ecmFileVersion)
     {
 
         boolean allow = ecmFileVersion != null &&
-                        ecmFileVersion.getVersionMimeType() != null &&
-                        (
-                            ecmFileVersion.getVersionMimeType().startsWith(TranscribeConstants.MEDIA_TYPE_AUDIO_RECOGNITION_KEY) ||
-                            ecmFileVersion.getVersionMimeType().startsWith(TranscribeConstants.MEDIA_TYPE_VIDEO_RECOGNITION_KEY)
-                        );
+                ecmFileVersion.getVersionMimeType() != null &&
+                (ecmFileVersion.getVersionMimeType().startsWith(TranscribeConstants.MEDIA_TYPE_AUDIO_RECOGNITION_KEY) ||
+                        ecmFileVersion.getVersionMimeType().startsWith(TranscribeConstants.MEDIA_TYPE_VIDEO_RECOGNITION_KEY));
 
         if (!allow)
         {
@@ -886,8 +952,10 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
 
     private ProcessInstance createProcessInstance(Transcribe transcribe, TranscribeBusinessProcessModel transcribeBusinessProcessModel)
     {
-        String status = TranscribeType.AUTOMATIC.toString().equalsIgnoreCase(transcribe.getType()) ? TranscribeStatusType.QUEUED.toString() : transcribe.getStatus();
-        String action = TranscribeType.AUTOMATIC.toString().equalsIgnoreCase(transcribe.getType()) ? TranscribeActionType.QUEUED.toString() : transcribe.getStatus();
+        String status = TranscribeType.AUTOMATIC.toString().equalsIgnoreCase(transcribe.getType()) ? TranscribeStatusType.QUEUED.toString()
+                : transcribe.getStatus();
+        String action = TranscribeType.AUTOMATIC.toString().equalsIgnoreCase(transcribe.getType()) ? TranscribeActionType.QUEUED.toString()
+                : transcribe.getStatus();
 
         List<Long> ids = new ArrayList<>();
         ids.add(transcribe.getId());
@@ -900,7 +968,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         processVariables.put(TranscribeBusinessProcessVariableKey.TYPE.toString(), transcribe.getType());
         processVariables.put(TranscribeBusinessProcessVariableKey.CREATED.toString(), new Date());
 
-        ProcessInstance processInstance = getActivitiRuntimeService().startProcessInstanceByKey(transcribeBusinessProcessModel.getName(), processVariables);
+        ProcessInstance processInstance = getActivitiRuntimeService().startProcessInstanceByKey(transcribeBusinessProcessModel.getName(),
+                processVariables);
 
         transcribe.setProcessId(processInstance.getId());
 
@@ -946,7 +1015,8 @@ public class ArkCaseTranscribeService extends AbstractArkCaseTranscribeService
         return transcribeConfigurationPropertiesService;
     }
 
-    public void setTranscribeConfigurationPropertiesService(TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService)
+    public void setTranscribeConfigurationPropertiesService(
+            TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService)
     {
         this.transcribeConfigurationPropertiesService = transcribeConfigurationPropertiesService;
     }

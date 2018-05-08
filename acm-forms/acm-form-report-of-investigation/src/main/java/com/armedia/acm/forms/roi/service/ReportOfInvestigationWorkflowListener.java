@@ -29,11 +29,9 @@ import java.util.Map;
 public class ReportOfInvestigationWorkflowListener implements ApplicationListener<ReportOfInvestigationFormEvent>
 {
 
-    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-
-    private RuntimeService activitiRuntimeService;
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+    private RuntimeService activitiRuntimeService;
 
     @Override
     public void onApplicationEvent(ReportOfInvestigationFormEvent event)

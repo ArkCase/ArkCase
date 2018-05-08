@@ -203,14 +203,16 @@ public class TranscribeConfiguration implements Serializable
                 automaticEnabled == that.automaticEnabled &&
                 newTranscriptionForNewVersion == that.newTranscriptionForNewVersion &&
                 copyTranscriptionForNewVersion == that.copyTranscriptionForNewVersion &&
-                that.cost != null ? that.cost.equals(cost) : cost == null &&
-                confidence == that.confidence &&
-                numberOfFilesForProcessing == that.numberOfFilesForProcessing &&
-                wordCountPerItem == that.wordCountPerItem &&
-                provider == that.provider &&
-                providerPurgeAttempts == that.providerPurgeAttempts &&
-                allowedMediaDuration == that.allowedMediaDuration &&
-                that.silentBetweenWords != null ? that.silentBetweenWords.equals(silentBetweenWords) : silentBetweenWords == null;
+                that.cost != null ? that.cost.equals(cost)
+                        : cost == null &&
+                                confidence == that.confidence &&
+                                numberOfFilesForProcessing == that.numberOfFilesForProcessing &&
+                                wordCountPerItem == that.wordCountPerItem &&
+                                provider == that.provider &&
+                                providerPurgeAttempts == that.providerPurgeAttempts &&
+                                allowedMediaDuration == that.allowedMediaDuration &&
+                                that.silentBetweenWords != null ? that.silentBetweenWords.equals(silentBetweenWords)
+                                        : silentBetweenWords == null;
     }
 
     @Override

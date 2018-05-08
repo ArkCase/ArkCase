@@ -36,6 +36,12 @@ public class AlfrescoRecordsService implements InitializingBean
     private Map<String, Object> alfrescoRmaPropertiesMap;
     private EcmFileDao ecmFileDao;
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
+    private DeclareRecordService declareRecordService;
+    private SetRecordMetadataService setRecordMetadataService;
+    private FindFolderService findFolderService;
+    private CreateOrFindRecordFolderService createOrFindRecordFolderService;
+    private MoveToRecordFolderService moveToRecordFolderService;
+    private CompleteRecordService completeRecordService;
 
     @Override
     public void afterPropertiesSet() throws Exception
@@ -44,13 +50,6 @@ public class AlfrescoRecordsService implements InitializingBean
 
         getEncryptablePropertyUtils().decryptProperties(alfrescoRmaPropertiesMap);
     }
-
-    private DeclareRecordService declareRecordService;
-    private SetRecordMetadataService setRecordMetadataService;
-    private FindFolderService findFolderService;
-    private CreateOrFindRecordFolderService createOrFindRecordFolderService;
-    private MoveToRecordFolderService moveToRecordFolderService;
-    private CompleteRecordService completeRecordService;
 
     public void declareAllContainerFilesAsRecords(Authentication auth, AcmContainer container, Date receiveDate, String recordFolderName)
     {
@@ -214,6 +213,11 @@ public class AlfrescoRecordsService implements InitializingBean
         this.ecmFileService = ecmFileService;
     }
 
+    public Properties getAlfrescoRmaProperties()
+    {
+        return alfrescoRmaProperties;
+    }
+
     public void setAlfrescoRmaProperties(Properties alfrescoRmaProperties)
     {
         this.alfrescoRmaProperties = alfrescoRmaProperties;
@@ -225,11 +229,6 @@ public class AlfrescoRecordsService implements InitializingBean
                     .forEach((entry) -> stringObjectMap.put((String) entry.getKey(), entry.getValue()));
             setAlfrescoRmaPropertiesMap(stringObjectMap);
         }
-    }
-
-    public Properties getAlfrescoRmaProperties()
-    {
-        return alfrescoRmaProperties;
     }
 
     public EcmFileDao getEcmFileDao()

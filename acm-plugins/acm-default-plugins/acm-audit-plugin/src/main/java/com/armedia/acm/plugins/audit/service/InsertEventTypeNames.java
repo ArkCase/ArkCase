@@ -24,10 +24,9 @@ import java.util.Map;
 public class InsertEventTypeNames implements ApplicationContextAware
 {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private AcmPlugin pluginEventType;
     private AuditLookupDao auditLookupDao;
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Override

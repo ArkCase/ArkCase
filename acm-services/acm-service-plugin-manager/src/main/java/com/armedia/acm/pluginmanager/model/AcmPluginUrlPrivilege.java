@@ -16,12 +16,11 @@ public class AcmPluginUrlPrivilege
     private static final String JSON_EXTENSION = ".json";
     private static final int XML_EXTENSION_LENGTH = XML_EXTENSION.length();
     private static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private String url;
     private HttpMethod httpMethod;
     private AcmPluginPrivilege requiredPrivilege;
     private String[] urlPathVariables;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public boolean matches(String incomingUrl, String method)
     {

@@ -18,9 +18,8 @@ import java.io.InputStream;
  */
 public class SendForPdfConversionImpl implements SendForPdfConversion
 {
-    private String captureFolderToWatch;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private String captureFolderToWatch;
 
     /**
      * Copies non-pdf files to the Ephesoft shared hot folder for recognition,

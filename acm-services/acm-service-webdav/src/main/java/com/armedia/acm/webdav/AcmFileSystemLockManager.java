@@ -29,24 +29,9 @@ import io.milton.resource.LockableResource;
 public class AcmFileSystemLockManager implements LockManager
 {
 
-    private static final class CurrentLock
-    {
-        final LockToken token;
-        final String lockedByUser;
-
-        public CurrentLock(LockToken token)
-        {
-            this.token = token;
-            this.lockedByUser = token.info.lockedByUser;
-        }
-
-    }
-
     // This should be changed with a distributed collection like ones from Hazelcast or Apache Ignite
     private final ConcurrentMap<String, CurrentLock> locks = new ConcurrentHashMap<>();
-
     private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-
     private AcmObjectLockService objectLockService;
 
     @Override
@@ -229,6 +214,19 @@ public class AcmFileSystemLockManager implements LockManager
     public void setObjectLockService(AcmObjectLockService objectLockService)
     {
         this.objectLockService = objectLockService;
+    }
+
+    private static final class CurrentLock
+    {
+        final LockToken token;
+        final String lockedByUser;
+
+        public CurrentLock(LockToken token)
+        {
+            this.token = token;
+            this.lockedByUser = token.info.lockedByUser;
+        }
+
     }
 
 }
