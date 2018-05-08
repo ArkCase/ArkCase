@@ -47,11 +47,12 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     private FileName mockFileName;
     private FileWatcher unit;
     private String fileSeparator = File.separator;
-    private final String baseFolderPath = fileUrlPrefix + fileSeparator + "temp";
-    private Logger log = LoggerFactory.getLogger(getClass());
+
     private boolean runningOnWindows = System.getProperty("os.name").startsWith("Windows");
     // for this test to pass, Windows and Linux require different file URL prefixes
     private final String fileUrlPrefix = runningOnWindows ? "file:///C:" : "file:///";
+    private final String baseFolderPath = fileUrlPrefix + fileSeparator + "temp";
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception
