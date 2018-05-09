@@ -39,7 +39,7 @@ import com.armedia.acm.services.transcribe.model.TranscribeBusinessProcessVariab
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.model.TranscribeServiceProvider;
 import com.armedia.acm.services.transcribe.model.TranscribeStatusType;
-import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeServiceImpl;
 import com.armedia.acm.services.transcribe.service.TranscribeService;
 
 import org.activiti.engine.RuntimeService;
@@ -67,7 +67,7 @@ public class TranscribeQueueJobTest
     private TranscribeQueueJob transcribeQueueJob;
 
     @Mock
-    private ArkCaseTranscribeService arkCaseTranscribeService;
+    private ArkCaseTranscribeServiceImpl arkCaseTranscribeService;
 
     @Mock
     private RuntimeService activitiRuntimeService;
