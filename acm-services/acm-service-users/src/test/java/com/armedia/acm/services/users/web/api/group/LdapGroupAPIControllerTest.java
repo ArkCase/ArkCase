@@ -35,25 +35,19 @@ import java.util.Collections;
 @RunWith(MockitoJUnitRunner.class)
 public class LdapGroupAPIControllerTest extends EasyMockSupport
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
-
-    private MockMvc mockMvc;
-
-    @Mock
-    private GroupService mockGroupService;
-
-    @Mock
-    private AcmGroupEventPublisher mockGroupEventPublisher;
-
     @Mock
     SpringContextHolder springContextHolder;
-
     @Mock
     LdapGroupService mockLdapGroupService;
-
     @InjectMocks
     @Spy
     LdapGroupAPIController ldapGroupAPIController;
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private MockMvc mockMvc;
+    @Mock
+    private GroupService mockGroupService;
+    @Mock
+    private AcmGroupEventPublisher mockGroupEventPublisher;
 
     @Before
     public void setUp()

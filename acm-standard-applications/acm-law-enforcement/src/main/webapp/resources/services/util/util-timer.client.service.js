@@ -14,7 +14,7 @@
 angular.module('services').factory('Util.TimerService', [ 'UtilService', function(Util) {
 
     var Service = {
-        _worker : null
+        _worker: null
 
         /**
          * @ngdoc method
@@ -28,7 +28,7 @@ angular.module('services').factory('Util.TimerService', [ 'UtilService', functio
          * the web worker previously created.
          */
         ,
-        startWorker : function(workerUrl) {
+        startWorker: function(workerUrl) {
             if (null == this._worker) {
                 if (typeof (Worker) === "undefined") {
                     return null;
@@ -54,13 +54,13 @@ angular.module('services').factory('Util.TimerService', [ 'UtilService', functio
          * Stop the web worker
          */
         ,
-        stopWorker : function() {
+        stopWorker: function() {
             this._worker.terminate();
         }
 
         ,
-        _listeners : [],
-        _listenerCount : 0
+        _listeners: [],
+        _listenerCount: 0
 
         /**
          * @ngdoc method
@@ -77,16 +77,16 @@ angular.module('services').factory('Util.TimerService', [ 'UtilService', functio
          * Register a timer listener
          */
         ,
-        registerListener : function(name, callback, interval, initInterval) {
+        registerListener: function(name, callback, interval, initInterval) {
             var count = interval / 100; //timer pulse is 100 ms
             var i = this._findListener(name);
             if (0 > i) { //not found; create new entry
                 var countDown = Util.goodValue(initInterval, interval) / 100;
                 this._listeners.push({
-                    name : name,
-                    callback : callback,
-                    count : count,
-                    countDown : countDown
+                    name: name,
+                    callback: callback,
+                    count: count,
+                    countDown: countDown
                 });
                 this._listenerCount++;
             } else {
@@ -107,17 +107,17 @@ angular.module('services').factory('Util.TimerService', [ 'UtilService', functio
          * Remove a timer listener
          */
         ,
-        removeListener : function(name) {
+        removeListener: function(name) {
             var i = this._findListener(name);
             this._removeListener(i);
         },
-        _removeListener : function(i) {
+        _removeListener: function(i) {
             if (0 <= i) {
                 this._listeners.splice(i, 1);
                 this._listenerCount--;
             }
         },
-        _findListener : function(name) {
+        _findListener: function(name) {
             for (var i = 0; i < this._listenerCount; i++) {
                 var listener = this._listeners[i];
                 if (listener.name == name) {
@@ -137,7 +137,7 @@ angular.module('services').factory('Util.TimerService', [ 'UtilService', functio
          * limit or when callback function return false
          */
         ,
-        triggerEvent : function() {
+        triggerEvent: function() {
             //need to loop backwards because of possible item removed while looping
             for (var i = this._listenerCount - 1; 0 <= i; i--) {
                 var listener = this._listeners[i];
@@ -165,7 +165,7 @@ angular.module('services').factory('Util.TimerService', [ 'UtilService', functio
          * Register a timer listener
          */
         ,
-        useTimer : function(name, interval, callback, initInterval) {
+        useTimer: function(name, interval, callback, initInterval) {
             Service.startWorker("assets/js/acmTimer.js");
             Service.registerListener(name, callback, interval, initInterval);
         }

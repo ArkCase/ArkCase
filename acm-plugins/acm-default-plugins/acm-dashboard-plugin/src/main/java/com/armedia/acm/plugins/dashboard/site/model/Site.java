@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -40,13 +41,7 @@ public class Site implements Serializable, AcmObject, AcmEntity
     private static final long serialVersionUID = 387976904L;
 
     @Id
-    @TableGenerator(name = "acm_site_gen",
-            table = "acm_site_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_site",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_site_gen", table = "acm_site_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_site", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_site_gen")
     @Column(name = "cm_site_id")
     private Long id;

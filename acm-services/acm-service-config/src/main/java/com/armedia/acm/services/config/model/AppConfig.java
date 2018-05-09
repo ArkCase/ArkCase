@@ -10,9 +10,8 @@ import java.io.Serializable;
 
 public class AppConfig implements AcmConfig, Serializable
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private static final long serialVersionUID = -1L;
-
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private String configName;
     private AcmApplication acmApplication;
     private String configDescription;

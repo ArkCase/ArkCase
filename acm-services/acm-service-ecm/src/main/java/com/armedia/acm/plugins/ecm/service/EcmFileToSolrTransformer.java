@@ -28,13 +28,11 @@ import java.util.Map;
 public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<EcmFile>
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileDao ecmFileDao;
     private UserDao userDao;
     private SearchAccessControlFields searchAccessControlFields;
     private ArkCaseBeanUtils arkCaseBeanUtils = new ArkCaseBeanUtils();
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     // whether to index file contents or just store document-related metadata
     private Boolean enableContentFileIndexing;
 
@@ -181,6 +179,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
 
         solr.setEcmFileId(in.getVersionSeriesId());
+        solr.setCmis_version_series_id_s(in.getVersionSeriesId());
 
         solr.setType_lcs(in.getFileType());
 

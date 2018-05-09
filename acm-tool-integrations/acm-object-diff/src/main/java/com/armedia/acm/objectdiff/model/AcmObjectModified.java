@@ -10,13 +10,12 @@ public class AcmObjectModified extends AcmObjectChange implements AcmChangeConta
 {
     private Long affectedObjectId;
     private String affectedObjectType;
+    private List<AcmChange> changes = new LinkedList<>();
 
     public AcmObjectModified()
     {
         setAction(AcmDiffConstants.OBJECT_MODIFIED);
     }
-
-    private List<AcmChange> changes = new LinkedList<>();
 
     public List<AcmChange> getChanges()
     {

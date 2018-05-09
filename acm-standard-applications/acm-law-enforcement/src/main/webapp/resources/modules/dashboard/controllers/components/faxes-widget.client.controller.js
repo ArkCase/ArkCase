@@ -2,33 +2,23 @@
 
 angular.module('dashboard.faxes', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('faxes', {
-        title : 'preference.overviewWidgets.faxes.title',
-        description : 'dashboard.widgets.faxes.description',
-        controller : 'Dashboard.FaxesController',
-        reload : true,
-        templateUrl : 'modules/dashboard/views/components/faxes-widget.client.view.html',
-        commonName : 'faxes'
+        title: 'preference.overviewWidgets.faxes.title',
+        description: 'dashboard.widgets.faxes.description',
+        controller: 'Dashboard.FaxesController',
+        reload: true,
+        templateUrl: 'modules/dashboard/views/components/faxes-widget.client.view.html',
+        commonName: 'faxes'
     });
 }).controller(
         'Dashboard.FaxesController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                'Organization.InfoService',
-                'Helper.ObjectBrowserService',
-                'Helper.UiGridService',
-                'UtilService',
-                'Object.LookupService',
-                'Object.ModelService',
-                function($scope, $stateParams, $translate, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, Util,
-                        ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$stateParams', '$translate', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService', 'Object.LookupService', 'Object.ModelService',
+                function($scope, $stateParams, $translate, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, Util, ObjectLookupService, ObjectModelService) {
 
                     var modules = [ {
-                        name : "ORGANIZATION",
-                        configName : "organizations",
-                        getInfo : OrganizationInfoService.getOrganizationInfo,
-                        validateInfo : OrganizationInfoService.validateOrganizationInfo
+                        name: "ORGANIZATION",
+                        configName: "organizations",
+                        getInfo: OrganizationInfoService.getOrganizationInfo,
+                        validateInfo: OrganizationInfoService.validateOrganizationInfo
                     } ];
 
                     var module = _.find(modules, function(module) {
@@ -36,25 +26,25 @@ angular.module('dashboard.faxes', [ 'adf.provider' ]).config(function(dashboardP
                     });
 
                     $scope.gridOptions = {
-                        enableColumnResizing : true,
-                        columnDefs : []
+                        enableColumnResizing: true,
+                        columnDefs: []
                     };
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : module.configName,
-                        componentId : "main",
-                        retrieveObjectInfo : module.getInfo,
-                        validateObjectInfo : module.validateInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: module.configName,
+                        componentId: "main",
+                        retrieveObjectInfo: module.getInfo,
+                        validateObjectInfo: module.validateInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         },
-                        onConfigRetrieved : function(componentConfig) {
+                        onConfigRetrieved: function(componentConfig) {
                             onConfigRetrieved(componentConfig);
                         }
                     });
@@ -62,7 +52,7 @@ angular.module('dashboard.faxes', [ 'adf.provider' ]).config(function(dashboardP
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
                         var faxes = _.filter($scope.objectInfo.contactMethods, {
-                            type : 'fax'
+                            type: 'fax'
                         });
                         gridHelper.setWidgetsGridData(faxes);
                     };

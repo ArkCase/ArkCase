@@ -2,7 +2,7 @@
 
 angular.module('preference').run([ 'Menus', 'ConfigService', function(Menus, ConfigService) {
     var config = ConfigService.getModule({
-        moduleId : 'preference'
+        moduleId: 'preference'
     });
     config.$promise.then(function(config) {
         if (config.menus) {

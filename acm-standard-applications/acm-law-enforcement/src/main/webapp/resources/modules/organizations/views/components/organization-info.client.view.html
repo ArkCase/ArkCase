@@ -4,7 +4,9 @@
             <div class="col-xs-12 col-md-12">
                 <div class="row">
                     <div class="col-xs-6">
-                        <h4><a href="#" editable-text="objectInfo.organizationValue" onaftersave="saveOrganization()" e-required>
+                        <h4><a href="#" permission="editObject" permission-object-type="ORGANIZATION" permission-action="disable"
+                                permission-properties="objectInfo" editable-text="objectInfo.organizationValue"
+                                onaftersave="saveOrganization()" e-required>
                             {{objectInfo.organizationValue || 'common.value.unknown' | translate}}</a>
                         </h4></div>
                     <div class="col-xs-6 text-right">
@@ -13,13 +15,14 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-md-4">
-                        <span class="h4 font-bold">
-                            {{objectInfo.defaultPhone.value || 'common.value.unknown' | translate}}
-                        </span>
-                        <span class="h4 font-bold" ng-show="objectInfo.defaultPhone">
-                            ({{objectInfo.defaultPhone.subType}})
-                        </span><br />
-                        <small class="text-muted"><span translate>organizations.comp.info.phone.label</span></small>
+                        <a href="#" permission="editObject" permission-object-type="ORGANIZATION" permission-action="disable"
+                                editable-select="objectInfo.organizationType" permission-properties="objectInfo"
+                                onaftersave="saveOrganization()"
+                                e-ng-options="o.key as (o.key | translateData: 'core.lookups.organizationTypes' : lang) for o in organizationTypes">
+                            {{ (objectInfo.organizationType | translateData: 'core.lookups.organizationTypes' : lang) ||
+                            ('common.value.unknown' | translate)
+                            }}</a><br>
+                        <small class="text-muted"><span translate>organizations.comp.info.type.label</span></small>
                     </div>
                     <div class="col-xs-12 col-md-4">
                         <div class="h4 font-bold">
@@ -30,6 +33,17 @@
                     </div>
                     <div class="col-xs-12 col-md-4">
                         <span class="h4 font-bold">
+                            {{objectInfo.defaultPhone.value || 'common.value.unknown' | translate}}
+                        </span>
+                        <span class="h4 font-bold" ng-show="objectInfo.defaultPhone">
+                            ({{objectInfo.defaultPhone.subType}})
+                        </span><br />
+                        <small class="text-muted"><span translate>organizations.comp.info.phone.label</span></small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <span class="h4 font-bold">
                             {{objectInfo.defaultIdentification.identificationNumber || 'common.value.unknown' | translate}}
                         </span>
                         <span class="h4 font-bold" ng-show="objectInfo.defaultIdentification">
@@ -38,8 +52,13 @@
                         <small class="text-muted"><span translate>organizations.comp.info.identification.label</span>
                         </small>
                     </div>
-                </div>
-                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            <a href="javascript:void(0)" readonly ng-click="addParent(true)">
+                                {{objectInfo.parentOrganization.organizationValue || 'common.value.unknown' | translate}}</a>
+                        </div>
+                        <small class="text-muted"><span translate>organizations.comp.info.parent.label</span></small>
+                    </div>
                     <div class="col-xs-12 col-md-4">
                         <span class="h4 font-bold">
                             {{objectInfo.defaultEmail.value || 'common.value.unknown' | translate}}
@@ -48,13 +67,6 @@
                             ({{objectInfo.defaultEmail.subType}})
                         </span><br />
                         <small class="text-muted"><span translate>organizations.comp.info.email.label</span></small>
-                    </div>
-                    <div class="col-xs-12 col-md-4">
-                        <div class="h4 font-bold">
-                            <a href="javascript:void(0)" readonly ng-click="addParent(true)">
-                                {{objectInfo.parentOrganization.organizationValue || 'common.value.unknown' | translate}}</a>
-                        </div>
-                        <small class="text-muted"><span translate>organizations.comp.info.parent.label</span></small>
                     </div>
                 </div>
             </div>

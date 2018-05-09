@@ -18,6 +18,12 @@ import java.util.Date;
 public class ComplaintsPage extends ArkCaseTestBase
 {
 
+    @FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[7]/a")
+    public WebElement documentLink;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[3]")
+    public WebElement refreshPageBtn;
+    @FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/button")
+    public WebElement detailsSaveBtn;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[1]/h3/span")
     WebElement complaintsPageTitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[1]/h3/span")
@@ -26,16 +32,12 @@ public class ComplaintsPage extends ArkCaseTestBase
     WebElement complaintTitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[5]")
     WebElement documentsLink;
-    @FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[7]/a")
-    public WebElement documentLink;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[1]")
     WebElement newComplaintBtn;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[2]")
     WebElement closeComplaintBtn;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[2]")
     WebElement subscribeBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[3]")
-    public WebElement refreshPageBtn;
     // Notes
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[7]/a")
     WebElement notesLink;
@@ -65,7 +67,6 @@ public class ComplaintsPage extends ArkCaseTestBase
     WebElement sortDateDesc;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span/span[3]")
     WebElement firstComplaint;
-
     // documents section
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/span")
     WebElement documentsTableTitle;
@@ -89,7 +90,6 @@ public class ComplaintsPage extends ArkCaseTestBase
     WebElement secondRowVersion;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[9]")
     WebElement secondRowStatus;
-
     // Details
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[2]")
     WebElement detailsLink;
@@ -103,8 +103,6 @@ public class ComplaintsPage extends ArkCaseTestBase
     WebElement insertImagePopUpTitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[1]/div/div/div[2]/div[1]/input")
     WebElement browseImageBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/button")
-    public WebElement detailsSaveBtn;
     @FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div[3]/div[1]/div/div[1]")
     WebElement insertedImage;
     // Tasks

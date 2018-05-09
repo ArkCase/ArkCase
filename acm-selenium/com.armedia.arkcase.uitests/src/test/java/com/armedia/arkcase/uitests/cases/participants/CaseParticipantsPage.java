@@ -13,12 +13,34 @@ import org.testng.asserts.SoftAssert;
 public class CaseParticipantsPage extends ArkCaseTestBase
 {
 
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[1]/div/div/div/div/div/div[1]/div[1]/div[1]/span[1]")
+    public WebElement typeColumnName;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/div/div[3]/a[2]")
+    public WebElement firstRowDeleteBtn;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[2]/div/div[3]/a[1]/i")
+    public WebElement secondRowEditBtn;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[2]/div/div[3]/a[2]/i")
+    public WebElement secondrowDeleteBtn;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[3]/div/div[3]/a[1]/i")
+    public WebElement thirdRowEditBtn;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[3]/div/div[3]/a[2]")
+    public WebElement thirdRowDeleteBtn;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[4]/div/div[3]/a[1]")
+    public WebElement fourthRowEditBtn;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[4]/div/div[3]/a[2]")
+    public WebElement fourthRowDeleteBtn;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[5]/div/div[3]/a[2]")
+    public WebElement fifthRowDeleteBtn;
+    @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[2]/div/div[1]/div/span/button")
+    public WebElement searchBtn;
+    @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[2]/div/div[2]/div/div/div[1]/div[1]/div[2]/div/div/div/div[4]/div")
+    public WebElement searchedUserName;
+    @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[2]/div/div[2]/div/div/div[1]/div[1]/div[2]/div/div/div/div/div")
+    public WebElement searchedGroupName;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[1]/div/span")
     WebElement participantsTabletitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[1]/div/div/button")
     WebElement addParticipantBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[1]/div/div/div/div/div/div[1]/div[1]/div[1]/span[1]")
-    public WebElement typeColumnName;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[1]/div/div/div/div/div/div[2]/div[2]/div[1]/span[1]")
     WebElement nameColumnName;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/div/div[1]/div")
@@ -41,31 +63,14 @@ public class CaseParticipantsPage extends ArkCaseTestBase
     WebElement nameForthRow;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[5]/div/div[2]/div")
     WebElement nameFifthRow;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/div/div[3]/a[1]/i")
-    WebElement firstRowEditBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/div/div[3]/a[2]")
-    public WebElement firstRowDeleteBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[2]/div/div[3]/a[1]/i")
-    public WebElement secondRowEditBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[2]/div/div[3]/a[2]/i")
-    public WebElement secondrowDeleteBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[3]/div/div[3]/a[1]/i")
-    public WebElement thirdRowEditBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[3]/div/div[3]/a[2]")
-    public WebElement thirdRowDeleteBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[4]/div/div[3]/a[1]")
-    public WebElement fourthRowEditBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[4]/div/div[3]/a[2]")
-    public WebElement fourthRowDeleteBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[5]/div/div[3]/a[1]")
-    WebElement fifthRowEditBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[5]/div/div[3]/a[2]")
-    public WebElement fifthRowDeleteBtn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[2]")
-    WebElement noDataLabel;
 
     // add participants popup
-
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/div/div[3]/a[1]/i")
+    WebElement firstRowEditBtn;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-participants/div/div[2]/div/div[1]/div[1]/div[2]/div/div[5]/div/div[3]/a[1]")
+    WebElement fifthRowEditBtn;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[2]")
+    WebElement noDataLabel;
     @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[1]/h3[1]/span")
     WebElement addParticipantTitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div[1]/select")
@@ -98,16 +103,12 @@ public class CaseParticipantsPage extends ArkCaseTestBase
     WebElement searchUserTitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[2]/div/div[1]/div/input")
     WebElement searchUserInput;
-    @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[2]/div/div[1]/div/span/button")
-    public WebElement searchBtn;
     @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[2]/div/div[2]/div/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div")
     WebElement searchedName;
     @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[2]/div/div[2]/div/div/div[1]/div[1]/div[2]/div/div/div/div[2]/div")
     WebElement searhedUserType;
     @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[2]/div/div[2]/div/div/div[1]/div[1]/div[2]/div/div/div/div[3]/div")
     WebElement searchedUserTitle;
-    @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[2]/div/div[2]/div/div/div[1]/div[1]/div[2]/div/div/div/div[4]/div")
-    public WebElement searchedUserName;
     @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[3]/button[2]")
     WebElement okBtn;
     // owning grooup
@@ -117,8 +118,6 @@ public class CaseParticipantsPage extends ArkCaseTestBase
     WebElement participantNameGroup;
     @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[1]")
     WebElement searchGroupPopUptitle;
-    @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[2]/div/div[2]/div/div/div[1]/div[1]/div[2]/div/div/div/div/div")
-    public WebElement searchedGroupName;
     @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[2]/div/div[1]/div/span/button")
     WebElement searchGroupBtn;
     @FindBy(how = How.XPATH, using = "/html/body/div[6]/div/div/div/search-modal/div[2]/div/div[1]/div/input")

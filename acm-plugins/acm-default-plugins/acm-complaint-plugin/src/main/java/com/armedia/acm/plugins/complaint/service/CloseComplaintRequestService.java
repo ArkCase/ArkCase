@@ -47,6 +47,7 @@ import java.util.stream.Collectors;
  */
 public class CloseComplaintRequestService
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private ComplaintDao complaintDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
     private ComplaintEventPublisher complaintEventPublisher;
@@ -58,9 +59,6 @@ public class CloseComplaintRequestService
     private String caseFileDetailsFormat;
     private String complaintDetailsFormat;
     private CaseFileEventUtility caseFileEventUtility;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     @PersistenceContext
     private EntityManager entityManager;
 

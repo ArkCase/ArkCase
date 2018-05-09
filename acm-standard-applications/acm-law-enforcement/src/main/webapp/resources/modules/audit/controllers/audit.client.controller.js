@@ -4,22 +4,10 @@
 
 angular.module('audit').controller(
         'AuditController',
-        [
-                '$scope',
-                '$sce',
-                '$q',
-                'ConfigService',
-                'LookupService',
-                'AuditController.BuildUrl',
-                'UtilService',
-                'Util.DateService',
-                '$window',
-                'Helper.LocaleService',
-                'Object.LookupService',
-                function($scope, $sce, $q, ConfigService, LookupService, BuildUrl, Util, UtilDateService, $window, LocaleHelper,
-                        ObjectLookupService) {
+        [ '$scope', '$sce', '$q', 'ConfigService', 'LookupService', 'AuditController.BuildUrl', 'UtilService', 'Util.DateService', '$window', 'Helper.LocaleService', 'Object.LookupService',
+                function($scope, $sce, $q, ConfigService, LookupService, BuildUrl, Util, UtilDateService, $window, LocaleHelper, ObjectLookupService) {
                     new LocaleHelper.Locale({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseModuleConfig = ConfigService.getModuleConfig("audit").then(function(config) {
@@ -91,13 +79,9 @@ angular.module('audit').controller(
                         var reportUri = $scope.auditReportUri;
                         if ($scope.showXmlReport) {
                             reportUri = reportUri.substring(0, reportUri.indexOf('viewer')) + 'report';
-                            $window.open(BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, reportUri, $scope.dateFrom, $scope.dateTo,
-                                    $scope.objectType, $scope.objectId, true, $scope.pentahoUser, $scope.pentahoPassword,
-                                    $scope.showXmlReport));
+                            $window.open(BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, reportUri, $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, true, $scope.pentahoUser, $scope.pentahoPassword, $scope.showXmlReport));
                         } else {
-                            $scope.auditReportUrl = BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, $scope.auditReportUri,
-                                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, true, $scope.pentahoUser,
-                                    $scope.pentahoPassword, $scope.showXmlReport);
+                            $scope.auditReportUrl = BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, $scope.auditReportUri, $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, true, $scope.pentahoUser, $scope.pentahoPassword, $scope.showXmlReport);
                         }
                     }
                 } ]);

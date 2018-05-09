@@ -55,6 +55,8 @@ import java.util.Map;
 public class CMISCloudConnector implements CMISFacade
 {
 
+    // This object will be used to hold the concurrency for the connection manager features
+    private final Object threadSafeLock;
     /**
      * Reference to a CMISFacade implementation in case you want to
      * use another implementation or initialize the default in a
@@ -62,11 +64,7 @@ public class CMISCloudConnector implements CMISFacade
      * attributes.
      */
     private CMISFacade facade;
-
     private String connectionIdentifier;
-
-    // This object will be used to hold the concurrency for the connection manager features
-    private final Object threadSafeLock;
 
     public CMISCloudConnector()
     {
@@ -173,6 +171,11 @@ public class CMISCloudConnector implements CMISFacade
     public String getConnectionIdentifier()
     {
         return this.connectionIdentifier;
+    }
+
+    public void setConnectionIdentifier(String connectionIdentifier)
+    {
+        this.connectionIdentifier = connectionIdentifier;
     }
 
     /**
@@ -363,10 +366,10 @@ public class CMISCloudConnector implements CMISFacade
      * Creates a new folder in the repository if it doesn't already exist.
      * <p/>
      * {@sample.xml ../../../doc/cmis-connector.xml.sample cmis:getOrCreateFolderByPath}
-     * 
+     *
      * @param folderPath
      *            Path to the folder
-     * 
+     *
      * @return the {@link ObjectId} of the created
      */
     @Override
@@ -1009,10 +1012,5 @@ public class CMISCloudConnector implements CMISFacade
     public void setFacade(CMISFacade facade)
     {
         this.facade = facade;
-    }
-
-    public void setConnectionIdentifier(String connectionIdentifier)
-    {
-        this.connectionIdentifier = connectionIdentifier;
     }
 }

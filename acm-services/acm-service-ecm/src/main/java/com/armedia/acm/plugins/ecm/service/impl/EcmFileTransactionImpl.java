@@ -13,8 +13,8 @@ import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
-
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.FileUtils;
@@ -54,6 +54,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUploadPipelineManager;
     private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUpdatePipelineManager;
     private CmisConfigUtils cmisConfigUtils;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
@@ -117,8 +118,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
 
     }
-
-    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
@@ -405,7 +404,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             CMISCloudConnectorConnectionManager manager = cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId());
 
             String alfrescoUser = manager.getUsername();
-            Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() : null;
+            Authentication authentication = SecurityContextHolder.getContext() != null
+                    ? SecurityContextHolder.getContext().getAuthentication()
+                    : null;
 
             if (authentication != null && authentication.getName() != null)
             {

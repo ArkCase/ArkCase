@@ -33,10 +33,8 @@ import java.util.Map;
 public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUtils
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
-
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private final String encryptedValuePrefix = "ENC(";
     private final String encryptedValueSuffix = ")";
     private AcmEncryptablePropertyEncryptionProperties encryptionProperties;

@@ -18,10 +18,9 @@ import java.util.stream.Collectors;
 
 public class UserIdGroupNameDomainUpdateDao
 {
+    private static final Logger log = LoggerFactory.getLogger(UserIdGroupNameDomainUpdateDao.class);
     @PersistenceContext
     private EntityManager em;
-
-    private static final Logger log = LoggerFactory.getLogger(UserIdGroupNameDomainUpdateDao.class);
 
     public int setUserIdAsDn(String directoryName)
     {

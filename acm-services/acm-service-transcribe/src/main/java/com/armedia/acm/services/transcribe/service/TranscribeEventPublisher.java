@@ -1,8 +1,19 @@
 package com.armedia.acm.services.transcribe.service;
 
-import com.armedia.acm.services.transcribe.model.*;
-import com.armedia.acm.spring.SpringContextHolder;
-import org.apache.http.auth.AUTH;
+import com.armedia.acm.services.transcribe.model.Transcribe;
+import com.armedia.acm.services.transcribe.model.TranscribeActionType;
+import com.armedia.acm.services.transcribe.model.TranscribeCancelledEvent;
+import com.armedia.acm.services.transcribe.model.TranscribeCompiledEvent;
+import com.armedia.acm.services.transcribe.model.TranscribeCompletedEvent;
+import com.armedia.acm.services.transcribe.model.TranscribeConstants;
+import com.armedia.acm.services.transcribe.model.TranscribeCreatedEvent;
+import com.armedia.acm.services.transcribe.model.TranscribeFailedEvent;
+import com.armedia.acm.services.transcribe.model.TranscribeProcessingEvent;
+import com.armedia.acm.services.transcribe.model.TranscribeProviderFailedEvent;
+import com.armedia.acm.services.transcribe.model.TranscribeQueuedEvent;
+import com.armedia.acm.services.transcribe.model.TranscribeRollbackEvent;
+import com.armedia.acm.services.transcribe.model.TranscribeUpdatedEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,9 +35,11 @@ public class TranscribeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishTranscribeCreatedEvent(Transcribe source, Authentication authentication, String ipAddress, boolean succeeded)
     {
-        String user = authentication != null && authentication.getName() != null ? authentication.getName() : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
+        String user = authentication != null && authentication.getName() != null ? authentication.getName()
+                : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
 
-        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same) events with these parent information
+        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same)
+        // events with these parent information
 
         TranscribeCreatedEvent createdEventParentRoot = new TranscribeCreatedEvent(source);
         createdEventParentRoot.setUserId(user);
@@ -50,9 +63,11 @@ public class TranscribeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishTranscribeUpdatedEvent(Transcribe source, Authentication authentication, String ipAddress, boolean succeeded)
     {
-        String user = authentication != null && authentication.getName() != null ? authentication.getName() : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
+        String user = authentication != null && authentication.getName() != null ? authentication.getName()
+                : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
 
-        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same) events with these parent information
+        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same)
+        // events with these parent information
 
         TranscribeUpdatedEvent updatedEventParentRoot = new TranscribeUpdatedEvent(source);
         updatedEventParentRoot.setUserId(user);
@@ -76,9 +91,11 @@ public class TranscribeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishTranscribeQueuedEvent(Transcribe source, Authentication authentication, String ipAddress, boolean succeeded)
     {
-        String user = authentication != null && authentication.getName() != null ? authentication.getName() : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
+        String user = authentication != null && authentication.getName() != null ? authentication.getName()
+                : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
 
-        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same) events with these parent information
+        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same)
+        // events with these parent information
 
         TranscribeQueuedEvent queuedEventParentRoot = new TranscribeQueuedEvent(source);
         queuedEventParentRoot.setUserId(user);
@@ -102,9 +119,11 @@ public class TranscribeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishTranscribeProcessingEvent(Transcribe source, Authentication authentication, String ipAddress, boolean succeeded)
     {
-        String user = authentication != null && authentication.getName() != null ? authentication.getName() : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
+        String user = authentication != null && authentication.getName() != null ? authentication.getName()
+                : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
 
-        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same) events with these parent information
+        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same)
+        // events with these parent information
 
         TranscribeProcessingEvent processingEventParentRoot = new TranscribeProcessingEvent(source);
         processingEventParentRoot.setUserId(user);
@@ -128,9 +147,11 @@ public class TranscribeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishTranscribeCompletedEvent(Transcribe source, Authentication authentication, String ipAddress, boolean succeeded)
     {
-        String user = authentication != null && authentication.getName() != null ? authentication.getName() : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
+        String user = authentication != null && authentication.getName() != null ? authentication.getName()
+                : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
 
-        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same) events with these parent information
+        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same)
+        // events with these parent information
 
         TranscribeCompletedEvent completedEventParentRoot = new TranscribeCompletedEvent(source);
         completedEventParentRoot.setUserId(user);
@@ -154,9 +175,11 @@ public class TranscribeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishTranscribeFailedEvent(Transcribe source, Authentication authentication, String ipAddress, boolean succeeded)
     {
-        String user = authentication != null && authentication.getName() != null ? authentication.getName() : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
+        String user = authentication != null && authentication.getName() != null ? authentication.getName()
+                : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
 
-        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same) events with these parent information
+        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same)
+        // events with these parent information
 
         TranscribeFailedEvent failedEventParentRoot = new TranscribeFailedEvent(source);
         failedEventParentRoot.setUserId(user);
@@ -180,9 +203,11 @@ public class TranscribeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishTranscribeCancelledEvent(Transcribe source, Authentication authentication, String ipAddress, boolean succeeded)
     {
-        String user = authentication != null && authentication.getName() != null ? authentication.getName() : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
+        String user = authentication != null && authentication.getName() != null ? authentication.getName()
+                : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
 
-        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same) events with these parent information
+        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same)
+        // events with these parent information
 
         TranscribeCancelledEvent cancelledEventParentRoot = new TranscribeCancelledEvent(source);
         cancelledEventParentRoot.setUserId(user);
@@ -206,9 +231,11 @@ public class TranscribeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishTranscribeCompiledEvent(Transcribe source, Authentication authentication, String ipAddress, boolean succeeded)
     {
-        String user = authentication != null && authentication.getName() != null ? authentication.getName() : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
+        String user = authentication != null && authentication.getName() != null ? authentication.getName()
+                : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
 
-        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same) events with these parent information
+        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same)
+        // events with these parent information
 
         TranscribeCompiledEvent compiledEventParentRoot = new TranscribeCompiledEvent(source);
         compiledEventParentRoot.setUserId(user);
@@ -232,9 +259,11 @@ public class TranscribeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishTranscribeProviderFailedEvent(Transcribe source, Authentication authentication, String ipAddress, boolean succeeded)
     {
-        String user = authentication != null && authentication.getName() != null ? authentication.getName() : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
+        String user = authentication != null && authentication.getName() != null ? authentication.getName()
+                : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
 
-        // No need to track history on Parent object (Case/Complaint/DocRepo) and parent File. For that reason just fire event with closest parent (version of the file)
+        // No need to track history on Parent object (Case/Complaint/DocRepo) and parent File. For that reason just fire
+        // event with closest parent (version of the file)
 
         TranscribeProviderFailedEvent providerFailedEvent = new TranscribeProviderFailedEvent(source);
         providerFailedEvent.setUserId(user);
@@ -249,9 +278,11 @@ public class TranscribeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishTranscribeRollbackEvent(Transcribe source, Authentication authentication, String ipAddress, boolean succeeded)
     {
-        String user = authentication != null && authentication.getName() != null ? authentication.getName() : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
+        String user = authentication != null && authentication.getName() != null ? authentication.getName()
+                : TranscribeConstants.TRANSCRIBE_SYSTEM_USER;
 
-        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same) events with these parent information
+        // We need history on both levels, top parent (Case/Complaint/DocRepo) and parent File. So fire two (the same)
+        // events with these parent information
 
         TranscribeRollbackEvent rollbackEventParentRoot = new TranscribeRollbackEvent(source);
         rollbackEventParentRoot.setUserId(user);
@@ -282,54 +313,56 @@ public class TranscribeEventPublisher implements ApplicationEventPublisherAware
         }
         catch (IllegalArgumentException e)
         {
-            String availableActions = Arrays.asList(TranscribeActionType.values()).stream().map(t -> t.toString()).collect(Collectors.joining(", "));
+            String availableActions = Arrays.asList(TranscribeActionType.values()).stream().map(t -> t.toString())
+                    .collect(Collectors.joining(", "));
             LOG.error("Could not found available ACTION=[{}]. Available actions are: [{}]", action, availableActions);
             return;
         }
 
-        Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() : null;
+        Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
+                : null;
 
         switch (transcribeActionType)
         {
-            case CREATED:
-                publishTranscribeCreatedEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
-                break;
+        case CREATED:
+            publishTranscribeCreatedEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
+            break;
 
-            case UPDATED:
-                publishTranscribeUpdatedEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
-                break;
+        case UPDATED:
+            publishTranscribeUpdatedEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
+            break;
 
-            case QUEUED:
-                publishTranscribeQueuedEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
-                break;
+        case QUEUED:
+            publishTranscribeQueuedEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
+            break;
 
-            case PROCESSING:
-                publishTranscribeProcessingEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
-                break;
+        case PROCESSING:
+            publishTranscribeProcessingEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
+            break;
 
-            case COMPLETED:
-                publishTranscribeCompletedEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
-                break;
+        case COMPLETED:
+            publishTranscribeCompletedEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
+            break;
 
-            case FAILED:
-                publishTranscribeFailedEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
-                break;
+        case FAILED:
+            publishTranscribeFailedEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
+            break;
 
-            case CANCELLED:
-                publishTranscribeCancelledEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
-                break;
+        case CANCELLED:
+            publishTranscribeCancelledEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
+            break;
 
-            case COMPILED:
-                publishTranscribeCompiledEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
-                break;
+        case COMPILED:
+            publishTranscribeCompiledEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
+            break;
 
-            case ROLLBACK:
-                publishTranscribeRollbackEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
-                break;
+        case ROLLBACK:
+            publishTranscribeRollbackEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
+            break;
 
-            case PROVIDER_FAILED:
-                publishTranscribeProviderFailedEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
-                break;
+        case PROVIDER_FAILED:
+            publishTranscribeProviderFailedEvent(transcribe, authentication, TranscribeConstants.TRANSCRIBE_SYSTEM_IP_ADDRESS, true);
+            break;
         }
     }
 

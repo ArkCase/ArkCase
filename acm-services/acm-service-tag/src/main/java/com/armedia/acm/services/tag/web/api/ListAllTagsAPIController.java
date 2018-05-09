@@ -24,9 +24,8 @@ import java.util.List;
 public class ListAllTagsAPIController
 {
 
-    private TagService tagService;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private TagService tagService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

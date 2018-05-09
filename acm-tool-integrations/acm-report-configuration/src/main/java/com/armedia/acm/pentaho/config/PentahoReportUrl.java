@@ -11,13 +11,12 @@ import java.util.TreeMap;
 
 public class PentahoReportUrl implements ReportUrl
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
     private static final String REPORT_SERVER_URL = "PENTAHO_SERVER_URL";
     private static final String REPORT_SERVER_PORT = "PENTAHO_SERVER_PORT";
     private static final String PENTAHO_SERVER_INTERNAL_URL = "PENTAHO_SERVER_INTERNAL_URL";
     private static final String PENTAHO_SERVER_INTERNAL_PORT = "PENTAHO_SERVER_INTERNAL_PORT";
     private static final String REPORTS_URL = "PENTAHO_REPORTS_URL";
-
+    private Logger log = LoggerFactory.getLogger(getClass());
     /**
      * List of form-specific properties.
      */

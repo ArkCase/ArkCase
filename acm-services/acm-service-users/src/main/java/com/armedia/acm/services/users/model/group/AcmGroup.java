@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -24,6 +25,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
@@ -386,6 +388,11 @@ public class AcmGroup implements Serializable, AcmEntity
         return ascendantsList;
     }
 
+    public void setAscendantsList(String ascendantsList)
+    {
+        this.ascendantsList = ascendantsList;
+    }
+
     /**
      * We will use this as pre-computed list of all ascendants found by traversing the full graph of groups and their
      * member groups trying to find path to this group. // TODO: find better separator then `,`, maybe `;` or `:`
@@ -418,11 +425,6 @@ public class AcmGroup implements Serializable, AcmEntity
         ascendantsList = ascendants.stream()
                 .sorted()
                 .collect(Collectors.joining(","));
-    }
-
-    public void setAscendantsList(String ascendantsList)
-    {
-        this.ascendantsList = ascendantsList;
     }
 
     @Override

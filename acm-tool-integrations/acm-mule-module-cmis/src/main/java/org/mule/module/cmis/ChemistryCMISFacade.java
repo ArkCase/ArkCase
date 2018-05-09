@@ -66,10 +66,8 @@ import java.util.Map;
  */
 public class ChemistryCMISFacade implements CMISFacade
 {
-    public static Logger log = Logger.getLogger(ChemistryCMISFacade.class);
-
     private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
-
+    public static Logger log = Logger.getLogger(ChemistryCMISFacade.class);
     private Session session;
     private Map<String, String> connectionParameters;
     private String baseURL = null;
@@ -88,6 +86,229 @@ public class ChemistryCMISFacade implements CMISFacade
         this.connectionParameters = paramMap(username, password, repositoryId, baseURL, useAtomPub,
                 connectionTimeout, useAlfrescoExtension, cxfPortProvider);
     } // End ChemistryCMISFacade Constructor
+
+    public static ContentStream createContentStream(String filename,
+            String mimeType,
+            Object content)
+    {
+        ContentStreamImpl ret;
+
+        if (content instanceof String)
+        {
+            ret = new ContentStreamImpl(filename, mimeType, (String) content);
+        }
+        else
+        {
+            ret = new ContentStreamImpl();
+            ret.setFileName(filename);
+            ret.setMimeType(mimeType);
+            if (content instanceof InputStream)
+            {
+                ret.setStream((InputStream) content);
+            }
+            else if (content instanceof byte[])
+            {
+                ret.setStream(new ByteArrayInputStream((byte[]) content));
+            }
+            else if (content instanceof Document)
+            {
+                ret = (ContentStreamImpl) ((Document) content).getContentStream();
+            }
+            else
+            {
+                throw new IllegalArgumentException(
+                        "The content must be one of the following: Document, InputStream or Byte array. The received type is not a valid one for generating a content stream: "
+                                + content.getClass());
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * Validates that either a CmisObject or it's ID has been provided.
+     */
+    private static void validateObjectOrId(CmisObject object, String objectId)
+    {
+        if (object == null && StringUtils.isBlank(objectId))
+        {
+            throw new IllegalArgumentException("Both the cmis object and it's ID are not set");
+        }
+    }
+
+    /**
+     * Validates that and object's ID is the one provided, in case both are not null or blank.
+     */
+    private static void validateRedundantIdentifier(CmisObject object, String objectId)
+    {
+        if (object != null && StringUtils.isNotBlank(objectId) && !object.getId().equals(objectId))
+        {
+            throw new IllegalArgumentException("The id provided does not match the object's ID");
+        }
+    }
+
+    private static OperationContext createOperationContext(String filter,
+            String orderBy)
+    {
+        OperationContext ctx = new OperationContextImpl();
+        ctx.setIncludeAcls(true);
+        ctx.setIncludePolicies(true);
+        if (StringUtils.isNotBlank(filter) || StringUtils.isNotBlank(orderBy))
+        {
+            if (StringUtils.isNotBlank(filter))
+            {
+                ctx.setFilterString(filter);
+            }
+            if (StringUtils.isNotBlank(orderBy))
+            {
+                ctx.setOrderBy(orderBy);
+            }
+        }
+        return ctx;
+    }
+
+    private static Map<String, String> paramMap(String username,
+            String password,
+            String repositoryId,
+            String baseURL,
+            boolean useAtomPub,
+            String connectionTimeout,
+            String useAlfrescoExtension,
+            String cxfPortProvider)
+    {
+        if ((username == null) || (username.trim().length() <= 0))
+        {
+            log.error(
+                    "The \"username\" attribute of the \"config\" element for the repository connector configuration is " +
+                            "empty or missing. This configuration is required in order to provide repository connection " +
+                            "parameters to the connector. The connector is currently non-functional.");
+            return null;
+        }
+        else if ((password == null) || (password.trim().length() <= 0))
+        {
+            log.error(
+                    "The \"password\" attribute of the \"config\" element for the repository connector configuration is " +
+                            "empty or missing. This configuration is required in order to provide repository connection " +
+                            "parameters to the connector. The connector is currently non-functional.");
+            return null;
+        }
+        else if ((baseURL == null) || (baseURL.trim().length() <= 0))
+        {
+            log.error(
+                    "The \"baseURL\" attribute of the \"config\" element for the repository connector configuration is " +
+                            "empty or missing. This configuration is required in order to provide repository connection " +
+                            "parameters to the connector. The connector is currently non-functional.");
+            return null;
+        }
+
+        Map<String, String> parameters = new HashMap<>();
+
+        // user credentials
+        if (username.trim().startsWith(KERBEROS_USERNAME_PREFIX))
+        {
+            parameters.put(SessionParameter.USER, username.trim().substring(KERBEROS_USERNAME_PREFIX.length()));
+            parameters.put(SessionParameter.HTTP_INVOKER_CLASS, KerberosHttpInvoker.class.getName());
+            parameters.put(SessionParameter.AUTHENTICATION_PROVIDER_CLASS, KerberosAuthenticationProvider.class.getName());
+        }
+        else
+        {
+            parameters.put(SessionParameter.HTTP_INVOKER_CLASS, BasicAuthenticationHttpInvoker.class.getName());
+            parameters.put(SessionParameter.USER, username.trim());
+        }
+
+        parameters.put(SessionParameter.PASSWORD, password.trim());
+
+        // connection settings... we prefer SOAP over ATOMPUB because some rare
+        // behaviurs with the ChangeEvents.getLatestChangeLogToken().
+        if (!useAtomPub)
+        {
+            parameters.put(SessionParameter.BINDING_TYPE, BindingType.WEBSERVICES.value());
+            parameters.put(SessionParameter.WEBSERVICES_ACL_SERVICE, baseURL + "ACLService?wsdl");
+            parameters.put(SessionParameter.WEBSERVICES_DISCOVERY_SERVICE, baseURL + "DiscoveryService?wsdl");
+            parameters.put(SessionParameter.WEBSERVICES_MULTIFILING_SERVICE, baseURL + "MultiFilingService?wsdl");
+            parameters.put(SessionParameter.WEBSERVICES_NAVIGATION_SERVICE, baseURL + "NavigationService?wsdl");
+            parameters.put(SessionParameter.WEBSERVICES_OBJECT_SERVICE, baseURL + "ObjectService?wsdl");
+            parameters.put(SessionParameter.WEBSERVICES_POLICY_SERVICE, baseURL + "PolicyService?wsdl");
+            parameters.put(SessionParameter.WEBSERVICES_RELATIONSHIP_SERVICE, baseURL + "RelationshipService?wsdl");
+            parameters.put(SessionParameter.WEBSERVICES_REPOSITORY_SERVICE, baseURL + "RepositoryService?wsdl");
+            parameters.put(SessionParameter.WEBSERVICES_VERSIONING_SERVICE, baseURL + "VersioningService?wsdl");
+            parameters.put(SessionParameter.WEBSERVICES_PORT_PROVIDER_CLASS, cxfPortProvider);
+        }
+        else
+        {
+            parameters.put(SessionParameter.BINDING_TYPE, BindingType.ATOMPUB.value());
+            parameters.put(SessionParameter.ATOMPUB_URL, baseURL.trim());
+        }
+
+        // Session locale
+        parameters.put(SessionParameter.LOCALE_ISO3166_COUNTRY, "");
+        parameters.put(SessionParameter.LOCALE_ISO639_LANGUAGE, "en");
+
+        if (connectionTimeout != null)
+        {
+            parameters.put(SessionParameter.CONNECT_TIMEOUT, connectionTimeout);
+        }
+
+        if (repositoryId != null)
+        {
+            parameters.put(SessionParameter.REPOSITORY_ID, repositoryId.trim());
+        }
+        else
+        {
+            // No repository ID was specified. Go try an get the first ID in the repository list from the server.
+            String repoID = getRepositoryID(parameters, baseURL);
+            if (repoID != null)
+            {
+                parameters.put(SessionParameter.REPOSITORY_ID, repoID);
+            }
+        }
+
+        // Determine if the use of the Alfresco extension for OpenCMIS was requested in the configuration.
+        if (Boolean.parseBoolean(useAlfrescoExtension.trim().toLowerCase()))
+        {
+            // Have the Alfresco Extended CMIS factory used.
+            parameters.put(SessionParameter.OBJECT_FACTORY_CLASS, "org.alfresco.cmis.client.impl.AlfrescoObjectFactoryImpl");
+            log.debug("The Alfresco Object Factor CMIS extension has been included in the session parameters.");
+        }
+
+        return parameters;
+    }
+
+    public static String getRepositoryID(Map<String, String> parameters, String baseURL)
+    {
+        String repoID = null;
+
+        try
+        {
+            log.debug("Attempting to dynamically obtain the repository ID.");
+            List<Repository> repositoryList = SessionFactoryImpl.newInstance().getRepositories(parameters);
+
+            if (repositoryList.size() <= 0)
+            {
+                log.error(
+                        "No repositories were returned at the CMIS server URL \"" + baseURL + "\". " +
+                                "The connector is currently non-functional.");
+            }
+            else
+            {
+                // Get the first repo in the list.
+                Repository firstRepo = repositoryList.get(0);
+
+                // Extract the ID of this repo, and add it to the parameters list.
+                repoID = firstRepo.getId();
+
+                log.debug("The repository ID that will be used is " + repoID + ".");
+            }
+        }
+        catch (Exception repoIDEx)
+        {
+            log.error(
+                    "An error occurred while attempting to dynamically obtain a repository ID. " +
+                            "The connector is currently non-functional. " + repoIDEx.getMessage());
+        }
+
+        return repoID;
+    } // end getRepositoryID
 
     @Override
     public List<Repository> repositories()
@@ -494,44 +715,6 @@ public class ChemistryCMISFacade implements CMISFacade
 
         return returnId;
     } // End createDocument
-
-    public static ContentStream createContentStream(String filename,
-            String mimeType,
-            Object content)
-    {
-        ContentStreamImpl ret;
-
-        if (content instanceof String)
-        {
-            ret = new ContentStreamImpl(filename, mimeType, (String) content);
-        }
-        else
-        {
-            ret = new ContentStreamImpl();
-            ret.setFileName(filename);
-            ret.setMimeType(mimeType);
-            if (content instanceof InputStream)
-            {
-                ret.setStream((InputStream) content);
-            }
-            else if (content instanceof byte[])
-            {
-                ret.setStream(new ByteArrayInputStream((byte[]) content));
-            }
-            else if (content instanceof Document)
-            {
-                ret = (ContentStreamImpl) ((Document) content).getContentStream();
-            }
-            else
-            {
-                throw new IllegalArgumentException(
-                        "The content must be one of the following: Document, InputStream or Byte array. The received type is not a valid one for generating a content stream: "
-                                + content.getClass());
-            }
-        }
-
-        return ret;
-    }
 
     @Override
     public ObjectId createFolder(String folderName, String parentObjectId)
@@ -1033,28 +1216,6 @@ public class ChemistryCMISFacade implements CMISFacade
         }
     }
 
-    /**
-     * Validates that either a CmisObject or it's ID has been provided.
-     */
-    private static void validateObjectOrId(CmisObject object, String objectId)
-    {
-        if (object == null && StringUtils.isBlank(objectId))
-        {
-            throw new IllegalArgumentException("Both the cmis object and it's ID are not set");
-        }
-    }
-
-    /**
-     * Validates that and object's ID is the one provided, in case both are not null or blank.
-     */
-    private static void validateRedundantIdentifier(CmisObject object, String objectId)
-    {
-        if (object != null && StringUtils.isNotBlank(objectId) && !object.getId().equals(objectId))
-        {
-            throw new IllegalArgumentException("The id provided does not match the object's ID");
-        }
-    }
-
     private CmisObject getCmisObject(CmisObject object, String objectId)
     {
         return getCmisObject(object, objectId, CmisObject.class);
@@ -1083,169 +1244,6 @@ public class ChemistryCMISFacade implements CMISFacade
             return null;
         }
     }
-
-    private static OperationContext createOperationContext(String filter,
-            String orderBy)
-    {
-        OperationContext ctx = new OperationContextImpl();
-        ctx.setIncludeAcls(true);
-        ctx.setIncludePolicies(true);
-        if (StringUtils.isNotBlank(filter) || StringUtils.isNotBlank(orderBy))
-        {
-            if (StringUtils.isNotBlank(filter))
-            {
-                ctx.setFilterString(filter);
-            }
-            if (StringUtils.isNotBlank(orderBy))
-            {
-                ctx.setOrderBy(orderBy);
-            }
-        }
-        return ctx;
-    }
-
-    private static Map<String, String> paramMap(String username,
-            String password,
-            String repositoryId,
-            String baseURL,
-            boolean useAtomPub,
-            String connectionTimeout,
-            String useAlfrescoExtension,
-            String cxfPortProvider)
-    {
-        if ((username == null) || (username.trim().length() <= 0))
-        {
-            log.error(
-                    "The \"username\" attribute of the \"config\" element for the repository connector configuration is " +
-                            "empty or missing. This configuration is required in order to provide repository connection " +
-                            "parameters to the connector. The connector is currently non-functional.");
-            return null;
-        }
-        else if ((password == null) || (password.trim().length() <= 0))
-        {
-            log.error(
-                    "The \"password\" attribute of the \"config\" element for the repository connector configuration is " +
-                            "empty or missing. This configuration is required in order to provide repository connection " +
-                            "parameters to the connector. The connector is currently non-functional.");
-            return null;
-        }
-        else if ((baseURL == null) || (baseURL.trim().length() <= 0))
-        {
-            log.error(
-                    "The \"baseURL\" attribute of the \"config\" element for the repository connector configuration is " +
-                            "empty or missing. This configuration is required in order to provide repository connection " +
-                            "parameters to the connector. The connector is currently non-functional.");
-            return null;
-        }
-
-        Map<String, String> parameters = new HashMap<>();
-
-        // user credentials
-        if (username.trim().startsWith(KERBEROS_USERNAME_PREFIX))
-        {
-            parameters.put(SessionParameter.USER, username.trim().substring(KERBEROS_USERNAME_PREFIX.length()));
-            parameters.put(SessionParameter.HTTP_INVOKER_CLASS, KerberosHttpInvoker.class.getName());
-            parameters.put(SessionParameter.AUTHENTICATION_PROVIDER_CLASS, KerberosAuthenticationProvider.class.getName());
-        }
-        else
-        {
-            parameters.put(SessionParameter.HTTP_INVOKER_CLASS, BasicAuthenticationHttpInvoker.class.getName());
-            parameters.put(SessionParameter.USER, username.trim());
-        }
-
-        parameters.put(SessionParameter.PASSWORD, password.trim());
-
-        // connection settings... we prefer SOAP over ATOMPUB because some rare
-        // behaviurs with the ChangeEvents.getLatestChangeLogToken().
-        if (!useAtomPub)
-        {
-            parameters.put(SessionParameter.BINDING_TYPE, BindingType.WEBSERVICES.value());
-            parameters.put(SessionParameter.WEBSERVICES_ACL_SERVICE, baseURL + "ACLService?wsdl");
-            parameters.put(SessionParameter.WEBSERVICES_DISCOVERY_SERVICE, baseURL + "DiscoveryService?wsdl");
-            parameters.put(SessionParameter.WEBSERVICES_MULTIFILING_SERVICE, baseURL + "MultiFilingService?wsdl");
-            parameters.put(SessionParameter.WEBSERVICES_NAVIGATION_SERVICE, baseURL + "NavigationService?wsdl");
-            parameters.put(SessionParameter.WEBSERVICES_OBJECT_SERVICE, baseURL + "ObjectService?wsdl");
-            parameters.put(SessionParameter.WEBSERVICES_POLICY_SERVICE, baseURL + "PolicyService?wsdl");
-            parameters.put(SessionParameter.WEBSERVICES_RELATIONSHIP_SERVICE, baseURL + "RelationshipService?wsdl");
-            parameters.put(SessionParameter.WEBSERVICES_REPOSITORY_SERVICE, baseURL + "RepositoryService?wsdl");
-            parameters.put(SessionParameter.WEBSERVICES_VERSIONING_SERVICE, baseURL + "VersioningService?wsdl");
-            parameters.put(SessionParameter.WEBSERVICES_PORT_PROVIDER_CLASS, cxfPortProvider);
-        }
-        else
-        {
-            parameters.put(SessionParameter.BINDING_TYPE, BindingType.ATOMPUB.value());
-            parameters.put(SessionParameter.ATOMPUB_URL, baseURL.trim());
-        }
-
-        // Session locale
-        parameters.put(SessionParameter.LOCALE_ISO3166_COUNTRY, "");
-        parameters.put(SessionParameter.LOCALE_ISO639_LANGUAGE, "en");
-
-        if (connectionTimeout != null)
-        {
-            parameters.put(SessionParameter.CONNECT_TIMEOUT, connectionTimeout);
-        }
-
-        if (repositoryId != null)
-        {
-            parameters.put(SessionParameter.REPOSITORY_ID, repositoryId.trim());
-        }
-        else
-        {
-            // No repository ID was specified. Go try an get the first ID in the repository list from the server.
-            String repoID = getRepositoryID(parameters, baseURL);
-            if (repoID != null)
-            {
-                parameters.put(SessionParameter.REPOSITORY_ID, repoID);
-            }
-        }
-
-        // Determine if the use of the Alfresco extension for OpenCMIS was requested in the configuration.
-        if (Boolean.parseBoolean(useAlfrescoExtension.trim().toLowerCase()))
-        {
-            // Have the Alfresco Extended CMIS factory used.
-            parameters.put(SessionParameter.OBJECT_FACTORY_CLASS, "org.alfresco.cmis.client.impl.AlfrescoObjectFactoryImpl");
-            log.debug("The Alfresco Object Factor CMIS extension has been included in the session parameters.");
-        }
-
-        return parameters;
-    }
-
-    public static String getRepositoryID(Map<String, String> parameters, String baseURL)
-    {
-        String repoID = null;
-
-        try
-        {
-            log.debug("Attempting to dynamically obtain the repository ID.");
-            List<Repository> repositoryList = SessionFactoryImpl.newInstance().getRepositories(parameters);
-
-            if (repositoryList.size() <= 0)
-            {
-                log.error(
-                        "No repositories were returned at the CMIS server URL \"" + baseURL + "\". " +
-                                "The connector is currently non-functional.");
-            }
-            else
-            {
-                // Get the first repo in the list.
-                Repository firstRepo = repositoryList.get(0);
-
-                // Extract the ID of this repo, and add it to the parameters list.
-                repoID = firstRepo.getId();
-
-                log.debug("The repository ID that will be used is " + repoID + ".");
-            }
-        }
-        catch (Exception repoIDEx)
-        {
-            log.error(
-                    "An error occurred while attempting to dynamically obtain a repository ID. " +
-                            "The connector is currently non-functional. " + repoIDEx.getMessage());
-        }
-
-        return repoID;
-    } // end getRepositoryID
 
     private Session getSession(Map<String, String> parameters)
     {

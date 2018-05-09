@@ -9,6 +9,7 @@ import com.armedia.acm.auth.okta.model.user.OktaUserProfile;
 import com.armedia.acm.auth.okta.model.user.OktaUserStatus;
 import com.armedia.acm.auth.okta.services.OktaUserService;
 import com.google.common.base.Preconditions;
+
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,6 @@ public class OktaUserServiceImpl implements OktaUserService
         Preconditions.checkNotNull(user, "User must not be null to create user");
 
         JSONObject userRequestBody = new JSONObject();
-
 
         JSONObject userProfileRequestBody = new JSONObject();
         OktaUserProfile profile = user.getProfile();
@@ -65,13 +65,14 @@ public class OktaUserServiceImpl implements OktaUserService
     {
         JSONObject profileData = new JSONObject();
 
-        //need to check whether it has all the data it needs
+        // need to check whether it has all the data it needs
         boolean profileComplete = isProfileComplete(userProfile, profileData);
 
         if (userProfile == null || !profileComplete)
         {
             throw new OktaException("User profile is null or profile data are incomplete");
-        } else
+        }
+        else
         {
             JSONObject body = new JSONObject();
             body.put("profile", profileData);
@@ -127,7 +128,8 @@ public class OktaUserServiceImpl implements OktaUserService
         if (fName == null)
         {
             return false;
-        } else
+        }
+        else
         {
             profileData.put(OktaAPIConstants.FIRST_NAME, fName);
         }
@@ -136,7 +138,8 @@ public class OktaUserServiceImpl implements OktaUserService
         if (lName == null)
         {
             return false;
-        } else
+        }
+        else
         {
             profileData.put(OktaAPIConstants.LAST_NAME, lName);
         }
@@ -145,7 +148,8 @@ public class OktaUserServiceImpl implements OktaUserService
         if (email == null)
         {
             return false;
-        } else
+        }
+        else
         {
 
             profileData.put(OktaAPIConstants.EMAIL, userProfile.getEmail());
@@ -155,7 +159,8 @@ public class OktaUserServiceImpl implements OktaUserService
         if (login != null)
         {
             profileData.put(OktaAPIConstants.LOGIN_NAME, login);
-        } else
+        }
+        else
         {
             return false;
         }

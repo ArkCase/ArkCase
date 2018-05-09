@@ -5,6 +5,7 @@ import com.armedia.acm.auth.okta.model.OktaAPIConstants;
 import com.armedia.acm.auth.okta.model.factor.FactorVerifyResult;
 import com.armedia.acm.auth.okta.services.FactorVerificationService;
 import com.google.common.base.Preconditions;
+
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,8 @@ public class FactorVerificationServiceImpl implements FactorVerificationService
         JSONObject passCodeBody = new JSONObject();
         passCodeBody.put(OktaAPIConstants.PASS_CODE, passCode);
         String apiPath = String.format(OktaAPIConstants.VERIFY_FACTOR, userId, factorId);
-        ResponseEntity<FactorVerifyResult> exchange = oktaRestService.doRestCall(apiPath, HttpMethod.POST, FactorVerifyResult.class, passCodeBody.toJSONString());
+        ResponseEntity<FactorVerifyResult> exchange = oktaRestService.doRestCall(apiPath, HttpMethod.POST, FactorVerifyResult.class,
+                passCodeBody.toJSONString());
         if (HttpStatus.OK.equals(exchange.getStatusCode()) || HttpStatus.FORBIDDEN.equals(exchange.getStatusCode()))
         {
             return exchange.getBody();
@@ -49,7 +51,8 @@ public class FactorVerificationServiceImpl implements FactorVerificationService
         if (HttpStatus.OK.equals(exchange.getStatusCode()))
         {
             return exchange.getBody();
-        } else if (exchange.getStatusCode().is4xxClientError())
+        }
+        else if (exchange.getStatusCode().is4xxClientError())
         {
             LOGGER.warn("Too many challenges recently? [{}]", exchange.getBody());
             return exchange.getBody();

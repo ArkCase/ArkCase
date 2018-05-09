@@ -193,11 +193,6 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                 : new ArrayList<>();
     }
 
-    public void setUserDao(UserDao userDao)
-    {
-        this.userDao = userDao;
-    }
-
     public String getDefaultAccess()
     {
         return defaultAccess;
@@ -251,6 +246,11 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     public UserDao getUserDao()
     {
         return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 
     public UserOrgService getUserOrgService()

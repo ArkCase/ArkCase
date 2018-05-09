@@ -14,22 +14,9 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 public class Attendee
 {
 
-    public static enum AttendeeType
-    {
-        REQUIRED, OPTIONAL, RESOURCE;
-    }
-
-    public static enum ResponseStatus
-    {
-        NONE, DECLINED, TENTATIVE, ACCEPTED, ORGANIZER;
-    }
-
     private String displayName;
-
     private String email;
-
     private AttendeeType type;
-
     private ResponseStatus status;
 
     /**
@@ -98,6 +85,16 @@ public class Attendee
     public void setStatus(ResponseStatus status)
     {
         this.status = status;
+    }
+
+    public static enum AttendeeType
+    {
+        REQUIRED, OPTIONAL, RESOURCE;
+    }
+
+    public static enum ResponseStatus
+    {
+        NONE, DECLINED, TENTATIVE, ACCEPTED, ORGANIZER;
     }
 
 }

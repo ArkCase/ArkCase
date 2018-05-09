@@ -17,10 +17,9 @@ import javax.persistence.Query;
 public class OutlookPasswordDao extends AcmAbstractDao<OutlookPassword>
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     @PersistenceContext
     private EntityManager entityManager;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional
     public void saveOutlookPassword(Authentication authentication, OutlookDTO in)

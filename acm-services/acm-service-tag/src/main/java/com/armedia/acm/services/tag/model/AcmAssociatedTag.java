@@ -70,11 +70,6 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_associated_tag_modifier")
     private String modifier;
 
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
     @Override
     public String getCreator()
     {
@@ -124,14 +119,14 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
         return tag;
     }
 
-    public Long getTagId()
-    {
-        return tag.getId();
-    }
-
     public void setTag(AcmTag tag)
     {
         this.tag = tag;
+    }
+
+    public Long getTagId()
+    {
+        return tag.getId();
     }
 
     @JsonIgnore
@@ -172,6 +167,11 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
     public Long getId()
     {
         return id;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
     }
 
     public String getParentTitle()

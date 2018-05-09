@@ -42,25 +42,19 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class AcmUserAPIControllerTest extends EasyMockSupport
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
-
-    private MockMvc mockMvc;
-
-    @Mock
-    private UserDao mockUserDao;
-
-    @Mock
-    private AcmGroupDao mockGroupDao;
-
-    @Mock
-    private AcmUserEventPublisher mockUserEventPublisher;
-
-    @Mock
-    private LdapUserService mockLdapUserService;
-
     @InjectMocks
     @Spy
     AcmUserAPIController acmUserAPIController;
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private MockMvc mockMvc;
+    @Mock
+    private UserDao mockUserDao;
+    @Mock
+    private AcmGroupDao mockGroupDao;
+    @Mock
+    private AcmUserEventPublisher mockUserEventPublisher;
+    @Mock
+    private LdapUserService mockLdapUserService;
 
     @Before
     public void setUp()

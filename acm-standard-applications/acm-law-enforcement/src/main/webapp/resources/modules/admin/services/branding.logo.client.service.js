@@ -16,7 +16,7 @@
  */
 angular.module('admin').service('Admin.BrandingLogoService', [ '$http', 'Upload', function(http, Upload) {
     return ({
-        uploadLogo : uploadLogo,
+        uploadLogo: uploadLogo,
     });
 
     /**
@@ -35,10 +35,10 @@ angular.module('admin').service('Admin.BrandingLogoService', [ '$http', 'Upload'
      */
     function uploadLogo(files, formNames) {
         return Upload.upload({
-            url : 'api/latest/plugin/admin/branding/customlogos',
-            method : 'POST',
-            fileFormDataName : formNames,
-            file : files
+            url: 'api/latest/plugin/admin/branding/customlogos',
+            method: 'POST',
+            fileFormDataName: formNames,
+            file: files
         });
     }
     ;

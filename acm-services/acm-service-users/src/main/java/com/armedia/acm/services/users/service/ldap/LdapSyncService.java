@@ -50,6 +50,7 @@ import java.util.Optional;
  */
 public class LdapSyncService implements ApplicationEventPublisherAware
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private SpringLdapDao ldapDao;
     private AcmLdapSyncConfig ldapSyncConfig;
     private boolean syncEnabled = true;
@@ -59,8 +60,6 @@ public class LdapSyncService implements ApplicationEventPublisherAware
     private String ldapLastSyncPropertyFileLocation;
     private LdapSyncProcessor ldapSyncProcessor;
     private ApplicationEventPublisher applicationEventPublisher;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder
     // ($HOME/.acm).

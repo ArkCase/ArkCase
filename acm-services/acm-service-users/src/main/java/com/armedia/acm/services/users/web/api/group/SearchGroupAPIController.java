@@ -20,11 +20,11 @@ public class SearchGroupAPIController
     @RequestMapping(params = { "nameFq" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String findGroupsByName(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                                   @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-                                   @RequestParam(value = "s", defaultValue = "name_lcs") String sortBy,
-                                   @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
-                                   @RequestParam(value = "nameFq") String nameFilter,
-                                   Authentication auth) throws MuleException
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            @RequestParam(value = "s", defaultValue = "name_lcs") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "nameFq") String nameFilter,
+            Authentication auth) throws MuleException
     {
         return groupService.getGroupsByNameFilter(auth, nameFilter, startRow, maxRows, sortBy, sortDirection);
     }

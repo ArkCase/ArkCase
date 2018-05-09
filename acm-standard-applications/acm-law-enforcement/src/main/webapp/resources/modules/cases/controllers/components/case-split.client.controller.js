@@ -2,20 +2,8 @@
 
 angular.module('cases').controller(
         'Cases.SplitController',
-        [
-                '$scope',
-                '$stateParams',
-                '$modal',
-                '$modalInstance',
-                '$q',
-                'UtilService',
-                'ConfigService',
-                'ObjectService',
-                'Object.LookupService',
-                'Case.InfoService',
-                'Helper.ObjectBrowserService',
-                function($scope, $stateParams, $modal, $modalInstance, $q, Util, ConfigService, ObjectService, ObjectLookupService,
-                        CaseInfoService, HelperObjectBrowserService) {
+        [ '$scope', '$stateParams', '$modal', '$modalInstance', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'Helper.ObjectBrowserService',
+                function($scope, $stateParams, $modal, $modalInstance, $q, Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, HelperObjectBrowserService) {
                     var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE);
                     var promiseFileTypes = ObjectLookupService.getFileTypes();
                     ConfigService.getComponentConfig("cases", "documents").then(function(componentConfig) {
@@ -42,13 +30,13 @@ angular.module('cases').controller(
                             for (var i = 0; i < selNodes.length; i++) {
                                 if (Util.goodValue(selNodes[i].folder, false)) {
                                     attachments.push({
-                                        "id" : selNodes[i].data.objectId,
-                                        "type" : "folder"
+                                        "id": selNodes[i].data.objectId,
+                                        "type": "folder"
                                     });
                                 } else { // file node
                                     attachments.push({
-                                        "id" : selNodes[i].data.objectId,
-                                        "type" : "document"
+                                        "id": selNodes[i].data.objectId,
+                                        "type": "document"
                                     });
                                 }
                             }

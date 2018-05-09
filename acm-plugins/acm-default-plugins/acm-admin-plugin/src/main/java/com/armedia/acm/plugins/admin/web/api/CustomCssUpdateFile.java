@@ -21,9 +21,8 @@ import java.io.IOException;
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class CustomCssUpdateFile
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     CustomCssService customCssService;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/branding/customcss", method = RequestMethod.PUT, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE

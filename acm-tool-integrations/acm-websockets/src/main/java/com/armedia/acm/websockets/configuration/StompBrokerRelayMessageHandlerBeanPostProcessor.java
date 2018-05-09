@@ -45,11 +45,9 @@ import reactor.io.net.impl.netty.NettyClientSocketOptions;
  */
 public class StompBrokerRelayMessageHandlerBeanPostProcessor implements BeanPostProcessor
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     private static final String RELAY_PROTOCOL_SSL = "ssl";
     private static final String RELAY_PROTOCOL_TCP = "tcp";
-
+    private Logger log = LoggerFactory.getLogger(getClass());
     private ApplicationContext applicationContext;
     private String relayProtocol;
     private String keyStore;

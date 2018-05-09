@@ -15,11 +15,12 @@ public class TranscribeServiceFactory
     {
         switch (provider)
         {
-            case AWS:
-                return awsTranscribeService;
+        case AWS:
+            return awsTranscribeService;
         }
 
-        throw new TranscribeServiceProviderNotFoundException(String.format("Provider [%s] not found.", provider != null ? provider.toString() : null));
+        throw new TranscribeServiceProviderNotFoundException(
+                String.format("Provider [%s] not found.", provider != null ? provider.toString() : null));
     }
 
     public void setAwsTranscribeService(TranscribeService awsTranscribeService)

@@ -34,15 +34,15 @@ public class AcmUserTaskEventHandler implements ApplicationEventPublisherAware
 
     }
 
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
-    }
-
-    public ApplicationEventPublisher getApplicationEventPublisher()
-    {
-        return applicationEventPublisher;
     }
 
     public RuntimeService getRuntimeService()

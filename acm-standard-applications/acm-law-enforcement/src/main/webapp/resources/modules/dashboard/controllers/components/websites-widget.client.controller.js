@@ -10,31 +10,28 @@
  *
  * Loads sites in the "User Websites" widget.
  */
-angular.module('dashboard.websites-widget', ['adf.provider'])
-    .config(function (ArkCaseDashboardProvider) {
-        ArkCaseDashboardProvider
-            .widget('userWebsites', {
-                title: 'dashboard.widgets.userWebsites.title',
-                description: 'dashboard.widgets.userWebsites.description',
-                controller: 'Dashboard.UserWebsitesController',
-                controllerAs: 'userWebsites',
-                reload: true,
-                templateUrl: 'modules/dashboard/views/components/websites-widget.client.view.html',
-                edit: {
-                    templateUrl: 'modules/dashboard/views/components/websites-widget-edit.client.view.html'
-                }
-            });
-    })
-    .controller('Dashboard.UserWebsitesController', ['$scope', '$window', '$modal', '$translate', 'config', 'Authentication'
-        , 'Dashboard.DashboardService', 'UtilService', 'Helper.UiGridService', 'ConfigService',
-        function ($scope, $window, $modal, $translate, config, Authentication, DashboardService, Util,
-                  HelperUiGridService, ConfigService) {
+angular.module('dashboard.websites-widget', [ 'adf.provider' ]).config(function(ArkCaseDashboardProvider) {
+    ArkCaseDashboardProvider.widget('userWebsites', {
+        title: 'dashboard.widgets.userWebsites.title',
+        description: 'dashboard.widgets.userWebsites.description',
+        controller: 'Dashboard.UserWebsitesController',
+        controllerAs: 'userWebsites',
+        reload: true,
+        templateUrl: 'modules/dashboard/views/components/websites-widget.client.view.html',
+        edit: {
+            templateUrl: 'modules/dashboard/views/components/websites-widget-edit.client.view.html'
+        }
+    });
+}).controller('Dashboard.UserWebsitesController',
+        [ '$scope', '$window', '$modal', '$translate', 'config', 'Authentication', 'Dashboard.DashboardService', 'UtilService', 'Helper.UiGridService', 'ConfigService', function($scope, $window, $modal, $translate, config, Authentication, DashboardService, Util, HelperUiGridService, ConfigService) {
 
             var vm = this;
             vm.config = null;
             var userInfo = null;
 
-            vm.gridHelper = new HelperUiGridService.Grid({scope: $scope});
+            vm.gridHelper = new HelperUiGridService.Grid({
+                scope: $scope
+            });
 
             var paginationOptions = {
                 pageNumber: 1,
@@ -60,12 +57,12 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
                 multiSelect: false,
                 noUnselect: false,
                 columnDefs: [],
-                onRegisterApi: function (gridApi) {
+                onRegisterApi: function(gridApi) {
                     vm.gridApi = gridApi;
                 }
             };
 
-            ConfigService.getComponentConfig("dashboard", "userWebsites").then(function (config) {
+            ConfigService.getComponentConfig("dashboard", "userWebsites").then(function(config) {
                 vm.config = config;
                 vm.gridOptions.columnDefs = config.columnDefs;
                 vm.gridOptions.enableFiltering = config.enableFiltering;
@@ -78,23 +75,23 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
                     vm.gridHelper.addButton(config, "delete");
                 }
 
-                Authentication.queryUserInfo().then(function (responseUserInfo) {
+                Authentication.queryUserInfo().then(function(responseUserInfo) {
                     userInfo = responseUserInfo;
                     loadSites(userInfo.userId);
                     return userInfo;
                 });
             });
 
-            vm.addNew = function () {
+            vm.addNew = function() {
                 showModal({}, false);
             };
 
-            $scope.editRow = function (rowEntity) {
+            $scope.editRow = function(rowEntity) {
                 var website = angular.copy(rowEntity);
                 showModal(website, true);
             };
 
-            $scope.deleteRow = function (rowEntity) {
+            $scope.deleteRow = function(rowEntity) {
                 vm.gridHelper.deleteRow(rowEntity);
                 for (var i = 0; i < vm.sitesList.length; i++) {
                     if (vm.sitesList[i].key == rowEntity.key) {
@@ -107,8 +104,8 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
                 vm.saveData();
             };
 
-            vm.saveData = function () {
-                _.forEach(vm.sitesList, function (site) {
+            vm.saveData = function() {
+                _.forEach(vm.sitesList, function(site) {
                     if (site.$$hashKey) {
                         delete site.$$hashKey;
                     }
@@ -116,7 +113,7 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
                 vm.sitesInfo.json = JSON.stringify({
                     'sites': vm.sitesList
                 });
-                DashboardService.saveUserWebsites(vm.sitesInfo, function (data) {
+                DashboardService.saveUserWebsites(vm.sitesInfo, function(data) {
                     if (data && data.id) {
                         vm.sitesInfo = data;
                         var jsonObj = JSON.parse(data.json);
@@ -129,24 +126,23 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
 
             function loadSites(userId) {
                 DashboardService.queryUserWebsites({
-                        userId: userId
-                    },
-                    function (data) {
-                        if (data && data[0]) {
-                            vm.sitesInfo = data[0];
-                            var jsonObj = JSON.parse(data[0].json);
-                            vm.sitesList = jsonObj.sites;
-                            vm.gridOptions.totalItems = vm.sitesList.length;
-                            vm.gridOptions.data = angular.copy(vm.sitesList);
-                        } else {
-                            // This user does not have the dashboard data yet, create a new object
-                            vm.sitesInfo = {
-                                user: userId
-                            };
-                            vm.sitesList = [];
-                            vm.gridOptions.totalItems = vm.sitesList.length;
-                        }
-                    });
+                    userId: userId
+                }, function(data) {
+                    if (data && data[0]) {
+                        vm.sitesInfo = data[0];
+                        var jsonObj = JSON.parse(data[0].json);
+                        vm.sitesList = jsonObj.sites;
+                        vm.gridOptions.totalItems = vm.sitesList.length;
+                        vm.gridOptions.data = angular.copy(vm.sitesList);
+                    } else {
+                        // This user does not have the dashboard data yet, create a new object
+                        vm.sitesInfo = {
+                            user: userId
+                        };
+                        vm.sitesList = [];
+                        vm.gridOptions.totalItems = vm.sitesList.length;
+                    }
+                });
             }
 
             function showModal(website, isEdit) {
@@ -155,15 +151,15 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
                     controller: 'Dashboard.WebsiteModalController',
                     size: 'md',
                     resolve: {
-                        websiteInfo: function () {
+                        websiteInfo: function() {
                             return website;
                         },
-                        isEdit: function () {
+                        isEdit: function() {
                             return isEdit;
                         }
                     }
                 });
-                websiteDialog.result.then(function (data) {
+                websiteDialog.result.then(function(data) {
                     if (data && data.name && data.url) {
                         if (isEdit) {
                             for (var i = 0; i < vm.sitesList.length; i++) {
@@ -188,9 +184,8 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
                 });
             }
 
-            $scope.onClickObjLink = function (event, rowEntity) {
+            $scope.onClickObjLink = function(event, rowEntity) {
                 event.preventDefault();
                 $window.open('//' + rowEntity.url);
             }
-        }
-    ]);
+        } ]);

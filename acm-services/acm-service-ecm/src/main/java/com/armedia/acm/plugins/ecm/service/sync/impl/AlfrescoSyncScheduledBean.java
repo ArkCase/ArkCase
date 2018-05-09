@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
  */
 public class AlfrescoSyncScheduledBean implements AcmSchedulableBean
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AlfrescoSyncService alfrescoSyncService;
     private boolean enabled;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void executeTask()
@@ -37,14 +37,14 @@ public class AlfrescoSyncScheduledBean implements AcmSchedulableBean
         this.alfrescoSyncService = alfrescoSyncService;
     }
 
-    public void setEnabled(boolean enabled)
-    {
-        this.enabled = enabled;
-    }
-
     public boolean isEnabled()
     {
         return enabled;
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
     }
 
 }

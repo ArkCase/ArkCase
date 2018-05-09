@@ -11,27 +11,6 @@ public class CategoryEvent extends AcmEvent
 
     private static final long serialVersionUID = 3652276020071035651L;
 
-    public enum CategoryEventType
-    {
-
-        CREATE("com.armedia.acm.plugins.category.model.action.create"), EDIT("com.armedia.acm.plugins.category.model.action.edit"), DELETE(
-                "com.armedia.acm.plugins.category.model.action.delete"), ACTIVATE(
-                        "com.armedia.acm.plugins.category.model.action.activate"), DEACTIVATE(
-                                "com.armedia.acm.plugins.category.model.action.deactivate");
-
-        private String actionType;
-
-        private CategoryEventType(String actionType)
-        {
-            this.actionType = actionType;
-        }
-
-        public String type()
-        {
-            return actionType;
-        }
-    }
-
     public CategoryEvent(Category source, CategoryEventType eventType, String description)
     {
 
@@ -52,6 +31,31 @@ public class CategoryEvent extends AcmEvent
         setEventType(eventType.type());
         setEventDescription(description);
 
+    }
+
+    public enum CategoryEventType
+    {
+
+        CREATE("com.armedia.acm.plugins.category.model.action.create"),
+        EDIT("com.armedia.acm.plugins.category.model.action.edit"),
+        DELETE(
+                "com.armedia.acm.plugins.category.model.action.delete"),
+        ACTIVATE(
+                "com.armedia.acm.plugins.category.model.action.activate"),
+        DEACTIVATE(
+                "com.armedia.acm.plugins.category.model.action.deactivate");
+
+        private String actionType;
+
+        private CategoryEventType(String actionType)
+        {
+            this.actionType = actionType;
+        }
+
+        public String type()
+        {
+            return actionType;
+        }
     }
 
 }

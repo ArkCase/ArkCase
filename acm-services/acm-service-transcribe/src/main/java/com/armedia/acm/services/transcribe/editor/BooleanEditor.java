@@ -22,6 +22,6 @@ public class BooleanEditor extends PropertyEditorSupport
     @Override
     public String[] getTags()
     {
-        return new String[]{String.valueOf(true), String.valueOf(false)};
+        return new String[] { String.valueOf(true), String.valueOf(false) };
     }
 }

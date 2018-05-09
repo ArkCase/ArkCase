@@ -36,11 +36,11 @@ angular.module('services').factory('Dialog.BootboxService', [ 'UtilService', '$q
         </file>
         </example>
          */
-        alert : function(msg, callback) {
+        alert: function(msg, callback) {
             var deferred = $q.defer();
             bootbox.alert({
-                message : msg,
-                callback : function() {
+                message: msg,
+                callback: function() {
                     deferred.resolve();
                 }
             });
@@ -69,7 +69,7 @@ angular.module('services').factory('Dialog.BootboxService', [ 'UtilService', '$q
         </example>
          */
         ,
-        confirm : function(msg, callback) {
+        confirm: function(msg, callback) {
             bootbox.confirm(msg, callback);
         }
 
@@ -100,11 +100,11 @@ angular.module('services').factory('Dialog.BootboxService', [ 'UtilService', '$q
         </example>
          */
         ,
-        prompt : function(msg, callback, initValue) {
+        prompt: function(msg, callback, initValue) {
             bootbox.prompt({
-                title : msg,
-                value : Util.goodValue(initValue),
-                callback : callback
+                title: msg,
+                value: Util.goodValue(initValue),
+                callback: callback
             });
         }
 
@@ -125,7 +125,7 @@ angular.module('services').factory('Dialog.BootboxService', [ 'UtilService', '$q
         </example>
          */
         ,
-        hideAll : function() {
+        hideAll: function() {
             bootbox.hideAll();
         }
 

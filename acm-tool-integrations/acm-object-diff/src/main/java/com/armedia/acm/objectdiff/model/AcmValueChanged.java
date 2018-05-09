@@ -28,15 +28,15 @@ public class AcmValueChanged extends AcmPropertyChange implements AcmChangeDispl
     }
 
     @Override
-    public String getNewValue()
-    {
-        return newValue;
-    }
-
-    @Override
     public void setOldValue(String oldValue)
     {
         this.oldValue = oldValue;
+    }
+
+    @Override
+    public String getNewValue()
+    {
+        return newValue;
     }
 
     @Override

@@ -87,6 +87,11 @@ public class AcmHistory implements Serializable, AcmEntity
         return personId;
     }
 
+    public void setPersonId(Long personId)
+    {
+        this.personId = personId;
+    }
+
     public String getPersonType()
     {
         return personType;
@@ -95,11 +100,6 @@ public class AcmHistory implements Serializable, AcmEntity
     public void setPersonType(String personType)
     {
         this.personType = personType;
-    }
-
-    public void setPersonId(Long personId)
-    {
-        this.personId = personId;
     }
 
     public Long getObjectId()

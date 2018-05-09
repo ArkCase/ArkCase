@@ -20,10 +20,9 @@ import java.util.List;
 public class TagService
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private TagDao tagDao;
     private AcmPlugin tagPlugin;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     public List<AcmTag> getAllTags()
     {

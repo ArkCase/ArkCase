@@ -48,24 +48,24 @@ public class GetGroupsByPrivilegeAPIController
         return retval;
     }
 
-    public void setPluginManager(AcmPluginManager pluginManager)
-    {
-        this.pluginManager = pluginManager;
-    }
-
     public AcmPluginManager getPluginManager()
     {
         return pluginManager;
     }
 
-    public void setUserDao(UserDao userDao)
+    public void setPluginManager(AcmPluginManager pluginManager)
     {
-        this.userDao = userDao;
+        this.pluginManager = pluginManager;
     }
 
     public UserDao getUserDao()
     {
         return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 
     public FunctionalAccessService getFunctionalAccessService()

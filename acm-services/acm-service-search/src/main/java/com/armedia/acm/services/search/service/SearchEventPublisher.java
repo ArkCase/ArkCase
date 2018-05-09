@@ -10,9 +10,8 @@ import org.springframework.context.ApplicationEventPublisherAware;
 public class SearchEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private ApplicationEventPublisher applicationEventPublisher;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public void publishSearchEvent(ApplicationSearchEvent event)
     {

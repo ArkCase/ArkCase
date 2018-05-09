@@ -1,6 +1,7 @@
 package com.armedia.acm.auth.okta.auth;
 
 import com.armedia.acm.auth.okta.model.OktaAPIConstants;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -13,6 +14,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,7 +34,8 @@ public class AcmRoleRedirectAuthenticationFilter extends GenericFilterBean
         if (authentication == null)
         {
             chain.doFilter(request, response);
-        } else
+        }
+        else
         {
             Set<String> collect = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
             if (collect.contains(OktaAPIConstants.ROLE_PRE_AUTHENTICATED)

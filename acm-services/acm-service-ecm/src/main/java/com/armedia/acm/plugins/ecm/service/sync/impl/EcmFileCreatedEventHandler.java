@@ -34,14 +34,12 @@ import java.util.UUID;
 public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AcmFolderService folderService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private AcmFolderDao folderDao;
-
     private EcmFileDao fileDao;
     private EcmFileService fileService;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     public void onEcmFileCreated(EcmEvent ecmEvent)
     {
@@ -199,19 +197,14 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
         }
     }
 
-    public void setFolderService(AcmFolderService folderService)
-    {
-        this.folderService = folderService;
-    }
-
     public AcmFolderService getFolderService()
     {
         return folderService;
     }
 
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    public void setFolderService(AcmFolderService folderService)
     {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+        this.folderService = folderService;
     }
 
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
@@ -219,9 +212,9 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
         return auditPropertyEntityAdapter;
     }
 
-    public void setFolderDao(AcmFolderDao folderDao)
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
-        this.folderDao = folderDao;
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
     public AcmFolderDao getFolderDao()
@@ -229,9 +222,9 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
         return folderDao;
     }
 
-    public void setFileDao(EcmFileDao fileDao)
+    public void setFolderDao(AcmFolderDao folderDao)
     {
-        this.fileDao = fileDao;
+        this.folderDao = folderDao;
     }
 
     public EcmFileDao getFileDao()
@@ -239,14 +232,19 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
         return fileDao;
     }
 
-    public void setFileService(EcmFileService fileService)
+    public void setFileDao(EcmFileDao fileDao)
     {
-        this.fileService = fileService;
+        this.fileDao = fileDao;
     }
 
     public EcmFileService getFileService()
     {
         return fileService;
+    }
+
+    public void setFileService(EcmFileService fileService)
+    {
+        this.fileService = fileService;
     }
 
 }

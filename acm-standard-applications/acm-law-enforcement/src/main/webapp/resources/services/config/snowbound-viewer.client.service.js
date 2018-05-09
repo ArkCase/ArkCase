@@ -27,7 +27,7 @@ angular.module('services').factory(
                          * This method takes the configuration from ecmFileService.properties and
                          * extracts the base part of the snowbound url (host/port, etc.)
                          */
-                        extractViewerBaseUrl : function(data) {
+                        extractViewerBaseUrl: function(data) {
                             var viewerUrl = "";
                             if (data && data["ecm.viewer.snowbound"]) {
                                 var viewerUrlConfig = data["ecm.viewer.snowbound"];
@@ -53,7 +53,7 @@ angular.module('services').factory(
                          * and allow snowbound to callback Alfresco (for merge/split, etc.) and authenticate.
                          */
                         ,
-                        buildSnowboundUrl : function(ecmFileProperties, acmTicket, userId, file) {
+                        buildSnowboundUrl: function(ecmFileProperties, acmTicket, userId, file) {
 
                             // Obtains the base portion of the viewer url (host/port, etc)
                             var viewerBaseUrl = this.extractViewerBaseUrl(ecmFileProperties);
@@ -62,10 +62,8 @@ angular.module('services').factory(
                             var randomUrlArgToCauseIframeRefresh = (new Date()).getTime();
                             return viewerBaseUrl
                                     + "?documentId="
-                                    + Util.encryptString("ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId
-                                            + "&documentName=" + file.name + "&parentObjectId=" + file.containerId + "&parentObjectType="
-                                            + file.containerType + "&selectedIds=" + file.selectedIds, encryptionPassphrase)
-                                    + "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh;
+                                    + Util.encryptString("ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId + "&documentName=" + file.name + "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds,
+                                            encryptionPassphrase) + "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh;
                         }
                     }
                 } ]);
