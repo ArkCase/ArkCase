@@ -13,12 +13,11 @@ import java.io.InputStream;
  */
 public class PDFUtils
 {
-    private static transient final Logger log = LoggerFactory.getLogger(PDFUtils.class);
-
     /**
      * Use no more than 32MB of main memory when merging PDFs, the disk is used for the rest.
      */
     public static final int MAX_MAIN_MEMORY_BYTES = 1024 * 1024 * 32;
+    private static transient final Logger log = LoggerFactory.getLogger(PDFUtils.class);
 
     /**
      * Merges together the two supplied PDF documents

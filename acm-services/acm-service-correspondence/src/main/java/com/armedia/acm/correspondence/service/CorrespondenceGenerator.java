@@ -39,24 +39,16 @@ import java.util.Map;
  */
 public class CorrespondenceGenerator
 {
+    protected static final String WORD_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    protected static final String CORRESPONDENCE_CATEGORY = "Correspondence";
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     @PersistenceContext
     private EntityManager entityManager;
-
     private PoiWordGenerator wordGenerator;
-
     private EcmFileService ecmFileService;
-
     private String correspondenceFolderName;
-
     private SpringContextHolder springContextHolder;
-
     private CorrespondenceService correspondenceService;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-
-    protected static final String WORD_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-
-    protected static final String CORRESPONDENCE_CATEGORY = "Correspondence";
 
     /**
      * Generate correspondence based on the supplied template, and store the correspondence in the ECM repository under
@@ -274,24 +266,24 @@ public class CorrespondenceGenerator
         return resultMap;
     }
 
-    public void setEntityManager(EntityManager entityManager)
-    {
-        this.entityManager = entityManager;
-    }
-
     public EntityManager getEntityManager()
     {
         return entityManager;
     }
 
-    public void setWordGenerator(PoiWordGenerator wordGenerator)
+    public void setEntityManager(EntityManager entityManager)
     {
-        this.wordGenerator = wordGenerator;
+        this.entityManager = entityManager;
     }
 
     public PoiWordGenerator getWordGenerator()
     {
         return wordGenerator;
+    }
+
+    public void setWordGenerator(PoiWordGenerator wordGenerator)
+    {
+        this.wordGenerator = wordGenerator;
     }
 
     public EcmFileService getEcmFileService()

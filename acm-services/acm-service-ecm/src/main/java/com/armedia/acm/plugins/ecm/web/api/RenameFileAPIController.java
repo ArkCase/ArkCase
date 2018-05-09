@@ -30,10 +30,9 @@ import javax.servlet.http.HttpSession;
 public class RenameFileAPIController
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileService fileService;
     private FileEventPublisher fileEventPublisher;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @PreAuthorize("hasPermission(#objectId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/{objectId}/{newName}/{extension}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

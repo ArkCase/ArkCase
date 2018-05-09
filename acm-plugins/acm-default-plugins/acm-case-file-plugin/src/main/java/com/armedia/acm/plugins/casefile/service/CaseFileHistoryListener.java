@@ -17,10 +17,8 @@ import java.util.List;
 public class CaseFileHistoryListener implements ApplicationListener<CaseEvent>
 {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
-
     private static final String OBJECT_TYPE = "CASE_FILE";
-
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private AcmObjectHistoryService acmObjectHistoryService;
 
     private List<String> nonHistoryGeneratingEvents;

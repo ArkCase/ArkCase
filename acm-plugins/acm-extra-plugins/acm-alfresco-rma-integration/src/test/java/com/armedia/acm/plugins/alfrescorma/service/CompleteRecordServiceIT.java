@@ -48,38 +48,29 @@ import java.util.UUID;
 })
 public class CompleteRecordServiceIT
 {
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     @Autowired
     private MuleContextManager muleContextManager;
-
     @Autowired
     @Qualifier("declareRecordService")
     private AlfrescoService<String> declareRecordService;
-
     @Autowired
     @Qualifier("setRecordMetadataService")
     private AlfrescoService<String> setRecordMetadataService;
-
     @Autowired
     @Qualifier("findFolderService")
     private AlfrescoService<Folder> findFolderService;
-
     @Autowired
     @Qualifier("createOrFindRecordFolderService")
     private AlfrescoService<String> findRecordFolderService;
-
     @Autowired
     @Qualifier("moveToRecordFolderService")
     private AlfrescoService<String> moveToRecordFolderService;
-
     @Autowired
     @Qualifier("completeRecordService")
     private AlfrescoService<String> service;
-
     private String ecmFileId;
-
     private CmisFileWriter cmisFileWriter = new CmisFileWriter();
-
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

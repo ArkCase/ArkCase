@@ -14,7 +14,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             payload is the (possibly updated) userOrg; i.e. for a new userOrg, the return payload&quot;s
             ID fields are populated.
         </description>
-        <vm:inbound-endpoint address="vm://saveUserOrg.in" exchange-pattern="request-response"
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://saveUserOrg.in" exchange-pattern="request-response"
             doc:name="Save UserOrg"></vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.profile"/>

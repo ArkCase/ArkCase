@@ -18,10 +18,8 @@ import org.springframework.context.ApplicationListener;
 public class ComplaintHistoryListener implements ApplicationListener<ComplaintPersistenceEvent>
 {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
-
     private static final String OBJECT_TYPE = "COMPLAINT";
-
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private AcmObjectHistoryService acmObjectHistoryService;
 
     @Override

@@ -36,16 +36,14 @@ import java.util.stream.Collectors;
 public class CorrespondenceMergeFieldManager implements ApplicationListener<ContextRefreshedEvent>
 {
 
+    private static final String DEFAULT_MERGE_FIELD_VERSION = "1.0";
+    private static final String DEFAULT_MERGE_FIELD_MODIFIER = "System User";
     private Resource correspondenceMergeFieldsVersionConfiguration;
     private Resource correspondenceMergeFieldsConfiguration;
     private SpringContextHolder springContextHolder;
     private ObjectConverter objectConverter;
-
     private List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
     private List<CorrespondenceMergeFieldVersion> mergeFieldsVersions = new ArrayList<>();
-
-    private static final String DEFAULT_MERGE_FIELD_VERSION = "1.0";
-    private static final String DEFAULT_MERGE_FIELD_MODIFIER = "System User";
 
     /*
      * (non-Javadoc)

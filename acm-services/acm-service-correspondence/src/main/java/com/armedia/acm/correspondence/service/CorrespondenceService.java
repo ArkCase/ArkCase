@@ -28,17 +28,14 @@ import java.util.stream.Collectors;
 
 public class CorrespondenceService
 {
+    private static final String TEMP_FILE_PREFIX = "template-";
+    private static final String TEMP_FILE_SUFFIX = ".docx";
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private SpringContextHolder springContextHolder;
     private CorrespondenceGenerator correspondenceGenerator;
     private CorrespondenceEventPublisher eventPublisher;
-
     private CorrespondenceTemplateManager templateManager;
     private CorrespondenceMergeFieldManager mergeFieldManager;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-
-    private static final String TEMP_FILE_PREFIX = "template-";
-    private static final String TEMP_FILE_SUFFIX = ".docx";
 
     /**
      * For use from MVC controllers and any other client with an Authentication object.

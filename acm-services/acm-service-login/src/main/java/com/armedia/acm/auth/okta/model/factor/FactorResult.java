@@ -15,7 +15,6 @@ public enum FactorResult
     PASSCODE_REPLAYED("PASSCODE_REPLAYED"),
     ERROR("ERROR");
 
-
     private String result;
 
     FactorResult(String result)

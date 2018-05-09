@@ -10,88 +10,87 @@
  *
  * Server communication. Pardon the incomplete ng doc. For now, it is just temporary code. Complete ng doc will be added after real implementation of UI and backend communication
  */
-angular.module('services').factory('ServCommService',
-        [ '$rootScope', '$timeout', 'Acm.StoreService', 'UtilService', function($rootScope, $timeout, Store, Util) {
-            var Service = {
-                CacheNames : {
-                    SERVCOMM_DATA : "ServCommData"
-                }
+angular.module('services').factory('ServCommService', [ '$rootScope', '$timeout', 'Acm.StoreService', 'UtilService', function($rootScope, $timeout, Store, Util) {
+    var Service = {
+        CacheNames: {
+            SERVCOMM_DATA: "ServCommData"
+        }
 
-                ,
-                ServComm : function(scope, channel, topic) {
-                    this.scope = scope;
-                    this.channel = channel;
-                    this.topic = topic;
-                }
+        ,
+        ServComm: function(scope, channel, topic) {
+            this.scope = scope;
+            this.channel = channel;
+            this.topic = topic;
+        }
 
-                ,
-                request : function(scope, channel, topic, data) {
-                    scope.$emit("rootScope:servcomm-request", {
-                        channel : channel,
-                        topic : topic,
-                        data : data
+        ,
+        request: function(scope, channel, topic, data) {
+            scope.$emit("rootScope:servcomm-request", {
+                channel: channel,
+                topic: topic,
+                data: data
+            });
+        }
+
+        ,
+        handleRequest: function() {
+            $rootScope.$on("rootScope:servcomm-request", function(e, request) {
+                var cache = new Store.CacheFifo(Service.CacheNames.SERVCOMM_DATA);
+                var key = request.channel + "." + request.topic;
+                cache.put(key, request.data);
+
+                //set up listener and send data to server, fake it with a timer for testing
+                $timeout(function() {
+                    Service.response({
+                        channel: request.channel,
+                        topic: request.topic,
+                        data: request.data
                     });
-                }
+                }, 8000);
+            });
+        }
 
-                ,
-                handleRequest : function() {
-                    $rootScope.$on("rootScope:servcomm-request", function(e, request) {
-                        var cache = new Store.CacheFifo(Service.CacheNames.SERVCOMM_DATA);
-                        var key = request.channel + "." + request.topic;
-                        cache.put(key, request.data);
+        ,
+        response: function(channel, topic, data) {
+            $rootScope.$broadcast("rootScope:servcomm-response", {
+                channel: channel,
+                topic: topic,
+                data: data
+            });
+        }
 
-                        //set up listener and send data to server, fake it with a timer for testing
-                        $timeout(function() {
-                            Service.response({
-                                channel : request.channel,
-                                topic : request.topic,
-                                data : request.data
-                            });
-                        }, 8000);
-                    });
-                }
+        ,
+        handleResponse: function(scope) {
+            scope.$on('rootScope:servcomm-response', function(event, data) {
+                console.log("ServCommService, rootScope:servcomm-response");
 
-                ,
-                response : function(channel, topic, data) {
-                    $rootScope.$broadcast("rootScope:servcomm-response", {
-                        channel : channel,
-                        topic : topic,
-                        data : data
-                    });
-                }
+                //$scope.$emit('report-object-refreshed', $stateParams.id);
+            });
+        }
 
-                ,
-                handleResponse : function(scope) {
-                    scope.$on('rootScope:servcomm-response', function(event, data) {
-                        console.log("ServCommService, rootScope:servcomm-response");
+        ,
+        popRequest: function(channel, topic) {
+            var cache = new Store.CacheFifo(Service.CacheNames.SERVCOMM_DATA);
+            var key = channel + "." + topic;
+            var data = cache.get(key);
+            cache.remove(key);
+            return data;
+        }
 
-                        //$scope.$emit('report-object-refreshed', $stateParams.id);
-                    });
-                }
+        ,
+        setStateToGo: function(stateName) {
+            var stateNameVariable = new Store.Variable("NextStateName");
+            stateNameVariable.set(stateName);
+        }
 
-                ,
-                popRequest : function(channel, topic) {
-                    var cache = new Store.CacheFifo(Service.CacheNames.SERVCOMM_DATA);
-                    var key = channel + "." + topic;
-                    var data = cache.get(key);
-                    cache.remove(key);
-                    return data;
-                }
+        ,
+        getStateToGo: function() {
+            var stateNameVariable = new Store.Variable("NextStateName");
+            var stateName = stateNameVariable.get();
+            return stateName;
+        }
+    };
+    Service.ServComm.prototype = {};
 
-                ,
-                setStateToGo : function(stateName) {
-                    var stateNameVariable = new Store.Variable("NextStateName");
-                    stateNameVariable.set(stateName);
-                }
-
-                ,
-                getStateToGo : function() {
-                    var stateNameVariable = new Store.Variable("NextStateName");
-                    var stateName = stateNameVariable.get();
-                    return stateName;
-                }
-            };
-            Service.ServComm.prototype = {};
-
-            return Service;
-        } ]);
+    return Service;
+} ]);

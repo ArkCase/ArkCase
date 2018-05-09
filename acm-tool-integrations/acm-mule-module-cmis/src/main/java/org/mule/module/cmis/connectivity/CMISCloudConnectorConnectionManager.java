@@ -38,63 +38,72 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
         ProcessAdapter<CMISCloudConnectorConnectionIdentifierAdapter>
 {
 
-    /**
-     * 
-     */
-    private String username;
-    /**
-     * 
-     */
-    private String password;
-    /**
-     * 
-     */
-    private String baseUrl;
-    /**
-     * 
-     */
-    private String repositoryId;
-    /**
-     * 
-     */
-    private String endpoint;
-    /**
-     * 
-     */
-    private String connectionTimeout;
-    /**
-     * 
-     */
-    private String useAlfrescoExtension;
-    /**
-     * 
-     */
-    private String cxfPortProvider;
-    /**
-     * Mule Context
-     * 
-     */
-    protected MuleContext muleContext;
-    /**
-     * Flow Construct
-     * 
-     */
-    protected FlowConstruct flowConstruct;
-    /**
-     * Connector Pool
-     * 
-     */
-    private GenericKeyedObjectPool connectionPool;
-    protected PoolingProfile connectionPoolingProfile;
-    protected RetryPolicyTemplate retryPolicyTemplate;
     private final static String MODULE_NAME = "CMIS";
     private final static String MODULE_VERSION = "1.14.1";
     private final static String DEVKIT_VERSION = "3.4.0";
     private final static String DEVKIT_BUILD = "3.4.0.1555.8df15c1";
+    /**
+     * Mule Context
+     *
+     */
+    protected MuleContext muleContext;
+    /**
+     * Flow Construct
+     *
+     */
+    protected FlowConstruct flowConstruct;
+    protected PoolingProfile connectionPoolingProfile;
+    protected RetryPolicyTemplate retryPolicyTemplate;
+    /**
+     *
+     */
+    private String username;
+    /**
+     *
+     */
+    private String password;
+    /**
+     *
+     */
+    private String baseUrl;
+    /**
+     *
+     */
+    private String repositoryId;
+    /**
+     *
+     */
+    private String endpoint;
+    /**
+     *
+     */
+    private String connectionTimeout;
+    /**
+     *
+     */
+    private String useAlfrescoExtension;
+    /**
+     *
+     */
+    private String cxfPortProvider;
+    /**
+     * Connector Pool
+     *
+     */
+    private GenericKeyedObjectPool connectionPool;
+
+    /**
+     * Retrieves muleContext
+     *
+     */
+    public MuleContext getMuleContext()
+    {
+        return this.muleContext;
+    }
 
     /**
      * Sets muleContext
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -104,17 +113,17 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
     }
 
     /**
-     * Retrieves muleContext
-     * 
+     * Retrieves flowConstruct
+     *
      */
-    public MuleContext getMuleContext()
+    public FlowConstruct getFlowConstruct()
     {
-        return this.muleContext;
+        return this.flowConstruct;
     }
 
     /**
      * Sets flowConstruct
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -124,17 +133,17 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
     }
 
     /**
-     * Retrieves flowConstruct
-     * 
+     * Retrieves connectionPoolingProfile
+     *
      */
-    public FlowConstruct getFlowConstruct()
+    public PoolingProfile getConnectionPoolingProfile()
     {
-        return this.flowConstruct;
+        return this.connectionPoolingProfile;
     }
 
     /**
      * Sets connectionPoolingProfile
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -144,17 +153,17 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
     }
 
     /**
-     * Retrieves connectionPoolingProfile
-     * 
+     * Retrieves retryPolicyTemplate
+     *
      */
-    public PoolingProfile getConnectionPoolingProfile()
+    public RetryPolicyTemplate getRetryPolicyTemplate()
     {
-        return this.connectionPoolingProfile;
+        return this.retryPolicyTemplate;
     }
 
     /**
      * Sets retryPolicyTemplate
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -164,17 +173,17 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
     }
 
     /**
-     * Retrieves retryPolicyTemplate
-     * 
+     * Retrieves baseUrl
+     *
      */
-    public RetryPolicyTemplate getRetryPolicyTemplate()
+    public String getBaseUrl()
     {
-        return this.retryPolicyTemplate;
+        return this.baseUrl;
     }
 
     /**
      * Sets baseUrl
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -184,17 +193,17 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
     }
 
     /**
-     * Retrieves baseUrl
-     * 
+     * Retrieves username
+     *
      */
-    public String getBaseUrl()
+    public String getUsername()
     {
-        return this.baseUrl;
+        return this.username;
     }
 
     /**
      * Sets username
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -204,17 +213,17 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
     }
 
     /**
-     * Retrieves username
-     * 
+     * Retrieves connectionTimeout
+     *
      */
-    public String getUsername()
+    public String getConnectionTimeout()
     {
-        return this.username;
+        return this.connectionTimeout;
     }
 
     /**
      * Sets connectionTimeout
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -224,17 +233,17 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
     }
 
     /**
-     * Retrieves connectionTimeout
-     * 
+     * Retrieves useAlfrescoExtension
+     *
      */
-    public String getConnectionTimeout()
+    public String getUseAlfrescoExtension()
     {
-        return this.connectionTimeout;
+        return this.useAlfrescoExtension;
     }
 
     /**
      * Sets useAlfrescoExtension
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -244,17 +253,17 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
     }
 
     /**
-     * Retrieves useAlfrescoExtension
-     * 
+     * Retrieves cxfPortProvider
+     *
      */
-    public String getUseAlfrescoExtension()
+    public String getCxfPortProvider()
     {
-        return this.useAlfrescoExtension;
+        return this.cxfPortProvider;
     }
 
     /**
      * Sets cxfPortProvider
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -264,17 +273,17 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
     }
 
     /**
-     * Retrieves cxfPortProvider
-     * 
+     * Retrieves repositoryId
+     *
      */
-    public String getCxfPortProvider()
+    public String getRepositoryId()
     {
-        return this.cxfPortProvider;
+        return this.repositoryId;
     }
 
     /**
      * Sets repositoryId
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -284,17 +293,17 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
     }
 
     /**
-     * Retrieves repositoryId
-     * 
+     * Retrieves password
+     *
      */
-    public String getRepositoryId()
+    public String getPassword()
     {
-        return this.repositoryId;
+        return this.password;
     }
 
     /**
      * Sets password
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -304,32 +313,23 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
     }
 
     /**
-     * Retrieves password
-     * 
+     * Retrieves endpoint
+     *
      */
-    public String getPassword()
+    public String getEndpoint()
     {
-        return this.password;
+        return this.endpoint;
     }
 
     /**
      * Sets endpoint
-     * 
+     *
      * @param value
      *            Value to set
      */
     public void setEndpoint(String value)
     {
         this.endpoint = value;
-    }
-
-    /**
-     * Retrieves endpoint
-     * 
-     */
-    public String getEndpoint()
-    {
-        return this.endpoint;
     }
 
     public void initialise()

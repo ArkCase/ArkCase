@@ -17,9 +17,8 @@ import java.util.List;
  */
 public class TaskDataAccessUpdateLocator implements AcmObjectDataAccessBatchUpdateLocator<AcmTask>
 {
-    private TaskDao taskDao;
-
     private final transient Logger log = LoggerFactory.getLogger(getClass());
+    private TaskDao taskDao;
 
     @Override
     public List<AcmTask> getObjectsModifiedSince(Date lastUpdate, int start, int pageSize)

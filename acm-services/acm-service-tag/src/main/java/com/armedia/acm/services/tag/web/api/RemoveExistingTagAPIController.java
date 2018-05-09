@@ -28,13 +28,11 @@ import java.sql.SQLException;
 public class RemoveExistingTagAPIController
 {
 
-    private TagService tagService;
-    private TagEventPublisher tagEventPublisher;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     private final static String SUCCESS_MSG = "Tag removed successfully: ";
     private final static String USER_ACTION = "DELETE";
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private TagService tagService;
+    private TagEventPublisher tagEventPublisher;
 
     @RequestMapping(value = "/{tagId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

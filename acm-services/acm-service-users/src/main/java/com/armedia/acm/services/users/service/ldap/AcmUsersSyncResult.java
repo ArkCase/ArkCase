@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
  */
 public class AcmUsersSyncResult
 {
+    private final boolean fullSync;
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private List<AcmUser> modifiedUsers;
     private List<AcmUser> newUsers;
     private List<AcmUser> deletedUsers;
-    private final boolean fullSync;
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public AcmUsersSyncResult(boolean fullSync)
     {

@@ -13,7 +13,7 @@
 angular.module('dashboard').factory('Dashboard.WidgetService', [ '$http', function($http) {
 
     var data = {
-        'getNews' : getNews
+        'getNews': getNews
     };
 
     /**
@@ -51,10 +51,10 @@ angular.module('dashboard').factory('Dashboard.WidgetService', [ '$http', functi
      */
     function getNews(url, query) {
         var configObj = {
-            params : {
-                callback : "JSON_CALLBACK",
-                format : "json",
-                q : query
+            params: {
+                callback: "JSON_CALLBACK",
+                format: "json",
+                q: query
             }
         };
         return makeRequest(url, configObj).then(function(response) {

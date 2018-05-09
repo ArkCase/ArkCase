@@ -15,11 +15,6 @@ public enum AcmTasksForAPeriod
         this.period = period;
     }
 
-    public String getPeriod()
-    {
-        return period;
-    }
-
     public static AcmTasksForAPeriod getTasksForPeriodByText(String text)
     {
         for (AcmTasksForAPeriod attribute : values())
@@ -30,5 +25,10 @@ public enum AcmTasksForAPeriod
             }
         }
         return AcmTasksForAPeriod.NONE;
+    }
+
+    public String getPeriod()
+    {
+        return period;
     }
 }

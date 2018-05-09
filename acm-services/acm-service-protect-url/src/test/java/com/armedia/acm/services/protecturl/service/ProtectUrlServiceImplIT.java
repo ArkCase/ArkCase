@@ -35,14 +35,12 @@ import java.util.UUID;
 })
 public class ProtectUrlServiceImplIT
 {
+    @Autowired
+    ProtectUrlService protectUrlService;
     /**
      * Logger instance.
      */
     private Logger log = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    ProtectUrlService protectUrlService;
-
     @PersistenceContext
     private EntityManager entityManager;
 

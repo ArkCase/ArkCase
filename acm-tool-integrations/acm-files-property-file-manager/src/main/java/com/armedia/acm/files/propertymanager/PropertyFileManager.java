@@ -23,9 +23,8 @@ import java.util.Properties;
  */
 public class PropertyFileManager
 {
-    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 
     public Properties readFromFile(File propertiesFile) throws IOException
     {

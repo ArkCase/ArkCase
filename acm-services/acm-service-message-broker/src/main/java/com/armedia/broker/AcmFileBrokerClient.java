@@ -27,15 +27,13 @@ import java.util.UUID;
  */
 public class AcmFileBrokerClient implements IAcmFileBrokerClient
 {
+    public static final String PROP_FILE_NAME = "fileName";
+    public static final String PROP_FILE_UPLOAD_URL = "fileUploadUrl";
     private final ActiveMQConnectionFactory connectionFactory;
     private final String outboundQueue;
     private final String inboundQueue;
-
     private JmsTemplate producerTemplate;
     private String fileUploadUrl;
-
-    public static final String PROP_FILE_NAME = "fileName";
-    public static final String PROP_FILE_UPLOAD_URL = "fileUploadUrl";
 
     public AcmFileBrokerClient(ActiveMQConnectionFactory connectionFactory, String outboundQueue, String inboundQueue)
     {

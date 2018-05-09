@@ -39,31 +39,13 @@ import java.util.EnumSet;
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public abstract class RecurrenceDetails
 {
-    /**
-     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 30, 2017
-     *
-     */
-    public static enum EventRecurrence
-    {
-        ONLY_ONCE, DAILY, WEEKLY, MONTHLY, YEARLY;
-    }
-
-    public static enum WeekOfMonth
-    {
-        FIRST, SECOND, THIRD, FOURTH, LAST;
-    }
-
     private EventRecurrence recurrenceType;
-
     private Integer interval;
-
     private Integer endAfterOccurrances;
-
     @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime startAt;
-
     @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
@@ -149,6 +131,20 @@ public abstract class RecurrenceDetails
     public void setEndBy(ZonedDateTime endBy)
     {
         this.endBy = endBy;
+    }
+
+    /**
+     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 30, 2017
+     *
+     */
+    public static enum EventRecurrence
+    {
+        ONLY_ONCE, DAILY, WEEKLY, MONTHLY, YEARLY;
+    }
+
+    public static enum WeekOfMonth
+    {
+        FIRST, SECOND, THIRD, FOURTH, LAST;
     }
 
     public static final class OnlyOnce extends RecurrenceDetails

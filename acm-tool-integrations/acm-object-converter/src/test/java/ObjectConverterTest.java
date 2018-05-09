@@ -22,25 +22,6 @@ public class ObjectConverterTest extends EasyMockSupport
 {
     private ObjectConverter objectConverter;
 
-    static class ObjectWithDateField
-    {
-        public ObjectWithDateField()
-        {
-        }
-
-        private Date theDate;
-
-        public Date getTheDate()
-        {
-            return theDate;
-        }
-
-        public void setTheDate(Date theDate)
-        {
-            this.theDate = theDate;
-        }
-    }
-
     @Before
     public void setUp()
     {
@@ -161,5 +142,24 @@ public class ObjectConverterTest extends EasyMockSupport
         assertEquals(hours, prependZeros(String.valueOf(unmarshalled.getTheDate().getHours()), 2));
         assertEquals(minutes, prependZeros(String.valueOf(unmarshalled.getTheDate().getMinutes()), 2));
         assertEquals(seconds, prependZeros(String.valueOf(unmarshalled.getTheDate().getSeconds()), 2));
+    }
+
+    static class ObjectWithDateField
+    {
+        private Date theDate;
+
+        public ObjectWithDateField()
+        {
+        }
+
+        public Date getTheDate()
+        {
+            return theDate;
+        }
+
+        public void setTheDate(Date theDate)
+        {
+            this.theDate = theDate;
+        }
     }
 }

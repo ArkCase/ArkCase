@@ -67,11 +67,6 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     private AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper;
     private GroupService groupService;
 
-    private enum AuthRequestType
-    {
-        AUTH_REQUEST_TYPE_TOKEN, AUTH_REQUEST_TYPE_EMAIL_TOKEN, AUTH_REQUEST_TYPE_CLIENT_CERT, AUTH_REQUEST_TYPE_BASIC, AUTH_REQUEST_TYPE_OTHER
-    }
-
     /**
      * Constructor.
      *
@@ -437,5 +432,14 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     public void setGroupService(GroupService groupService)
     {
         this.groupService = groupService;
+    }
+
+    private enum AuthRequestType
+    {
+        AUTH_REQUEST_TYPE_TOKEN,
+        AUTH_REQUEST_TYPE_EMAIL_TOKEN,
+        AUTH_REQUEST_TYPE_CLIENT_CERT,
+        AUTH_REQUEST_TYPE_BASIC,
+        AUTH_REQUEST_TYPE_OTHER
     }
 }

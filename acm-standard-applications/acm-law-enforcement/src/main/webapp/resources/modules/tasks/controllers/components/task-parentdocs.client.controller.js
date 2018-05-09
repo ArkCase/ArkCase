@@ -27,11 +27,8 @@ angular.module('tasks').controller(
                 'Admin.CMTemplatesService',
                 'DocTreeExt.Email',
                 'Admin.EmailSenderConfigurationService',
-                function($scope, $stateParams, $q, $modal, $translate, Util, LocaleService, ConfigService, ObjectService,
-                        ObjectLookupService, TaskInfoService, HelperObjectBrowserService, Authentication, DocTreeService,
-                        PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin, CaseInfoService, ComplaintInfoService,
-                        CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService, DocTreeExtEmail,
-                        EmailSenderConfigurationService) {
+                function($scope, $stateParams, $q, $modal, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin, CaseInfoService,
+                        ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService, DocTreeExtEmail, EmailSenderConfigurationService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -43,16 +40,16 @@ angular.module('tasks').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        moduleId : "tasks",
-                        componentId : "parentdocs",
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        retrieveObjectInfo : TaskInfoService.getTaskInfo,
-                        validateObjectInfo : TaskInfoService.validateTaskInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        moduleId: "tasks",
+                        componentId: "parentdocs",
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        retrieveObjectInfo: TaskInfoService.getTaskInfo,
+                        validateObjectInfo: TaskInfoService.validateTaskInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -82,16 +79,14 @@ angular.module('tasks').controller(
                             ComplaintInfoService.getComplaintInfo($scope.objectInfo.parentObjectId).then(function(complaintInfo) {
                                 $scope.parentInfo = complaintInfo;
                             });
-                            promiseCorrespondenceForms = CorrespondenceService
-                                    .getActivatedTemplatesData(ObjectService.ObjectTypes.COMPLAINT);
+                            promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.COMPLAINT);
                             $scope.treeConfig.email.emailSubject = "Complaint $complaintNumber";
                             break;
                         case ObjectService.ObjectTypes.CASE_FILE:
                             CaseInfoService.getCaseInfo($scope.objectInfo.parentObjectId).then(function(caseInfo) {
                                 $scope.parentInfo = caseInfo;
                             });
-                            promiseCorrespondenceForms = CorrespondenceService
-                                    .getActivatedTemplatesData(ObjectService.ObjectTypes.CASE_FILE);
+                            promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.CASE_FILE);
                             $scope.treeConfig.email.emailSubject = "Case $caseNumber";
                             break;
                         case ObjectService.ObjectTypes.COSTSHEET:
@@ -111,18 +106,17 @@ angular.module('tasks').controller(
                             promiseCorrespondenceForms = {};
                         }
 
-                        $q.all([ promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages ]).then(
-                                function(data) {
-                                    $scope.treeConfig.formTypes = data[0];
-                                    $scope.treeConfig.fileTypes = data[1];
-                                    $scope.treeConfig.correspondenceForms = data[2];
-                                    $scope.treeConfig.fileLanguages = data[3];
-                                });
+                        $q.all([ promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages ]).then(function(data) {
+                            $scope.treeConfig.formTypes = data[0];
+                            $scope.treeConfig.fileTypes = data[1];
+                            $scope.treeConfig.correspondenceForms = data[2];
+                            $scope.treeConfig.fileLanguages = data[3];
+                        });
 
                         $scope.isreadOnly = false;
                         // Using the parentInfo and parentObjectType to enforce the editing permission
                         PermissionsService.getActionPermission('editAttachments', $scope.parentInfo, {
-                            objectType : $scope.parentObjectType
+                            objectType: $scope.parentObjectType
                         }).then(function(result) {
                             $scope.isReadOnly = !result;
                         });
@@ -171,13 +165,13 @@ angular.module('tasks').controller(
 
                     $scope.onFilter = function() {
                         $scope.$bus.publish('onFilterDocTree', {
-                            filter : $scope.filter
+                            filter: $scope.filter
                         });
                     };
 
                     $scope.onSearch = function() {
                         $scope.$bus.publish('onSearchDocTree', {
-                            searchFilter : $scope.searchFilter
+                            searchFilter: $scope.searchFilter
                         });
                     };
 

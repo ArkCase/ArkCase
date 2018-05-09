@@ -20,6 +20,7 @@ import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.common.base.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -29,8 +30,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author riste.tutureski
@@ -348,11 +351,13 @@ public class TimeService extends FrevvoFormChargeAbstractService
         this.timeFactory = timeFactory;
     }
 
-    public TimesheetConfigurationService getTimesheetConfigurationService() {
+    public TimesheetConfigurationService getTimesheetConfigurationService()
+    {
         return timesheetConfigurationService;
     }
 
-    public void setTimesheetConfigurationService(TimesheetConfigurationService timesheetConfigurationService) {
+    public void setTimesheetConfigurationService(TimesheetConfigurationService timesheetConfigurationService)
+    {
         this.timesheetConfigurationService = timesheetConfigurationService;
     }
 

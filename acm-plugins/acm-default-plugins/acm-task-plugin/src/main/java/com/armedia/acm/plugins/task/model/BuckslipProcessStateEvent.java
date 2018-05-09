@@ -4,11 +4,6 @@ import com.armedia.acm.core.model.AcmEvent;
 
 public class BuckslipProcessStateEvent extends AcmEvent
 {
-    public enum BuckslipProcessState
-    {
-        INITIALIZED, WITHDRAWN, COMPLETED
-    }
-
     private BuckslipProcessState buckslipProcessState;
 
     public BuckslipProcessStateEvent(Object source)
@@ -24,5 +19,10 @@ public class BuckslipProcessStateEvent extends AcmEvent
     public void setBuckslipProcessState(BuckslipProcessState buckslipProcessState)
     {
         this.buckslipProcessState = buckslipProcessState;
+    }
+
+    public enum BuckslipProcessState
+    {
+        INITIALIZED, WITHDRAWN, COMPLETED
     }
 }

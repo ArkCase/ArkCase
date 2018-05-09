@@ -349,11 +349,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
         this.ldapDao = ldapDao;
     }
 
-    public void setUserDao(UserDao userDao)
-    {
-        this.userDao = userDao;
-    }
-
     public void setGroupService(GroupService groupService)
     {
         this.groupService = groupService;
@@ -377,6 +372,11 @@ public class LdapUserService implements ApplicationEventPublisherAware
     public UserDao getUserDao()
     {
         return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 
     @Override

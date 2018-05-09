@@ -11,6 +11,7 @@ import com.armedia.acm.services.transcribe.model.Transcribe;
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.model.TranscribeType;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -39,23 +40,27 @@ public class EcmFileReplacedListener implements ApplicationListener<EcmFileRepla
                     TranscribeConfiguration configuration = getArkCaseTranscribeService().getConfiguration();
                     if (configuration.isCopyTranscriptionForNewVersion())
                     {
-                        LOG.debug("Copy Transcription for replaced file with ID=[{}] and VERSION_ID=[{}]", ecmFile.getId(), ecmFileVersion.getId());
-                        Transcribe transcribe = getArkCaseTranscribeService().getByMediaVersionId(event.getPreviousActiveFileVersion().getId());
+                        LOG.debug("Copy Transcription for replaced file with ID=[{}] and VERSION_ID=[{}]", ecmFile.getId(),
+                                ecmFileVersion.getId());
+                        Transcribe transcribe = getArkCaseTranscribeService()
+                                .getByMediaVersionId(event.getPreviousActiveFileVersion().getId());
 
                         if (transcribe != null)
                         {
                             getArkCaseTranscribeService().copy(transcribe, ecmFileVersion);
                         }
                     }
-                    else if(configuration.isNewTranscriptionForNewVersion() && configuration.isAutomaticEnabled())
+                    else if (configuration.isNewTranscriptionForNewVersion() && configuration.isAutomaticEnabled())
                     {
-                        LOG.debug("New Transcription for replaced file with ID=[{}] and VERSION_ID=[{}]", ecmFile.getId(), ecmFileVersion.getId());
+                        LOG.debug("New Transcription for replaced file with ID=[{}] and VERSION_ID=[{}]", ecmFile.getId(),
+                                ecmFileVersion.getId());
                         getArkCaseTranscribeService().create(ecmFileVersion, TranscribeType.AUTOMATIC);
                     }
                 }
                 catch (GetConfigurationException | GetTranscribeException | CreateTranscribeException e)
                 {
-                    LOG.warn("Creating Transcription for replaced file with ID=[{}] and VERSION_ID=[{}] is not executed. REASON=[{}]", ecmFile.getId(), ecmFileVersion.getId(), e.getMessage());
+                    LOG.warn("Creating Transcription for replaced file with ID=[{}] and VERSION_ID=[{}] is not executed. REASON=[{}]",
+                            ecmFile.getId(), ecmFileVersion.getId(), e.getMessage());
                 }
             }
         }

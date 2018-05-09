@@ -20,26 +20,21 @@ import java.util.List;
  */
 public class SpringConfigCopier implements ApplicationContextAware
 {
-    private List<String> resourcePatterns;
-
-    private PathMatchingResourcePatternResolver resolver;
-
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     /**
      * Built-in Spring configuration files are copied to this folder
      */
     String builtinFolderPath;
-
     /**
      * Custom Spring configuration files are copied to this folder
      */
     String customFolderPath;
-
     /**
      * Root custom folder, mapped to web application root (see context.xml)
      */
     String customRoot;
+    private List<String> resourcePatterns;
+    private PathMatchingResourcePatternResolver resolver;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException

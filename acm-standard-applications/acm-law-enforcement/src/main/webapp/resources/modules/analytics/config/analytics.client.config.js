@@ -2,7 +2,7 @@
 
 angular.module('analytics').run([ 'Menus', 'ConfigService', function(Menus, ConfigService) {
     var config = ConfigService.getModule({
-        moduleId : 'analytics'
+        moduleId: 'analytics'
     });
     config.$promise.then(function(config) {
         if (config.menus) {

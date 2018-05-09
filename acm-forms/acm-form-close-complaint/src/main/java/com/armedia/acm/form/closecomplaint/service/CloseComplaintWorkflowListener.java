@@ -22,13 +22,10 @@ import java.util.Map;
  */
 public class CloseComplaintWorkflowListener implements ApplicationListener<CloseComplaintFormEvent>
 {
-    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-
-    private RuntimeService activitiRuntimeService;
-
-    private String closeComplaintTaskName;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+    private RuntimeService activitiRuntimeService;
+    private String closeComplaintTaskName;
 
     @Override
     public void onApplicationEvent(CloseComplaintFormEvent closeComplaintFormEvent)

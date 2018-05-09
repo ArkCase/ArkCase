@@ -8,22 +8,13 @@ import java.util.List;
 public class CaseFileEnqueueResponse
 {
 
-    public enum ErrorReason
-    {
-        NO_ERROR, LEAVE, NEXT_POSSIBLE, ENTER, ON_LEAVE, ON_ENTER
-    }
-
     private final boolean success;
-
     private final ErrorReason reason;
-
     private final List<String> errors;
+    private final String requestedQueue;
 
     // We have the caseId from the CaseFile instance.
     // private final Long caseId;
-
-    private final String requestedQueue;
-
     private CaseFile caseFile;
 
     public CaseFileEnqueueResponse(ErrorReason reason, String requestedQueue, CaseFile caseFile)
@@ -59,15 +50,15 @@ public class CaseFileEnqueueResponse
         return errors;
     }
 
-    // public Long getCaseId()
-    // {
-    // return caseId;
-    // }
-
     public String getRequestedQueue()
     {
         return requestedQueue;
     }
+
+    // public Long getCaseId()
+    // {
+    // return caseId;
+    // }
 
     public CaseFile getCaseFile()
     {
@@ -77,5 +68,10 @@ public class CaseFileEnqueueResponse
     protected void setCaseFile(CaseFile caseFile)
     {
         this.caseFile = caseFile;
+    }
+
+    public enum ErrorReason
+    {
+        NO_ERROR, LEAVE, NEXT_POSSIBLE, ENTER, ON_LEAVE, ON_ENTER
     }
 }

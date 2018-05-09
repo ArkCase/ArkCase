@@ -1,17 +1,45 @@
 <div data-ng-controller="Admin.Holiday">
-    <div class="panel panel-success panel-grid">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <span translate>admin.application.holiday.title</span>
-                <div class="pull-right">
-                    <button class="btn btn-default btn-xs" ng-click="addNew()">
-                        <i class="fa fa-lg fa-plus"></i></button>
+    <div class="clearfix well-sm">
+        <div class="col-xs-4">
+            <div class="check-box">
+                <label>
+                    <input type="checkbox" ng-model="holidaySchedule.includeWeekends" name="includeWeekends" value="true" />
+                    <span translate="admin.application.holiday.label"></span>
+                </label>
+            </div>
+
+        </div>
+        <div class="pull-right">
+            <div class="btn-group">
+                <button class="btn btn-sm btn-default" ng-click="save()">
+                    <i class="fa fa-save"></i>
+                </button>
+                <button class="btn btn-sm btn-default" ng-click="loadPage()">
+                    <i class="fa fa-refresh"></i>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="well-sm">
+        <div class="panel panel-success panel-grid">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <span translate>admin.application.holiday.title</span>
+                    <div class="pull-right">
+                        <button class="btn btn-default btn-xs" ng-click="addNew()">
+                            <i class="fa fa-lg fa-plus"></i></button>
+                    </div>
                 </div>
             </div>
+
+            <div class="panel-body">
+                <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
+                        adjust-table-height="gridOptions.data.length" class="grid"></div>
+            </div>
         </div>
-        <div class="panel-body">
-            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
-                    adjust-table-height="gridOptions.data.length" class="grid"></div>
-        </div>
+
     </div>
+
 </div>

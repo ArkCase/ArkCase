@@ -29,6 +29,7 @@ public class ExecuteSolrQuery
 
     private MuleContextManager muleContextManager;
     private ObjectConverter objectConverter;
+    private SendDocumentsToSolr sendDocumentsToSolr;
     private boolean enableDocumentACL;
 
     /**
@@ -343,13 +344,13 @@ public class ExecuteSolrQuery
      * This method executes delete of documents in solr using search query
      * (Beware) it could easily delete all documents if query is not specific
      *
-     * @param toSolrFlow
-     *            Which solr flow (quick search or advanced search to solr flow)
+     * @param queueName
+     *            Which queue to send the request to
      * @param query
      *            Solr Search query for removing found documents
      * @throws MuleException
      */
-    public void sendSolrDeleteQuery(String toSolrFlow, String query) throws MuleException
+    public void sendSolrDeleteQuery(String queueName, String query) throws MuleException
     {
         log.debug("Received query [{}] for deletion.", query);
 
@@ -359,7 +360,7 @@ public class ExecuteSolrQuery
             documentsQuery.setQuery(query);
             SolrDeleteDocumentsByQueryRequest deleteQueryRequest = new SolrDeleteDocumentsByQueryRequest(documentsQuery);
             String json = objectConverter.getJsonMarshaller().marshal(deleteQueryRequest);
-            getMuleContextManager().dispatch(toSolrFlow, json, new HashMap<>());
+            getSendDocumentsToSolr().sendSolrDocuments(queueName, json);
         }
         else
         {
@@ -390,5 +391,15 @@ public class ExecuteSolrQuery
     public void setEnableDocumentACL(boolean enableDocumentACL)
     {
         this.enableDocumentACL = enableDocumentACL;
+    }
+
+    public SendDocumentsToSolr getSendDocumentsToSolr()
+    {
+        return sendDocumentsToSolr;
+    }
+
+    public void setSendDocumentsToSolr(SendDocumentsToSolr sendDocumentsToSolr)
+    {
+        this.sendDocumentsToSolr = sendDocumentsToSolr;
     }
 }
