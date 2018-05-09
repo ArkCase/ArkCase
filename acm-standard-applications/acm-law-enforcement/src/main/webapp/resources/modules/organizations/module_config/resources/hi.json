@@ -21,7 +21,8 @@
         "identification.label": "पहचान",
         "primary.label": "प्राथमिक संपर्क",
         "parent.label": "मूल संगठन",
-        "parent.placeholder": "अभिभावक संगठन दर्ज करें"
+        "parent.placeholder": "अभिभावक संगठन दर्ज करें",
+        "type.label": "hi_Type"
     },
     "organizations.comp.actions": {
         "title": "क्रिया",

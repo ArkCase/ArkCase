@@ -22,12 +22,12 @@
  */
 angular.module('core').directive('acmLogin', [ '$stateParams', function($stateParams) {
     return {
-        scope : {},
-        bindToController : {}
+        scope: {},
+        bindToController: {}
         //, templateUrl: 'modules/core/components/acm-login/acm-login.client.view.html'
         ,
-        template : '',
-        controller : AcmLoginController,
-        controllerAs : 'ctrl'
+        template: '',
+        controller: AcmLoginController,
+        controllerAs: 'ctrl'
     }
 } ]);

@@ -16,12 +16,12 @@
  */
 angular.module('admin').service('Admin.SelectPrivilegesService', function($http) {
     return ({
-        getAppRoles : getAppRoles,
-        getAllPrivileges : getAllPrivileges,
-        addRolePrivileges : addRolePrivileges,
-        getRolePrivileges : getRolePrivileges,
-        getRolePrivilegesByName : getRolePrivilegesByName,
-        upsertRole : upsertRole
+        getAppRoles: getAppRoles,
+        getAllPrivileges: getAllPrivileges,
+        addRolePrivileges: addRolePrivileges,
+        getRolePrivileges: getRolePrivileges,
+        getRolePrivilegesByName: getRolePrivilegesByName,
+        upsertRole: upsertRole
     });
 
     /**
@@ -36,8 +36,9 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
      */
     function getAppRoles() {
         return $http({
-            method : 'GET',
-            url : 'api/latest/plugin/admin/rolesprivileges/roles'
+            method: 'GET',
+            cache: false,
+            url: 'api/latest/plugin/admin/rolesprivileges/roles'
         });
     }
 
@@ -53,8 +54,8 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
      */
     function getAllPrivileges() {
         return $http({
-            method : 'GET',
-            url : 'api/latest/plugin/admin/rolesprivileges/privileges'
+            method: 'GET',
+            url: 'api/latest/plugin/admin/rolesprivileges/privileges'
         });
     }
 
@@ -76,11 +77,11 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
         var data = {};
         data['privileges'] = privileges;
         return $http({
-            method : 'PUT',
-            url : url,
-            data : data,
-            headers : {
-                'Content-Type' : 'application/json'
+            method: 'PUT',
+            url: url,
+            data: data,
+            headers: {
+                'Content-Type': 'application/json'
             }
         });
     }
@@ -100,8 +101,8 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
     function getRolePrivileges(roleName) {
         var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roleName + '/privileges';
         return $http({
-            method : 'GET',
-            url : url
+            method: 'GET',
+            url: url
         });
     }
 
@@ -124,13 +125,14 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
     function getRolePrivilegesByName(data) {
         var url = 'api/latest/plugin/admin/' + data.role.name + '/privileges';
         return $http({
-            method : 'GET',
-            url : url,
-            params : {
-                authorized : data.isAuthorized,
-                n : (data.n ? data.n : 18),
-                start : (data.start ? data.start : 0),
-                fq : (data.filterWord ? data.filterWord : "")
+            method: 'GET',
+            url: url,
+            cache: false,
+            params: {
+                authorized: data.isAuthorized,
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0),
+                fq: (data.filterWord ? data.filterWord : "")
             }
         });
     }
@@ -153,11 +155,11 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
         var data = {};
         data['roleName'] = roleName;
         return $http({
-            method : oldRoleName ? 'PUT' : 'POST',
-            url : url,
-            data : data,
-            headers : {
-                'Content-Type' : 'application/json'
+            method: oldRoleName ? 'PUT' : 'POST',
+            url: url,
+            data: data,
+            headers: {
+                'Content-Type': 'application/json'
             }
         });
     }

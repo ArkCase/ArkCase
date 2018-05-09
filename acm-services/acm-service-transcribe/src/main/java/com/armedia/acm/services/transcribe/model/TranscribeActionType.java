@@ -5,9 +5,17 @@ package com.armedia.acm.services.transcribe.model;
  */
 public enum TranscribeActionType
 {
+    CREATED,
+    UPDATED,
     QUEUED,
     PROCESSING,
     COMPLETED,
     FAILED,
-    CANCELLED
+    CANCELLED,
+    COMPILED,
+    ROLLBACK,
+    PROVIDER_FAILED,
+    PURGE_SUCCESS,
+    PURGE_FAILED,
+    PURGE_TERMINATE
 }

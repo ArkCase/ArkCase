@@ -14,8 +14,8 @@ import java.util.concurrent.Callable;
 public class RetryExecutor<T>
 {
     private final long timeout;
-    private int retryAttempts;
     private final List<Class> exceptions;
+    private int retryAttempts;
 
     public RetryExecutor()
     {

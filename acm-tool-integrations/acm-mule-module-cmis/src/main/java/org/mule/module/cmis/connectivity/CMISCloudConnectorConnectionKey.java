@@ -58,8 +58,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
+     * Retrieves baseUrl
+     *
+     */
+    public String getBaseUrl()
+    {
+        return this.baseUrl;
+    }
+
+    /**
      * Sets baseUrl
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -69,17 +78,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves baseUrl
-     * 
+     * Retrieves username
+     *
      */
-    public String getBaseUrl()
+    public String getUsername()
     {
-        return this.baseUrl;
+        return this.username;
     }
 
     /**
      * Sets username
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -89,17 +98,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves username
-     * 
+     * Retrieves connectionTimeout
+     *
      */
-    public String getUsername()
+    public String getConnectionTimeout()
     {
-        return this.username;
+        return this.connectionTimeout;
     }
 
     /**
      * Sets connectionTimeout
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -109,17 +118,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves connectionTimeout
-     * 
+     * Retrieves useAlfrescoExtension
+     *
      */
-    public String getConnectionTimeout()
+    public String getUseAlfrescoExtension()
     {
-        return this.connectionTimeout;
+        return this.useAlfrescoExtension;
     }
 
     /**
      * Sets useAlfrescoExtension
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -129,17 +138,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves useAlfrescoExtension
-     * 
+     * Retrieves cxfPortProvider
+     *
      */
-    public String getUseAlfrescoExtension()
+    public String getCxfPortProvider()
     {
-        return this.useAlfrescoExtension;
+        return this.cxfPortProvider;
     }
 
     /**
      * Sets cxfPortProvider
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -149,17 +158,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves cxfPortProvider
-     * 
+     * Retrieves repositoryId
+     *
      */
-    public String getCxfPortProvider()
+    public String getRepositoryId()
     {
-        return this.cxfPortProvider;
+        return this.repositoryId;
     }
 
     /**
      * Sets repositoryId
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -169,17 +178,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves repositoryId
-     * 
+     * Retrieves password
+     *
      */
-    public String getRepositoryId()
+    public String getPassword()
     {
-        return this.repositoryId;
+        return this.password;
     }
 
     /**
      * Sets password
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -189,32 +198,23 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves password
-     * 
+     * Retrieves endpoint
+     *
      */
-    public String getPassword()
+    public String getEndpoint()
     {
-        return this.password;
+        return this.endpoint;
     }
 
     /**
      * Sets endpoint
-     * 
+     *
      * @param value
      *            Value to set
      */
     public void setEndpoint(String value)
     {
         this.endpoint = value;
-    }
-
-    /**
-     * Retrieves endpoint
-     * 
-     */
-    public String getEndpoint()
-    {
-        return this.endpoint;
     }
 
     public int hashCode()

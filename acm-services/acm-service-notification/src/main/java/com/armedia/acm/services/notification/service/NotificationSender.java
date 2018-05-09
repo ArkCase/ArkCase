@@ -208,20 +208,20 @@ public abstract class NotificationSender
     }
 
     /**
+     * @return the userDao
+     */
+    protected UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    /**
      * @param userDao
      *            the userDao to set
      */
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
-    }
-
-    /**
-     * @return the userDao
-     */
-    protected UserDao getUserDao()
-    {
-        return userDao;
     }
 
 }

@@ -9,6 +9,7 @@ import com.armedia.acm.auth.okta.model.factor.SecurityQuestion;
 import com.armedia.acm.auth.okta.model.user.OktaUser;
 import com.armedia.acm.auth.okta.services.FactorService;
 import com.google.common.base.Preconditions;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -85,25 +86,26 @@ public class FactorServiceImpl implements FactorService
             FactorType type = factor.getFactorType();
             switch (type)
             {
-                case EMAIL:
-                    sb.append("Email: ").append(factor.getProfile().getEmail());
-                    break;
-                case SMS:
-                    String phoneNumber = factor.getProfile().getPhoneNumber();
-                    if (phoneNumber.length() > 4)
-                    {
-                        String phoneSanitized = phoneNumber.substring(0, phoneNumber.length() - 4).replaceAll("[\\+0-9]", "*");
-                        sb.append("Phone: ").append(phoneSanitized).append(StringUtils.substring(phoneNumber, phoneNumber.length() - 4));
-                    } else
-                    {
-                        sb.append("Phone: ").append(phoneNumber);
-                    }
-                    break;
-                case SOFTWARE_TOKEN:
-                    sb.append("TOTP");
-                    break;
-                default:
-                    sb.append(factor.getFactorType());
+            case EMAIL:
+                sb.append("Email: ").append(factor.getProfile().getEmail());
+                break;
+            case SMS:
+                String phoneNumber = factor.getProfile().getPhoneNumber();
+                if (phoneNumber.length() > 4)
+                {
+                    String phoneSanitized = phoneNumber.substring(0, phoneNumber.length() - 4).replaceAll("[\\+0-9]", "*");
+                    sb.append("Phone: ").append(phoneSanitized).append(StringUtils.substring(phoneNumber, phoneNumber.length() - 4));
+                }
+                else
+                {
+                    sb.append("Phone: ").append(phoneNumber);
+                }
+                break;
+            case SOFTWARE_TOKEN:
+                sb.append("TOTP");
+                break;
+            default:
+                sb.append(factor.getFactorType());
             }
 
             return sb.toString();
@@ -133,18 +135,21 @@ public class FactorServiceImpl implements FactorService
                     if (!factorsAlreadyEnrolled.isEmpty())
                     {
                         List<FactorType> factorTypes = factorsAlreadyEnrolled.stream()
-                                .filter(factor -> FactorStatus.ACTIVE.equals(factor.getStatus()) || FactorStatus.ENROLLED.equals(factor.getStatus()))
+                                .filter(factor -> FactorStatus.ACTIVE.equals(factor.getStatus())
+                                        || FactorStatus.ENROLLED.equals(factor.getStatus()))
                                 .map(Factor::getFactorType)
                                 .collect(Collectors.toList());
-                        return factorCatalog.stream().filter(factor -> !factorTypes.contains(factor.getFactorType())).collect(Collectors.toList());
-                    } else
+                        return factorCatalog.stream().filter(factor -> !factorTypes.contains(factor.getFactorType()))
+                                .collect(Collectors.toList());
+                    }
+                    else
                     {
                         return factorCatalog;
                     }
                 }
             }
         }
-        
+
         return Collections.emptyList();
     }
 
@@ -154,7 +159,8 @@ public class FactorServiceImpl implements FactorService
         if (user != null)
         {
             String apiPath = String.format(OktaAPIConstants.LIST_SECURITY_QUESTIONS, user.getId());
-            ResponseEntity<SecurityQuestion[]> exchange = oktaRestService.doRestCall(apiPath, HttpMethod.GET, SecurityQuestion[].class, "parameters");
+            ResponseEntity<SecurityQuestion[]> exchange = oktaRestService.doRestCall(apiPath, HttpMethod.GET, SecurityQuestion[].class,
+                    "parameters");
             if (!exchange.getStatusCode().is2xxSuccessful())
             {
                 throw new OktaException(exchange.toString());
@@ -209,7 +215,8 @@ public class FactorServiceImpl implements FactorService
             if (!StringUtils.isEmpty(factor.getErrorSummary()))
             {
                 errorMsg = factor.getErrorSummary();
-            } else if (!StringUtils.isEmpty(factor.getErrorCode()))
+            }
+            else if (!StringUtils.isEmpty(factor.getErrorCode()))
             {
                 errorMsg = factor.getErrorCode();
             }

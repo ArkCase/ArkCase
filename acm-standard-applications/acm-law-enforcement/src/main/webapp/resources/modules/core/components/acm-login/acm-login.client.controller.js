@@ -1,30 +1,15 @@
 'use strict';
 
-var AcmLoginController = [
-        "$q",
-        "$scope",
-        "$document",
-        "$state",
-        "$translate",
-        "UtilService",
-        "Util.TimerService",
-        "Authentication",
-        "Acm.LoginService",
-        "Dialog.BootboxService",
-        "AuditService",
-        "ConfigService",
-        'Admin.ApplicationSettingsService',
-        function($q, $scope, $document, $state, $translate, Util, UtilTimerService, Authentication, AcmLoginService, Dialog, AuditService,
-                ConfigService, ApplicationSettingsService) {
+var AcmLoginController = [ "$q", "$scope", "$document", "$state", "$translate", "UtilService", "Util.TimerService", "Authentication", "Acm.LoginService", "Dialog.BootboxService", "AuditService", "ConfigService", 'Admin.ApplicationSettingsService',
+        function($q, $scope, $document, $state, $translate, Util, UtilTimerService, Authentication, AcmLoginService, Dialog, AuditService, ConfigService, ApplicationSettingsService) {
             var ctrl = this;
 
-            var promiseAppSetting = ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.IDLE_LIMIT).then(
-                    function(response) {
-                        ctrl.idleLimit = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_LIMIT], 600000);
-                        ctrl.idlePull = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_PULL], 5000);
-                        ctrl.idleConfirm = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_CONFIRM], 15000);
-                        return response;
-                    });
+            var promiseAppSetting = ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.IDLE_LIMIT).then(function(response) {
+                ctrl.idleLimit = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_LIMIT], 600000);
+                ctrl.idlePull = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_PULL], 5000);
+                ctrl.idleConfirm = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_CONFIRM], 15000);
+                return response;
+            });
             //var promiseConfig = ConfigService.getComponentConfig("core", "acmLogin").then(function (config) {
             //    ctrl.idleLimit = Util.goodValue(config.idleLimit, 600000);     //600000 - limit of 10 minutes
             //    ctrl.idlePull = Util.goodValue(config.idlePull, 5000);         //5000   - every 5 seconds

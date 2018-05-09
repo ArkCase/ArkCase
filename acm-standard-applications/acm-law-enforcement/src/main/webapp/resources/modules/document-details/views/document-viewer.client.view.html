@@ -1,7 +1,7 @@
 <div class="well" class="snowbound-iframe-div">
     <div ng-switch on="showVideoPlayer">
         <div ng-switch-when="true">
-            <videogular vg-theme="config.theme" vg-auto-play="config.autoPlay">
+            <videogular vg-theme="config.theme" vg-auto-play="config.autoPlay" vg-player-ready="onPlayerReady($API)">
                 <vg-media vg-src="config.sources"></vg-media>
 
                 <vg-controls vg-autohide="true">

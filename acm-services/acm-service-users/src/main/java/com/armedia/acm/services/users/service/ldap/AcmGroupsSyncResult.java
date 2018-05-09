@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
  */
 public class AcmGroupsSyncResult
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private List<AcmGroup> newGroups;
     private List<AcmGroup> modifiedGroups;
     private List<AcmGroup> deletedGroups;
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public AcmGroupsSyncResult()
     {

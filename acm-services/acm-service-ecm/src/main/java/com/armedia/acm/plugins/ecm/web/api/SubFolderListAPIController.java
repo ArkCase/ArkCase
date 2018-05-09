@@ -30,9 +30,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SubFolderListAPIController
 {
 
-    private EcmFileService fileService;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private EcmFileService fileService;
 
     @PreAuthorize("hasPermission(#objectId, #objectType, 'read|group-read|write|group-write')")
     @RequestMapping(value = "/folder/{objectType}/{objectId}/{folderId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

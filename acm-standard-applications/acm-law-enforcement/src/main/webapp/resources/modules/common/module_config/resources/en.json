@@ -180,9 +180,11 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "Choose",
         "not_authorized": "Not Authorized",
+        "not_member": "Not Member",
         "tooltip.move_right": "Move Right",
         "tooltip.move_left": "Move Left",
-        "authorized": "Authorized"
+        "authorized": "Authorized",
+        "member": "Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "Error, 2 characters required."
@@ -649,7 +651,8 @@
         "PARTICIPANT": "Participant",
         "NOTE": "Note",
         "PARTICIPANT-ASSOCIATION": "Participant-Association",
-        "ASSIGNMENT": "Assignment"
+        "ASSIGNMENT": "Assignment",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",

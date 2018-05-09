@@ -647,6 +647,7 @@
             },
             "holiday": {
                 "title": "Holiday Schedule",
+                "label": "Include Weekends as Working Days",
                 "grid": {
                     "holidayName": "Name of Holiday",
                     "holidayDate": "Date of holiday"
@@ -865,11 +866,14 @@
                 "wordCount.label": "Word Count",
                 "costPerSecond.label": "Cost Per Second",
                 "confidenceThreshold.label": "Confidence Threshold",
+                "mediaDurationInSeconds.label": "Media duration threshold in seconds",
+                "silenceBetweenWords.label": "Silence between words in seconds",
                 "validation.messages": {
                     "requiredErrorMsg": "This field is required",
                     "maxErrorMsg": "Value must be less than or equal to 100",
                     "minZeroValueErrorMsg": "Value must be greater than or equal to 0",
-                    "minOneValueErrorMsg": "Value must be greater than or equal to 1"
+                    "minOneValueErrorMsg": "Value must be greater than or equal to 1",
+                    "minPositiveValueErrorMsg": "Value must be greater than 0"
                 }
             }
         }

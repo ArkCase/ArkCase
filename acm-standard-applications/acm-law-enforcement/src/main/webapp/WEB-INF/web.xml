@@ -13,7 +13,7 @@
         
         We can further exclude most of the jars from other types of scanning with <JarScanFilter> element in context.xml.
     -->
-    <absolute-ordering />
+    <absolute-ordering/>
 
     <display-name>ACM Law Enforcement</display-name>
 

@@ -53,17 +53,13 @@ import java.nio.file.StandardCopyOption;
 public class AttachmentCaptureFileListenerIT extends EasyMockSupport
 {
     @Autowired
-    private AttachmentCaptureFileListener attachmentCaptureFileListener;
-
-    @Autowired
     FileObject captureFolder;
-
     @Autowired
     FileObject errorFolder;
-
     @Autowired
     FileObject completedFolder;
-
+    @Autowired
+    private AttachmentCaptureFileListener attachmentCaptureFileListener;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private EcmFileService ecmFileService;
 

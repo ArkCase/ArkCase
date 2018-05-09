@@ -15,10 +15,10 @@ import java.util.stream.Stream;
 
 public class ResetPasswordService
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private UserDao userDao;
     private AcmApplication acmAppConfiguration;
     private AcmEmailSenderService emailSenderService;
-
     /**
      * Formatting string to be used for producing text to inserted as a body in the password reset email. The formatting
      * string accepts the password reset link string twice.
@@ -32,8 +32,14 @@ public class ResetPasswordService
      * e.g: "/reset-password?token=%s"
      */
     private String passwordResetLink;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private EmailBuilder<AcmUser> emailBuilder = (acmUser, messageProps) -> {
+        messageProps.put("to", acmUser.getMail());
+        messageProps.put("subject", passwordResetEmailSubject);
+    };
+    private EmailBodyBuilder<AcmUser> emailBodyBuilder = (user) -> {
+        String link = String.format(passwordResetLink, acmAppConfiguration.getBaseUrl(), user.getPasswordResetToken().getToken());
+        return String.format(passwordResetEmailBodyTemplate, link, link);
+    };
 
     @Async
     public void sendPasswordResetEmail(AcmUser user)
@@ -62,16 +68,6 @@ public class ResetPasswordService
     {
         return userDao.isUserPasswordExpired(userId);
     }
-
-    private EmailBuilder<AcmUser> emailBuilder = (acmUser, messageProps) -> {
-        messageProps.put("to", acmUser.getMail());
-        messageProps.put("subject", passwordResetEmailSubject);
-    };
-
-    private EmailBodyBuilder<AcmUser> emailBodyBuilder = (user) -> {
-        String link = String.format(passwordResetLink, acmAppConfiguration.getBaseUrl(), user.getPasswordResetToken().getToken());
-        return String.format(passwordResetEmailBodyTemplate, link, link);
-    };
 
     public void setUserDao(UserDao userDao)
     {

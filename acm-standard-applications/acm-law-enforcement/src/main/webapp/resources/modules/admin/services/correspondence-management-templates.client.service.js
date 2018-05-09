@@ -16,18 +16,18 @@
  */
 angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload', function($http, Upload) {
     return ({
-        retrieveTemplatesList : retrieveTemplatesList,
-        retrieveActiveVersionTemplatesList : retrieveActiveVersionTemplatesList,
-        retrieveQuerySelectList : retrieveQuerySelectList,
-        downloadByFilename : downloadByFilename,
-        uploadTemplate : uploadTemplate,
-        uploadTemplateWithTimestamp : uploadTemplateWithTimestamp,
-        getTemplateData : getTemplateData,
-        getActivatedTemplatesData : getActivatedTemplatesData,
-        getTemplateVersionData : getTemplateVersionData,
-        saveTemplateData : saveTemplateData,
-        deleteTemplate : deleteTemplate,
-        deleteTemplateByIdAndVersion : deleteTemplateByIdAndVersion
+        retrieveTemplatesList: retrieveTemplatesList,
+        retrieveActiveVersionTemplatesList: retrieveActiveVersionTemplatesList,
+        retrieveQuerySelectList: retrieveQuerySelectList,
+        downloadByFilename: downloadByFilename,
+        uploadTemplate: uploadTemplate,
+        uploadTemplateWithTimestamp: uploadTemplateWithTimestamp,
+        getTemplateData: getTemplateData,
+        getActivatedTemplatesData: getActivatedTemplatesData,
+        getTemplateVersionData: getTemplateVersionData,
+        saveTemplateData: saveTemplateData,
+        deleteTemplate: deleteTemplate,
+        deleteTemplateByIdAndVersion: deleteTemplateByIdAndVersion
     });
 
     /**
@@ -42,9 +42,9 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      */
     function retrieveTemplatesList() {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/admin/templates",
-            cache : false
+            method: "GET",
+            url: "api/latest/plugin/admin/templates",
+            cache: false
         });
     }
     ;
@@ -61,9 +61,9 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      */
     function retrieveActiveVersionTemplatesList() {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/admin/templates/active",
-            cache : false
+            method: "GET",
+            url: "api/latest/plugin/admin/templates/active",
+            cache: false
         });
     }
     ;
@@ -82,8 +82,8 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      */
     function retrieveQuerySelectList(objectType) {
         return $http({
-            method : "GET",
-            url : 'api/latest/plugin/admin/queries/' + objectType
+            method: "GET",
+            url: 'api/latest/plugin/admin/queries/' + objectType
         });
     }
     ;
@@ -102,8 +102,8 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      */
     function getTemplateData(fileName) {
         return $http({
-            method : "GET",
-            url : 'api/latest/plugin/admin/template/' + fileName
+            method: "GET",
+            url: 'api/latest/plugin/admin/template/' + fileName
         });
     }
     ;
@@ -123,8 +123,8 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      */
     function getTemplateData(templateId, fileName) {
         return $http({
-            method : "GET",
-            url : 'api/latest/plugin/admin/template/' + templateId + '/' + fileName
+            method: "GET",
+            url: 'api/latest/plugin/admin/template/' + templateId + '/' + fileName
         });
     }
     ;
@@ -143,8 +143,8 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      */
     function getTemplateVersionData(templateId) {
         return $http({
-            method : "GET",
-            url : 'api/latest/plugin/admin/template/versions/' + templateId
+            method: "GET",
+            url: 'api/latest/plugin/admin/template/versions/' + templateId
         });
     }
     ;
@@ -163,8 +163,8 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      */
     function getActivatedTemplatesData(objectType) {
         return $http({
-            method : "GET",
-            url : 'api/latest/plugin/admin/templates/activated/' + objectType
+            method: "GET",
+            url: 'api/latest/plugin/admin/templates/activated/' + objectType
         });
     }
     ;
@@ -182,9 +182,9 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      */
     function saveTemplateData(template) {
         return $http({
-            method : "PUT",
-            url : 'api/latest/plugin/admin/template',
-            data : template
+            method: "PUT",
+            url: 'api/latest/plugin/admin/template',
+            data: template
         });
     }
     ;
@@ -202,8 +202,8 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      */
     function deleteTemplate(templateId) {
         return $http({
-            method : "DELETE",
-            url : 'api/latest/plugin/admin/template/' + templateId
+            method: "DELETE",
+            url: 'api/latest/plugin/admin/template/' + templateId
         });
     }
     ;
@@ -222,8 +222,8 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      */
     function deleteTemplateByIdAndVersion(templateId, templateVersion) {
         return $http({
-            method : "DELETE",
-            url : 'api/latest/plugin/admin/template/' + templateId + '/' + templateVersion
+            method: "DELETE",
+            url: 'api/latest/plugin/admin/template/' + templateId + '/' + templateVersion
         });
     }
     ;
@@ -259,8 +259,8 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      */
     function uploadTemplate(files) {
         return Upload.upload({
-            url : 'api/latest/plugin/admin/template',
-            file : files
+            url: 'api/latest/plugin/admin/template',
+            file: files
         });
     }
     ;
@@ -279,8 +279,8 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      */
     function uploadTemplateWithTimestamp(files) {
         return Upload.upload({
-            url : 'api/latest/plugin/admin/template/timestamp',
-            file : files
+            url: 'api/latest/plugin/admin/template/timestamp',
+            file: files
         });
     }
     ;

@@ -32,10 +32,6 @@ import java.util.Vector;
  */
 public class AcmAuditRequestInterceptorTest extends EasyMockSupport
 {
-    private AcmAuditRequestInterceptor interceptor;
-    private AuditService mockAuditService;
-    private HttpServletRequest mockRequest;
-
     final UUID requestID = UUID.randomUUID();
     final String remoteAddress = "remote.address";
     final String userId = "userId";
@@ -58,6 +54,9 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
     final String cookieValue2 = "123456";
     final Cookie[] cookies = { new Cookie(cookieName1, cookieValue1), new Cookie(cookieName2, cookieValue2) };
     final String body = "param: [value]";
+    private AcmAuditRequestInterceptor interceptor;
+    private AuditService mockAuditService;
+    private HttpServletRequest mockRequest;
 
     @Before
     public void setUp() throws Exception

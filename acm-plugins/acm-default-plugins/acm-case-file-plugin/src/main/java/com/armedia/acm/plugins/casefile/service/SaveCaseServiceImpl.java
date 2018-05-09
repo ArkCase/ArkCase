@@ -25,13 +25,10 @@ import java.util.List;
  */
 public class SaveCaseServiceImpl implements SaveCaseService
 {
-    private CaseFileDao caseFileDao;
-
-    private PipelineManager<CaseFile, CaseFilePipelineContext> pipelineManager;
-
-    private EcmFileService ecmFileService;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private CaseFileDao caseFileDao;
+    private PipelineManager<CaseFile, CaseFilePipelineContext> pipelineManager;
+    private EcmFileService ecmFileService;
 
     @Override
     @Transactional

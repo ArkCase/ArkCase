@@ -63,19 +63,14 @@ public class AcmCmisObjectList implements Serializable
         this.children = children;
     }
 
-    public void setTotalChildren(int totalChildren)
-    {
-        this.totalChildren = totalChildren;
-    }
-
     public int getTotalChildren()
     {
         return totalChildren;
     }
 
-    public void setCategory(String category)
+    public void setTotalChildren(int totalChildren)
     {
-        this.category = category;
+        this.totalChildren = totalChildren;
     }
 
     public String getCategory()
@@ -83,9 +78,9 @@ public class AcmCmisObjectList implements Serializable
         return category;
     }
 
-    public void setSortBy(String sortBy)
+    public void setCategory(String category)
     {
-        this.sortBy = sortBy;
+        this.category = category;
     }
 
     public String getSortBy()
@@ -93,9 +88,9 @@ public class AcmCmisObjectList implements Serializable
         return sortBy;
     }
 
-    public void setSortDirection(String sortDirection)
+    public void setSortBy(String sortBy)
     {
-        this.sortDirection = sortDirection;
+        this.sortBy = sortBy;
     }
 
     public String getSortDirection()
@@ -103,9 +98,9 @@ public class AcmCmisObjectList implements Serializable
         return sortDirection;
     }
 
-    public void setStartRow(int startRow)
+    public void setSortDirection(String sortDirection)
     {
-        this.startRow = startRow;
+        this.sortDirection = sortDirection;
     }
 
     public int getStartRow()
@@ -113,13 +108,18 @@ public class AcmCmisObjectList implements Serializable
         return startRow;
     }
 
-    public void setMaxRows(int maxRows)
+    public void setStartRow(int startRow)
     {
-        this.maxRows = maxRows;
+        this.startRow = startRow;
     }
 
     public int getMaxRows()
     {
         return maxRows;
+    }
+
+    public void setMaxRows(int maxRows)
+    {
+        this.maxRows = maxRows;
     }
 }

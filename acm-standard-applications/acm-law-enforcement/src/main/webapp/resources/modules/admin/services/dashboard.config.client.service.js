@@ -15,8 +15,8 @@
  */
 angular.module('admin').service('Admin.DashboardConfigService', function($http) {
     return ({
-        getRolesByWidgets : getRolesByWidgets,
-        authorizeRolesForWidget : authorizeRolesForWidget
+        getRolesByWidgets: getRolesByWidgets,
+        authorizeRolesForWidget: authorizeRolesForWidget
     });
 
     /**
@@ -31,8 +31,8 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
      */
     function getRolesByWidgets() {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/dashboard/widgets/rolesByWidget/all"
+            method: "GET",
+            url: "api/latest/plugin/dashboard/widgets/rolesByWidget/all"
         });
     }
 
@@ -47,11 +47,11 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
      */
     function authorizeRolesForWidget(widget) {
         return $http({
-            method : "POST",
-            url : "api/latest/plugin/dashboard/widgets/set",
-            data : widget,
-            headers : {
-                "Content-Type" : "application/json"
+            method: "POST",
+            url: "api/latest/plugin/dashboard/widgets/set",
+            data: widget,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }

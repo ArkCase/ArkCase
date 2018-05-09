@@ -25,13 +25,12 @@ import java.util.List;
 public class OutlookFolderCreatorPasswordMd5ToSha256UpdateExecutorTest extends EasyMockSupport
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private OutlookFolderCreatorPasswordMd5ToSha256UpdateExecutor unit;
     private EntityManager mockEntityManager;
     private TypedQuery mockQuery;
     private AcmCryptoUtils cryptoUtils;
     private AcmEncryptablePropertyEncryptionProperties encryptionProperties;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp()
@@ -73,7 +72,7 @@ public class OutlookFolderCreatorPasswordMd5ToSha256UpdateExecutorTest extends E
                 .andReturn(mockQuery);
         expect(mockQuery.getResultList()).andReturn(found);
 
-        expect(mockEntityManager.merge(first)).andReturn(first);
+        expect(mockEntityManager.merge(first)).andReturn(first).atLeastOnce();
 
         replayAll();
 

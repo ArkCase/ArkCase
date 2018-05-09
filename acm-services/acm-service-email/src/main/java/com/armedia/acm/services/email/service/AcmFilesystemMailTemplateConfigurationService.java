@@ -40,63 +40,9 @@ import java.util.stream.Stream;
 public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTemplateConfigurationService
 {
     private ObjectConverter objectConverter;
-
-    /**
-     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 8, 2017
-     *
-     */
-    private class FilesystemMailTemplateConfigurationExceptionMapper<ME extends AcmEmailServiceException>
-            implements AcmEmailServiceExceptionMapper<ME>
-    {
-
-        /*
-         * (non-Javadoc)
-         * @see
-         * com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper#mapException(com.armedia.acm.services.
-         * email.service.AcmEmailServiceException)
-         */
-        @Override
-        public Object mapException(ME me)
-        {
-            Map<String, Object> errorDetails = new HashMap<>();
-            if (me instanceof AcmEmailConfigurationIOException)
-            {
-                errorDetails.put("error_cause", "READ_WRITE_ERROR.");
-            }
-            else if (me instanceof AcmEmailConfigurationJsonException)
-            {
-                errorDetails.put("error_cause", "JSON_PARSING_ERROR.");
-            }
-            else if (me instanceof AcmEmailConfigurationException)
-            {
-                errorDetails.put("error_cause", "INTERENAL_SERVER_ERROR.");
-            }
-            else
-            {
-                errorDetails.put("error_cause", "UNKOWN_ERROR.");
-            }
-            errorDetails.put("error_message", me.getMessage());
-            return errorDetails;
-        }
-
-        /*
-         * (non-Javadoc)
-         * @see com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper#getStatusCode()
-         */
-        @Override
-        public HttpStatus getStatusCode()
-        {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-
-    }
-
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private Resource templateConfigurations;
-
     private String templateFolderPath;
-
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /*
@@ -134,6 +80,15 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
         {
             readLock.unlock();
         }
+    }
+
+    /**
+     * @param templateConfigurations
+     *            the templateConfigurations to set
+     */
+    public void setTemplateConfigurations(Resource templateConfigurations)
+    {
+        this.templateConfigurations = templateConfigurations;
     }
 
     /*
@@ -464,15 +419,6 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     }
 
     /**
-     * @param templateConfigurations
-     *            the templateConfigurations to set
-     */
-    public void setTemplateConfigurations(Resource templateConfigurations)
-    {
-        this.templateConfigurations = templateConfigurations;
-    }
-
-    /**
      * @param templateFolderPath
      *            the templateFolderPath to set
      */
@@ -489,6 +435,56 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    /**
+     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 8, 2017
+     *
+     */
+    private class FilesystemMailTemplateConfigurationExceptionMapper<ME extends AcmEmailServiceException>
+            implements AcmEmailServiceExceptionMapper<ME>
+    {
+
+        /*
+         * (non-Javadoc)
+         * @see
+         * com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper#mapException(com.armedia.acm.services.
+         * email.service.AcmEmailServiceException)
+         */
+        @Override
+        public Object mapException(ME me)
+        {
+            Map<String, Object> errorDetails = new HashMap<>();
+            if (me instanceof AcmEmailConfigurationIOException)
+            {
+                errorDetails.put("error_cause", "READ_WRITE_ERROR.");
+            }
+            else if (me instanceof AcmEmailConfigurationJsonException)
+            {
+                errorDetails.put("error_cause", "JSON_PARSING_ERROR.");
+            }
+            else if (me instanceof AcmEmailConfigurationException)
+            {
+                errorDetails.put("error_cause", "INTERENAL_SERVER_ERROR.");
+            }
+            else
+            {
+                errorDetails.put("error_cause", "UNKOWN_ERROR.");
+            }
+            errorDetails.put("error_message", me.getMessage());
+            return errorDetails;
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper#getStatusCode()
+         */
+        @Override
+        public HttpStatus getStatusCode()
+        {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
     }
 
 }

@@ -16,11 +16,9 @@ import java.util.List;
 
 public class SignatureDao extends AcmAbstractDao<Signature>
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     @PersistenceContext
     private EntityManager entityManager;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     private String lookupByObjectIdObjectType = "SELECT d " +
             "FROM Signature d " +
             "WHERE d.objectId = :objectId AND " +

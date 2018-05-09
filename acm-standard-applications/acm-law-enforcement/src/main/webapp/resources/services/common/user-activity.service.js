@@ -36,89 +36,83 @@
  </file>
  </example>
  */
-angular.module('services').factory(
-        'UserActivityService',
-        [
-                '$document',
-                '$timeout',
-                function($document, $timeout) {
+angular.module('services').factory('UserActivityService', [ '$document', '$timeout', function($document, $timeout) {
 
-                    // Events handling by service
-                    var userEvents = [ 'keydown', 'keyup', 'click', 'mousemove', 'DOMMouseScroll', 'mousewheel', 'mousedown', 'touchstart',
-                            'touchmove', 'scroll', 'focus' ];
+    // Events handling by service
+    var userEvents = [ 'keydown', 'keyup', 'click', 'mousemove', 'DOMMouseScroll', 'mousewheel', 'mousedown', 'touchstart', 'touchmove', 'scroll', 'focus' ];
 
-                    var timeout = 0;
-                    var timer = null;
-                    var callbacFunc = null;
+    var timeout = 0;
+    var timer = null;
+    var callbacFunc = null;
 
-                    var api = {
+    var api = {
 
-                        /**
-                         * @ngdoc method
-                         * @name start
-                         * @methodOf services.service:UserActivityService
-                         *
-                         * @param {Number} timeout User activity timeout (milliseconds)
-                         * @param {Function} callback Callback function that executes after timeout expired
-                         *
-                         * @description
-                         * Start user activity monitoring
-                         */
-                        start : function(newTimeout, newCallback) {
-                            if (newTimeout) {
-                                this.stop();
+        /**
+         * @ngdoc method
+         * @name start
+         * @methodOf services.service:UserActivityService
+         *
+         * @param {Number} timeout User activity timeout (milliseconds)
+         * @param {Function} callback Callback function that executes after timeout expired
+         *
+         * @description
+         * Start user activity monitoring
+         */
+        start: function(newTimeout, newCallback) {
+            if (newTimeout) {
+                this.stop();
 
-                                _.forEach(userEvents, function(event) {
-                                    $document.bind(event, userAction);
-                                });
+                _.forEach(userEvents, function(event) {
+                    $document.bind(event, userAction);
+                });
 
-                                timeout = newTimeout;
-                                callbacFunc = newCallback;
+                timeout = newTimeout;
+                callbacFunc = newCallback;
 
-                                updateTimer();
-                            }
-                        },
+                updateTimer();
+            }
+        },
 
-                        /**
-                         * @ngdoc method
-                         * @name stop
-                         * @methodOf services.service:UserActivityService
-                         *
-                         * @description
-                         * Stop user activity monitoring
-                         */
-                        stop : function() {
-                            _.forEach(userEvents, function(event) {
-                                $document.unbind(event, userAction);
-                            });
+        /**
+         * @ngdoc method
+         * @name stop
+         * @methodOf services.service:UserActivityService
+         *
+         * @description
+         * Stop user activity monitoring
+         */
+        stop: function() {
+            _.forEach(userEvents, function(event) {
+                $document.unbind(event, userAction);
+            });
 
-                            $timeout.cancel(timer);
-                            timer = null;
-                        }
-                    };
+            $timeout.cancel(timer);
+            timer = null;
+        }
+    };
 
-                    return api;
+    return api;
 
-                    /**
-                     * Executed every time when user action events fired
-                     */
-                    function userAction() {
-                        updateTimer();
-                    }
+    /**
+     * Executed every time when user action events fired
+     */
+    function userAction() {
+        updateTimer();
+    }
 
-                    /**
-                     * Reset timer every time when user perform any action
-                     */
-                    function updateTimer() {
-                        $timeout.cancel(timer);
-                        timer = $timeout(timeoutCallback, timeout);
-                    }
+    /**
+     * Reset timer every time when user perform any action
+     */
+    function updateTimer() {
+        $timeout.cancel(timer);
+        timer = $timeout(timeoutCallback, timeout);
+    }
 
-                    /**
-                     * Performs timeout reset and execute callback function on timeout
-                     */
-                    function timeoutCallback() {
-                        api.stop();
-                        callbacFunc();
-                    }
-                } ]);
+    /**
+     * Performs timeout reset and execute callback function on timeout
+     */
+    function timeoutCallback() {
+        api.stop();
+        callbacFunc();
+    }
+} ]);

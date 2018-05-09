@@ -18,10 +18,8 @@ public class ApplicationMetaInfoService implements InitializingBean, ServletCont
 {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-
-    private String version;
-
     ServletContext servletContext;
+    private String version;
 
     public String getVersion()
     {

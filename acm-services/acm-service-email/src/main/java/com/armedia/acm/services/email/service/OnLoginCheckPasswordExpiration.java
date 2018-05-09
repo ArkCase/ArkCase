@@ -9,9 +9,8 @@ import org.springframework.security.core.Authentication;
 
 public class OnLoginCheckPasswordExpiration implements ApplicationListener<LoginEvent>
 {
-    private ResetPasswordService resetPasswordService;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private ResetPasswordService resetPasswordService;
 
     @Override
     public void onApplicationEvent(LoginEvent loginEvent)

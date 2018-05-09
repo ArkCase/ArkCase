@@ -3,9 +3,9 @@ package com.armedia.acm.auth;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
-
 import com.armedia.acm.services.users.model.event.LdapGroupCreatedEvent;
 import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

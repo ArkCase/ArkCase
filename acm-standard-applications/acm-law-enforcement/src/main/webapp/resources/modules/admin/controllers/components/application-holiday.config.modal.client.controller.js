@@ -1,20 +1,22 @@
 'use strict';
 
-angular.module('admin').controller(
-        'Admin.HolidayModalController',
-        [ '$scope', '$modalInstance', 'params', 'Util.DateService', '$filter',
-                function($scope, $modalInstance, params, UtilDateService, $filter) {
+angular.module('admin').controller('Admin.HolidayModalController', [ '$scope', '$modalInstance', 'params', 'Util.DateService', '$filter', function($scope, $modalInstance, params, UtilDateService, $filter) {
 
-                    $scope.holiday = params.holiday;
-                    $scope.holiday.holidayDate = new Date($scope.holiday.holidayDate);
-                    $scope.onClickCancel = function() {
-                        $modalInstance.dismiss('Cancel');
-                    };
+    $scope.holidays = {
+        holidayName: '',
+        holidayDate: ''
+    }
 
-                    $scope.onClickOk = function() {
-                        $scope.holiday.holidayDate = $filter('date')($scope.holiday.holidayDate, "yyyy-MM-dd");
+    $scope.holidays = params.holidays;
+    $scope.holidays.holidayDate = new Date($scope.holidays.holidayDate);
+    $scope.onClickCancel = function() {
+        $modalInstance.dismiss('Cancel');
+    };
 
-                        $modalInstance.close($scope.holiday);
-                    };
+    $scope.onClickOk = function() {
+        $scope.holidays.holidayDate = $filter('date')($scope.holidays.holidayDate, "yyyy-MM-dd");
 
-                } ]);
+        $modalInstance.close($scope.holidays);
+    };
+
+} ]);

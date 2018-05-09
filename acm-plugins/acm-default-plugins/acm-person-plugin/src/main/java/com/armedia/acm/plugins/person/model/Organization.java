@@ -31,7 +31,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -60,148 +59,104 @@ import java.util.List;
 public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssignedObject
 {
     private static final long serialVersionUID = 7413755227864370548L;
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization", orphanRemoval = true)
+    List<PersonOrganizationAssociation> personAssociations = new ArrayList<>();
     @Id
     @TableGenerator(name = "acm_organization_gen", table = "acm_organization_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_organization", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_organization_gen")
     @Column(name = "cm_organization_id")
     private Long organizationId;
-
     @Column(name = "cm_organization_type")
     private String organizationType;
-
     @Transient
     private List<String> organizationTypes;
-
     @Column(name = "cm_organization_value")
     @Size(min = 1)
     private String organizationValue;
-
     @Column(name = "cm_organization_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
-
     @Column(name = "cm_organization_creator", insertable = true, updatable = false)
     private String creator;
-
     @Column(name = "cm_organization_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
-
     @Column(name = "cm_organization_modifier")
     private String modifier;
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "acm_organization_identification", joinColumns = {
             @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") }, inverseJoinColumns = {
                     @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true) })
     private List<Identification> identifications = new ArrayList<>();
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "acm_organization_postal_address", joinColumns = {
             @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") }, inverseJoinColumns = {
                     @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") })
     private List<PostalAddress> addresses = new ArrayList<>();
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "acm_organization_contact_method", joinColumns = {
             @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") }, inverseJoinColumns = {
                     @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") })
     private List<ContactMethod> contactMethods = new ArrayList<>();
-
-    @OneToMany(cascade = {
-            CascadeType.DETACH,
-            CascadeType.REFRESH,
-            CascadeType.REMOVE,
-            CascadeType.PERSIST })
-    @JoinColumns({
-            @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_organization_id"),
-            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
-    @OrderBy("created ASC")
-    private List<OrganizationAssociation> associationsToObjects = new ArrayList<>();
-
-    @OneToMany(cascade = {
-            CascadeType.DETACH,
-            CascadeType.REFRESH,
-            CascadeType.REMOVE,
-            CascadeType.PERSIST }, orphanRemoval = true, mappedBy = "organization")
-    private List<OrganizationAssociation> associationsFromObjects = new ArrayList<>();
-
     @Column(name = "cm_status")
     private String status;
-
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
-
     /**
      * ContactMethod which is default as phone
      */
     @OneToOne
     @JoinColumn(name = "cm_default_phone")
     private ContactMethod defaultPhone;
-
     /**
      * ContactMethod which is default as email
      */
     @OneToOne
     @JoinColumn(name = "cm_default_email")
     private ContactMethod defaultEmail;
-
     /**
      * PostalAddress which is default
      */
     @OneToOne
     @JoinColumn(name = "cm_default_address")
     private PostalAddress defaultAddress;
-
     /**
      * ContactMethod which is default as url
      */
     @OneToOne
     @JoinColumn(name = "cm_default_url")
     private ContactMethod defaultUrl;
-
     /**
      * ContactMethod which is default as fax
      */
     @OneToOne
     @JoinColumn(name = "cm_default_fax")
     private ContactMethod defaultFax;
-
     /**
      * Identification which is default from identifications
      */
     @OneToOne
     @JoinColumn(name = "cm_default_identification")
     private Identification defaultIdentification;
-
     @Lob
     @Column(name = "cm_details")
     private String details;
-
     @Column(name = "cm_object_type", updatable = false)
     private String objectType = PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE;
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "organization")
     private List<OrganizationDBA> organizationDBAs = new ArrayList<>();
-
     /**
      * OrganizationDBA which is default as dba
      */
     @OneToOne
     @JoinColumn(name = "cm_default_dba")
     private OrganizationDBA defaultDBA;
-
     /**
      * Parent Organization
      */
     @OneToOne
     @JoinColumn(name = "cm_parent_organization")
     private Organization parentOrganization;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization", orphanRemoval = true)
-    List<PersonOrganizationAssociation> personAssociations = new ArrayList<>();
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({
             @JoinColumn(name = "cm_object_id"),
@@ -236,11 +191,6 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
      */
     private void updateChildObjectsWithParentObjectReference()
     {
-        for (OrganizationAssociation pa : getAssociationsFromObjects())
-        {
-            pa.setOrganization(this);
-        }
-
         for (OrganizationDBA dba : getOrganizationDBAs())
         {
             dba.setOrganization(this);
@@ -461,24 +411,14 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
         this.defaultIdentification = defaultIdentification;
     }
 
-    public void setDefaultFax(ContactMethod defaultFax)
-    {
-        this.defaultFax = defaultFax;
-    }
-
     public ContactMethod getDefaultFax()
     {
         return defaultFax;
     }
 
-    public List<OrganizationAssociation> getAssociationsToObjects()
+    public void setDefaultFax(ContactMethod defaultFax)
     {
-        return associationsToObjects;
-    }
-
-    public void setAssociationsToObjects(List<OrganizationAssociation> associationsToObjects)
-    {
-        this.associationsToObjects = associationsToObjects;
+        this.defaultFax = defaultFax;
     }
 
     @Override
@@ -497,16 +437,6 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
     public void setObjectType(String objectType)
     {
         this.objectType = objectType;
-    }
-
-    public List<OrganizationAssociation> getAssociationsFromObjects()
-    {
-        return associationsFromObjects;
-    }
-
-    public void setAssociationsFromObjects(List<OrganizationAssociation> associationsFromObjects)
-    {
-        this.associationsFromObjects = associationsFromObjects;
     }
 
     public List<OrganizationDBA> getOrganizationDBAs()
@@ -565,6 +495,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
         return participants;
     }
 
+    @Override
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
@@ -582,6 +513,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
         this.status = status;
     }
 
+    @Override
     public Boolean getRestricted()
     {
         return restricted;

@@ -522,16 +522,6 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     {
         personAssoc.setParentId(getComplaintId());
         personAssoc.setParentType(ComplaintConstants.OBJECT_TYPE);
-
-        if (personAssoc.getPerson().getAssociationsFromObjects() == null)
-        {
-            personAssoc.getPerson().setAssociationsFromObjects(new ArrayList<>());
-        }
-
-        if (!personAssoc.getPerson().getAssociationsFromObjects().contains(personAssoc))
-        {
-            personAssoc.getPerson().getAssociationsFromObjects().add(personAssoc);
-        }
     }
 
     public Date getDueDate()
@@ -580,6 +570,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         return participants;
     }
 
+    @Override
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
@@ -595,6 +586,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         this.disposition = disposition;
     }
 
+    @Override
     public Boolean getRestricted()
     {
         return restricted;

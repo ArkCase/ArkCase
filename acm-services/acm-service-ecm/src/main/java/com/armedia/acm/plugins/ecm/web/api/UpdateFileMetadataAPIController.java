@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by manoj.dhungana 04/10/2017.
@@ -32,10 +34,9 @@ import java.util.Date;
 public class UpdateFileMetadataAPIController implements ApplicationEventPublisherAware
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileService ecmFileService;
     private ApplicationEventPublisher applicationEventPublisher;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/metadata/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -51,6 +52,9 @@ public class UpdateFileMetadataAPIController implements ApplicationEventPublishe
                     "Invalid incoming file", null);
         }
 
+        Map<String, Object> eventProperties = new HashMap<>();
+        eventProperties.put("oldEcmFile", getEcmFileService().findById(file.getId()));
+
         // Explicitly set modified to force a save to trigger transformer to reindex data when child objects are changed
         // (e.g participants)
         file.setModified(new Date());
@@ -59,7 +63,8 @@ public class UpdateFileMetadataAPIController implements ApplicationEventPublishe
         file = getEcmFileService().updateFile(file);
         if (file != null)
         {
-            publishFileUpdatedEvent(file, authentication, true);
+
+            publishFileUpdatedEvent(file, authentication, true, eventProperties);
             log.info("File update successful [{}]", file);
             return file;
         }
@@ -67,10 +72,11 @@ public class UpdateFileMetadataAPIController implements ApplicationEventPublishe
                 "Failed to update file with fileId: " + fileId, null);
     }
 
-    private void publishFileUpdatedEvent(EcmFile file, Authentication authentication, boolean success)
+    private void publishFileUpdatedEvent(EcmFile file, Authentication authentication, boolean success, Map<String, Object> eventProperties)
     {
         EcmFileUpdatedEvent event;
         event = new EcmFileUpdatedEvent(file, authentication);
+        event.setEventProperties(eventProperties);
         event.setSucceeded(success);
         applicationEventPublisher.publishEvent(event);
     }

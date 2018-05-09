@@ -9,13 +9,14 @@ import java.util.Map;
 public final class AcmSolrUtil
 {
     /**
-     * encoded chars used for ACL
-     */
-    private static Map<Character, String> encodedChars;
-    /**
      * special characters in Solr
      */
     private static final String solrSpecialCharacters;
+    /**
+     * encoded chars used for ACL
+     */
+    private static Map<Character, String> encodedChars;
+
     static
     {
         solrSpecialCharacters = "\\+!():,^[]\"{}~*?|&;/ ";

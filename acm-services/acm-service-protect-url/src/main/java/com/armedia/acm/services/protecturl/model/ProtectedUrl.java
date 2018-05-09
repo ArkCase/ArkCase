@@ -115,15 +115,15 @@ public class ProtectedUrl implements AcmObject, AcmEntity
         return this.objectType;
     }
 
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
     @Override
     public Long getId()
     {
         return id;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
     }
 
     @Override

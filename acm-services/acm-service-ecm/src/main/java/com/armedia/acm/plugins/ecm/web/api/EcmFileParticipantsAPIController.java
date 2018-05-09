@@ -11,7 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -22,9 +26,8 @@ import java.util.List;
 @RequestMapping({ "/api/v1/service/ecm/participants", "/api/latest/service/ecm/participants" })
 public class EcmFileParticipantsAPIController
 {
-    private EcmFileParticipantService fileParticipantService;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private EcmFileParticipantService fileParticipantService;
 
     @PreAuthorize("hasPermission(#objectId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/FILE/{objectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

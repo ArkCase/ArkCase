@@ -24,14 +24,16 @@ import java.util.stream.Collectors;
  */
 public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshedEvent>
 {
+    private static final Logger log = LoggerFactory.getLogger(AcmDataUpdateManager.class);
     private AcmDataUpdateService dataUpdateService;
-
+    private final Consumer<AcmDataUpdateExecutor> dataUpdateExecutor = service -> {
+        log.debug("Execute updates from: [{}]", service.getUpdateId());
+        service.execute();
+        dataUpdateService.save(service.getUpdateId());
+    };
     private List<AcmDataUpdateExecutor> dataUpdateExecutors;
-
     @Autowired(required = false)
     private ExtensionDataUpdateExecutors extensionDataUpdateExecutors;
-
-    private static final Logger log = LoggerFactory.getLogger(AcmDataUpdateManager.class);
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event)
@@ -62,12 +64,6 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
             }
         }
     }
-
-    private final Consumer<AcmDataUpdateExecutor> dataUpdateExecutor = service -> {
-        log.debug("Execute updates from: [{}]", service.getUpdateId());
-        service.execute();
-        dataUpdateService.save(service.getUpdateId());
-    };
 
     public void setDataUpdateService(AcmDataUpdateService dataUpdateService)
     {

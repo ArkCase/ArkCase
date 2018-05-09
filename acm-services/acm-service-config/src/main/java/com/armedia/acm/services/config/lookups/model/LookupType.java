@@ -8,8 +8,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum LookupType
 {
-    STANDARD_LOOKUP("standardLookup", StandardLookup.class), INVERSE_VALUES_LOOKUP("inverseValuesLookup",
-            InverseValuesLookup.class), NESTED_LOOKUP("nestedLookup", NestedLookup.class);
+    STANDARD_LOOKUP("standardLookup", StandardLookup.class),
+    INVERSE_VALUES_LOOKUP(
+            "inverseValuesLookup",
+            InverseValuesLookup.class),
+    NESTED_LOOKUP("nestedLookup", NestedLookup.class);
 
     private String typeName;
 
@@ -19,17 +22,6 @@ public enum LookupType
     {
         this.typeName = typeName;
         this.lookupClass = lookupClass;
-    }
-
-    @JsonValue
-    public String getTypeName()
-    {
-        return typeName;
-    }
-
-    public Class<? extends AcmLookup<?>> getLookupClass()
-    {
-        return lookupClass;
     }
 
     @JsonCreator
@@ -44,5 +36,16 @@ public enum LookupType
             }
         }
         throw new RuntimeException("Unknown lookup type: " + typeName + "!");
+    }
+
+    @JsonValue
+    public String getTypeName()
+    {
+        return typeName;
+    }
+
+    public Class<? extends AcmLookup<?>> getLookupClass()
+    {
+        return lookupClass;
     }
 }

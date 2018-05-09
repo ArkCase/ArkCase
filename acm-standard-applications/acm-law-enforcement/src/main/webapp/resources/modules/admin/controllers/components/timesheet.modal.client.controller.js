@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('admin').controller('Admin.TimesheetModalController',['$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+angular.module('admin').controller('Admin.TimesheetModalController', [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
 
     $scope.chargeRoleItem = {
-            chargeRole : '',
-            rate : 0,
-            active : ''
-      };
+        chargeRole: '',
+        rate: 0,
+        active: ''
+    };
 
     $scope.chargeRoleItem.chargeRole = params.chargeRoleItem.chargeRole;
     $scope.chargeRoleItem.rate = params.chargeRoleItem.rate;
@@ -22,6 +22,6 @@ angular.module('admin').controller('Admin.TimesheetModalController',['$scope', '
         $modalInstance.close({
             chargeRoleItem: $scope.chargeRoleItem
         });
-   };
+    };
 
-}]);
+} ]);

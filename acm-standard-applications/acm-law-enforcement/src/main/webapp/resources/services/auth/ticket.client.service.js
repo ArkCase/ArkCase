@@ -19,11 +19,11 @@ angular.module('services').factory('TicketService', [ '$http', function($http) {
          * @description
          * Retrieves a new acm authentication ticket for the currently logged in user
          */
-        getArkCaseTicket : function() {
+        getArkCaseTicket: function() {
             return $http({
-                url : 'api/v1/authenticationtoken/',
-                method : 'GET',
-                data : ''
+                url: 'api/v1/authenticationtoken/',
+                method: 'GET',
+                data: ''
             });
         }
     }

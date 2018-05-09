@@ -96,10 +96,6 @@ public class DashboardServiceTest extends EasyMockSupport
         casesByQueue.setWidgetId(1209L);
         casesByQueue.setWidgetName("casesByQueue");
 
-        Widget weather = new Widget();
-        weather.setWidgetId(1211L);
-        weather.setWidgetName("weather");
-
         List<Widget> widgetsByUserRoles = new ArrayList<>();
         widgetsByUserRoles.add(news);
         widgetsByUserRoles.add(teamWorkload);
@@ -109,7 +105,6 @@ public class DashboardServiceTest extends EasyMockSupport
         listOfDashboardWidgetOnly.add(news);
         listOfDashboardWidgetOnly.add(teamWorkload);
         listOfDashboardWidgetOnly.add(casesByQueue);
-        listOfDashboardWidgetOnly.add(weather);
 
         expect(mockUserDao.findByUserId(user.getUserId())).andReturn(user);
         expect(mockDashboardDao.getDashboardConfigForUserAndModuleName(user, "DASHBOARD")).andReturn(dashboard).anyTimes();

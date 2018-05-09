@@ -8,13 +8,12 @@
  *
  *{@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/dashboard/services/dashboard.widgets.service.js modules/dashboard/services/dashboard.widgets.service.js}
  *
- *  The WidgetService is used for fetching data from weather api service and for fetching RSS data.
+ *  The WidgetService is used for fetching data from news api service and for fetching RSS data.
  */
-angular.module('dashboard').factory('Dashboard.WidgetService', [ '$http', '$log', '$window', function($http, $log, $window) {
+angular.module('dashboard').factory('Dashboard.WidgetService', [ '$http', function($http) {
 
     var data = {
-        'getNews' : getNews,
-        'getWeather' : getWeather
+        'getNews': getNews
     };
 
     /**
@@ -52,84 +51,14 @@ angular.module('dashboard').factory('Dashboard.WidgetService', [ '$http', '$log'
      */
     function getNews(url, query) {
         var configObj = {
-            params : {
-                callback : "JSON_CALLBACK",
-                format : "json",
-                q : query
+            params: {
+                callback: "JSON_CALLBACK",
+                format: "json",
+                q: query
             }
         };
         return makeRequest(url, configObj).then(function(response) {
             return (response && response.data && response.data.query.results) ? response.data.query.results.rss.channel : null;
         });
-    }
-
-    /**
-     * @ngdoc method
-     * @name getWeather
-     * @methodOf dashboard.service:Dashboard.WidgetService
-     *
-     * @description
-     * This method make a HTTP GET request to the weather service, get needed data from the JSON response and
-     * puts it in the weather object that is returned and is used by the widget.
-     *
-     * @param {String} url - The base url of the weather service api without parameters.
-     * @param {String} appid - the APPID ( unique application ID, provided by the weather service )
-     * @param {String} location - The location for which the method is going to fetch a weather data.
-     * @param {String} zip - The zip code for which the method is going to fetch a weather data.
-     * @param {String} units - units in which retrieved data will be represented ( metric, imperial )
-     * @param {String} type - accuracy level of the search (accurate, like. 'accurate' returns exact match value, 'like' returns results by searching for that substring)
-     *
-     * @returns {HttpPromise} Feature info about weather object created in this method and filed with the needed
-     * data fetched from the weather api service.
-     */
-    function getWeather(url, appid, location, zip, units, type) {
-
-        var configObj = {
-            params : {
-                callback : "JSON_CALLBACK",
-                units : units,
-                q : location,
-                zip : zip,
-                APPID : appid,
-                type : type
-            }
-        };
-
-        return makeRequest(url, configObj).then(function(response) {
-            var weather = {
-                location : {},
-                temp : {},
-                clouds : null
-            };
-            if (response.data) {
-                if (response.data.main) {
-
-                    weather.temp.current = response.data.main.temp;
-                    weather.temp.min = response.data.main.temp_min;
-                    weather.temp.max = response.data.main.temp_max;
-                    weather.location.city = response.data.name;
-                    weather.location.country = response.data.sys.country;
-                    weather.location.zip = response.params.zip;
-
-                }
-
-                weather.imgId = response.data.weather[0].icon ? response.data.weather[0].icon : undefined;
-
-                $window.localStorage['lastWeatherData'] = JSON.stringify(weather);
-
-                return response.data && 200 === response.data.cod ? weather : null;
-
-            } else {
-                return JSON.parse($window.localStorage['lastWeatherData'] || '{}');
-            }
-        });
-    }
-
-    return data;
-
-    function serviceError(errorResponse) {
-        $log.error("JSONP request failed for Dashboard.WidgetService");
-        $log.error(errorResponse);
-        return $q.reject(errorResponse);
     }
 } ]);

@@ -3,10 +3,11 @@ package com.armedia.acm.services.transcribe.pipline.postsave;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import com.armedia.acm.services.transcribe.model.Transcribe;
-import com.armedia.acm.services.transcribe.model.TranscribeBusinessProcessModel;
+import com.armedia.acm.services.transcribe.model.TranscribeActionType;
 import com.armedia.acm.services.transcribe.pipline.TranscribePipelineContext;
-import com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+import com.armedia.acm.services.transcribe.service.TranscribeEventPublisher;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +23,7 @@ public class TranscribeBusinessProcessHandler implements PipelineHandler<Transcr
 
     private ArkCaseTranscribeService arkCaseTranscribeService;
     private RuntimeService activitiRuntimeService;
+    private TranscribeEventPublisher transcribeEventPublisher;
 
     @Override
     public void execute(Transcribe entity, TranscribePipelineContext pipelineContext) throws PipelineProcessException
@@ -45,6 +47,8 @@ public class TranscribeBusinessProcessHandler implements PipelineHandler<Transcr
         {
             getActivitiRuntimeService().deleteProcessInstance(pipelineContext.getProcessId(), "Pipeline rollback action.");
         }
+
+        getTranscribeEventPublisher().publish(entity, TranscribeActionType.ROLLBACK.toString());
     }
 
     public ArkCaseTranscribeService getArkCaseTranscribeService()
@@ -65,5 +69,15 @@ public class TranscribeBusinessProcessHandler implements PipelineHandler<Transcr
     public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
     {
         this.activitiRuntimeService = activitiRuntimeService;
+    }
+
+    public TranscribeEventPublisher getTranscribeEventPublisher()
+    {
+        return transcribeEventPublisher;
+    }
+
+    public void setTranscribeEventPublisher(TranscribeEventPublisher transcribeEventPublisher)
+    {
+        this.transcribeEventPublisher = transcribeEventPublisher;
     }
 }

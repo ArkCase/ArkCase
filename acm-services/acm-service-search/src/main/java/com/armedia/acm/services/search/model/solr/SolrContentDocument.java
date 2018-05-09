@@ -14,6 +14,8 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
 
     private List<String> skipAdditionalPropertiesInURL;
 
+    private String cmis_version_series_id_s;
+
     public String getUrl()
     {
         String url = "literal.allow_acl_ss=" + (getAllow_acl_ss() == null ? null : String.join("&literal.allow_acl_ss=", getAllow_acl_ss()))
@@ -87,5 +89,15 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
     public void setSkipAdditionalPropertiesInURL(List<String> skipAdditionalPropertiesInURL)
     {
         this.skipAdditionalPropertiesInURL = skipAdditionalPropertiesInURL;
+    }
+
+    public String getCmis_version_series_id_s()
+    {
+        return cmis_version_series_id_s;
+    }
+
+    public void setCmis_version_series_id_s(String cmis_version_series_id_s)
+    {
+        this.cmis_version_series_id_s = cmis_version_series_id_s;
     }
 }

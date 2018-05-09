@@ -45,6 +45,27 @@ public class StreamServiceImpl implements StreamService
     private FolderAndFilesUtils folderAndFilesUtils;
     private EcmFileService ecmFileService;
 
+    /**
+     * Close the given resource.
+     *
+     * @param resource
+     *            The resource to be closed.
+     */
+    private static void close(Closeable resource)
+    {
+        if (resource != null)
+        {
+            try
+            {
+                resource.close();
+            }
+            catch (IOException ignore)
+            {
+                // Do nothing. Silent close.
+            }
+        }
+    }
+
     @Override
     public void stream(Long id, String version, HttpServletRequest request, HttpServletResponse response)
             throws AcmUserActionFailedException, MuleException, AcmObjectNotFoundException, IOException
@@ -377,27 +398,6 @@ public class StreamServiceImpl implements StreamService
                     output.write(buffer, 0, (int) toRead + read);
                     break;
                 }
-            }
-        }
-    }
-
-    /**
-     * Close the given resource.
-     *
-     * @param resource
-     *            The resource to be closed.
-     */
-    private static void close(Closeable resource)
-    {
-        if (resource != null)
-        {
-            try
-            {
-                resource.close();
-            }
-            catch (IOException ignore)
-            {
-                // Do nothing. Silent close.
             }
         }
     }

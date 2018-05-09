@@ -17,8 +17,8 @@ import io.milton.resource.PropFindableResource;
 public abstract class AcmAbstractResource implements DigestResource, PropFindableResource
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
     private final AcmFileSystemResourceFactory resourceFactory;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     public AcmAbstractResource(AcmFileSystemResourceFactory resourceFactory)
     {

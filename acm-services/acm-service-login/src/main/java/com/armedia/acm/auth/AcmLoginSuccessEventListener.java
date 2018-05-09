@@ -17,12 +17,6 @@ public class AcmLoginSuccessEventListener
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
-    {
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
-
-    @Override
     public void onApplicationEvent(InteractiveAuthenticationSuccessEvent authenticationSuccessEvent)
     {
         Authentication auth = authenticationSuccessEvent.getAuthentication();
@@ -35,5 +29,11 @@ public class AcmLoginSuccessEventListener
     public ApplicationEventPublisher getApplicationEventPublisher()
     {
         return applicationEventPublisher;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }

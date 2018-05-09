@@ -2,37 +2,19 @@
 
 angular.module('people').controller(
         'Person.PicturesController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                '$timeout',
-                'UtilService',
-                'ConfigService',
-                'Person.InfoService',
-                'MessageService',
-                'Helper.ObjectBrowserService',
-                'Helper.UiGridService',
-                'Authentication',
-                'Person.PicturesService',
-                'EcmService',
-                'ObjectService',
-                'PermissionsService',
-                function($scope, $stateParams, $translate, $modal, $timeout, Util, ConfigService, PersonInfoService, MessageService,
-                        HelperObjectBrowserService, HelperUiGridService, Authentication, PersonPicturesService, EcmService, ObjectService,
-                        PermissionsService) {
+        [ '$scope', '$stateParams', '$translate', '$modal', '$timeout', 'UtilService', 'ConfigService', 'Person.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', 'Person.PicturesService', 'EcmService', 'ObjectService', 'PermissionsService',
+                function($scope, $stateParams, $translate, $modal, $timeout, Util, ConfigService, PersonInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, PersonPicturesService, EcmService, ObjectService, PermissionsService) {
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "people",
-                        componentId : "pictures",
-                        retrieveObjectInfo : PersonInfoService.getPersonInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "people",
+                        componentId: "pictures",
+                        retrieveObjectInfo: PersonInfoService.getPersonInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -42,7 +24,7 @@ angular.module('people').controller(
                     var currentUser = '';
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     Authentication.queryUserInfo().then(function(data) {
@@ -52,7 +34,7 @@ angular.module('people').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.PERSON
+                            objectType: ObjectService.ObjectTypes.PERSON
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -76,7 +58,7 @@ angular.module('people').controller(
                     $scope.editRow = function(rowEntity) {
 
                         EcmService.getFile({
-                            fileId : rowEntity.object_id_s
+                            fileId: rowEntity.object_id_s
                         }).$promise.then(function(data) {
                             $scope.image = data;
                             showModal(data, true);
@@ -110,14 +92,14 @@ angular.module('people').controller(
                         params.isDefault = $scope.isDefault(image);
 
                         var modalInstance = $modal.open({
-                            animation : true,
-                            templateUrl : "modules/people/views/components/person-pictures-upload.dialog.view.html",
-                            controller : 'Person.PictureUploadDialogController',
-                            size : 'md',
-                            scope : $scope,
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            animation: true,
+                            templateUrl: "modules/people/views/components/person-pictures-upload.dialog.view.html",
+                            controller: 'Person.PictureUploadDialogController',
+                            size: 'md',
+                            scope: $scope,
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -127,14 +109,15 @@ angular.module('people').controller(
 
                             if (data.isEdit) {
                                 data.image.modified = null;
-                                PersonPicturesService.savePersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image).then(
-                                        function() {
-                                            $scope.objectInfo.defaultPicture = data.image;
-                                            MessageService.succsessAction();
-                                            $scope.$emit("report-object-updated", $scope.objectInfo);
-                                        }, function() {
-                                            MessageService.errorAction();
-                                        });
+                                PersonPicturesService.savePersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image).then(function() {
+                                    if (data.isDefault) {
+                                        $scope.objectInfo.defaultPicture = data.image;
+                                    }
+                                    MessageService.succsessAction();
+                                    $scope.$emit("report-object-updated", $scope.objectInfo);
+                                }, function() {
+                                    MessageService.errorAction();
+                                });
                             } else if (data.file) {
                                 var name = data.file.name.substr(0, (data.file.name.lastIndexOf('.'))); //get file name example.png -> example
                                 var ext = data.file.name.substr(data.file.name.lastIndexOf('.')); //get file extension example.png -> .png
@@ -146,12 +129,23 @@ angular.module('people').controller(
                                 if (found) {
                                     MessageService.error($translate.instant("people.comp.pictures.message.error.uploadSamePicture"));
                                 } else {
-                                    PersonPicturesService.insertPersonPicture($scope.objectInfo.id, data.file, data.isDefault,
-                                            data.image.description).then(function() {
+                                    PersonPicturesService.insertPersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image.description).then(function(returnResponse) {
+                                        var uploadedPictureId = returnResponse.data.fileId;
+
                                         MessageService.succsessAction();
-                                        $timeout(function() {
-                                            $scope.refresh();
-                                        }, 2000);
+                                        EcmService.getFile({
+                                            fileId: uploadedPictureId
+                                        }).$promise.then(function(uploadedPic) {
+                                            $scope.image = uploadedPic;
+
+                                            if (data.isDefault) {
+                                                $scope.objectInfo.defaultPicture = $scope.image;
+                                            }
+                                            $timeout(function() {
+                                                $scope.$emit("report-object-updated", $scope.objectInfo);
+                                            }, 2000);
+                                        });
+
                                     }, function() {
                                         MessageService.errorAction();
                                     });
@@ -182,7 +176,6 @@ angular.module('people').controller(
                     };
 
                     $scope.reloadGrid = function() {
-
                         if ($scope.objectInfo.id) {
                             $scope.gridOptions.data = [];
                             PersonPicturesService.listPersonPictures($scope.objectInfo.id).then(function(result) {

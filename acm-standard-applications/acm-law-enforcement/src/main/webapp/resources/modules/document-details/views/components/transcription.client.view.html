@@ -45,24 +45,40 @@
         <div class="panel-footer">
             <div class="row">
                 <div class="col-lg-12">
-                    <button class="btn btn-xs btn-primary" ng-disabled="transcribeForm.$invalid || items == null || items.length === 0" ng-click="saveChanges()">
-                        <i class="fa fa-floppy-o"></i>
+                    <button class="btn btn-xs btn-primary" ng-disabled="transcribeForm.$invalid || items == null || items.length === 0 || isSaveLoading" ng-click="saveChanges()">
+                        <i class="fa fa-floppy-o" ng-if="!isSaveLoading"></i>
+                        <span ng-if="isSaveLoading">
+                             <i class="fa fa-circle-o-notch fa-spin" ></i>
+                        </span>
                         <span translate>documentDetails.comp.transcription.buttons.save</span>
                     </button>
                     <div class="pull-right">
-                        <a ng-click="diagram()" href="" class="inline animated btn btn-default btn-xs ng-scope" ng-if="transcribeDataModel.processId != null && transcribeDataModel.status != 'DRAFT' && transcribeDataModel.status != 'COMPLETED' && transcribeDataModel.status != 'FAILED'">
+                        <a ng-click="diagram()" href="" class="inline animated btn btn-default btn-xs ng-scope" ng-if="transcribeDataModel.processId != null">
                             <i class="fa fa-sitemap"></i>
                         </a>
-                        <button class="btn btn-xs btn-default" ng-click="cancel()" ng-disabled="transcribeDataModel.status != 'QUEUED'" ng-if="transcribeDataModel.type === 'AUTOMATIC'">
+                        <button class="btn btn-xs btn-default" ng-click="cancel()" ng-disabled="transcribeDataModel.status != 'QUEUED' || isCancelLoading" ng-if="transcribeDataModel.type === 'AUTOMATIC'">
+                            <span ng-if="isCancelLoading">
+                                  <i class="fa fa-circle-o-notch fa-spin"></i>
+                             </span>
                             <span translate>documentDetails.comp.transcription.buttons.cancel</span>
                         </button>
-                        <button class="btn btn-xs btn-default" ng-click="transcribe()" ng-disabled="transcribeDataModel.status === 'QUEUED' || transcribeDataModel.status === 'PROCESSING'">
+                        <button class="btn btn-xs btn-default" ng-click="transcribe()" ng-disabled="transcribeDataModel.status === 'QUEUED' || transcribeDataModel.status === 'PROCESSING' || (transcribeDataModel.status === 'COMPLETED' && transcribeDataModel.processId !== null) || isTranscribeLoading">
+                            <span ng-if="isTranscribeLoading">
+                            <i class="fa fa-circle-o-notch fa-spin"></i>
+                            </span>
                             <span translate>documentDetails.comp.transcription.buttons.transcribe</span>
                         </button>
-                        <button class="btn btn-xs btn-default" ng-click="complete()" ng-disabled="transcribeDataModel.status === 'COMPLETED'" ng-if="transcribeDataModel.type === 'MANUAL'">
+                        <button class="btn btn-xs btn-default" ng-click="complete()" ng-disabled="transcribeDataModel.status === 'COMPLETED' || isCompleteLoading" ng-if="transcribeDataModel.type === 'MANUAL'">
+                            <span ng-if="isCompleteLoading">
+                                  <i class="fa fa-circle-o-notch fa-spin"></i>
+                             </span>
                             <span translate>documentDetails.comp.transcription.buttons.complete</span>
                         </button>
-                        <button class="btn btn-xs btn-info" ng-click="compile()" ng-disabled="items == null || items.length === 0">
+                        <button class="btn btn-xs btn-info" ng-click="compile()"
+                                ng-disabled="items == null || items.length === 0 || isCompileLoading">
+                             <span ng-if="isCompileLoading">
+                                  <i class="fa fa-circle-o-notch fa-spin"></i>
+                             </span>
                             <span translate>documentDetails.comp.transcription.buttons.compile</span>
                         </button>
                     </div>

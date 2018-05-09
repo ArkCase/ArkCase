@@ -116,7 +116,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         searchControls.setReturningAttributes(new String[] { "cn", "member" });
 
-        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(syncConfig);
+        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(syncConfig, template);
 
         Optional<String> lastSyncTimestamp = ldapLastSyncDate
                 .map(it -> convertToDirectorySpecificTimestamp(it, syncConfig.getDirectoryType()));

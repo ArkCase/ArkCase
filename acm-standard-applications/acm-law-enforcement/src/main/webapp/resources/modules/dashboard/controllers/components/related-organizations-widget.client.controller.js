@@ -2,32 +2,23 @@
 
 angular.module('dashboard.relOrganizations', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('relOrganizations', {
-        title : 'preference.overviewWidgets.relOrganizations.title',
-        description : 'dashboard.widgets.relOrganizations.description',
-        controller : 'Dashboard.RelatedOrganizationsController',
-        reload : true,
-        templateUrl : 'modules/dashboard/views/components/related-organizations-widget.client.view.html',
-        commonName : 'relOrganizations'
+        title: 'preference.overviewWidgets.relOrganizations.title',
+        description: 'dashboard.widgets.relOrganizations.description',
+        controller: 'Dashboard.RelatedOrganizationsController',
+        reload: true,
+        templateUrl: 'modules/dashboard/views/components/related-organizations-widget.client.view.html',
+        commonName: 'relOrganizations'
     });
 }).controller(
         'Dashboard.RelatedOrganizationsController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                'Organization.InfoService',
-                'ObjectAssociation.Service',
-                'Helper.ObjectBrowserService',
-                'Helper.UiGridService',
-                'Object.LookupService',
-                function($scope, $stateParams, $translate, OrganizationInfoService, ObjectAssociationService, HelperObjectBrowserService,
-                        HelperUiGridService, ObjectLookupService) {
+        [ '$scope', '$stateParams', '$translate', 'Organization.InfoService', 'ObjectAssociation.Service', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.LookupService',
+                function($scope, $stateParams, $translate, OrganizationInfoService, ObjectAssociationService, HelperObjectBrowserService, HelperUiGridService, ObjectLookupService) {
 
                     var modules = [ {
-                        name : "ORGANIZATION",
-                        configName : "organizations",
-                        getInfo : OrganizationInfoService.getOrganizationInfo,
-                        validateInfo : OrganizationInfoService.validateOrganizationInfo
+                        name: "ORGANIZATION",
+                        configName: "organizations",
+                        getInfo: OrganizationInfoService.getOrganizationInfo,
+                        validateInfo: OrganizationInfoService.validateOrganizationInfo
                     } ];
 
                     var module = _.find(modules, function(module) {
@@ -35,25 +26,25 @@ angular.module('dashboard.relOrganizations', [ 'adf.provider' ]).config(function
                     });
 
                     $scope.gridOptions = {
-                        enableColumnResizing : true,
-                        columnDefs : []
+                        enableColumnResizing: true,
+                        columnDefs: []
                     };
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : module.configName,
-                        componentId : "main",
-                        retrieveObjectInfo : module.getInfo,
-                        validateObjectInfo : module.validateInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: module.configName,
+                        componentId: "main",
+                        retrieveObjectInfo: module.getInfo,
+                        validateObjectInfo: module.validateInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         },
-                        onConfigRetrieved : function(componentConfig) {
+                        onConfigRetrieved: function(componentConfig) {
                             onConfigRetrieved(componentConfig);
                         }
                     });
@@ -80,10 +71,10 @@ angular.module('dashboard.relOrganizations', [ 'adf.provider' ]).config(function
                     ObjectLookupService.getOrganizationRelationTypes().then(function(relationshipTypes) {
                         for (var i = 0; i < relationshipTypes.length; i++) {
                             $scope.relationshipTypes.push({
-                                "key" : relationshipTypes[i].inverseKey,
-                                "value" : relationshipTypes[i].inverseValue,
-                                "inverseKey" : relationshipTypes[i].key,
-                                "inverseValue" : relationshipTypes[i].value
+                                "key": relationshipTypes[i].inverseKey,
+                                "value": relationshipTypes[i].inverseValue,
+                                "inverseKey": relationshipTypes[i].key,
+                                "inverseValue": relationshipTypes[i].value
                             });
                         }
 

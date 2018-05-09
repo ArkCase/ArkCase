@@ -19,9 +19,8 @@ import java.util.Date;
  */
 public class ClearanceVerificationSystemExportService
 {
-    private EcmFileService ecmFileService;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private EcmFileService ecmFileService;
 
     public void exportDeterminationRecord(
             String adjudicatorId,

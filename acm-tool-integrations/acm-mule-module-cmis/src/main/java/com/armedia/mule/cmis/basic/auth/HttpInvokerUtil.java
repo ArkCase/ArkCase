@@ -11,10 +11,8 @@ import org.slf4j.MDC;
  */
 public class HttpInvokerUtil
 {
-    private static final Logger log = LoggerFactory.getLogger(HttpInvokerUtil.class);
-
     public static final String EXTERNAL_AUTH_KEY = "X-Alfresco-Remote-User";
-
+    private static final Logger log = LoggerFactory.getLogger(HttpInvokerUtil.class);
     private static final String ANONYMOUS_USER = "anonymous";
 
     private static final String EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY = "MDC_ALFRESCO_USER_ID";

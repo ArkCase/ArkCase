@@ -23,55 +23,28 @@ public class AcmCalendarEvent
 {
 
     static final String ZONED_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ssXXX";
-
-    public static enum Priority
-    {
-        LOW, NORMAL, HIGH
-    }
-
-    public static enum Sensitivity
-    {
-        CONFIDENTIAL, PRIVATE, PERSONAL, NORMAL
-    }
-
     private String eventId;
-
     private String calendarId;
-
     private String objectType;
-
     private String objectId;
-
     private String subject;
-
     private String location;
-
     @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime start;
-
     @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime end;
-
     private boolean allDayEvent;
-
     private RecurrenceDetails recurrenceDetails;
-
     private String details;
-
     private int remindIn = -1;
-
     private Sensitivity sensitivity = Sensitivity.NORMAL;
-
     private Priority priority = Priority.LOW;
-
     private boolean sendEmails;
-
     private List<Attendee> attendees;
-
     private List<AcmCalendarEventAttachment> files;
 
     /**
@@ -361,6 +334,16 @@ public class AcmCalendarEvent
     public void setFiles(List<AcmCalendarEventAttachment> files)
     {
         this.files = files;
+    }
+
+    public static enum Priority
+    {
+        LOW, NORMAL, HIGH
+    }
+
+    public static enum Sensitivity
+    {
+        CONFIDENTIAL, PRIVATE, PERSONAL, NORMAL
     }
 
 }

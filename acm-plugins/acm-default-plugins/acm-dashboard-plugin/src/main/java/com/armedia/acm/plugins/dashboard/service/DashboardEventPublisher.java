@@ -15,8 +15,8 @@ import org.springframework.security.core.Authentication;
 public class DashboardEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private ApplicationEventPublisher eventPublisher;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private ApplicationEventPublisher eventPublisher;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)

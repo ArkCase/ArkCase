@@ -2,20 +2,8 @@
 
 angular.module('cases').controller(
         'CasesListController',
-        [
-                '$scope',
-                '$state',
-                '$stateParams',
-                '$translate',
-                'UtilService',
-                'ObjectService',
-                'Case.ListService',
-                'Case.InfoService',
-                'Helper.ObjectBrowserService',
-                'ServCommService',
-                'MessageService',
-                function($scope, $state, $stateParams, $translate, Util, ObjectService, CaseListService, CaseInfoService,
-                        HelperObjectBrowserService, ServCommService, MessageService) {
+        [ '$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ServCommService', 'MessageService',
+                function($scope, $state, $stateParams, $translate, Util, ObjectService, CaseListService, CaseInfoService, HelperObjectBrowserService, ServCommService, MessageService) {
 
                     /*//
                      // Check to see if complaint page is shown as a result returned by Frevvo
@@ -41,8 +29,8 @@ angular.module('cases').controller(
 
                             var objectTypeString = $translate.instant('common.objectTypes.' + data.objectType);
                             var objectWasCreatedMessage = $translate.instant('common.objects.objectWasCreatedMessage ', {
-                                objectTypeString : objectTypeString,
-                                objectId : data.objectId
+                                objectTypeString: objectTypeString,
+                                objectId: data.objectId
                             });
                             if (frevvoRequest) {
                                 ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, data.objectId);
@@ -55,28 +43,28 @@ angular.module('cases').controller(
 
                     //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
                     new HelperObjectBrowserService.Tree({
-                        scope : $scope,
-                        state : $state,
-                        stateParams : $stateParams,
-                        moduleId : "cases",
-                        resetTreeData : function() {
+                        scope: $scope,
+                        state: $state,
+                        stateParams: $stateParams,
+                        moduleId: "cases",
+                        resetTreeData: function() {
                             return CaseListService.resetCasesTreeData();
                         },
-                        updateTreeData : function(start, n, sort, filters, query, nodeData) {
+                        updateTreeData: function(start, n, sort, filters, query, nodeData) {
                             return CaseListService.updateCasesTreeData(start, n, sort, filters, query, nodeData);
                         },
-                        getTreeData : function(start, n, sort, filters, query) {
+                        getTreeData: function(start, n, sort, filters, query) {
                             return CaseListService.queryCasesTreeData(start, n, sort, filters, query);
                         },
-                        getNodeData : function(caseId) {
+                        getNodeData: function(caseId) {
                             return CaseInfoService.getCaseInfo(caseId);
                         },
-                        makeTreeNode : function(caseInfo) {
+                        makeTreeNode: function(caseInfo) {
                             return {
-                                nodeId : Util.goodValue(caseInfo.id, 0),
-                                nodeType : ObjectService.ObjectTypes.CASE_FILE,
-                                nodeTitle : Util.goodValue(caseInfo.title),
-                                nodeToolTip : Util.goodValue(caseInfo.title)
+                                nodeId: Util.goodValue(caseInfo.id, 0),
+                                nodeType: ObjectService.ObjectTypes.CASE_FILE,
+                                nodeTitle: Util.goodValue(caseInfo.title),
+                                nodeToolTip: Util.goodValue(caseInfo.title)
                             };
                         }
                     });

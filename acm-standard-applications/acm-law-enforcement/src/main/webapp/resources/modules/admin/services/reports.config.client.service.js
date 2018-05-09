@@ -16,16 +16,16 @@
  */
 angular.module('admin').service('Admin.ReportsConfigService', function($http) {
     return ({
-        getReports : getReports,
-        getReportsByMatchingName : getReportsByMatchingName,
-        getReportsPaged : getReportsPaged,
-        getUserGroups : getUserGroups,
-        getGroupsForReport : getGroupsForReport,
-        getGroupsForReportByName : getGroupsForReportByName,
-        getReportsUserGroups : getReportsUserGroups,
-        saveReportsUserGroups : saveReportsUserGroups,
-        saveReports : saveReports,
-        syncReports : syncReports
+        getReports: getReports,
+        getReportsByMatchingName: getReportsByMatchingName,
+        getReportsPaged: getReportsPaged,
+        getUserGroups: getUserGroups,
+        getGroupsForReport: getGroupsForReport,
+        getGroupsForReportByName: getGroupsForReportByName,
+        getReportsUserGroups: getReportsUserGroups,
+        saveReportsUserGroups: saveReportsUserGroups,
+        saveReports: saveReports,
+        syncReports: syncReports
     });
 
     /**
@@ -40,8 +40,8 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getReports() {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/report/get/pentaho"
+            method: "GET",
+            url: "api/latest/plugin/report/get/pentaho"
         });
     }
 
@@ -61,13 +61,13 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getReportsByMatchingName(data) {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/report/pentaho",
-            params : {
-                fn : (data.filterWord ? data.filterWord : ""),
-                dir : (data.dir ? data.dir : "ASC"),
-                start : (data.start ? data.start : 0),
-                n : (data.n ? data.n : 50)
+            method: "GET",
+            url: "api/latest/plugin/report/pentaho",
+            params: {
+                fn: (data.filterWord ? data.filterWord : ""),
+                dir: (data.dir ? data.dir : "ASC"),
+                start: (data.start ? data.start : 0),
+                n: (data.n ? data.n : 50)
             }
         });
     }
@@ -87,12 +87,12 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getReportsPaged(data) {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/report/pentaho",
-            params : {
-                dir : (data.dir ? data.dir : "ASC"),
-                start : (data.start ? data.start : 0),
-                n : (data.n ? data.n : 50)
+            method: "GET",
+            url: "api/latest/plugin/report/pentaho",
+            params: {
+                dir: (data.dir ? data.dir : "ASC"),
+                start: (data.start ? data.start : 0),
+                n: (data.n ? data.n : 50)
             }
         });
     }
@@ -109,8 +109,8 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getUserGroups() {
         return $http({
-            method : "GET",
-            url : "api/latest/users/groups/get"
+            method: "GET",
+            url: "api/latest/users/groups/get"
         });
     }
 
@@ -130,13 +130,14 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getGroupsForReport(data) {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/report/" + data.report.key + "/groups",
-            params : {
-                authorized : data.isAuthorized,
-                dir : (data.dir ? data.dir : ""),
-                n : (data.n ? data.n : 50),
-                start : (data.start ? data.start : 0)
+            method: "GET",
+            url: "api/latest/plugin/report/" + data.report.key + "/groups",
+            cache: false,
+            params: {
+                authorized: data.isAuthorized,
+                dir: (data.dir ? data.dir : ""),
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0)
             }
         });
     }
@@ -157,14 +158,14 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getGroupsForReportByName(data) {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/report/" + data.report.key + "/groups",
-            params : {
-                authorized : data.isAuthorized,
-                dir : (data.dir ? data.dir : ""),
-                n : (data.n ? data.n : 50),
-                start : (data.start ? data.start : 0),
-                fq : (data.filterWord ? data.filterWord : "")
+            method: "GET",
+            url: "api/latest/plugin/report/" + data.report.key + "/groups",
+            params: {
+                authorized: data.isAuthorized,
+                dir: (data.dir ? data.dir : ""),
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0),
+                fq: (data.filterWord ? data.filterWord : "")
             }
         });
     }
@@ -181,8 +182,8 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getReportsUserGroups() {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/report/reporttogroupsmap"
+            method: "GET",
+            url: "api/latest/plugin/report/reporttogroupsmap"
         });
     }
 
@@ -198,11 +199,11 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function saveReportsUserGroups(reportsUserGroups) {
         return $http({
-            method : "POST",
-            url : "api/latest/plugin/report/reporttogroupsmap",
-            data : reportsUserGroups,
-            headers : {
-                "Content-Type" : "application/json"
+            method: "POST",
+            url: "api/latest/plugin/report/reporttogroupsmap",
+            data: reportsUserGroups,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }
@@ -219,11 +220,11 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function saveReports(reports) {
         return $http({
-            method : "POST",
-            url : "api/latest/plugin/report/save",
-            data : reports,
-            headers : {
-                "Content-Type" : "application/json"
+            method: "POST",
+            url: "api/latest/plugin/report/save",
+            data: reports,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }
@@ -239,10 +240,10 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function syncReports() {
         return $http({
-            method : "PUT",
-            url : "api/latest/plugin/report/sync",
-            headers : {
-                "Content-Type" : "application/json"
+            method: "PUT",
+            url: "api/latest/plugin/report/sync",
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }

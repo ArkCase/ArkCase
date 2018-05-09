@@ -5,7 +5,6 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
-import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import com.armedia.acm.services.users.service.group.LdapGroupService;
 import com.armedia.acm.services.users.web.api.SecureLdapController;
 
@@ -22,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.Valid;
+
 import java.util.Base64;
 
 @Controller
@@ -34,7 +35,7 @@ public class LdapGroupAPIController extends SecureLdapController
 
     @RequestMapping(value = "/{directory:.+}/groups", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup createLdapGroup(@RequestBody AcmGroup group, @PathVariable String directory)
+    public AcmGroup createLdapGroup(@RequestBody @Valid AcmGroup group, @PathVariable String directory)
             throws AcmAppErrorJsonMsg
     {
 
@@ -63,7 +64,7 @@ public class LdapGroupAPIController extends SecureLdapController
 
     @RequestMapping(value = "/{directory:.+}/groups/{parentGroupName:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup createLdapSubgroup(@RequestBody AcmGroup group, @PathVariable String directory,
+    public AcmGroup createLdapSubgroup(@RequestBody @Valid AcmGroup group, @PathVariable String directory,
             @PathVariable String parentGroupName)
             throws AcmAppErrorJsonMsg
     {

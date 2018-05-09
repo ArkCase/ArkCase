@@ -180,9 +180,11 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "Выберите",
         "not_authorized": "Не авторизовано",
+        "not_member": "ru_Not Member",
         "tooltip.move_right": "Двигаться вправо",
         "tooltip.move_left": "Двигай влево",
-        "authorized": "Уполномоченный"
+        "authorized": "Уполномоченный",
+        "member": "ru_Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "Ошибка, требуется 2 символа."
@@ -649,7 +651,8 @@
         "PARTICIPANT": "Участник",
         "NOTE": "Заметка",
         "PARTICIPANT-ASSOCIATION": "Участник-Aссоциация",
-        "ASSIGNMENT": "Назначение"
+        "ASSIGNMENT": "Назначение",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "Выберите пользователя",

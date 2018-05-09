@@ -44,24 +44,21 @@ import java.nio.file.Paths;
 public class ConfigurationComparator implements ApplicationContextAware
 {
     /**
-     * XML Document builder.
-     */
-    private DocumentBuilder docBuilder;
-
-    /**
-     * Logger instance.
-     */
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
      * Built-in Spring configuration files are copied to this folder
      */
     String builtinFolderPath;
-
     /**
      * Custom Spring configuration files are copied to this folder
      */
     String customFolderPath;
+    /**
+     * XML Document builder.
+     */
+    private DocumentBuilder docBuilder;
+    /**
+     * Logger instance.
+     */
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * Constructor.

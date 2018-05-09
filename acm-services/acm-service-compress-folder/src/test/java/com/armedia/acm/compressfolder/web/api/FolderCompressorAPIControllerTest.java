@@ -10,9 +10,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.armedia.acm.compressfolder.DefaultFolderCompressor;
 import com.armedia.acm.compressfolder.FolderCompressor;
-import com.armedia.acm.compressfolder.FolderCompressorException;
 import com.armedia.acm.compressfolder.model.CompressNode;
 import com.armedia.acm.compressfolder.model.FileFolderNode;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.easymock.EasyMockSupport;
@@ -119,7 +119,7 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
 
         long folderId = 101l;
 
-        expect(mockedFolderCompressor.compressFolder(folderId)).andThrow(new FolderCompressorException(folderId));
+        expect(mockedFolderCompressor.compressFolder(folderId)).andThrow(new AcmFolderException(folderId));
 
         replayAll();
 

@@ -94,13 +94,13 @@ public class GetPentahoReportsAPIController
         this.reportService = reportService;
     }
 
-    public void setPentahoFilePropertiesService(PentahoFilePropertiesService pentahoFilePropertiesService)
-    {
-        this.pentahoFilePropertiesService = pentahoFilePropertiesService;
-    }
-
     public PentahoFilePropertiesService getPentahoFilePropertiesService()
     {
         return pentahoFilePropertiesService;
+    }
+
+    public void setPentahoFilePropertiesService(PentahoFilePropertiesService pentahoFilePropertiesService)
+    {
+        this.pentahoFilePropertiesService = pentahoFilePropertiesService;
     }
 }
