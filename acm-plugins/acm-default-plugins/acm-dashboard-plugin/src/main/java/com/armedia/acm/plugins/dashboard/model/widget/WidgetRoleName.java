@@ -7,7 +7,7 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
  * Created by marjan.stefanoski on 10/1/2014.
  */
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class WidgetRoleName
+public class WidgetRoleName implements Comparable<WidgetRoleName>
 {
 
     private String name;
@@ -50,6 +50,12 @@ public class WidgetRoleName
     public int hashCode()
     {
         return name != null ? name.hashCode() : 0;
+    }
+
+    @Override
+    public int compareTo(WidgetRoleName widgetRoleName)
+    {
+        return this.getName().toLowerCase().compareTo(widgetRoleName.getName().toLowerCase());
     }
 
     @Override

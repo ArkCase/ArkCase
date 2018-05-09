@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
+import com.armedia.acm.plugins.dashboard.exception.AcmWidgetException;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
@@ -25,6 +26,7 @@ import org.springframework.security.core.Authentication;
 import javax.servlet.http.HttpSession;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -269,6 +271,63 @@ public class DashboardService
             stringBuffer.append(" ");
         }
         return stringBuffer.toString();
+    }
+
+    public List<WidgetRoleName> getRolesByWidgetPaged(String widgetName, String sortBy, String sortDirection, Integer startRow,
+            Integer maxRows,
+            Boolean authorized, List<RolesGroupByWidgetDto> rolesGroupsPerWidget) throws AcmWidgetException
+    {
+        return getRolesGroupsPaged(rolesGroupsPerWidget, widgetName, sortBy, sortDirection, startRow, maxRows, authorized, "");
+    }
+
+    public List<WidgetRoleName> getRolesByWidget(String widgetName, String sortBy, String sortDirection, Integer startRow,
+            Integer maxRows, String filterName, Boolean authorized, List<RolesGroupByWidgetDto> rolesGroupsPerWidget)
+            throws AcmWidgetException
+    {
+        return getRolesGroupsPaged(rolesGroupsPerWidget, widgetName, sortBy, sortDirection, startRow, maxRows, authorized, filterName);
+    }
+
+    public List<WidgetRoleName> getRolesGroupsPaged(List<RolesGroupByWidgetDto> rolesGroupsPerWidget, String widgetName,
+            String sortBy,
+            String sortDirection, Integer startRow, Integer maxRows, Boolean authorized, String filterName) throws AcmWidgetException
+    {
+        List<RolesGroupByWidgetDto> rolesGroupsByWidgetDto = addNotAuthorizedRolesPerWidget(rolesGroupsPerWidget);
+        RolesGroupByWidgetDto roleGroupByWidgetDto = rolesGroupsByWidgetDto.stream()
+                .filter(roleGroup -> roleGroup.getWidgetName().equalsIgnoreCase(widgetName)).findFirst()
+                .orElseThrow(() -> new AcmWidgetException("There are no roles/groups for the widget " + widgetName));
+
+        List<WidgetRoleName> result = null;
+
+        if (authorized)
+        {
+            result = new ArrayList<>(roleGroupByWidgetDto.getWidgetAuthorizedRoles());
+        }
+        else
+        {
+            result = new ArrayList<>(roleGroupByWidgetDto.getWidgetNotAuthorizedRoles());
+        }
+
+        if (sortDirection.contains("DESC"))
+        {
+            Collections.sort(result, Collections.reverseOrder());
+        }
+        else
+        {
+            Collections.sort(result);
+        }
+
+        if (startRow > result.size())
+        {
+            return result;
+        }
+        maxRows = maxRows > result.size() ? result.size() : maxRows;
+
+        if (!filterName.isEmpty())
+        {
+            result.removeIf(widgetRoleName -> !(widgetRoleName.getName().toLowerCase().contains(filterName.toLowerCase())));
+        }
+
+        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
     public AcmPlugin getDashboardPlugin()
