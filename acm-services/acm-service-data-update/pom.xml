@@ -61,6 +61,7 @@
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-document-repository-plugin</artifactId>
+            <version>${acm.version}</version>
         </dependency>
     </dependencies>
 
