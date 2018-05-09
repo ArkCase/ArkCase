@@ -27,6 +27,7 @@ package com.armedia.acm.services.functionalaccess.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 
 import org.slf4j.Logger;
@@ -34,10 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -62,6 +60,34 @@ public class SaveApplicationRolesToGroupsAPIController
 
         boolean retval = getFunctionalAccessService().saveApplicationRolesToGroups(applicationRolesToGroups, auth);
         LOG.debug("Successfuly save ? " + retval);
+
+        return retval;
+    }
+
+    @RequestMapping(value = "/{roleName:.+}/groups", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public boolean addGroupsToApplicationRole(@PathVariable(value = "roleName") String roleName, @RequestBody List<String> groups,
+            Authentication auth) throws AcmEncryptionException
+    {
+        LOG.debug("Adding groups to an application role [{}]", roleName);
+
+        boolean retval = getFunctionalAccessService().saveGroupsToApplicationRole(groups, roleName, auth);
+
+        LOG.debug("Successfuly save ? {}", retval);
+
+        return retval;
+    }
+
+    @RequestMapping(value = "/{roleName:.+}/groups", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public boolean deleteGroupsFromApplicationRole(@PathVariable(value = "roleName") String roleName, @RequestBody List<String> groups,
+            Authentication auth)
+    {
+        LOG.debug("Deleting groups from an application role [{}]", roleName);
+
+        boolean retval = getFunctionalAccessService().removeGroupsToApplicationRole(groups, roleName, auth);
+
+        LOG.debug("Successfuly deleted ? {}", retval);
 
         return retval;
     }

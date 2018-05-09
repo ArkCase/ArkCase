@@ -31,6 +31,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmWidgetException;
 import com.armedia.acm.plugins.dashboard.model.widget.RolesGroupByWidgetDto;
+import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleName;
 import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -40,12 +41,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,6 +81,62 @@ public class GetRolesByWidgetsAPIController
         {
             throw new AcmWidgetException("No Roles per Widgets found", e);
         }
+    }
+
+    @RequestMapping(value = "/{widgetName:.+}/roles", method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+    })
+    @ResponseBody
+    public List<WidgetRoleName> findRolesByWidgetPaged(
+            @PathVariable(value = "widgetName") String widgetName,
+            @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "widgetName") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows, Authentication authentication,
+            HttpSession session)
+            throws IOException
+    {
+        List<WidgetRoleName> result = new ArrayList<>();
+        try
+        {
+            result = dashboardService.getRolesByWidgetPaged(widgetName, sortBy, sortDirection, startRow, maxRows, authorized,
+                    getWidgetDao().getRolesGroupByWidget());
+            dashboardService.raiseGetEvent(authentication, session, getWidgetDao().getRolesGroupByWidget(), true);
+        }
+        catch (Exception e)
+        {
+            log.warn("Can't retrieve privileges", e);
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/{widgetName:.+}/roles", params = { "fn" }, method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+    })
+    @ResponseBody
+    public List<WidgetRoleName> findRolesByWidgetPaged(
+            @PathVariable(value = "widgetName") String widgetName,
+            @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "fn") String filterName,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "widgetName") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows, Authentication authentication,
+            HttpSession session)
+    {
+        List<WidgetRoleName> result = new ArrayList<>();
+        try
+        {
+            result = dashboardService.getRolesByWidget(widgetName, sortBy, sortDirection, startRow, maxRows, filterName, authorized,
+                    getWidgetDao().getRolesGroupByWidget());
+            dashboardService.raiseGetEvent(authentication, session, getWidgetDao().getRolesGroupByWidget(), true);
+        }
+        catch (Exception e)
+        {
+            log.warn("Can't retrieve privileges {}", e);
+        }
+        return result;
     }
 
     public WidgetDao getWidgetDao()
