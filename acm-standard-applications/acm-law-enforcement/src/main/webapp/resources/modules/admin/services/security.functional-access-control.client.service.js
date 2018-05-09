@@ -16,16 +16,16 @@
  */
 angular.module('admin').service('Admin.FunctionalAccessControlService', function($http) {
     return ({
-        getAppRoles : getAppRoles,
-        getAppRolesPaged : getAppRolesPaged,
-        getAppRolesByName : getAppRolesByName,
-        getUserGroups : getUserGroups,
-        getAppUserToGroups : getAppUserToGroups,
-        saveAppRolesToGroups : saveAppRolesToGroups,
-        addGroupsToApplicationRole : addGroupsToApplicationRole,
-        deleteGroupsFromApplicationRole : deleteGroupsFromApplicationRole,
-        getGroupsForRolePaged : getGroupsForRolePaged,
-        getGroupsForRoleByName : getGroupsForRoleByName
+        getAppRoles: getAppRoles,
+        getAppRolesPaged: getAppRolesPaged,
+        getAppRolesByName: getAppRolesByName,
+        getUserGroups: getUserGroups,
+        getAppUserToGroups: getAppUserToGroups,
+        saveAppRolesToGroups: saveAppRolesToGroups,
+        addGroupsToApplicationRole: addGroupsToApplicationRole,
+        deleteGroupsFromApplicationRole: deleteGroupsFromApplicationRole,
+        getGroupsForRolePaged: getGroupsForRolePaged,
+        getGroupsForRoleByName: getGroupsForRoleByName
     });
 
     /**
@@ -40,8 +40,8 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function getAppRoles() {
         return $http({
-            method : 'GET',
-            url : 'api/latest/functionalaccess/roles'
+            method: 'GET',
+            url: 'api/latest/functionalaccess/roles'
         });
     }
 
@@ -57,12 +57,12 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function getAppRolesPaged(data) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/functionalaccess/appRoles',
-            cache : false,
-            params : {
-                n : (data.n ? data.n : 50),
-                start : (data.start ? data.start : 0)
+            method: 'GET',
+            url: 'api/latest/functionalaccess/appRoles',
+            cache: false,
+            params: {
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0)
             }
         });
     }
@@ -79,12 +79,12 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function getAppRolesByName(data) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/functionalaccess/appRoles',
-            cache : false,
-            params : {
-                fq : (data.filterWord ? data.filterWord : ""),
-                n : (data.n ? data.n : 50)
+            method: 'GET',
+            url: 'api/latest/functionalaccess/appRoles',
+            cache: false,
+            params: {
+                fq: (data.filterWord ? data.filterWord : ""),
+                n: (data.n ? data.n : 50)
             }
         });
     }
@@ -101,9 +101,9 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function getUserGroups() {
         return $http({
-            method : 'GET',
-            url : 'api/latest/users/groups/get',
-            cache : false
+            method: 'GET',
+            url: 'api/latest/users/groups/get',
+            cache: false
         });
     }
 
@@ -119,9 +119,9 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function getAppUserToGroups() {
         return $http({
-            method : 'GET',
-            url : 'api/latest/functionalaccess/rolestogroups',
-            cache : false
+            method: 'GET',
+            url: 'api/latest/functionalaccess/rolestogroups',
+            cache: false
         });
     }
 
@@ -137,12 +137,12 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function saveAppRolesToGroups(appRolesToGroups) {
         return $http({
-            method : 'POST',
-            url : 'api/latest/functionalaccess/rolestogroups',
-            data : appRolesToGroups,
-            cache : false,
-            headers : {
-                'Content-Type' : 'application/json'
+            method: 'POST',
+            url: 'api/latest/functionalaccess/rolestogroups',
+            data: appRolesToGroups,
+            cache: false,
+            headers: {
+                'Content-Type': 'application/json'
             }
         });
     }
@@ -160,12 +160,12 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function addGroupsToApplicationRole(roleName, groups) {
         return $http({
-            method : 'PUT',
-            url : 'api/latest/functionalaccess/' + roleName + '/groups',
-            data : groups,
-            cache : false,
-            headers : {
-                'Content-Type' : 'application/json'
+            method: 'PUT',
+            url: 'api/latest/functionalaccess/' + roleName + '/groups',
+            data: groups,
+            cache: false,
+            headers: {
+                'Content-Type': 'application/json'
             }
         });
     }
@@ -183,12 +183,12 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function deleteGroupsFromApplicationRole(roleName, groups) {
         return $http({
-            method : 'DELETE',
-            url : 'api/latest/functionalaccess/' + roleName + '/groups',
-            data : groups,
-            cache : false,
-            headers : {
-                'Content-Type' : 'application/json'
+            method: 'DELETE',
+            url: 'api/latest/functionalaccess/' + roleName + '/groups',
+            data: groups,
+            cache: false,
+            headers: {
+                'Content-Type': 'application/json'
             }
         });
     }
@@ -208,13 +208,13 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function getGroupsForRolePaged(data) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/functionalaccess/' + data.roleName.key + '/groups',
-            cache : false,
-            params : {
-                start : (data.start ? data.start : 0),
-                n : (data.n ? data.n : 50),
-                authorized : data.isAuthorized
+            method: 'GET',
+            url: 'api/latest/functionalaccess/' + data.roleName.key + '/groups',
+            cache: false,
+            params: {
+                start: (data.start ? data.start : 0),
+                n: (data.n ? data.n : 50),
+                authorized: data.isAuthorized
             }
         });
     }
@@ -234,14 +234,14 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function getGroupsForRoleByName(data) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/functionalaccess/' + data.roleName.key + '/groups',
-            cache : false,
-            params : {
-                start : (data.start ? data.start : 0),
-                n : (data.n ? data.n : 50),
-                fq : (data.filterWord ? data.filterWord : ""),
-                authorized : data.isAuthorized
+            method: 'GET',
+            url: 'api/latest/functionalaccess/' + data.roleName.key + '/groups',
+            cache: false,
+            params: {
+                start: (data.start ? data.start : 0),
+                n: (data.n ? data.n : 50),
+                fq: (data.filterWord ? data.filterWord : ""),
+                authorized: data.isAuthorized
             }
         });
     }
