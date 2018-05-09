@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.dashboard.model.widget.RolesGroupByWidgetDto;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRole;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleName;
+import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
@@ -44,10 +45,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -66,6 +64,9 @@ public class SetAuthorizedWidgetRolesAPIController
     private UserDao userDao;
     private WidgetDao widgetDao;
     private WidgetEventPublisher eventPublisher;
+
+    private DashboardService dashboardService;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/set", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -90,6 +91,56 @@ public class SetAuthorizedWidgetRolesAPIController
         {
             throw e;
         }
+    }
+
+    @RequestMapping(value = "/roleGroupToWidget", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public RolesGroupByWidgetDto setAuthorizedWidgetRoles(
+            @RequestBody List<String> rolesGroups,
+            @RequestParam(value = "widgetName") String widgetName,
+            @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "widgetName") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
+            Authentication authentication,
+            HttpSession session) throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
+        RolesGroupByWidgetDto result = null;
+        List<RolesGroupByWidgetDto> rolesGroupsByWidgetDto;
+        RolesGroupByWidgetDto roleGroupByWidgetDtoUpdated;
+        try
+        {
+            rolesGroupsByWidgetDto = dashboardService
+                    .addNotAuthorizedRolesPerWidget(getWidgetDao().getRolesGroupByWidget());
+            roleGroupByWidgetDtoUpdated = rolesGroupsByWidgetDto.stream()
+                    .filter(roleGroup -> roleGroup.getWidgetName().equalsIgnoreCase(widgetName)).findFirst()
+                    .orElseThrow(() -> new AcmWidgetException("There is no widget " + widgetName));
+
+            if (authorized)
+            {
+                rolesGroups.forEach(roleGroup -> {
+                    roleGroupByWidgetDtoUpdated.getWidgetAuthorizedRoles().add(new WidgetRoleName(roleGroup));
+                    roleGroupByWidgetDtoUpdated.getWidgetNotAuthorizedRoles().removeIf(rg -> rg.getName().equalsIgnoreCase(roleGroup));
+                });
+            }
+            else
+            {
+                rolesGroups.forEach(roleGroup -> {
+                    roleGroupByWidgetDtoUpdated.getWidgetNotAuthorizedRoles().add(new WidgetRoleName(roleGroup));
+                    roleGroupByWidgetDtoUpdated.getWidgetAuthorizedRoles().removeIf(rg -> rg.getName().equalsIgnoreCase(roleGroup));
+                });
+            }
+            log.info("Updating authorized roles for dashboard widget: [{}]", roleGroupByWidgetDtoUpdated.getWidgetName());
+
+            result = updateWidgetRolesAuthorization(roleGroupByWidgetDtoUpdated);
+            raiseSetEvent(authentication, session, result, true);
+        }
+        catch (Exception e)
+        {
+            log.warn("You cannot update the widget {}", e.getMessage());
+        }
+        return result;
     }
 
     protected void raiseSetEvent(Authentication authentication, HttpSession session, RolesGroupByWidgetDto rolesPerWidget,
@@ -182,4 +233,15 @@ public class SetAuthorizedWidgetRolesAPIController
     {
         this.eventPublisher = eventPublisher;
     }
+
+    public DashboardService getDashboardService()
+    {
+        return dashboardService;
+    }
+
+    public void setDashboardService(DashboardService dashboardService)
+    {
+        this.dashboardService = dashboardService;
+    }
+
 }
