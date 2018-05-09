@@ -108,17 +108,17 @@ public class RolesPrivilegesService
      * @return list of objects (PrivilegeItem)
      * @throws AcmRolesPrivilegesException
      */
-    public List<PrivilegeItem> getPrivilegesByRole(String roleName, Boolean authorized, String filterQuery, String sortDirection,
+    public List<PrivilegeItem> getPrivilegesByRole(String roleName, Boolean authorized, String filterName, String sortDirection,
             Integer startRow, Integer maxRows)
             throws AcmRolesPrivilegesException
     {
         Map<String, String> privileges = retrievePrivilegesByAuthorization(authorized, roleName);
 
-        return getPrivilegesPaged(privileges, sortDirection, startRow, maxRows, filterQuery);
+        return getPrivilegesPaged(privileges, sortDirection, startRow, maxRows, filterName);
     }
 
     public List<PrivilegeItem> getPrivilegesPaged(Map<String, String> privileges, String sortDirection,
-            Integer startRow, Integer maxRows, String filterQuery)
+            Integer startRow, Integer maxRows, String filterName)
     {
         List<PrivilegeItem> result = privileges.entrySet().stream()
                 .map(privilege -> new PrivilegeItem(privilege.getKey(), privilege.getValue()))
@@ -139,9 +139,9 @@ public class RolesPrivilegesService
         }
         maxRows = maxRows > privileges.size() ? privileges.size() : maxRows;
 
-        if (!filterQuery.isEmpty())
+        if (!filterName.isEmpty())
         {
-            result.removeIf(privilegeItem -> !(privilegeItem.getValue().toLowerCase().contains(filterQuery.toLowerCase())));
+            result.removeIf(privilegeItem -> !(privilegeItem.getValue().toLowerCase().contains(filterName.toLowerCase())));
         }
 
         return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());

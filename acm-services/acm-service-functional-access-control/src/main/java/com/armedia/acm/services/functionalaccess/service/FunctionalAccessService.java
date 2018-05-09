@@ -34,11 +34,11 @@ public interface FunctionalAccessService
      *            startRow, maxRows, filterQuery
      * @return application roles
      */
-    public List<String> getApplicationRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterQuery);
+    public List<String> getApplicationRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterName);
 
     public List<String> getGroupsByRole(Authentication auth, String role, Integer startRow, Integer maxRows,
             String sortDirection,
-            Boolean authorized, String filterQuery) throws MuleException;
+            Boolean authorized, String filterName) throws MuleException;
 
     /**
      * Retrieve groups for an application roles paged & sorted(SOLR sort)

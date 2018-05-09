@@ -89,8 +89,6 @@ angular.module('admin').controller('Admin.DashboardConfigController', [ '$scope'
         }
     }
 
-    var tempWidgetsPromise = dashboardConfigService.getRolesByWidgets();
-    var tempDashboardModulePromise = ConfigService.getModuleConfig("dashboard");
     function appRoleUnauthorizedFilter(searchData) {
         var data = {
             isAuthorized: false,
@@ -103,11 +101,6 @@ angular.module('admin').controller('Admin.DashboardConfigController', [ '$scope'
         });
     }
 
-    $scope.filterArrayByProperty = filterArrayByProperty;
-    //filter functions
-    $scope.chooseAppRoleFilter = chooseAppRoleFilter;
-    $scope.appRoleUnauthorizedFilter = appRoleUnauthorizedFilter;
-    $scope.appRoleAuthorizedFilter = appRoleAuthorizedFilter;
     function appRoleAuthorizedFilter(searchData) {
         var data = {
             isAuthorized: true,
@@ -155,17 +148,6 @@ angular.module('admin').controller('Admin.DashboardConfigController', [ '$scope'
         $scope.retrieveDataScroll(data, "getRolesGroupsByName", "selectedNotAuthorized");
     }
 
-    function filterArrayByProperty(filterWord, arrayFrom, property) {
-        var result = [];
-        if (!Util.isEmpty(filterWord)) {
-            result = _.filter(arrayFrom, function(item) {
-                return ($translate.instant(item[property]).toLowerCase().indexOf(filterWord.toLowerCase()) >= 0);
-            });
-        } else {
-            result = angular.copy(arrayFrom);
-        }
-        return result;
-    }
     $scope.onObjSelect = function(selectedObject) {
         $scope.lastSelectedWidget = [];
         $scope.lastSelectedWidget = selectedObject;
@@ -194,9 +176,6 @@ angular.module('admin').controller('Admin.DashboardConfigController', [ '$scope'
         });
     };
 
-    $scope.onObjSelect = function(selectedObject) {
-        $scope.lastSelectedRole = [];
-        $scope.lastSelectedRole = selectedObject;
     $scope.onAuthRoleSelected = function(selectedObject, authorized, notAuthorized) {
         var toBeAdded = [];
         var toBeRemoved = [];

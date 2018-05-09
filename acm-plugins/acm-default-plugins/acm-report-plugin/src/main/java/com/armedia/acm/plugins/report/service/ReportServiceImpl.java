@@ -349,14 +349,14 @@ public class ReportServiceImpl implements ReportService
     }
 
     @Override
-    public List<String> getReportToGroupsByName(String sortDirection, Integer startRow, Integer maxRows, String filterQuery)
+    public List<String> getReportToGroupsByName(String sortDirection, Integer startRow, Integer maxRows, String filterName)
             throws IOException
     {
-        return getReportToGroups(sortDirection, startRow, maxRows, filterQuery);
+        return getReportToGroups(sortDirection, startRow, maxRows, filterName);
     }
 
     @Override
-    public List<String> getReportToGroups(String sortDirection, Integer startRow, Integer maxRows, String filterQuery) throws IOException
+    public List<String> getReportToGroups(String sortDirection, Integer startRow, Integer maxRows, String filterName) throws IOException
     {
         Properties reportsToGroups = propertyFileManager.readFromFile(new File(getReportToGroupsMapPropertiesFileLocation()));
         List<String> result = new ArrayList<>(reportsToGroups.stringPropertyNames());

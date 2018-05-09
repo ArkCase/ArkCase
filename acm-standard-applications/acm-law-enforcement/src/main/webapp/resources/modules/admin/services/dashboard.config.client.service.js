@@ -42,7 +42,7 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
 
     /**
      * @ngdoc method
-     * @name getRolesByWidgets
+     * @name authorizeRolesForWidget
      * @methodOf admin.service:Admin.DashboardConfigService
      *
      * @description

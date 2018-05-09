@@ -83,7 +83,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
             url: 'api/latest/functionalaccess/appRoles',
             cache: false,
             params: {
-                fq: (data.filterWord ? data.filterWord : ""),
+                fn: (data.filterWord ? data.filterWord : ""),
                 n: (data.n ? data.n : 50)
             }
         });
