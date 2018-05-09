@@ -36,15 +36,15 @@ public class AcmLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler imple
         super.onLogoutSuccess(httpServletRequest, httpServletResponse, authentication);
     }
 
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
-    }
-
-    public ApplicationEventPublisher getApplicationEventPublisher()
-    {
-        return applicationEventPublisher;
     }
 
     public AcmAuthenticationDetailsFactory getAuthenticationDetailsFactory()

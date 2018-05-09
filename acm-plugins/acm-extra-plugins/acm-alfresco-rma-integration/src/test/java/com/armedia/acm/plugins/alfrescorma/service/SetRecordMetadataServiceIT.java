@@ -31,22 +31,17 @@ import java.util.UUID;
         "/spring/spring-library-property-file-manager.xml" })
 public class SetRecordMetadataServiceIT
 {
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     @Autowired
     private MuleContextManager muleContextManager;
-
     @Autowired
     @Qualifier("declareRecordService")
     private AlfrescoService<String> declareRecordService;
-
     @Autowired
     @Qualifier("setRecordMetadataService")
     private AlfrescoService<String> service;
-
     private String ecmFileId;
-
     private CmisFileWriter cmisFileWriter = new CmisFileWriter();
-
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

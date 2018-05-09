@@ -26,10 +26,9 @@ import java.util.List;
 })
 public class AuditDaoIT
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private AuditDao dao;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Test
     public void findEvents() throws Exception

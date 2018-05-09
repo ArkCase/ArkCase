@@ -15,6 +15,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.report.model.PentahoFileProperties;
 import com.armedia.acm.plugins.report.model.PentahoReportScheduleConstants;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -72,15 +73,18 @@ public class PentahoUploadGeneratedReportService
                         reportDataStream, PentahoReportScheduleConstants.EXCEL_MIMETYPE, fileName,
                         auth, yearFolder.getCmisFolderId(),
                         container.getContainerObjectType(), container.getContainerObjectId());
-            } catch (AcmCreateObjectFailedException e)
+            }
+            catch (AcmCreateObjectFailedException e)
             {
                 LOGGER.error("Fail to create object", e);
-            } catch (AcmUserActionFailedException e)
+            }
+            catch (AcmUserActionFailedException e)
             {
                 LOGGER.error("User action fail", e);
             }
             return ecmFile;
-        } else
+        }
+        else
         {
             throw new AcmObjectNotFoundException("Document Repository", null, "Failed to find report document repository");
         }
@@ -92,22 +96,27 @@ public class PentahoUploadGeneratedReportService
         if (container != null)
         {
             String year = "" + LocalDateTime.now().getYear();
-            Optional<AcmFolder> folderFound = container.getFolder().getChildrenFolders().stream().filter(f -> year.equals(f.getName())).findAny();
+            Optional<AcmFolder> folderFound = container.getFolder().getChildrenFolders().stream().filter(f -> year.equals(f.getName()))
+                    .findAny();
             if (folderFound.isPresent())
             {
                 yearFolder = folderFound.get();
-            } else
+            }
+            else
             {
                 try
                 {
                     yearFolder = acmFolderService.addNewFolder(container.getFolder().getId(), year);
-                } catch (AcmCreateObjectFailedException e)
+                }
+                catch (AcmCreateObjectFailedException e)
                 {
                     LOGGER.error("Year folder creation failed", e);
-                } catch (AcmUserActionFailedException e)
+                }
+                catch (AcmUserActionFailedException e)
                 {
                     LOGGER.error("User action failed", e);
-                } catch (AcmObjectNotFoundException e)
+                }
+                catch (AcmObjectNotFoundException e)
                 {
                     LOGGER.error("Year folder not found", e);
                 }
@@ -121,7 +130,8 @@ public class PentahoUploadGeneratedReportService
         String fileName = generateFileName(pentahoFileProperties);
         String nameNoExtension = fileName.substring(0, fileName.lastIndexOf("."));
         String extension = fileName.substring(fileName.lastIndexOf("."));
-        EcmFile[] filesFound = getEcmFileDao().findByFolderId(acmFolder.getId()).stream().filter(f -> f.getFileName().contains(nameNoExtension)).toArray(EcmFile[]::new);
+        EcmFile[] filesFound = getEcmFileDao().findByFolderId(acmFolder.getId()).stream()
+                .filter(f -> f.getFileName().contains(nameNoExtension)).toArray(EcmFile[]::new);
         if (filesFound.length > 0)
         {
             fileName = nameNoExtension + "-" + filesFound.length + extension;

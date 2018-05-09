@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 
     <flow name="getPentahoReports" doc:name="Get Reports from Pentaho server">
 
-        <vm:inbound-endpoint address="vm://getPentahoReports.in" exchange-pattern="request-response"
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://getPentahoReports.in" exchange-pattern="request-response"
             doc:name="Get Pentaho Reports"></vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.report"/>

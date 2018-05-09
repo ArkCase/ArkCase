@@ -16,12 +16,11 @@ import org.slf4j.LoggerFactory;
 public class CaseFileEventHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
 
-    private CaseFileEventUtility caseFileEventUtility;
-
     /**
      * Logger instance.
      */
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private CaseFileEventUtility caseFileEventUtility;
 
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException

@@ -58,7 +58,7 @@ public class HistoryCleanService
         // Delete notifications from solr, using same query as for database
         try
         {
-            executeSolrQuery.sendSolrDeleteQuery("jms://solrAdvancedSearch.in", createDeleteNotificationSolrQuery(threshold));
+            executeSolrQuery.sendSolrDeleteQuery("solrAdvancedSearch.in", createDeleteNotificationSolrQuery(threshold));
         }
         catch (MuleException e)
         {

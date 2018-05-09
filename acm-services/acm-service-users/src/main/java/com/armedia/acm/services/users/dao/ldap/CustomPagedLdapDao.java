@@ -108,7 +108,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
         searchControls.setReturningAttributes(new String[] { "cn", "member", "displayName" });
 
         AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(config, config.getGroupsSortingAttribute());
-        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(config);
+        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(config, template);
 
         boolean searchGroups = true;
         boolean skipFirst = false;

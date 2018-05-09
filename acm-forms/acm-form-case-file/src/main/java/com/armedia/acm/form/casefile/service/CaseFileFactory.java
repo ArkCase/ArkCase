@@ -31,14 +31,12 @@ import java.util.List;
  */
 public class CaseFileFactory extends FrevvoFormFactory
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
-
     public static final String PERSON_TYPE = "Subject";
     public static final String PERSON_IDENTIFICATION_EMPLOYEE_ID = "EMPLOYEE_ID";
     public static final String PERSON_IDENTIFICATION_SSN = "SSN";
     public static final String OBJECT_TYPE_POSTAL_ADDRESS = "POSTAL_ADDRESS";
     public static final String OBJECT_TYPE_ORGANIZATION = "ORGANIZATION";
-
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private ObjectAssociationDao objectAssociationDao;
     private EcmFileDao ecmFileDao;
     private AcmHistoryDao acmHistoryDao;

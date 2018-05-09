@@ -28,9 +28,8 @@ import java.util.stream.Collectors;
 public class ListAssociatedTagsByObjectTypeAndIdAPIController
 {
 
-    private AssociatedTagService associatedTagService;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private AssociatedTagService associatedTagService;
 
     @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

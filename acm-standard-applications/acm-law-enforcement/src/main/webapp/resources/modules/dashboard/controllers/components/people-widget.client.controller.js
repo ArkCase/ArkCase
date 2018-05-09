@@ -2,44 +2,33 @@
 
 angular.module('dashboard.people', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('people', {
-        title : 'preference.overviewWidgets.people.title',
-        description : 'dashboard.widgets.people.description',
-        controller : 'Dashboard.PeopleController',
-        reload : true,
-        templateUrl : 'modules/dashboard/views/components/people-widget.client.view.html',
-        commonName : 'people'
+        title: 'preference.overviewWidgets.people.title',
+        description: 'dashboard.widgets.people.description',
+        controller: 'Dashboard.PeopleController',
+        reload: true,
+        templateUrl: 'modules/dashboard/views/components/people-widget.client.view.html',
+        commonName: 'people'
     });
 }).controller(
         'Dashboard.PeopleController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                'Case.InfoService',
-                'Complaint.InfoService',
-                'Organization.InfoService',
-                'Helper.ObjectBrowserService',
-                'Helper.UiGridService',
-                'Object.LookupService',
-                'Object.ModelService',
-                function($scope, $stateParams, $translate, CaseInfoService, ComplaintInfoService, OrganizationInfoService,
-                        HelperObjectBrowserService, HelperUiGridService, ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$stateParams', '$translate', 'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.LookupService', 'Object.ModelService',
+                function($scope, $stateParams, $translate, CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, ObjectLookupService, ObjectModelService) {
 
                     var modules = [ {
-                        name : "CASE_FILE",
-                        configName : "cases",
-                        getInfo : CaseInfoService.getCaseInfo,
-                        validateInfo : CaseInfoService.validateCaseInfo
+                        name: "CASE_FILE",
+                        configName: "cases",
+                        getInfo: CaseInfoService.getCaseInfo,
+                        validateInfo: CaseInfoService.validateCaseInfo
                     }, {
-                        name : "COMPLAINT",
-                        configName : "complaints",
-                        getInfo : ComplaintInfoService.getComplaintInfo,
-                        validateInfo : ComplaintInfoService.validateComplaintInfo
+                        name: "COMPLAINT",
+                        configName: "complaints",
+                        getInfo: ComplaintInfoService.getComplaintInfo,
+                        validateInfo: ComplaintInfoService.validateComplaintInfo
                     }, {
-                        name : "ORGANIZATION",
-                        configName : "organizations",
-                        getInfo : OrganizationInfoService.getOrganizationInfo,
-                        validateInfo : OrganizationInfoService.validateOrganizationInfo
+                        name: "ORGANIZATION",
+                        configName: "organizations",
+                        getInfo: OrganizationInfoService.getOrganizationInfo,
+                        validateInfo: OrganizationInfoService.validateOrganizationInfo
                     } ];
 
                     var module = _.find(modules, function(module) {
@@ -47,25 +36,25 @@ angular.module('dashboard.people', [ 'adf.provider' ]).config(function(dashboard
                     });
 
                     $scope.gridOptions = {
-                        enableColumnResizing : true,
-                        columnDefs : []
+                        enableColumnResizing: true,
+                        columnDefs: []
                     };
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : module.configName,
-                        componentId : "main",
-                        retrieveObjectInfo : module.getInfo,
-                        validateObjectInfo : module.validateInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: module.configName,
+                        componentId: "main",
+                        retrieveObjectInfo: module.getInfo,
+                        validateObjectInfo: module.validateInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         },
-                        onConfigRetrieved : function(componentConfig) {
+                        onConfigRetrieved: function(componentConfig) {
                             onConfigRetrieved(componentConfig);
                         }
                     });

@@ -14,18 +14,18 @@
  *
  * @example
  <example>
- <object-authorization-roles-filter ng-show="true" filter="exampleFunction(data)" />
+ <object-authorization-roles-filter ng-hide="true" filter="exampleFunction(data)" />
  </example>
  **/
 
 angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'UtilService', function(Util) {
     return {
-        restrict : 'E',
-        scope : {
-            filter : "&?"
+        restrict: 'E',
+        scope: {
+            filter: "&?"
         },
-        templateUrl : 'directives/object-authorization-filter/object.authorization.roles.filter.html',
-        link : function(scope) {
+        templateUrl: 'directives/object-authorization-filter/object.authorization.roles.filter.html',
+        link: function(scope) {
             scope.isSearchValid = true;
             scope.data = {};
 
@@ -33,7 +33,7 @@ angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'Util
                 scope.isSearchValid = true;
                 if (scope.data.filterWord === "") {
                     scope.filter({
-                        data : {}
+                        data: {}
                     });
                 } else {
                     scope.isSearchValid = false;
@@ -42,7 +42,7 @@ angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'Util
 
             scope.filterObjects = function() {
                 scope.filter({
-                    data : scope.data
+                    data: scope.data
                 });
             };
         }

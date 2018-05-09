@@ -2,6 +2,7 @@ package com.armedia.acm.services.transcribe.utils;
 
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.services.transcribe.model.TranscribeItem;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,8 @@ public class TranscribeUtils
         if (text != null)
         {
             String[] words = StringUtils.split(text, " ");
-            return words.length > numberOfWords ? StringUtils.join(words, " ", 0, numberOfWords) + " ..." : StringUtils.join(words, " ", 0, words.length);
+            return words.length > numberOfWords ? StringUtils.join(words, " ", 0, numberOfWords) + " ..."
+                    : StringUtils.join(words, " ", 0, words.length);
         }
 
         return "";
@@ -64,7 +66,7 @@ public class TranscribeUtils
                 TranscribeItem clone = null;
                 try
                 {
-                    clone =  new TranscribeItem();
+                    clone = new TranscribeItem();
                     arkCaseBeanUtils.copyProperties(clone, item);
                 }
                 catch (IllegalAccessException | InvocationTargetException e)
@@ -74,7 +76,7 @@ public class TranscribeUtils
 
                 if (clone != null)
                 {
-                     clonedItems.add(clone);
+                    clonedItems.add(clone);
                 }
             });
 

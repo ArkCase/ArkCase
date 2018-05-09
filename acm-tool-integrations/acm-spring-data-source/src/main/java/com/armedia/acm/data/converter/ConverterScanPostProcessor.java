@@ -28,15 +28,11 @@ import java.net.URL;
  */
 public class ConverterScanPostProcessor implements PersistenceUnitPostProcessor
 {
-    private String[] packagesToScan;
-
     private static final String ENTITY_CLASS_RESOURCE_PATTERN = "/**/*.class";
-
-    private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-
     private final TypeFilter converterFilter = new AnnotationTypeFilter(Converter.class, false);
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private String[] packagesToScan;
+    private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
     @Override
     public void postProcessPersistenceUnitInfo(MutablePersistenceUnitInfo pui)

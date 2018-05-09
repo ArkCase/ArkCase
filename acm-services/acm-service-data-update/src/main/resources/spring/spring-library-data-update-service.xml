@@ -79,9 +79,4 @@
         <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 
-    <bean id="documentRepositoryParticipantTypesUpdateExecutor"
-        class="com.armedia.acm.services.dataupdate.service.DocumentRepositoryParticipantTypesUpdateExecutor">
-        <property name="documentDao" ref="documentRepositoryDao"/>
-    </bean>
-
 </beans>

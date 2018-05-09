@@ -80,20 +80,17 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationListener<AbstractConfigurationFileEvent>
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private final PropertySet standardProperties = new PropertySet(BasePropertySet.IdOnly, ItemSchema.Subject, ItemSchema.DateTimeSent,
+            ItemSchema.DateTimeCreated, ItemSchema.DateTimeReceived, ItemSchema.LastModifiedTime, ItemSchema.Body, ItemSchema.Size);
+    private final PropertySet folderProperties = new PropertySet(FolderSchema.Id, FolderSchema.DisplayName, FolderSchema.ParentFolderId,
+            FolderSchema.Permissions);
     private ExchangeVersion exchangeVersion = ExchangeVersion.Exchange2007_SP1;
     private Map<String, PropertyDefinition> sortFields;
     private Cache outlookUserConnectionCache;
     private String defaultAccess;
-
     private ExchangeConfigurationServiceImpl exchangeConfigurationService;
-
-    private final PropertySet standardProperties = new PropertySet(BasePropertySet.IdOnly, ItemSchema.Subject, ItemSchema.DateTimeSent,
-            ItemSchema.DateTimeCreated, ItemSchema.DateTimeReceived, ItemSchema.LastModifiedTime, ItemSchema.Body, ItemSchema.Size);
     private boolean autodiscoveryEnabled;
     private URI clientAccessServer;
-
-    private final PropertySet folderProperties = new PropertySet(FolderSchema.Id, FolderSchema.DisplayName, FolderSchema.ParentFolderId,
-            FolderSchema.Permissions);
 
     @Override
     @Cacheable(value = "outlook-connection-cache", key = "#user.emailAddress")

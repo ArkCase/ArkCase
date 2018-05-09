@@ -2,20 +2,8 @@
 
 angular.module('admin').controller(
         'Admin.LdapUserManagementController',
-        [
-                '$scope',
-                '$q',
-                '$modal',
-                '$timeout',
-                'Admin.LdapUserManagementService',
-                'LookupService',
-                'MessageService',
-                'Acm.StoreService',
-                'UtilService',
-                '$log',
-                '$translate',
-                function($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store, Util, $log,
-                        $translate) {
+        [ '$scope', '$q', '$modal', '$timeout', 'Admin.LdapUserManagementService', 'LookupService', 'MessageService', 'Acm.StoreService', 'UtilService', '$log', '$translate',
+                function($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store, Util, $log, $translate) {
 
                     $scope.cloneUser = cloneUser;
                     $scope.onObjSelect = onObjSelect;
@@ -34,31 +22,30 @@ angular.module('admin').controller(
                     $scope.userAuthorizedFilter = userAuthorizedFilter;
                     $scope.retrieveDataFilter = retrieveDataFilter;
 
-                    $scope.showFilter = true;
                     var makePaginationRequest = true;
                     var currentAuthGroups;
                     var selectedUser;
                     var objectTitle = $translate.instant('admin.security.ldap.user.management.user');
                     $scope.lastSelectedUser;
                     $scope.userData = {
-                        "chooseObject" : [],
-                        "selectedNotAuthorized" : [],
-                        "selectedAuthorized" : []
+                        "chooseObject": [],
+                        "selectedNotAuthorized": [],
+                        "selectedAuthorized": []
                     };
                     $scope.scrollLoadData = {
-                        "loadObjectsScroll" : $scope.userScroll,
-                        "loadUnauthorizedScroll" : $scope.unauthorizedScroll,
-                        "loadAuthorizedScroll" : $scope.authorizedScroll
+                        "loadObjectsScroll": $scope.userScroll,
+                        "loadUnauthorizedScroll": $scope.unauthorizedScroll,
+                        "loadAuthorizedScroll": $scope.authorizedScroll
                     };
                     $scope.filterData = {
-                        "objectsFilter" : $scope.userManagementFilter,
-                        "unauthorizedFilter" : $scope.userUnauthorizedFilter,
-                        "authorizedFilter" : $scope.userAuthorizedFilter
+                        "objectsFilter": $scope.userManagementFilter,
+                        "unauthorizedFilter": $scope.userUnauthorizedFilter,
+                        "authorizedFilter": $scope.userAuthorizedFilter
                     };
 
                     function initUser(userNumber) {
                         var userRequestInfo = {};
-                        userRequestInfo.n = Util.isEmpty(userNumber) ? 18 : userNumber;
+                        userRequestInfo.n = Util.isEmpty(userNumber) ? 50 : userNumber;
                         userRequestInfo.start = Util.isEmpty(userNumber) ? 0 : $scope.userData.chooseObject.length;
                         if (makePaginationRequest) {
                             LdapUserManagementService.getNUsers(userRequestInfo).then(function(response) {
@@ -75,14 +62,14 @@ angular.module('admin').controller(
                     $scope.initUser();
 
                     //callback function when user is selected
-                    function onObjSelect(selectedObject, authorized, notAuthorized) {
+                    function onObjSelect(selectedObject) {
                         $scope.userData.selectedAuthorized = [];
                         $scope.userData.selectedNotAuthorized = [];
 
                         if (!_.isEmpty($scope.userData.chooseObject)) {
                             var data = {};
                             data.member = selectedObject;
-                            $scope.lastSelectedUser = [];
+                            $scope.lastSelectedUser = {};
                             $scope.lastSelectedUser = selectedObject;
                             selectedUser = selectedObject;
                             currentAuthGroups = [];
@@ -129,13 +116,12 @@ angular.module('admin').controller(
                         if (toBeAdded.length > 0) {
                             currentAuthGroups = currentAuthGroups.concat(toBeAdded);
 
-                            LdapUserManagementService.addGroupsToUser(selectedObject.key, toBeAdded, selectedObject.directory).then(
-                                    function(data) {
-                                        MessageService.succsessAction();
-                                    }, function() {
-                                        //error adding group
-                                        MessageService.errorAction();
-                                    });
+                            LdapUserManagementService.addGroupsToUser(selectedObject.key, toBeAdded, selectedObject.directory).then(function(data) {
+                                MessageService.succsessAction();
+                            }, function() {
+                                //error adding group
+                                MessageService.errorAction();
+                            });
                             return deferred.promise;
                         }
 
@@ -144,13 +130,12 @@ angular.module('admin').controller(
                                 currentAuthGroups.splice(currentAuthGroups.indexOf(element), 1);
                             });
 
-                            LdapUserManagementService.removeGroupsFromUser(selectedObject.key, toBeRemoved, selectedObject.directory).then(
-                                    function(data) {
-                                        MessageService.succsessAction();
-                                    }, function() {
-                                        //error adding group
-                                        MessageService.errorAction();
-                                    });
+                            LdapUserManagementService.removeGroupsFromUser(selectedObject.key, toBeRemoved, selectedObject.directory).then(function(data) {
+                                MessageService.succsessAction();
+                            }, function() {
+                                //error adding group
+                                MessageService.errorAction();
+                            });
                             return deferred.promise;
                         }
                     }
@@ -158,9 +143,9 @@ angular.module('admin').controller(
                     function openCloneUserModal(userForm, usernameError) {
 
                         return $modal.open({
-                            animation : $scope.animationsEnabled,
-                            templateUrl : 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
-                            controller : [ '$scope', '$modalInstance', 'UtilService', function($scope, $modalInstance, Util) {
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
+                            controller: [ '$scope', '$modalInstance', 'UtilService', function($scope, $modalInstance, Util) {
                                 $scope.addUser = true;
                                 $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
                                 $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
@@ -168,8 +153,8 @@ angular.module('admin').controller(
                                 $scope.user = userForm;
                                 $scope.error = usernameError;
                                 $scope.data = {
-                                    "user" : $scope.user,
-                                    "selectedUser" : selectedUser
+                                    "user": $scope.user,
+                                    "selectedUser": selectedUser
                                 };
 
                                 $scope.clearUsernameError = function() {
@@ -182,7 +167,7 @@ angular.module('admin').controller(
                                     $modalInstance.close($scope.data);
                                 };
                             } ],
-                            size : 'sm'
+                            size: 'sm'
                         });
                     }
 
@@ -256,7 +241,7 @@ angular.module('admin').controller(
                             var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
                             var users = cacheUsers.get();
                             var cacheKeyUser = _.find(users, {
-                                'object_id_s' : selectedUser.key
+                                'object_id_s': selectedUser.key
                             });
                             cacheUsers.remove(cacheKeyUser);
 
@@ -281,6 +266,12 @@ angular.module('admin').controller(
                                 $scope.fillList($scope.userData[panelName], response.data);
                             } else {
                                 $scope.fillList($scope.userData[panelName], response.data.response.docs);
+                            }
+                            if (panelName === "selectedAuthorized") {
+                                currentAuthGroups = [];
+                                _.forEach($scope.userData[panelName], function(obj) {
+                                    currentAuthGroups.push(obj.key);
+                                });
                             }
                         }, function() {
                             $log.error('Error during calling the method ' + methodName);

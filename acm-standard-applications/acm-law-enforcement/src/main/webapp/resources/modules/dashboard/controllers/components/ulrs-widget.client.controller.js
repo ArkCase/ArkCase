@@ -2,39 +2,28 @@
 
 angular.module('dashboard.urls', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('urls', {
-        title : 'preference.overviewWidgets.urls.title',
-        description : 'dashboard.widgets.urls.description',
-        controller : 'Dashboard.UrlsController',
-        reload : true,
-        templateUrl : 'modules/dashboard/views/components/urls-widget.client.view.html',
-        commonName : 'urls'
+        title: 'preference.overviewWidgets.urls.title',
+        description: 'dashboard.widgets.urls.description',
+        controller: 'Dashboard.UrlsController',
+        reload: true,
+        templateUrl: 'modules/dashboard/views/components/urls-widget.client.view.html',
+        commonName: 'urls'
     });
 }).controller(
         'Dashboard.UrlsController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                'Person.InfoService',
-                'Organization.InfoService',
-                'Helper.ObjectBrowserService',
-                'Helper.UiGridService',
-                'UtilService',
-                'Object.LookupService',
-                'Object.ModelService',
-                function($scope, $stateParams, $translate, PersonInfoService, OrganizationInfoService, HelperObjectBrowserService,
-                        HelperUiGridService, Util, ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$stateParams', '$translate', 'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService', 'Object.LookupService', 'Object.ModelService',
+                function($scope, $stateParams, $translate, PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, Util, ObjectLookupService, ObjectModelService) {
 
                     var modules = [ {
-                        name : "PERSON",
-                        configName : "people",
-                        getInfo : PersonInfoService.getPersonInfo,
-                        validateInfo : PersonInfoService.validatePersonInfo
+                        name: "PERSON",
+                        configName: "people",
+                        getInfo: PersonInfoService.getPersonInfo,
+                        validateInfo: PersonInfoService.validatePersonInfo
                     }, {
-                        name : "ORGANIZATION",
-                        configName : "organizations",
-                        getInfo : OrganizationInfoService.getOrganizationInfo,
-                        validateInfo : OrganizationInfoService.validateOrganizationInfo
+                        name: "ORGANIZATION",
+                        configName: "organizations",
+                        getInfo: OrganizationInfoService.getOrganizationInfo,
+                        validateInfo: OrganizationInfoService.validateOrganizationInfo
                     } ];
 
                     var module = _.find(modules, function(module) {
@@ -42,25 +31,25 @@ angular.module('dashboard.urls', [ 'adf.provider' ]).config(function(dashboardPr
                     });
 
                     $scope.gridOptions = {
-                        enableColumnResizing : true,
-                        columnDefs : []
+                        enableColumnResizing: true,
+                        columnDefs: []
                     };
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : module.configName,
-                        componentId : "main",
-                        retrieveObjectInfo : module.getInfo,
-                        validateObjectInfo : module.validateInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: module.configName,
+                        componentId: "main",
+                        retrieveObjectInfo: module.getInfo,
+                        validateObjectInfo: module.validateInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         },
-                        onConfigRetrieved : function(componentConfig) {
+                        onConfigRetrieved: function(componentConfig) {
                             onConfigRetrieved(componentConfig);
                         }
                     });
@@ -68,7 +57,7 @@ angular.module('dashboard.urls', [ 'adf.provider' ]).config(function(dashboardPr
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
                         var urls = _.filter($scope.objectInfo.contactMethods, {
-                            type : 'url'
+                            type: 'url'
                         });
                         gridHelper.setWidgetsGridData(urls);
                     };

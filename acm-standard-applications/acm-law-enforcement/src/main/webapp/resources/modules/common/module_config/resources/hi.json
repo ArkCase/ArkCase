@@ -3,7 +3,7 @@
         "select.option.none": "(एक चुनें)",
         "value.unknown": "अज्ञात",
         "value.none": "कोई नहीं",
-		"_1_": "कृपया कोई भी कस्टम दिनांक शैलियों का उपयोग न करें या उन्हें कोई त्रुटि न होने दें.",
+        "_1_": "कृपया कोई भी कस्टम दिनांक शैलियों का उपयोग न करें या उन्हें कोई त्रुटि न होने दें.",
         "_2_": "कृपया पूर्वनिर्धारित स्वरूपों में से एक का उपयोग करें: ",
         "_3_": "'मध्यम'        - के बराबर 'एमएमएम डी, वाई एच: मिमी: एसएस ए' en_US लोकेल के लिए (3 सितंबर, 2010 12:05:08 अपराह्न के रूप में)",
         "_4_": "'कम'           - के बराबर 'एम/डी/वाईवाई एच: मिमी ए' en_US लोकेल के लिए (जैसे 9/3/10 12:05 PM)",
@@ -109,10 +109,10 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "अनुलग्नक और हाइपरलिंक के रूप में भेजें",
             "btnCancel.text": "रद्द करना",
             "btnOk.text": "ईमेल भेजें"
-		 },
+        },
         "participantsDialog": {
             "titlePart": "प्रतिभागियों के लिए ",
-            "title": "प्रतिभागियों"	
+            "title": "प्रतिभागियों"
         },
         "recipientsDialog": {
             "title": "प्राप्तकर्ता चुनें",
@@ -180,9 +180,11 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "चुनें",
         "not_authorized": "अधिकृत नहीं",
+        "not_member": "hi_Not Member",
         "tooltip.move_right": "दाएँ चले",
         "tooltip.move_left": "बाएं खिसको",
-        "authorized": "अधिकृत"
+        "authorized": "अधिकृत",
+        "member": "hi_Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "त्रुटि, 2 वर्ण आवश्यक हैं."
@@ -194,9 +196,9 @@
         "btnCancel.text": "रद्द करना",
         "edtPlaceholder": "खोज में टाइप करें",
         "noData.text": "कोई परिणाम नहीं",
-		"pickUserLabel": "संबद्ध उपयोगकर्ता चुनें",
+        "pickUserLabel": "संबद्ध उपयोगकर्ता चुनें",
         "pickGroupLabel": "संबद्ध समूह चुनें",
-		"selectedItemsGrid.label": "चयनित प्रविष्टियां"
+        "selectedItemsGrid.label": "चयनित प्रविष्टियां"
     },
     "common.directive.search": {
         "showMore.button.text": "अधिक मूल्य दिखाएं",
@@ -611,7 +613,7 @@
             "error.noAccessCombo": "नो एक्सेस और एसिग्ने के संयोजन की अनुमति नहीं है",
             "error.duplicateUserOrGroup": "अमान्य प्रतिभागी प्रतिभागी के लिए डुप्लिकेट प्रविष्टियां मिलती हैं",
             "error.userOrGroupNotFound": "अमान्य प्रतिभागी सिस्टम में भाग लेने वाले सहभागी प्रविष्टि",
-			"error.emptyParticipantLdapId": "प्रतिभागी का नाम खाली नहीं हो सकता",
+            "error.emptyParticipantLdapId": "प्रतिभागी का नाम खाली नहीं हो सकता",
             "error.emptyParticipantType": "प्रतिभागी प्रकार रिक्त नहीं हो सकता",
             "error.ownerUnique": "केवल एक मालिक की अनुमति है"
         }
@@ -649,7 +651,8 @@
         "PARTICIPANT": "प्रतिभागी",
         "NOTE": "ध्यान दें",
         "PARTICIPANT-ASSOCIATION": "प्रतिभागी-एसोसिएशन",
-        "ASSIGNMENT": "असाइनमेंट"
+        "ASSIGNMENT": "असाइनमेंट",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "उपयोगकर्ता चुनें",

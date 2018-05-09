@@ -12,16 +12,18 @@ import org.openqa.selenium.support.How;
 public class ComplaintPage extends ArkCaseTestBase
 {
 
+    @FindBy(how = How.XPATH, using = "/html/body/iframe")
+    public WebElement secondIframe;
+    @FindBy(how = How.XPATH, using = "//iframe")
+    public WebElement firstIfarme;
+    @FindBy(how = How.XPATH, using = ".//*[@ng-click='toggleEditMode()']/i")
+    public WebElement editButton;
     @FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/div/div[1]/div/a/span")
     WebElement newComplaintBtn;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div")
     WebElement complaintPage;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/div[1]/span[4]/label")
     WebElement initiatorTab;
-    @FindBy(how = How.XPATH, using = "/html/body/iframe")
-    public WebElement secondIframe;
-    @FindBy(how = How.XPATH, using = "//iframe")
-    public WebElement firstIfarme;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[2]/div[4]/div[2]/div[1]/div[2]/div[3]/div[1]/input")
     WebElement firstNameInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[2]/div[4]/div[2]/div[1]/div[2]/div[4]/div[1]/input")
@@ -62,8 +64,6 @@ public class ComplaintPage extends ArkCaseTestBase
     WebElement submitBtn;
     @FindBy(how = How.XPATH, using = ".//a[@class='dropdown-toggle']/i")
     WebElement newButton;
-    @FindBy(how = How.XPATH, using = ".//*[@ng-click='toggleEditMode()']/i")
-    public WebElement editButton;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td")
     WebElement noDataAviable;
 

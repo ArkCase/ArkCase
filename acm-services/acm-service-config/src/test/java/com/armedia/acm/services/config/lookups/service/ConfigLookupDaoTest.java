@@ -33,12 +33,10 @@ public class ConfigLookupDaoTest extends EasyMockSupport
 {
     private static final Configuration configuration = Configuration.builder().jsonProvider(new JacksonJsonNodeJsonProvider())
             .mappingProvider(new JacksonMappingProvider()).build();
-
+    private final String lookupsExtFileLocation = "lookups-ext.json";
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
-
     private ConfigLookupDao configLookupDao;
-    private final String lookupsExtFileLocation = "lookups-ext.json";
 
     @Before
     public void setUp() throws Exception

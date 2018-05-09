@@ -27,10 +27,9 @@ import java.util.List;
 })
 public class TikaMetadataIT
 {
+    private transient final Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private EcmTikaFileService ecmTikaFileService;
-
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
     public void extractMetadata() throws Exception

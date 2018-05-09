@@ -16,19 +16,14 @@ public class OutlookResults<T extends OutlookItem>
     private String currentSortField;
     private boolean currentSortAscending;
 
-    public void setTotalItems(int totalItems)
-    {
-        this.totalItems = totalItems;
-    }
-
     public int getTotalItems()
     {
         return totalItems;
     }
 
-    public void setMoreItemsAvailable(boolean moreItemsAvailable)
+    public void setTotalItems(int totalItems)
     {
-        this.moreItemsAvailable = moreItemsAvailable;
+        this.totalItems = totalItems;
     }
 
     public boolean isMoreItemsAvailable()
@@ -36,9 +31,9 @@ public class OutlookResults<T extends OutlookItem>
         return moreItemsAvailable;
     }
 
-    public void setCurrentStartIndex(int currentStartIndex)
+    public void setMoreItemsAvailable(boolean moreItemsAvailable)
     {
-        this.currentStartIndex = currentStartIndex;
+        this.moreItemsAvailable = moreItemsAvailable;
     }
 
     public int getCurrentStartIndex()
@@ -46,9 +41,9 @@ public class OutlookResults<T extends OutlookItem>
         return currentStartIndex;
     }
 
-    public void setCurrentMaxItems(int currentMaxItems)
+    public void setCurrentStartIndex(int currentStartIndex)
     {
-        this.currentMaxItems = currentMaxItems;
+        this.currentStartIndex = currentStartIndex;
     }
 
     public int getCurrentMaxItems()
@@ -56,9 +51,9 @@ public class OutlookResults<T extends OutlookItem>
         return currentMaxItems;
     }
 
-    public void setNextStartIndex(Integer nextStartIndex)
+    public void setCurrentMaxItems(int currentMaxItems)
     {
-        this.nextStartIndex = nextStartIndex;
+        this.currentMaxItems = currentMaxItems;
     }
 
     public Integer getNextStartIndex()
@@ -66,9 +61,9 @@ public class OutlookResults<T extends OutlookItem>
         return nextStartIndex;
     }
 
-    public void setCurrentSortField(String currentSortField)
+    public void setNextStartIndex(Integer nextStartIndex)
     {
-        this.currentSortField = currentSortField;
+        this.nextStartIndex = nextStartIndex;
     }
 
     public String getCurrentSortField()
@@ -76,14 +71,19 @@ public class OutlookResults<T extends OutlookItem>
         return currentSortField;
     }
 
-    public void setCurrentSortAscending(boolean currentSortAscending)
+    public void setCurrentSortField(String currentSortField)
     {
-        this.currentSortAscending = currentSortAscending;
+        this.currentSortField = currentSortField;
     }
 
     public boolean isCurrentSortAscending()
     {
         return currentSortAscending;
+    }
+
+    public void setCurrentSortAscending(boolean currentSortAscending)
+    {
+        this.currentSortAscending = currentSortAscending;
     }
 
     public List<T> getItems()

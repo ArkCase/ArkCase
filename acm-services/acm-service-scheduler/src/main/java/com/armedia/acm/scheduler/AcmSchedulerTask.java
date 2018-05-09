@@ -16,23 +16,20 @@ public class AcmSchedulerTask
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
-     * How often a task should be run given in milliseconds.
-     */
-    private volatile long howOften;
-
-    /**
-     * When was the task last ran.
-     */
-    private volatile long taskLastRun;
-
     /**
      * The Spring bean implementing the <code>AcmSchedulableBean</code> interface.
      *
      * @see AcmSchedulableBean#executeTask()
      */
     private final AcmSchedulableBean schedulableBean;
+    /**
+     * How often a task should be run given in milliseconds.
+     */
+    private volatile long howOften;
+    /**
+     * When was the task last ran.
+     */
+    private volatile long taskLastRun;
 
     /**
      * Constructor for the task.

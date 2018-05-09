@@ -41,23 +41,23 @@ public class RetryProcessInterceptor<T, O> implements ProcessInterceptor<T, O>
     }
 
     /**
+     * Retrieves muleContext
+     *
+     */
+    public MuleContext getMuleContext()
+    {
+        return this.muleContext;
+    }
+
+    /**
      * Sets muleContext
-     * 
+     *
      * @param value
      *            Value to set
      */
     public void setMuleContext(MuleContext value)
     {
         this.muleContext = value;
-    }
-
-    /**
-     * Retrieves muleContext
-     * 
-     */
-    public MuleContext getMuleContext()
-    {
-        return this.muleContext;
     }
 
     public T execute(ProcessCallback<T, O> processCallback, O object, MessageProcessor messageProcessor, MuleEvent event)

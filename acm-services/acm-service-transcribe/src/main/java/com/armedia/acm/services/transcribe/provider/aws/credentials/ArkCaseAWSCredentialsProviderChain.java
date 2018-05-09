@@ -1,6 +1,9 @@
 package com.armedia.acm.services.transcribe.provider.aws.credentials;
 
-import com.amazonaws.auth.*;
+import com.amazonaws.auth.AWSCredentialsProviderChain;
+import com.amazonaws.auth.EC2ContainerCredentialsProviderWrapper;
+import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.auth.SystemPropertiesCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 
 /**
@@ -14,8 +17,8 @@ public class ArkCaseAWSCredentialsProviderChain extends AWSCredentialsProviderCh
         // Use the same order of credential providers, just override "ProfileCredentialsProvider"
         // to change the path of the credentials file
         super(new EnvironmentVariableCredentialsProvider(),
-              new SystemPropertiesCredentialsProvider(),
-              new ProfileCredentialsProvider(path, profile),
-              new EC2ContainerCredentialsProviderWrapper());
+                new SystemPropertiesCredentialsProvider(),
+                new ProfileCredentialsProvider(path, profile),
+                new EC2ContainerCredentialsProviderWrapper());
     }
 }

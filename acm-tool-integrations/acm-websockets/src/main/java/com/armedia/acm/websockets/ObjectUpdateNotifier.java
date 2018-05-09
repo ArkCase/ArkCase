@@ -100,14 +100,14 @@ public class ObjectUpdateNotifier
         this.includeClassNames = includeClassNames;
     }
 
-    public void setObjectChangeNotificationProperties(Properties objectChangeNotificationProperties)
-    {
-        this.objectChangeNotificationProperties = objectChangeNotificationProperties;
-    }
-
     public Properties getObjectChangeNotificationProperties()
     {
         return objectChangeNotificationProperties;
+    }
+
+    public void setObjectChangeNotificationProperties(Properties objectChangeNotificationProperties)
+    {
+        this.objectChangeNotificationProperties = objectChangeNotificationProperties;
     }
 
 }

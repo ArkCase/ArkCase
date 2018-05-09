@@ -18,26 +18,9 @@ import java.util.stream.Stream;
 
 public class AcmRoleToGroupMapping
 {
+    public static final String GROUP_NAME_WILD_CARD = "@*";
     private Map<String, String> roleToGroupMap;
     private AcmGroupDao groupDao;
-    public static final String GROUP_NAME_WILD_CARD = "@*";
-
-    public void reloadRoleToGroupMap(Properties properties)
-    {
-        roleToGroupMap = properties.entrySet()
-                .stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().toString(), entry -> entry.getValue().toString()));
-    }
-
-    public Map<String, List<String>> getGroupToRolesMap()
-    {
-        // generate all value-key pairs from the original map and then group the keys by these values
-        return getRoleToGroupsMap().entrySet().stream()
-                .flatMap(entry -> entry.getValue().stream()
-                        .map(it -> new AbstractMap.SimpleEntry<>(it, entry.getKey())))
-                .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey,
-                        Collectors.mapping(AbstractMap.SimpleEntry::getValue, Collectors.toList())));
-    }
 
     public static Function<String, Stream<String>> mapGroupsString(Function<String, List<AcmGroup>> findGroup)
     {
@@ -56,7 +39,34 @@ public class AcmRoleToGroupMapping
         };
     }
 
+    public void reloadRoleToGroupMap(Properties properties)
+    {
+        roleToGroupMap = properties.entrySet()
+                .stream()
+                .collect(Collectors.toMap(entry -> entry.getKey().toString(), entry -> entry.getValue().toString()));
+    }
+
+    public Map<String, List<String>> getGroupToRolesMap()
+    {
+        // generate all value-key pairs from the original map and then group the keys by these values
+        return getRoleToGroupsMap().entrySet().stream()
+                .flatMap(entry -> entry.getValue().stream()
+                        .map(it -> new AbstractMap.SimpleEntry<>(it, entry.getKey())))
+                .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey,
+                        Collectors.mapping(AbstractMap.SimpleEntry::getValue, Collectors.toList())));
+    }
+
     public Map<String, Set<String>> getRoleToGroupsMap()
+    {
+        return getStringSetMap(true);
+    }
+
+    public Map<String, Set<String>> getRoleToGroupsMapIgnoreCaseSensitive()
+    {
+        return getStringSetMap(false);
+    }
+
+    private Map<String, Set<String>> getStringSetMap(boolean isUpperCase)
     {
         Map<String, List<AcmGroup>> groupsCache = new HashMap<>();
 
@@ -75,14 +85,15 @@ public class AcmRoleToGroupMapping
                 .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
                 .collect(
                         Collectors.toMap(entry -> {
-                            String roleName = entry.getKey().trim().toUpperCase();
+                            String roleName = isUpperCase ? entry.getKey().trim().toUpperCase() : entry.getKey().trim();
                             if (!roleName.startsWith("ROLE_"))
                             {
                                 roleName = "ROLE_" + roleName;
                             }
                             return roleName;
                         },
-                                entry -> groupsStringToSet.apply(entry.getValue().trim().toUpperCase())));
+                                entry -> groupsStringToSet
+                                        .apply(isUpperCase ? entry.getValue().trim().toUpperCase() : entry.getValue().trim())));
     }
 
     public void setRoleToGroupMap(Map<String, String> roleToGroupMap)

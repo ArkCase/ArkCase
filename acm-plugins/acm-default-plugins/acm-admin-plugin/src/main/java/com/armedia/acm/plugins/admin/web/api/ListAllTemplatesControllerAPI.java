@@ -28,8 +28,8 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class ListAllTemplatesControllerAPI
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
     List<Object> templateUploadList = new ArrayList<>();
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/template/list", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })

@@ -28,12 +28,9 @@ import java.sql.SQLException;
 public class RemoveTagAssociationAPIController
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     private final static String SUCCESS_MSG = "Associated Tag Removed Successfully";
-
     private final static int NO_ROW_DELETED = 0;
-
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AssociatedTagService associatedTagService;
     private AssociatedTagEventPublisher associatedTagEventPublisher;
 

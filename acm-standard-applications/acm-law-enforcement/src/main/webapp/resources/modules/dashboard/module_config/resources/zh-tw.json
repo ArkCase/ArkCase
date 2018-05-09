@@ -154,22 +154,6 @@
                 "configDescription": "描述",
                 "configDescriptionPlaceholder": "輸入小部件描述"
             },
-            "weather": {
-                "description": "顯示天氣",
-                "label": {
-                    "current": "當前：",
-                    "enterLocation": "輸入位置",
-                    "description": "顯示城市的當前溫度",
-                    "location": "位置",
-                    "insertLocationInConfiguration": "請在窗口小部件配置中插入位置",
-                    "zip": "郵遞區號",
-                    "enterZip": "輸入郵遞區號"
-                },
-                "title": "天氣",
-                "noDataMessage": "目前沒有天氣信息",
-                "configDescription": "描述",
-                "configDescriptionPlaceholder": "輸入小部件描述"
-            },
             "news": {
                 "description": "顯示新聞",
                 "label": {
@@ -369,9 +353,6 @@
     },
     "dashboard.comp.news": {
         "title": "新聞小組"
-    },
-    "dashboard.comp.weather": {
-        "title": "天氣小部件"
     },
     "dashboard.comp.myCases": {
         "title": "我的案例小部件"

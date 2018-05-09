@@ -1,6 +1,5 @@
 package com.armedia.acm.services.transcribe.provider.aws.model.transcript;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;

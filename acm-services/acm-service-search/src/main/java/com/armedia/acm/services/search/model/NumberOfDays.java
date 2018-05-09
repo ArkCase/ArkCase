@@ -8,23 +8,12 @@ public enum NumberOfDays
 
     ONE_YEAR(365, "one year"), SEVEN_DAYS(7, "seven days"), THIRTY_DAYS(30, "thirty days");
 
+    private int numOfDays;
+    private String nDays;
     NumberOfDays(int numOfDays, String days)
     {
         this.numOfDays = numOfDays;
         this.nDays = days;
-    }
-
-    private int numOfDays;
-    private String nDays;
-
-    public int getNumOfDays()
-    {
-        return numOfDays;
-    }
-
-    public String getnDays()
-    {
-        return nDays;
     }
 
     public static NumberOfDays getNumberOfDays(int days)
@@ -37,5 +26,15 @@ public enum NumberOfDays
             }
         }
         return null;
+    }
+
+    public int getNumOfDays()
+    {
+        return numOfDays;
+    }
+
+    public String getnDays()
+    {
+        return nDays;
     }
 }

@@ -3,8 +3,11 @@ package com.armedia.acm.services.transcribe.pipline.postsave;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import com.armedia.acm.services.transcribe.model.Transcribe;
+import com.armedia.acm.services.transcribe.model.TranscribeActionType;
 import com.armedia.acm.services.transcribe.pipline.TranscribePipelineContext;
 import com.armedia.acm.services.transcribe.rules.TranscribeBusinessRulesExecutor;
+import com.armedia.acm.services.transcribe.service.TranscribeEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +19,7 @@ public class TranscribeRulesHandler implements PipelineHandler<Transcribe, Trans
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private TranscribeBusinessRulesExecutor transcribeBusinessRulesExecutor;
+    private TranscribeEventPublisher transcribeEventPublisher;
 
     @Override
     public void execute(Transcribe entity, TranscribePipelineContext pipelineContext) throws PipelineProcessException
@@ -30,7 +34,7 @@ public class TranscribeRulesHandler implements PipelineHandler<Transcribe, Trans
     @Override
     public void rollback(Transcribe entity, TranscribePipelineContext pipelineContext) throws PipelineProcessException
     {
-        // nothing to do here, there is no rollback action to be executed
+        getTranscribeEventPublisher().publish(entity, TranscribeActionType.ROLLBACK.toString());
     }
 
     public TranscribeBusinessRulesExecutor getTranscribeBusinessRulesExecutor()
@@ -41,5 +45,15 @@ public class TranscribeRulesHandler implements PipelineHandler<Transcribe, Trans
     public void setTranscribeBusinessRulesExecutor(TranscribeBusinessRulesExecutor transcribeBusinessRulesExecutor)
     {
         this.transcribeBusinessRulesExecutor = transcribeBusinessRulesExecutor;
+    }
+
+    public TranscribeEventPublisher getTranscribeEventPublisher()
+    {
+        return transcribeEventPublisher;
+    }
+
+    public void setTranscribeEventPublisher(TranscribeEventPublisher transcribeEventPublisher)
+    {
+        this.transcribeEventPublisher = transcribeEventPublisher;
     }
 }

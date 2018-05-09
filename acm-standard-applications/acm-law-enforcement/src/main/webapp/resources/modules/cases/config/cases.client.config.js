@@ -2,7 +2,7 @@
 
 angular.module('cases').run([ 'Menus', 'ConfigService', function(Menus, ConfigService) {
     var config = ConfigService.getModule({
-        moduleId : 'cases'
+        moduleId: 'cases'
     });
     config.$promise.then(function(config) {
         if (config.menus) {

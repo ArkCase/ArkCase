@@ -11,7 +11,8 @@ public class OktaErrorHandler extends DefaultResponseErrorHandler
         if (statusCode.is4xxClientError())
         {
             return false;
-        } else
+        }
+        else
         {
             return super.hasError(statusCode);
         }

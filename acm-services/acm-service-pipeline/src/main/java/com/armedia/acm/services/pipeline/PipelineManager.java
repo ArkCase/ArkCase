@@ -33,26 +33,18 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     private static final String POST_SAVE_HANDLER_ROLLING_BACK = "Post-save handler: [{}] rolling back";
 
     private static final String POST_SAVE_HANDLER_ROLLBACK_FAILED = "Post-save handler [{}] rollback failed with {}.";
-
-    /**
-     * List of handlers executed before saving the entity to database.
-     */
-    private List<PipelineHandler<T, S>> preSaveHandlers;
-
-    /**
-     * List of handlers executed after saving the entity to database.
-     */
-    private List<PipelineHandler<T, S>> postSaveHandlers;
-
     /**
      * Logger instance.
      */
     private final Logger log = LoggerFactory.getLogger(getClass());
-
-    public static interface PipelineManagerOperation<T>
-    {
-        T execute() throws PipelineProcessException;
-    }
+    /**
+     * List of handlers executed before saving the entity to database.
+     */
+    private List<PipelineHandler<T, S>> preSaveHandlers;
+    /**
+     * List of handlers executed after saving the entity to database.
+     */
+    private List<PipelineHandler<T, S>> postSaveHandlers;
 
     public T executeOperation(T entity, S pipelineContext, PipelineManagerOperation<T> operation) throws PipelineProcessException
     {
@@ -229,5 +221,10 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     public void setPostSaveHandlers(List<PipelineHandler<T, S>> postSaveHandlers)
     {
         this.postSaveHandlers = postSaveHandlers;
+    }
+
+    public static interface PipelineManagerOperation<T>
+    {
+        T execute() throws PipelineProcessException;
     }
 }

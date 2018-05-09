@@ -22,12 +22,9 @@ import javax.persistence.PersistenceContext;
 public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
 {
 
-    private AcmDataService acmDataService;
-
-    private UserTrackerService userTrackerService;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
-
+    private AcmDataService acmDataService;
+    private UserTrackerService userTrackerService;
     @PersistenceContext
     private EntityManager entityManager;
 

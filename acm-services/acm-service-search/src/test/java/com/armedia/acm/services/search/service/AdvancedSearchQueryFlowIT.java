@@ -1,6 +1,9 @@
 package com.armedia.acm.services.search.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 
@@ -26,10 +29,9 @@ import java.util.Map;
 @ContextConfiguration(locations = { "/spring/spring-library-search-service-test-mule.xml" })
 public class AdvancedSearchQueryFlowIT
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private MuleContextManager muleContextManager;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Test
     public void largeRequest() throws Exception

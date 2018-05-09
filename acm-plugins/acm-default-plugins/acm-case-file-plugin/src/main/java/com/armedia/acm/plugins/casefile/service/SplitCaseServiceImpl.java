@@ -128,8 +128,9 @@ public class SplitCaseServiceImpl implements SplitCaseService
         {
             if (participant.getParticipantLdapId().equals(auth.getName()))
                 continue;
-            if (ParticipantTypes.ASSIGNEE.equals(participant.getParticipantType())
+            if ((ParticipantTypes.ASSIGNEE.equals(participant.getParticipantType())
                     || ParticipantTypes.FOLLOWER.equals(participant.getParticipantType()))
+                    && !StringUtils.isEmpty(participant.getParticipantLdapId()))
             {
                 AcmParticipant copyParticipant = new AcmParticipant();
                 copyParticipant.setParticipantType(ParticipantTypes.FOLLOWER);
@@ -212,13 +213,13 @@ public class SplitCaseServiceImpl implements SplitCaseService
         this.acmTaskService = acmTaskService;
     }
 
-    public void setSplitCaseFileBusinessRule(SplitCaseFileBusinessRule splitCaseFileBusinessRule)
-    {
-        this.splitCaseFileBusinessRule = splitCaseFileBusinessRule;
-    }
-
     public SplitCaseFileBusinessRule getSplitCaseFileBusinessRule()
     {
         return splitCaseFileBusinessRule;
+    }
+
+    public void setSplitCaseFileBusinessRule(SplitCaseFileBusinessRule splitCaseFileBusinessRule)
+    {
+        this.splitCaseFileBusinessRule = splitCaseFileBusinessRule;
     }
 }

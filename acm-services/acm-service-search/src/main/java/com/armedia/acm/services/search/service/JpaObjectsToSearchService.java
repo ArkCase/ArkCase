@@ -180,23 +180,23 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
         }
     }
 
-    public void setSpringContextHolder(SpringContextHolder springContextHolder)
-    {
-        this.springContextHolder = springContextHolder;
-    }
-
     public SpringContextHolder getSpringContextHolder()
     {
         return springContextHolder;
     }
 
-    public void setSendToSolr(SendDocumentsToSolr sendToSolr)
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
     {
-        this.sendToSolr = sendToSolr;
+        this.springContextHolder = springContextHolder;
     }
 
     public SendDocumentsToSolr getSendToSolr()
     {
         return sendToSolr;
+    }
+
+    public void setSendToSolr(SendDocumentsToSolr sendToSolr)
+    {
+        this.sendToSolr = sendToSolr;
     }
 }

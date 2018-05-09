@@ -21,11 +21,10 @@ import java.util.stream.Collectors;
  */
 public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTask>
 {
+    private final transient Logger log = LoggerFactory.getLogger(getClass());
     private UserDao userDao;
     private TaskDao taskDao;
     private SearchAccessControlFields searchAccessControlFields;
-
-    private final transient Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public List<AcmTask> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -142,6 +141,12 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
 
         doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
         doc.setAdditionalProperty("parent_title_s", in.getParentObjectTitle());
+        /*
+         * 'task_owner_s' is explicitly added as an additional property, because the current schema does not support
+         * multivalues
+         * and doc.setOwner_s would not work
+         */
+        doc.setAdditionalProperty("task_owner_s", in.getOwner());
 
         doc.setTitle_parseable_lcs(in.getTitle());
 

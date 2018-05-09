@@ -15,9 +15,8 @@ import java.util.Map;
 public class AcmAssigneeChangeEvent extends AcmEvent
 {
 
-    private static final long serialVersionUID = -969356637766220472L;
-
     public static final String EVENT_TYPE = "com.armedia.acm.object.assignee.change";
+    private static final long serialVersionUID = -969356637766220472L;
 
     public AcmAssigneeChangeEvent(AcmAssignment source, String userId)
     {

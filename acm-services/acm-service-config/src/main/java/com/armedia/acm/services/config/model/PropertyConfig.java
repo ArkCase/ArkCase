@@ -13,9 +13,8 @@ import java.util.Map;
 
 public class PropertyConfig implements AcmConfig, Serializable, InitializingBean
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private static final long serialVersionUID = -1L;
-
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private String configName;
     private Map<Object, Object> properties = new HashMap<>();
     private String configDescription;

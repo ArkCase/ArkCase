@@ -5,12 +5,12 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileActiveVersionSetEvent;
+import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileCreatedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileDeletedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileMovedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileRenamedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileReplacedEvent;
-import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +21,8 @@ import org.springframework.security.core.Authentication;
 public class FileEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private ApplicationEventPublisher eventPublisher;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private ApplicationEventPublisher eventPublisher;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -85,7 +84,8 @@ public class FileEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(fileRenamedEvent);
     }
 
-    public void publishFileReplacedEvent(EcmFile source, EcmFileVersion previousActiveFileVersion, Authentication auth, String ipAddress, boolean succeeded)
+    public void publishFileReplacedEvent(EcmFile source, EcmFileVersion previousActiveFileVersion, Authentication auth, String ipAddress,
+            boolean succeeded)
     {
 
         log.debug("Publishing a file replaced event.");

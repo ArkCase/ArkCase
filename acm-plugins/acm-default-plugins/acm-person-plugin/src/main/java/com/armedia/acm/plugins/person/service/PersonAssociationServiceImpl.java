@@ -17,17 +17,12 @@ import org.springframework.transaction.TransactionException;
 
 public class PersonAssociationServiceImpl implements PersonAssociationService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    private SavePersonAssociationTransaction personAssociationTransaction;
-
-    private PersonAssociationDao personAssociationDao;
-
-    private PersonAssociationEventPublisher personAssociationEventPublisher;
-
-    private ObjectConverter objectConverter;
-
     SolrJoinDocumentsServiceImpl solrJoinDocumentsService;
+    private Logger log = LoggerFactory.getLogger(getClass());
+    private SavePersonAssociationTransaction personAssociationTransaction;
+    private PersonAssociationDao personAssociationDao;
+    private PersonAssociationEventPublisher personAssociationEventPublisher;
+    private ObjectConverter objectConverter;
 
     @Override
     public PersonAssociation savePersonAssociation(PersonAssociation personAssociation, Authentication authentication)

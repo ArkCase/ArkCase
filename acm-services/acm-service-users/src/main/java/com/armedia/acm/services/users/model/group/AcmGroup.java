@@ -41,6 +41,7 @@ import java.util.stream.Stream;
 @Entity
 @Table(name = "acm_group")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
+@LdapGroupNameValidation(message = "Ldap group name validation")
 public class AcmGroup implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = -2729731595684630823L;
@@ -387,6 +388,11 @@ public class AcmGroup implements Serializable, AcmEntity
         return ascendantsList;
     }
 
+    public void setAscendantsList(String ascendantsList)
+    {
+        this.ascendantsList = ascendantsList;
+    }
+
     /**
      * We will use this as pre-computed list of all ascendants found by traversing the full graph of groups and their
      * member groups trying to find path to this group. // TODO: find better separator then `,`, maybe `;` or `:`
@@ -419,11 +425,6 @@ public class AcmGroup implements Serializable, AcmEntity
         ascendantsList = ascendants.stream()
                 .sorted()
                 .collect(Collectors.joining(","));
-    }
-
-    public void setAscendantsList(String ascendantsList)
-    {
-        this.ascendantsList = ascendantsList;
     }
 
     @Override

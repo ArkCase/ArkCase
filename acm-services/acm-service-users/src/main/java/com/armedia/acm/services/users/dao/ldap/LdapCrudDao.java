@@ -97,14 +97,14 @@ class LdapCrudDao
         }
     }
 
+    public void setLdapDao(SpringLdapDao ldapDao)
+    {
+        this.ldapDao = ldapDao;
+    }
+
     @FunctionalInterface
     private interface LdapTemplateFunction<T>
     {
         T apply(LdapTemplate template) throws Exception;
-    }
-
-    public void setLdapDao(SpringLdapDao ldapDao)
-    {
-        this.ldapDao = ldapDao;
     }
 }

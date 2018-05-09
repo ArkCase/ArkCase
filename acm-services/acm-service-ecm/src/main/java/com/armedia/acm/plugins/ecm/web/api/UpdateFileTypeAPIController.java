@@ -30,9 +30,8 @@ import java.util.stream.Collectors;
 @RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
 public class UpdateFileTypeAPIController
 {
-    private EcmFileService ecmFileService;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private EcmFileService ecmFileService;
 
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/{fileId}/type/{fileType}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
