@@ -40,11 +40,6 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
     {
         try
         {
-            if (roleName == null || "".equals(roleName))
-            {
-                throw new AcmRolesPrivilegesException("Role name is undefined");
-            }
-
             JSONObject rolePrivilegesObject = new JSONObject(resource);
             JSONArray privelegesArray = rolePrivilegesObject.getJSONArray(PROP_PRIVILEGES);
             List<String> privileges = new ArrayList<>();
@@ -96,11 +91,6 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
 
         try
         {
-            if (roleName == null || "".equals(roleName))
-            {
-                throw new AcmRolesPrivilegesException("Role name is undefined");
-            }
-
             log.debug("Removing privileges from an application role [{}]", roleName);
             rolesPrivilegesService.removeRolesPrivileges(new ArrayList<>(Arrays.asList(roleName)), privileges);
             return new ResponseEntity<>(HttpStatus.OK);

@@ -120,8 +120,8 @@ public class RolesPrivilegesService
     public List<PrivilegeItem> getPrivilegesPaged(Map<String, String> privileges, String sortDirection,
             Integer startRow, Integer maxRows, String filterQuery)
     {
-        List<PrivilegeItem> result = new ArrayList<>();
-        result = privileges.entrySet().stream().map(privilege -> new PrivilegeItem(privilege.getKey(), privilege.getValue()))
+        List<PrivilegeItem> result = privileges.entrySet().stream()
+                .map(privilege -> new PrivilegeItem(privilege.getKey(), privilege.getValue()))
                 .collect(Collectors.toList());
 
         if (sortDirection.contains("DESC"))
@@ -203,7 +203,7 @@ public class RolesPrivilegesService
      * @return
      */
     public List<String> getRolesByNamePaged(String privilegeName, String sortBy, String sortDirection, Integer startRow, Integer maxRows,
-            Boolean authorized, String filterQuery) throws AcmRolesPrivilegesException
+            Boolean authorized, String filterName) throws AcmRolesPrivilegesException
     {
         List<String> rolesByPrivilege = retrieveRolesByPrivilege(privilegeName);
         List<String> allRoles = loadRoles();
@@ -233,9 +233,9 @@ public class RolesPrivilegesService
         }
         maxRows = maxRows > rolesByPrivilegePaged.size() ? rolesByPrivilegePaged.size() : maxRows;
 
-        if (!filterQuery.isEmpty())
+        if (!filterName.isEmpty())
         {
-            rolesByPrivilegePaged.removeIf(role -> !(role.toLowerCase().contains(filterQuery.toLowerCase())));
+            rolesByPrivilegePaged.removeIf(role -> !(role.toLowerCase().contains(filterName.toLowerCase())));
         }
 
         return rolesByPrivilegePaged.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());

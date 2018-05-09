@@ -292,15 +292,15 @@ public class DashboardService
     }
 
     public List<WidgetRoleName> getRolesByWidget(String widgetName, String sortBy, String sortDirection, Integer startRow,
-            Integer maxRows, String filterQuery, Boolean authorized, List<RolesGroupByWidgetDto> rolesGroupsPerWidget)
+            Integer maxRows, String filterName, Boolean authorized, List<RolesGroupByWidgetDto> rolesGroupsPerWidget)
             throws AcmWidgetException
     {
-        return getRolesGroupsPaged(rolesGroupsPerWidget, widgetName, sortBy, sortDirection, startRow, maxRows, authorized, filterQuery);
+        return getRolesGroupsPaged(rolesGroupsPerWidget, widgetName, sortBy, sortDirection, startRow, maxRows, authorized, filterName);
     }
 
     public List<WidgetRoleName> getRolesGroupsPaged(List<RolesGroupByWidgetDto> rolesGroupsPerWidget, String widgetName,
             String sortBy,
-            String sortDirection, Integer startRow, Integer maxRows, Boolean authorized, String filterQuery) throws AcmWidgetException
+            String sortDirection, Integer startRow, Integer maxRows, Boolean authorized, String filterName) throws AcmWidgetException
     {
         List<RolesGroupByWidgetDto> rolesGroupsByWidgetDto = addNotAuthorizedRolesPerWidget(rolesGroupsPerWidget);
         RolesGroupByWidgetDto roleGroupByWidgetDto = rolesGroupsByWidgetDto.stream()
@@ -333,9 +333,9 @@ public class DashboardService
         }
         maxRows = maxRows > result.size() ? result.size() : maxRows;
 
-        if (!filterQuery.isEmpty())
+        if (!filterName.isEmpty())
         {
-            result.removeIf(widgetRoleName -> !(widgetRoleName.getName().toLowerCase().contains(filterQuery.toLowerCase())));
+            result.removeIf(widgetRoleName -> !(widgetRoleName.getName().toLowerCase().contains(filterName.toLowerCase())));
         }
 
         return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());

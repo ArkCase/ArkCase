@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,7 +58,7 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows, Authentication authentication)
     {
-        List<String> rolesByNamePaged = null;
+        List<String> rolesByNamePaged = new ArrayList<>();
         try
         {
             rolesByNamePaged = rolesPrivilegesService.getRolesByNamePaged(privilegeName, sortBy, sortDirection, startRow, maxRows,
@@ -71,14 +72,14 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
         return rolesByNamePaged;
     }
 
-    @RequestMapping(value = "/rolesprivileges/{privilegeName:.+}/roles", params = { "fq" }, method = RequestMethod.GET, produces = {
+    @RequestMapping(value = "/rolesprivileges/{privilegeName:.+}/roles", params = { "fn" }, method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
     public List<String> findRolesByPrivilegeByName(
             @PathVariable(PROP_PRIVILEGE_NAME) String privilegeName,
             @RequestParam(value = "authorized") Boolean authorized,
-            @RequestParam(value = "fq") String filterQuery,
+            @RequestParam(value = "fn") String filterName,
             @RequestParam(value = "sortBy", required = false, defaultValue = "widgetName") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
@@ -88,7 +89,7 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
         try
         {
             return rolesPrivilegesService.getRolesByNamePaged(privilegeName, sortBy, sortDirection, startRow, maxRows, authorized,
-                    filterQuery);
+                    filterName);
         }
         catch (Exception e)
         {

@@ -20,7 +20,7 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
         getRolesGroups : getRolesGroups,
         addRoleGroupToWidget : addRoleGroupToWidget,
         removeRoleGroupToWidget : removeRoleGroupToWidget,
-        getRoleSGroupsByName : getRoleSGroupsByName
+        getRolesGroupsByName: getRolesGroupsByName
     });
 
     /**
@@ -138,7 +138,7 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
 
     /**
      * @ngdoc method
-     * @name getRoleSGroupsByName
+     * @name getRolesGroupsByName
      * @methodOf admin.service:Admin.DashboardConfigService
      *
      * @description
@@ -150,7 +150,7 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
      *      {n} data.n end position
      *      {start} data.start start position
      */
-    function getRoleSGroupsByName(data) {
+    function getRolesGroupsByName(data) {
         return $http({
             method : "GET",
             url : "api/latest/plugin/dashboard/widgets/" + data.widget.key + "/roles",
@@ -159,7 +159,7 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
                 authorized : data.isAuthorized,
                 n : (data.n ? data.n : 50),
                 start : (data.start ? data.start : 0),
-                fq : (data.filterWord ? data.filterWord : "")
+                fn: (data.filterWord ? data.filterWord : "")
             }
         });
     }
