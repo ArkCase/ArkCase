@@ -32,8 +32,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SolrContentDocument extends SolrAdvancedSearchDocument
 {
@@ -43,6 +45,70 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
 
     private String cmis_version_series_id_s;
 
+    /**
+     * 
+     * @return a map suitable for use in the Spring RestTemplate postForEntity method. The partner method
+     *         buildUrlTemlpate() provides the template needed by Spring.
+     */
+    public Map<String, Object> buildUrlValues()
+    {
+        Map<String, Object> values = new HashMap<>();
+        values.put("literal.allow_acl_ss", (getAllow_acl_ss() == null ? null : String.join("&literal.allow_acl_ss=", getAllow_acl_ss())));
+        values.put("literal.deny_acl_ss", (getDeny_acl_ss() == null ? null : String.join("&literal.deny_acl_ss=", getDeny_acl_ss())));
+        values.put("literal.hidden_b", isHidden_b());
+        values.put("literal.parent_ref_s", getParent_ref_s());
+        values.put("literal.status_lcs", getStatus_lcs());
+        values.put("literal.protected_object_b", isProtected_object_b());
+        values.put("literal.public_doc_b", isPublic_doc_b());
+        values.put("literal.id", getId());
+        values.put("literal.object_type_s", getObject_type_s());
+        values.put("literal.object_id_s", getObject_id_s());
+        values.put("literal.modified_date_tdt", getModified_date_tdt());
+        values.put("literal.modifier_lcs", getModifier_lcs());
+        values.put("literal.create_date_tdt", getCreate_date_tdt());
+        values.put("literal.creator_lcs", getCreator_lcs());
+        values.put("literal.name", getName());
+        values.put("literal.parent_id_s", getParent_id_s());
+        values.put("literal.parent_type_s", getParent_type_s());
+        values.put("literal.parent_number_lcs", getParent_number_lcs());
+        values.put("literal.title_parseable", getTitle_parseable());
+        values.put("literal.title_parseable_lcs", getTitle_parseable_lcs());
+        values.put("literal.assignee_full_name_lcs", getAssignee_full_name_lcs());
+        values.put("literal.type_lcs", getType_lcs());
+        values.put("literal.ext_s", getExt_s());
+        values.put("literal.mime_type_s", getMime_type_s());
+
+        if (getAdditionalProperties() != null)
+        {
+            for (Map.Entry<String, Object> entry : getAdditionalProperties().entrySet())
+            {
+                if (getSkipAdditionalPropertiesInURL() != null && !getSkipAdditionalPropertiesInURL().contains(entry.getKey()))
+                {
+                    values.put("literal." + entry.getKey(), entry.getValue());
+                }
+            }
+        }
+
+        return values;
+    }
+
+    /**
+     * 
+     * @return a URL template for use by the Spring Rest Template. You must also provide the values, via
+     *         buildUrlValues().
+     */
+    public String buildUrlTemplate()
+    {
+        return buildUrlValues().keySet().stream().map(k -> String.format("%s={%s}", k, k)).collect(Collectors.joining("&"));
+    }
+
+    /**
+     * This method is no longer used in the content-file-to-Solr flow. Kept for backwards compatibility.
+     * 
+     * @deprecated use buildUrlTemplate and buildUrlValues
+     * @return
+     */
+    @Deprecated
     public String getUrl()
     {
         String url = "literal.allow_acl_ss=" + (getAllow_acl_ss() == null ? null : String.join("&literal.allow_acl_ss=", getAllow_acl_ss()))
@@ -118,11 +184,13 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
         this.skipAdditionalPropertiesInURL = skipAdditionalPropertiesInURL;
     }
 
+    @Override
     public String getCmis_version_series_id_s()
     {
         return cmis_version_series_id_s;
     }
 
+    @Override
     public void setCmis_version_series_id_s(String cmis_version_series_id_s)
     {
         this.cmis_version_series_id_s = cmis_version_series_id_s;
