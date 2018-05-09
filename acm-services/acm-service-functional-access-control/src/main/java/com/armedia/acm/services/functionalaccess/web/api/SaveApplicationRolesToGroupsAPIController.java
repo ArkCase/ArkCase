@@ -46,7 +46,7 @@ public class SaveApplicationRolesToGroupsAPIController
 
         boolean retval = getFunctionalAccessService().saveGroupsToApplicationRole(groups, roleName, auth);
 
-        LOG.debug("Successfuly save ? " + retval);
+        LOG.debug("Successfuly save ? {}", retval);
 
         return retval;
     }
@@ -60,7 +60,7 @@ public class SaveApplicationRolesToGroupsAPIController
 
         boolean retval = getFunctionalAccessService().removeGroupsToApplicationRole(groups, roleName, auth);
 
-        LOG.debug("Successfuly deleted ? " + retval);
+        LOG.debug("Successfuly deleted ? {}", retval);
 
         return retval;
     }
