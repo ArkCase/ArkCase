@@ -15,11 +15,11 @@
  */
 angular.module('admin').service('Admin.DashboardConfigService', function($http) {
     return ({
-        getRolesByWidgets : getRolesByWidgets,
-        authorizeRolesForWidget : authorizeRolesForWidget,
-        getRolesGroups : getRolesGroups,
-        addRoleGroupToWidget : addRoleGroupToWidget,
-        removeRoleGroupToWidget : removeRoleGroupToWidget,
+        getRolesByWidgets: getRolesByWidgets,
+        authorizeRolesForWidget: authorizeRolesForWidget,
+        getRolesGroups: getRolesGroups,
+        addRoleGroupToWidget: addRoleGroupToWidget,
+        removeRoleGroupToWidget: removeRoleGroupToWidget,
         getRolesGroupsByName: getRolesGroupsByName
     });
 
@@ -35,8 +35,8 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
      */
     function getRolesByWidgets() {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/dashboard/widgets/rolesByWidget/all"
+            method: "GET",
+            url: "api/latest/plugin/dashboard/widgets/rolesByWidget/all"
         });
     }
 
@@ -51,11 +51,11 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
      */
     function authorizeRolesForWidget(widget) {
         return $http({
-            method : "POST",
-            url : "api/latest/plugin/dashboard/widgets/set",
-            data : widget,
-            headers : {
-                "Content-Type" : "application/json"
+            method: "POST",
+            url: "api/latest/plugin/dashboard/widgets/set",
+            data: widget,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }
@@ -76,12 +76,12 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
      */
     function getRolesGroups(data) {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/dashboard/widgets/" + data.role.key + "/roles",
-            cache : false,
-            params : {
-                authorized : data.isAuthorized,
-                n : (data.n ? data.n : 50)
+            method: "GET",
+            url: "api/latest/plugin/dashboard/widgets/" + data.role.key + "/roles",
+            cache: false,
+            params: {
+                authorized: data.isAuthorized,
+                n: (data.n ? data.n : 50)
             }
         });
     }
@@ -100,13 +100,13 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
      */
     function addRoleGroupToWidget(widgetName, rolesGroups, isAuthorized) {
         return $http({
-            method : "PUT",
-            url : "api/latest/plugin/dashboard/widgets/roleGroupToWidget",
-            cache : false,
-            data : rolesGroups,
-            params : {
-                widgetName : widgetName,
-                authorized : isAuthorized
+            method: "PUT",
+            url: "api/latest/plugin/dashboard/widgets/roleGroupToWidget",
+            cache: false,
+            data: rolesGroups,
+            params: {
+                widgetName: widgetName,
+                authorized: isAuthorized
             }
         });
     }
@@ -125,13 +125,13 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
      */
     function removeRoleGroupToWidget(widgetName, rolesGroups, isAuthorized) {
         return $http({
-            method : "PUT",
-            url : "api/latest/plugin/dashboard/widgets/roleGroupToWidget",
-            cache : false,
-            data : rolesGroups,
-            params : {
-                widgetName : widgetName,
-                authorized : isAuthorized
+            method: "PUT",
+            url: "api/latest/plugin/dashboard/widgets/roleGroupToWidget",
+            cache: false,
+            data: rolesGroups,
+            params: {
+                widgetName: widgetName,
+                authorized: isAuthorized
             }
         });
     }
@@ -152,13 +152,13 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
      */
     function getRolesGroupsByName(data) {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/dashboard/widgets/" + data.widget.key + "/roles",
-            cache : false,
-            params : {
-                authorized : data.isAuthorized,
-                n : (data.n ? data.n : 50),
-                start : (data.start ? data.start : 0),
+            method: "GET",
+            url: "api/latest/plugin/dashboard/widgets/" + data.widget.key + "/roles",
+            cache: false,
+            params: {
+                authorized: data.isAuthorized,
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0),
                 fn: (data.filterWord ? data.filterWord : "")
             }
         });
