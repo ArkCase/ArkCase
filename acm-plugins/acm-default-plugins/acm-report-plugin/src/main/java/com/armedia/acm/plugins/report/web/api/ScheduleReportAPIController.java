@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.report.model.PentahoReportSchedule;
 import com.armedia.acm.plugins.report.model.PentahoScheduleRequest;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
 import com.armedia.acm.plugins.report.service.ScheduleReportService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created by dwu on 6/13/2017.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/report", "/api/latest/plugin/report"})
+@RequestMapping({ "/api/v1/plugin/report", "/api/latest/plugin/report" })
 public class ScheduleReportAPIController
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleReportAPIController.class);
@@ -37,9 +38,11 @@ public class ScheduleReportAPIController
             throw new ScheduleReportException("Invalid input given or missing schedule type: DAILY, WEEKLY, etc.");
         }
 
-        PentahoScheduleRequest pentahoScheduleRequest = new PentahoScheduleRequest(pentahoReportSchedule.getUiPassParam(), pentahoReportSchedule.getStartTime(),
+        PentahoScheduleRequest pentahoScheduleRequest = new PentahoScheduleRequest(pentahoReportSchedule.getUiPassParam(),
+                pentahoReportSchedule.getStartTime(),
                 pentahoReportSchedule.getEndTime(), pentahoReportSchedule.getJobName(), pentahoReportSchedule.getEmails(),
-                pentahoReportSchedule.getFilterStartDate(), pentahoReportSchedule.getFilterEndDate(), pentahoReportSchedule.getReportFile(), scheduleInputFolder, scheduleOutputFolder);
+                pentahoReportSchedule.getFilterStartDate(), pentahoReportSchedule.getFilterEndDate(), pentahoReportSchedule.getReportFile(),
+                scheduleInputFolder, scheduleOutputFolder);
         getScheduleReportService().scheduleReport(pentahoScheduleRequest.toJSONSting());
 
         LOGGER.debug(pentahoReportSchedule.toString());

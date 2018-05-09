@@ -12,12 +12,12 @@
  */
 angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', function($http) {
     return {
-        PROPERTIES : {
-            DISPLAY_USERNAME : 'displayUserName',
-            IDLE_LIMIT : 'idleLimit',
-            IDLE_PULL : 'idlePull',
-            IDLE_CONFIRM : 'idleConfirm',
-            HISTORY_DAYS : 'historyDays'
+        PROPERTIES: {
+            DISPLAY_USERNAME: 'displayUserName',
+            IDLE_LIMIT: 'idleLimit',
+            IDLE_PULL: 'idlePull',
+            IDLE_CONFIRM: 'idleConfirm',
+            HISTORY_DAYS: 'historyDays'
         },
 
         /**
@@ -31,10 +31,10 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
          *
          * @returns {Object} Application seting structure
          */
-        getSettings : function() {
+        getSettings: function() {
             return $http({
-                method : 'GET',
-                url : 'api/latest/plugin/admin/app-properties'
+                method: 'GET',
+                url: 'api/latest/plugin/admin/app-properties'
             });
         },
 
@@ -50,10 +50,10 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
          *
          * @returns {String} Application settings value
          */
-        getProperty : function(propertyName) {
+        getProperty: function(propertyName) {
             return $http({
-                method : 'GET',
-                url : 'api/latest/plugin/admin/app-properties/' + propertyName
+                method: 'GET',
+                url: 'api/latest/plugin/admin/app-properties/' + propertyName
             });
         },
 
@@ -69,14 +69,14 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
          *
          * @returns {String} updated Application settings value
          */
-        setProperty : function(propertyName, propertyValue) {
+        setProperty: function(propertyName, propertyValue) {
             var data = {};
             data[propertyName] = propertyValue;
 
             return $http({
-                method : 'PUT',
-                url : 'api/latest/plugin/admin/app-properties',
-                data : data
+                method: 'PUT',
+                url: 'api/latest/plugin/admin/app-properties',
+                data: data
             });
         }
     }

@@ -24,5 +24,6 @@ public class TestQueueListener implements MessageListener
     {
         Integer sofar = received.incrementAndGet();
         log.info("got message # {}", sofar);
+
     }
 }

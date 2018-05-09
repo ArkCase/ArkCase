@@ -138,16 +138,16 @@ public class ConvertedFileWatcher implements FileListener, ApplicationEventPubli
         return fileObject.getName().getExtension();
     }
 
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         log.debug("The application event publisher has been set!");
         this.applicationEventPublisher = applicationEventPublisher;
-    }
-
-    public ApplicationEventPublisher getApplicationEventPublisher()
-    {
-        return applicationEventPublisher;
     }
 
     public FileObject getBaseFolder()

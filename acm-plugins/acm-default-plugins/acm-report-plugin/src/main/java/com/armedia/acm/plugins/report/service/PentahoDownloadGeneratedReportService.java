@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.report.service;
 
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -42,7 +43,8 @@ public class PentahoDownloadGeneratedReportService
                 throw new ScheduleReportException(response.getStatusCode().toString());
             }
 
-        } catch (ScheduleReportException e)
+        }
+        catch (ScheduleReportException e)
         {
             LOGGER.error("download encountered error. May be Rest call connection or file not found error: {}", e.getMessage(), e);
             throw e;
@@ -51,7 +53,8 @@ public class PentahoDownloadGeneratedReportService
 
     public String buildDownloadUrl(String fileName)
     {
-        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "") + getDownloadApi().replace("{reportFileName}", fileName);
+        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "")
+                + getDownloadApi().replace("{reportFileName}", fileName);
     }
 
     public ResponseEntity<byte[]> getResponse()

@@ -19,11 +19,18 @@ import java.util.Set;
 
 public class AcmUsersSyncResultTest
 {
+    private static final String LANG = "en";
     private AcmUsersSyncResult unit;
 
-    private static final String LANG = "en";
+    // @formatter:off
+
+    static Set<String> fromArray(String... elements)
+    {
+        return new HashSet<>(Arrays.asList(elements));
+    }
 
     // @formatter:off
+
     /**
      * ldap state db state
      *
@@ -71,6 +78,7 @@ public class AcmUsersSyncResultTest
     }
 
     // @formatter:off
+
     /**
      * ldap state db state
      *
@@ -115,6 +123,7 @@ public class AcmUsersSyncResultTest
     }
 
     // @formatter:off
+
     /**
      * ldap state db state
      *
@@ -181,7 +190,6 @@ public class AcmUsersSyncResultTest
         assertThat(actual.get("3"), is(user3));
     }
 
-    // @formatter:off
     /**
      * ldap state db state
      *
@@ -234,10 +242,5 @@ public class AcmUsersSyncResultTest
         assertThat(actual.get("3").getUserId(), is("3"));
         assertThat(actual.get("3").getUserState(), is(AcmUserState.VALID));
         assertThat(actual.get("3").getMail(), is("user3@arkcase"));
-    }
-
-    static Set<String> fromArray(String... elements)
-    {
-        return new HashSet<>(Arrays.asList(elements));
     }
 }

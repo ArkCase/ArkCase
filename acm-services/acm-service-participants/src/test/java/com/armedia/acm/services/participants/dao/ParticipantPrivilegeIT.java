@@ -31,14 +31,11 @@ import javax.persistence.Query;
 @TransactionConfiguration(defaultRollback = true)
 public class ParticipantPrivilegeIT
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     @PersistenceContext
     private EntityManager entityManager;
-
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     private String objectType = "TEST OBJECT TYPE";
     private Long objectId = 500L;
     private String participantLdapId = "TEST ACCESSOR ID";

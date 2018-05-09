@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.dashboard.site.model.Site;
 import com.armedia.acm.plugins.dashboard.site.model.SiteConstants;
 import com.armedia.acm.plugins.dashboard.site.model.SiteEvent;
 import com.google.common.base.Preconditions;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.MediaType;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpSession;
  * Created by joseph.mcgrady on 4/26/2017.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/dashboard/widgets/site", "/api/latest/plugin/dashboard/widgets/site"})
+@RequestMapping({ "/api/v1/plugin/dashboard/widgets/site", "/api/latest/plugin/dashboard/widgets/site" })
 public class SaveSiteAPIController implements ApplicationEventPublisherAware
 {
     private SiteDao siteDao;
@@ -42,7 +43,8 @@ public class SaveSiteAPIController implements ApplicationEventPublisherAware
             Site saved = getSiteDao().save(site);
             publishSiteEvent(httpSession, authentication, saved, eventType, true);
             return saved;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             publishSiteEvent(httpSession, authentication, site, eventType, false);
             throw new AcmCreateObjectFailedException("site", e.getMessage(), e);

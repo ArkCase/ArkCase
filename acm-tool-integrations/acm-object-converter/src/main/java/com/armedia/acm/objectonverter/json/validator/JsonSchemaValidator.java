@@ -44,6 +44,15 @@ import java.util.Map;
 public class JsonSchemaValidator
 
 {
+    private static final Function<SchemaContext, JsonRef> FUNCTION = new Function<SchemaContext, JsonRef>()
+    {
+        @Override
+        public JsonRef apply(final SchemaContext input)
+        {
+            return input.getSchema().getDollarSchema();
+        }
+    };
+
     public ProcessingReport validate(File schema) throws IOException, ProcessingException
     {
         JsonFactory jsonFactory = new JsonFactory();
@@ -76,15 +85,6 @@ public class JsonSchemaValidator
 
         return report;
     }
-
-    private static final Function<SchemaContext, JsonRef> FUNCTION = new Function<SchemaContext, JsonRef>()
-    {
-        @Override
-        public JsonRef apply(final SchemaContext input)
-        {
-            return input.getSchema().getDollarSchema();
-        }
-    };
 
     private Processor<SchemaContext, ValidatorList> buildProcessor(ValidationConfiguration validationCfg, SchemaLoader loader)
     {

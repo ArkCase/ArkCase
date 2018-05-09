@@ -21,11 +21,10 @@ import java.util.stream.Collectors;
  */
 public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTask>
 {
+    private final transient Logger log = LoggerFactory.getLogger(getClass());
     private UserDao userDao;
     private TaskDao taskDao;
     private SearchAccessControlFields searchAccessControlFields;
-
-    private final transient Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public List<AcmTask> getObjectsModifiedSince(Date lastModified, int start, int pageSize)

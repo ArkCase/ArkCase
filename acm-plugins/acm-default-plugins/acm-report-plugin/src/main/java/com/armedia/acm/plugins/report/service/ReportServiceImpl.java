@@ -44,11 +44,10 @@ import java.util.stream.Collectors;
 
 public class ReportServiceImpl implements ReportService
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
-
     private static final String PENTAHO_DASHBOARD_REPORT_EXTENSION = ".xdash";
     private static final String PENTAHO_ANALYSIS_REPORT_EXTENSION = ".xanalyzer";
     private static final String PENTAHO_INTERACTIVE_REPORT_EXTENSION = ".prpti";
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
     private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
     private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE = "PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE";

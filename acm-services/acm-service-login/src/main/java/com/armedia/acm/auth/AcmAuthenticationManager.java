@@ -182,14 +182,14 @@ public class AcmAuthenticationManager implements AuthenticationManager
         this.authoritiesMapper = authoritiesMapper;
     }
 
-    public void setAuthenticationEventPublisher(DefaultAuthenticationEventPublisher authenticationEventPublisher)
-    {
-        this.authenticationEventPublisher = authenticationEventPublisher;
-    }
-
     public DefaultAuthenticationEventPublisher getAuthenticationEventPublisher()
     {
         return authenticationEventPublisher;
+    }
+
+    public void setAuthenticationEventPublisher(DefaultAuthenticationEventPublisher authenticationEventPublisher)
+    {
+        this.authenticationEventPublisher = authenticationEventPublisher;
     }
 
     public UserDao getUserDao()

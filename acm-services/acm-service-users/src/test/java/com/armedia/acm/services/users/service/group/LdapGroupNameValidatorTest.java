@@ -1,20 +1,22 @@
 package com.armedia.acm.services.users.service.group;
 
-import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.group.AcmGroupType;
-import org.easymock.EasyMockSupport;
-import org.junit.Test;
-
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-public class LdapGroupNameValidatorTest extends EasyMockSupport {
+import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
+
+import org.easymock.EasyMockSupport;
+import org.junit.Test;
+
+public class LdapGroupNameValidatorTest extends EasyMockSupport
+{
 
     private LdapGroupNameValidator unit = new LdapGroupNameValidator();
 
-
     @Test
-    public void invalidLdapGroupNameLength(){
+    public void invalidLdapGroupNameLength()
+    {
         AcmGroup acmGroup = new AcmGroup();
         acmGroup.setName("ACM_ADMINISTATOR_DEV_TEST_VALIDATE_LDAP_GROUP_NAME_LENGTH_TESTTTTTTTTTTTTTTTTTTTTTTTT@ARMEDIA.COM");
         acmGroup.setType(AcmGroupType.LDAP_GROUP);
@@ -25,7 +27,8 @@ public class LdapGroupNameValidatorTest extends EasyMockSupport {
     }
 
     @Test
-    public void validLdapGroupNameLength(){
+    public void validLdapGroupNameLength()
+    {
         AcmGroup acmGroup = new AcmGroup();
         acmGroup.setName("ACM_ADMINISTATOR_DEV@ARMEDIA.COM");
         acmGroup.setType(AcmGroupType.LDAP_GROUP);
@@ -35,7 +38,8 @@ public class LdapGroupNameValidatorTest extends EasyMockSupport {
     }
 
     @Test
-    public void undefinedLdapGroupType(){
+    public void undefinedLdapGroupType()
+    {
         AcmGroup acmGroup = new AcmGroup();
         acmGroup.setName("ACM_ADMINISTATOR_DEV@ARMEDIA.COM");
         acmGroup.setType(null);

@@ -23,19 +23,14 @@ public class OutlookCalendarItem extends OutlookItem
     private ExtendedPropertyDefinition extendedPropertyDefinition;
     private Object extendedPropertyValue;
 
-    public void setAllDayEvent(Boolean allDayEvent)
-    {
-        this.allDayEvent = allDayEvent;
-    }
-
     public Boolean getAllDayEvent()
     {
         return allDayEvent;
     }
 
-    public void setCancelled(Boolean cancelled)
+    public void setAllDayEvent(Boolean allDayEvent)
     {
-        this.cancelled = cancelled;
+        this.allDayEvent = allDayEvent;
     }
 
     public Boolean getCancelled()
@@ -43,9 +38,9 @@ public class OutlookCalendarItem extends OutlookItem
         return cancelled;
     }
 
-    public void setMeeting(Boolean meeting)
+    public void setCancelled(Boolean cancelled)
     {
-        this.meeting = meeting;
+        this.cancelled = cancelled;
     }
 
     public Boolean getMeeting()
@@ -53,9 +48,9 @@ public class OutlookCalendarItem extends OutlookItem
         return meeting;
     }
 
-    public void setRecurring(Boolean recurring)
+    public void setMeeting(Boolean meeting)
     {
-        this.recurring = recurring;
+        this.meeting = meeting;
     }
 
     public Boolean getRecurring()
@@ -63,9 +58,9 @@ public class OutlookCalendarItem extends OutlookItem
         return recurring;
     }
 
-    public void setStartDate(Date startDate)
+    public void setRecurring(Boolean recurring)
     {
-        this.startDate = startDate;
+        this.recurring = recurring;
     }
 
     public Date getStartDate()
@@ -73,14 +68,19 @@ public class OutlookCalendarItem extends OutlookItem
         return startDate;
     }
 
-    public void setEndDate(Date endDate)
+    public void setStartDate(Date startDate)
     {
-        this.endDate = endDate;
+        this.startDate = startDate;
     }
 
     public Date getEndDate()
     {
         return endDate;
+    }
+
+    public void setEndDate(Date endDate)
+    {
+        this.endDate = endDate;
     }
 
     public Date getRecurringEndDate()

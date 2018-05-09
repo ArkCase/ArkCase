@@ -17,14 +17,12 @@ import java.util.Map;
 public class CaseFileStartBusinessProcessIfNeededHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
 
-    private CaseFileStartBusinessProcessBusinessRule startBusinessProcessBusinessRule;
-
-    private StartBusinessProcessService startBusinessProcessService;
-
     /**
      * Logger instance.
      */
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private CaseFileStartBusinessProcessBusinessRule startBusinessProcessBusinessRule;
+    private StartBusinessProcessService startBusinessProcessService;
 
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException

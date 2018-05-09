@@ -3,6 +3,7 @@ package com.armedia.acm.auth.okta.model.user;
 import com.armedia.acm.auth.okta.model.ProviderType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -88,9 +89,11 @@ public class OktaUserCredentials
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
+        if (this == o)
+            return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         OktaUserCredentials that = (OktaUserCredentials) o;
 

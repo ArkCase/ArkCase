@@ -2,27 +2,13 @@
 
 angular.module('document-details').controller(
         'Document.TagsController',
-        [
-                '$scope',
-                '$filter',
-                '$stateParams',
-                '$q',
-                '$modal',
-                'UtilService',
-                'ConfigService',
-                'Helper.UiGridService',
-                'ObjectService',
-                'Object.TagsService',
-                'MessageService',
-                '$translate',
-                'EcmService',
-                function($scope, $filter, $stateParams, $q, $modal, Util, ConfigService, HelperUiGridService, ObjectService,
-                        ObjectTagsService, messageService, $translate, EcmService) {
+        [ '$scope', '$filter', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.TagsService', 'MessageService', '$translate', 'EcmService',
+                function($scope, $filter, $stateParams, $q, $modal, Util, ConfigService, HelperUiGridService, ObjectService, ObjectTagsService, messageService, $translate, EcmService) {
 
                     $scope.tags = [];
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
                     var promiseUsers = gridHelper.getUsers();
 
@@ -56,17 +42,17 @@ angular.module('document-details').controller(
                     };
 
                     EcmService.getFile({
-                        fileId : $stateParams.id
+                        fileId: $stateParams.id
                     }).$promise.then(function(ecmFileInfo) {
                         $scope.parentTitle = ecmFileInfo.fileName;
                     });
 
                     $scope.addNew = function() {
                         var modalInstance = $modal.open({
-                            animation : $scope.animationsEnabled,
-                            templateUrl : 'modules/document-details/views/components/tags-modal.client.view.html',
-                            controller : 'Document.TagsModalController',
-                            size : 'lg'
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'modules/document-details/views/components/tags-modal.client.view.html',
+                            controller: 'Document.TagsModalController',
+                            size: 'lg'
                         });
 
                         modalInstance.result.then(function(tags) {
@@ -79,8 +65,7 @@ angular.module('document-details').controller(
                                             return tagAss.id == tag.object_id_s;
                                         });
                                         if (tagsFound.length == 0) {
-                                            ObjectTagsService.associateTag($stateParams.id, ObjectService.ObjectTypes.FILE,
-                                                    $scope.parentTitle, tag.object_id_s).then(function(returnedTag) {
+                                            ObjectTagsService.associateTag($stateParams.id, ObjectService.ObjectTypes.FILE, $scope.parentTitle, tag.object_id_s).then(function(returnedTag) {
                                                 var tagToAdd = angular.copy(returnedTag);
                                                 tagToAdd.tagName = tag.tags_s;
                                                 tagToAdd.id = returnedTag.tagId;
@@ -89,15 +74,13 @@ angular.module('document-details').controller(
                                                 $scope.gridOptions.totalItems = $scope.tags.length;
                                             });
                                         } else {
-                                            messageService.info(tag.tags_s + " "
-                                                    + $translate.instant('documentDetails.comp.tags.message.tagAssociated'));
+                                            messageService.info(tag.tags_s + " " + $translate.instant('documentDetails.comp.tags.message.tagAssociated'));
                                             _.remove(tagsFound, function() {
                                                 return tag;
                                             });
                                         }
                                     } else {
-                                        ObjectTagsService.associateTag($stateParams.id, ObjectService.ObjectTypes.FILE, $scope.parentTitle,
-                                                tag.id).then(function() {
+                                        ObjectTagsService.associateTag($stateParams.id, ObjectService.ObjectTypes.FILE, $scope.parentTitle, tag.id).then(function() {
                                             $scope.tags.push(tag);
                                             $scope.gridOptions.data = $scope.tags;
                                             $scope.gridOptions.totalItems = $scope.tags.length;
@@ -112,13 +95,12 @@ angular.module('document-details').controller(
                     };
 
                     $scope.deleteRow = function(rowEntity) {
-                        ObjectTagsService.removeAssociateTag($stateParams.id, ObjectService.ObjectTypes.FILE, rowEntity.id).then(
-                                function() {
-                                    gridHelper.deleteRow(rowEntity);
-                                    messageService.info($translate.instant('documentDetails.comp.tags.message.delete.success'));
-                                }, function() {
-                                    messageService.error($translate.instant('documentDetails.comp.tags.message.delete.error'));
-                                });
+                        ObjectTagsService.removeAssociateTag($stateParams.id, ObjectService.ObjectTypes.FILE, rowEntity.id).then(function() {
+                            gridHelper.deleteRow(rowEntity);
+                            messageService.info($translate.instant('documentDetails.comp.tags.message.delete.success'));
+                        }, function() {
+                            messageService.error($translate.instant('documentDetails.comp.tags.message.delete.error'));
+                        });
                     };
 
                 } ]);

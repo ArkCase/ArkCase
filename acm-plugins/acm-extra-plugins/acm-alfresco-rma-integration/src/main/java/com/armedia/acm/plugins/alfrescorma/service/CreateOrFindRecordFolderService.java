@@ -21,10 +21,8 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
 {
 
     private final String service = "/s/api/type/rma%3arecordFolder/formprocessor";
-
-    private EcmFileService ecmFileService;
-
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private EcmFileService ecmFileService;
 
     /**
      * The context must have:

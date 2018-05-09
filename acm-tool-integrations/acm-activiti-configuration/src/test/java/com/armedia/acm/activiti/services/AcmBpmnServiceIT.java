@@ -57,18 +57,15 @@ import java.util.Set;
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class AcmBpmnServiceIT
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     @Autowired
     AcmBpmnService acmBpmnService;
-
     @Autowired
     AcmBpmnDao acmBpmnDao;
-
     @Autowired
     RepositoryService activitiRepositoryService;
     Set<String> filesToDelete = null;
     Set<String> deploymentsIdToDelete = null;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

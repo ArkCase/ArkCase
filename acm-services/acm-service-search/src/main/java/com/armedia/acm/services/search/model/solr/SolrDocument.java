@@ -367,14 +367,14 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.notes_no_html_tags_parseable = notes_no_html_tags_parseable;
     }
 
-    public void setParent_object_id_i(Long parent_object_id_i)
-    {
-        this.parent_object_id_i = parent_object_id_i;
-    }
-
     public Long getParent_object_id_i()
     {
         return parent_object_id_i;
+    }
+
+    public void setParent_object_id_i(Long parent_object_id_i)
+    {
+        this.parent_object_id_i = parent_object_id_i;
     }
 
     public String getDisposition_id_s()
@@ -437,19 +437,14 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.endDate_s = endDate_s;
     }
 
-    public void setFolder_id_i(Long folder_id_i)
-    {
-        this.folder_id_i = folder_id_i;
-    }
-
     public Long getFolder_id_i()
     {
         return folder_id_i;
     }
 
-    public void setFolder_name_s(String folder_name_s)
+    public void setFolder_id_i(Long folder_id_i)
     {
-        this.folder_name_s = folder_name_s;
+        this.folder_id_i = folder_id_i;
     }
 
     public String getFolder_name_s()
@@ -457,9 +452,9 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return folder_name_s;
     }
 
-    public void setType_s(String type_s)
+    public void setFolder_name_s(String folder_name_s)
     {
-        this.type_s = type_s;
+        this.folder_name_s = folder_name_s;
     }
 
     public String getType_s()
@@ -467,9 +462,9 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return type_s;
     }
 
-    public void setVersion_s(String version_s)
+    public void setType_s(String type_s)
     {
-        this.version_s = version_s;
+        this.type_s = type_s;
     }
 
     public String getVersion_s()
@@ -477,9 +472,9 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return version_s;
     }
 
-    public void setName_lcs(String name_lcs)
+    public void setVersion_s(String version_s)
     {
-        this.name_lcs = name_lcs;
+        this.version_s = version_s;
     }
 
     public String getName_lcs()
@@ -487,9 +482,9 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return name_lcs;
     }
 
-    public void setParent_folder_id_i(Long parent_folder_id_i)
+    public void setName_lcs(String name_lcs)
     {
-        this.parent_folder_id_i = parent_folder_id_i;
+        this.name_lcs = name_lcs;
     }
 
     public Long getParent_folder_id_i()
@@ -497,9 +492,9 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return parent_folder_id_i;
     }
 
-    public void setCategory_s(String category_s)
+    public void setParent_folder_id_i(Long parent_folder_id_i)
     {
-        this.category_s = category_s;
+        this.parent_folder_id_i = parent_folder_id_i;
     }
 
     public String getCategory_s()
@@ -507,14 +502,19 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return category_s;
     }
 
-    public void setCmis_version_series_id_s(String cmis_version_series_id_s)
+    public void setCategory_s(String category_s)
     {
-        this.cmis_version_series_id_s = cmis_version_series_id_s;
+        this.category_s = category_s;
     }
 
     public String getCmis_version_series_id_s()
     {
         return cmis_version_series_id_s;
+    }
+
+    public void setCmis_version_series_id_s(String cmis_version_series_id_s)
+    {
+        this.cmis_version_series_id_s = cmis_version_series_id_s;
     }
 
     public String getMime_type_s()
@@ -547,14 +547,14 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.notification_type_s = notification_type_s;
     }
 
-    public void setParent_ref_s(String parent_ref_s)
-    {
-        this.parent_ref_s = parent_ref_s;
-    }
-
     public String getParent_ref_s()
     {
         return parent_ref_s;
+    }
+
+    public void setParent_ref_s(String parent_ref_s)
+    {
+        this.parent_ref_s = parent_ref_s;
     }
 
     public String getData_s()

@@ -27,10 +27,8 @@ angular.module('cases').controller(
                 'Acm.StoreService',
                 'ModalDialogService',
                 '$timeout',
-                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService,
-                        ObjectLookupService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication,
-                        PermissionsService, UserInfoService, ObjectTaskService, TaskInfoService, CaseFutureApprovalService, MessageService,
-                        Store, ModalDialogService, $timeout) {
+                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication, PermissionsService, UserInfoService, ObjectTaskService,
+                        TaskInfoService, CaseFutureApprovalService, MessageService, Store, ModalDialogService, $timeout) {
 
                     $scope.userSearchConfig = null;
                     $scope.gridOptions = $scope.gridOptions || {};
@@ -45,24 +43,24 @@ angular.module('cases').controller(
                     var currentUser = '';
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "cases",
-                        componentId : "approvalRouting",
-                        retrieveObjectInfo : CaseInfoService.getCaseInfo,
-                        validateObjectInfo : CaseInfoService.validateCaseInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "cases",
+                        componentId: "approvalRouting",
+                        retrieveObjectInfo: CaseInfoService.getCaseInfo,
+                        validateObjectInfo: CaseInfoService.validateCaseInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
                         $scope.userSearchConfig = _.find(moduleConfig.components, {
-                            id : "userSearch"
+                            id: "userSearch"
                         });
                         return moduleConfig;
                     });
@@ -116,8 +114,7 @@ angular.module('cases').controller(
                                 }
                             });
 
-                            CaseFutureApprovalService.getBusinessProcessVariableForObject("CASE_FILE", objectInfo.id,
-                                    "nonConcurEndsApprovals", true).then(function(response) {
+                            CaseFutureApprovalService.getBusinessProcessVariableForObject("CASE_FILE", objectInfo.id, "nonConcurEndsApprovals", true).then(function(response) {
                                 if (!Util.isEmpty(response.data)) {
                                     $scope.nonConcurEndsApprovals = response.data;
                                 }
@@ -125,8 +122,7 @@ angular.module('cases').controller(
 
                         } else if (!Util.isEmpty(objectInfo.buckslipFutureTasks)) {
                             $scope.taskInfo = objectInfo;
-                            CaseFutureApprovalService.getBuckslipProcessesForChildren(objectInfo.parentObjectType,
-                                    objectInfo.parentObjectId).then(function(response) {
+                            CaseFutureApprovalService.getBuckslipProcessesForChildren(objectInfo.parentObjectType, objectInfo.parentObjectId).then(function(response) {
                                 fetchBuckslipProcess(response.data[0]);
                                 $scope.nonConcurEndsApprovals = $scope.buckslipProcess.nonConcurEndsApprovals;
                             });
@@ -141,18 +137,18 @@ angular.module('cases').controller(
 
                     $scope.userSearch = function() {
                         var modalMetadata = {
-                            moduleName : "cases",
-                            templateUrl : "modules/cases/views/components/case-new-future-task.client.view.html",
-                            controllerName : "Cases.NewFutureTaskController"
+                            moduleName: "cases",
+                            templateUrl: "modules/cases/views/components/case-new-future-task.client.view.html",
+                            controllerName: "Cases.NewFutureTaskController"
                         };
                         ModalDialogService.showModal(modalMetadata).then(function(result) {
                             var futureTask = {
-                                approverId : result.pickedUserId,
-                                approverFullName : result.pickedUserName,
-                                groupName : result.pickedGroupId,
-                                taskName : result.futureTaskTitle,
-                                details : result.futureTaskDetails,
-                                addedByFullName : currentUser
+                                approverId: result.pickedUserId,
+                                approverFullName: result.pickedUserName,
+                                groupName: result.pickedGroupId,
+                                taskName: result.futureTaskTitle,
+                                details: result.futureTaskDetails,
+                                addedByFullName: currentUser
                             }
                             if (!Util.isEmpty(futureTask.approverId) && !Util.isEmpty(futureTask.taskName)) {
                                 $scope.buckslipProcess.futureTasks.push(futureTask);
@@ -171,26 +167,21 @@ angular.module('cases').controller(
                             $scope.initInProgress = true;
                             $scope.buckslipProcess.nonConcurEndsApprovals = $scope.nonConcurEndsApprovals;
 
-                            CaseFutureApprovalService.updateBuckslipProcess($scope.buckslipProcess).then(
-                                    function(result) {
-                                        CaseFutureApprovalService.initiateRoutingWorkflow($scope.buckslipProcess.businessProcessId).then(
-                                                function(result) {
-                                                    cleanCachedCaseFile($stateParams.id);
-                                                    $timeout(function() {
-                                                        $scope.$emit('report-object-refreshed', $stateParams.id);
-                                                        MessageService.info($translate
-                                                                .instant('cases.comp.approvalRouting.processInitialize.successfull'));
+                            CaseFutureApprovalService.updateBuckslipProcess($scope.buckslipProcess).then(function(result) {
+                                CaseFutureApprovalService.initiateRoutingWorkflow($scope.buckslipProcess.businessProcessId).then(function(result) {
+                                    cleanCachedCaseFile($stateParams.id);
+                                    $timeout(function() {
+                                        $scope.$emit('report-object-refreshed', $stateParams.id);
+                                        MessageService.info($translate.instant('cases.comp.approvalRouting.processInitialize.successfull'));
 
-                                                        $scope.initInProgress = false;
-                                                    }, 2000);
-                                                },
-                                                function(reason) {
-                                                    MessageService.error($translate
-                                                            .instant('cases.comp.approvalRouting.processInitialize.fail'));
-                                                });
-                                    }, function(reason) {
-                                        MessageService.error($translate.instant('cases.comp.approvalRouting.businessProcessUpdate.fail'));
-                                    });
+                                        $scope.initInProgress = false;
+                                    }, 2000);
+                                }, function(reason) {
+                                    MessageService.error($translate.instant('cases.comp.approvalRouting.processInitialize.fail'));
+                                });
+                            }, function(reason) {
+                                MessageService.error($translate.instant('cases.comp.approvalRouting.businessProcessUpdate.fail'));
+                            });
                         }
                     };
 
@@ -202,7 +193,7 @@ angular.module('cases').controller(
                                 $timeout(function() {
                                     $scope.$emit('report-object-refreshed', $stateParams.id);
                                     $scope.$bus.publish('buckslip-task-object-updated', {
-                                        'id' : $stateParams.id
+                                        'id': $stateParams.id
                                     });
                                     MessageService.info($translate.instant('cases.comp.approvalRouting.processWithdraw.successfull'));
 
@@ -277,7 +268,7 @@ angular.module('cases').controller(
                     gridHelper.addCustomButton = function(config, name, icon, clickFn, readOnlyFn, colName, tooltip) {
                         if (Util.isEmpty(icon) || Util.isEmpty(clickFn) || Util.isEmpty(readOnlyFn)) {
                             var found = _.find(HelperUiGridService.CommonButtons, {
-                                name : name
+                                name: name
                             });
                             if (found) {
                                 if (Util.isEmpty(icon)) {
@@ -295,7 +286,7 @@ angular.module('cases').controller(
                         var cellTemplate = configureCellTemplate(clickFn, icon, readOnlyFn, tooltip, name);
                         var columnDefs = Util.goodArray(config.columnDefs);
                         var columnDef = _.find(columnDefs, {
-                            name : colName
+                            name: colName
                         });
 
                         if (columnDefs) {
@@ -317,22 +308,21 @@ angular.module('cases').controller(
                             }
                         } else {
                             columnDef = {
-                                name : colName,
-                                cellEditableCondition : false,
-                                enableFiltering : false,
-                                enableHiding : false,
-                                enableSorting : false,
-                                enableColumnResizing : true,
-                                headerCellTemplate : "<span></span>",
-                                cellTemplate : cellTemplate
+                                name: colName,
+                                cellEditableCondition: false,
+                                enableFiltering: false,
+                                enableHiding: false,
+                                enableSorting: false,
+                                enableColumnResizing: true,
+                                headerCellTemplate: "<span></span>",
+                                cellTemplate: cellTemplate
                             };
                             columnDefs.push(columnDef);
                         }
                     };
 
                     var configureCellTemplate = function(clickFn, icon, readOnlyFn, tooltip, name) {
-                        var cellTemplate = "<a class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn
-                                + "(row.entity)'";
+                        var cellTemplate = "<a class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
 
                         if (tooltip) {
                             cellTemplate += " tooltip='" + tooltip + "' tooltip-append-to-body='true' tooltip-popup-delay='400'";
@@ -350,8 +340,8 @@ angular.module('cases').controller(
                     function convertProfileToUser(userProfile) {
                         //we are using for now just this to fields, if needed add rest of them
                         var user = {
-                            userId : userProfile.userId,
-                            fullName : userProfile.fullName
+                            userId: userProfile.userId,
+                            fullName: userProfile.fullName
                         };
                         return user;
                     }

@@ -2,34 +2,23 @@
 
 angular.module('tasks').controller(
         'Tasks.WorkflowOverviewController',
-        [
-                '$scope',
-                '$stateParams',
-                '$q',
-                'UtilService',
-                'ConfigService',
-                'ObjectService',
-                'Task.HistoryService',
-                'Task.InfoService',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                function($scope, $stateParams, $q, Util, ConfigService, ObjectService, TaskHistoryService, TaskInfoService,
-                        HelperUiGridService, HelperObjectBrowserService) {
+        [ '$scope', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Task.HistoryService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService',
+                function($scope, $stateParams, $q, Util, ConfigService, ObjectService, TaskHistoryService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        moduleId : "tasks",
-                        componentId : "workflow",
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        retrieveObjectInfo : TaskInfoService.getTaskInfo,
-                        validateObjectInfo : TaskInfoService.validateTaskInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        moduleId: "tasks",
+                        componentId: "workflow",
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        retrieveObjectInfo: TaskInfoService.getTaskInfo,
+                        validateObjectInfo: TaskInfoService.validateTaskInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var onConfigRetrieved = function(config) {

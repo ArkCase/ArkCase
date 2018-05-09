@@ -15,11 +15,6 @@ public enum CasesByStatusAndTimePeriod
         this.period = period;
     }
 
-    public String getPeriod()
-    {
-        return period;
-    }
-
     public static CasesByStatusAndTimePeriod getTimePeriod(String text)
     {
         for (CasesByStatusAndTimePeriod attribute : values())
@@ -30,5 +25,10 @@ public enum CasesByStatusAndTimePeriod
             }
         }
         return CasesByStatusAndTimePeriod.NONE;
+    }
+
+    public String getPeriod()
+    {
+        return period;
     }
 }

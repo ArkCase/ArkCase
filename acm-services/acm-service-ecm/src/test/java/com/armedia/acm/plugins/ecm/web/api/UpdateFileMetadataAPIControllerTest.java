@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.easymock.EasyMock.anyLong;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
@@ -91,6 +92,7 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
         Capture<EcmFile> saved = Capture.newInstance();
         Capture<EcmFileUpdatedEvent> capturedEvent = Capture.newInstance();
 
+        expect(mockEcmFileService.findById(anyLong())).andReturn(in).anyTimes();
         expect(mockEcmFileService.updateFile(capture(saved))).andReturn(out);
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
@@ -138,6 +140,7 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
 
         Capture<EcmFile> saved = Capture.newInstance();
 
+        expect(mockEcmFileService.findById(anyLong())).andReturn(in).anyTimes();
         expect(mockEcmFileService.updateFile(capture(saved))).andReturn(null);
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
 

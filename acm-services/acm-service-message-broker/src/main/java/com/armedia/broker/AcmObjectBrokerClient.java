@@ -150,23 +150,23 @@ public class AcmObjectBrokerClient<E> extends DefaultMessageListenerContainer
     }
 
     /**
-     * Set object handler
-     * 
-     * @param handler
-     */
-    public void setHandler(AcmObjectBrokerClientHandler<E> handler)
-    {
-        this.handler = handler;
-    }
-
-    /**
      * Get object handler
-     * 
+     *
      * @param handler
      */
     protected AcmObjectBrokerClientHandler<E> getHandler()
     {
         return handler;
+    }
+
+    /**
+     * Set object handler
+     *
+     * @param handler
+     */
+    public void setHandler(AcmObjectBrokerClientHandler<E> handler)
+    {
+        this.handler = handler;
     }
 
     /**

@@ -163,11 +163,13 @@ public class TimeForm extends FrevvoForm
     }
 
     @XmlTransient
-    public TimesheetConfig getTimesheetConfig() {
+    public TimesheetConfig getTimesheetConfig()
+    {
         return timesheetConfig;
     }
 
-    public void setTimesheetConfig(TimesheetConfig timesheetConfig) {
+    public void setTimesheetConfig(TimesheetConfig timesheetConfig)
+    {
         this.timesheetConfig = timesheetConfig;
     }
 }

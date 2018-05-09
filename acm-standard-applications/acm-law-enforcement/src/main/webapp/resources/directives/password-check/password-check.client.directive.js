@@ -23,16 +23,16 @@
 
 angular.module('directives').directive('passwordCheck', [ '$translate', function($translate) {
     return {
-        resctrict : 'A',
-        require : '^form', // access the FormController in a directive
-        scope : {
-            newPassword : '=',
-            confirmNewPassword : '=',
-            errorMessages : '=',
-            newPasswordValidation : '@',
-            confirmNewPasswordValidation : '@'
+        resctrict: 'A',
+        require: '^form', // access the FormController in a directive
+        scope: {
+            newPassword: '=',
+            confirmNewPassword: '=',
+            errorMessages: '=',
+            newPasswordValidation: '@',
+            confirmNewPasswordValidation: '@'
         },
-        link : function(scope, elem, attrs, formCtrl) {
+        link: function(scope, elem, attrs, formCtrl) {
             scope.$watch('newPassword', function() {
                 scope.differentPasswords();
                 scope.$bus.publish('ldap-change-password-clear-errors');

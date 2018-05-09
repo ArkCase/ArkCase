@@ -35,17 +35,13 @@ import java.util.Properties;
 })
 public class GetPersonTypesAPIControllerTest extends EasyMockSupport
 {
-    private MockMvc mockMvc;
-    private Authentication mockAuthentication;
-
-    @Autowired
-    private ExceptionHandlerExceptionResolver exceptionResolver;
-
-    private Properties personPluginProperties;
-
     @Autowired
     Properties wrongPersonPluginProperties;
-
+    private MockMvc mockMvc;
+    private Authentication mockAuthentication;
+    @Autowired
+    private ExceptionHandlerExceptionResolver exceptionResolver;
+    private Properties personPluginProperties;
     private GetPersonTypesAPIController unit;
 
     private Logger log = LoggerFactory.getLogger(getClass());

@@ -6,6 +6,7 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.transcribe.dao.TranscribeItemDao;
 import com.armedia.acm.services.transcribe.model.TranscribeItem;
 import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +56,10 @@ public class TranscribeItemToSolrTransformer implements AcmObjectToSolrDocTransf
         solr.setAdditionalProperty("corrected_b", in.getCorrected().booleanValue());
         solr.setAdditionalProperty("text_s", in.getText());
 
-        solr.setAdditionalProperty("parent_root_id_s", in.getTranscribe().getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId());
-        solr.setAdditionalProperty("parent_root_type_s", in.getTranscribe().getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType());
+        solr.setAdditionalProperty("parent_root_id_s",
+                in.getTranscribe().getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId());
+        solr.setAdditionalProperty("parent_root_type_s",
+                in.getTranscribe().getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType());
         solr.setAdditionalProperty("parent_file_id_s", in.getTranscribe().getMediaEcmFileVersion().getFile().getId());
 
         return solr;

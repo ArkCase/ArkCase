@@ -19,7 +19,8 @@ public interface ConfigurationService<T>
     /**
      * This method will save provided T configuration to the datasource
      *
-     * @param configuration - configuration object
+     * @param configuration
+     *            - configuration object
      * @return Saved T object
      * @throws SaveConfigurationException
      */

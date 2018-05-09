@@ -44,17 +44,13 @@ import java.util.List;
 @TransactionConfiguration(defaultRollback = true)
 public class ParticipantDaoIT
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     @PersistenceContext
     private EntityManager entityManager;
-
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
-
     @Autowired
     private AcmParticipantDao dao;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     private String objectType = "TEST OBJECT TYPE";
     private Long objectId = -500L; // negative object id means we can't collide with any participant that might actually
                                    // exist

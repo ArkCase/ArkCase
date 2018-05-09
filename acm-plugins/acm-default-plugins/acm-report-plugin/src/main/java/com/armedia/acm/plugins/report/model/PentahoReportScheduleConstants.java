@@ -4,7 +4,8 @@ package com.armedia.acm.plugins.report.model;
  * Created by dwu on 6/9/2017.
  * <p>
  * "jobName":"MasterList",
- * "simpleJobTrigger":{"uiPassParam":"RUN_ONCE", "repeatInterval":0, "repeatCount":0, "startTime":"2017-06-06T15:59:00.000-04:00", "endTime":null},
+ * "simpleJobTrigger":{"uiPassParam":"RUN_ONCE", "repeatInterval":0, "repeatCount":0,
+ * "startTime":"2017-06-06T15:59:00.000-04:00", "endTime":null},
  * "inputFile":"/public/arkcase/MasterList.prpt",
  * "outputFile":"/public/admin",
  * "jobParameters":[
@@ -22,7 +23,7 @@ package com.armedia.acm.plugins.report.model;
 
 public final class PentahoReportScheduleConstants
 {
-    //These are default values
+    // These are default values
     public static final String SIMPLE_JOB_TRIGGER = "simpleJobTrigger";
     public static final String COMPLEX_JOB_TRIGGER = "complexJobTrigger";
     public static final String RUN_ONCE = "RUN_ONCE";

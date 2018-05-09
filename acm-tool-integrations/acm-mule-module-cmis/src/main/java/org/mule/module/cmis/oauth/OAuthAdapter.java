@@ -35,6 +35,12 @@ public interface OAuthAdapter
     void setAccessToken(String value);
 
     /**
+     * Get the callback to be called when the access token and secret need to be saved for
+     * later restoration
+     */
+    SaveAccessTokenCallback getOauthSaveAccessToken();
+
+    /**
      * Set the callback to be called when the access token and secret need to be saved for
      * later restoration
      *
@@ -44,23 +50,17 @@ public interface OAuthAdapter
     void setOauthSaveAccessToken(SaveAccessTokenCallback saveCallback);
 
     /**
+     * Get the callback to be called when the access token and secret need to be restored
+     */
+    RestoreAccessTokenCallback getOauthRestoreAccessToken();
+
+    /**
      * Set the callback to be called when the access token and secret need to be restored
      *
      * @param restoreCallback
      *            Callback to be called
      */
     void setOauthRestoreAccessToken(RestoreAccessTokenCallback restoreCallback);
-
-    /**
-     * Get the callback to be called when the access token and secret need to be saved for
-     * later restoration
-     */
-    SaveAccessTokenCallback getOauthSaveAccessToken();
-
-    /**
-     * Get the callback to be called when the access token and secret need to be restored
-     */
-    RestoreAccessTokenCallback getOauthRestoreAccessToken();
 
     void hasBeenAuthorized() throws NotAuthorizedException;
 }

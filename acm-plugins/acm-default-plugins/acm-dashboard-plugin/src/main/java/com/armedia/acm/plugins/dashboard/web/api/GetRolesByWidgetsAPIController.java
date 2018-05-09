@@ -132,23 +132,23 @@ public class GetRolesByWidgetsAPIController
         this.userDao = userDao;
     }
 
-    public void setDashboardService(DashboardService dashboardService)
-    {
-        this.dashboardService = dashboardService;
-    }
-
     public DashboardService getDashboardService()
     {
         return dashboardService;
     }
 
-    public void setEventPublisher(WidgetEventPublisher eventPublisher)
+    public void setDashboardService(DashboardService dashboardService)
     {
-        this.eventPublisher = eventPublisher;
+        this.dashboardService = dashboardService;
     }
 
     public WidgetEventPublisher getEventPublisher()
     {
         return eventPublisher;
+    }
+
+    public void setEventPublisher(WidgetEventPublisher eventPublisher)
+    {
+        this.eventPublisher = eventPublisher;
     }
 }

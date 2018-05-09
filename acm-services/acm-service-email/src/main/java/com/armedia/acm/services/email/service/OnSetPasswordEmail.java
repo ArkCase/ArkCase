@@ -9,8 +9,8 @@ import org.springframework.context.ApplicationListener;
 
 public class OnSetPasswordEmail implements ApplicationListener<SetPasswordEmailEvent>
 {
-    private ResetPasswordService resetPasswordService;
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private ResetPasswordService resetPasswordService;
 
     @Override
     public void onApplicationEvent(SetPasswordEmailEvent setPasswordEmailEvent)

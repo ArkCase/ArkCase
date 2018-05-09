@@ -3,11 +3,11 @@
 //Setting up route
 angular.module('dashboard').config([ '$stateProvider', 'ArkCaseDashboardProvider', function($stateProvider, ArkCaseDashboardProvider) {
     $stateProvider.state('dashboard', {
-        url : '/dashboard',
-        templateUrl : 'modules/dashboard/views/dashboard.client.view.html',
-        controller : 'DashboardController',
-        resolve : {
-            translatePartialLoader : [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
+        url: '/dashboard',
+        templateUrl: 'modules/dashboard/views/dashboard.client.view.html',
+        controller: 'DashboardController',
+        resolve: {
+            translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('dashboard');
                 return $translate.refresh();

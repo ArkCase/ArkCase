@@ -30,13 +30,12 @@ import java.util.Map;
  */
 public class AcmLoginSuccessOperations
 {
+    private static final int DAYS_TO_PASSWORD_EXPIRATION = 10;
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private AcmPluginManager acmPluginManager;
     private AcmApplication acmApplication;
     private UserDao userDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private static final int DAYS_TO_PASSWORD_EXPIRATION = 10;
     private ObjectConverter objectConverter;
 
     public void onSuccessfulAuthentication(HttpServletRequest request, Authentication authentication)
@@ -220,24 +219,24 @@ public class AcmLoginSuccessOperations
         this.acmPluginManager = acmPluginManager;
     }
 
-    public void setAcmApplication(AcmApplication acmApplication)
-    {
-        this.acmApplication = acmApplication;
-    }
-
     public AcmApplication getAcmApplication()
     {
         return acmApplication;
     }
 
-    public void setUserDao(UserDao userDao)
+    public void setAcmApplication(AcmApplication acmApplication)
     {
-        this.userDao = userDao;
+        this.acmApplication = acmApplication;
     }
 
     public UserDao getUserDao()
     {
         return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()

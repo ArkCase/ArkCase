@@ -77,16 +77,12 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
     private static final String SEND_AS_LINKS = "sendAsLinks";
 
     private static final String SEND_AS_ATTACHMENTS_AND_LINKS = "sendAsAttachmentsAndLinks";
-
-    @Mock
-    private Resource templateConfigurations;
-
-    @Mock
-    private File mockedConfigurationsFile;
-
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
+    @Mock
+    private Resource templateConfigurations;
+    @Mock
+    private File mockedConfigurationsFile;
     @InjectMocks
     private AcmFilesystemMailTemplateConfigurationService service;
 

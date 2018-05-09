@@ -17,10 +17,8 @@ import org.springframework.context.ApplicationListener;
 public class TaskHistoryListener implements ApplicationListener<AcmApplicationTaskEvent>
 {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
-
     private static final String OBJECT_TYPE = "TASK";
-
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private AcmObjectHistoryService acmObjectHistoryService;
 
     @Override

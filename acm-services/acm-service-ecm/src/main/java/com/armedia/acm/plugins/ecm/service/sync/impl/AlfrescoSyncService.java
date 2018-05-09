@@ -26,13 +26,11 @@ import java.util.UUID;
  */
 public class AlfrescoSyncService implements ApplicationEventPublisherAware
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private PropertyFileManager propertyFileManager;
     private AlfrescoAuditApplicationRestClient auditApplicationRestClient;
     private Map<String, EcmAuditResponseReader> auditApplications;
     private String auditApplicationLastAuditIdsFilename;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     private ApplicationEventPublisher applicationEventPublisher;
 
     public void queryAlfrescoAuditApplications()
@@ -112,19 +110,14 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
         }
     }
 
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
     public PropertyFileManager getPropertyFileManager()
     {
         return propertyFileManager;
     }
 
-    public void setAuditApplicationRestClient(AlfrescoAuditApplicationRestClient auditApplicationRestClient)
+    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
     {
-        this.auditApplicationRestClient = auditApplicationRestClient;
+        this.propertyFileManager = propertyFileManager;
     }
 
     public AlfrescoAuditApplicationRestClient getAuditApplicationRestClient()
@@ -132,14 +125,19 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
         return auditApplicationRestClient;
     }
 
-    public void setAuditApplicationLastAuditIdsFilename(String auditApplicationLastAuditIdsFilename)
+    public void setAuditApplicationRestClient(AlfrescoAuditApplicationRestClient auditApplicationRestClient)
     {
-        this.auditApplicationLastAuditIdsFilename = auditApplicationLastAuditIdsFilename;
+        this.auditApplicationRestClient = auditApplicationRestClient;
     }
 
     public String getAuditApplicationLastAuditIdsFilename()
     {
         return auditApplicationLastAuditIdsFilename;
+    }
+
+    public void setAuditApplicationLastAuditIdsFilename(String auditApplicationLastAuditIdsFilename)
+    {
+        this.auditApplicationLastAuditIdsFilename = auditApplicationLastAuditIdsFilename;
     }
 
     @Override

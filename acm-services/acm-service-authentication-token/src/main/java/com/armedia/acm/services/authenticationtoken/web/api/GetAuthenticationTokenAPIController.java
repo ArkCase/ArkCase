@@ -15,9 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = { "/api/v1/authenticationtoken", "/api/latest/authenticationtoken" })
 public class GetAuthenticationTokenAPIController
 {
-    private AuthenticationTokenService authenticationTokenService;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private AuthenticationTokenService authenticationTokenService;
 
     /**
      * REST service to retrieve a token for an authorized user; i.e. the HTTP client should provide a Basic

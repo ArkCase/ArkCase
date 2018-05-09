@@ -26,13 +26,10 @@ import java.util.Map;
 public class ChangeCaseStatusWorkflowListener implements ApplicationListener<ChangeCaseStatusFormEvent>
 {
 
-    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-
-    private RuntimeService activitiRuntimeService;
-
-    private String changeCaseStatusTaskName;
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+    private RuntimeService activitiRuntimeService;
+    private String changeCaseStatusTaskName;
 
     @Override
     public void onApplicationEvent(ChangeCaseStatusFormEvent event)

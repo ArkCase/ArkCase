@@ -20,24 +20,21 @@ import org.springframework.security.core.Authentication;
 public class CaseFileFolderStructureHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
     /**
+     * Logger instance.
+     */
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    /**
      * Case File folder structure.
      */
     private String folderStructureAsString;
-
     /**
      * CMIS service.
      */
     private EcmFileService ecmFileService;
-
     /**
      * ACM folder service.
      */
     private AcmFolderService acmFolderService;
-
-    /**
-     * Logger instance.
-     */
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
