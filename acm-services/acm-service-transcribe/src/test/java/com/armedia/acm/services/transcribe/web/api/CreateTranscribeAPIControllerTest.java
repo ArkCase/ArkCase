@@ -38,7 +38,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.model.Transcribe;
 import com.armedia.acm.services.transcribe.model.TranscribeType;
-import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeServiceImpl;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -69,7 +69,7 @@ public class CreateTranscribeAPIControllerTest extends EasyMockSupport
     private MockMvc mockMvc;
 
     @Mock
-    private ArkCaseTranscribeService mockArkCaseTranscribeService;
+    private ArkCaseTranscribeServiceImpl mockArkCaseTranscribeService;
 
     @Mock
     private Authentication mockAuthentication;

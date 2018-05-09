@@ -79,7 +79,7 @@ import java.util.Map;
 @RunWith(MockitoJUnitRunner.class)
 public class ArkCaseTranscribeServiceTest extends EasyMockSupport
 {
-    private ArkCaseTranscribeService arkCaseTranscribeService;
+    private ArkCaseTranscribeServiceImpl arkCaseTranscribeService;
     private TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
 
     @Mock
@@ -115,7 +115,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         transcribeConfigurationPropertiesService = new TranscribeConfigurationPropertiesService();
         transcribeConfigurationPropertiesService.setPropertyFileManager(propertyFileManager);
 
-        arkCaseTranscribeService = new ArkCaseTranscribeService();
+        arkCaseTranscribeService = new ArkCaseTranscribeServiceImpl();
         arkCaseTranscribeService.setTranscribeConfigurationPropertiesService(transcribeConfigurationPropertiesService);
         arkCaseTranscribeService.setTranscribeDao(transcribeDao);
         arkCaseTranscribeService.setPipelineManager(pipelineManager);
