@@ -11,6 +11,12 @@
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
     <inceptionYear>2014</inceptionYear>
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.en.html</url>            
+        </license>
+    </licenses>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -126,7 +132,7 @@
     <developers>
         <developer>
             <name>David Miller</name>
-            <email>david.miller@armedia.com</email>
+            <email>david.miller@arkcase.com</email>
             <roles>
                 <role>Technical Lead</role>
             </roles>
@@ -145,7 +151,7 @@
     <contributors>
         <contributor>
             <name>James Bailey</name>
-            <email>james.bailey@armedia.com</email>
+            <email>james.bailey@arkcase.com</email>
             <roles>
                 <role>Sponsor</role>
             </roles>
@@ -244,6 +250,26 @@
             <url>file://${basedir}/../../../arkcase-lib</url>
         </repository>
     </repositories>
+    
+    <pluginRepositories>
+        <!-- local repo for dependencies not in Maven central... this is for poms embedded one level down -->
+        <pluginRepository>
+            <id>arkcase-local-repo-one-level</id>
+            <url>file://${basedir}/../arkcase-lib</url>
+        </pluginRepository>
+
+        <!-- local repo for dependencies not in Maven central... this is for poms embedded two level down -->
+        <pluginRepository>
+            <id>arkcase-local-repo-two-level</id>
+            <url>file://${basedir}/../../arkcase-lib</url>
+        </pluginRepository>
+
+        <!-- local repo for dependencies not in Maven central... this is for poms embedded three level down -->
+        <pluginRepository>
+            <id>arkcase-local-repo-third-level</id>
+            <url>file://${basedir}/../../../arkcase-lib</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <plugins>
@@ -389,7 +415,36 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
+   
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.16</version>
+                <configuration>
+                    <licenseName>arkcase_license</licenseName>
+                    <licenseResolver>classpath://arkcase</licenseResolver>
+                    <includes>
+                        <include>**/*.java</include>
+                        <include>**/*.jsp</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>update-license</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.arkcase</groupId>
+                        <artifactId>arkcase-license-headers</artifactId>
+                        <version>1.0</version>
+                    </dependency>
+                </dependencies>                
+            </plugin>
         </plugins>
     </build>
 
