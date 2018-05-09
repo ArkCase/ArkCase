@@ -7,10 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +30,26 @@ public class SaveReportToGroupsMapAPIController
         LOG.debug("Successfuly saved ? " + retval);
 
         return retval;
+    }
+
+    @RequestMapping(value = "/{reportName:.+}/groups/adhoc", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<String> addAdhocGroupsToReport(@PathVariable("reportName") String reportName, @RequestBody List<String> adhocGroups,
+            Authentication auth)
+    {
+        LOG.debug("Saving adhoc groups to report [{}]", reportName);
+
+        return getReportService().saveAdhocGroupsToReport(reportName, adhocGroups, auth);
+    }
+
+    @RequestMapping(value = "/{reportName:.+}/groups/adhoc", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<String> removeAdhocGroupsToReport(@PathVariable("reportName") String reportName, @RequestBody List<String> adhocGroups,
+            Authentication auth)
+    {
+        LOG.debug("Saving adhoc groups to report [{}]", reportName);
+
+        return getReportService().removeAdhocGroupsToReport(reportName, adhocGroups, auth);
     }
 
     public ReportService getReportService()

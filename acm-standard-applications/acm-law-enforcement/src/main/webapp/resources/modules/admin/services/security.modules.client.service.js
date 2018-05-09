@@ -20,6 +20,8 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
         getAppModulesPaged: getAppModulesPaged,
         getAppModulesByName: getAppModulesByName,
         getRolesForModulePrivilege: getRolesForModulePrivilege,
+        getRolesForModulePaged: getRolesForModulePaged,
+        getRolesForModuleByName: getRolesForModuleByName,
         addRolesToModule: addRolesToModule,
         removeRolesFromModule: removeRolesFromModule
     });
@@ -37,6 +39,7 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
     function getAppModules() {
         return $http({
             method: 'GET',
+            cache: false,
             url: 'api/latest/plugin/admin/moduleconfiguration/modules'
         });
     }
@@ -86,9 +89,10 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
         return $http({
             method: 'GET',
             url: 'api/latest/plugin/admin/moduleconfiguration/modules',
+            cache: false,
             params: {
                 fn: (data.filterWord ? data.filterWord : ""),
-                n: (Util.isEmpty(data.filterWord) ? 50 : 10000)
+                n: (data.n ? data.n : 50)
             }
         });
     }
@@ -115,6 +119,56 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
 
     /**
      * @ngdoc method
+     * @name getRolesForModulePaged
+     * @methodOf admin.service:Admin.ModulesService
+     *
+     * @description
+     * Performs retrieving roles for provided module paged
+     *
+     * @param {string} modulePrivilege privilege for which roles will be retrieved
+     *
+     * @returns {HttpPromise} Future info roles for module privilege
+     */
+    function getRolesForModulePaged(data) {
+        return $http({
+            method: 'GET',
+            cache: false,
+            url: 'api/latest/plugin/admin/rolesprivileges/' + data.module.key + '/roles',
+            params: {
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0),
+                authorized: data.isAuthorized
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name getRolesForModuleByName
+     * @methodOf admin.service:Admin.ModulesService
+     *
+     * @description
+     * Performs retrieving roles for provided module paged
+     *
+     * @param {string} modulePrivilege privilege for which roles will be retrieved
+     *
+     * @returns {HttpPromise} Future info roles for module privilege
+     */
+    function getRolesForModuleByName(data) {
+        return $http({
+            method: 'GET',
+            cache: false,
+            url: 'api/latest/plugin/admin/rolesprivileges/' + data.module.key + '/roles',
+            params: {
+                n: (data.n ? data.n : 50),
+                authorized: data.isAuthorized,
+                fn: (data.filterWord ? data.filterWord : "")
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
      * @name addRolesToModule
      * @methodOf admin.service:Admin.ModulesService
      *
@@ -131,6 +185,7 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
         return $http({
             method: 'PUT',
             url: url,
+            cache: false,
             data: {},
             headers: {
                 'Content-Type': 'application/json'
@@ -155,6 +210,7 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
         var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roles.join() + '/privileges/' + modulePrivilege;
         return $http({
             method: 'DELETE',
+            cache: false,
             url: url
         });
     }

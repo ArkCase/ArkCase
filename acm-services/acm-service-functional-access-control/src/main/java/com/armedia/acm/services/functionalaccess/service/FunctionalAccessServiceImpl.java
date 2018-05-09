@@ -1,5 +1,6 @@
 package com.armedia.acm.services.functionalaccess.service;
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -24,14 +25,7 @@ import org.springframework.security.core.Authentication;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -123,6 +117,57 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         return applicationRoles;
     }
 
+    @Override
+    public List<String> getApplicationRolesPaged(String sortDirection, Integer startRow, Integer maxRows)
+    {
+        List<String> result = getApplicationRoles();
+
+        if (sortDirection.contains("DESC"))
+        {
+            result.sort(Collections.reverseOrder());
+        }
+        else
+        {
+            Collections.sort(result);
+        }
+
+        if (startRow > result.size())
+        {
+            return result;
+        }
+        maxRows = maxRows > result.size() ? result.size() : maxRows;
+
+        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getApplicationRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterName)
+    {
+        List<String> result = new ArrayList<>(getApplicationRoles());
+
+        if (sortDirection.contains("DESC"))
+        {
+            result.sort(Collections.reverseOrder());
+        }
+        else
+        {
+            Collections.sort(result);
+        }
+
+        if (startRow > result.size())
+        {
+            return result;
+        }
+        maxRows = maxRows > result.size() ? result.size() : maxRows;
+
+        if (!filterName.isEmpty())
+        {
+            result.removeIf(role -> !(role.toLowerCase().contains(filterName.toLowerCase())));
+        }
+
+        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
+    }
+
     private List<String> getGroupsBySolrQuery(Authentication auth, String sortDirection,
             Integer startRow,
             Integer maxRows, String query) throws MuleException
@@ -141,12 +186,29 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     }
 
     @Override
-    public List<String> getGroupsByRole(Authentication auth, String roleName, Integer startRow, Integer maxRows,
+    public List<String> getGroupsByRolePaged(Authentication auth, String roleName, Integer startRow, Integer maxRows,
             String sortDirection,
             Boolean authorized) throws MuleException
     {
+        return getGroupsByRole(auth, roleName, startRow, maxRows, sortDirection, authorized, "");
+    }
+
+    @Override
+    public List<String> getGroupsByRoleByName(Authentication auth, String roleName, Integer startRow, Integer maxRows,
+            String sortDirection,
+            Boolean authorized, String filterQuery) throws MuleException
+    {
+        return getGroupsByRole(auth, roleName, startRow, maxRows, sortDirection, authorized, filterQuery);
+    }
+
+    @Override
+    public List<String> getGroupsByRole(Authentication auth, String roleName, Integer startRow, Integer maxRows,
+            String sortDirection,
+            Boolean authorized, String filterQuery) throws MuleException
+    {
         Set<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().get(roleName.toUpperCase());
         List<String> retrieveGroupsByRole = groupsByRole == null ? new ArrayList<>() : new ArrayList<>(groupsByRole);
+        String query = "";
 
         if (authorized)
         {
@@ -154,20 +216,23 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             {
                 return retrieveGroupsByRole;
             }
-            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
+            query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
                     + retrieveGroupsByRole.stream().collect(Collectors.joining("\" OR name_lcs:\"", "(name_lcs:\"", "\")"));
-            return getGroupsBySolrQuery(auth, sortDirection, startRow, maxRows, query);
         }
         else
         {
-            String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+            query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
             if (!retrieveGroupsByRole.isEmpty())
             {
                 query += " AND " + retrieveGroupsByRole.stream().collect(Collectors.joining("\" AND -name_lcs:\"", "-name_lcs:\"", "\""));
             }
-
-            return getGroupsBySolrQuery(auth, sortDirection, startRow, maxRows, query);
         }
+
+        if (!filterQuery.isEmpty())
+        {
+            query += " AND name_partial:" + filterQuery;
+        }
+        return getGroupsBySolrQuery(auth, sortDirection, startRow, maxRows, query);
     }
 
     @Override
@@ -203,6 +268,69 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         if (success)
         {
             getEventPublisher().publishFunctionalAccessUpdateEventOnRolesToGroupMap(rolesToGroups, user);
+        }
+
+        return success;
+    }
+
+    @Override
+    public boolean saveGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth) throws AcmEncryptionException
+    {
+
+        String roleUpdated = "";
+        boolean success;
+        try
+        {
+            roleUpdated += getPropertyFileManager().load(getRolesToGroupsPropertyFileLocation(), roleName, null)
+                    + groups.stream().collect(Collectors.joining(",", ",", ""));
+            getPropertyFileManager().store(roleName, roleUpdated, getRolesToGroupsPropertyFileLocation(), false);
+            success = true;
+        }
+        catch (Exception e)
+        {
+            LOG.error("Cannot save groups to application role", e);
+            success = false;
+        }
+
+        if (success)
+        {
+            getEventPublisher().publishFunctionalAccessUpdateEvent(groups, auth);
+        }
+
+        return success;
+    }
+
+    @Override
+    public boolean removeGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth)
+    {
+
+        List<String> roleGroups;
+        String roleUpdated = "";
+        boolean success;
+        try
+        {
+            roleGroups = new ArrayList<>(
+                    Arrays.asList(getPropertyFileManager().load(getRolesToGroupsPropertyFileLocation(), roleName, null).split(",")));
+
+            for (String g : groups)
+            {
+                roleGroups.remove(g);
+            }
+
+            roleUpdated += roleGroups.stream().collect(Collectors.joining(","));
+
+            getPropertyFileManager().store(roleName, roleUpdated, getRolesToGroupsPropertyFileLocation(), false);
+            success = true;
+        }
+        catch (Exception e)
+        {
+            LOG.error("Cannot save groups to application role", e);
+            success = false;
+        }
+
+        if (success)
+        {
+            getEventPublisher().publishFunctionalAccessUpdateEvent(groups, auth);
         }
 
         return success;
