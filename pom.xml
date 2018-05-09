@@ -252,6 +252,11 @@
     </repositories>
     
     <pluginRepositories>
+        <!-- local repo for dependencies not in Maven central... this is for top-level modules -->
+        <pluginRepository>
+            <id>arkcase-local-repo-top-level</id>
+            <url>file://${basedir}/arkcase-lib</url>
+        </pluginRepository>
         <!-- local repo for dependencies not in Maven central... this is for poms embedded one level down -->
         <pluginRepository>
             <id>arkcase-local-repo-one-level</id>
