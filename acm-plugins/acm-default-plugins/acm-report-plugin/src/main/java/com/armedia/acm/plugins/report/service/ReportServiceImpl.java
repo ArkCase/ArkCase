@@ -376,9 +376,9 @@ public class ReportServiceImpl implements ReportService
         }
         maxRows = maxRows > result.size() ? result.size() : maxRows;
 
-        if (!filterQuery.isEmpty())
+        if (!filterName.isEmpty())
         {
-            result.removeIf(report -> !(report.toLowerCase().contains(filterQuery.toLowerCase())));
+            result.removeIf(report -> !(report.toLowerCase().contains(filterName.toLowerCase())));
         }
 
         return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
