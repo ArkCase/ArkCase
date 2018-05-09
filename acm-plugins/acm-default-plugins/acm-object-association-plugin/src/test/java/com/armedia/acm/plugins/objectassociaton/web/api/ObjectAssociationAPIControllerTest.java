@@ -40,23 +40,18 @@ import javax.servlet.http.HttpServletResponse;
 @RunWith(MockitoJUnitRunner.class)
 public class ObjectAssociationAPIControllerTest implements HandlerExceptionResolver
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
-    private MockMvc mockMvc;
-
-    @InjectMocks
-    private ObjectAssociationService objectAssociationService = new ObjectAssociationServiceImpl();
-
-    @Mock
-    private ObjectAssociationDao objectAssociationDao;
-
-    @Mock
-    private ObjectAssociationEventPublisher objectAssociationEventPublisher;
-
-    @Mock
-    private Authentication mockAuthentication;
-
     @InjectMocks
     ObjectAssociationAPIController objectAssociationAPIController = new ObjectAssociationAPIController();
+    private Logger log = LoggerFactory.getLogger(getClass());
+    private MockMvc mockMvc;
+    @InjectMocks
+    private ObjectAssociationService objectAssociationService = new ObjectAssociationServiceImpl();
+    @Mock
+    private ObjectAssociationDao objectAssociationDao;
+    @Mock
+    private ObjectAssociationEventPublisher objectAssociationEventPublisher;
+    @Mock
+    private Authentication mockAuthentication;
 
     @Before
     public void setUp() throws Exception

@@ -14,24 +14,10 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 public class CalendarConfiguration
 {
 
-    public static enum CalendarPropertyKeys
-    {
-        INTEGRATION_ENABLED, SYSTEM_EMAIL, PASSWORD, PURGE_OPTION, DAYS_CLOSED;
-    }
-
-    public static enum PurgeOptions
-    {
-        RETAIN_INDEFINITELY, CLOSED, CLOSED_X_DAYS;
-    }
-
     private boolean integrationEnabled;
-
     private String systemEmail;
-
     private String password;
-
     private PurgeOptions purgeOptions = PurgeOptions.RETAIN_INDEFINITELY;
-
     private Integer daysClosed;
 
     /**
@@ -117,6 +103,16 @@ public class CalendarConfiguration
     public void setDaysClosed(Integer daysClosed)
     {
         this.daysClosed = daysClosed;
+    }
+
+    public static enum CalendarPropertyKeys
+    {
+        INTEGRATION_ENABLED, SYSTEM_EMAIL, PASSWORD, PURGE_OPTION, DAYS_CLOSED;
+    }
+
+    public static enum PurgeOptions
+    {
+        RETAIN_INDEFINITELY, CLOSED, CLOSED_X_DAYS;
     }
 
 }

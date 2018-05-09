@@ -17,6 +17,7 @@ public class IdentificationDao extends AcmAbstractDao<Identification>
 
     @PersistenceContext
     private EntityManager entityManager;
+    private Logger LOG = LoggerFactory.getLogger(getClass());
 
     public EntityManager getEntityManager()
     {
@@ -27,8 +28,6 @@ public class IdentificationDao extends AcmAbstractDao<Identification>
     {
         this.entityManager = entityManager;
     }
-
-    private Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Override
     protected Class<Identification> getPersistenceClass()

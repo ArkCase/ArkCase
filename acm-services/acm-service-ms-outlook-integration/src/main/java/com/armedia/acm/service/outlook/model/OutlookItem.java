@@ -65,24 +65,24 @@ public abstract class OutlookItem
         this.body = body;
     }
 
-    public void setSize(int size)
-    {
-        this.size = size;
-    }
-
     public int getSize()
     {
         return size;
     }
 
-    public void setSent(Date sent)
+    public void setSize(int size)
     {
-        this.sent = sent;
+        this.size = size;
     }
 
     public Date getSent()
     {
         return sent;
+    }
+
+    public void setSent(Date sent)
+    {
+        this.sent = sent;
     }
 
     @Override

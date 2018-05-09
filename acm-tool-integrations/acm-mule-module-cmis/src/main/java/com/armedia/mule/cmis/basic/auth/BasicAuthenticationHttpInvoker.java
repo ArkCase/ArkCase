@@ -41,9 +41,8 @@ import java.util.zip.GZIPOutputStream;
 public class BasicAuthenticationHttpInvoker implements HttpInvoker
 {
 
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
-
     private static final int BUFFER_SIZE = 2 * 1024 * 1024;
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     public BasicAuthenticationHttpInvoker()
     {

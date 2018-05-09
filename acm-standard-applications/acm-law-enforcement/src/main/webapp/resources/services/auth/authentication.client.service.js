@@ -21,20 +21,20 @@ angular.module('services').factory('Authentication', [ '$resource', 'Acm.StoreSe
          *
          * @returns {Object} Returned by $resource
          */
-        _queryUserInfo : {
-            method : 'GET',
-            url : 'api/v1/users/info'
+        _queryUserInfo: {
+            method: 'GET',
+            url: 'api/v1/users/info'
         }
 
         ,
-        _updateUserLang : {
-            method : 'POST',
-            url : 'api/v1/users/lang/:lang'
+        _updateUserLang: {
+            method: 'POST',
+            url: 'api/v1/users/lang/:lang'
         }
     });
 
     Service.SessionCacheNames = {
-        USER_INFO : "AcmUserInfo"
+        USER_INFO: "AcmUserInfo"
     };
 
     /**
@@ -51,9 +51,9 @@ angular.module('services').factory('Authentication', [ '$resource', 'Acm.StoreSe
         var cacheUserInfo = new Store.SessionData(Service.SessionCacheNames.USER_INFO);
         var userInfo = cacheUserInfo.get();
         return Util.serviceCall({
-            service : Service._queryUserInfo,
-            result : userInfo,
-            onSuccess : function(data) {
+            service: Service._queryUserInfo,
+            result: userInfo,
+            onSuccess: function(data) {
                 if (Service.validateUserInfo(data)) {
                     userInfo = data;
                     Store.fixOwner(userInfo.userId);
@@ -97,12 +97,12 @@ angular.module('services').factory('Authentication', [ '$resource', 'Acm.StoreSe
 
     Service.updateUserLang = function(lang) {
         return Util.serviceCall({
-            service : Service._updateUserLang,
-            param : {
-                lang : lang
+            service: Service._updateUserLang,
+            param: {
+                lang: lang
             },
-            data : {},
-            onSuccess : function(data) {
+            data: {},
+            onSuccess: function(data) {
                 if (Service.validateUpdateUserLang(data)) {
                     var cacheUserInfo = new Store.SessionData(Service.SessionCacheNames.USER_INFO);
                     var userInfo = cacheUserInfo.get();

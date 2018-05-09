@@ -19,82 +19,79 @@
  </example>
  */
 
-angular.module('directives').directive(
-        'downloadAllAsZip',
-        [ 'MessageService', 'UtilService', '$translate', 'DocTreeExt.DownloadSelectedAsZip', '$timeout',
-                function(MessageService, Util, $translate, DownloadSelectedAsZip, $timeout) {
-                    return {
-                        restrict : 'E',
-                        templateUrl : 'directives/doc-tree/download-all-as-zip.html',
-                        link : function(scope) {
-                            scope.downloadInProgress = false;
+angular.module('directives').directive('downloadAllAsZip', [ 'MessageService', 'UtilService', '$translate', 'DocTreeExt.DownloadSelectedAsZip', '$timeout', function(MessageService, Util, $translate, DownloadSelectedAsZip, $timeout) {
+    return {
+        restrict: 'E',
+        templateUrl: 'directives/doc-tree/download-all-as-zip.html',
+        link: function(scope) {
+            scope.downloadInProgress = false;
 
-                            scope.tmpSelectedNodes = [];
-                            var updateSelectedNodesList = function() {
-                                $timeout(function() {
-                                    scope.tmpSelectedNodes = scope.treeControl.getSelectedNodes();
-                                }, 0);
-                            };
+            scope.tmpSelectedNodes = [];
+            var updateSelectedNodesList = function() {
+                $timeout(function() {
+                    scope.tmpSelectedNodes = scope.treeControl.getSelectedNodes();
+                }, 0);
+            };
 
-                            scope.$bus.subscribe('docTreeNodeChecked', function() {
-                                updateSelectedNodesList();
-                            });
+            scope.$bus.subscribe('docTreeNodeChecked', function() {
+                updateSelectedNodesList();
+            });
 
-                            scope.$bus.subscribe('toggleAllNodesChecked', function() {
-                                updateSelectedNodesList();
-                            });
+            scope.$bus.subscribe('toggleAllNodesChecked', function() {
+                updateSelectedNodesList();
+            });
 
-                            var downloadFile = function(data) {
-                                //TRIGGER DOWNLOAD
+            var downloadFile = function(data) {
+                //TRIGGER DOWNLOAD
 
-                                var blob = new Blob([ data ], {
-                                    type : "application/zip"
-                                })
-                                if (window.navigator.msSaveOrOpenBlob) {
-                                    window.navigator.msSaveOrOpenBlob(blob, "acm-documents.zip");
-                                    scope.downloadInProgress = false;
-                                } else {
-                                    var url = window.URL.createObjectURL(blob);
-                                    var downloadLink = angular.element('<a></a>');
+                var blob = new Blob([ data ], {
+                    type: "application/zip"
+                })
+                if (window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(blob, "acm-documents.zip");
+                    scope.downloadInProgress = false;
+                } else {
+                    var url = window.URL.createObjectURL(blob);
+                    var downloadLink = angular.element('<a></a>');
 
-                                    downloadLink.css('display', 'none');
-                                    downloadLink.attr('href', url);
-                                    downloadLink.attr('download', "acm-documents.zip");
-                                    angular.element(document.body).append(downloadLink);
-                                    downloadLink[0].click();
+                    downloadLink.css('display', 'none');
+                    downloadLink.attr('href', url);
+                    downloadLink.attr('download', "acm-documents.zip");
+                    angular.element(document.body).append(downloadLink);
+                    downloadLink[0].click();
 
-                                    downloadLink.remove();
-                                    window.URL.revokeObjectURL(url);
-                                    scope.downloadInProgress = false;
-                                }
-                            };
+                    downloadLink.remove();
+                    window.URL.revokeObjectURL(url);
+                    scope.downloadInProgress = false;
+                }
+            };
 
-                            scope.downloadAllAsZip = function() {
-                                scope.downloadInProgress = true;
+            scope.downloadAllAsZip = function() {
+                scope.downloadInProgress = true;
 
-                                var folderId = Util.goodMapValue(scope.objectInfo, 'container.folder.id', false);
-                                scope.tmpSelectedNodes = scope.treeControl.getSelectedNodes();
-                                var selectedNodes = [];
+                var folderId = Util.goodMapValue(scope.objectInfo, 'container.folder.id', false);
+                scope.tmpSelectedNodes = scope.treeControl.getSelectedNodes();
+                var selectedNodes = [];
 
-                                for (var i = 0; i < scope.tmpSelectedNodes.length; i++) {
+                for (var i = 0; i < scope.tmpSelectedNodes.length; i++) {
 
-                                    var _folder = scope.tmpSelectedNodes[i].folder;
-                                    var _objectId = scope.tmpSelectedNodes[i].data.objectId;
+                    var _folder = scope.tmpSelectedNodes[i].folder;
+                    var _objectId = scope.tmpSelectedNodes[i].data.objectId;
 
-                                    selectedNodes.push({
-                                        folder : _folder,
-                                        objectId : _objectId
-                                    });
-                                }
-                                var compressNode = {
-                                    rootFolderId : folderId,
-                                    selectedNodes : selectedNodes
-                                };
+                    selectedNodes.push({
+                        folder: _folder,
+                        objectId: _objectId
+                    });
+                }
+                var compressNode = {
+                    rootFolderId: folderId,
+                    selectedNodes: selectedNodes
+                };
 
-                                DownloadSelectedAsZip.downloadSelectedFoldersAndFiles(compressNode).then(function(result) {
-                                    downloadFile(result.data);
-                                });
-                            };
-                        }
-                    };
-                } ]);
+                DownloadSelectedAsZip.downloadSelectedFoldersAndFiles(compressNode).then(function(result) {
+                    downloadFile(result.data);
+                });
+            };
+        }
+    };
+} ]);

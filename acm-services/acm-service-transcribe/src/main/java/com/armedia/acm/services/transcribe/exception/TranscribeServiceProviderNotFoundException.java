@@ -20,7 +20,8 @@ public class TranscribeServiceProviderNotFoundException extends TranscribeExcept
         super(cause);
     }
 
-    protected TranscribeServiceProviderNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
+    protected TranscribeServiceProviderNotFoundException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace)
     {
         super(message, cause, enableSuppression, writableStackTrace);
     }

@@ -1,5 +1,12 @@
 package com.armedia.acm.plugins.admin.service;
 
+import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.plugins.admin.model.TimesheetConfig;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -8,16 +15,8 @@ import java.util.Objects;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-
-import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.admin.model.TimesheetConfig;
-
-
-
-public class TimesheetConfigurationService {
+public class TimesheetConfigurationService
+{
 
     private Logger log = LoggerFactory.getLogger(getClass());
     private Resource timesheetResource;
@@ -26,7 +25,6 @@ public class TimesheetConfigurationService {
     private FileWriter fileWriter = null;
     private FileReader fileReader = null;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
-
 
     public TimesheetConfig getConfig()
     {
@@ -42,7 +40,7 @@ public class TimesheetConfigurationService {
             fileReader = new FileReader(getTimesheetResource().getFile());
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-            while((currentLine = bufferedReader.readLine()) != null)
+            while ((currentLine = bufferedReader.readLine()) != null)
             {
                 timesheetConfigJson += currentLine;
             }
@@ -78,25 +76,29 @@ public class TimesheetConfigurationService {
         {
             log.error(e.getMessage());
         }
-        finally {
+        finally
+        {
             lock.writeLock().unlock();
         }
     }
 
-
-    public Resource getTimesheetResource() {
+    public Resource getTimesheetResource()
+    {
         return timesheetResource;
     }
 
-    public void setTimesheetResource(Resource timesheetResource) {
+    public void setTimesheetResource(Resource timesheetResource)
+    {
         this.timesheetResource = timesheetResource;
     }
 
-    public ObjectConverter getObjectConverter() {
+    public ObjectConverter getObjectConverter()
+    {
         return objectConverter;
     }
 
-    public void setObjectConverter(ObjectConverter objectConverter) {
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
         this.objectConverter = objectConverter;
     }
 }

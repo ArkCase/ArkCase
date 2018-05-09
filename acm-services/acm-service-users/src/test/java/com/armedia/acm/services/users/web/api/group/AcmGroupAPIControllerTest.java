@@ -40,16 +40,12 @@ import java.util.Base64;
 @RunWith(EasyMockRunner.class)
 public class AcmGroupAPIControllerTest extends EasyMockSupport implements HandlerExceptionResolver
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    private MockMvc mockMvc;
-
-    @Mock
-    private GroupServiceImpl groupService;
-
     @Mock
     MuleMessage muleMessage;
-
+    private Logger log = LoggerFactory.getLogger(getClass());
+    private MockMvc mockMvc;
+    @Mock
+    private GroupServiceImpl groupService;
     @Mock
     private MuleContextManager muleContextManager;
 

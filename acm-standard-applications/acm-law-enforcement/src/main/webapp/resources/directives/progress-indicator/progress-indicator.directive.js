@@ -21,9 +21,9 @@
 
 angular.module('directives').directive('progressIndicator', [ '$timeout', function($timeout) {
     return {
-        restrict : 'E',
-        templateUrl : 'directives/progress-indicator/progress-indicator.html',
-        link : function(scope) {
+        restrict: 'E',
+        templateUrl: 'directives/progress-indicator/progress-indicator.html',
+        link: function(scope) {
 
             scope.showProgress = false;
             var eventName = "live_progress";
@@ -33,7 +33,7 @@ angular.module('directives').directive('progressIndicator', [ '$timeout', functi
                     scope.showProgress = true;
                     scope.currentProgress = data.current;
                     scope.percentageStyle = {
-                        width : scope.currentProgress + '%'
+                        width: scope.currentProgress + '%'
                     };
                     if (scope.currentProgress >= 100) {
                         $timeout(function() {

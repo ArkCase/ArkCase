@@ -25,7 +25,7 @@ angular.module('services').factory('DocTreeExt.Record', [ 'UtilService', 'Ecm.Re
          * @param {Object} DocTree  DocTree object defined in doc-tree directive
          *
          */
-        getColumnRenderers : function(DocTree) {
+        getColumnRenderers: function(DocTree) {
             return [];
         }
 
@@ -41,10 +41,10 @@ angular.module('services').factory('DocTreeExt.Record', [ 'UtilService', 'Ecm.Re
          *
          */
         ,
-        getCommandHandlers : function(DocTree) {
+        getCommandHandlers: function(DocTree) {
             return [ {
-                name : "declare",
-                execute : function(nodes, args) {
+                name: "declare",
+                execute: function(nodes, args) {
                     var declareAsRecordData = [];
                     var nodesToDeclare = nodes;
                     for (var i = 0; i < nodes.length; i++) {

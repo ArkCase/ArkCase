@@ -263,7 +263,6 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
         }
     };
 
-    //Raboti
     $scope.syncReports = function() {
         ReportsConfigService.syncReports().then(function() {
             $scope.execute();

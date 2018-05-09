@@ -21,9 +21,8 @@ angular.module('cases').controller(
                 'PermissionsService',
                 'Profile.UserInfoService',
                 'Case.FutureApprovalService',
-                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService,
-                        ObjectLookupService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication,
-                        PermissionsService, UserInfoService, CaseFutureApprovalService) {
+                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication, PermissionsService, UserInfoService,
+                        CaseFutureApprovalService) {
 
                     $scope.pastApprovers = {};
                     $scope.gridOptions = $scope.gridOptions || {};
@@ -32,19 +31,19 @@ angular.module('cases').controller(
                     var currentUser = '';
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "cases",
-                        componentId : "pastapprovals",
-                        retrieveObjectInfo : CaseInfoService.getCaseInfo,
-                        validateObjectInfo : CaseInfoService.validateCaseInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "cases",
+                        componentId: "pastapprovals",
+                        retrieveObjectInfo: CaseInfoService.getCaseInfo,
+                        validateObjectInfo: CaseInfoService.validateCaseInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         }
                     });
 
                     var gridHelperPastApprovers = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     Authentication.queryUserInfo().then(function(data) {
@@ -63,15 +62,14 @@ angular.module('cases').controller(
 
                         //set past approvers info
                         if (!Util.isEmpty(objectInfo.id)) {
-                            CaseFutureApprovalService.getBuckslipPastTasksForObject('CASE_FILE', objectInfo.id, true).then(
-                                    function(result) {
-                                        if (!Util.isArrayEmpty(result.data)) {
-                                            $scope.gridOptions.data = angular.fromJson(result.data);
-                                            $scope.gridOptions.noData = false;
-                                        } else {
-                                            $scope.gridOptions.noData = true;
-                                        }
-                                    });
+                            CaseFutureApprovalService.getBuckslipPastTasksForObject('CASE_FILE', objectInfo.id, true).then(function(result) {
+                                if (!Util.isArrayEmpty(result.data)) {
+                                    $scope.gridOptions.data = angular.fromJson(result.data);
+                                    $scope.gridOptions.noData = false;
+                                } else {
+                                    $scope.gridOptions.noData = true;
+                                }
+                            });
                         } else if (objectInfo.buckslipPastApprovers) {
                             $scope.gridOptions.data = angular.fromJson(objectInfo.buckslipPastApprovers);
                             $scope.gridOptions.noData = false;

@@ -25,10 +25,9 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 @RequestMapping({ "/api/v1/plugin/outlook", "/api/latest/plugin/outlook" })
 public class ListInboxItemsAPIController
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private OutlookService outlookService;
     private UserOrgService userOrgService;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/inbox", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

@@ -118,15 +118,15 @@ public class FileWatcher implements FileListener, ApplicationContextAware, Appli
         // Do nothing so far
     }
 
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
-    }
-
-    public ApplicationEventPublisher getApplicationEventPublisher()
-    {
-        return applicationEventPublisher;
     }
 
     /**

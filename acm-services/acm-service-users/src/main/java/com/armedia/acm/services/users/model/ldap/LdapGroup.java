@@ -161,11 +161,6 @@ public class LdapGroup
         this.members = members;
     }
 
-    public void setMemberUserDns(Set<String> memberUserDns)
-    {
-        this.memberUserDns = memberUserDns;
-    }
-
     public void addUserMember(String userDn)
     {
         getMemberUserDns().add(userDn);
@@ -174,6 +169,11 @@ public class LdapGroup
     public Set<String> getMemberUserDns()
     {
         return memberUserDns;
+    }
+
+    public void setMemberUserDns(Set<String> memberUserDns)
+    {
+        this.memberUserDns = memberUserDns;
     }
 
     public Set<LdapGroup> getMemberGroups()

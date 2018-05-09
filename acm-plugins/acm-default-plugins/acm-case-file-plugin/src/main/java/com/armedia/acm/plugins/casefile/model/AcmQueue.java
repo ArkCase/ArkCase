@@ -29,6 +29,25 @@ import java.util.Date;
 public class AcmQueue implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = -3949175334101994270L;
+    @Id
+    @TableGenerator(name = "acm_queue_gen", table = "acm_queue_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_queue", initialValue = 100, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_queue_gen")
+    @Column(name = "cm_queue_id")
+    private Long id;
+    @Column(name = "cm_name")
+    private String name;
+    @Column(name = "cm_display_order")
+    private Integer displayOrder;
+    @Column(name = "cm_queue_created", nullable = false, insertable = true, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+    @Column(name = "cm_queue_creator", insertable = true, updatable = false)
+    private String creator;
+    @Column(name = "cm_queue_modified", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified;
+    @Column(name = "cm_queue_modifier")
+    private String modifier;
 
     public AcmQueue(Long id, String name, Integer displayOrder)
     {
@@ -40,32 +59,6 @@ public class AcmQueue implements Serializable, AcmEntity
     public AcmQueue()
     {
     }
-
-    @Id
-    @TableGenerator(name = "acm_queue_gen", table = "acm_queue_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_queue", initialValue = 100, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_queue_gen")
-    @Column(name = "cm_queue_id")
-    private Long id;
-
-    @Column(name = "cm_name")
-    private String name;
-
-    @Column(name = "cm_display_order")
-    private Integer displayOrder;
-
-    @Column(name = "cm_queue_created", nullable = false, insertable = true, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
-
-    @Column(name = "cm_queue_creator", insertable = true, updatable = false)
-    private String creator;
-
-    @Column(name = "cm_queue_modified", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modified;
-
-    @Column(name = "cm_queue_modifier")
-    private String modifier;
 
     public Long getId()
     {

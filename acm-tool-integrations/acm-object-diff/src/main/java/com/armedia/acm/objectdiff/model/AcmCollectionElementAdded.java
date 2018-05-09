@@ -25,16 +25,6 @@ public class AcmCollectionElementAdded extends AcmCollectionElementChange implem
         this.affectedObject = affectedObject;
     }
 
-    public void setOldValue(String displayOldValue)
-    {
-        this.displayOldValue = displayOldValue;
-    }
-
-    public void setNewValue(String displayNewValue)
-    {
-        this.displayNewValue = displayNewValue;
-    }
-
     @Override
     public boolean isLeaf()
     {
@@ -47,9 +37,19 @@ public class AcmCollectionElementAdded extends AcmCollectionElementChange implem
         return displayOldValue;
     }
 
+    public void setOldValue(String displayOldValue)
+    {
+        this.displayOldValue = displayOldValue;
+    }
+
     @Override
     public String getNewValue()
     {
         return displayNewValue;
+    }
+
+    public void setNewValue(String displayNewValue)
+    {
+        this.displayNewValue = displayNewValue;
     }
 }

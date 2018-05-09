@@ -15,12 +15,6 @@ import java.util.Date;
 public class UserProfilePage extends ArkCaseTestBase
 {
 
-    @FindBy(how = How.XPATH, using = ".//*[@ng-click='toggleEditMode()']/i")
-    WebElement editDashoboard;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[1]/nav/div[1]/div/div/div[2]/a/strong/span[1]")
-    WebElement arrowDown;
-    @FindBy(how = How.XPATH, using = ".//a[@title='Profile']")
-    WebElement profileLink;
     @FindBy(how = How.ID, using = "lnkChangePicture")
     public WebElement changePicture;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[1]/h3/span")
@@ -63,103 +57,107 @@ public class UserProfilePage extends ArkCaseTestBase
     public WebElement changePasswordButton;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[1]/section/div/div/div[2]/h4[2]/a")
     public WebElement userTitle;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[1]/h4[1]/a")
+    public WebElement locationField;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[2]/h4[1]/a")
+    public WebElement officePhoneField;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[2]/h4[2]/a")
+    public WebElement mobilePhoneField;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[1]/h4[2]/a[1]")
+    public WebElement firstImAccounField;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[1]/h4[2]/a[2]")
+    public WebElement secondImAccountField;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[1]/a")
+    public WebElement companyNameFiled;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[2]/a")
+    public WebElement addressOneField;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[3]/a")
+    public WebElement addressTwoField;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[4]/a")
+    public WebElement cityField;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[5]/a")
+    public WebElement stateField;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[6]/a")
+    public WebElement zipField;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[1]/a")
+    public WebElement mainPhoneField;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[2]/a")
+    public WebElement faxField;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[3]/a")
+    public WebElement websiteField;
+    public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]/div/div/div/div[3]/div/button") WebElement deleteSubscription;
+    @FindBy(how = How.XPATH, using = ".//*[@ng-click='toggleEditMode()']/i")
+    WebElement editDashoboard;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[1]/nav/div[1]/div/div/div[2]/a/strong/span[1]")
+    WebElement arrowDown;
+    @FindBy(how = How.XPATH, using = ".//a[@title='Profile']")
+    WebElement profileLink;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[1]/section/div/div/div[2]/h4[2]/form/div/input")
     WebElement userTitleInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[1]/section/div/div/div[2]/h4[2]/form/div/span/button[1]")
     WebElement userTitleAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[1]/h4[1]/a")
-    public WebElement locationField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[1]/h4[1]/form/div/input")
     WebElement locationFiledInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[1]/h4[1]/form/div/span/button[1]")
     WebElement locationFiledAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[2]/h4[1]/a")
-    public WebElement officePhoneField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[2]/h4[1]/form/div/input")
     WebElement officePhoneFiledInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[2]/h4[1]/form/div/span/button[1]")
     WebElement officePhoneFiledAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[2]/h4[2]/a")
-    public WebElement mobilePhoneField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[2]/h4[2]/form/div/input")
     WebElement mobilePhoneFieldInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[2]/h4[2]/form/div/span/button[1]")
     WebElement mobilePhoneFiledAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[1]/h4[2]/a[1]")
-    public WebElement firstImAccounField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[1]/h4[2]/form/div/input")
     WebElement firstImAccountInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[1]/h4[2]/form/div/span/button[1]")
     WebElement firstImAccountFieldAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[1]/h4[2]/a[2]")
-    public WebElement secondImAccountField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[1]/h4[2]/form/div/input")
     WebElement secondImAccountInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[1]/section/ul/li/div/div[1]/h4[2]/form/div/span/button[1]")
     WebElement secondImAccountFiledAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[1]/a")
-    public WebElement companyNameFiled;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[1]/form/div/input")
     WebElement companyNameFieldInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[1]/form/div/span/button[1]")
     WebElement companyNameFieldAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[2]/a")
-    public WebElement addressOneField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[2]/form/div/input")
     WebElement addressOneInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[2]/form/div/span/button[1]")
     WebElement addressOneAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[3]/a")
-    public WebElement addressTwoField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[3]/form/div/input")
     WebElement addressTwoInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[3]/form/div/span/button[1]")
     WebElement addressTwoAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[4]/a")
-    public WebElement cityField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[4]/form/div/input")
     WebElement cityFieldInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[4]/form/div/span/button[1]")
     WebElement cityFieldAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[5]/a")
-    public WebElement stateField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[5]/form/div/input")
     WebElement stateFieldInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[5]/form/div/span/button[1]")
     WebElement stateFieldAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[6]/a")
-    public WebElement zipField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[6]/form/div/input")
     WebElement zipFieldInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[1]/h4[6]/form/div/span/button[1]")
     WebElement zipFieldAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[1]/a")
-    public WebElement mainPhoneField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[1]/form/div/input")
     WebElement mainPhoneFieldInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[1]/form/div/span/button[1]")
     WebElement mainPhoneFieldAddButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[2]/a")
-    public WebElement faxField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[2]/form/div/input")
     WebElement faxFieldInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[2]/form/div/span/button[1]")
     WebElement faxFieldAddButton;
-
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[3]/a")
-    public WebElement websiteField;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[3]/form/div/input")
     WebElement websiteFieldInput;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[3]/form/div/span/button[1]")
     WebElement websiteFieldAddButton;
-
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[1]/div/span")
     WebElement subscriptionsTitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]/div/div/div/div[1]/div")
     WebElement subsciptionTitleFiled;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]/div/div/div/div[2]/div")
     WebElement subscriptionDateFiled;
-    public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]/div/div/div/div[3]/div/button") WebElement deleteSubscription;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]")
     WebElement subscriptionEmptyTable;
 

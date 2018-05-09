@@ -27,11 +27,11 @@ angular.module('admin').factory('Admin.LabelsConfigService', [ '$resource', func
          *
          * @returns {Object} Object returned by $resource
          */
-        retrieveNamespaces : {
-            method : "GET",
-            url : "api/latest/plugin/admin/labelmanagement/namespaces",
-            cache : false,
-            isArray : true
+        retrieveNamespaces: {
+            method: "GET",
+            url: "api/latest/plugin/admin/labelmanagement/namespaces",
+            cache: false,
+            isArray: true
         },
 
         /**
@@ -50,11 +50,11 @@ angular.module('admin').factory('Admin.LabelsConfigService', [ '$resource', func
          *
          * @returns {Object} Object returned by $resource
          */
-        retrieveResource : {
-            method : "GET",
-            url : "api/latest/plugin/admin/labelmanagement/admin-resource?lang=:lang&ns=:ns",
-            cache : false,
-            isArray : true
+        retrieveResource: {
+            method: "GET",
+            url: "api/latest/plugin/admin/labelmanagement/admin-resource?lang=:lang&ns=:ns",
+            cache: false,
+            isArray: true
         },
 
         /**
@@ -70,11 +70,11 @@ angular.module('admin').factory('Admin.LabelsConfigService', [ '$resource', func
          *
          * @returns {Object} Object returned by $resource
          */
-        retrieveSettings : {
-            method : "GET",
-            url : "api/latest/plugin/admin/labelmanagement/settings",
-            cache : false,
-            isArray : false
+        retrieveSettings: {
+            method: "GET",
+            url: "api/latest/plugin/admin/labelmanagement/settings",
+            cache: false,
+            isArray: false
         },
 
         /**
@@ -96,11 +96,11 @@ angular.module('admin').factory('Admin.LabelsConfigService', [ '$resource', func
          *
          * @returns {Object} Object returned by $resource
          */
-        updateResource : {
-            method : "PUT",
-            url : "api/latest/plugin/admin/labelmanagement/admin-resource?lang=:lang&ns=:ns",
-            cache : false,
-            isArray : true
+        updateResource: {
+            method: "PUT",
+            url: "api/latest/plugin/admin/labelmanagement/admin-resource?lang=:lang&ns=:ns",
+            cache: false,
+            isArray: true
         },
 
         /**
@@ -118,10 +118,10 @@ angular.module('admin').factory('Admin.LabelsConfigService', [ '$resource', func
          *
          * @returns {Object} Object returned by $resource
          */
-        updateSettings : {
-            method : "PUT",
-            url : "api/latest/plugin/admin/labelmanagement/settings",
-            cache : false
+        updateSettings: {
+            method: "PUT",
+            url: "api/latest/plugin/admin/labelmanagement/settings",
+            cache: false
         },
 
         /**
@@ -141,10 +141,10 @@ angular.module('admin').factory('Admin.LabelsConfigService', [ '$resource', func
          *
          * @returns {Object} Object returned by $resource
          */
-        resetResource : {
-            method : "POST",
-            url : "api/latest/plugin/admin/labelmanagement/admin-resource/reset",
-            cache : false
+        resetResource: {
+            method: "POST",
+            url: "api/latest/plugin/admin/labelmanagement/admin-resource/reset",
+            cache: false
         },
 
         /**
@@ -163,10 +163,10 @@ angular.module('admin').factory('Admin.LabelsConfigService', [ '$resource', func
          *
          * @returns {Object} Object returned by $resource
          */
-        refreshResource : {
-            method : "POST",
-            url : "api/latest/plugin/admin/labelmanagement/admin-resource/refresh",
-            cache : false
+        refreshResource: {
+            method: "POST",
+            url: "api/latest/plugin/admin/labelmanagement/admin-resource/refresh",
+            cache: false
         }
     });
 } ]);

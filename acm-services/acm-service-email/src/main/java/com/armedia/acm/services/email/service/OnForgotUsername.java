@@ -16,12 +16,10 @@ import java.util.stream.Stream;
 
 public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent>
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private AcmEmailSenderService emailSenderService;
-
     private AcmApplication acmAppConfiguration;
-
     private String forgotUsernameEmailSubject;
-
     /**
      * Formatting string to be used for producing text to inserted as a body in the forgot username email. The
      * formatting
@@ -29,8 +27,18 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
      * e.g: "Proceed to login <a href='%s'>%s</a>"
      */
     private String forgotUsernameEmailBodyTemplate;
+    private EmailBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBuilder = (emailUserData, messageProps) -> {
+        messageProps.put("to", emailUserData.getKey());
+        messageProps.put("subject", forgotUsernameEmailSubject);
+    };
+    private EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBodyBuilder = emailUserData -> {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+        int userAccountsNum = emailUserData.getValue().size();
+        String userAccounts = toUserAccountsString(emailUserData.getValue());
+
+        return String.format(forgotUsernameEmailBodyTemplate, userAccountsNum, userAccounts,
+                acmAppConfiguration.getBaseUrl(), acmAppConfiguration.getBaseUrl());
+    };
 
     @Override
     public void onApplicationEvent(ForgotUsernameEvent forgotUsernameEvent)
@@ -57,20 +65,6 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
             log.error("Email with username was not sent to address: [{}]", userEmailAddress);
         }
     }
-
-    private EmailBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBuilder = (emailUserData, messageProps) -> {
-        messageProps.put("to", emailUserData.getKey());
-        messageProps.put("subject", forgotUsernameEmailSubject);
-    };
-
-    private EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBodyBuilder = emailUserData -> {
-
-        int userAccountsNum = emailUserData.getValue().size();
-        String userAccounts = toUserAccountsString(emailUserData.getValue());
-
-        return String.format(forgotUsernameEmailBodyTemplate, userAccountsNum, userAccounts,
-                acmAppConfiguration.getBaseUrl(), acmAppConfiguration.getBaseUrl());
-    };
 
     private String toUserAccountsString(List<String> accounts)
     {

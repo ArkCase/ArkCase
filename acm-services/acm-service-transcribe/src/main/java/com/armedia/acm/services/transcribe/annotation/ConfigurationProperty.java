@@ -13,6 +13,8 @@ import java.lang.annotation.Target;
 public @interface ConfigurationProperty
 {
     public String key();
+
     public boolean read() default true;
+
     public boolean write() default true;
 }

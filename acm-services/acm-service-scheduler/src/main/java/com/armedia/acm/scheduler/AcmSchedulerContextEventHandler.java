@@ -12,9 +12,8 @@ import org.springframework.context.ApplicationListener;
  */
 public class AcmSchedulerContextEventHandler implements ApplicationListener<AbstractContextHolderEvent>
 {
-    private AcmScheduler scheduler;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private AcmScheduler scheduler;
 
     @Override
     public void onApplicationEvent(AbstractContextHolderEvent abstractContextHolderEvent)

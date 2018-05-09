@@ -18,6 +18,11 @@ public class CmisActivator
     public final static String PLUGIN_ID = "org.mule.tooling.ui.contribution.cmis";
     private static org.mule.tooling.ui.contribution.CmisActivator plugin;
 
+    public static org.mule.tooling.ui.contribution.CmisActivator getDefault()
+    {
+        return plugin;
+    }
+
     public void start(BundleContext context)
             throws Exception
     {
@@ -30,11 +35,6 @@ public class CmisActivator
     {
         plugin = null;
         super.stop(context);
-    }
-
-    public static org.mule.tooling.ui.contribution.CmisActivator getDefault()
-    {
-        return plugin;
     }
 
 }

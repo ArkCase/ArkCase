@@ -30,7 +30,7 @@ public class PentahoFileProperties
 
     private String aclNode;
 
-    //use string for now
+    // use string for now
     private String createdDate;
     private String creatorId;
     private String fileSize;
@@ -39,8 +39,8 @@ public class PentahoFileProperties
     private String id;
     private String lastModifiedDate;
     private String locale;
-    
-    //should be boolean
+
+    // should be boolean
     private String locked;
     private String name;
     private String ownerType;
@@ -248,4 +248,3 @@ public class PentahoFileProperties
                 '}';
     }
 }
-

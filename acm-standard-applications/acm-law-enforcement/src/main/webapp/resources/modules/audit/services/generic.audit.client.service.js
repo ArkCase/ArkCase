@@ -24,11 +24,11 @@ angular.module('audit').factory('AuditService', [ '$http', function($http) {
          *
          * @returns {HttpPromise} Future info about generic Audit
          */
-        genericAudit : function(auditType) {
+        genericAudit: function(auditType) {
             //FIXME add some filtering here to disable or enable logging types, useful in extensions
             return $http({
-                method : 'POST',
-                url : 'api/v1/plugin/audit/generic?type=' + auditType,
+                method: 'POST',
+                url: 'api/v1/plugin/audit/generic?type=' + auditType,
             });
         }
     }

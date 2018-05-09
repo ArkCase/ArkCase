@@ -74,29 +74,21 @@ import java.util.UUID;
 @TransactionConfiguration(defaultRollback = true)
 public class BuckslipArkcaseIT
 {
+    final String processName = "ArkCaseBuckslipProcess";
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     @Autowired
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-
     @Autowired
     private RuntimeService rt;
-
     @Autowired
     private RepositoryService repo;
-
     @Autowired
     private TaskService ts;
-
     @Autowired
     private AcmTaskService acmTaskService;
-
     @Autowired
     private TaskDao taskDao;
-
-    final String processName = "ArkCaseBuckslipProcess";
-
     private BuckslipProcess buckslipProcess;
-
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

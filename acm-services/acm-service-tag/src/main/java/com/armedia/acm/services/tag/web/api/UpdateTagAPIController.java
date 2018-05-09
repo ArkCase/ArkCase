@@ -27,10 +27,9 @@ import java.sql.SQLException;
 public class UpdateTagAPIController
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private TagService tagService;
     private TagEventPublisher tagEventPublisher;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

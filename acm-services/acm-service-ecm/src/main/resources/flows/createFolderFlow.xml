@@ -8,7 +8,8 @@
                http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
 
     <flow name="createFolder">
-        <vm:inbound-endpoint doc:name="Create a folder" address="vm://createFolder.in" exchange-pattern="request-response"/>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" doc:name="Create a folder" address="vm://createFolder.in"
+            exchange-pattern="request-response"/>
         <cmis:get-or-create-folder-by-path config-ref="#[message.inboundProperties.configRef]" folderPath="#[payload]"/>
     </flow>
 

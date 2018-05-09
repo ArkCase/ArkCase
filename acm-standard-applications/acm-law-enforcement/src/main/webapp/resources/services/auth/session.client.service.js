@@ -34,7 +34,7 @@ angular.module('services').factory('SessionService', [ '$injector', function($in
          * Update session cookie.
          *
          */
-        update : function() {
+        update: function() {
             var lastActionTime = new Date().getTime();
             $cookies.put(SESSION_TIMEOUT_COOKIE, lastActionTime);
         }

@@ -29,16 +29,6 @@ public class MDCThreadPoolExecutor extends ThreadPoolExecutor
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, rejectedExecutionHandler);
     }
 
-    /**
-     * All executions will have MDC injected. {@code ThreadPoolExecutor}'s submission methods ({@code submit()} etc.)
-     * all delegate to this.
-     */
-    @Override
-    public void execute(Runnable command)
-    {
-        super.execute(wrap(command, MDC.getCopyOfContextMap()));
-    }
-
     public static Runnable wrap(final Runnable runnable, final Map<String, String> context)
     {
         return () -> {
@@ -69,5 +59,15 @@ public class MDCThreadPoolExecutor extends ThreadPoolExecutor
                 }
             }
         };
+    }
+
+    /**
+     * All executions will have MDC injected. {@code ThreadPoolExecutor}'s submission methods ({@code submit()} etc.)
+     * all delegate to this.
+     */
+    @Override
+    public void execute(Runnable command)
+    {
+        super.execute(wrap(command, MDC.getCopyOfContextMap()));
     }
 }

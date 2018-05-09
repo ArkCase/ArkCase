@@ -20,9 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 public class UpdateSecurityFieldAPIController
 {
-    private EcmFileService ecmFileService;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private EcmFileService ecmFileService;
 
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{fileId}/security-field/{securityFieldValue}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -40,6 +40,11 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
         return loadingDocumentsSeconds;
     }
 
+    public void setLoadingDocumentsSeconds(Long loadingDocumentsSeconds)
+    {
+        this.loadingDocumentsSeconds = loadingDocumentsSeconds;
+    }
+
     @Override
     public void processBatch(Map<String, DocumentObject> documents, DynamicEntity parentBatch)
     {
@@ -349,11 +354,6 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
         }
 
         return contactMethod;
-    }
-
-    public void setLoadingDocumentsSeconds(Long loadingDocumentsSeconds)
-    {
-        this.loadingDocumentsSeconds = loadingDocumentsSeconds;
     }
 
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()

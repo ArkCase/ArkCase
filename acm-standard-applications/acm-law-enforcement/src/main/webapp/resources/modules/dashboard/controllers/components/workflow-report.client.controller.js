@@ -2,19 +2,8 @@
 
 angular.module('dashboard.workflow-report').controller(
         'Dashboard.WorkflowReportController',
-        [
-                '$scope',
-                '$translate',
-                '$state',
-                'Authentication',
-                'Dashboard.DashboardService',
-                'ObjectService',
-                'ConfigService',
-                'UtilService',
-                'Util.DateService',
-                'params',
-                function($scope, $translate, $state, Authentication, DashboardService, ObjectService, ConfigService, Util, UtilDateService,
-                        params) {
+        [ '$scope', '$translate', '$state', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', 'ConfigService', 'UtilService', 'Util.DateService', 'params',
+                function($scope, $translate, $state, Authentication, DashboardService, ObjectService, ConfigService, Util, UtilDateService, params) {
 
                     var vm = this;
                     vm.config = null;
@@ -36,23 +25,23 @@ angular.module('dashboard.workflow-report').controller(
                     });
 
                     var paginationOptions = {
-                        pageNumber : 1,
-                        pageSize : 5,
-                        sortBy : 'create_date_tdt',
-                        sortDir : 'desc'
+                        pageNumber: 1,
+                        pageSize: 5,
+                        sortBy: 'create_date_tdt',
+                        sortDir: 'desc'
                     };
 
                     vm.gridOptions = {
-                        enableColumnResizing : true,
-                        enableRowSelection : true,
-                        enableSelectAll : false,
-                        enableRowHeaderSelection : false,
-                        useExternalPagination : true,
-                        useExternalSorting : true,
-                        multiSelect : false,
-                        noUnselect : false,
-                        columnDefs : [],
-                        onRegisterApi : function(gridApi) {
+                        enableColumnResizing: true,
+                        enableRowSelection: true,
+                        enableSelectAll: false,
+                        enableRowHeaderSelection: false,
+                        useExternalPagination: true,
+                        useExternalSorting: true,
+                        multiSelect: false,
+                        noUnselect: false,
+                        columnDefs: [],
+                        onRegisterApi: function(gridApi) {
                             vm.gridApi = gridApi;
 
                             gridApi.core.on.sortChanged($scope, function(grid, sortColumns) {
@@ -74,10 +63,10 @@ angular.module('dashboard.workflow-report').controller(
 
                     function getPage() {
                         DashboardService.queryWorkflowReport({
-                            sortBy : paginationOptions.sortBy,
-                            sortDir : paginationOptions.sortDir,
-                            startWith : (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,
-                            pageSize : paginationOptions.pageSize
+                            sortBy: paginationOptions.sortBy,
+                            sortDir: paginationOptions.sortDir,
+                            startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,
+                            pageSize: paginationOptions.pageSize
                         }, function(response) {
                             vm.gridOptions.data = [];
                             vm.gridOptions.totalItems = response.numFound;

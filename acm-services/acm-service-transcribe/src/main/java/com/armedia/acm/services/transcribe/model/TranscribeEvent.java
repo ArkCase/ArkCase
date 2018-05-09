@@ -1,7 +1,6 @@
 package com.armedia.acm.services.transcribe.model;
 
 import com.armedia.acm.core.model.AcmEvent;
-import org.springframework.security.core.Authentication;
 
 import java.util.Date;
 

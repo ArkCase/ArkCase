@@ -22,23 +22,15 @@ public class AlfrescoAuditApplicationRestClient
 {
     private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
     private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
-
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     private String protocol;
     private String host;
     private String port;
     private String contextRoot;
     private String username;
     private String password;
-
     private RestTemplate restTemplate;
     private String basicAuthenticationHeaderValue;
-
-    private enum AlfrescoAuthenticationType
-    {
-        BASIC, KERBEROS
-    }
-
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     public String baseUrl()
     {
@@ -211,6 +203,11 @@ public class AlfrescoAuditApplicationRestClient
     public void setPassword(String password)
     {
         this.password = password;
+    }
+
+    private enum AlfrescoAuthenticationType
+    {
+        BASIC, KERBEROS
     }
 
 }

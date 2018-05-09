@@ -2,30 +2,21 @@
 
 angular.module('document-repository').controller(
         'DocumentRepository.DetailsController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                'UtilService',
-                'ConfigService',
-                'DocumentRepository.InfoService',
-                'MessageService',
-                'Helper.ObjectBrowserService',
-                function($scope, $stateParams, $translate, Util, ConfigService, DocumentRepositoryInfoService, MessageService,
-                        HelperObjectBrowserService) {
+        [ '$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'DocumentRepository.InfoService', 'MessageService', 'Helper.ObjectBrowserService',
+                function($scope, $stateParams, $translate, Util, ConfigService, DocumentRepositoryInfoService, MessageService, HelperObjectBrowserService) {
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "document-repository",
-                        componentId : "details",
-                        retrieveObjectInfo : DocumentRepositoryInfoService.getDocumentRepositoryInfo,
-                        validateObjectInfo : DocumentRepositoryInfoService.validateDocumentRepositoryInfo
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "document-repository",
+                        componentId: "details",
+                        retrieveObjectInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                        validateObjectInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
                     });
 
                     $scope.options = {
-                        focus : true,
-                        dialogsInBody : true
+                        focus: true,
+                        dialogsInBody: true
                     };
 
                     $scope.saveDetails = function() {

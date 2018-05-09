@@ -22,6 +22,7 @@ import java.util.Map;
  */
 public class LabelManagementService
 {
+    private final String MODULE_CORE_ID = "core";
     private Logger log = LoggerFactory.getLogger(getClass());
     private String customResourcesLocation;
     private String customResourceFile;
@@ -34,10 +35,7 @@ public class LabelManagementService
     private String defaultLocale;
     private Map<String, Object> defaultLocales;
     private ApplicationEventPublisher applicationEventPublisher;
-
     private Map<String, Map<String, JSONObject>> cachedResources = new HashMap<>();
-
-    private final String MODULE_CORE_ID = "core";
 
     /**
      * Return modules

@@ -35,15 +35,11 @@ import java.util.Optional;
 
 public class UserDao extends AcmAbstractDao<AcmUser>
 {
+    private static String DEFAULT_LOCALE_CODE = null;
     @PersistenceContext
     private EntityManager entityManager;
-
     private Cache quietUserLookupCache;
-
     private List<AcmConfig> configList;
-
-    private static String DEFAULT_LOCALE_CODE = null;
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
     public void init()

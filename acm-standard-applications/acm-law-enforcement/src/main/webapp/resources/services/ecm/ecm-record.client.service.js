@@ -27,10 +27,10 @@ angular.module('services').factory('Ecm.RecordService', [ '$resource', 'Acm.Stor
          *
          * @returns {Object} Object returned by $resource
          */
-        _declareAsRecord : {
-            method : 'POST',
-            url : 'api/latest/service/ecm/declare/:objectType/:objectId',
-            isArray : true
+        _declareAsRecord: {
+            method: 'POST',
+            url: 'api/latest/service/ecm/declare/:objectType/:objectId',
+            isArray: true
         }
     });
 
@@ -50,13 +50,13 @@ angular.module('services').factory('Ecm.RecordService', [ '$resource', 'Acm.Stor
      */
     Service.declareAsRecord = function(objectType, objectId, declareAsRecordData) {
         return Util.serviceCall({
-            service : Service._declareAsRecord,
-            param : {
-                objectType : objectType,
-                objectId : objectId
+            service: Service._declareAsRecord,
+            param: {
+                objectType: objectType,
+                objectId: objectId
             },
-            data : declareAsRecordData,
-            onSuccess : function(data) {
+            data: declareAsRecordData,
+            onSuccess: function(data) {
                 if (Service.validateDeclareAsRecord(data)) {
                     return data;
                 }

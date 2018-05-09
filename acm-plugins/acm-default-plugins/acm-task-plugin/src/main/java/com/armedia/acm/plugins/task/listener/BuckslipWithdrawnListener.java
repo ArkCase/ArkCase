@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 
 public class BuckslipWithdrawnListener implements JavaDelegate
 {
-    private BuckslipTaskHelper buckslipTaskHelper;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private BuckslipTaskHelper buckslipTaskHelper;
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception

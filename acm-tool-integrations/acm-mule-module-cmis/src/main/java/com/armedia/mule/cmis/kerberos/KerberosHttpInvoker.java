@@ -64,10 +64,8 @@ import java.util.stream.Collectors;
  */
 public class KerberosHttpInvoker implements HttpInvoker
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
-
     private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
-
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private HttpClient httpClient;
 
     public KerberosHttpInvoker()

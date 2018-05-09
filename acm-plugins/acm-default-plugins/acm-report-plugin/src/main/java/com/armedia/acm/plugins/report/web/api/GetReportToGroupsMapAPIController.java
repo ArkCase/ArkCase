@@ -132,13 +132,13 @@ public class GetReportToGroupsMapAPIController
         this.reportService = reportService;
     }
 
-    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
-    {
-        this.executeSolrQuery = executeSolrQuery;
-    }
-
     public ExecuteSolrQuery getExecuteSolrQuery()
     {
         return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
     }
 }
