@@ -162,7 +162,7 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
             params : {
                 n : (data.n ? data.n : 50),
                 authorized : data.isAuthorized,
-                fq : (data.filterWord ? data.filterWord : "")
+                fn: (data.filterWord ? data.filterWord : "")
             }
         });
     }

@@ -107,7 +107,7 @@ angular.module('admin')
                                     widget : $scope.lastSelectedWidget,
                                     filterWord : searchData.filterWord
                                 };
-                                DashboardConfigService.getRoleSGroupsByName(data).then(function(response) {
+                                DashboardConfigService.getRolesGroupsByName(data).then(function(response) {
                                     $scope.widgetsData.selectedNotAuthorized = [];
                                     $scope.fillList($scope.widgetsData.selectedNotAuthorized, response.data);
                                 });
@@ -119,7 +119,7 @@ angular.module('admin')
                                     widget : $scope.lastSelectedWidget,
                                     filterWord : searchData.filterWord
                                 };
-                                DashboardConfigService.getRoleSGroupsByName(data).then(function(response) {
+                                DashboardConfigService.getRolesGroupsByName(data).then(function(response) {
                                     $scope.widgetsData.selectedAuthorized = [];
                                     $scope.fillList($scope.widgetsData.selectedAuthorized, response.data);
                                 });
@@ -149,7 +149,7 @@ angular.module('admin')
                                 data.widget = $scope.lastSelectedWidget;
                                 data.start = $scope.widgetsData.selectedAuthorized.length;
                                 data.isAuthorized = true;
-                                $scope.retrieveDataScroll(data, "getRoleSGroupsByName", "selectedAuthorized");
+                                $scope.retrieveDataScroll(data, "getRolesGroupsByName", "selectedAuthorized");
                             }
 
                             function unauthorizedScroll() {
@@ -157,7 +157,7 @@ angular.module('admin')
                                 data.widget = $scope.lastSelectedWidget;
                                 data.start = $scope.widgetsData.selectedNotAuthorized.length;
                                 data.isAuthorized = false;
-                                $scope.retrieveDataScroll(data, "getRoleSGroupsByName", "selectedNotAuthorized");
+                                $scope.retrieveDataScroll(data, "getRolesGroupsByName", "selectedNotAuthorized");
                             }
 
                             $scope.onObjSelect = function(selectedObject) {
