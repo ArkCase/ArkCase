@@ -53,7 +53,7 @@ public class RolesPrivilegesRetrievePrivileges
             @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws IOException, AcmRolesPrivilegesException
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws AcmRolesPrivilegesException
     {
         try
         {
@@ -66,21 +66,21 @@ public class RolesPrivilegesRetrievePrivileges
         }
     }
 
-    @RequestMapping(value = "/{roleName:.+}/privileges", params = { "fq" }, method = RequestMethod.GET, produces = {
+    @RequestMapping(value = "/{roleName:.+}/privileges", params = { "fn" }, method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
     public List<PrivilegeItem> findPrivilegesByRole(
             @PathVariable(value = "roleName") String roleName,
             @RequestParam(value = "authorized") Boolean authorized,
-            @RequestParam(value = "fq") String filterQuery,
+            @RequestParam(value = "fn") String filterName,
             @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws IOException, AcmRolesPrivilegesException
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws AcmRolesPrivilegesException
     {
         try
         {
-            return rolesPrivilegesService.getPrivilegesByRole(roleName, authorized, filterQuery, sortDirection, startRow, maxRows);
+            return rolesPrivilegesService.getPrivilegesByRole(roleName, authorized, filterName, sortDirection, startRow, maxRows);
         }
         catch (Exception e)
         {

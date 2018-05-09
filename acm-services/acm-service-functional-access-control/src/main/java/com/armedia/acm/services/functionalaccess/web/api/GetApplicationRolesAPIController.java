@@ -54,10 +54,10 @@ public class GetApplicationRolesAPIController
         return retval;
     }
 
-    @RequestMapping(value = "/appRoles", params = { "fq" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/appRoles", params = { "fn" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<String> getApplicationRolesByName(
-            @RequestParam(value = "fq") String filterQuery,
+            @RequestParam(value = "fn") String filterName,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
             @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
@@ -65,7 +65,7 @@ public class GetApplicationRolesAPIController
     {
         LOG.debug("Taking application roles by name...");
 
-        List<String> retval = getFunctionalAccessService().getApplicationRolesByName(sortDirection, startRow, maxRows, filterQuery);
+        List<String> retval = getFunctionalAccessService().getApplicationRolesByName(sortDirection, startRow, maxRows, filterName);
         LOG.debug("Application roles: {}", retval.toString());
 
         return retval;

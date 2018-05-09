@@ -28,7 +28,7 @@ public interface ReportService
 
     public Map<String, List<String>> getReportToGroupsMap();
 
-    public List<String> getReportToGroups(String sortDirection, Integer startRow, Integer maxRows, String filterQuery) throws IOException;
+    public List<String> getReportToGroups(String sortDirection, Integer startRow, Integer maxRows, String filterName) throws IOException;
 
     public List<String> getReportToGroupsPaged(String sortDirection, Integer startRow, Integer maxRows) throws IOException;
 

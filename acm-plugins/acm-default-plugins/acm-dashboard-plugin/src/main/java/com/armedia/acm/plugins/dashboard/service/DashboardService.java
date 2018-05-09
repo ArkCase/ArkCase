@@ -273,17 +273,6 @@ public class DashboardService
         return stringBuffer.toString();
     }
 
-    public RolesGroupByWidgetDto getRoleGroupWidgetByName(String widgetName, String sortBy, String sortDirection, Integer startRow,
-            Integer maxRows,
-            Boolean authorized, List<RolesGroupByWidgetDto> rolesGroupsPerWidget)
-    {
-        List<RolesGroupByWidgetDto> rolesGroupsByWidgetDto = addNotAuthorizedRolesPerWidget(rolesGroupsPerWidget);
-        RolesGroupByWidgetDto roleGroupByWidgetDto = rolesGroupsByWidgetDto.stream()
-                .filter(roleGroup -> roleGroup.getWidgetName().equalsIgnoreCase(widgetName)).findFirst()
-                .orElse(null);
-        return roleGroupByWidgetDto;
-    }
-
     public List<WidgetRoleName> getRolesByWidgetPaged(String widgetName, String sortBy, String sortDirection, Integer startRow,
             Integer maxRows,
             Boolean authorized, List<RolesGroupByWidgetDto> rolesGroupsPerWidget) throws AcmWidgetException

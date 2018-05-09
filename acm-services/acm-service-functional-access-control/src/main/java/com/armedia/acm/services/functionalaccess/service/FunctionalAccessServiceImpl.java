@@ -141,7 +141,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     }
 
     @Override
-    public List<String> getApplicationRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterQuery)
+    public List<String> getApplicationRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterName)
     {
         List<String> result = new ArrayList<>(getApplicationRoles());
 
@@ -160,9 +160,9 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         }
         maxRows = maxRows > result.size() ? result.size() : maxRows;
 
-        if (!filterQuery.isEmpty())
+        if (!filterName.isEmpty())
         {
-            result.removeIf(role -> !(role.toLowerCase().contains(filterQuery.toLowerCase())));
+            result.removeIf(role -> !(role.toLowerCase().contains(filterName.toLowerCase())));
         }
 
         return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
