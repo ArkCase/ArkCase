@@ -16,8 +16,8 @@
  */
 angular.module('admin').service('Admin.FormWorkflowsLinkService', function($http) {
     return ({
-        getFormWorkflowsData : getFormWorkflowsData,
-        saveData : saveData
+        getFormWorkflowsData: getFormWorkflowsData,
+        saveData: saveData
     });
     /**
      * @ngdoc method
@@ -31,8 +31,8 @@ angular.module('admin').service('Admin.FormWorkflowsLinkService', function($http
      */
     function getFormWorkflowsData() {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/admin/linkformsworkflows/configuration"
+            method: "GET",
+            url: "api/latest/plugin/admin/linkformsworkflows/configuration"
         });
     }
     ;
@@ -51,11 +51,11 @@ angular.module('admin').service('Admin.FormWorkflowsLinkService', function($http
      */
     function saveData(reports) {
         return $http({
-            method : "PUT",
-            url : "api/latest/plugin/admin/linkformsworkflows/configuration",
-            data : reports,
-            headers : {
-                "Content-Type" : "application/json"
+            method: "PUT",
+            url: "api/latest/plugin/admin/linkformsworkflows/configuration",
+            data: reports,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }

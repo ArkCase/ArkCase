@@ -33,19 +33,19 @@
  */
 angular.module('directives').directive('permission', [ '$q', '$log', 'PermissionsService', function($q, $log, PermissionsService) {
     return {
-        priority : 100,
-        restrict : 'A',
+        priority: 100,
+        restrict: 'A',
 
-        link : {
-            pre : function(scope, element, attrs) {
+        link: {
+            pre: function(scope, element, attrs) {
                 element.on('click', {
-                    actionName : attrs.permission,
-                    objectType : attrs.permissionObjectType,
-                    element : element
+                    actionName: attrs.permission,
+                    objectType: attrs.permissionObjectType,
+                    element: element
                 }, onElementClick);
             },
 
-            post : function(scope, element, attrs) {
+            post: function(scope, element, attrs) {
 
                 // We use access to attributes value instead of isolated scope
                 // to avoid "isolated scopes conflicts" when few directives with isolated scopes are applied to element
@@ -68,17 +68,17 @@ angular.module('directives').directive('permission', [ '$q', '$log', 'Permission
 
     function setPermission(element, actionName, objectType, permissionProperties, permissionAction) {
         PermissionsService.getActionPermission(actionName, permissionProperties, {
-            objectType : objectType
+            objectType: objectType
         }).then(function success(enabled) {
 
             if (enabled === false) {
                 if (permissionAction == 'hide') {
                     element.css({
-                        'display' : 'none'
+                        'display': 'none'
                     });
                 } else if (permissionAction == 'show') {
                     element.css({
-                        'display' : ''
+                        'display': ''
                     });
                 } else {
                     element.attr('disabled', true);
@@ -87,11 +87,11 @@ angular.module('directives').directive('permission', [ '$q', '$log', 'Permission
             } else {
                 if (permissionAction == 'hide') {
                     element.css({
-                        'display' : ''
+                        'display': ''
                     });
                 } else if (permissionAction == 'show') {
                     element.css({
-                        'display' : 'none'
+                        'display': 'none'
                     });
                 } else {
                     element.attr('disabled', false);

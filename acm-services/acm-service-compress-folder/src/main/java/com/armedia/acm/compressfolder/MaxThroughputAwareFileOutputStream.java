@@ -3,6 +3,33 @@
  */
 package com.armedia.acm.compressfolder;
 
+/*-
+ * #%L
+ * ACM Service: Folder Compressing Service
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,20 +49,18 @@ public class MaxThroughputAwareFileOutputStream extends FileOutputStream
 {
 
     /**
-     * Logger instance.
-     */
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
-     * Total number of bytes written so far.
-     */
-    private long totalBytes;
-
-    /**
      * Calculated maximum number of bytes that this stream is allowed to write. It can not be reset. Negative value
      * means there is no limit to the number of bytes to be written by this stream.
      */
     private final long maxBytes;
+    /**
+     * Logger instance.
+     */
+    private Logger log = LoggerFactory.getLogger(getClass());
+    /**
+     * Total number of bytes written so far.
+     */
+    private long totalBytes;
 
     /**
      * Construct a new instance of the stream with calculating the maximum number of bytes to be written by this stream.

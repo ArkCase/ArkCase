@@ -2,50 +2,37 @@
 
 angular.module('document-repository').controller(
         'DocumentRepository.TagsController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                'UtilService',
-                'ObjectService',
-                'DocumentRepository.InfoService',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'Object.TagsService',
-                '$modal',
-                'MessageService',
-                function($scope, $q, $stateParams, $translate, Util, ObjectService, DocumentRepositoryInfoService, HelperUiGridService,
-                        HelperObjectBrowserService, ObjectTagsService, $modal, messageService) {
+        [ '$scope', '$q', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'DocumentRepository.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.TagsService', '$modal', 'MessageService',
+                function($scope, $q, $stateParams, $translate, Util, ObjectService, DocumentRepositoryInfoService, HelperUiGridService, HelperObjectBrowserService, ObjectTagsService, $modal, messageService) {
 
                     $scope.tags = [];
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "document-repository",
-                        componentId : "tags",
-                        retrieveObjectInfo : DocumentRepositoryInfoService.getDocumentRepositoryInfo,
-                        validateObjectInfo : DocumentRepositoryInfoService.validateDocumentRepositoryInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "document-repository",
+                        componentId: "tags",
+                        retrieveObjectInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                        validateObjectInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
                     var promiseUsers = gridHelper.getUsers();
 
                     $scope.addNew = function() {
                         var modalInstance = $modal.open({
-                            animation : $scope.animationsEnabled,
-                            templateUrl : 'modules/document-repository/views/components/document-repository-tags-modal.client.view.html',
-                            controller : 'DocumentRepository.TagsModalController',
-                            size : 'lg'
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'modules/document-repository/views/components/document-repository-tags-modal.client.view.html',
+                            controller: 'DocumentRepository.TagsModalController',
+                            size: 'lg'
                         });
 
                         modalInstance.result.then(function(tags) {
@@ -58,26 +45,22 @@ angular.module('document-repository').controller(
                                             return tagAss.id == tag.object_id_s;
                                         });
                                         if (tagsFound.length == 0) {
-                                            ObjectTagsService.associateTag(componentHelper.currentObjectId,
-                                                    ObjectService.ObjectTypes.DOC_REPO, $scope.objectParentTitle, tag.object_id_s).then(
-                                                    function(returnedTag) {
-                                                        var tagToAdd = angular.copy(returnedTag);
-                                                        tagToAdd.tagName = tag.tags_s;
-                                                        tagToAdd.id = returnedTag.tagId;
-                                                        $scope.tags.push(tagToAdd);
-                                                        $scope.gridOptions.data = $scope.tags;
-                                                        $scope.gridOptions.totalItems = $scope.tags.length;
-                                                    });
+                                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.DOC_REPO, $scope.objectParentTitle, tag.object_id_s).then(function(returnedTag) {
+                                                var tagToAdd = angular.copy(returnedTag);
+                                                tagToAdd.tagName = tag.tags_s;
+                                                tagToAdd.id = returnedTag.tagId;
+                                                $scope.tags.push(tagToAdd);
+                                                $scope.gridOptions.data = $scope.tags;
+                                                $scope.gridOptions.totalItems = $scope.tags.length;
+                                            });
                                         } else {
-                                            messageService.info(tag.tags_s + " "
-                                                    + $translate.instant('document-repository.comp.tags.message.tagAssociated'));
+                                            messageService.info(tag.tags_s + " " + $translate.instant('document-repository.comp.tags.message.tagAssociated'));
                                             _.remove(tagsFound, function() {
                                                 return tag;
                                             });
                                         }
                                     } else {
-                                        ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.DOC_REPO,
-                                                $scope.objectParentTitle, tag.id).then(function() {
+                                        ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.DOC_REPO, $scope.objectParentTitle, tag.id).then(function() {
                                             $scope.tags.push(tag);
                                             $scope.gridOptions.data = $scope.tags;
                                             $scope.gridOptions.totalItems = $scope.tags.length;
@@ -134,8 +117,7 @@ angular.module('document-repository').controller(
 
                         var id = Util.goodMapValue(rowEntity, "id", 0);
                         if (0 < id) { //do not need to call service when deleting a new row with id==0
-                            ObjectTagsService.removeAssociateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.DOC_REPO,
-                                    rowEntity.id).then(function() {
+                            ObjectTagsService.removeAssociateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.DOC_REPO, rowEntity.id).then(function() {
                                 messageService.info($translate.instant('document-repository.comp.tags.message.delete.success'));
                             }, function() {
                                 messageService.error($translate.instant('cases.comp.tags.message.delete.error'));

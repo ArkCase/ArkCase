@@ -1,3 +1,29 @@
+/*-
+ * #%L
+ * Tool Integrations: Object Converter
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -21,25 +47,6 @@ import java.util.TimeZone;
 public class ObjectConverterTest extends EasyMockSupport
 {
     private ObjectConverter objectConverter;
-
-    static class ObjectWithDateField
-    {
-        public ObjectWithDateField()
-        {
-        }
-
-        private Date theDate;
-
-        public Date getTheDate()
-        {
-            return theDate;
-        }
-
-        public void setTheDate(Date theDate)
-        {
-            this.theDate = theDate;
-        }
-    }
 
     @Before
     public void setUp()
@@ -161,5 +168,24 @@ public class ObjectConverterTest extends EasyMockSupport
         assertEquals(hours, prependZeros(String.valueOf(unmarshalled.getTheDate().getHours()), 2));
         assertEquals(minutes, prependZeros(String.valueOf(unmarshalled.getTheDate().getMinutes()), 2));
         assertEquals(seconds, prependZeros(String.valueOf(unmarshalled.getTheDate().getSeconds()), 2));
+    }
+
+    static class ObjectWithDateField
+    {
+        private Date theDate;
+
+        public ObjectWithDateField()
+        {
+        }
+
+        public Date getTheDate()
+        {
+            return theDate;
+        }
+
+        public void setTheDate(Date theDate)
+        {
+            this.theDate = theDate;
+        }
     }
 }

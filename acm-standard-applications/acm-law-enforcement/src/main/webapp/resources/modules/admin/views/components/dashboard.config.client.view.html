@@ -3,8 +3,8 @@
         <div class="row">
             <object-authorization-roles data="widgetsData" object-display-name="name" on-object-selected="onObjSelect"
                     role-display-name="name" on-auth-role-change="onAuthRoleSelected"
-                    object-title="{{'admin.dashboard.widgets' | translate}}" filter-data-control="filterData"
-                    selected-object="lastSelectedRole" />
+                    object-title="{{'admin.dashboard.widgets' | translate}}" pagination-data-control="scrollLoadData"
+                    filter-data-control="filterData" selected-object="lastSelectedWidget" />
         </div>
     </panel-view>
 </div>

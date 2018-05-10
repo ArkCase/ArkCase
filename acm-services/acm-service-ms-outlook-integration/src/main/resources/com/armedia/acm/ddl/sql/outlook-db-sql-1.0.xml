@@ -1,7 +1,7 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-cm_outlook_password-set-passwords-to-null" author="jivanovski" >
+    <changeSet id="01-cm_outlook_password-set-passwords-to-null" author="jivanovski">
         <update tableName="acm_outlook_password">
             <column name="cm_outlook_password" value="NULL" type="VARCHAR(1024)"/>
         </update>

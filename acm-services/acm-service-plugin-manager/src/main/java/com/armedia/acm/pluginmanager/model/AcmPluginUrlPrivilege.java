@@ -1,5 +1,32 @@
 package com.armedia.acm.pluginmanager.model;
 
+/*-
+ * #%L
+ * ACM Service: Plugin Manager
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -16,12 +43,11 @@ public class AcmPluginUrlPrivilege
     private static final String JSON_EXTENSION = ".json";
     private static final int XML_EXTENSION_LENGTH = XML_EXTENSION.length();
     private static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private String url;
     private HttpMethod httpMethod;
     private AcmPluginPrivilege requiredPrivilege;
     private String[] urlPathVariables;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public boolean matches(String incomingUrl, String method)
     {

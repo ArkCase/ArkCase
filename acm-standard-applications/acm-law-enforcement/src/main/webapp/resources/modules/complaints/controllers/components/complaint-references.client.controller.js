@@ -17,27 +17,25 @@ angular.module('complaints').controller(
                 'ObjectAssociation.Service',
                 'MessageService',
                 '$timeout',
-                function($scope, $stateParams, $modal, Util, ConfigService, ComplaintInfoService, HelperUiGridService,
-                        HelperObjectBrowserService, ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService,
-                        MessageService, $timeout) {
+                function($scope, $stateParams, $modal, Util, ConfigService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService, MessageService, $timeout) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "complaints",
-                        componentId : "references",
-                        retrieveObjectInfo : ComplaintInfoService.getComplaintInfo,
-                        validateObjectInfo : ComplaintInfoService.validateComplaintInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "complaints",
+                        componentId: "references",
+                        retrieveObjectInfo: ComplaintInfoService.getComplaintInfo,
+                        validateObjectInfo: ComplaintInfoService.validateComplaintInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         },
-                        onConfigRetrieved : function(componentConfig) {
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var onConfigRetrieved = function(config) {
@@ -71,54 +69,49 @@ angular.module('complaints').controller(
 
                         if (ObjectService.ObjectTypes.COMPLAINT == targetType) {
                             $scope.$emit('request-show-object', {
-                                objectId : targetId,
-                                objectType : targetType
+                                objectId: targetId,
+                                objectType: targetType
                             });
                         }
                     };
 
                     ConfigService.getModuleConfig("complaints").then(function(moduleConfig) {
                         $scope.modalConfig = _.find(moduleConfig.components, {
-                            id : "referenceSearchGrid"
+                            id: "referenceSearchGrid"
                         });
                         return moduleConfig;
                     });
 
                     // open add reference modal
                     $scope.addReference = function() {
-                        var modalInstance = $modal
-                                .open({
-                                    animation : $scope.animationsEnabled,
-                                    templateUrl : 'modules/complaints/views/components/complaint-reference-modal.client.view.html',
-                                    controller : 'Complaints.ReferenceModalController',
-                                    size : 'lg',
-                                    resolve : {
-                                        $filter : function() {
-                                            var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.complaintId + "-"
-                                                    + ObjectService.ObjectTypes.COMPLAINT;
-                                            if ($scope.gridOptions.data.length > 0) {
-                                                for (var i = 0; i < $scope.gridOptions.data.length; i++) {
-                                                    var data = $scope.gridOptions.data[i];
-                                                    filter += "&-id:" + data.targetId + "-" + data.targetType;
-                                                }
-                                            }
-                                            filter += "&-parent_ref_s:" + $scope.objectInfo.complaintId + "-"
-                                                    + ObjectService.ObjectTypes.COMPLAINT;
-                                            return filter.replace(/&/gi, '%26');
-                                        },
-                                        $config : function() {
-                                            return $scope.modalConfig;
+                        var modalInstance = $modal.open({
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'modules/complaints/views/components/complaint-reference-modal.client.view.html',
+                            controller: 'Complaints.ReferenceModalController',
+                            size: 'lg',
+                            resolve: {
+                                $filter: function() {
+                                    var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.complaintId + "-" + ObjectService.ObjectTypes.COMPLAINT;
+                                    if ($scope.gridOptions.data.length > 0) {
+                                        for (var i = 0; i < $scope.gridOptions.data.length; i++) {
+                                            var data = $scope.gridOptions.data[i];
+                                            filter += "&-id:" + data.targetId + "-" + data.targetType;
                                         }
                                     }
-                                });
+                                    filter += "&-parent_ref_s:" + $scope.objectInfo.complaintId + "-" + ObjectService.ObjectTypes.COMPLAINT;
+                                    return filter.replace(/&/gi, '%26');
+                                },
+                                $config: function() {
+                                    return $scope.modalConfig;
+                                }
+                            }
+                        });
 
                         modalInstance.result.then(function(chosenReference) {
                             var parent = $scope.objectInfo;
                             var target = chosenReference;
                             if (target) {
-                                var association = ObjectAssociationService.createAssociationInfo(parent.complaintId,
-                                        ObjectService.ObjectTypes.COMPLAINT, parent.complaintTitle, parent.complaintNumber,
-                                        target.object_id_s, target.object_type_s, target.title_parseable, target.name, 'REFERENCE',
+                                var association = ObjectAssociationService.createAssociationInfo(parent.complaintId, ObjectService.ObjectTypes.COMPLAINT, parent.complaintTitle, parent.complaintNumber, target.object_id_s, target.object_type_s, target.title_parseable, target.name, 'REFERENCE',
                                         'REFERENCE');
                                 ObjectAssociationService.saveObjectAssociation(association).then(function(payload) {
                                     //success
@@ -128,18 +121,18 @@ angular.module('complaints').controller(
 
                                     //append new entity as last item in the grid
                                     var rowEntity = {
-                                        object_id_s : payload.associationId,
-                                        target_object : {
-                                            name : target.name,
-                                            title_parseable : target.title_parseable,
-                                            parent_ref_s : target.parent_ref_s,
-                                            modified_date_tdt : target.modified_date_tdt,
-                                            assignee_full_name_lcs : target.assignee_full_name_lcs,
-                                            object_type_s : target.object_type_s,
-                                            status_lcs : target.status_lcs
+                                        object_id_s: payload.associationId,
+                                        target_object: {
+                                            name: target.name,
+                                            title_parseable: target.title_parseable,
+                                            parent_ref_s: target.parent_ref_s,
+                                            modified_date_tdt: target.modified_date_tdt,
+                                            assignee_full_name_lcs: target.assignee_full_name_lcs,
+                                            object_type_s: target.object_type_s,
+                                            status_lcs: target.status_lcs
                                         },
-                                        target_type_s : payload.targetType,
-                                        target_id_s : payload.targetId
+                                        target_type_s: payload.targetType,
+                                        target_id_s: payload.targetId
                                     };
 
                                     $scope.gridOptions.data.push(rowEntity);
@@ -157,10 +150,9 @@ angular.module('complaints').controller(
                     };
 
                     function refreshGridData(objectId) {
-                        ObjectAssociationService.getObjectAssociations(objectId, ObjectService.ObjectTypes.COMPLAINT, null).then(
-                                function(response) {
-                                    $scope.gridOptions.data = response.response.docs;
-                                });
+                        ObjectAssociationService.getObjectAssociations(objectId, ObjectService.ObjectTypes.COMPLAINT, null).then(function(response) {
+                            $scope.gridOptions.data = response.response.docs;
+                        });
                     }
 
                     $scope.deleteRow = function(rowEntity) {

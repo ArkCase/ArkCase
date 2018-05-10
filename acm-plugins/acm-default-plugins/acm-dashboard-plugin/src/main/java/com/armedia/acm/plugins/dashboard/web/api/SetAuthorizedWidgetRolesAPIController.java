@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.dashboard.web.api;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Dashboard
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
@@ -8,6 +35,7 @@ import com.armedia.acm.plugins.dashboard.model.widget.RolesGroupByWidgetDto;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRole;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleName;
+import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
@@ -17,10 +45,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -39,6 +64,9 @@ public class SetAuthorizedWidgetRolesAPIController
     private UserDao userDao;
     private WidgetDao widgetDao;
     private WidgetEventPublisher eventPublisher;
+
+    private DashboardService dashboardService;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/set", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -63,6 +91,56 @@ public class SetAuthorizedWidgetRolesAPIController
         {
             throw e;
         }
+    }
+
+    @RequestMapping(value = "/roleGroupToWidget", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public RolesGroupByWidgetDto setAuthorizedWidgetRoles(
+            @RequestBody List<String> rolesGroups,
+            @RequestParam(value = "widgetName") String widgetName,
+            @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "widgetName") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
+            Authentication authentication,
+            HttpSession session) throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
+        RolesGroupByWidgetDto result = null;
+        List<RolesGroupByWidgetDto> rolesGroupsByWidgetDto;
+        RolesGroupByWidgetDto roleGroupByWidgetDtoUpdated;
+        try
+        {
+            rolesGroupsByWidgetDto = dashboardService
+                    .addNotAuthorizedRolesPerWidget(getWidgetDao().getRolesGroupByWidget());
+            roleGroupByWidgetDtoUpdated = rolesGroupsByWidgetDto.stream()
+                    .filter(roleGroup -> roleGroup.getWidgetName().equalsIgnoreCase(widgetName)).findFirst()
+                    .orElseThrow(() -> new AcmWidgetException("There is no widget " + widgetName));
+
+            if (authorized)
+            {
+                rolesGroups.forEach(roleGroup -> {
+                    roleGroupByWidgetDtoUpdated.getWidgetAuthorizedRoles().add(new WidgetRoleName(roleGroup));
+                    roleGroupByWidgetDtoUpdated.getWidgetNotAuthorizedRoles().removeIf(rg -> rg.getName().equalsIgnoreCase(roleGroup));
+                });
+            }
+            else
+            {
+                rolesGroups.forEach(roleGroup -> {
+                    roleGroupByWidgetDtoUpdated.getWidgetNotAuthorizedRoles().add(new WidgetRoleName(roleGroup));
+                    roleGroupByWidgetDtoUpdated.getWidgetAuthorizedRoles().removeIf(rg -> rg.getName().equalsIgnoreCase(roleGroup));
+                });
+            }
+            log.info("Updating authorized roles for dashboard widget: [{}]", roleGroupByWidgetDtoUpdated.getWidgetName());
+
+            result = updateWidgetRolesAuthorization(roleGroupByWidgetDtoUpdated);
+            raiseSetEvent(authentication, session, result, true);
+        }
+        catch (Exception e)
+        {
+            log.warn("You cannot update the widget {}", e.getMessage());
+        }
+        return result;
     }
 
     protected void raiseSetEvent(Authentication authentication, HttpSession session, RolesGroupByWidgetDto rolesPerWidget,
@@ -155,4 +233,15 @@ public class SetAuthorizedWidgetRolesAPIController
     {
         this.eventPublisher = eventPublisher;
     }
+
+    public DashboardService getDashboardService()
+    {
+        return dashboardService;
+    }
+
+    public void setDashboardService(DashboardService dashboardService)
+    {
+        this.dashboardService = dashboardService;
+    }
+
 }

@@ -1,5 +1,32 @@
 package com.armedia.acm.auth.okta.services.impl;
 
+/*-
+ * #%L
+ * ACM Service: User Login and Authentication
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.auth.okta.exceptions.OktaException;
 import com.armedia.acm.auth.okta.model.ErrorResponse;
 import com.armedia.acm.auth.okta.model.OktaAPIConstants;
@@ -11,6 +38,7 @@ import com.armedia.acm.auth.okta.model.user.OktaUser;
 import com.armedia.acm.auth.okta.services.FactorLifecycleService;
 import com.armedia.acm.auth.okta.services.FactorService;
 import com.google.common.base.Preconditions;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -51,7 +79,8 @@ public class FactorLifecycleServiceImpl implements FactorLifecycleService
             ResponseEntity<Factor> exchange = oktaRestService.doRestCall(apiPath, HttpMethod.POST, Factor.class, body.toString());
             if (!exchange.getStatusCode().is2xxSuccessful())
             {
-                LOGGER.debug("Failed to enroll factor [{}, {}]", ErrorResponse.class.cast(exchange.getBody()).getErrorSummary(), ErrorResponse.class.cast(exchange.getBody()).getErrorId());
+                LOGGER.debug("Failed to enroll factor [{}, {}]", ErrorResponse.class.cast(exchange.getBody()).getErrorSummary(),
+                        ErrorResponse.class.cast(exchange.getBody()).getErrorId());
                 throw new OktaException(buildErrorMessage(exchange.getBody()));
             }
 
@@ -62,11 +91,14 @@ public class FactorLifecycleServiceImpl implements FactorLifecycleService
 
     private String buildEnrollmentPath(FactorType factorType, OktaUser user) throws OktaException
     {
-        String apiPath = FactorType.SOFTWARE_TOKEN.equals(factorType) || FactorType.SMS.equals(factorType) ? String.format(OktaAPIConstants.ENROLL_FACTOR, user.getId()) : String.format(OktaAPIConstants.ENROLL_FACTOR_ACTIVATE, user.getId());
+        String apiPath = FactorType.SOFTWARE_TOKEN.equals(factorType) || FactorType.SMS.equals(factorType)
+                ? String.format(OktaAPIConstants.ENROLL_FACTOR, user.getId())
+                : String.format(OktaAPIConstants.ENROLL_FACTOR_ACTIVATE, user.getId());
         if (FactorType.SMS.equals(factorType))
         {
             LOGGER.debug("Checking for previously verified sms devices");
-            Optional<Factor> sms = getFactorService().listAvailableFactors(user).stream().filter(factor -> FactorType.SMS.equals(factor.getFactorType())).findAny();
+            Optional<Factor> sms = getFactorService().listAvailableFactors(user).stream()
+                    .filter(factor -> FactorType.SMS.equals(factor.getFactorType())).findAny();
             if (sms.isPresent())
             {
                 Factor smsFactor = sms.get();
@@ -132,7 +164,8 @@ public class FactorLifecycleServiceImpl implements FactorLifecycleService
         Preconditions.checkNotNull(factorType, "factorType is null");
         Preconditions.checkArgument(!StringUtils.isEmpty(passCode), "passCode is null or empty");
 
-        Optional<Factor> factor = factorService.listEnrolledFactors(user).stream().filter(f -> factorType.equals(f.getFactorType())).findAny();
+        Optional<Factor> factor = factorService.listEnrolledFactors(user).stream().filter(f -> factorType.equals(f.getFactorType()))
+                .findAny();
         if (user != null && factor.isPresent())
         {
             // Builds activation request body
@@ -170,21 +203,21 @@ public class FactorLifecycleServiceImpl implements FactorLifecycleService
         JSONObject enrollProfile = new JSONObject();
         switch (factorType)
         {
-            case EMAIL:
-                if (StringUtils.isEmpty(profile.getEmail()))
-                {
-                    throw new OktaException("Email Address is null or empty");
-                }
-                enrollProfile.put(OktaAPIConstants.EMAIL, profile.getEmail());
-                break;
-            case SMS:
-                if (StringUtils.isEmpty(profile.getPhoneNumber()))
-                {
-                    throw new OktaException("Phone Number is null or empty");
-                }
-                enrollProfile.put(OktaAPIConstants.PHONE_NUMBER, profile.getPhoneNumber());
-            default:
-                break;
+        case EMAIL:
+            if (StringUtils.isEmpty(profile.getEmail()))
+            {
+                throw new OktaException("Email Address is null or empty");
+            }
+            enrollProfile.put(OktaAPIConstants.EMAIL, profile.getEmail());
+            break;
+        case SMS:
+            if (StringUtils.isEmpty(profile.getPhoneNumber()))
+            {
+                throw new OktaException("Phone Number is null or empty");
+            }
+            enrollProfile.put(OktaAPIConstants.PHONE_NUMBER, profile.getPhoneNumber());
+        default:
+            break;
         }
         return enrollProfile;
     }
@@ -197,7 +230,8 @@ public class FactorLifecycleServiceImpl implements FactorLifecycleService
             if (!StringUtils.isEmpty(factor.getErrorSummary()))
             {
                 errorMsg = factor.getErrorSummary();
-            } else if (!StringUtils.isEmpty(factor.getErrorCode()))
+            }
+            else if (!StringUtils.isEmpty(factor.getErrorCode()))
             {
                 errorMsg = factor.getErrorCode();
             }

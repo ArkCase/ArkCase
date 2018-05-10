@@ -2,43 +2,26 @@
 
 angular.module('cases').controller(
         'Cases.TasksController',
-        [
-                '$scope',
-                '$state',
-                '$stateParams',
-                '$q',
-                '$translate',
-                'UtilService',
-                'ConfigService',
-                'ObjectService',
-                'Object.TaskService',
-                'Task.WorkflowService',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'Case.InfoService',
-                'Task.AlertsService',
-                'ModalDialogService',
-                function($scope, $state, $stateParams, $q, $translate, Util, ConfigService, ObjectService, ObjectTaskService,
-                        TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService,
-                        ModalDialogService) {
+        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Task.AlertsService', 'ModalDialogService',
+                function($scope, $state, $stateParams, $q, $translate, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService, ModalDialogService) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "cases",
-                        componentId : "tasks",
-                        retrieveObjectInfo : CaseInfoService.getCaseInfo,
-                        validateObjectInfo : CaseInfoService.validateCaseInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "cases",
+                        componentId: "tasks",
+                        retrieveObjectInfo: CaseInfoService.getCaseInfo,
+                        validateObjectInfo: CaseInfoService.validateCaseInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
                     var promiseUsers = gridHelper.getUsers();
 
@@ -71,9 +54,7 @@ angular.module('cases').controller(
                     var retrieveGridData = function() {
                         var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
                         if (Util.goodPositive(currentObjectId, false)) {
-                            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId,
-                                    Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodValue($scope.sort.by),
-                                    Util.goodValue($scope.sort.dir)).then(function(data) {
+                            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId, Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodValue($scope.sort.by), Util.goodValue($scope.sort.dir)).then(function(data) {
                                 var tasks = data.response.docs;
                                 angular.forEach(tasks, function(task) {
                                     //calculate to show alert icons if task is in overdue or deadline is approaching
@@ -91,15 +72,15 @@ angular.module('cases').controller(
 
                     $scope.addNew = function() {
                         var modalMetadata = {
-                            moduleName : "tasks",
-                            templateUrl : "modules/tasks/views/components/task-new-task.client.view.html",
-                            controllerName : "Tasks.NewTaskController",
-                            params : {
-                                parentType : ObjectService.ObjectTypes.CASE_FILE,
-                                parentObject : $scope.objectInfo.caseNumber,
-                                parentId : $scope.objectInfo.id,
-                                parentTitle : $scope.objectInfo.title,
-                                taskType : 'ACM_TASK'
+                            moduleName: "tasks",
+                            templateUrl: "modules/tasks/views/components/task-new-task.client.view.html",
+                            controllerName: "Tasks.NewTaskController",
+                            params: {
+                                parentType: ObjectService.ObjectTypes.CASE_FILE,
+                                parentObject: $scope.objectInfo.caseNumber,
+                                parentId: $scope.objectInfo.id,
+                                parentTitle: $scope.objectInfo.title,
+                                taskType: 'ACM_TASK'
                             }
                         };
                         ModalDialogService.showModal(modalMetadata);
@@ -122,8 +103,7 @@ angular.module('cases').controller(
 
                     $scope.onClickObjLink = function(event, rowEntity) {
                         event.preventDefault();
-                        var targetType = (Util.goodMapValue(rowEntity, "adhocTask_b", false)) ? ObjectService.ObjectTypes.ADHOC_TASK
-                                : ObjectService.ObjectTypes.TASK;
+                        var targetType = (Util.goodMapValue(rowEntity, "adhocTask_b", false)) ? ObjectService.ObjectTypes.ADHOC_TASK : ObjectService.ObjectTypes.TASK;
                         //var targetType = Util.goodMapValue(rowEntity, "object_type_s");
                         var targetId = Util.goodMapValue(rowEntity, "object_id_s");
                         gridHelper.showObject(targetType, targetId);

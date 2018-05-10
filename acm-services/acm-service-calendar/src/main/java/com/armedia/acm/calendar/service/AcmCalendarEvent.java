@@ -1,5 +1,32 @@
 package com.armedia.acm.calendar.service;
 
+/*-
+ * #%L
+ * ACM Service: Calendar Service
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -23,55 +50,28 @@ public class AcmCalendarEvent
 {
 
     static final String ZONED_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ssXXX";
-
-    public static enum Priority
-    {
-        LOW, NORMAL, HIGH
-    }
-
-    public static enum Sensitivity
-    {
-        CONFIDENTIAL, PRIVATE, PERSONAL, NORMAL
-    }
-
     private String eventId;
-
     private String calendarId;
-
     private String objectType;
-
     private String objectId;
-
     private String subject;
-
     private String location;
-
     @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime start;
-
     @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime end;
-
     private boolean allDayEvent;
-
     private RecurrenceDetails recurrenceDetails;
-
     private String details;
-
     private int remindIn = -1;
-
     private Sensitivity sensitivity = Sensitivity.NORMAL;
-
     private Priority priority = Priority.LOW;
-
     private boolean sendEmails;
-
     private List<Attendee> attendees;
-
     private List<AcmCalendarEventAttachment> files;
 
     /**
@@ -361,6 +361,16 @@ public class AcmCalendarEvent
     public void setFiles(List<AcmCalendarEventAttachment> files)
     {
         this.files = files;
+    }
+
+    public static enum Priority
+    {
+        LOW, NORMAL, HIGH
+    }
+
+    public static enum Sensitivity
+    {
+        CONFIDENTIAL, PRIVATE, PERSONAL, NORMAL
     }
 
 }

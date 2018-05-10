@@ -2,50 +2,37 @@
 
 angular.module('tasks').controller(
         'Tasks.TagsController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                'UtilService',
-                'ObjectService',
-                'Task.InfoService',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'Object.TagsService',
-                '$modal',
-                'MessageService',
-                function($scope, $q, $stateParams, $translate, Util, ObjectService, TaskInfoService, HelperUiGridService,
-                        HelperObjectBrowserService, ObjectTagsService, $modal, messageService) {
+        [ '$scope', '$q', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.TagsService', '$modal', 'MessageService',
+                function($scope, $q, $stateParams, $translate, Util, ObjectService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, ObjectTagsService, $modal, messageService) {
 
                     $scope.tags = [];
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "tasks",
-                        componentId : "tags",
-                        retrieveObjectInfo : TaskInfoService.getTaskInfo,
-                        validateObjectInfo : TaskInfoService.validateTaskInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "tasks",
+                        componentId: "tags",
+                        retrieveObjectInfo: TaskInfoService.getTaskInfo,
+                        validateObjectInfo: TaskInfoService.validateTaskInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
                     var promiseUsers = gridHelper.getUsers();
 
                     $scope.addNew = function() {
                         var modalInstance = $modal.open({
-                            animation : $scope.animationsEnabled,
-                            templateUrl : 'modules/tasks/views/components/task-tags-modal.client.view.html',
-                            controller : 'Tasks.TagsModalController',
-                            size : 'lg'
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'modules/tasks/views/components/task-tags-modal.client.view.html',
+                            controller: 'Tasks.TagsModalController',
+                            size: 'lg'
                         });
 
                         modalInstance.result.then(function(tags) {
@@ -58,8 +45,7 @@ angular.module('tasks').controller(
                                             return tagAss.id == tag.object_id_s;
                                         });
                                         if (tagsFound.length == 0) {
-                                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK,
-                                                    $scope.objectParentTitle, tag.object_id_s).then(function(returnedTag) {
+                                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, $scope.objectParentTitle, tag.object_id_s).then(function(returnedTag) {
                                                 var tagToAdd = angular.copy(returnedTag);
                                                 tagToAdd.tagName = tag.tags_s;
                                                 tagToAdd.id = returnedTag.tagId;
@@ -68,15 +54,13 @@ angular.module('tasks').controller(
                                                 $scope.gridOptions.totalItems = $scope.tags.length;
                                             });
                                         } else {
-                                            messageService.info(tag.tags_s + " "
-                                                    + $translate.instant('tasks.comp.tags.message.tagAssociated'));
+                                            messageService.info(tag.tags_s + " " + $translate.instant('tasks.comp.tags.message.tagAssociated'));
                                             _.remove(tagsFound, function() {
                                                 return tag;
                                             });
                                         }
                                     } else {
-                                        ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK,
-                                                $scope.objectParentTitle, tag.id).then(function() {
+                                        ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, $scope.objectParentTitle, tag.id).then(function() {
                                             $scope.tags.push(tag);
                                             $scope.gridOptions.data = $scope.tags;
                                             $scope.gridOptions.totalItems = $scope.tags.length;
@@ -134,8 +118,7 @@ angular.module('tasks').controller(
 
                         var id = Util.goodMapValue(rowEntity, "id", 0);
                         if (0 < id) { //do not need to call service when deleting a new row with id==0
-                            ObjectTagsService.removeAssociateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK,
-                                    rowEntity.id).then(function() {
+                            ObjectTagsService.removeAssociateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, rowEntity.id).then(function() {
                                 messageService.info($translate.instant('tasks.comp.tags.message.delete.success'));
                             }, function() {
                                 messageService.error($translate.instant('tasks.comp.tags.message.delete.error'));

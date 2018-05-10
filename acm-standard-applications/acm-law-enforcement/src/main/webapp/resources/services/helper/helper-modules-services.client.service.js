@@ -12,19 +12,8 @@
  */
 angular.module('services').factory(
         'Helper.ModulesServicesStructure',
-        [
-                '$timeout',
-                '$translate',
-                'UtilService',
-                'ConfigService',
-                'TimeTracking.InfoService',
-                'ObjectService',
-                'Case.InfoService',
-                'Complaint.InfoService',
-                'Person.InfoService',
-                'Organization.InfoService',
-                function($timeout, $translate, Util, ConfigService, TimeTrackingInfoService, ObjectService, CaseInfoService,
-                        ComplaintInfoService, PersonInfoService, OrganizationInfoService) {
+        [ '$timeout', '$translate', 'UtilService', 'ConfigService', 'TimeTracking.InfoService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Person.InfoService', 'Organization.InfoService',
+                function($timeout, $translate, Util, ConfigService, TimeTrackingInfoService, ObjectService, CaseInfoService, ComplaintInfoService, PersonInfoService, OrganizationInfoService) {
 
                     var Service = {};
 
@@ -38,30 +27,30 @@ angular.module('services').factory(
                      */
                     Service.getModulesServiceStructure = function() {
                         return [ {
-                            name : ObjectService.ObjectTypes.TIMESHEET,
-                            configName : "time-tracking",
-                            getInfo : TimeTrackingInfoService.getTimesheetInfo,
-                            validateInfo : TimeTrackingInfoService.validateTimesheet
+                            name: ObjectService.ObjectTypes.TIMESHEET,
+                            configName: "time-tracking",
+                            getInfo: TimeTrackingInfoService.getTimesheetInfo,
+                            validateInfo: TimeTrackingInfoService.validateTimesheet
                         }, {
-                            name : ObjectService.ObjectTypes.CASE_FILE,
-                            configName : "time-tracking",
-                            getInfo : CaseInfoService.getCaseInfo,
-                            validateInfo : TimeTrackingInfoService.validateCaseInfo
+                            name: ObjectService.ObjectTypes.CASE_FILE,
+                            configName: "time-tracking",
+                            getInfo: CaseInfoService.getCaseInfo,
+                            validateInfo: TimeTrackingInfoService.validateCaseInfo
                         }, {
-                            name : ObjectService.ObjectTypes.COMPLAINT,
-                            configName : "time-tracking",
-                            getInfo : ComplaintInfoService.getComplaintInfo,
-                            validateInfo : TimeTrackingInfoService.validateComplaintInfo
+                            name: ObjectService.ObjectTypes.COMPLAINT,
+                            configName: "time-tracking",
+                            getInfo: ComplaintInfoService.getComplaintInfo,
+                            validateInfo: TimeTrackingInfoService.validateComplaintInfo
                         }, {
-                            name : ObjectService.ObjectTypes.PERSON,
-                            configName : "people",
-                            getInfo : PersonInfoService.getPersonInfo,
-                            validateInfo : PersonInfoService.validatePersonInfo
+                            name: ObjectService.ObjectTypes.PERSON,
+                            configName: "people",
+                            getInfo: PersonInfoService.getPersonInfo,
+                            validateInfo: PersonInfoService.validatePersonInfo
                         }, {
-                            name : ObjectService.ObjectTypes.ORGANIZATION,
-                            configName : "organizations",
-                            getInfo : OrganizationInfoService.getOrganizationInfo,
-                            validateInfo : OrganizationInfoService.validateOrganizationInfo
+                            name: ObjectService.ObjectTypes.ORGANIZATION,
+                            configName: "organizations",
+                            getInfo: OrganizationInfoService.getOrganizationInfo,
+                            validateInfo: OrganizationInfoService.validateOrganizationInfo
                         } ];
                     };
 

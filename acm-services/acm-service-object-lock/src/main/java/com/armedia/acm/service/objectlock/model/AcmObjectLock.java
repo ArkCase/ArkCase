@@ -1,5 +1,32 @@
 package com.armedia.acm.service.objectlock.model;
 
+/*-
+ * #%L
+ * ACM Service: Object lock
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
@@ -29,6 +56,27 @@ import java.util.Date;
 public class AcmObjectLock implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 4579477797364149888L;
+    @Id
+    @TableGenerator(name = "acm_object_lock_gen", table = "acm_object_lock_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_object_lock", initialValue = 100, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_object_lock_gen")
+    @Column(name = "cm_object_lock_id")
+    private Long id;
+    @Column(name = "cm_object_id")
+    private Long objectId;
+    @Column(name = "cm_object_type")
+    private String objectType;
+    @Column(name = "cm_object_lock_created", nullable = false, insertable = true, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+    @Column(name = "cm_object_lock_creator", insertable = true, updatable = false)
+    private String creator;
+    @Column(name = "cm_object_lock_modified", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified;
+    @Column(name = "cm_object_lock_modifier")
+    private String modifier;
+    @Column(name = "cm_lock_type")
+    private String lockType;
 
     public AcmObjectLock(long objectId, String objectType)
     {
@@ -39,34 +87,6 @@ public class AcmObjectLock implements Serializable, AcmEntity
     public AcmObjectLock()
     {
     }
-
-    @Id
-    @TableGenerator(name = "acm_object_lock_gen", table = "acm_object_lock_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_object_lock", initialValue = 100, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_object_lock_gen")
-    @Column(name = "cm_object_lock_id")
-    private Long id;
-
-    @Column(name = "cm_object_id")
-    private Long objectId;
-    @Column(name = "cm_object_type")
-    private String objectType;
-
-    @Column(name = "cm_object_lock_created", nullable = false, insertable = true, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
-
-    @Column(name = "cm_object_lock_creator", insertable = true, updatable = false)
-    private String creator;
-
-    @Column(name = "cm_object_lock_modified", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modified;
-
-    @Column(name = "cm_object_lock_modifier")
-    private String modifier;
-
-    @Column(name = "cm_lock_type")
-    private String lockType;
 
     public Long getId()
     {
