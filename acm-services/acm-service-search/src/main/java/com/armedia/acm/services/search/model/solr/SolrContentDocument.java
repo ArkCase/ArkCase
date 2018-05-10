@@ -27,11 +27,13 @@ package com.armedia.acm.services.search.model.solr;
  * #L%
  */
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,17 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
 
     private String cmis_version_series_id_s;
 
+    protected void listToUrlValues(Map<String, Object> values, List<? extends Object> list, String key)
+    {
+        if (list != null)
+        {
+            for (int a = 0; a < list.size(); a++)
+            {
+                values.put("literal." + key + "." + a, list.get(a));
+            }
+        }
+    }
+
     /**
      * 
      * @return a map suitable for use in the Spring RestTemplate postForEntity method. The partner method
@@ -53,8 +66,10 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
     public Map<String, Object> buildUrlValues()
     {
         Map<String, Object> values = new HashMap<>();
-        values.put("literal.allow_acl_ss", (getAllow_acl_ss() == null ? null : String.join("&literal.allow_acl_ss=", getAllow_acl_ss())));
-        values.put("literal.deny_acl_ss", (getDeny_acl_ss() == null ? null : String.join("&literal.deny_acl_ss=", getDeny_acl_ss())));
+
+        listToUrlValues(values, getAllow_acl_ss(), "allow_acl_ss");
+        listToUrlValues(values, getDeny_acl_ss(), "deny_acl_ss");
+
         values.put("literal.hidden_b", isHidden_b());
         values.put("literal.parent_ref_s", getParent_ref_s());
         values.put("literal.status_lcs", getStatus_lcs());
@@ -99,7 +114,17 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
      */
     public String buildUrlTemplate()
     {
-        return buildUrlValues().keySet().stream().map(k -> String.format("%s={%s}", k, k)).collect(Collectors.joining("&"));
+        final List<String> multivalueProperties = Arrays.asList("literal.allow_acl_ss", "literal.deny_acl_ss");
+        return buildUrlValues().keySet().stream().
+        // Solr multivalued elements are represented in the buildUrlValues map as e.g. "literal.allow_acl_ss.0",
+        // "literal.deny_acl_ss.1".
+        // We want the URL template to be e.g. "literal.allow_acl_ss={literal.allow_acl_ss.0}",
+        // "literal.deny_acl_ss={literal.deny_acl_ss.1"
+                map(k -> String.format("%s={%s}",
+                        multivalueProperties.contains(StringUtils.substringBeforeLast(k, ".")) ? StringUtils.substringBeforeLast(k, ".")
+                                : k,
+                        k))
+                .collect(Collectors.joining("&"));
     }
 
     /**
