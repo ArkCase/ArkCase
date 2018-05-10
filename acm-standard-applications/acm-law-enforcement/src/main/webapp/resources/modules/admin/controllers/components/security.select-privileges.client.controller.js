@@ -264,6 +264,7 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', [ '$scope
                             data.key = result;
                             data.name = result;
                             $scope.lastSelectedRole = data;
+                            return false;
                         }
                     });
                     MessageService.succsessAction();
