@@ -259,8 +259,14 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', [ '$scope
             } else {
                 //handle edit item
                 SelectPrivilegesService.upsertRole(result, value).then(function() {
-                    $scope.lastSelectedRole.key = result;
-                    $scope.lastSelectedRole.name = result;
+                    _.forEach($scope.rolesData.chooseObject, function(data) {
+                        if (data.key === $scope.lastSelectedRole.key) {
+                            data.key = result;
+                            data.name = result;
+                            $scope.lastSelectedRole = data;
+                        }
+                    });
+                    MessageService.succsessAction();
                 });
 
             }
