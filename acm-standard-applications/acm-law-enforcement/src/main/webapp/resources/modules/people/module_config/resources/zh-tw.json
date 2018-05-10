@@ -18,7 +18,9 @@
         "email.label": "電子郵箱",
         "status.label": "狀態",
         "organization.label": "組織",
-        "identification.label": "身份號碼"
+        "organization.type": "zh-tw_Organization type",
+        "identification.label": "身份號碼",
+        "identification.type": "zh-tw_ID type"
     },
     "people.comp.actions": {
         "title": "行動",
