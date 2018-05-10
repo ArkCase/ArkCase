@@ -170,6 +170,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         List<String> skipAdditionalPropertiesInURL = new ArrayList<>();
         skipAdditionalPropertiesInURL.add("file_source_s");
         skipAdditionalPropertiesInURL.add("name_partial");
+        skipAdditionalPropertiesInURL.add("url");
 
         solr.setSkipAdditionalPropertiesInURL(skipAdditionalPropertiesInURL);
 

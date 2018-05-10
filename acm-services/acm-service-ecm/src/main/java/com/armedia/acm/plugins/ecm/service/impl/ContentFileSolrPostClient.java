@@ -47,6 +47,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -78,6 +79,9 @@ public class ContentFileSolrPostClient implements SolrPostClient
 
         Document cmisDoc = null;
 
+        String urlWithPlaceholders = solrContentDocument.buildUrlTemplate();
+        Map<String, Object> urlValues = solrContentDocument.buildUrlValues();
+
         try
         {
             cmisDoc = (Document) getEcmFileService().findObjectById(cmisRepositoryId, cmisObjectId);
@@ -92,13 +96,14 @@ public class ContentFileSolrPostClient implements SolrPostClient
         ContentStream contentStream = cmisDoc.getContentStream();
 
         final String logText = solrContentDocument.getName();
+        final String contentType = solrContentDocument.getContent_type();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", solrContentDocument.getContent_type());
+        headers.set("Content-Type", contentType);
         InputStreamResource inputStreamResource = new InputStreamResource(contentStream.getStream());
         HttpEntity<InputStreamResource> entity = new HttpEntity<>(inputStreamResource, headers);
 
-        getSolrRestClient().postToSolr(core.getCore(), getSolrContentFileHandler(), entity, logText, solrContentDocument.getUrl());
+        getSolrRestClient().postToSolr(core.getCore(), getSolrContentFileHandler(), entity, logText, urlWithPlaceholders, urlValues);
 
     }
 
