@@ -1,5 +1,32 @@
 package com.armedia.acm.services.functionalaccess.web.api;
 
+/*-
+ * #%L
+ * ACM Service: Functional Access Control
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -48,24 +75,24 @@ public class GetGroupsByPrivilegeAPIController
         return retval;
     }
 
-    public void setPluginManager(AcmPluginManager pluginManager)
-    {
-        this.pluginManager = pluginManager;
-    }
-
     public AcmPluginManager getPluginManager()
     {
         return pluginManager;
     }
 
-    public void setUserDao(UserDao userDao)
+    public void setPluginManager(AcmPluginManager pluginManager)
     {
-        this.userDao = userDao;
+        this.pluginManager = pluginManager;
     }
 
     public UserDao getUserDao()
     {
         return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 
     public FunctionalAccessService getFunctionalAccessService()

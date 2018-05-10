@@ -13,6 +13,8 @@ import java.util.List;
 public class HttpResponseCode extends ArkCaseTestBase
 {
 
+    private static int statusCode;
+
     public static int getResponseCode(String urlString) throws MalformedURLException, IOException
     {
         URL url = new URL(urlString);
@@ -21,8 +23,6 @@ public class HttpResponseCode extends ArkCaseTestBase
         huc.connect();
         return huc.getResponseCode();
     }
-
-    private static int statusCode;
 
     public void checkHttpResponse(String path) throws IOException
     {

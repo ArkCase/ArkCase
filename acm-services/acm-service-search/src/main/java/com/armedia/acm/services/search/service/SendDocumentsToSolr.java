@@ -1,6 +1,32 @@
 package com.armedia.acm.services.search.service;
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+/*-
+ * #%L
+ * ACM Service: Search
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
@@ -9,24 +35,32 @@ import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.jms.JmsException;
+import org.springframework.jms.core.JmsTemplate;
+
+import javax.jms.ConnectionFactory;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by armdev on 10/21/14.
  */
-public class SendDocumentsToSolr
+public class SendDocumentsToSolr implements InitializingBean
 {
-    private MuleContextManager muleContextManager;
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private ObjectConverter objectConverter;
+    private ConnectionFactory jmsConnectionFactory;
+    private JmsTemplate jmsTemplate;
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        jmsTemplate = new JmsTemplate(getJmsConnectionFactory());
+    }
 
     // this method is used from Mule, do not delete it!
     public String asJsonArray(SolrBaseDocument document) throws JsonProcessingException
@@ -39,12 +73,12 @@ public class SendDocumentsToSolr
 
     public void sendSolrAdvancedSearchDocuments(List<SolrAdvancedSearchDocument> solrDocuments)
     {
-        sendToJmsQueue(solrDocuments, "jms://solrAdvancedSearch.in");
+        sendToJmsQueue(solrDocuments, "solrAdvancedSearch.in");
     }
 
     public void sendSolrQuickSearchDocuments(List<SolrDocument> solrDocuments)
     {
-        sendToJmsQueue(solrDocuments, "jms://solrQuickSearch.in");
+        sendToJmsQueue(solrDocuments, "solrQuickSearch.in");
     }
 
     public void sendSolrContentFileIndexDocuments(List<SolrContentDocument> solrDocuments)
@@ -53,7 +87,8 @@ public class SendDocumentsToSolr
         {
             for (SolrContentDocument doc : solrDocuments)
             {
-                sendToJmsQueue(doc, "jms://solrContentFile.in");
+                log.debug("sending to solrContentFile.in");
+                sendToJmsQueue(doc, "solrContentFile.in");
             }
 
         }
@@ -62,12 +97,12 @@ public class SendDocumentsToSolr
     public void sendSolrContentFileIndexDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
     {
         // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
-        // queue.
+        // index.
         if (deletes != null)
         {
             for (SolrDeleteDocumentByIdRequest doc : deletes)
             {
-                sendToJmsQueue(doc, "jms://solrAdvancedSearch.in");
+                sendToJmsQueue(doc, "solrAdvancedSearch.in");
             }
         }
     }
@@ -75,12 +110,12 @@ public class SendDocumentsToSolr
     public void sendSolrQuickSearchDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
     {
         // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
-        // queue.
+        // index.
         if (deletes != null)
         {
             for (SolrDeleteDocumentByIdRequest doc : deletes)
             {
-                sendToJmsQueue(doc, "jms://solrQuickSearch.in");
+                sendToJmsQueue(doc, "solrQuickSearch.in");
             }
         }
     }
@@ -89,14 +124,19 @@ public class SendDocumentsToSolr
     {
         log.debug("Received [{}] to be deleted.", deletes.size());
         // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
-        // queue.
+        // index.
         if (deletes != null)
         {
             for (SolrDeleteDocumentByIdRequest doc : deletes)
             {
-                sendToJmsQueue(doc, "jms://solrAdvancedSearch.in");
+                sendToJmsQueue(doc, "solrAdvancedSearch.in");
             }
         }
+    }
+
+    public void sendSolrDocuments(String queueName, String json)
+    {
+        getJmsTemplate().convertAndSend(queueName, json);
     }
 
     private void sendToJmsQueue(SolrDeleteDocumentByIdRequest solrDocument, String queueName)
@@ -107,15 +147,15 @@ public class SendDocumentsToSolr
 
             log.debug("Sending JSON to SOLR with hash {}", json.hashCode());
 
-            getMuleContextManager().dispatch(queueName, json);
+            getJmsTemplate().convertAndSend(queueName, json);
             log.debug("Sent JSON to SOLR with hash {}", json.hashCode());
 
             log.trace("Returning JSON: {}", json);
 
         }
-        catch (MuleException e)
+        catch (JmsException e)
         {
-            log.error("Could not send document to SOLR: " + e.getMessage(), e);
+            log.error("Could not send document to SOLR: {}", e.getMessage(), e);
         }
     }
 
@@ -125,15 +165,13 @@ public class SendDocumentsToSolr
         {
             log.trace("Sending POJO to SOLR: {}", solrDocument);
 
-            Map<String, Object> messageProperties = new HashMap<>();
-            messageProperties.put("additionalProperties", solrDocument.getAdditionalProperties());
-            messageProperties.put("url", solrDocument.getUrl());
+            String json = objectConverter.getJsonMarshaller().marshal(solrDocument);
 
             log.debug("Sending a doc to Solr with hash {}", solrDocument.hashCode());
-            getMuleContextManager().dispatch(queueName, solrDocument, messageProperties);
+            getJmsTemplate().convertAndSend(queueName, json);
             log.debug("Sent a doc to Solr with hash {}", solrDocument.hashCode());
         }
-        catch (MuleException e)
+        catch (JmsException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
@@ -146,26 +184,16 @@ public class SendDocumentsToSolr
             String json = objectConverter.getJsonMarshaller().marshal(solrDocuments);
 
             log.debug("Sending json to Solr via JMS with hash {}", json.hashCode());
-            getMuleContextManager().dispatch(queueName, json);
+            getJmsTemplate().convertAndSend(queueName, json);
             log.debug("Sent json to Solr via JMS with hash {}", json.hashCode());
 
             log.trace("Returning JSON: {}", json);
 
         }
-        catch (MuleException e)
+        catch (JmsException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public ObjectConverter getObjectConverter()
@@ -177,4 +205,25 @@ public class SendDocumentsToSolr
     {
         this.objectConverter = objectConverter;
     }
+
+    public ConnectionFactory getJmsConnectionFactory()
+    {
+        return jmsConnectionFactory;
+    }
+
+    public void setJmsConnectionFactory(ConnectionFactory jmsConnectionFactory)
+    {
+        this.jmsConnectionFactory = jmsConnectionFactory;
+    }
+
+    public JmsTemplate getJmsTemplate()
+    {
+        return jmsTemplate;
+    }
+
+    public void setJmsTemplate(JmsTemplate jmsTemplate)
+    {
+        this.jmsTemplate = jmsTemplate;
+    }
+
 }

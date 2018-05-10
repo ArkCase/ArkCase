@@ -327,13 +327,13 @@ angular.module('directives').controller('directives.DocTreeEmailRecipientsDialog
                     MessageService.info($translate.instant('common.directive.docTree.email.noEmailAddress') + lastSelectedItems[0].object_type_s.toLowerCase());
                 } else {
                     var selectedRecipientEmail = lastSelectedItems[0].email_lcs;
-                    var selectedRecipientDataModel = {
-                        email: lastSelectedItems[0].email_lcs
-                    };
-
                     var isRecipientSelected = _.find($scope.recipients, function(recipient) {
                         return recipient.email === selectedRecipientEmail;
                     });
+
+                    var selectedRecipientDataModel = {
+                        email: lastSelectedItems[0].email_lcs
+                    };
 
                     if (isRecipientSelected) {
                         if (!isSelected) {

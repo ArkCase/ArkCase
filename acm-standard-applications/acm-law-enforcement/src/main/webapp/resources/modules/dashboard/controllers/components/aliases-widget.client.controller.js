@@ -2,74 +2,64 @@
 
 angular.module('dashboard.aliases', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('aliases', {
-        title : 'preference.overviewWidgets.aliases.title',
-        description : 'dashboard.widgets.aliases.description',
-        controller : 'Dashboard.AliasesController',
-        reload : true,
-        templateUrl : 'modules/dashboard/views/components/aliases-widget.client.view.html',
-        commonName : 'aliases'
+        title: 'preference.overviewWidgets.aliases.title',
+        description: 'dashboard.widgets.aliases.description',
+        controller: 'Dashboard.AliasesController',
+        reload: true,
+        templateUrl: 'modules/dashboard/views/components/aliases-widget.client.view.html',
+        commonName: 'aliases'
     });
-}).controller(
-        'Dashboard.AliasesController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                'Person.InfoService',
-                'Helper.ObjectBrowserService',
-                'Helper.UiGridService',
-                'Object.ModelService',
-                function($scope, $stateParams, $translate, PersonInfoService, HelperObjectBrowserService, HelperUiGridService,
-                        ObjectModelService) {
+}).controller('Dashboard.AliasesController',
+        [ '$scope', '$stateParams', '$translate', 'Person.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.ModelService', function($scope, $stateParams, $translate, PersonInfoService, HelperObjectBrowserService, HelperUiGridService, ObjectModelService) {
 
-                    var modules = [ {
-                        name : "PERSON",
-                        configName : "people",
-                        getInfo : PersonInfoService.getPersonInfo,
-                        validateInfo : PersonInfoService.validatePersonInfo
-                    } ];
+            var modules = [ {
+                name: "PERSON",
+                configName: "people",
+                getInfo: PersonInfoService.getPersonInfo,
+                validateInfo: PersonInfoService.validatePersonInfo
+            } ];
 
-                    var module = _.find(modules, function(module) {
-                        return module.name == $stateParams.type;
-                    });
+            var module = _.find(modules, function(module) {
+                return module.name == $stateParams.type;
+            });
 
-                    $scope.gridOptions = {
-                        enableColumnResizing : true,
-                        columnDefs : []
-                    };
+            $scope.gridOptions = {
+                enableColumnResizing: true,
+                columnDefs: []
+            };
 
-                    var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
-                    });
+            var gridHelper = new HelperUiGridService.Grid({
+                scope: $scope
+            });
 
-                    new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : module.configName,
-                        componentId : "main",
-                        retrieveObjectInfo : module.getInfo,
-                        validateObjectInfo : module.validateInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
-                            onObjectInfoRetrieved(objectInfo);
-                        },
-                        onConfigRetrieved : function(componentConfig) {
-                            onConfigRetrieved(componentConfig);
-                        }
-                    });
+            new HelperObjectBrowserService.Component({
+                scope: $scope,
+                stateParams: $stateParams,
+                moduleId: module.configName,
+                componentId: "main",
+                retrieveObjectInfo: module.getInfo,
+                validateObjectInfo: module.validateInfo,
+                onObjectInfoRetrieved: function(objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
+                },
+                onConfigRetrieved: function(componentConfig) {
+                    onConfigRetrieved(componentConfig);
+                }
+            });
 
-                    var onObjectInfoRetrieved = function(objectInfo) {
-                        gridHelper.setWidgetsGridData(objectInfo.personAliases);
-                    };
+            var onObjectInfoRetrieved = function(objectInfo) {
+                gridHelper.setWidgetsGridData(objectInfo.personAliases);
+            };
 
-                    var onConfigRetrieved = function(componentConfig) {
-                        var widgetInfo = _.find(componentConfig.widgets, function(widget) {
-                            return widget.id === "aliases";
-                        });
-                        gridHelper.setColumnDefs(widgetInfo);
-                    };
+            var onConfigRetrieved = function(componentConfig) {
+                var widgetInfo = _.find(componentConfig.widgets, function(widget) {
+                    return widget.id === "aliases";
+                });
+                gridHelper.setColumnDefs(widgetInfo);
+            };
 
-                    $scope.isDefault = function(data) {
-                        return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultAlias");
-                    }
+            $scope.isDefault = function(data) {
+                return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultAlias");
+            }
 
-                } ]);
+        } ]);

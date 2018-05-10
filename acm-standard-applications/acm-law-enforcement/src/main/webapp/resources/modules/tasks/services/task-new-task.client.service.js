@@ -25,10 +25,10 @@ angular.module('tasks').factory('Task.NewTaskService', [ '$http', '$httpParamSer
      */
     Service.saveAdHocTask = function(taskData) {
         return $http({
-            method : 'POST',
-            url : 'api/latest/plugin/task/adHocTask',
-            data : taskData,
-            cache : false
+            method: 'POST',
+            url: 'api/latest/plugin/task/adHocTask',
+            data: taskData,
+            cache: false
         });
     };
 
@@ -47,16 +47,16 @@ angular.module('tasks').factory('Task.NewTaskService', [ '$http', '$httpParamSer
      */
     Service.reviewDocuments = function(taskData, businessProcessName) {
         var params = {
-            businessProcessName : businessProcessName
+            businessProcessName: businessProcessName
         };
 
         var urlArgs = $httpParamSerializer(params);
 
         return $http({
-            method : 'POST',
-            url : 'api/latest/plugin/tasks/documents/review' + '?' + urlArgs,
-            data : taskData,
-            cache : false
+            method: 'POST',
+            url: 'api/latest/plugin/tasks/documents/review' + '?' + urlArgs,
+            data: taskData,
+            cache: false
         });
     };
 

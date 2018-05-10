@@ -1,5 +1,32 @@
 package com.armedia.acm.pdf.service;
 
+/*-
+ * #%L
+ * Tool Integrations: PDF creation and manipulation utilities
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.pdf.PdfServiceException;
 import com.github.jaiimageio.impl.plugins.tiff.TIFFImageWriterSpi;
 import com.github.jaiimageio.plugins.tiff.TIFFImageWriteParam;
@@ -56,24 +83,21 @@ import java.util.Random;
 public class PdfServiceImpl implements PdfService
 {
     /**
-     * Logger instance.
-     */
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
-     * Random number generator.
-     */
-    private Random random = new Random();
-
-    /**
      * Megabyte in bytes.
      */
     public static final long MEGABYTE = 1024 * 1024;
-
     /**
      * Use no more than 32MB of main memory when merging PDFs, the disk is used for the rest.
      */
     public static final int MAX_MAIN_MEMORY_BYTES = 1024 * 1024 * 32;
+    /**
+     * Logger instance.
+     */
+    private Logger log = LoggerFactory.getLogger(getClass());
+    /**
+     * Random number generator.
+     */
+    private Random random = new Random();
 
     /**
      * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is

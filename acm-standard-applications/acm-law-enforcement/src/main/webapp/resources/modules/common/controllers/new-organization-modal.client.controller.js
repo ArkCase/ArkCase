@@ -2,29 +2,15 @@
 
 angular.module('common').controller(
         'Common.NewOrganizationModalController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                'Organization.InfoService',
-                '$state',
-                'Object.LookupService',
-                'UtilService',
-                '$modal',
-                'ConfigService',
-                'MessageService',
-                '$timeout',
-                '$modalInstance',
-                'Person.InfoService',
-                function($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, Util, $modal,
-                        ConfigService, MessageService, $timeout, $modalInstance, PersonInfoService) {
+        [ '$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'UtilService', '$modal', 'ConfigService', 'MessageService', '$timeout', '$modalInstance', 'Person.InfoService',
+                function($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, Util, $modal, ConfigService, MessageService, $timeout, $modalInstance, PersonInfoService) {
 
                     //used for showing/hiding buttons in communication accounts
                     var contactMethodsCounts = {
-                        'url' : 0,
-                        'phone' : 0,
-                        'email' : 0,
-                        'fax' : 0
+                        'url': 0,
+                        'phone': 0,
+                        'email': 0,
+                        'fax': 0
                     };
                     $scope.loadingIcon = "fa fa-floppy-o";
 
@@ -36,22 +22,22 @@ angular.module('common').controller(
                     $scope.accordionSuffix = Math.floor((Math.random() * 1000) + 1);
                     //new organization with predefined values
                     $scope.organization = {
-                        className : 'com.armedia.acm.plugins.person.model.Organization',
-                        contactMethods : [],
-                        identifications : [],
-                        addresses : [],
-                        personAssociations : [ {} ],
-                        defaultEmail : {
-                            type : 'email'
+                        className: 'com.armedia.acm.plugins.person.model.Organization',
+                        contactMethods: [],
+                        identifications: [],
+                        addresses: [],
+                        personAssociations: [ {} ],
+                        defaultEmail: {
+                            type: 'email'
                         },
-                        defaultPhone : {
-                            type : 'phone'
+                        defaultPhone: {
+                            type: 'phone'
                         },
-                        defaultUrl : {
-                            type : 'url'
+                        defaultUrl: {
+                            type: 'url'
                         },
-                        defaultFax : {
-                            type : 'fax'
+                        defaultFax: {
+                            type: 'fax'
                         }
                     };
 
@@ -68,18 +54,18 @@ angular.module('common').controller(
                         params.addNewEnabled = false;
 
                         var modalInstance = $modal.open({
-                            templateUrl : "modules/common/views/object-picker-modal.client.view.html",
-                            controller : [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+                            templateUrl: "modules/common/views/object-picker-modal.client.view.html",
+                            controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
                                 $scope.modalInstance = $modalInstance;
                                 $scope.header = params.header;
                                 $scope.filter = params.filter;
                                 $scope.config = params.config;
                             } ],
-                            animation : true,
-                            size : 'lg',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            animation: true,
+                            size: 'lg',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -114,33 +100,33 @@ angular.module('common').controller(
                         });
                         var association = index > -1 ? $scope.organization.personAssociations[index] : {};
                         var params = {
-                            showSetPrimary : true,
-                            isDefault : false,
-                            addNewEnabled : false,
-                            types : $scope.personAssociationTypes,
-                            isFirstPerson : Util.isEmpty(associationFound) ? true : false
+                            showSetPrimary: true,
+                            isDefault: false,
+                            addNewEnabled: false,
+                            types: $scope.personAssociationTypes,
+                            isFirstPerson: Util.isEmpty(associationFound) ? true : false
                         };
 
                         //set this params for editing
                         if (association.person) {
                             angular.extend(params, {
-                                selectExistingEnabled : false,
-                                personId : association.person.id,
-                                personName : association.person.givenName + ' ' + association.person.familyName,
-                                type : association.organizationToPersonAssociationType,
-                                isDefault : Util.isEmpty(association.primaryContact) ? true : false
+                                selectExistingEnabled: false,
+                                personId: association.person.id,
+                                personName: association.person.givenName + ' ' + association.person.familyName,
+                                type: association.organizationToPersonAssociationType,
+                                isDefault: Util.isEmpty(association.primaryContact) ? true : false
                             });
                         }
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-person-modal.client.view.html',
-                            controller : 'Common.AddPersonModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-person-modal.client.view.html',
+                            controller: 'Common.AddPersonModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -233,7 +219,7 @@ angular.module('common').controller(
                         $timeout(function() {
                             contactMethodsCounts[contactType]++;
                             $scope.organization.contactMethods.push({
-                                type : contactType
+                                type: contactType
                             });
                         }, 0);
                     };
@@ -289,7 +275,7 @@ angular.module('common').controller(
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
 
                         $modalInstance.close({
-                            organization : clearNotFilledElements(_.cloneDeep($scope.organization))
+                            organization: clearNotFilledElements(_.cloneDeep($scope.organization))
                         });
                     };
 

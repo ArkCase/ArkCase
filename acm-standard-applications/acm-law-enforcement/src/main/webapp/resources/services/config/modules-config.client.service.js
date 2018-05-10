@@ -12,29 +12,29 @@
  */
 angular.module('services').factory('ConfigService', [ '$resource', 'Acm.StoreService', 'UtilService', function($resource, Store, Util) {
     var Service = $resource('api/config/', {}, {
-        getModule : {
-            method : 'GET',
-            cache : true,
-            url : 'modules_config/config/modules/:moduleId/config.json',
-            isArray : false
+        getModule: {
+            method: 'GET',
+            cache: true,
+            url: 'modules_config/config/modules/:moduleId/config.json',
+            isArray: false
         },
 
-        queryModules : {
-            method : 'GET',
-            cache : true,
-            url : 'modules_config/config/modules.json',
-            isArray : true
+        queryModules: {
+            method: 'GET',
+            cache: true,
+            url: 'modules_config/config/modules.json',
+            isArray: true
         },
 
-        updateModule : {
-            method : 'PUT',
-            url : 'modules_config/config/modules/:moduleId/config.json',
-            isArray : false
+        updateModule: {
+            method: 'PUT',
+            url: 'modules_config/config/modules/:moduleId/config.json',
+            isArray: false
         }
     });
 
     Service.SessionCacheNames = {
-        MODULE_CONFIG_MAP : "AcmModuleConfigMap"
+        MODULE_CONFIG_MAP: "AcmModuleConfigMap"
     };
     Service.CacheNames = {};
 
@@ -56,12 +56,12 @@ angular.module('services').factory('ConfigService', [ '$resource', 'Acm.StoreSer
         var moduleConfigMap = cacheModuleConfigMap.get();
         var moduleConfig = Util.goodMapValue(moduleConfigMap, moduleId, null);
         return Util.serviceCall({
-            service : Service.getModule,
-            param : {
-                moduleId : moduleId
+            service: Service.getModule,
+            param: {
+                moduleId: moduleId
             },
-            result : moduleConfig,
-            onSuccess : function(data) {
+            result: moduleConfig,
+            onSuccess: function(data) {
                 if (Service.validateModuleConfig(data, moduleId)) {
                     moduleConfig = data;
                     moduleConfigMap = moduleConfigMap || {};
@@ -115,7 +115,7 @@ angular.module('services').factory('ConfigService', [ '$resource', 'Acm.StoreSer
         return Service.getModuleConfig(moduleId).then(function(moduleConfig) {
             var components = Util.goodMapValue(moduleConfig, "components", []);
             var componentConfig = _.find(moduleConfig.components, {
-                id : componentId
+                id: componentId
             });
             return componentConfig;
         });

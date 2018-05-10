@@ -1,5 +1,32 @@
 package com.armedia.acm.services.search.model.solr;
 
+/*-
+ * #%L
+ * ACM Service: Search
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -367,14 +394,14 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.notes_no_html_tags_parseable = notes_no_html_tags_parseable;
     }
 
-    public void setParent_object_id_i(Long parent_object_id_i)
-    {
-        this.parent_object_id_i = parent_object_id_i;
-    }
-
     public Long getParent_object_id_i()
     {
         return parent_object_id_i;
+    }
+
+    public void setParent_object_id_i(Long parent_object_id_i)
+    {
+        this.parent_object_id_i = parent_object_id_i;
     }
 
     public String getDisposition_id_s()
@@ -437,19 +464,14 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.endDate_s = endDate_s;
     }
 
-    public void setFolder_id_i(Long folder_id_i)
-    {
-        this.folder_id_i = folder_id_i;
-    }
-
     public Long getFolder_id_i()
     {
         return folder_id_i;
     }
 
-    public void setFolder_name_s(String folder_name_s)
+    public void setFolder_id_i(Long folder_id_i)
     {
-        this.folder_name_s = folder_name_s;
+        this.folder_id_i = folder_id_i;
     }
 
     public String getFolder_name_s()
@@ -457,9 +479,9 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return folder_name_s;
     }
 
-    public void setType_s(String type_s)
+    public void setFolder_name_s(String folder_name_s)
     {
-        this.type_s = type_s;
+        this.folder_name_s = folder_name_s;
     }
 
     public String getType_s()
@@ -467,9 +489,9 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return type_s;
     }
 
-    public void setVersion_s(String version_s)
+    public void setType_s(String type_s)
     {
-        this.version_s = version_s;
+        this.type_s = type_s;
     }
 
     public String getVersion_s()
@@ -477,9 +499,9 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return version_s;
     }
 
-    public void setName_lcs(String name_lcs)
+    public void setVersion_s(String version_s)
     {
-        this.name_lcs = name_lcs;
+        this.version_s = version_s;
     }
 
     public String getName_lcs()
@@ -487,9 +509,9 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return name_lcs;
     }
 
-    public void setParent_folder_id_i(Long parent_folder_id_i)
+    public void setName_lcs(String name_lcs)
     {
-        this.parent_folder_id_i = parent_folder_id_i;
+        this.name_lcs = name_lcs;
     }
 
     public Long getParent_folder_id_i()
@@ -497,9 +519,9 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return parent_folder_id_i;
     }
 
-    public void setCategory_s(String category_s)
+    public void setParent_folder_id_i(Long parent_folder_id_i)
     {
-        this.category_s = category_s;
+        this.parent_folder_id_i = parent_folder_id_i;
     }
 
     public String getCategory_s()
@@ -507,14 +529,19 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return category_s;
     }
 
-    public void setCmis_version_series_id_s(String cmis_version_series_id_s)
+    public void setCategory_s(String category_s)
     {
-        this.cmis_version_series_id_s = cmis_version_series_id_s;
+        this.category_s = category_s;
     }
 
     public String getCmis_version_series_id_s()
     {
         return cmis_version_series_id_s;
+    }
+
+    public void setCmis_version_series_id_s(String cmis_version_series_id_s)
+    {
+        this.cmis_version_series_id_s = cmis_version_series_id_s;
     }
 
     public String getMime_type_s()
@@ -547,14 +574,14 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.notification_type_s = notification_type_s;
     }
 
-    public void setParent_ref_s(String parent_ref_s)
-    {
-        this.parent_ref_s = parent_ref_s;
-    }
-
     public String getParent_ref_s()
     {
         return parent_ref_s;
+    }
+
+    public void setParent_ref_s(String parent_ref_s)
+    {
+        this.parent_ref_s = parent_ref_s;
     }
 
     public String getData_s()

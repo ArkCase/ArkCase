@@ -14,6 +14,9 @@ public class TaskPage extends ArkCaseTestBase
 {
 
     public @FindBy(how = How.ID, using = "saveButton") WebElement saveButton;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/h4/a")
+    public WebElement secondSubject;
+    public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[4]") WebElement deleteTask;
     @FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[1]/h3/span")
     WebElement taskTitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[2]/div[1]/label")
@@ -157,8 +160,6 @@ public class TaskPage extends ArkCaseTestBase
     WebElement linkNotes;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div/a")
     WebElement secondPageUser;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/h4/a")
-    public WebElement secondSubject;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[1]/div/a")
     WebElement secondComplete;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[3]/div/a")
@@ -182,7 +183,6 @@ public class TaskPage extends ArkCaseTestBase
     WebElement taskInTaskTable;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/button[3]")
     WebElement tableForward;
-    public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[4]") WebElement deleteTask;
 
     public void newTask() throws InterruptedException
     {

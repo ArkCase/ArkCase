@@ -1,5 +1,32 @@
 package com.armedia.acm.services.dataupdate.web;
 
+/*-
+ * #%L
+ * ACM Service: Data Update Service
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -24,8 +51,8 @@ import java.util.Properties;
 public class SolrReindexServiceTests extends EasyMockSupport
 {
     private static final String SOLR_LAST_RUN_DATE_PROPERTY_KEY = "solr.last.run.date";
-    private PropertyFileManager propertyFileManager;
     private final String filePath = getClass().getClassLoader().getResource("properties/solrBatchUpdate.properties").getPath();
+    private PropertyFileManager propertyFileManager;
     private List<String> solrList;
     private Map<String, String> solrMap;
     private SolrReindexService solrReindexService;

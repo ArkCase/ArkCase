@@ -1,5 +1,32 @@
 package com.armedia.acm.pluginmanager.service;
 
+/*-
+ * #%L
+ * ACM Service: Plugin Manager
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
@@ -25,21 +52,19 @@ import java.util.Map;
 public class AcmPluginManagerTest extends EasyMockSupport
 {
 
+    private final String roleAdd = "role_add";
+    private final String roleAdmin = "role_admin";
+    private final String wildCardRole = "ADMIN@*";
+    private final String privilegeAdd = "add";
     private AcmPluginManager unit;
-
     private AcmPlugin pluginOne;
     private AcmPlugin pluginTwo;
     private AcmPlugin pluginThree;
     private AcmPluginPrivileges pluginPrivilegesOne;
     private AcmPluginPrivileges pluginPrivilegesTwo;
     private AcmPluginPrivileges pluginPrivilegesThree;
-
     private ApplicationContext mockContext;
     private SpringContextHolder mockSpringContextHolder;
-    private final String roleAdd = "role_add";
-    private final String roleAdmin = "role_admin";
-    private final String wildCardRole = "ADMIN@*";
-    private final String privilegeAdd = "add";
 
     @Before
     public void setUp() throws Exception

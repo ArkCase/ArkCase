@@ -19,12 +19,11 @@ import java.util.Date;
 public class ScreenshotTaker extends TestWatcher
 {
 
-    private WebDriver browser;
-    private String screenshotLocation;
     Date date = new Date(System.currentTimeMillis());
     SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
     String createdDate = formatter.format(date);
-
+    private WebDriver browser;
+    private String screenshotLocation;
     private String filenameOfReport = System.getProperty("user.home") + "/.arkcase/seleniumTests/SeleniumReports/SeleniumReport"
             + createdDate + ".html";
 

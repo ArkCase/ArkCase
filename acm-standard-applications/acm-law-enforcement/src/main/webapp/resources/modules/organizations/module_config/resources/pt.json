@@ -21,7 +21,8 @@
         "identification.label": "Identificação",
         "primary.label": "Contato primário",
         "parent.label": "Organização dos pais",
-        "parent.placeholder": "Digite a Organização-mãe"
+        "parent.placeholder": "Digite a Organização-mãe",
+        "type.label": "pt_Type"
     },
     "organizations.comp.actions": {
         "title": "Ações",

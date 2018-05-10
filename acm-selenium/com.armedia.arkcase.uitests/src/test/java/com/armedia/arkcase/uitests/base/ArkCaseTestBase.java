@@ -119,14 +119,6 @@ public class ArkCaseTestBase
         driver.manage().window().maximize();
     }
 
-    @Before
-    public void logIn()
-    {
-
-        ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-                TestsPoperties.getSupervisorUserPasswordCore(), driver, TestsPoperties.getBaseUrlCore());
-    }
-
     @AfterClass
     public static void shutDown() throws Exception
     {
@@ -135,5 +127,13 @@ public class ArkCaseTestBase
         folder.deleteFolder();
         driver.close();
         driver.quit();
+    }
+
+    @Before
+    public void logIn()
+    {
+
+        ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+                TestsPoperties.getSupervisorUserPasswordCore(), driver, TestsPoperties.getBaseUrlCore());
     }
 }
