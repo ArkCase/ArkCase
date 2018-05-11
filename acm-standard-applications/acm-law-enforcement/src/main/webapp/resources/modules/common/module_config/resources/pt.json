@@ -2,8 +2,8 @@
     "common": {
         "select.option.none": "(Selecione um)",
         "value.unknown": "Desconhecido",
-        "value.none": "Nenhum", 
-		"_1_": "Não use ou adicione formatos de data personalizados porque é propenso a erros para serem compatíveis com i18n.",
+        "value.none": "Nenhum",
+        "_1_": "Não use ou adicione formatos de data personalizados porque é propenso a erros para serem compatíveis com i18n.",
         "_2_": "Use um dos formatos predefinidos: ",
         "_3_": "'médio'       - equivalente a 'MMM d, a h:mm:ss a' para en_US localidade (por exemplo. 3 de setembro de 2010 12:05:08 PM)",
         "_4_": "'curto'       - equivalente a 'M/d/aa h:mm a' para en_US localidade (por exemplo. 9/3/10 12:05 PM)",
@@ -55,7 +55,8 @@
             "defaultBodyLinks": "Siga os links abaixo para ver o (s) documento (s). Os links expiram em 3 dias.",
             "defaultBodyAttachments": "Anexe os documentos enviados a você no ArkCase.",
             "defaultFooter": "Desenvolvido pela ArkCase, Enterprise Case Management Platform, http://www.arkcase.com",
-            "successMessage": "O e-mail foi enviado com sucesso"
+            "successMessage": "O e-mail foi enviado com sucesso",
+            "noEmailAddress": "pt_There is no entered email for this "
         },
         "menu": {
             "noop": "(Selecionar item)",
@@ -109,10 +110,10 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "Enviar como anexo e hiperlink",
             "btnCancel.text": "Cancelar",
             "btnOk.text": "Enviar email"
-		},
+        },
         "participantsDialog": {
             "titlePart": "Participantes para",
-            "title": "Participantes"	
+            "title": "Participantes"
         },
         "recipientsDialog": {
             "title": "Escolha Recipientes",
@@ -196,9 +197,9 @@
         "btnCancel.text": "Cancelar",
         "edtPlaceholder": "Digite para pesquisar",
         "noData.text": "Sem resultados",
-		"pickUserLabel": "Escolha Usuário associado",
+        "pickUserLabel": "Escolha Usuário associado",
         "pickGroupLabel": "Escolha Grupo Associado",
-		"selectedItemsGrid.label": "Entradas selecionadas"
+        "selectedItemsGrid.label": "Entradas selecionadas"
     },
     "common.directive.search": {
         "showMore.button.text": "Mostrar mais valores",
@@ -613,7 +614,7 @@
             "error.noAccessCombo": "A combinação de No Access e Assignee não é permitida.",
             "error.duplicateUserOrGroup": "Participante inválido. Entradas duplicadas encontradas para o participante.",
             "error.userOrGroupNotFound": "Participante inválido. Falta a entrada do participante no sistema.",
-			"error.emptyParticipantLdapId": "O nome do participante não pode estar vazio",
+            "error.emptyParticipantLdapId": "O nome do participante não pode estar vazio",
             "error.emptyParticipantType": "O tipo de participante não pode estar vazio",
             "error.ownerUnique": "Apenas um proprietário é permitido."
         }

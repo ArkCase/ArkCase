@@ -202,7 +202,7 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
             if (objectType == ObjectService.ObjectTypes.CASE_FILE || objectType == ObjectService.ObjectTypes.COMPLAINT) {
                 ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
                     var originator = data.originator;
-                    if (originator != undefined) {
+                    if (originator != undefined && !Util.isArrayEmpty(originator.person.contactMethods)) {
                         var emailOfOriginator = originator.person.contactMethods[2].value;
                         if (emailOfOriginator != null) {
                             $scope.recipients.push(emailOfOriginator);
@@ -316,49 +316,55 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
 
         } ]);
 
-angular.module('directives').controller('directives.DocTreeEmailRecipientsDialogController', [ '$scope', '$modalInstance', 'DocTreeExt.Email', 'config', 'recipients', function($scope, $modalInstance, DocTreeExtEmail, config, recipients) {
-    $scope.config = config;
-    $scope.recipients = angular.copy(recipients);
+angular.module('directives').controller('directives.DocTreeEmailRecipientsDialogController',
+        [ '$scope', '$modalInstance', 'DocTreeExt.Email', 'Object.LookupService', 'config', 'recipients', 'UtilService', 'MessageService', '$translate', function($scope, $modalInstance, DocTreeExtEmail, ObjectLookupService, config, recipients, Util, MessageService, $translate) {
 
-    $scope.onSelectRecipient = function(selectedItems, lastSelectedItems, isSelected) {
-        var selectedRecipientEmail = lastSelectedItems[0].email_lcs;
-        var isRecipientSelected = _.find($scope.recipients, function(recipient) {
-            return recipient.email === selectedRecipientEmail;
-        });
+            $scope.config = config;
+            $scope.recipients = angular.copy(recipients);
 
-        var selectedRecipientDataModel = {
-            email: lastSelectedItems[0].email_lcs
-        };
+            $scope.onSelectRecipient = function(selectedItems, lastSelectedItems, isSelected) {
+                if (Util.isEmpty(lastSelectedItems[0].email_lcs)) {
+                    MessageService.info($translate.instant('common.directive.docTree.email.noEmailAddress') + lastSelectedItems[0].object_type_s.toLowerCase());
+                } else {
+                    var selectedRecipientEmail = lastSelectedItems[0].email_lcs;
+                    var isRecipientSelected = _.find($scope.recipients, function(recipient) {
+                        return recipient.email === selectedRecipientEmail;
+                    });
 
-        if (isRecipientSelected) {
-            if (!isSelected) {
-                _.remove($scope.recipients, function(recipient) {
-                    return recipient.email === isRecipientSelected.email;
-                });
-            }
-        } else {
-            if (isSelected) {
-                $scope.recipients.push(selectedRecipientDataModel);
-            }
-        }
-    };
+                    var selectedRecipientDataModel = {
+                        email: lastSelectedItems[0].email_lcs
+                    };
 
-    $scope.addAdditionalRecipients = function(tag) {
-        var selectedRecipientDataModel = {
-            email: tag.email
-        };
+                    if (isRecipientSelected) {
+                        if (!isSelected) {
+                            _.remove($scope.recipients, function(recipient) {
+                                return recipient.email === isRecipientSelected.email;
+                            });
+                        }
+                    } else {
+                        if (isSelected) {
+                            $scope.recipients.push(selectedRecipientDataModel);
+                        }
+                    }
+                }
+            };
 
-        $scope.recipients[$scope.recipients.length - 1] = selectedRecipientDataModel;
-    };
+            $scope.addAdditionalRecipients = function(tag) {
+                var selectedRecipientDataModel = {
+                    email: tag.email
+                };
+                $scope.recipients[$scope.recipients.length - 1] = selectedRecipientDataModel;
+            };
 
-    $scope.addRecipients = function() {
-        $modalInstance.close($scope.recipients);
-    };
+            $scope.addRecipients = function() {
+                $modalInstance.close($scope.recipients);
+            };
 
-    $scope.cancel = function() {
-        $modalInstance.dismiss();
-    };
-} ]);
+            $scope.cancel = function() {
+                $modalInstance.dismiss();
+            };
+
+        } ]);
 
 //, validateSentEmails: function (data) {
 //    if (!Util.isArray(data)) {
