@@ -59,24 +59,24 @@ public class SaveReportToGroupsMapAPIController
         return retval;
     }
 
-    @RequestMapping(value = "/{reportName:.+}/groups/adhoc", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{reportName:.+}/groups", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<String> addAdhocGroupsToReport(@PathVariable("reportName") String reportName, @RequestBody List<String> adhocGroups,
+    public List<String> addGroupsToReport(@PathVariable("reportName") String reportName, @RequestBody List<String> adhocGroups,
             Authentication auth)
     {
         LOG.debug("Saving adhoc groups to report [{}]", reportName);
 
-        return getReportService().saveAdhocGroupsToReport(reportName, adhocGroups, auth);
+        return getReportService().saveGroupsToReport(reportName, adhocGroups, auth);
     }
 
-    @RequestMapping(value = "/{reportName:.+}/groups/adhoc", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{reportName:.+}/groups", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<String> removeAdhocGroupsToReport(@PathVariable("reportName") String reportName, @RequestBody List<String> adhocGroups,
+    public List<String> removeGroupsToReport(@PathVariable("reportName") String reportName, @RequestBody List<String> adhocGroups,
             Authentication auth)
     {
         LOG.debug("Saving adhoc groups to report [{}]", reportName);
 
-        return getReportService().removeAdhocGroupsToReport(reportName, adhocGroups, auth);
+        return getReportService().removeGroupsToReport(reportName, adhocGroups, auth);
     }
 
     public ReportService getReportService()

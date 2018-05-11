@@ -116,6 +116,7 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
         var tempReportsPentahoPromise = ReportsConfigService.getReportsPaged({});
         var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
         var tempReportsUserGroupsPromise = ReportsConfigService.getReportsUserGroups();
+
         //wait all promises to resolve
         $q.all([ tempReportsPentahoPromise, promiseServerConfig, tempReportsUserGroupsPromise ]).then(function(payload) {
             $scope.reportsData.chooseObject = [];
