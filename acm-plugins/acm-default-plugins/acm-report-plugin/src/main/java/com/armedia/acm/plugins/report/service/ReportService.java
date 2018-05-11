@@ -64,9 +64,9 @@ public interface ReportService
 
     public boolean saveReportToGroupsMap(Map<String, List<String>> reportToGroupsMap, Authentication auth);
 
-    public List<String> saveAdhocGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth);
+    public List<String> saveGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth);
 
-    public List<String> removeAdhocGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth);
+    public List<String> removeGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth);
 
     public List<Report> sync() throws Exception;
 

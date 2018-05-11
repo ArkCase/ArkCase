@@ -291,7 +291,7 @@ public class ReportServiceImpl implements ReportService
     }
 
     @Override
-    public List<String> saveAdhocGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth)
+    public List<String> saveGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth)
     {
         String reportUpdated = "";
         try
@@ -309,7 +309,7 @@ public class ReportServiceImpl implements ReportService
     }
 
     @Override
-    public List<String> removeAdhocGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth)
+    public List<String> removeGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth)
     {
         List<String> reportGroups;
         String reportUpdated = "";
@@ -537,12 +537,12 @@ public class ReportServiceImpl implements ReportService
     {
         StringBuilder solrQuery = new StringBuilder();
         List<String> groupsForReport = new ArrayList<>(
-                Arrays.asList(propertyFileManager.load(getReportToGroupsMapPropertiesFileLocation(), reportId, null).split(",")));
+                Arrays.asList(propertyFileManager.load(getReportToGroupsMapPropertiesFileLocation(), reportId, "").split(",")));
 
         solrQuery.append(
                 "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED");
 
-        if (groupsForReport != null)
+        if (!groupsForReport.equals(""))
         {
             solrQuery.append(authorized ? " AND name_lcs:" : " AND -name_lcs:");
             solrQuery.append(groupsForReport.stream().collect(Collectors.joining("\" OR \"", "(\"", "\")")));

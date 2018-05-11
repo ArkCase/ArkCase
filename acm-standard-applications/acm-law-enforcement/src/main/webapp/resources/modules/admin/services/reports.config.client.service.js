@@ -266,28 +266,6 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
 
     /**
      * @ngdoc method
-     * @name saveReports
-     * @methodOf admin.service:Admin.DashboardConfigService
-     *
-     * @description
-     * Performs saving reports.
-     *
-     * @param {object} reports reports objects send to the server
-     */
-    function saveReports(reports) {
-        return $http({
-            method: "POST",
-            url: "api/latest/plugin/report/save",
-            data: reports,
-            cache: false,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    }
-
-    /**
-     * @ngdoc method
      * @name addGroupsToReport
      * @methodOf admin.service:Admin.FunctionalAccessControlService
      *
@@ -302,7 +280,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
     function addGroupsToReport(privilegeName, groups) {
         return $http({
             method: 'PUT',
-            url: 'api/latest/plugin/report/' + privilegeName + '/groups/adhoc',
+            url: 'api/latest/plugin/report/' + privilegeName + '/groups',
             data: groups,
             cache: false,
             headers: {
@@ -327,11 +305,33 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
     function removeGroupsFromReport(privilegeName, groups) {
         return $http({
             method: 'DELETE',
-            url: 'api/latest/plugin/report/' + privilegeName + '/groups/adhoc',
+            url: 'api/latest/plugin/report/' + privilegeName + '/groups',
             data: groups,
             cache: false,
             headers: {
                 'Content-Type': 'application/json'
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name saveReports
+     * @methodOf admin.service:Admin.DashboardConfigService
+     *
+     * @description
+     * Performs saving reports.
+     *
+     * @param {object} reports reports objects send to the server
+     */
+    function saveReports(reports) {
+        return $http({
+            method: "POST",
+            url: "api/latest/plugin/report/save",
+            data: reports,
+            cache: false,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }
