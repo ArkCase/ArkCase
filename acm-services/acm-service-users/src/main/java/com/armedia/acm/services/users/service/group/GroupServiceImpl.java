@@ -51,11 +51,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -497,6 +493,12 @@ public class GroupServiceImpl implements GroupService
         }
 
         log.debug("Add User [{}] as member to Group [{}]", user.getUserId(), group.getName());
+
+        Optional<AcmUser> isUserPresent = group.getUserMembers().stream().filter(u -> u.getUserId().equals(user.getUserId())).findFirst();
+        if (isUserPresent.isPresent())
+        {
+            return group;
+        }
         group.addUserMember(user);
 
         if (flushInstructions)
