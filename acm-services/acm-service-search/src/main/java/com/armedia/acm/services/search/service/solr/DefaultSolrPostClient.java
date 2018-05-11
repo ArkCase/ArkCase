@@ -58,7 +58,7 @@ public class DefaultSolrPostClient implements SolrPostClient
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         HttpEntity<String> entity = new HttpEntity<>(json, headers);
 
-        getSolrRestClient().postToSolr(core.getCore(), getSolrUpdateHandler(), entity, logJson, null);
+        getSolrRestClient().postToSolr(core.getCore(), getSolrUpdateHandler(), entity, logJson);
     }
 
     public String getSolrUpdateHandler()

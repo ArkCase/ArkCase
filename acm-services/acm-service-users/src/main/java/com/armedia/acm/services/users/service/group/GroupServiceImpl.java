@@ -51,11 +51,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -494,6 +490,13 @@ public class GroupServiceImpl implements GroupService
         {
             log.warn("Group [{}] was not found.", groupId);
             throw new AcmObjectNotFoundException("GROUP", null, "Group " + groupId + " was not found");
+        }
+
+        Optional<AcmUser> foundUser = group.getUserMembers().stream().filter(u -> u.getUserId().equals(user.getUserId())).findFirst();
+        if (foundUser.isPresent())
+        {
+            log.debug("User [{}] is already a member to the Group [{}]", user.getUserId(), group.getName());
+            return group;
         }
 
         log.debug("Add User [{}] as member to Group [{}]", user.getUserId(), group.getName());
