@@ -267,7 +267,7 @@ angular.module('admin').controller(
                     $scope.onAddMembers = function(group) {
                         var deferred = $q.defer();
                         var params = {
-                            filter: "\"Object Type\": USER %26status_lcs:VALID"
+                            filter: "\"Object Type\": USER %26status_lcs:VALID%26-groups_id_ss:" + group.object_id_s
                         };
                         var modalInstance = openMembersPicker(params);
 
@@ -385,7 +385,7 @@ angular.module('admin').controller(
                     $scope.addExistingMembersToLdapGroup = function(group) {
                         var deferred = $q.defer();
                         var params = {
-                            filter: "\"Object Type\": USER%26directory_name_s:" + group.directory_name_s + "%26status_lcs:VALID"
+                            filter: "\"Object Type\": USER%26directory_name_s:" + group.directory_name_s + "%26status_lcs:VALID%26-groups_id_ss:" + group.object_id_s
                         };
                         var modalInstance = openMembersPicker(params);
 
