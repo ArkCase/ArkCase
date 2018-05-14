@@ -73,6 +73,7 @@
                     "name": "title",
                     "displayName": "profile.subscriptions.table.columns.title",
                     "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{COL_FIELD}}</a>",
                     "width": "40%"
                 },
                 {
