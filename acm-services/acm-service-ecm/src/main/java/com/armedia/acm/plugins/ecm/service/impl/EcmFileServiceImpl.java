@@ -72,6 +72,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -1090,6 +1091,55 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         file = getEcmFileDao().save(ecmFile);
         return file;
+    }
+
+    @Override
+    public EcmFile updateFile(EcmFile ecmFile, Long fileId, Authentication authentication)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
+        if (ecmFile == null || ecmFile.getFileId() == null || fileId == null || !fileId.equals(ecmFile.getFileId()))
+        {
+            log.error("Invalid incoming file [{}]", ecmFile.toString());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null,
+                    "Invalid incoming file", null);
+        }
+
+        EcmFile oldFile = findById(ecmFile.getId());
+        if (oldFile == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, ecmFile.getId(), "File not found", null);
+        }
+        getEcmFileDao().getEm().detach(oldFile);
+        Map<String, Object> eventProperties = new HashMap<>();
+        eventProperties.put("oldEcmFile", oldFile);
+
+        // Explicitly set modified to force a save to trigger transformer to reindex data when child objects are changed
+        // (e.g participants)
+        ecmFile.setModified(new Date());
+
+        ecmFile = getEcmFileDao().save(ecmFile);
+
+        if (ecmFile != null)
+        {
+            if (authentication == null)
+            {
+                authentication = SecurityContextHolder.getContext().getAuthentication();
+            }
+            publishFileUpdatedEvent(ecmFile, authentication, true, eventProperties);
+            log.info("File update successful [{}]", ecmFile);
+            return ecmFile;
+        }
+        throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId,
+                "Failed to update file with fileId: " + fileId, null);
+    }
+
+    private void publishFileUpdatedEvent(EcmFile file, Authentication authentication, boolean success, Map<String, Object> eventProperties)
+    {
+        EcmFileUpdatedEvent event;
+        event = new EcmFileUpdatedEvent(file, authentication);
+        event.setEventProperties(eventProperties);
+        event.setSucceeded(success);
+        applicationEventPublisher.publishEvent(event);
     }
 
     @Override
