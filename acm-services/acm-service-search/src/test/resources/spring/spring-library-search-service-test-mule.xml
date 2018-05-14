@@ -8,6 +8,7 @@
                 <value>/flows/solrConfigurationFlow.xml</value>
                 <value>/flows/advancedSearchQueryFlow.xml</value>
                 <value>/flows/quickSearchQueryFlow.xml</value>
+                <value>/flows/searchTestFlow.xml</value>
             </list>
         </property>
     </bean>
