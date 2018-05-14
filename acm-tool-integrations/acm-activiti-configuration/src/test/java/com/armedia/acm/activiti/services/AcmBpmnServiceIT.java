@@ -247,17 +247,20 @@ public class AcmBpmnServiceIT
         filesToDelete.add(apd.getFileName());
         deploymentsIdToDelete.add(apd.getDeploymentId());
         log.info("AcmProcessDefinition deployed: " + apd);
+        List<AcmProcessDefinition> acmProcessDefinitionList = acmBpmnService.getVersionHistory(apd);
+        int countBefore = acmProcessDefinitionList.size();
+
         File f1 = new File(getClass().getResource("/activiti/TestActivitiSpringProcessChanged.bpmn20.xml").toURI());
         AcmProcessDefinition apd1 = acmBpmnService.deploy(f1, "", false, false);
         deploymentsIdToDelete.add(apd1.getDeploymentId());
         filesToDelete.add(apd1.getFileName());
         log.info("AcmProcessDefinition deployed: " + apd1);
 
-        List<AcmProcessDefinition> acmProcessDefinitionList = acmBpmnService.getVersionHistory(apd1);
+        acmProcessDefinitionList = acmBpmnService.getVersionHistory(apd1);
 
-        // getVersionHistory should return all OTHER versions, aside from the version of the one that we sent to it.
-        // so since we now have two versions, and we exclude one of them, the result should have only one entry.
-        assertEquals(1, acmProcessDefinitionList.size());
+        int countAfter = acmProcessDefinitionList.size();
+
+        assertEquals(1, countAfter - countBefore);
         assertNotEquals(apd1.getVersion(), acmProcessDefinitionList.get(0).getVersion());
 
         acmBpmnService.remove(apd, true);
