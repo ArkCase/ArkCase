@@ -26,10 +26,9 @@ package com.armedia.acm.plugins.ecm.web.api;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
-import static junit.framework.TestCase.assertTrue;
 import static org.easymock.EasyMock.anyLong;
 import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
@@ -39,7 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -51,7 +49,6 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -79,7 +76,6 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
     private UpdateFileMetadataAPIController unit;
     private EcmFileService mockEcmFileService;
     private Authentication mockAuthentication;
-    private ApplicationEventPublisher mockApplicationEventPublisher;
 
     @Autowired
     private ExceptionHandlerExceptionResolver filePluginExceptionResolver;
@@ -90,9 +86,7 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
         unit = new UpdateFileMetadataAPIController();
 
         mockEcmFileService = createMock(EcmFileService.class);
-        mockApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
         unit.setEcmFileService(mockEcmFileService);
-        unit.setApplicationEventPublisher(mockApplicationEventPublisher);
         mockAuthentication = createMock(Authentication.class);
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(filePluginExceptionResolver).build();
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
@@ -117,13 +111,12 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
         out.setContainer(acmContainer);
 
         Capture<EcmFile> saved = Capture.newInstance();
-        Capture<EcmFileUpdatedEvent> capturedEvent = Capture.newInstance();
+        Capture<Authentication> authentication = Capture.newInstance();
 
         expect(mockEcmFileService.findById(anyLong())).andReturn(in).anyTimes();
-        expect(mockEcmFileService.updateFile(capture(saved))).andReturn(out);
+        expect(mockEcmFileService.updateFile(capture(saved), eq(100L), capture(authentication))).andReturn(out);
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
-        mockApplicationEventPublisher.publishEvent(capture(capturedEvent));
         expectLastCall();
 
         replayAll();
@@ -145,11 +138,6 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
 
         assertEquals(in.getFileId(), saved.getValue().getFileId());
         assertEquals(in.getStatus(), saved.getValue().getStatus());
-
-        EcmFileUpdatedEvent event = capturedEvent.getValue();
-        assertEquals(in.getFileId(), event.getObjectId());
-        assertEquals("FILE", event.getObjectType());
-        assertTrue(event.isSucceeded());
     }
 
     @Test
@@ -166,9 +154,10 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
         in.setContainer(acmContainer);
 
         Capture<EcmFile> saved = Capture.newInstance();
+        Capture<Authentication> authentication = Capture.newInstance();
 
         expect(mockEcmFileService.findById(anyLong())).andReturn(in).anyTimes();
-        expect(mockEcmFileService.updateFile(capture(saved))).andReturn(null);
+        expect(mockEcmFileService.updateFile(capture(saved), eq(100L), capture(authentication))).andReturn(null).anyTimes();
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
 
         replayAll();
@@ -176,7 +165,7 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
         try
         {
             mockMvc.perform(
-                    post("/api/latest/service/ecm/file/metadata/{fileId}", "100")
+                    post("/api/latest/service/ecm/file/metadata/{fileId}", "101")
                             .content(new ObjectMapper().writeValueAsString(in))
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
