@@ -55,7 +55,8 @@
             "defaultBodyLinks": "Por favor, siga los enlaces a continuación para ver el documento (s). Los enlaces caducan en 3 días.",
             "defaultBodyAttachments": "Adjuntamos los documentos enviados por ArkCase.",
             "defaultFooter": "Desarrollado por ArkCase, plataforma Enterprise Case Management, http://www.arkcase.com",
-            "successMessage": "El correo electrónico fue enviado con éxito"
+            "successMessage": "El correo electrónico fue enviado con éxito",
+            "noEmailAddress": "es_There is no entered email for this "
         },
         "menu": {
             "noop": "(Seleccione un artículo)",

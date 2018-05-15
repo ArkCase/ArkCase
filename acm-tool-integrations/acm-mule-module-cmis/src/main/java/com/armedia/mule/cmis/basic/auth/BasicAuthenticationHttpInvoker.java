@@ -1,5 +1,32 @@
 package com.armedia.mule.cmis.basic.auth;
 
+/*-
+ * #%L
+ * ACM Mule CMIS Connector
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import org.apache.chemistry.opencmis.client.bindings.impl.ClientVersion;
 import org.apache.chemistry.opencmis.client.bindings.impl.CmisBindingsHelper;
 import org.apache.chemistry.opencmis.client.bindings.spi.BindingSession;
@@ -41,9 +68,8 @@ import java.util.zip.GZIPOutputStream;
 public class BasicAuthenticationHttpInvoker implements HttpInvoker
 {
 
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
-
     private static final int BUFFER_SIZE = 2 * 1024 * 1024;
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     public BasicAuthenticationHttpInvoker()
     {

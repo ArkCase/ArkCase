@@ -1,5 +1,32 @@
 package com.armedia.acm.services.pipeline;
 
+/*-
+ * #%L
+ * ACM Service: Pipeline
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
@@ -33,26 +60,18 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     private static final String POST_SAVE_HANDLER_ROLLING_BACK = "Post-save handler: [{}] rolling back";
 
     private static final String POST_SAVE_HANDLER_ROLLBACK_FAILED = "Post-save handler [{}] rollback failed with {}.";
-
-    /**
-     * List of handlers executed before saving the entity to database.
-     */
-    private List<PipelineHandler<T, S>> preSaveHandlers;
-
-    /**
-     * List of handlers executed after saving the entity to database.
-     */
-    private List<PipelineHandler<T, S>> postSaveHandlers;
-
     /**
      * Logger instance.
      */
     private final Logger log = LoggerFactory.getLogger(getClass());
-
-    public static interface PipelineManagerOperation<T>
-    {
-        T execute() throws PipelineProcessException;
-    }
+    /**
+     * List of handlers executed before saving the entity to database.
+     */
+    private List<PipelineHandler<T, S>> preSaveHandlers;
+    /**
+     * List of handlers executed after saving the entity to database.
+     */
+    private List<PipelineHandler<T, S>> postSaveHandlers;
 
     public T executeOperation(T entity, S pipelineContext, PipelineManagerOperation<T> operation) throws PipelineProcessException
     {
@@ -229,5 +248,10 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     public void setPostSaveHandlers(List<PipelineHandler<T, S>> postSaveHandlers)
     {
         this.postSaveHandlers = postSaveHandlers;
+    }
+
+    public static interface PipelineManagerOperation<T>
+    {
+        T execute() throws PipelineProcessException;
     }
 }

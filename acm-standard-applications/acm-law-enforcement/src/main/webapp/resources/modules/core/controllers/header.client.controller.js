@@ -2,25 +2,8 @@
 
 angular.module('core').controller(
         'HeaderController',
-        [
-                '$scope',
-                '$q',
-                '$state',
-                '$translate',
-                'UtilService',
-                'Acm.StoreService',
-                'Authentication',
-                'Menus',
-                'ServCommService',
-                'Search.AutoSuggestService',
-                'Config.LocaleService',
-                'ConfigService',
-                'Profile.UserInfoService',
-                'MessageService',
-                'ModalDialogService',
-                'i18nService',
-                function($scope, $q, $state, $translate, Util, Store, Authentication, Menus, ServCommService, AutoSuggestService,
-                        LocaleService, ConfigService, UserInfoService, MessageService, ModalDialogService, i18nService) {
+        [ '$scope', '$q', '$state', '$translate', 'UtilService', 'Acm.StoreService', 'Authentication', 'Menus', 'ServCommService', 'Search.AutoSuggestService', 'Config.LocaleService', 'ConfigService', 'Profile.UserInfoService', 'MessageService', 'ModalDialogService', 'i18nService',
+                function($scope, $q, $state, $translate, Util, Store, Authentication, Menus, ServCommService, AutoSuggestService, LocaleService, ConfigService, UserInfoService, MessageService, ModalDialogService, i18nService) {
 
                     $scope.authentication = Authentication;
                     $scope.isCollapsed = false;
@@ -73,7 +56,7 @@ angular.module('core').controller(
 
                     $scope.search = function() {
                         $state.go('search', {
-                            query : $scope.data.inputQuery
+                            query: $scope.data.inputQuery
                         });
                     };
 
@@ -81,8 +64,8 @@ angular.module('core').controller(
                         if (event.keyCode == 13) {
                             $scope.isSelected = isSelected;
                             $state.go('search', {
-                                query : $scope.data.inputQuery,
-                                isSelected : $scope.isSelected
+                                query: $scope.data.inputQuery,
+                                isSelected: $scope.isSelected
                             });
                         }
                         isSelected = false;
@@ -126,7 +109,7 @@ angular.module('core').controller(
                         event.preventDefault();
                         if (!item.modalDialog) {
                             $state.go(item.link, {}, {
-                                reload : true
+                                reload: true
                             });
                         } else {
                             ModalDialogService.showModal(item.modalDialog);

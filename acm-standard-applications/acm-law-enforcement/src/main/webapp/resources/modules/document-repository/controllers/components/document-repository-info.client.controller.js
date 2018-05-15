@@ -2,29 +2,17 @@
 
 angular.module('document-repository').controller(
         'DocumentRepository.InfoController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'Util.DateService',
-                'ConfigService',
-                'Object.LookupService',
-                'DocumentRepository.InfoService',
-                'Object.ModelService',
-                'Helper.ObjectBrowserService',
-                function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService,
-                        DocumentRepositoryInfoService, ObjectModelService, HelperObjectBrowserService) {
+        [ '$scope', '$stateParams', '$translate', '$modal', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'DocumentRepository.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService',
+                function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, DocumentRepositoryInfoService, ObjectModelService, HelperObjectBrowserService) {
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "document-repository",
-                        componentId : "info",
-                        retrieveObjectInfo : DocumentRepositoryInfoService.getDocumentRepositoryInfo,
-                        validateObjectInfo : DocumentRepositoryInfoService.validateDocumentRepositoryInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "document-repository",
+                        componentId: "info",
+                        retrieveObjectInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                        validateObjectInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });

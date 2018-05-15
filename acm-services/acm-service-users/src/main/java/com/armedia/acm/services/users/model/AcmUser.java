@@ -1,5 +1,32 @@
 package com.armedia.acm.services.users.model;
 
+/*-
+ * #%L
+ * ACM Service: Users
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -286,6 +313,11 @@ public class AcmUser implements Serializable
         return groups;
     }
 
+    public void setGroups(Set<AcmGroup> groups)
+    {
+        this.groups = groups;
+    }
+
     @JsonIgnore
     public String getDistinguishedName()
     {
@@ -386,11 +418,6 @@ public class AcmUser implements Serializable
     public void setPasswordResetToken(PasswordResetToken passwordResetToken)
     {
         this.passwordResetToken = passwordResetToken;
-    }
-
-    public void setGroups(Set<AcmGroup> groups)
-    {
-        this.groups = groups;
     }
 
     @Override

@@ -2,36 +2,24 @@
 
 angular.module('dashboard.history', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('history', {
-        title : 'preference.overviewWidgets.history.title',
-        description : 'dashboard.widgets.history.description',
-        controller : 'Dashboard.HistoryController',
-        controllerAs : 'history',
-        reload : true,
-        templateUrl : 'modules/dashboard/views/components/history-widget.client.view.html',
-        commonName : 'history'
+        title: 'preference.overviewWidgets.history.title',
+        description: 'dashboard.widgets.history.description',
+        controller: 'Dashboard.HistoryController',
+        controllerAs: 'history',
+        reload: true,
+        templateUrl: 'modules/dashboard/views/components/history-widget.client.view.html',
+        commonName: 'history'
     });
 }).controller(
         'Dashboard.HistoryController',
-        [
-                '$scope',
-                'config',
-                '$state',
-                '$stateParams',
-                '$translate',
-                'Dashboard.DashboardService',
-                'Object.AuditService',
-                'Helper.ObjectBrowserService',
-                'UtilService',
-                function($scope, config, $state, $stateParams, $translate, DashboardService, ObjectAuditService,
-                        HelperObjectBrowserService, Util) {
+        [ '$scope', 'config', '$state', '$stateParams', '$translate', 'Dashboard.DashboardService', 'Object.AuditService', 'Helper.ObjectBrowserService', 'UtilService',
+                function($scope, config, $state, $stateParams, $translate, DashboardService, ObjectAuditService, HelperObjectBrowserService, Util) {
 
                     var vm = this;
 
                     var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
                     if (Util.goodPositive(currentObjectId, false)) {
-                        ObjectAuditService.queryAudit($stateParams.type == "ADHOC" ? "TASK" : $stateParams.type, currentObjectId,
-                                Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodMapValue($scope.sort, "by"),
-                                Util.goodMapValue($scope.sort, "dir")).then(function(data) {
+                        ObjectAuditService.queryAudit($stateParams.type == "ADHOC" ? "TASK" : $stateParams.type, currentObjectId, Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodMapValue($scope.sort, "by"), Util.goodMapValue($scope.sort, "dir")).then(function(data) {
 
                             var results = data.resultPage;
                             var eventsList = [];
@@ -49,8 +37,8 @@ angular.module('dashboard.history', [ 'adf.provider' ]).config(function(dashboar
                                 } else {
                                     if (eventsList.length === 0) {
                                         eventsList.push({
-                                            'eventName' : eventType,
-                                            'count' : 1
+                                            'eventName': eventType,
+                                            'count': 1
                                         });
                                     } else {
                                         if (_.find(eventsList, _.matchesProperty('eventName', eventType))) {
@@ -58,8 +46,8 @@ angular.module('dashboard.history', [ 'adf.provider' ]).config(function(dashboar
                                             foundEvent.count++;
                                         } else {
                                             eventsList.push({
-                                                'eventName' : eventType,
-                                                'count' : 1
+                                                'eventName': eventType,
+                                                'count': 1
                                             });
                                         }
                                     }

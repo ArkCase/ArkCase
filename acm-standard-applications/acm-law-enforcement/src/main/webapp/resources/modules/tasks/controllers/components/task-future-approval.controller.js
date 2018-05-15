@@ -2,27 +2,9 @@
 
 angular.module('tasks').controller(
         'Tasks.FutureApprovalRoutingController',
-        [
-                '$scope',
-                '$stateParams',
-                '$q',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'Util.DateService',
-                'ConfigService',
-                'ObjectService',
-                'LookupService',
-                'Object.LookupService',
-                'Task.InfoService',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'Authentication',
-                'PermissionsService',
+        [ '$scope', '$stateParams', '$q', '$translate', '$modal', 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService',
                 'Profile.UserInfoService',
-                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService,
-                        ObjectLookupService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication,
-                        PermissionsService, UserInfoService) {
+                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication, PermissionsService, UserInfoService) {
 
                     $scope.userSearchConfig = null;
                     $scope.gridOptions = $scope.gridOptions || {};
@@ -32,27 +14,27 @@ angular.module('tasks').controller(
                     var currentUser = '';
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "tasks",
-                        componentId : "approvalRouting",
-                        retrieveObjectInfo : TaskInfoService.getTaskInfo,
-                        validateObjectInfo : TaskInfoService.validateTaskInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "tasks",
+                        componentId: "approvalRouting",
+                        retrieveObjectInfo: TaskInfoService.getTaskInfo,
+                        validateObjectInfo: TaskInfoService.validateTaskInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     ConfigService.getModuleConfig("tasks").then(function(moduleConfig) {
                         $scope.userSearchConfig = _.find(moduleConfig.components, {
-                            id : "userSearch"
+                            id: "userSearch"
                         });
                         return moduleConfig;
                     });
@@ -93,18 +75,18 @@ angular.module('tasks').controller(
 
                     $scope.userSearch = function() {
                         var modalInstance = $modal.open({
-                            animation : $scope.animationsEnabled,
-                            templateUrl : 'modules/tasks/views/components/task-user-search.client.view.html',
-                            controller : 'Tasks.UserSearchController',
-                            size : 'lg',
-                            resolve : {
-                                $filter : function() {
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'modules/tasks/views/components/task-user-search.client.view.html',
+                            controller: 'Tasks.UserSearchController',
+                            size: 'lg',
+                            resolve: {
+                                $filter: function() {
                                     return $scope.config.userSearch.userFacetFilter;
                                 },
-                                $extraFilter : function() {
+                                $extraFilter: function() {
                                     return $scope.config.userSearch.userFacetExtraFilter;
                                 },
-                                $config : function() {
+                                $config: function() {
                                     return $scope.userSearchConfig;
                                 }
                             }
@@ -203,7 +185,7 @@ angular.module('tasks').controller(
                     gridHelper.addCustomButton = function(config, name, icon, clickFn, readOnlyFn, colName, tooltip) {
                         if (Util.isEmpty(icon) || Util.isEmpty(clickFn) || Util.isEmpty(readOnlyFn)) {
                             var found = _.find(HelperUiGridService.CommonButtons, {
-                                name : name
+                                name: name
                             });
                             if (found) {
                                 if (Util.isEmpty(icon)) {
@@ -221,7 +203,7 @@ angular.module('tasks').controller(
                         var cellTemplate = configureCellTemplate(clickFn, icon, readOnlyFn, tooltip, name);
                         var columnDefs = Util.goodArray(config.columnDefs);
                         var columnDef = _.find(columnDefs, {
-                            name : colName
+                            name: colName
                         });
 
                         if (columnDefs) {
@@ -243,22 +225,21 @@ angular.module('tasks').controller(
                             }
                         } else {
                             columnDef = {
-                                name : colName,
-                                cellEditableCondition : false,
-                                enableFiltering : false,
-                                enableHiding : false,
-                                enableSorting : false,
-                                enableColumnResizing : true,
-                                headerCellTemplate : "<span></span>",
-                                cellTemplate : cellTemplate
+                                name: colName,
+                                cellEditableCondition: false,
+                                enableFiltering: false,
+                                enableHiding: false,
+                                enableSorting: false,
+                                enableColumnResizing: true,
+                                headerCellTemplate: "<span></span>",
+                                cellTemplate: cellTemplate
                             };
                             columnDefs.push(columnDef);
                         }
                     };
 
                     var configureCellTemplate = function(clickFn, icon, readOnlyFn, tooltip, name) {
-                        var cellTemplate = "<a class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn
-                                + "(row.entity)'";
+                        var cellTemplate = "<a class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
 
                         if (tooltip) {
                             cellTemplate += " tooltip='" + tooltip + "' tooltip-append-to-body='true' tooltip-popup-delay='400'";
@@ -276,8 +257,8 @@ angular.module('tasks').controller(
                     function convertProfileToUser(userProfile) {
                         //we are using for now just this to fields, if needed add rest of them
                         var user = {
-                            userId : userProfile.userId,
-                            fullName : userProfile.fullName
+                            userId: userProfile.userId,
+                            fullName: userProfile.fullName
                         };
                         return user;
                     }

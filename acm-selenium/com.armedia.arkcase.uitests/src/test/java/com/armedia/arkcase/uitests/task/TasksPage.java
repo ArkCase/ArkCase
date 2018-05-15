@@ -22,10 +22,32 @@ public class TasksPage extends ArkCaseTestBase
 
     // TaskPage taskf = PageFactory.initElements(driver, TaskPage.class);
     public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/header/div[1]/div/input") WebElement serachInput;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/header/div[1]/div/span/button")
-    WebElement serachButton;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li/span/span[3]")
     public WebElement taskList;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/core-notes/div/div[1]/div/div/button")
+    public WebElement addNewNoteButton;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[4]")
+    public WebElement deleteButton;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[5]")
+    public WebElement completeButton;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[7]")
+    public WebElement refreshButton;
+    // Assignee
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div/a")
+    public WebElement assignee;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div/form/div/span/button[1]")
+    public WebElement assigneeConfirm;
+    // Priority
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[3]/div/a")
+    public WebElement priority;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[3]/div/form/div/span/button[1]")
+    public WebElement priorityConfirmButton;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[6]/div")
+    public WebElement stateTask;
+    public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/header/div[2]/button") WebElement refreshButtonInTaskList;
+    public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]") WebElement emptyTaskTable;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/header/div[1]/div/span/button")
+    WebElement serachButton;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li/span/span[1]")
     WebElement expandTask;
     // Details Section
@@ -77,7 +99,6 @@ public class TasksPage extends ArkCaseTestBase
     WebElement detailsInsertLink;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div[2]/div[1]/input")
     WebElement detailsLinkTextToDisplay;
-
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div[2]/div[2]/input")
     WebElement detailsLinkUrl;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div[3]/button")
@@ -88,7 +109,6 @@ public class TasksPage extends ArkCaseTestBase
     WebElement detailsPictureBrowse;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[1]/div/div/div[3]/button")
     WebElement detailsInsertImageButton;
-
     // Reject Comment Section
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li/ul/li[2]/span/span[2]")
     WebElement rejectCommentsList;
@@ -142,8 +162,6 @@ public class TasksPage extends ArkCaseTestBase
     WebElement notesCreatedColumn;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/core-notes/div/div[2]/div/div[1]/div[1]/div[1]/div/div/div/div/div/div[3]/div[2]/div[1]/span[1]")
     WebElement notesAuthorColumn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/core-notes/div/div[1]/div/div/button")
-    public WebElement addNewNoteButton;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[1]/h3/span")
     WebElement tasksTitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[1]/h3[1]/span")
@@ -297,12 +315,6 @@ public class TasksPage extends ArkCaseTestBase
     WebElement signButton;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[2]")
     WebElement subscribeButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[4]")
-    public WebElement deleteButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[5]")
-    public WebElement completeButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[7]")
-    public WebElement refreshButton;
     // subject
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/h4/a")
     WebElement subject;
@@ -339,28 +351,16 @@ public class TasksPage extends ArkCaseTestBase
     WebElement dueDateCancel;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[5]/div/form/div/span/button[1]")
     WebElement dueDateConfirm;
-    // Assignee
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div/a")
-    public WebElement assignee;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div/form/div/span/button[2]")
     WebElement assigneeCancel;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div/form/div/span/button[1]")
-    public WebElement assigneeConfirm;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div/form/div/select")
     WebElement selectAssignee;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div/form/div/select/option[4]")
     WebElement selectBillThomas;
-    // Priority
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[3]/div/a")
-    public WebElement priority;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[3]/div/form/div/span/button[2]")
     WebElement priorityCancelButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[3]/div/form/div/span/button[1]")
-    public WebElement priorityConfirmButton;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[3]")
     WebElement unsucribeButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[6]/div")
-    public WebElement stateTask;
     // Attachment new Document
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr/td[3]/span/span[3]")
     WebElement root;
@@ -476,9 +476,6 @@ public class TasksPage extends ArkCaseTestBase
     WebElement parentTypeDropDown;
     @FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[2]/div[2]/label/select/option[2]")
     WebElement associateWithCAase;
-    public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/header/div[2]/button") WebElement refreshButtonInTaskList;
-    public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]") WebElement emptyTaskTable;
-
     // new attachment
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[3]/span/span[3]")
     WebElement firstRowDocumentTitle;

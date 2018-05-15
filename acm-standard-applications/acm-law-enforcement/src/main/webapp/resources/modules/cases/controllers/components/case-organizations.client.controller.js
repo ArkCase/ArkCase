@@ -2,22 +2,8 @@
 
 angular.module('cases').controller(
         'Cases.OrganizationsController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Case.InfoService',
-                'Authentication',
-                'Object.LookupService',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'Organization.InfoService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, CaseInfoService, Authentication,
-                        ObjectLookupService, HelperUiGridService, HelperObjectBrowserService, OrganizationInfoService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Case.InfoService', 'Authentication', 'Object.LookupService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Organization.InfoService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, CaseInfoService, Authentication, ObjectLookupService, HelperUiGridService, HelperObjectBrowserService, OrganizationInfoService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -31,22 +17,22 @@ angular.module('cases').controller(
                     });
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "cases",
-                        componentId : "organizations",
-                        retrieveObjectInfo : CaseInfoService.getCaseInfo,
-                        validateObjectInfo : CaseInfoService.validateCaseInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "cases",
+                        componentId: "organizations",
+                        retrieveObjectInfo: CaseInfoService.getCaseInfo,
+                        validateObjectInfo: CaseInfoService.validateCaseInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -83,13 +69,13 @@ angular.module('cases').controller(
 
                     var newOrganizationAssociation = function() {
                         return {
-                            id : null,
-                            associationType : "",
-                            parentId : $scope.objectInfo.id,
-                            parentType : ObjectService.ObjectTypes.CASE_FILE,
-                            parentTitle : $scope.objectInfo.caseNumber,
-                            organization : null,
-                            className : "com.armedia.acm.plugins.person.model.OrganizationAssociation"
+                            id: null,
+                            associationType: "",
+                            parentId: $scope.objectInfo.id,
+                            parentType: ObjectService.ObjectTypes.CASE_FILE,
+                            parentTitle: $scope.objectInfo.caseNumber,
+                            organization: null,
+                            className: "com.armedia.acm.plugins.person.model.OrganizationAssociation"
                         };
                     };
 
@@ -103,24 +89,24 @@ angular.module('cases').controller(
 
                         if (association) {
                             angular.extend(params, {
-                                organizationId : association.organization.organizationId,
-                                organizationValue : association.organization.organizationValue,
-                                type : association.associationType,
-                                description : association.description
+                                organizationId: association.organization.organizationId,
+                                organizationValue: association.organization.organizationValue,
+                                type: association.associationType,
+                                description: association.description
                             });
                         } else {
                             association = new newOrganizationAssociation();
                         }
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-organization-modal.client.view.html',
-                            controller : 'Common.AddOrganizationModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                            controller: 'Common.AddOrganizationModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }

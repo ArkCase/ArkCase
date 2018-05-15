@@ -13,7 +13,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             payload is the (possibly updated) personAssociation; i.e. for a new personAssociation, the return payload&quot;s
             ID fields are populated.
         </description>
-        <vm:inbound-endpoint address="vm://savePersonAssociation.in" exchange-pattern="request-response"
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://savePersonAssociation.in"
+            exchange-pattern="request-response"
             doc:name="Save PersonAssociation"></vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.person"/>

@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+/*-
+ * #%L
+ * ACM Service: Enterprise Content Management
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -45,6 +72,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -1055,14 +1083,32 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public EcmFile updateFile(EcmFile ecmFile) throws AcmObjectNotFoundException
     {
 
-        EcmFile file = getEcmFileDao().find(ecmFile.getId());
-        if (file == null)
+        EcmFile oldFile = findById(ecmFile.getId());
+        if (oldFile == null)
         {
-            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, ecmFile.getId(), "File  not found", null);
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, ecmFile.getId(), "File not found", null);
         }
+        getEcmFileDao().getEm().detach(oldFile);
+        Map<String, Object> eventProperties = new HashMap<>();
+        eventProperties.put("oldEcmFile", oldFile);
 
-        file = getEcmFileDao().save(ecmFile);
-        return file;
+        // Explicitly set modified to force a save to trigger transformer to reindex data when child objects are changed
+        // (e.g participants)
+        ecmFile.setModified(new Date());
+
+        ecmFile = getEcmFileDao().save(ecmFile);
+
+        publishFileUpdatedEvent(ecmFile, SecurityContextHolder.getContext().getAuthentication(), true, eventProperties);
+        log.info("File update successful [{}]", ecmFile);
+        return ecmFile;
+    }
+
+    private void publishFileUpdatedEvent(EcmFile file, Authentication authentication, boolean success, Map<String, Object> eventProperties)
+    {
+        EcmFileUpdatedEvent event = new EcmFileUpdatedEvent(file, authentication);
+        event.setEventProperties(eventProperties);
+        event.setSucceeded(success);
+        applicationEventPublisher.publishEvent(event);
     }
 
     @Override

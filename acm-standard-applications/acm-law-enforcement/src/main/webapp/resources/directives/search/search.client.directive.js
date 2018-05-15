@@ -61,37 +61,23 @@
  */
 angular.module('directives').directive(
         'search',
-        [
-                'SearchService',
-                '$window',
-                '$q',
-                '$location',
-                '$browser',
-                '$translate',
-                'UtilService',
-                'Object.LookupService',
-                'uiGridExporterConstants',
-                'Tags.TagsService',
-                'Search.QueryBuilderService',
-                'ObjectService',
-                'Search.AutoSuggestService',
-                function(SearchService, $window, $q, $location, $browser, $translate, Util, ObjectLookupService, uiGridExporterConstants,
-                        TagsService, SearchQueryBuilder, ObjectService, AutoSuggestService) {
+        [ 'SearchService', '$window', '$q', '$location', '$browser', '$translate', 'UtilService', 'Object.LookupService', 'uiGridExporterConstants', 'Tags.TagsService', 'Search.QueryBuilderService', 'ObjectService', 'Search.AutoSuggestService',
+                function(SearchService, $window, $q, $location, $browser, $translate, Util, ObjectLookupService, uiGridExporterConstants, TagsService, SearchQueryBuilder, ObjectService, AutoSuggestService) {
                     return {
-                        restrict : 'E', //match only element name
-                        scope : {
-                            header : '@', //@ : text binding (read-only and only strings)
-                            searchBtn : '@',
-                            exportBtn : '@',
-                            searchQuery : '@',
-                            searchPlaceholder : '@',
-                            filter : '@',
-                            multiFilter : '@',
-                            config : '=', //= : two way binding so that the data can be monitored for changes
-                            customization : '=?'
+                        restrict: 'E', //match only element name
+                        scope: {
+                            header: '@', //@ : text binding (read-only and only strings)
+                            searchBtn: '@',
+                            exportBtn: '@',
+                            searchQuery: '@',
+                            searchPlaceholder: '@',
+                            filter: '@',
+                            multiFilter: '@',
+                            config: '=', //= : two way binding so that the data can be monitored for changes
+                            customization: '=?'
                         },
 
-                        link : function(scope) { //dom operations
+                        link: function(scope) { //dom operations
                             scope.facets = [];
                             scope.currentFacetSelection = {};
                             scope.selectedItem = null;
@@ -129,7 +115,7 @@ angular.module('directives').directive(
                                 if (scope.filter) {
                                     scope.filters += 'fq=' + scope.filter;
                                 }
-                                
+
                                 scope.clearAllFacets();
                                 scope.queryExistingItems();
                             };
@@ -155,21 +141,17 @@ angular.module('directives').directive(
                                     }
 
                                     if (scope.isAutoSuggestActive && scope.searchQuery !== "" && isSelected) {
-                                        var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : "\""
-                                                + scope.searchQuery + "\""), scope.filters, scope.join, scope.pageSize, scope.start,
-                                                scope.sort);
+                                        var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : "\"" + scope.searchQuery + "\""), scope.filters, scope.join, scope.pageSize, scope.start, scope.sort);
                                         isSelected = false;
                                     } else {
                                         scope.searchQuery = searchObject.searchQuery;
-                                        var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*"
-                                                : scope.searchQuery + "*"), scope.filters, scope.join, scope.pageSize, scope.start,
-                                                scope.sort);
+                                        var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.join, scope.pageSize, scope.start, scope.sort);
                                     }
 
                                     setExportQuery(query);
                                     if (query) {
                                         SearchService.queryFilteredSearch({
-                                            query : query
+                                            query: query
                                         }, function(data) {
                                             updateFacets(data.facet_counts.facet_fields);
                                             scope.gridOptions.data = data.response.docs;
@@ -210,11 +192,10 @@ angular.module('directives').directive(
                                         if (typeaheadQuery.length >= 2) {
                                             var deferred = $q.defer();
                                             if (scope.objectType !== 'undefined') {
-                                                AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", scope.objectType).then(
-                                                        function(res) {
-                                                            var results = _.pluck(res, scope.typeAheadColumn);
-                                                            deferred.resolve(results);
-                                                        });
+                                                AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", scope.objectType).then(function(res) {
+                                                    var results = _.pluck(res, scope.typeAheadColumn);
+                                                    deferred.resolve(results);
+                                                });
                                                 return deferred.promise;
                                             } else {
                                                 AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", null).then(function(res) {
@@ -233,9 +214,9 @@ angular.module('directives').directive(
                                 var deferred = $q.defer();
                                 if (typeaheadQuery) {
                                     SearchService.queryFilteredSearchForUser({
-                                        query : typeaheadQuery,
-                                        start : 0,
-                                        maxRows : 10
+                                        query: typeaheadQuery,
+                                        start: 0,
+                                        maxRows: 10
                                     }, function(res) {
                                         var result = _.pluck(res.response.docs, 'name');
                                         deferred.resolve(result);
@@ -247,7 +228,7 @@ angular.module('directives').directive(
                                 setExportQuery(query);
                                 if (query) {
                                     SearchService.queryFilteredSearch({
-                                        query : query
+                                        query: query
                                     }, function(res) {
                                         var result = _.pluck(res.response.docs, scope.typeAheadColumn);
                                         deferred.resolve(result);
@@ -286,8 +267,7 @@ angular.module('directives').directive(
                                 var absUrl = $location.absUrl();
                                 var baseHref = $browser.baseHref();
                                 var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-                                $window.location.href = appUrl
-                                        + SearchService.exportUrl(scope.query, 'csv', scope.config.reportFileName, fields, titles);
+                                $window.location.href = appUrl + SearchService.exportUrl(scope.query, 'csv', scope.config.reportFileName, fields, titles);
                             };
 
                             function updateFacets(facets) {
@@ -303,19 +283,18 @@ angular.module('directives').directive(
                                             hidden = _.includes(scope.config.hiddenFacets, key);
                                         }
                                         if (!hidden && value) {
-                                            var fieldCategory = Util.goodValue($translate
-                                                    .getKey(key, "common.directive.search.facet.names"));
+                                            var fieldCategory = Util.goodValue($translate.getKey(key, "common.directive.search.facet.names"));
                                             var tokens = fieldCategory.split(".");
                                             fieldCategory = tokens.pop();
                                             fieldCategory = fieldCategory.replace(/%$/, "");
                                             //var nameTranslated = $translate.data(key, "common.directive.search.facet.names");
                                             var facet = {
-                                                name : key,
-                                                fields : value,
-                                                limit : scope.facetLimit,
+                                                name: key,
+                                                fields: value,
+                                                limit: scope.facetLimit,
                                                 //nameTranslated: nameTranslated,
-                                                nameTranslated : key,
-                                                fieldCategory : fieldCategory
+                                                nameTranslated: key,
+                                                fieldCategory: fieldCategory
                                             };
 
                                             // _.each(facet.fields, function(field) {
@@ -330,8 +309,7 @@ angular.module('directives').directive(
                                     _translateFacets(scope.facets);
 
                                     //allow predetermined order of facets, defined in config
-                                    if (Util.goodMapValue(scope.config, 'preferredFacetOrder', false)
-                                            && Util.isArray(scope.config.preferredFacetOrder)) {
+                                    if (Util.goodMapValue(scope.config, 'preferredFacetOrder', false) && Util.isArray(scope.config.preferredFacetOrder)) {
                                         sortFacets(scope.facets, scope.config.preferredFacetOrder);
                                     }
                                 }
@@ -352,8 +330,7 @@ angular.module('directives').directive(
                                 _.each(facets, function(facet) {
                                     facet.nameTranslated = $translate.data(facet.name, "common.directive.search.facet.names");
                                     _.each(facet.fields, function(field) {
-                                        field.name.nameTranslated = $translate.data(field.name.nameFiltered,
-                                                "common.directive.search.facet.fields." + facet.fieldCategory);
+                                        field.name.nameTranslated = $translate.data(field.name.nameFiltered, "common.directive.search.facet.fields." + facet.fieldCategory);
                                     });
                                 });
                             };
@@ -455,93 +432,90 @@ angular.module('directives').directive(
                             scope.gridOptions = {};
 
                             scope.$watchCollection('config', function(newValue, oldValue) {
-                                $q.when(newValue).then(
-                                        function(config) {
-                                            scope.filterName = config.filterName;
-                                            scope.pageSize = config.paginationPageSize;
-                                            scope.start = config.start;
-                                            scope.sort = Util.goodValue(config.sort, "");
-                                            scope.objectType = config.autoSuggestObjectType;
-                                            scope.gridOptions = {
-                                                enableColumnResizing : true,
-                                                enableRowSelection : true,
-                                                enableRowHeaderSelection : false,
-                                                enableFiltering : config.enableFiltering,
-                                                multiSelect : false,
-                                                noUnselect : false,
-                                                useExternalPagination : true,
-                                                paginationPageSizes : config.paginationPageSizes,
-                                                paginationPageSize : config.paginationPageSize,
-                                                enableSelectAll : true,
-                                                exporterCsvFilename : config.csvFileName,
-                                                exporterCsvLinkElement : angular.element(document
-                                                        .querySelectorAll(".custom-csv-link-location")),
-                                                exporterHeaderFilter : $translate.instant,
-                                                columnDefs : config.columnDefs,
-                                                onRegisterApi : function(gridApi) {
-                                                    scope.gridApi = gridApi;
+                                $q.when(newValue).then(function(config) {
+                                    scope.filterName = config.filterName;
+                                    scope.pageSize = config.paginationPageSize;
+                                    scope.start = config.start;
+                                    scope.sort = Util.goodValue(config.sort, "");
+                                    scope.objectType = config.autoSuggestObjectType;
+                                    scope.gridOptions = {
+                                        enableColumnResizing: true,
+                                        enableRowSelection: true,
+                                        enableRowHeaderSelection: false,
+                                        enableFiltering: config.enableFiltering,
+                                        multiSelect: false,
+                                        noUnselect: false,
+                                        useExternalPagination: true,
+                                        paginationPageSizes: config.paginationPageSizes,
+                                        paginationPageSize: config.paginationPageSize,
+                                        enableSelectAll: true,
+                                        exporterCsvFilename: config.csvFileName,
+                                        exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
+                                        exporterHeaderFilter: $translate.instant,
+                                        columnDefs: config.columnDefs,
+                                        onRegisterApi: function(gridApi) {
+                                            scope.gridApi = gridApi;
 
-                                                    gridApi.selection.on.rowSelectionChanged(scope, function(row) {
-                                                        scope.selectedItem = row.isSelected ? row.entity : null;
+                                            gridApi.selection.on.rowSelectionChanged(scope, function(row) {
+                                                scope.selectedItem = row.isSelected ? row.entity : null;
+                                            });
+
+                                            // Get the sorting info from UI grid
+                                            gridApi.core.on.sortChanged(scope, function(grid, sortColumns) {
+                                                if (sortColumns.length > 0) {
+                                                    var sortColArr = [];
+                                                    _.each(sortColumns, function(col) {
+                                                        sortColArr.push((col.colDef.sortField || col.colDef.name) + " " + col.sort.direction);
                                                     });
-
-                                                    // Get the sorting info from UI grid
-                                                    gridApi.core.on.sortChanged(scope, function(grid, sortColumns) {
-                                                        if (sortColumns.length > 0) {
-                                                            var sortColArr = [];
-                                                            _.each(sortColumns, function(col) {
-                                                                sortColArr.push((col.colDef.sortField || col.colDef.name) + " "
-                                                                        + col.sort.direction);
-                                                            });
-                                                            scope.sort = sortColArr.join(',');
-                                                        } else {
-                                                            scope.sort = "";
-                                                        }
-                                                        scope.queryExistingItems();
-                                                    });
-
-                                                    gridApi.pagination.on.paginationChanged(scope, function(newPage, pageSize) {
-                                                        scope.start = (newPage - 1) * pageSize; //newPage is 1-based index
-                                                        scope.pageSize = pageSize;
-                                                        scope.queryExistingItems(scope.start);
-                                                    });
+                                                    scope.sort = sortColArr.join(',');
+                                                } else {
+                                                    scope.sort = "";
                                                 }
-                                            };
+                                                scope.queryExistingItems();
+                                            });
 
-                                            scope.join = "";
-                                            scope.isMultiFilter = false;
-                                            if (config.multiFilter) {
-                                                scope.multiFilter = scope.config.multiFilter;
-                                                scope.isMultiFilter = true;
-                                            }
-                                            //hideTypeahead is false by default, it will be changed in true if it is added in config
-                                            scope.hideTypeahead = false;
-                                            if (config.hideTypeahead)
-                                                scope.hideTypeahead = true;
-                                            //default for typeAheadColumn is name
-                                            scope.typeAheadColumn = "name";
-                                            if (config.typeAheadColumn)
-                                                scope.typeAheadColumn = config.typeAheadColumn;
-
-                                            if (scope.gridOptions) {
-                                                if (scope.filter) {
-                                                    scope.filters = 'fq=' + scope.filter;
-                                                }
-
-                                                scope.isAutoSuggestActive = false;
-                                                if (config.isAutoSuggestActive) {
-                                                    scope.isAutoSuggestActive = config.isAutoSuggestActive;
-
-                                                }
-
+                                            gridApi.pagination.on.paginationChanged(scope, function(newPage, pageSize) {
+                                                scope.start = (newPage - 1) * pageSize; //newPage is 1-based index
+                                                scope.pageSize = pageSize;
                                                 scope.queryExistingItems(scope.start);
+                                            });
+                                        }
+                                    };
 
-                                            }
-                                        }, true);
+                                    scope.join = "";
+                                    scope.isMultiFilter = false;
+                                    if (config.multiFilter) {
+                                        scope.multiFilter = scope.config.multiFilter;
+                                        scope.isMultiFilter = true;
+                                    }
+                                    //hideTypeahead is false by default, it will be changed in true if it is added in config
+                                    scope.hideTypeahead = false;
+                                    if (config.hideTypeahead)
+                                        scope.hideTypeahead = true;
+                                    //default for typeAheadColumn is name
+                                    scope.typeAheadColumn = "name";
+                                    if (config.typeAheadColumn)
+                                        scope.typeAheadColumn = config.typeAheadColumn;
+
+                                    if (scope.gridOptions) {
+                                        if (scope.filter) {
+                                            scope.filters = 'fq=' + scope.filter;
+                                        }
+
+                                        scope.isAutoSuggestActive = false;
+                                        if (config.isAutoSuggestActive) {
+                                            scope.isAutoSuggestActive = config.isAutoSuggestActive;
+
+                                        }
+
+                                        scope.queryExistingItems(scope.start);
+
+                                    }
+                                }, true);
                             });
 
                         },
 
-                        templateUrl : 'directives/search/search.client.view.html'
+                        templateUrl: 'directives/search/search.client.view.html'
                     };
                 } ]);

@@ -14,8 +14,8 @@
 angular.module('services').factory('Acm.AppService', [ '$location', 'Acm.StoreService', 'UtilService', function($location, Store, Util) {
 
     var Service = {
-        SessionCacheNames : {
-            APP_CONTEXT : "AcmAppContext"
+        SessionCacheNames: {
+            APP_CONTEXT: "AcmAppContext"
         }
 
         /**
@@ -29,7 +29,7 @@ angular.module('services').factory('Acm.AppService', [ '$location', 'Acm.StoreSe
          * If the url is http://localhost:8080/arkcase/home.html#!/dashboard, The app context name is 'arkcase'
          */
         ,
-        getAppContext : function() {
+        getAppContext: function() {
             var cacheAppContext = new Store.SessionData(Service.SessionCacheNames.APP_CONTEXT);
             var appContext = cacheAppContext.get();
             if (Util.isEmpty(appContext)) {
@@ -59,7 +59,7 @@ angular.module('services').factory('Acm.AppService', [ '$location', 'Acm.StoreSe
          * With app context '/', input '/some/url' or 'some/url' becomes '/some/url'.
          */
         ,
-        getAppUrl : function(url) {
+        getAppUrl: function(url) {
             var appUrl = "";
             var appContext = Service.getAppContext();
             if (!Util.isEmpty(appContext)) {

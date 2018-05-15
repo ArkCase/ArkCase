@@ -1,5 +1,32 @@
 package com.armedia.acm.scheduler;
 
+/*-
+ * #%L
+ * ACM Service: Scheduler Service
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.TaskExecutor;
@@ -16,23 +43,20 @@ public class AcmSchedulerTask
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
-     * How often a task should be run given in milliseconds.
-     */
-    private volatile long howOften;
-
-    /**
-     * When was the task last ran.
-     */
-    private volatile long taskLastRun;
-
     /**
      * The Spring bean implementing the <code>AcmSchedulableBean</code> interface.
      *
      * @see AcmSchedulableBean#executeTask()
      */
     private final AcmSchedulableBean schedulableBean;
+    /**
+     * How often a task should be run given in milliseconds.
+     */
+    private volatile long howOften;
+    /**
+     * When was the task last ran.
+     */
+    private volatile long taskLastRun;
 
     /**
      * Constructor for the task.
