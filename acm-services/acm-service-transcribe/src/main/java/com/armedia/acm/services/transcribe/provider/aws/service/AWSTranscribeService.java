@@ -1,5 +1,32 @@
 package com.armedia.acm.services.transcribe.provider.aws.service;
 
+/*-
+ * #%L
+ * ACM Service: Transcribe
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
@@ -8,7 +35,12 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.transcribe.AmazonTranscribe;
 import com.amazonaws.services.transcribe.AmazonTranscribeClientBuilder;
-import com.amazonaws.services.transcribe.model.*;
+import com.amazonaws.services.transcribe.model.GetTranscriptionJobRequest;
+import com.amazonaws.services.transcribe.model.GetTranscriptionJobResult;
+import com.amazonaws.services.transcribe.model.Media;
+import com.amazonaws.services.transcribe.model.StartTranscriptionJobRequest;
+import com.amazonaws.services.transcribe.model.StartTranscriptionJobResult;
+import com.amazonaws.services.transcribe.model.TranscriptionJobStatus;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -17,7 +49,11 @@ import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
 import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
 import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
-import com.armedia.acm.services.transcribe.model.*;
+import com.armedia.acm.services.transcribe.model.Transcribe;
+import com.armedia.acm.services.transcribe.model.TranscribeActionType;
+import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
+import com.armedia.acm.services.transcribe.model.TranscribeItem;
+import com.armedia.acm.services.transcribe.model.TranscribeStatusType;
 import com.armedia.acm.services.transcribe.provider.aws.credentials.ArkCaseAWSCredentialsProviderChain;
 import com.armedia.acm.services.transcribe.provider.aws.model.AWSTranscribeConfiguration;
 import com.armedia.acm.services.transcribe.provider.aws.model.transcript.AWSTranscript;
@@ -29,6 +65,8 @@ import com.armedia.acm.services.transcribe.service.TranscribeService;
 import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -61,9 +99,12 @@ public class AWSTranscribeService implements TranscribeService
     public void init() throws GetConfigurationException
     {
         AWSTranscribeConfiguration configuration = getConfiguration();
-        ArkCaseAWSCredentialsProviderChain credentialsProviderChain = new ArkCaseAWSCredentialsProviderChain(getCredentialConfigurationFileLocation(), configuration.getProfile());
-        s3Client = AmazonS3ClientBuilder.standard().withCredentials(credentialsProviderChain).withRegion(Regions.fromName(configuration.getRegion())).build();
-        transcribeClient = AmazonTranscribeClientBuilder.standard().withCredentials(credentialsProviderChain).withRegion(Regions.fromName(configuration.getRegion())).build();
+        ArkCaseAWSCredentialsProviderChain credentialsProviderChain = new ArkCaseAWSCredentialsProviderChain(
+                getCredentialConfigurationFileLocation(), configuration.getProfile());
+        s3Client = AmazonS3ClientBuilder.standard().withCredentials(credentialsProviderChain)
+                .withRegion(Regions.fromName(configuration.getRegion())).build();
+        transcribeClient = AmazonTranscribeClientBuilder.standard().withCredentials(credentialsProviderChain)
+                .withRegion(Regions.fromName(configuration.getRegion())).build();
     }
 
     @Override
@@ -113,12 +154,12 @@ public class AWSTranscribeService implements TranscribeService
                     String status = TranscribeStatusType.PROCESSING.toString();
                     switch (TranscriptionJobStatus.fromValue(resultStatus))
                     {
-                        case IN_PROGRESS:
-                            status = TranscribeStatusType.PROCESSING.toString();
-                            break;
-                        case FAILED:
-                            status = TranscribeStatusType.FAILED.toString();
-                            break;
+                    case IN_PROGRESS:
+                        status = TranscribeStatusType.PROCESSING.toString();
+                        break;
+                    case FAILED:
+                        status = TranscribeStatusType.FAILED.toString();
+                        break;
                     }
                     transcribe.setStatus(status);
                     transcribe.setRemoteId(remoteId);
@@ -138,25 +179,25 @@ public class AWSTranscribeService implements TranscribeService
     @Override
     public List<Transcribe> getAll() throws GetTranscribeException
     {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Transcribe> getAllByStatus(String status) throws GetTranscribeException
     {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Transcribe> getPage(int start, int n) throws GetTranscribeException
     {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Transcribe> getPageByStatus(int start, int n, String status) throws GetTranscribeException
     {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
@@ -172,7 +213,8 @@ public class AWSTranscribeService implements TranscribeService
         }
         catch (Exception e)
         {
-            LOG.error("Error while purging Transcribe information on Amazon side for Transcribe with REMOTE_ID=[{}]. REASON=[{}]", transcribe.getRemoteId(), e.getMessage());
+            LOG.error("Error while purging Transcribe information on Amazon side for Transcribe with REMOTE_ID=[{}]. REASON=[{}]",
+                    transcribe.getRemoteId(), e.getMessage());
             return false;
         }
     }
@@ -211,7 +253,8 @@ public class AWSTranscribeService implements TranscribeService
             catch (Exception e)
             {
                 getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
-                throw new CreateTranscribeException(String.format("Unable to upload media file to Amazon. REASON=[%s].", e.getMessage()), e);
+                throw new CreateTranscribeException(String.format("Unable to upload media file to Amazon. REASON=[%s].", e.getMessage()),
+                        e);
             }
         }
 
@@ -243,7 +286,8 @@ public class AWSTranscribeService implements TranscribeService
             catch (Exception e)
             {
                 getTranscribeEventPublisher().publish(transcribe, TranscribeActionType.PROVIDER_FAILED.toString());
-                throw new CreateTranscribeException(String.format("Unable to start transcribe job on Amazon. REASON=[%s]", e.getMessage()), e);
+                throw new CreateTranscribeException(String.format("Unable to start transcribe job on Amazon. REASON=[%s]", e.getMessage()),
+                        e);
             }
         }
 
@@ -350,7 +394,8 @@ public class AWSTranscribeService implements TranscribeService
 
                 if (awsTranscriptItem.getAlternatives() != null && awsTranscriptItem.getAlternatives().size() > 0)
                 {
-                    AWSTranscriptAlternative awsTranscriptAlternative = getBestAWSTranscriptAlternative(awsTranscriptItem.getAlternatives());
+                    AWSTranscriptAlternative awsTranscriptAlternative = getBestAWSTranscriptAlternative(
+                            awsTranscriptItem.getAlternatives());
 
                     if (awsTranscriptAlternative != null && awsTranscriptAlternative.getConfidence() != null)
                     {
@@ -375,7 +420,8 @@ public class AWSTranscribeService implements TranscribeService
                         item.setEndTime(endTime);
                         item.setText(text);
 
-                        int conf = confidence.multiply(new BigDecimal(100)).intValue() == 0 || confidenceCounter == 0 ? 0 : confidence.multiply(new BigDecimal(100)).intValue() / confidenceCounter;
+                        int conf = confidence.multiply(new BigDecimal(100)).intValue() == 0 || confidenceCounter == 0 ? 0
+                                : confidence.multiply(new BigDecimal(100)).intValue() / confidenceCounter;
                         item.setConfidence(conf);
 
                         items.add(item);
@@ -401,7 +447,8 @@ public class AWSTranscribeService implements TranscribeService
 
     private boolean isNextPunctuation(int i, int size, List<AWSTranscriptItem> awsTranscriptItems)
     {
-        if (i <= size - 2 && awsTranscriptItems.get(i+1) != null && "punctuation".equalsIgnoreCase(awsTranscriptItems.get(i+1).getType()))
+        if (i <= size - 2 && awsTranscriptItems.get(i + 1) != null
+                && "punctuation".equalsIgnoreCase(awsTranscriptItems.get(i + 1).getType()))
         {
             return true;
         }
@@ -424,7 +471,7 @@ public class AWSTranscribeService implements TranscribeService
         if (i <= size - 2 && awsTranscriptItems.get(i) != null && !"punctuation".equalsIgnoreCase(awsTranscriptItems.get(i).getType()))
         {
             int j = i;
-            while(isNextPunctuation(j, size, awsTranscriptItems) && j <= size - 2)
+            while (isNextPunctuation(j, size, awsTranscriptItems) && j <= size - 2)
             {
                 j++;
             }
@@ -433,7 +480,8 @@ public class AWSTranscribeService implements TranscribeService
                 String currentEndTimeAsString = awsTranscriptItems.get(i).getEndTime();
                 String nextStartTimeAsString = awsTranscriptItems.get(j + 1).getStartTime();
                 BigDecimal silentBetweenWords = configuration.getSilentBetweenWords();
-                if (StringUtils.isNotEmpty(currentEndTimeAsString) && StringUtils.isNotEmpty(nextStartTimeAsString) && silentBetweenWords != null)
+                if (StringUtils.isNotEmpty(currentEndTimeAsString) && StringUtils.isNotEmpty(nextStartTimeAsString)
+                        && silentBetweenWords != null)
                 {
                     BigDecimal currentEndTime = new BigDecimal(currentEndTimeAsString);
                     BigDecimal nextStartTime = new BigDecimal(nextStartTimeAsString);
@@ -460,7 +508,8 @@ public class AWSTranscribeService implements TranscribeService
             return alternatives.get(0);
         }
 
-        alternatives.sort((AWSTranscriptAlternative a1, AWSTranscriptAlternative a2) -> (toIntWithWholePrecision(a2.getConfidence()) - toIntWithWholePrecision(a1.getConfidence())));
+        alternatives.sort((AWSTranscriptAlternative a1, AWSTranscriptAlternative a2) -> (toIntWithWholePrecision(a2.getConfidence())
+                - toIntWithWholePrecision(a1.getConfidence())));
 
         return alternatives.get(0);
     }
@@ -513,6 +562,12 @@ public class AWSTranscribeService implements TranscribeService
         return awsTranscribeConfigurationPropertiesService;
     }
 
+    public void setAwsTranscribeConfigurationPropertiesService(
+            AWSTranscribeConfigurationPropertiesService awsTranscribeConfigurationPropertiesService)
+    {
+        this.awsTranscribeConfigurationPropertiesService = awsTranscribeConfigurationPropertiesService;
+    }
+
     public MuleContextManager getMuleContextManager()
     {
         return muleContextManager;
@@ -523,17 +578,13 @@ public class AWSTranscribeService implements TranscribeService
         this.muleContextManager = muleContextManager;
     }
 
-    public void setAwsTranscribeConfigurationPropertiesService(AWSTranscribeConfigurationPropertiesService awsTranscribeConfigurationPropertiesService)
-    {
-        this.awsTranscribeConfigurationPropertiesService = awsTranscribeConfigurationPropertiesService;
-    }
-
     public TranscribeConfigurationPropertiesService getTranscribeConfigurationPropertiesService()
     {
         return transcribeConfigurationPropertiesService;
     }
 
-    public void setTranscribeConfigurationPropertiesService(TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService)
+    public void setTranscribeConfigurationPropertiesService(
+            TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService)
     {
         this.transcribeConfigurationPropertiesService = transcribeConfigurationPropertiesService;
     }

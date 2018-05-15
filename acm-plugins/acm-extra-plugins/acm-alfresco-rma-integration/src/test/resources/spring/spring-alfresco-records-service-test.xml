@@ -9,6 +9,7 @@
                 <value>/flows/getObjectByPathFlow.xml</value>
                 <value>/flows/createFolderFlow.xml</value>
                 <value>/flows/addFileFlow.xml</value>
+                <value>/flows/rmaTestFlow.xml</value>
             </list>
         </property>
     </bean>

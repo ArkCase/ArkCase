@@ -55,7 +55,8 @@
             "defaultBodyLinks": "कृपया दस्तावेज़ (ओं) को देखने के लिए नीचे दिए गए लिंक का पालन करें 3 दिन में लिंक की समय सीमा समाप्त हो जाती है।",
             "defaultBodyAttachments": "ArkCase से आपको भेजे गए दस्तावेज़ों को संलग्न करें।",
             "defaultFooter": "ArkCase द्वारा संचालित, एंटरप्राइज़ केस मैनेजमेंट प्लेटफ़ॉर्म, http://www.arkcase.com",
-            "successMessage": "ई - मेल को सफलतापूर्वक भेजा गया था"
+            "successMessage": "ई - मेल को सफलतापूर्वक भेजा गया था",
+            "noEmailAddress": "hi_There is no entered email for this "
         },
         "menu": {
             "noop": "(वस्तु चुनें)",

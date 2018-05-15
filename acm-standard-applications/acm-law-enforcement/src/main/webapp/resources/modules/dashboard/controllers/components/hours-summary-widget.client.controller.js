@@ -2,32 +2,18 @@
 
 angular.module('dashboard.hoursSummary', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('hoursSummary', {
-        title : 'preference.overviewWidgets.hoursSummary.title',
-        description : 'dashboard.widgets.hoursSummary.description',
-        controller : 'Dashboard.HoursSummaryController',
-        controllerAs : 'hoursSummary',
-        reload : true,
-        templateUrl : 'modules/dashboard/views/components/hours-summary-widget.client.view.html',
-        commonName : 'hoursSummary'
+        title: 'preference.overviewWidgets.hoursSummary.title',
+        description: 'dashboard.widgets.hoursSummary.description',
+        controller: 'Dashboard.HoursSummaryController',
+        controllerAs: 'hoursSummary',
+        reload: true,
+        templateUrl: 'modules/dashboard/views/components/hours-summary-widget.client.view.html',
+        commonName: 'hoursSummary'
     });
 }).controller(
         'Dashboard.HoursSummaryController',
-        [
-                '$scope',
-                '$translate',
-                '$stateParams',
-                '$filter',
-                'UtilService',
-                'TimeTracking.InfoService',
-                'Helper.ObjectBrowserService',
-                'ConfigService',
-                'moment',
-                'Helper.UiGridService',
-                'Case.InfoService',
-                'Helper.ModulesServicesStructure',
-                "ObjectService",
-                function($scope, $translate, $stateParams, $filter, Util, TimeTrackingInfoService, HelperObjectBrowserService,
-                        ConfigService, moment, HelperUiGridService, CaseInfoService, ModulesServicesStructure, ObjectService) {
+        [ '$scope', '$translate', '$stateParams', '$filter', 'UtilService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'moment', 'Helper.UiGridService', 'Case.InfoService', 'Helper.ModulesServicesStructure', "ObjectService",
+                function($scope, $translate, $stateParams, $filter, Util, TimeTrackingInfoService, HelperObjectBrowserService, ConfigService, moment, HelperUiGridService, CaseInfoService, ModulesServicesStructure, ObjectService) {
 
                     var modules = ModulesServicesStructure.getModulesServiceStructure();
 
@@ -36,12 +22,12 @@ angular.module('dashboard.hoursSummary', [ 'adf.provider' ]).config(function(das
                     });
 
                     $scope.gridOptions = {
-                        enableColumnResizing : true,
-                        columnDefs : []
+                        enableColumnResizing: true,
+                        columnDefs: []
                     };
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var decorateObject = function(objectInfo) {
@@ -90,16 +76,16 @@ angular.module('dashboard.hoursSummary', [ 'adf.provider' ]).config(function(das
                     };
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : module.configName,
-                        componentId : "main",
-                        retrieveObjectInfo : module.getInfo,
-                        validateObjectInfo : module.validateInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: module.configName,
+                        componentId: "main",
+                        retrieveObjectInfo: module.getInfo,
+                        validateObjectInfo: module.validateInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         },
-                        onConfigRetrieved : function(componentConfig) {
+                        onConfigRetrieved: function(componentConfig) {
                             onConfigRetrieved(componentConfig);
                         }
                     });

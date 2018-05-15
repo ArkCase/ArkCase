@@ -1,12 +1,47 @@
 package com.armedia.acm.services.transcribe.web.api;
 
+/*-
+ * #%L
+ * ACM Service: Transcribe
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
 import com.armedia.acm.services.transcribe.model.Transcribe;
 import com.armedia.acm.services.transcribe.model.TranscribeType;
-import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeServiceImpl;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,11 +58,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/09/2018
  */
@@ -39,7 +69,7 @@ public class CreateTranscribeAPIControllerTest extends EasyMockSupport
     private MockMvc mockMvc;
 
     @Mock
-    private ArkCaseTranscribeService mockArkCaseTranscribeService;
+    private ArkCaseTranscribeServiceImpl mockArkCaseTranscribeService;
 
     @Mock
     private Authentication mockAuthentication;

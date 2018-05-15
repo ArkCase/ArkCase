@@ -1,5 +1,32 @@
 package com.armedia.acm.services.tag.model;
 
+/*-
+ * #%L
+ * ACM Service: Tag
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -70,11 +97,6 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_associated_tag_modifier")
     private String modifier;
 
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
     @Override
     public String getCreator()
     {
@@ -124,14 +146,14 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
         return tag;
     }
 
-    public Long getTagId()
-    {
-        return tag.getId();
-    }
-
     public void setTag(AcmTag tag)
     {
         this.tag = tag;
+    }
+
+    public Long getTagId()
+    {
+        return tag.getId();
     }
 
     @JsonIgnore
@@ -172,6 +194,11 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
     public Long getId()
     {
         return id;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
     }
 
     public String getParentTitle()

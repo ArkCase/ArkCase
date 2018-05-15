@@ -1,5 +1,33 @@
 package com.armedia.acm.files;
 
+/*-
+ * #%L
+ * Tool Integrations: Folder Watcher
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+
 import org.apache.commons.vfs2.FileChangeEvent;
 import org.apache.commons.vfs2.FileListener;
 import org.apache.commons.vfs2.FileObject;
@@ -179,16 +207,16 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
         return retval;
     }
 
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         log.debug("The application event publisher has been set!");
         this.applicationEventPublisher = applicationEventPublisher;
-    }
-
-    public ApplicationEventPublisher getApplicationEventPublisher()
-    {
-        return applicationEventPublisher;
     }
 
     public FileObject getBaseFolder()
@@ -228,6 +256,11 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
         this.ignoreFolderPath = baseFolderPath.contains("\\") ? baseFolderPath.replaceAll("\\\\", "/") : baseFolderPath;
     }
 
+    public List<String> getIgnoreFolders()
+    {
+        return ignoreFolders;
+    }
+
     public void setIgnoreFolders(List<String> ignoreFolders)
     {
         List<String> ignore = new ArrayList<>(ignoreFolders.size());
@@ -236,11 +269,6 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
             ignore.add(ignoreFolder.replaceAll("\\\\", "/"));
         }
         this.ignoreFolders = ignore;
-    }
-
-    public List<String> getIgnoreFolders()
-    {
-        return ignoreFolders;
     }
 
     public String getIgnoreFolderPath()

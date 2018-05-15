@@ -99,7 +99,8 @@
         </insert>
     </changeSet>
     <changeSet id="02-change-columnName-cm_pd_md5_hex" author="jivanovski">
-        <renameColumn tableName="acm_process_definition" oldColumnName="cm_pd_md5_hex" newColumnName="cm_pd_sha256_hex" columnDataType="VARCHAR(32)"/>
+        <renameColumn tableName="acm_process_definition" oldColumnName="cm_pd_md5_hex" newColumnName="cm_pd_sha256_hex"
+            columnDataType="VARCHAR(32)"/>
     </changeSet>
     <changeSet id="03-widen-cm_pd_md5_hex" author="jivanovski">
         <modifyDataType tableName="acm_process_definition" columnName="cm_pd_sha256_hex" newDataType="VARCHAR(256)"/>

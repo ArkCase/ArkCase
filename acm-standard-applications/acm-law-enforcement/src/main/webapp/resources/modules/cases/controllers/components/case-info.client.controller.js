@@ -21,24 +21,23 @@ angular.module('cases').controller(
                 'Search.QueryBuilderService',
                 'Helper.ObjectBrowserService',
                 'Helper.UiGridService',
-                function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService,
-                        CaseLookupService, CaseInfoService, ObjectModelService, MessageService, ObjectService, ObjectParticipantService,
-                        SearchService, SearchQueryBuilder, HelperObjectBrowserService, HelperUiGridService) {
+                function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService, SearchQueryBuilder,
+                        HelperObjectBrowserService, HelperUiGridService) {
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "cases",
-                        componentId : "info",
-                        retrieveObjectInfo : CaseInfoService.getCaseInfo,
-                        validateObjectInfo : CaseInfoService.validateCaseInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "cases",
+                        componentId: "info",
+                        retrieveObjectInfo: CaseInfoService.getCaseInfo,
+                        validateObjectInfo: CaseInfoService.validateCaseInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -51,8 +50,8 @@ angular.module('cases').controller(
                         var options = [];
                         _.each(groups, function(group) {
                             options.push({
-                                value : group.name,
-                                text : group.name
+                                value: group.name,
+                                text: group.name
                             });
                         });
                         $scope.owningGroups = options;
@@ -76,9 +75,9 @@ angular.module('cases').controller(
 
                     $scope.openAssigneePickerModal = function() {
                         var participant = {
-                            id : '',
-                            participantLdapId : '',
-                            config : $scope.config
+                            id: '',
+                            participantLdapId: '',
+                            config: $scope.config
                         };
                         showModal(participant);
                     };
@@ -88,14 +87,14 @@ angular.module('cases').controller(
                         modalScope.participant = participant || {};
 
                         var modalInstance = $modal.open({
-                            scope : modalScope,
-                            animation : true,
-                            templateUrl : "modules/cases/views/components/case-assignee-picker-modal.client.view.html",
-                            controller : "Cases.AssigneePickerController",
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                owningGroup : function() {
+                            scope: modalScope,
+                            animation: true,
+                            templateUrl: "modules/cases/views/components/case-assignee-picker-modal.client.view.html",
+                            controller: "Cases.AssigneePickerController",
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                owningGroup: function() {
                                     return $scope.owningGroup;
                                 }
                             }
@@ -114,9 +113,9 @@ angular.module('cases').controller(
 
                     $scope.openGroupPickerModal = function() {
                         var participant = {
-                            id : '',
-                            participantLdapId : '',
-                            config : $scope.config
+                            id: '',
+                            participantLdapId: '',
+                            config: $scope.config
                         };
                         showGroupModal(participant);
                     };
@@ -126,14 +125,14 @@ angular.module('cases').controller(
                         modalScope.participant = participant || {};
 
                         var modalInstance = $modal.open({
-                            scope : modalScope,
-                            animation : true,
-                            templateUrl : "modules/cases/views/components/case-group-picker-modal.client.view.html",
-                            controller : "Cases.GroupPickerController",
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                owningGroup : function() {
+                            scope: modalScope,
+                            animation: true,
+                            templateUrl: "modules/cases/views/components/case-group-picker-modal.client.view.html",
+                            controller: "Cases.GroupPickerController",
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                owningGroup: function() {
                                     return $scope.owningGroup;
                                 }
                             }
@@ -157,7 +156,7 @@ angular.module('cases').controller(
                                 var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(searchQuery, filter, size, start);
                                 if (query) {
                                     SearchService.queryFilteredSearch({
-                                        query : query
+                                        query: query
                                     }, function(data) {
                                         var returnedUsers = data.response.docs;
                                         // Going through th collection of returnedUsers to see if there is a match with the current assignee
@@ -205,8 +204,8 @@ angular.module('cases').controller(
                             var options = [];
                             _.each(approvers, function(approver) {
                                 options.push({
-                                    id : approver.userId,
-                                    name : approver.fullName
+                                    id: approver.userId,
+                                    name: approver.fullName
                                 });
                             });
                             $scope.assignees = options;
@@ -215,7 +214,7 @@ angular.module('cases').controller(
                     };
 
                     $scope.picker = {
-                        opened : false
+                        opened: false
                     };
                     $scope.onPickerClick = function() {
                         $scope.picker.opened = true;

@@ -1,10 +1,51 @@
 package com.armedia.acm.services.transcribe.provider.aws.service;
 
+/*-
+ * #%L
+ * ACM Service: Transcribe
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.transcribe.AmazonTranscribe;
-import com.amazonaws.services.transcribe.model.*;
+import com.amazonaws.services.transcribe.model.GetTranscriptionJobResult;
+import com.amazonaws.services.transcribe.model.LimitExceededException;
+import com.amazonaws.services.transcribe.model.StartTranscriptionJobResult;
+import com.amazonaws.services.transcribe.model.Transcript;
+import com.amazonaws.services.transcribe.model.TranscriptionJob;
+import com.amazonaws.services.transcribe.model.TranscriptionJobStatus;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -16,6 +57,7 @@ import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.model.TranscribeType;
 import com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService;
 import com.armedia.acm.services.transcribe.service.TranscribeEventPublisher;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,15 +70,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/13/2018
@@ -111,7 +144,6 @@ public class AWSTranscribeServiceTest
         transcribe.setRemoteId("remote-id");
         transcribe.setMediaEcmFileVersion(version);
 
-
         Map<String, Object> properties = new HashMap<>();
         properties.put("aws.bucket", "bucket");
         properties.put("aws.region", "region");
@@ -119,17 +151,22 @@ public class AWSTranscribeServiceTest
         properties.put("aws.profile", "profile");
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-        when(s3Client.doesObjectExist((String) properties.get("aws.bucket"), transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension())).thenReturn(false);
+        when(s3Client.doesObjectExist((String) properties.get("aws.bucket"),
+                transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension())).thenReturn(false);
         when(ecmFileTransaction.downloadFileTransactionAsInputStream(file)).thenReturn(inputStream);
-        when(s3Client.putObject(eq((String) properties.get("aws.bucket")), eq(transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension()), eq(inputStream), any())).thenReturn(new PutObjectResult());
+        when(s3Client.putObject(eq((String) properties.get("aws.bucket")),
+                eq(transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension()), eq(inputStream), any()))
+                        .thenReturn(new PutObjectResult());
         when(transcribeClient.startTranscriptionJob(any())).thenReturn(new StartTranscriptionJobResult());
 
         awsTranscribeService.create(transcribe);
 
         verify(propertyFileManager, times(3)).loadMultiple(any(), any());
-        verify(s3Client).doesObjectExist((String) properties.get("aws.bucket"), transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension());
+        verify(s3Client).doesObjectExist((String) properties.get("aws.bucket"),
+                transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension());
         verify(ecmFileTransaction).downloadFileTransactionAsInputStream(file);
-        verify(s3Client).putObject(eq((String) properties.get("aws.bucket")), eq(transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension()), eq(inputStream), any());
+        verify(s3Client).putObject(eq((String) properties.get("aws.bucket")),
+                eq(transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension()), eq(inputStream), any());
         verify(transcribeClient).startTranscriptionJob(any());
     }
 
@@ -168,7 +205,6 @@ public class AWSTranscribeServiceTest
         transcribe.setRemoteId("remote-id");
         transcribe.setMediaEcmFileVersion(version);
 
-
         Map<String, Object> properties = new HashMap<>();
         properties.put("aws.bucket", "bucket");
         properties.put("aws.region", "region");
@@ -179,7 +215,8 @@ public class AWSTranscribeServiceTest
         String expectedErrorMessage = "The file with KEY=[" + key + "] already exist on Amazon.";
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-        when(s3Client.doesObjectExist((String) properties.get("aws.bucket"), transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension())).thenReturn(true);
+        when(s3Client.doesObjectExist((String) properties.get("aws.bucket"),
+                transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension())).thenReturn(true);
 
         try
         {
@@ -188,7 +225,8 @@ public class AWSTranscribeServiceTest
         catch (Exception e)
         {
             verify(propertyFileManager).loadMultiple(any(), any());
-            verify(s3Client).doesObjectExist((String) properties.get("aws.bucket"), transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension());
+            verify(s3Client).doesObjectExist((String) properties.get("aws.bucket"),
+                    transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension());
 
             assertTrue(e instanceof CreateTranscribeException);
             assertEquals(expectedErrorMessage, e.getMessage());
@@ -215,7 +253,6 @@ public class AWSTranscribeServiceTest
         transcribe.setRemoteId("remote-id");
         transcribe.setMediaEcmFileVersion(version);
 
-
         Map<String, Object> properties = new HashMap<>();
         properties.put("aws.bucket", "bucket");
         properties.put("aws.region", "region");
@@ -225,9 +262,12 @@ public class AWSTranscribeServiceTest
         String expectedErrorMessage = "Unable to upload media file to Amazon. REASON=[error (Service: null; Status Code: 0; Error Code: null; Request ID: null)].";
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-        when(s3Client.doesObjectExist((String) properties.get("aws.bucket"), transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension())).thenReturn(false);
+        when(s3Client.doesObjectExist((String) properties.get("aws.bucket"),
+                transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension())).thenReturn(false);
         when(ecmFileTransaction.downloadFileTransactionAsInputStream(file)).thenReturn(inputStream);
-        when(s3Client.putObject(eq((String) properties.get("aws.bucket")), eq(transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension()), eq(inputStream), any())).thenThrow(new AmazonServiceException("error"));
+        when(s3Client.putObject(eq((String) properties.get("aws.bucket")),
+                eq(transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension()), eq(inputStream), any()))
+                        .thenThrow(new AmazonServiceException("error"));
 
         try
         {
@@ -236,9 +276,12 @@ public class AWSTranscribeServiceTest
         catch (Exception e)
         {
             verify(propertyFileManager, times(2)).loadMultiple(any(), any());
-            verify(s3Client).doesObjectExist((String) properties.get("aws.bucket"), transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension());
+            verify(s3Client).doesObjectExist((String) properties.get("aws.bucket"),
+                    transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension());
             verify(ecmFileTransaction).downloadFileTransactionAsInputStream(file);
-            verify(s3Client).putObject(eq((String) properties.get("aws.bucket")), eq(transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension()), eq(inputStream), any());
+            verify(s3Client).putObject(eq((String) properties.get("aws.bucket")),
+                    eq(transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension()), eq(inputStream),
+                    any());
 
             assertTrue(e instanceof CreateTranscribeException);
             assertEquals(expectedErrorMessage, e.getMessage());
@@ -265,7 +308,6 @@ public class AWSTranscribeServiceTest
         transcribe.setRemoteId("remote-id");
         transcribe.setMediaEcmFileVersion(version);
 
-
         Map<String, Object> properties = new HashMap<>();
         properties.put("aws.bucket", "bucket");
         properties.put("aws.region", "region");
@@ -275,9 +317,12 @@ public class AWSTranscribeServiceTest
         String expectedErrorMessage = "Unable to start transcribe job on Amazon. REASON=[error (Service: null; Status Code: 0; Error Code: null; Request ID: null)]";
 
         when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-        when(s3Client.doesObjectExist((String) properties.get("aws.bucket"), transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension())).thenReturn(false);
+        when(s3Client.doesObjectExist((String) properties.get("aws.bucket"),
+                transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension())).thenReturn(false);
         when(ecmFileTransaction.downloadFileTransactionAsInputStream(file)).thenReturn(inputStream);
-        when(s3Client.putObject(eq((String) properties.get("aws.bucket")), eq(transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension()), eq(inputStream), any())).thenReturn(new PutObjectResult());
+        when(s3Client.putObject(eq((String) properties.get("aws.bucket")),
+                eq(transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension()), eq(inputStream), any()))
+                        .thenReturn(new PutObjectResult());
         when(transcribeClient.startTranscriptionJob(any())).thenThrow(new LimitExceededException("error"));
 
         try
@@ -287,9 +332,12 @@ public class AWSTranscribeServiceTest
         catch (Exception e)
         {
             verify(propertyFileManager, times(3)).loadMultiple(any(), any());
-            verify(s3Client).doesObjectExist((String) properties.get("aws.bucket"), transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension());
+            verify(s3Client).doesObjectExist((String) properties.get("aws.bucket"),
+                    transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension());
             verify(ecmFileTransaction).downloadFileTransactionAsInputStream(file);
-            verify(s3Client).putObject(eq((String) properties.get("aws.bucket")), eq(transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension()), eq(inputStream), any());
+            verify(s3Client).putObject(eq((String) properties.get("aws.bucket")),
+                    eq(transcribe.getRemoteId() + transcribe.getMediaEcmFileVersion().getVersionFileNameExtension()), eq(inputStream),
+                    any());
             verify(transcribeClient).startTranscriptionJob(any());
 
             assertTrue(e instanceof CreateTranscribeException);
@@ -337,7 +385,8 @@ public class AWSTranscribeServiceTest
         assertEquals(new BigDecimal("1.390"), transcribe.getTranscribeItems().get(0).getStartTime());
         assertEquals(new BigDecimal("7.720"), transcribe.getTranscribeItems().get(0).getEndTime());
         assertEquals(98, transcribe.getTranscribeItems().get(0).getConfidence());
-        assertEquals("I've often said that i wish people could realize all their dreams and wealth fame and so that they could", transcribe.getTranscribeItems().get(0).getText());
+        assertEquals("I've often said that i wish people could realize all their dreams and wealth fame and so that they could",
+                transcribe.getTranscribeItems().get(0).getText());
         assertEquals(new BigDecimal("169.120"), transcribe.getTranscribeItems().get(21).getStartTime());
         assertEquals(new BigDecimal("177.730"), transcribe.getTranscribeItems().get(21).getEndTime());
         assertEquals(61, transcribe.getTranscribeItems().get(21).getConfidence());

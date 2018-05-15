@@ -2,36 +2,19 @@
 
 angular.module('organizations').controller(
         'Organization.DBAsController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                'UtilService',
-                'ConfigService',
-                'Organization.InfoService',
-                'MessageService',
-                'Helper.ObjectBrowserService',
-                'Helper.UiGridService',
-                'Authentication',
-                '$modal',
-                'PermissionsService',
-                'ObjectService',
-                'Object.LookupService',
-                'Object.ModelService',
-                function($scope, $stateParams, $translate, Util, ConfigService, OrganizationInfoService, MessageService,
-                        HelperObjectBrowserService, HelperUiGridService, Authentication, $modal, PermissionsService, ObjectService,
-                        ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'Organization.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', '$modal', 'PermissionsService', 'ObjectService', 'Object.LookupService', 'Object.ModelService',
+                function($scope, $stateParams, $translate, Util, ConfigService, OrganizationInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, $modal, PermissionsService, ObjectService, ObjectLookupService, ObjectModelService) {
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "organizations",
-                        componentId : "dbas",
-                        retrieveObjectInfo : OrganizationInfoService.getOrganizationInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "organizations",
+                        componentId: "dbas",
+                        retrieveObjectInfo: OrganizationInfoService.getOrganizationInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -41,7 +24,7 @@ angular.module('organizations').controller(
                     var currentUser = '';
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -53,7 +36,7 @@ angular.module('organizations').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editOrganization', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.ORGANIZATION
+                            objectType: ObjectService.ObjectTypes.ORGANIZATION
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -91,10 +74,10 @@ angular.module('organizations').controller(
                         dba.organization = $scope.objectInfo;
                         $scope.dba = dba;
                         var item = {
-                            id : '',
-                            type : '',
-                            value : '',
-                            description : ''
+                            id: '',
+                            type: '',
+                            value: '',
+                            description: ''
                         };
                         showModal(item, false);
                     };
@@ -102,10 +85,10 @@ angular.module('organizations').controller(
                     $scope.editRow = function(rowEntity) {
                         $scope.dba = rowEntity;
                         var item = {
-                            id : rowEntity.id,
-                            type : rowEntity.type,
-                            value : rowEntity.value,
-                            description : rowEntity.description
+                            id: rowEntity.id,
+                            type: rowEntity.type,
+                            value: rowEntity.value,
+                            description: rowEntity.description
                         };
                         showModal(item, true);
                     };
@@ -129,13 +112,13 @@ angular.module('organizations').controller(
                         params.isDefault = $scope.isDefault(dba);
 
                         var modalInstance = $modal.open({
-                            animation : true,
-                            templateUrl : "modules/organizations/views/components/organization-dbas-modal.client.view.html",
-                            controller : 'Organizations.DBAsModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            animation: true,
+                            templateUrl: "modules/organizations/views/components/organization-dbas-modal.client.view.html",
+                            controller: 'Organizations.DBAsModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -147,7 +130,7 @@ angular.module('organizations').controller(
                                 dba = $scope.dba;
                             else {
                                 dba = _.find($scope.objectInfo.organizationDBAs, {
-                                    id : data.dba.id
+                                    id: data.dba.id
                                 });
                             }
                             dba.type = data.dba.type;

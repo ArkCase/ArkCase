@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.ecm.service;
 
+/*-
+ * #%L
+ * ACM Service: Enterprise Content Management
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -28,13 +55,11 @@ import java.util.Map;
 public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<EcmFile>
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileDao ecmFileDao;
     private UserDao userDao;
     private SearchAccessControlFields searchAccessControlFields;
     private ArkCaseBeanUtils arkCaseBeanUtils = new ArkCaseBeanUtils();
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     // whether to index file contents or just store document-related metadata
     private Boolean enableContentFileIndexing;
 
@@ -145,6 +170,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         List<String> skipAdditionalPropertiesInURL = new ArrayList<>();
         skipAdditionalPropertiesInURL.add("file_source_s");
         skipAdditionalPropertiesInURL.add("name_partial");
+        skipAdditionalPropertiesInURL.add("url");
 
         solr.setSkipAdditionalPropertiesInURL(skipAdditionalPropertiesInURL);
 
@@ -181,6 +207,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
 
         solr.setEcmFileId(in.getVersionSeriesId());
+        solr.setCmis_version_series_id_s(in.getVersionSeriesId());
 
         solr.setType_lcs(in.getFileType());
 

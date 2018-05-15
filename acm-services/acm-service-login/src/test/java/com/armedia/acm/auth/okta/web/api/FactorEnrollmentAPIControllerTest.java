@@ -1,5 +1,40 @@
 package com.armedia.acm.auth.okta.web.api;
 
+/*-
+ * #%L
+ * ACM Service: User Login and Authentication
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import com.armedia.acm.auth.okta.model.ProviderType;
 import com.armedia.acm.auth.okta.model.factor.ActivateRequestDTO;
 import com.armedia.acm.auth.okta.model.factor.Factor;
@@ -13,6 +48,7 @@ import com.armedia.acm.auth.okta.services.impl.FactorLifecycleServiceImpl;
 import com.armedia.acm.auth.okta.services.impl.FactorServiceImpl;
 import com.armedia.acm.auth.okta.services.impl.OktaUserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -29,14 +65,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 /**
  * Created by joseph.mcgrady on 11/13/2017.
@@ -97,8 +125,8 @@ public class FactorEnrollmentAPIControllerTest extends EasyMockSupport
                 get("/api/latest/plugin/okta/factor/enrollment")
                         .accept(MediaType.APPLICATION_JSON)
                         .session(mockHttpSession)
-                        .principal(mockAuthentication)
-        ).andReturn();
+                        .principal(mockAuthentication))
+                .andReturn();
         verifyAll();
 
         // Verifies the request succeeded with HTTP 200 and returned json data
@@ -135,8 +163,8 @@ public class FactorEnrollmentAPIControllerTest extends EasyMockSupport
                 get("/api/latest/plugin/okta/factor/enrollment/available")
                         .accept(MediaType.APPLICATION_JSON)
                         .session(mockHttpSession)
-                        .principal(mockAuthentication)
-        ).andReturn();
+                        .principal(mockAuthentication))
+                .andReturn();
         verifyAll();
 
         // Verifies the request succeeded with HTTP 200 and returned json data
@@ -164,7 +192,7 @@ public class FactorEnrollmentAPIControllerTest extends EasyMockSupport
         expect(mockAuthentication.getName()).andReturn(expectedUser.getId()).atLeastOnce();
         expect(mockOktaUserService.getUser(expectedUser.getId())).andReturn(expectedUser);
         expect(mockFactorLifecycleService.enroll(expectedFactor.getFactorType(), expectedFactor.getProvider(),
-                expectedFactor.getProfile(),expectedUser)).andReturn(expectedFactor);
+                expectedFactor.getProfile(), expectedUser)).andReturn(expectedFactor);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String requestBody = objectMapper.writeValueAsString(expectedFactor);
@@ -176,8 +204,8 @@ public class FactorEnrollmentAPIControllerTest extends EasyMockSupport
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .session(mockHttpSession)
-                        .principal(mockAuthentication)
-        ).andReturn();
+                        .principal(mockAuthentication))
+                .andReturn();
         verifyAll();
 
         // Verifies the request succeeded with HTTP 200 and returned json data
@@ -205,7 +233,8 @@ public class FactorEnrollmentAPIControllerTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn(expectedUser.getId()).atLeastOnce();
         expect(mockOktaUserService.getUser(expectedUser.getId())).andReturn(expectedUser);
-        expect(mockFactorLifecycleService.activate(requestDTO.getFactorId(), requestDTO.getActivationCode(), expectedUser)).andReturn(expectedFactor);
+        expect(mockFactorLifecycleService.activate(requestDTO.getFactorId(), requestDTO.getActivationCode(), expectedUser))
+                .andReturn(expectedFactor);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String requestBody = objectMapper.writeValueAsString(requestDTO);
@@ -217,8 +246,8 @@ public class FactorEnrollmentAPIControllerTest extends EasyMockSupport
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .session(mockHttpSession)
-                        .principal(mockAuthentication)
-        ).andReturn();
+                        .principal(mockAuthentication))
+                .andReturn();
         verifyAll();
 
         // Verifies the request succeeded with HTTP 200 and returned json data
@@ -250,8 +279,8 @@ public class FactorEnrollmentAPIControllerTest extends EasyMockSupport
                 post("/api/latest/plugin/okta/factor/enrollment/reset")
                         .accept(MediaType.APPLICATION_JSON)
                         .session(mockHttpSession)
-                        .principal(mockAuthentication)
-        ).andReturn();
+                        .principal(mockAuthentication))
+                .andReturn();
         verifyAll();
 
         // Verifies the request succeeded with HTTP 200 and returned json data
@@ -272,8 +301,8 @@ public class FactorEnrollmentAPIControllerTest extends EasyMockSupport
                 delete("/api/latest/plugin/okta/factor/enrollment?factorId={factorId}", expectedFactor.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .session(mockHttpSession)
-                        .principal(mockAuthentication)
-        ).andReturn();
+                        .principal(mockAuthentication))
+                .andReturn();
         verifyAll();
 
         // Verifies the request succeeded with HTTP 200 and returned json data

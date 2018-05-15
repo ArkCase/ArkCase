@@ -1,5 +1,32 @@
 package com.armedia.acm.services.participants.model;
 
+/*-
+ * #%L
+ * ACM Service: Participants
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
@@ -8,7 +35,27 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -79,6 +126,22 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
 
     @Transient
     private boolean isDeletable = true;
+
+    public static AcmParticipant createRulesTestParticipant(AcmParticipant participant)
+    {
+        AcmParticipant copyParticipant = new AcmParticipant();
+        copyParticipant.setParticipantLdapId(participant.getParticipantLdapId());
+        copyParticipant.setObjectId(participant.getObjectId());
+        copyParticipant.setParticipantType(participant.getParticipantType());
+        copyParticipant.setObjectType(participant.getObjectType());
+        copyParticipant.setCreated(participant.getCreated());
+        copyParticipant.setCreator(participant.getCreator());
+        copyParticipant.setModified(participant.getModified());
+        copyParticipant.setModifier(participant.getModifier());
+        copyParticipant.setReplaceChildrenParticipant(participant.isReplaceChildrenParticipant());
+
+        return copyParticipant;
+    }
 
     public boolean isEditableUser()
     {
@@ -310,21 +373,5 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     public void setReplaceChildrenParticipant(boolean replaceChildrenParticipant)
     {
         this.replaceChildrenParticipant = replaceChildrenParticipant;
-    }
-
-    public static AcmParticipant createRulesTestParticipant(AcmParticipant participant)
-    {
-        AcmParticipant copyParticipant = new AcmParticipant();
-        copyParticipant.setParticipantLdapId(participant.getParticipantLdapId());
-        copyParticipant.setObjectId(participant.getObjectId());
-        copyParticipant.setParticipantType(participant.getParticipantType());
-        copyParticipant.setObjectType(participant.getObjectType());
-        copyParticipant.setCreated(participant.getCreated());
-        copyParticipant.setCreator(participant.getCreator());
-        copyParticipant.setModified(participant.getModified());
-        copyParticipant.setModifier(participant.getModifier());
-        copyParticipant.setReplaceChildrenParticipant(participant.isReplaceChildrenParticipant());
-
-        return copyParticipant;
     }
 }

@@ -18,7 +18,9 @@
         "email.label": "Email",
         "status.label": "Statut",
         "organization.label": "Organisation",
-        "identification.label": "Identification"
+        "organization.type": "fr_Organization type",
+        "identification.label": "Identification",
+        "identification.type": "fr_ID type"
     },
     "people.comp.actions": {
         "title": "Actions",

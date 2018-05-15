@@ -1,10 +1,47 @@
 package com.armedia.acm.services.transcribe.job;
 
+/*-
+ * #%L
+ * ACM Service: Transcribe
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.transcribe.factory.TranscribeServiceFactory;
-import com.armedia.acm.services.transcribe.model.*;
-import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+import com.armedia.acm.services.transcribe.model.Transcribe;
+import com.armedia.acm.services.transcribe.model.TranscribeActionType;
+import com.armedia.acm.services.transcribe.model.TranscribeBusinessProcessVariableKey;
+import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
+import com.armedia.acm.services.transcribe.model.TranscribeServiceProvider;
+import com.armedia.acm.services.transcribe.model.TranscribeStatusType;
+import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeServiceImpl;
 import com.armedia.acm.services.transcribe.service.TranscribeService;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.runtime.ProcessInstanceQuery;
@@ -14,11 +51,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.*;
-
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/15/2018
@@ -29,7 +67,7 @@ public class TranscribeQueueJobTest
     private TranscribeQueueJob transcribeQueueJob;
 
     @Mock
-    private ArkCaseTranscribeService arkCaseTranscribeService;
+    private ArkCaseTranscribeServiceImpl arkCaseTranscribeService;
 
     @Mock
     private RuntimeService activitiRuntimeService;
@@ -152,7 +190,8 @@ public class TranscribeQueueJobTest
         when(arkCaseTranscribeService.getTranscribeServiceFactory()).thenReturn(transcribeServiceFactory);
         when(transcribeServiceFactory.getService(TranscribeServiceProvider.AWS)).thenReturn(transcribeService);
         when(transcribeService.create(transcribe1)).thenReturn(serviceProviderTranscribe);
-        doNothing().when(arkCaseTranscribeService).signal(processInstance1, TranscribeStatusType.PROCESSING.toString(), TranscribeActionType.PROCESSING.toString());
+        doNothing().when(arkCaseTranscribeService).signal(processInstance1, TranscribeStatusType.PROCESSING.toString(),
+                TranscribeActionType.PROCESSING.toString());
         doNothing().when(auditPropertyEntityAdapter).setUserId("TRANSCRIBE_SERVICE");
 
         transcribeQueueJob.executeTask();
@@ -166,7 +205,8 @@ public class TranscribeQueueJobTest
         verify(arkCaseTranscribeService).getTranscribeServiceFactory();
         verify(transcribeServiceFactory).getService(TranscribeServiceProvider.AWS);
         verify(transcribeService).create(transcribe1);
-        verify(arkCaseTranscribeService).signal(processInstance1, TranscribeStatusType.PROCESSING.toString(), TranscribeActionType.PROCESSING.toString());
+        verify(arkCaseTranscribeService).signal(processInstance1, TranscribeStatusType.PROCESSING.toString(),
+                TranscribeActionType.PROCESSING.toString());
         verify(auditPropertyEntityAdapter).setUserId("TRANSCRIBE_SERVICE");
     }
 }
