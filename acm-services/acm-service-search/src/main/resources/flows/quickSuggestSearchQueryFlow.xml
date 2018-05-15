@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:https="http://www.mulesoft.org/schema/mule/https" xmlns="http://www.mulesoft.org/schema/mule/core"
-      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
-      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" version="CE-3.7.0"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="
+<mule xmlns:https="http://www.mulesoft.org/schema/mule/https" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+    xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.mulesoft.org/schema/mule/core" version="CE-3.7.0"
+    xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
+    <!-- NOTE: mimetype is no longer supported in requests to Solr 7.2.1 -->
     <https:endpoint name="quickSuggestQuerySolrEndpoint"
-                    address="https://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.quicksearch.core}/${solr.suggestHandler}"
-                    contentType="application/x-www-form-urlencoded; charset=UTF-8" mimeType="application/json"
-                    encoding="UTF-8" method="POST"
-                    exchange-pattern="request-response"
-                    doc:name="Issue an advanced search request to SOLR"></https:endpoint>
+        address="https://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.quicksearch.core}/${solr.suggestHandler}"
+        contentType="application/x-www-form-urlencoded; charset=UTF-8" encoding="UTF-8" method="POST" exchange-pattern="request-response"
+        doc:name="Issue an advanced search request to SOLR"></https:endpoint>
 
     <flow name="quickSuggestQuery" doc:name="Quick Suggester Search Query Flow">
-        <vm:inbound-endpoint address="vm://quickSuggesterQuery.in" exchange-pattern="request-response" doc:name="VM"/>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://quickSuggesterQuery.in" exchange-pattern="request-response"
+            doc:name="VM"/>
         <logger category="com.armedia.acm.plugins.search" level="DEBUG"/>
 
         <timer-interceptor/>
@@ -29,7 +28,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         </scripting:transformer>
 
         <set-payload
-                value="df=suggest_ngram&amp;q=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;fq=#[message.inboundProperties['childObjectFilterQuery']]&amp;topLevel=#[message.inboundProperties['isTopLevelObjectFilter']]&amp;dac=#[message.inboundProperties['childObjectDacFilter']]&amp;fq=#[message.inboundProperties['isSubscribed']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;#[message.inboundProperties['rowQueryParametars']]#[message.inboundProperties['df'] != empty ? '&amp;df=' + message.inboundProperties['df'] : '']"/>
+            value="df=suggest_ngram&amp;q=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;fq=#[message.inboundProperties['childObjectFilterQuery']]&amp;dac=#[message.inboundProperties['childObjectDacFilter']]&amp;fq=#[message.inboundProperties['isSubscribed']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;#[message.inboundProperties['rowQueryParametars']]#[message.inboundProperties['df'] != empty ? '&amp;df=' + message.inboundProperties['df'] : '']"/>
 
         <!--<set-payload-->
         <!--value="df=suggest_ngram&amp;q=#[message.inboundProperties['query']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]"/>-->

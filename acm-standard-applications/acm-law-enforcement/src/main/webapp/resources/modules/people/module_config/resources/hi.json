@@ -18,7 +18,9 @@
         "email.label": "ई-मेल",
         "status.label": "स्थिति",
         "organization.label": "संगठन",
-        "identification.label": "पहचान"
+        "organization.type": "hi_Organization type",
+        "identification.label": "पहचान",
+        "identification.type": "hi_ID type"
     },
     "people.comp.actions": {
         "title": "स्टॉक",

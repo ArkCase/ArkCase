@@ -3,6 +3,33 @@
  */
 package com.armedia.acm.services.timesheet.model;
 
+/*-
+ * #%L
+ * ACM Service: Timesheet
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -25,6 +52,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -144,19 +172,23 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
         this.type = type;
     }
 
-    public String getChargeRole() {
+    public String getChargeRole()
+    {
         return chargeRole;
     }
 
-    public void setChargeRole(String chargeRole) {
+    public void setChargeRole(String chargeRole)
+    {
         this.chargeRole = chargeRole;
     }
 
-    public Double getTotalCost() {
+    public Double getTotalCost()
+    {
         return totalCost;
     }
 
-    public void setTotalCost(Double totalCost) {
+    public void setTotalCost(Double totalCost)
+    {
         this.totalCost = totalCost;
     }
 
@@ -235,11 +267,13 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
         return TimeConstants.OBJECT_TYPE;
     }
 
-    public String getClassName() {
+    public String getClassName()
+    {
         return className;
     }
 
-    public void setClassName(String className) {
+    public void setClassName(String className)
+    {
         this.className = className;
     }
 }

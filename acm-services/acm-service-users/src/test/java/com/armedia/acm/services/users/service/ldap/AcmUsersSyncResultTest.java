@@ -1,5 +1,32 @@
 package com.armedia.acm.services.users.service.ldap;
 
+/*-
+ * #%L
+ * ACM Service: Users
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isIn;
 import static org.hamcrest.core.Every.everyItem;
@@ -19,11 +46,18 @@ import java.util.Set;
 
 public class AcmUsersSyncResultTest
 {
+    private static final String LANG = "en";
     private AcmUsersSyncResult unit;
 
-    private static final String LANG = "en";
+    // @formatter:off
+
+    static Set<String> fromArray(String... elements)
+    {
+        return new HashSet<>(Arrays.asList(elements));
+    }
 
     // @formatter:off
+
     /**
      * ldap state db state
      *
@@ -71,6 +105,7 @@ public class AcmUsersSyncResultTest
     }
 
     // @formatter:off
+
     /**
      * ldap state db state
      *
@@ -115,6 +150,7 @@ public class AcmUsersSyncResultTest
     }
 
     // @formatter:off
+
     /**
      * ldap state db state
      *
@@ -181,7 +217,6 @@ public class AcmUsersSyncResultTest
         assertThat(actual.get("3"), is(user3));
     }
 
-    // @formatter:off
     /**
      * ldap state db state
      *
@@ -234,10 +269,5 @@ public class AcmUsersSyncResultTest
         assertThat(actual.get("3").getUserId(), is("3"));
         assertThat(actual.get("3").getUserState(), is(AcmUserState.VALID));
         assertThat(actual.get("3").getMail(), is("user3@arkcase"));
-    }
-
-    static Set<String> fromArray(String... elements)
-    {
-        return new HashSet<>(Arrays.asList(elements));
     }
 }

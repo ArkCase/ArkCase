@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
+/*-
+ * #%L
+ * ACM Service: Enterprise Content Management
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
@@ -26,13 +53,11 @@ import java.util.UUID;
  */
 public class AlfrescoSyncService implements ApplicationEventPublisherAware
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private PropertyFileManager propertyFileManager;
     private AlfrescoAuditApplicationRestClient auditApplicationRestClient;
     private Map<String, EcmAuditResponseReader> auditApplications;
     private String auditApplicationLastAuditIdsFilename;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     private ApplicationEventPublisher applicationEventPublisher;
 
     public void queryAlfrescoAuditApplications()
@@ -112,19 +137,14 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
         }
     }
 
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
     public PropertyFileManager getPropertyFileManager()
     {
         return propertyFileManager;
     }
 
-    public void setAuditApplicationRestClient(AlfrescoAuditApplicationRestClient auditApplicationRestClient)
+    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
     {
-        this.auditApplicationRestClient = auditApplicationRestClient;
+        this.propertyFileManager = propertyFileManager;
     }
 
     public AlfrescoAuditApplicationRestClient getAuditApplicationRestClient()
@@ -132,14 +152,19 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
         return auditApplicationRestClient;
     }
 
-    public void setAuditApplicationLastAuditIdsFilename(String auditApplicationLastAuditIdsFilename)
+    public void setAuditApplicationRestClient(AlfrescoAuditApplicationRestClient auditApplicationRestClient)
     {
-        this.auditApplicationLastAuditIdsFilename = auditApplicationLastAuditIdsFilename;
+        this.auditApplicationRestClient = auditApplicationRestClient;
     }
 
     public String getAuditApplicationLastAuditIdsFilename()
     {
         return auditApplicationLastAuditIdsFilename;
+    }
+
+    public void setAuditApplicationLastAuditIdsFilename(String auditApplicationLastAuditIdsFilename)
+    {
+        this.auditApplicationLastAuditIdsFilename = auditApplicationLastAuditIdsFilename;
     }
 
     @Override

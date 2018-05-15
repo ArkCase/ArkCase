@@ -2,42 +2,26 @@
 
 angular.module('cases').controller(
         'Cases.ReferencesController',
-        [
-                '$scope',
-                '$stateParams',
-                '$modal',
-                'UtilService',
-                'ConfigService',
-                'Case.InfoService',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'ObjectService',
-                'SearchService',
-                'Search.QueryBuilderService',
-                'ObjectAssociation.Service',
-                'MessageService',
-                '$timeout',
-                function($scope, $stateParams, $modal, Util, ConfigService, CaseInfoService, HelperUiGridService,
-                        HelperObjectBrowserService, ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService,
-                        MessageService, $timeout) {
+        [ '$scope', '$stateParams', '$modal', 'UtilService', 'ConfigService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ObjectService', 'SearchService', 'Search.QueryBuilderService', 'ObjectAssociation.Service', 'MessageService', '$timeout',
+                function($scope, $stateParams, $modal, Util, ConfigService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService, MessageService, $timeout) {
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "cases",
-                        componentId : "references",
-                        retrieveObjectInfo : CaseInfoService.getCaseInfo,
-                        validateObjectInfo : CaseInfoService.validateCaseInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "cases",
+                        componentId: "references",
+                        retrieveObjectInfo: CaseInfoService.getCaseInfo,
+                        validateObjectInfo: CaseInfoService.validateCaseInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var onConfigRetrieved = function(config) {
@@ -71,15 +55,15 @@ angular.module('cases').controller(
 
                         if (ObjectService.ObjectTypes.CASE_FILE == targetType) {
                             $scope.$emit('request-show-object', {
-                                objectId : targetId,
-                                objectType : targetType
+                                objectId: targetId,
+                                objectType: targetType
                             });
                         }
                     };
 
                     ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
                         $scope.modalConfig = _.find(moduleConfig.components, {
-                            id : "referenceSearchGrid"
+                            id: "referenceSearchGrid"
                         });
                         return moduleConfig;
                     });
@@ -87,14 +71,13 @@ angular.module('cases').controller(
                     // open add reference modal
                     $scope.addReference = function() {
                         var modalInstance = $modal.open({
-                            animation : $scope.animationsEnabled,
-                            templateUrl : 'modules/cases/views/components/case-reference-modal.client.view.html',
-                            controller : 'Cases.ReferenceModalController',
-                            size : 'lg',
-                            resolve : {
-                                $filter : function() {
-                                    var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.id + "-"
-                                            + ObjectService.ObjectTypes.CASE_FILE;
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'modules/cases/views/components/case-reference-modal.client.view.html',
+                            controller: 'Cases.ReferenceModalController',
+                            size: 'lg',
+                            resolve: {
+                                $filter: function() {
+                                    var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.id + "-" + ObjectService.ObjectTypes.CASE_FILE;
                                     if ($scope.gridOptions.data.length > 0) {
                                         for (var i = 0; i < $scope.gridOptions.data.length; i++) {
                                             var data = $scope.gridOptions.data[i];
@@ -104,7 +87,7 @@ angular.module('cases').controller(
                                     filter += "&-parent_ref_s:" + $scope.objectInfo.id + "-" + ObjectService.ObjectTypes.CASE_FILE;
                                     return filter.replace(/&/gi, '%26');
                                 },
-                                $config : function() {
+                                $config: function() {
                                     return $scope.modalConfig;
                                 }
                             }
@@ -116,9 +99,7 @@ angular.module('cases').controller(
                             var parent = $scope.objectInfo;
                             var target = chosenReference;
                             if (target) {
-                                var association = ObjectAssociationService.createAssociationInfo(parent.id,
-                                        ObjectService.ObjectTypes.CASE_FILE, parent.title, parent.caseNumber, target.object_id_s,
-                                        target.object_type_s, target.title_parseable, target.name, 'REFERENCE', 'REFERENCE');
+                                var association = ObjectAssociationService.createAssociationInfo(parent.id, ObjectService.ObjectTypes.CASE_FILE, parent.title, parent.caseNumber, target.object_id_s, target.object_type_s, target.title_parseable, target.name, 'REFERENCE', 'REFERENCE');
                                 ObjectAssociationService.saveObjectAssociation(association).then(function(payload) {
                                     //success
                                     $timeout(function() {
@@ -127,18 +108,18 @@ angular.module('cases').controller(
 
                                     //append new entity as last item in the grid
                                     var rowEntity = {
-                                        object_id_s : payload.associationId,
-                                        target_object : {
-                                            name : target.name,
-                                            title_parseable : target.title_parseable,
-                                            parent_ref_s : target.parent_ref_s,
-                                            modified_date_tdt : target.modified_date_tdt,
-                                            assignee_full_name_lcs : target.assignee_full_name_lcs,
-                                            object_type_s : target.object_type_s,
-                                            status_lcs : target.status_lcs
+                                        object_id_s: payload.associationId,
+                                        target_object: {
+                                            name: target.name,
+                                            title_parseable: target.title_parseable,
+                                            parent_ref_s: target.parent_ref_s,
+                                            modified_date_tdt: target.modified_date_tdt,
+                                            assignee_full_name_lcs: target.assignee_full_name_lcs,
+                                            object_type_s: target.object_type_s,
+                                            status_lcs: target.status_lcs
                                         },
-                                        target_type_s : payload.targetType,
-                                        target_id_s : payload.targetId
+                                        target_type_s: payload.targetType,
+                                        target_id_s: payload.targetId
                                     };
 
                                     $scope.gridOptions.data.push(rowEntity);
@@ -155,10 +136,9 @@ angular.module('cases').controller(
                     };
 
                     function refreshGridData(objectId) {
-                        ObjectAssociationService.getObjectAssociations(objectId, ObjectService.ObjectTypes.CASE_FILE, null).then(
-                                function(response) {
-                                    $scope.gridOptions.data = response.response.docs;
-                                });
+                        ObjectAssociationService.getObjectAssociations(objectId, ObjectService.ObjectTypes.CASE_FILE, null).then(function(response) {
+                            $scope.gridOptions.data = response.response.docs;
+                        });
                     }
 
                     $scope.deleteRow = function(rowEntity) {

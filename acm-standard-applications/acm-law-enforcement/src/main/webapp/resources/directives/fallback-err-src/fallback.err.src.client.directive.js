@@ -22,7 +22,7 @@
  */
 angular.module('directives').directive('fallbackErrSrc', function() {
     return {
-        link : function(scope, element, attrs) {
+        link: function(scope, element, attrs) {
             element.bind('error', function() {
                 if (attrs.src != attrs.fallbackErrSrc) {
                     attrs.$set('src', attrs.fallbackErrSrc);

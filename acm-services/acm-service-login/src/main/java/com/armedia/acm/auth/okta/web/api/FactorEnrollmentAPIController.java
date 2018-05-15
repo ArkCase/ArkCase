@@ -1,5 +1,32 @@
 package com.armedia.acm.auth.okta.web.api;
 
+/*-
+ * #%L
+ * ACM Service: User Login and Authentication
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.auth.okta.exceptions.OktaException;
 import com.armedia.acm.auth.okta.model.factor.ActivateRequestDTO;
 import com.armedia.acm.auth.okta.model.factor.Factor;
@@ -8,6 +35,7 @@ import com.armedia.acm.auth.okta.services.FactorLifecycleService;
 import com.armedia.acm.auth.okta.services.FactorService;
 import com.armedia.acm.auth.okta.services.OktaUserService;
 import com.google.common.base.Preconditions;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -25,13 +53,13 @@ import java.util.List;
  * Created by joseph.mcgrady on 11/10/2017.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/okta/factor/enrollment", "/api/latest/plugin/okta/factor/enrollment"})
+@RequestMapping({ "/api/v1/plugin/okta/factor/enrollment", "/api/latest/plugin/okta/factor/enrollment" })
 public class FactorEnrollmentAPIController
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FactorEnrollmentAPIController.class);
     private FactorService factorService;
     private FactorLifecycleService factorLifecycleService;
     private OktaUserService oktaUserService;
-    private static final Logger LOGGER = LoggerFactory.getLogger(FactorEnrollmentAPIController.class);
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -42,7 +70,8 @@ public class FactorEnrollmentAPIController
             LOGGER.info("Retrieving enrolled factors for user [{}]", auth.getName());
             OktaUser user = getOktaUserService().getUser(auth.getName());
             return getFactorService().listEnrolledFactors(user);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOGGER.error("Failed to retrieve enrolled factors for user [{}]", auth.getName(), e);
             throw new OktaException(e.getMessage(), e);
@@ -58,7 +87,8 @@ public class FactorEnrollmentAPIController
             LOGGER.info("Retrieving available factors");
             OktaUser user = getOktaUserService().getUser(auth.getName());
             return getFactorService().listAvailableFactors(user);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOGGER.error("Failed to retrieve available factors", e);
             throw new OktaException(e.getMessage(), e);
@@ -80,7 +110,8 @@ public class FactorEnrollmentAPIController
             OktaUser user = getOktaUserService().getUser(auth.getName());
             return getFactorLifecycleService().enroll(enrollRequestDTO.getFactorType(),
                     enrollRequestDTO.getProvider(), enrollRequestDTO.getProfile(), user);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOGGER.error("Failed to enroll user [{}] in factor [{}]", auth.getName(), enrollRequestDTO.getFactorType().name(), e);
             throw new OktaException(e.getMessage(), e);
@@ -101,7 +132,8 @@ public class FactorEnrollmentAPIController
             LOGGER.info("Activating factor [{}] for user [{}]", activateRequestDTO.getFactorId(), auth.getName());
             OktaUser user = getOktaUserService().getUser(auth.getName());
             return getFactorLifecycleService().activate(activateRequestDTO.getFactorId(), activateRequestDTO.getActivationCode(), user);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOGGER.error("Failed to activate factor [{}] for user [{}]", activateRequestDTO.getFactorId(), auth.getName(), e);
             throw new OktaException(e.getMessage(), e);
@@ -117,7 +149,8 @@ public class FactorEnrollmentAPIController
             LOGGER.info("Resetting factors for user [{}]", auth.getName());
             OktaUser user = getOktaUserService().getUser(auth.getName());
             getFactorLifecycleService().resetFactors(user);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOGGER.error("Failed to reset factors for user [{}]", auth.getName(), e);
             throw new OktaException(e.getMessage(), e);
@@ -136,7 +169,8 @@ public class FactorEnrollmentAPIController
             LOGGER.info("Deleting factor [{}] for user [{}]", id, auth.getName());
             OktaUser user = getOktaUserService().getUser(auth.getName());
             getFactorService().deleteFactor(id, user);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOGGER.error("Failed to delete factor [{}] for user [{}]", id, auth.getName(), e);
             throw new OktaException(e.getMessage(), e);

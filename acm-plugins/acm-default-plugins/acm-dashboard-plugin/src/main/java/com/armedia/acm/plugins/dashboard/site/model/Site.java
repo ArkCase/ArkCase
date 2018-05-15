@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.dashboard.site.model;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Dashboard
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -22,6 +49,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -40,13 +68,7 @@ public class Site implements Serializable, AcmObject, AcmEntity
     private static final long serialVersionUID = 387976904L;
 
     @Id
-    @TableGenerator(name = "acm_site_gen",
-            table = "acm_site_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_site",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_site_gen", table = "acm_site_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_site", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_site_gen")
     @Column(name = "cm_site_id")
     private Long id;

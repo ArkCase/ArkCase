@@ -1,5 +1,32 @@
 package com.armedia.acm.calendar.config.service;
 
+/*-
+ * #%L
+ * ACM Service: Calendar Service
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.CalendarPropertyKeys;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
@@ -39,92 +66,13 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 {
 
     private static final String CALENDAR_CONFIG_SERVICE_USER_ID = "CALENDAR_CONFIG_SERVICE";
-
-    /**
-     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 22, 2017
-     */
-    private class PropertyFileCalendarConfigurationExceptionMapper
-            implements CalendarConfigurationExceptionMapper<CalendarConfigurationException>
-    {
-
-        /*
-         * (non-Javadoc)
-         * @see
-         * com.armedia.acm.calendar.config.service.CalendarConfigurationExceptionMapper#mapException(com.armedia.acm.
-         * calendar.config.service.CalendarConfigurationException)
-         */
-        @Override
-        public Object mapException(CalendarConfigurationException ce)
-        {
-            Map<String, Object> errorDetails = new HashMap<>();
-
-            Throwable cause = ce.getCause();
-            if (cause != null)
-            {
-                Class<? extends Throwable> causeClass = cause.getClass();
-                if (causeClass.equals(IOException.class))
-                {
-                    errorDetails.put(ERROR_CAUSE, UPDATE_CONFIGURATION_EXCEPTION);
-                }
-                errorDetails.put(ERROR_MESSAGE, ce.getMessage());
-            }
-
-            Throwable[] suppressed = ce.getSuppressed();
-            Map<String, Map<String, String>> validationFailures = new HashMap<>();
-
-            for (Throwable t : suppressed)
-            {
-                if (!CalendarConfigurationValidationException.class.equals(t.getClass()))
-                {
-                    continue;
-                }
-
-                CalendarConfigurationValidationException cce = CalendarConfigurationValidationException.class.cast(t);
-                String objectType = cce.getObjectType();
-                Map<String, String> validationfaiulureByType = validationFailures.computeIfAbsent(objectType, k -> new HashMap<>());
-
-                if (t.getCause() != null && t.getCause().getClass().equals(AcmEncryptionException.class))
-                {
-                    validationfaiulureByType.put(ERROR_CAUSE, ENCRYPT_EXCEPTION);
-                }
-                else
-                {
-                    validationfaiulureByType.put(ERROR_CAUSE, INPUT_DATA_EXCEPTION);
-                }
-                validationfaiulureByType.put(ERROR_MESSAGE, ce.getMessage());
-            }
-
-            errorDetails.put("validationFailures", validationFailures);
-
-            return errorDetails;
-        }
-
-        /*
-         * (non-Javadoc)
-         * @see com.armedia.acm.calendar.config.service.CalendarConfigurationExceptionMapper#getStatusCode()
-         */
-        @Override
-        public HttpStatus getStatusCode()
-        {
-            return HttpStatus.BAD_REQUEST;
-        }
-
-    }
-
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private Resource configurableObjectTypes;
-
     private Resource calendarPropertiesResource;
-
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
-
     private ReadWriteLock lock = new ReentrantReadWriteLock();
-
     private List<String> objectTypes;
-
     private ApplicationEventPublisher applicationEventPublisher;
-
     private CalendarConfigurationsByObjectType configurations;
 
     /*
@@ -507,6 +455,77 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
     public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
     {
         this.encryptablePropertyUtils = encryptablePropertyUtils;
+    }
+
+    /**
+     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 22, 2017
+     */
+    private class PropertyFileCalendarConfigurationExceptionMapper
+            implements CalendarConfigurationExceptionMapper<CalendarConfigurationException>
+    {
+
+        /*
+         * (non-Javadoc)
+         * @see
+         * com.armedia.acm.calendar.config.service.CalendarConfigurationExceptionMapper#mapException(com.armedia.acm.
+         * calendar.config.service.CalendarConfigurationException)
+         */
+        @Override
+        public Object mapException(CalendarConfigurationException ce)
+        {
+            Map<String, Object> errorDetails = new HashMap<>();
+
+            Throwable cause = ce.getCause();
+            if (cause != null)
+            {
+                Class<? extends Throwable> causeClass = cause.getClass();
+                if (causeClass.equals(IOException.class))
+                {
+                    errorDetails.put(ERROR_CAUSE, UPDATE_CONFIGURATION_EXCEPTION);
+                }
+                errorDetails.put(ERROR_MESSAGE, ce.getMessage());
+            }
+
+            Throwable[] suppressed = ce.getSuppressed();
+            Map<String, Map<String, String>> validationFailures = new HashMap<>();
+
+            for (Throwable t : suppressed)
+            {
+                if (!CalendarConfigurationValidationException.class.equals(t.getClass()))
+                {
+                    continue;
+                }
+
+                CalendarConfigurationValidationException cce = CalendarConfigurationValidationException.class.cast(t);
+                String objectType = cce.getObjectType();
+                Map<String, String> validationfaiulureByType = validationFailures.computeIfAbsent(objectType, k -> new HashMap<>());
+
+                if (t.getCause() != null && t.getCause().getClass().equals(AcmEncryptionException.class))
+                {
+                    validationfaiulureByType.put(ERROR_CAUSE, ENCRYPT_EXCEPTION);
+                }
+                else
+                {
+                    validationfaiulureByType.put(ERROR_CAUSE, INPUT_DATA_EXCEPTION);
+                }
+                validationfaiulureByType.put(ERROR_MESSAGE, ce.getMessage());
+            }
+
+            errorDetails.put("validationFailures", validationFailures);
+
+            return errorDetails;
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see com.armedia.acm.calendar.config.service.CalendarConfigurationExceptionMapper#getStatusCode()
+         */
+        @Override
+        public HttpStatus getStatusCode()
+        {
+            return HttpStatus.BAD_REQUEST;
+        }
+
     }
 
 }

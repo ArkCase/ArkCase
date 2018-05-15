@@ -25,40 +25,38 @@
  </file>
  </example>
  */
-angular.module('directives').directive(
-        'googlemapsHref',
-        function() {
-            var defaults = {
-                    isPrimaryAddress : true
-                };
-            return {
-                restrict : 'A',
-                scope : {
-                    isPrimaryAddress : '=',
-                    locationData : '='
-                },
-                link : function(scope, element, attrs) {
-                    scope.$watch('locationData', function(newValue, oldValue) {
-                        buildUrl(newValue);
-                    });
+angular.module('directives').directive('googlemapsHref', function() {
+    var defaults = {
+        isPrimaryAddress: true
+    };
+    return {
+        restrict: 'A',
+        scope: {
+            isPrimaryAddress: '=',
+            locationData: '='
+        },
+        link: function(scope, element, attrs) {
+            scope.$watch('locationData', function(newValue, oldValue) {
+                buildUrl(newValue);
+            });
 
-                    function buildUrl(locationData) {
+            function buildUrl(locationData) {
 
-                        var googleMapsUrl = "http://maps.google.com/?q=";
-                        var locationArray = [locationData.city, locationData.state, locationData.zip, locationData.country];
-                        
-                        if (scope.isPrimaryAddress) {
-                            locationArray.unshift(locationData.streetAddress);
-                        } else {
-                            locationArray.unshift(locationData.streetAddress2);
-                        }
-                        
-                        googleMapsUrl += locationArray.filter(Boolean).join();
-                        
-                        element.attr('href', googleMapsUrl);
-                        element.attr('target', "_blank");
-                    }
+                var googleMapsUrl = "http://maps.google.com/?q=";
+                var locationArray = [ locationData.city, locationData.state, locationData.zip, locationData.country ];
 
+                if (scope.isPrimaryAddress) {
+                    locationArray.unshift(locationData.streetAddress);
+                } else {
+                    locationArray.unshift(locationData.streetAddress2);
                 }
+
+                googleMapsUrl += locationArray.filter(Boolean).join();
+
+                element.attr('href', googleMapsUrl);
+                element.attr('target', "_blank");
             }
-        });
+
+        }
+    }
+});

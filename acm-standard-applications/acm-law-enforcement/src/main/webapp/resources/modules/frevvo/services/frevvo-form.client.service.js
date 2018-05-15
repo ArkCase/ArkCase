@@ -26,7 +26,7 @@ angular.module('frevvo').factory('Frevvo.FormService', [ 'UtilService', 'Config.
          * full Frevvo form url for the specified form type.  If a caseFile is specified,
          * then that case file data will be loaded into the form to edit.
          */
-        buildFrevvoUrl : function(acmFormsProperties, formType, acmTicket, arg) {
+        buildFrevvoUrl: function(acmFormsProperties, formType, acmTicket, arg) {
 
             // Loads Frevvo server basic configuration
             var protocol = acmFormsProperties['frevvo.protocol'];

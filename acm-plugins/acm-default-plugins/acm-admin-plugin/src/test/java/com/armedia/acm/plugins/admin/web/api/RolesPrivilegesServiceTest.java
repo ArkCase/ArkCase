@@ -1,21 +1,47 @@
 package com.armedia.acm.plugins.admin.web.api;
 
+/*-
+ * #%L
+ * ACM Default Plugin: admin
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.junit.Assert.assertTrue;
 
+import com.armedia.acm.plugins.admin.model.PrivilegeItem;
 import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
 
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class RolesPrivilegesServiceTest extends EasyMockSupport
 {
     private Map<String, String> mockPrivileges;
-    private Map<String, String> expectedValue;
+    private List<PrivilegeItem> expectedValue;
     private RolesPrivilegesService rolesPrivilegesService;
 
     @Before
@@ -37,56 +63,69 @@ public class RolesPrivilegesServiceTest extends EasyMockSupport
     public void validatePrivilegesSortDirectionASC() throws Exception
     {
         // given
-        expectedValue = new TreeMap<>();
-        mockPrivileges.forEach((key, value) -> expectedValue.put(value, key));
+        expectedValue = new ArrayList<>();
+        mockPrivileges.forEach((key, value) -> {
+            PrivilegeItem privilegeItem = new PrivilegeItem();
+            privilegeItem.setKey(key);
+            privilegeItem.setValue(value);
+            expectedValue.add(privilegeItem);
+        });
+        Collections.sort(expectedValue);
 
         // when
-        Map<String, String> mapToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "ASC", 0, 7, "");
+        List<PrivilegeItem> listToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "ASC", 0, 7, "");
 
         // then
-        assertTrue(mapToVerify.equals(expectedValue));
+        assertTrue(listToVerify.equals(expectedValue));
     }
 
     @Test
-    public void validatePrivilegesSortDirectionDESC() throws Exception
+    public void validatePrivilegesSortDirectionDESC()
     { // given
-        expectedValue = new TreeMap<>((o1, o2) -> o2.toLowerCase().compareTo(o1.toLowerCase()));
-        mockPrivileges.forEach((key, value) -> expectedValue.put(value, key));
+        expectedValue = new ArrayList<>();
+        mockPrivileges.forEach((key, value) -> {
+            PrivilegeItem privilegeItem = new PrivilegeItem();
+            privilegeItem.setKey(key);
+            privilegeItem.setValue(value);
+            expectedValue.add(privilegeItem);
+        });
+        Collections.sort(expectedValue, Collections.reverseOrder());
+
         // when
-        Map<String, String> mapToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "DESC", 0, 7, "");
+        List<PrivilegeItem> listToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "DESC", 0, 7, "");
 
         // then
-        assertTrue(expectedValue.keySet().toString().equals(mapToVerify.keySet().toString()));
+        assertTrue(expectedValue.equals(listToVerify));
     }
 
     @Test
-    public void validatePrivilegesStartMaxRows() throws Exception
+    public void validatePrivilegesStartMaxRows()
     {
         // given
-        expectedValue = new TreeMap<>();
-        expectedValue.put("Case Approve Privilege", "acmCaseApprovePrivilege");
-        expectedValue.put("Category Management Privilege", "acmCategoryManagementPrivilege");
-        expectedValue.put("Complaint Create Privilege", "acmComplaintCreatePrivilege");
+        expectedValue = new ArrayList<>();
+        expectedValue.add(new PrivilegeItem("acmCaseApprovePrivilege", "Case Approve Privilege"));
+        expectedValue.add(new PrivilegeItem("acmCategoryManagementPrivilege", "Category Management Privilege"));
+        expectedValue.add(new PrivilegeItem("acmComplaintCreatePrivilege", "Complaint Create Privilege"));
 
         // when
-        Map<String, String> mapToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "ASC", 0, 3, "");
+        List<PrivilegeItem> listToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "ASC", 0, 3, "");
 
         // then
-        assertTrue(expectedValue.keySet().toString().equals(mapToVerify.keySet().toString()));
+        assertTrue(expectedValue.equals(listToVerify));
     }
 
     @Test
-    public void validatePrivilegesFilterQuery() throws Exception
+    public void validatePrivilegesFilterQuery()
     {
         // given
-        expectedValue = new TreeMap<>();
-        expectedValue.put("Dashboard Privilege", "dashboardPrivilege");
+        expectedValue = new ArrayList<>();
+        expectedValue.add(new PrivilegeItem("dashboardPrivilege", "Dashboard Privilege"));
 
         // when
-        Map<String, String> mapToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "ASC", 0, 7, "da");
+        List<PrivilegeItem> listToVerify = rolesPrivilegesService.getPrivilegesPaged(mockPrivileges, "ASC", 0, 7, "da");
 
         // then
-        assertTrue(expectedValue.keySet().toString().equals(mapToVerify.keySet().toString()));
+        assertTrue(expectedValue.equals(listToVerify));
     }
 
 }

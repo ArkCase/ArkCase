@@ -27,7 +27,7 @@
                 <ref bean="userRootFolderAccessUpdateExecutor"/>
                 <ref bean="outlookFolderCreatorPasswordMd5ToSha256UpdateExecutor"/>
                 <ref bean="triggerCostsheetSolrUpdateExecutor"/>
-                <ref bean="triggerTimesheetSolrUpdateExecutor" />
+                <ref bean="triggerTimesheetSolrUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>

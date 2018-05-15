@@ -2,19 +2,8 @@
 
 angular.module('complaints').controller(
         'ComplaintsController',
-        [
-                '$scope',
-                '$state',
-                '$stateParams',
-                'UtilService',
-                'ConfigService',
-                'Complaint.InfoService',
-                'ObjectService',
-                'Helper.ObjectBrowserService',
-                'Object.CalendarService',
-                '$translate',
-                function($scope, $state, $stateParams, Util, ConfigService, ComplaintInfoService, ObjectService,
-                        HelperObjectBrowserService, CalendarService, $translate) {
+        [ '$scope', '$state', '$stateParams', 'UtilService', 'ConfigService', 'Complaint.InfoService', 'ObjectService', 'Helper.ObjectBrowserService', 'Object.CalendarService', '$translate',
+                function($scope, $state, $stateParams, Util, ConfigService, ComplaintInfoService, ObjectService, HelperObjectBrowserService, CalendarService, $translate) {
 
                     $scope.isNodeDisabled = function(node) {
                         return HelperObjectBrowserService.isNodeDisabled('complaints', $translate.instant(node));
@@ -25,17 +14,17 @@ angular.module('complaints').controller(
                     });
 
                     new HelperObjectBrowserService.Content({
-                        scope : $scope,
-                        state : $state,
-                        stateParams : $stateParams,
-                        moduleId : "complaints",
-                        resetObjectInfo : ComplaintInfoService.resetComplaintInfo,
-                        getObjectInfo : ComplaintInfoService.getComplaintInfo,
-                        updateObjectInfo : ComplaintInfoService.updateComplaintInfo,
-                        getObjectIdFromInfo : function(complaintInfo) {
+                        scope: $scope,
+                        state: $state,
+                        stateParams: $stateParams,
+                        moduleId: "complaints",
+                        resetObjectInfo: ComplaintInfoService.resetComplaintInfo,
+                        getObjectInfo: ComplaintInfoService.getComplaintInfo,
+                        updateObjectInfo: ComplaintInfoService.updateComplaintInfo,
+                        getObjectIdFromInfo: function(complaintInfo) {
                             return Util.goodMapValue(complaintInfo, "complaintId");
                         },
-                        getObjectTypeFromInfo : function(objectInfo) {
+                        getObjectTypeFromInfo: function(objectInfo) {
                             return ObjectService.ObjectTypes.COMPLAINT;
                         }
                     });

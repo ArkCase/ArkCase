@@ -1,5 +1,32 @@
 package com.armedia.acm.service.outlook.model;
 
+/*-
+ * #%L
+ * ACM Service: MS Outlook integration
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 /**
  * Created by armdev on 4/20/15.
  */
@@ -13,19 +40,14 @@ public class OutlookContactItem extends OutlookItem
     private String emailAddress2;
     private String completeName;
 
-    public void setSurname(String surname)
-    {
-        this.surname = surname;
-    }
-
     public String getSurname()
     {
         return surname;
     }
 
-    public void setDisplayName(String displayName)
+    public void setSurname(String surname)
     {
-        this.displayName = displayName;
+        this.surname = surname;
     }
 
     public String getDisplayName()
@@ -33,9 +55,9 @@ public class OutlookContactItem extends OutlookItem
         return displayName;
     }
 
-    public void setCompanyName(String companyName)
+    public void setDisplayName(String displayName)
     {
-        this.companyName = companyName;
+        this.displayName = displayName;
     }
 
     public String getCompanyName()
@@ -43,9 +65,9 @@ public class OutlookContactItem extends OutlookItem
         return companyName;
     }
 
-    public void setEmailAddress1(String emailAddress1)
+    public void setCompanyName(String companyName)
     {
-        this.emailAddress1 = emailAddress1;
+        this.companyName = companyName;
     }
 
     public String getEmailAddress1()
@@ -53,9 +75,9 @@ public class OutlookContactItem extends OutlookItem
         return emailAddress1;
     }
 
-    public void setPrimaryTelephone(String primaryTelephone)
+    public void setEmailAddress1(String emailAddress1)
     {
-        this.primaryTelephone = primaryTelephone;
+        this.emailAddress1 = emailAddress1;
     }
 
     public String getPrimaryTelephone()
@@ -63,9 +85,9 @@ public class OutlookContactItem extends OutlookItem
         return primaryTelephone;
     }
 
-    public void setEmailAddress2(String emailAddress2)
+    public void setPrimaryTelephone(String primaryTelephone)
     {
-        this.emailAddress2 = emailAddress2;
+        this.primaryTelephone = primaryTelephone;
     }
 
     public String getEmailAddress2()
@@ -73,14 +95,19 @@ public class OutlookContactItem extends OutlookItem
         return emailAddress2;
     }
 
-    public void setCompleteName(String completeName)
+    public void setEmailAddress2(String emailAddress2)
     {
-        this.completeName = completeName;
+        this.emailAddress2 = emailAddress2;
     }
 
     public String getCompleteName()
     {
         return completeName;
+    }
+
+    public void setCompleteName(String completeName)
+    {
+        this.completeName = completeName;
     }
 
     @Override

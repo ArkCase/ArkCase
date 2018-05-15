@@ -3,6 +3,33 @@
  */
 package com.armedia.acm.form.casefile.service;
 
+/*-
+ * #%L
+ * ACM Forms: Case File
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.form.casefile.model.CaseFileForm;
 import com.armedia.acm.form.casefile.model.CaseFileFormConstants;
 import com.armedia.acm.form.config.xml.PersonItem;
@@ -31,14 +58,12 @@ import java.util.List;
  */
 public class CaseFileFactory extends FrevvoFormFactory
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
-
     public static final String PERSON_TYPE = "Subject";
     public static final String PERSON_IDENTIFICATION_EMPLOYEE_ID = "EMPLOYEE_ID";
     public static final String PERSON_IDENTIFICATION_SSN = "SSN";
     public static final String OBJECT_TYPE_POSTAL_ADDRESS = "POSTAL_ADDRESS";
     public static final String OBJECT_TYPE_ORGANIZATION = "ORGANIZATION";
-
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private ObjectAssociationDao objectAssociationDao;
     private EcmFileDao ecmFileDao;
     private AcmHistoryDao acmHistoryDao;

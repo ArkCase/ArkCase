@@ -22,11 +22,11 @@ angular.module('admin').factory('Admin.EmailSenderConfigurationService', [ '$htt
          *
          * @returns {Object} http promise
          */
-        saveEmailSenderConfiguration : function(emailConfig) {
+        saveEmailSenderConfiguration: function(emailConfig) {
             return $http({
-                method : 'PUT',
-                url : 'api/latest/plugin/admin/email/configuration',
-                data : emailConfig
+                method: 'PUT',
+                url: 'api/latest/plugin/admin/email/configuration',
+                data: emailConfig
             });
         },
         /**
@@ -40,10 +40,10 @@ angular.module('admin').factory('Admin.EmailSenderConfigurationService', [ '$htt
          *
          * @returns {Object} http promise
          */
-        getEmailSenderConfiguration : function() {
+        getEmailSenderConfiguration: function() {
             return $http({
-                method : 'GET',
-                url : 'api/latest/plugin/admin/email/configuration'
+                method: 'GET',
+                url: 'api/latest/plugin/admin/email/configuration'
             });
         },
         /**
@@ -58,11 +58,11 @@ angular.module('admin').factory('Admin.EmailSenderConfigurationService', [ '$htt
          *
          * @returns {Object} http promise
          */
-        validateSmtpConfiguration : function(smtpConfiguration) {
+        validateSmtpConfiguration: function(smtpConfiguration) {
             return $http({
-                method : 'PUT',
-                url : 'api/latest/plugin/admin/email/configuration/validate',
-                data : smtpConfiguration
+                method: 'PUT',
+                url: 'api/latest/plugin/admin/email/configuration/validate',
+                data: smtpConfiguration
             });
         }
     };

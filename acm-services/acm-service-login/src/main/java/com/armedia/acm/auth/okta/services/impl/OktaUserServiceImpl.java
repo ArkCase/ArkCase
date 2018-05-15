@@ -1,5 +1,32 @@
 package com.armedia.acm.auth.okta.services.impl;
 
+/*-
+ * #%L
+ * ACM Service: User Login and Authentication
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.auth.okta.auth.AcmMultiFactorConfig;
 import com.armedia.acm.auth.okta.exceptions.OktaException;
 import com.armedia.acm.auth.okta.model.OktaAPIConstants;
@@ -9,6 +36,7 @@ import com.armedia.acm.auth.okta.model.user.OktaUserProfile;
 import com.armedia.acm.auth.okta.model.user.OktaUserStatus;
 import com.armedia.acm.auth.okta.services.OktaUserService;
 import com.google.common.base.Preconditions;
+
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +61,6 @@ public class OktaUserServiceImpl implements OktaUserService
         Preconditions.checkNotNull(user, "User must not be null to create user");
 
         JSONObject userRequestBody = new JSONObject();
-
 
         JSONObject userProfileRequestBody = new JSONObject();
         OktaUserProfile profile = user.getProfile();
@@ -65,13 +92,14 @@ public class OktaUserServiceImpl implements OktaUserService
     {
         JSONObject profileData = new JSONObject();
 
-        //need to check whether it has all the data it needs
+        // need to check whether it has all the data it needs
         boolean profileComplete = isProfileComplete(userProfile, profileData);
 
         if (userProfile == null || !profileComplete)
         {
             throw new OktaException("User profile is null or profile data are incomplete");
-        } else
+        }
+        else
         {
             JSONObject body = new JSONObject();
             body.put("profile", profileData);
@@ -127,7 +155,8 @@ public class OktaUserServiceImpl implements OktaUserService
         if (fName == null)
         {
             return false;
-        } else
+        }
+        else
         {
             profileData.put(OktaAPIConstants.FIRST_NAME, fName);
         }
@@ -136,7 +165,8 @@ public class OktaUserServiceImpl implements OktaUserService
         if (lName == null)
         {
             return false;
-        } else
+        }
+        else
         {
             profileData.put(OktaAPIConstants.LAST_NAME, lName);
         }
@@ -145,7 +175,8 @@ public class OktaUserServiceImpl implements OktaUserService
         if (email == null)
         {
             return false;
-        } else
+        }
+        else
         {
 
             profileData.put(OktaAPIConstants.EMAIL, userProfile.getEmail());
@@ -155,7 +186,8 @@ public class OktaUserServiceImpl implements OktaUserService
         if (login != null)
         {
             profileData.put(OktaAPIConstants.LOGIN_NAME, login);
-        } else
+        }
+        else
         {
             return false;
         }

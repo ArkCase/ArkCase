@@ -2,27 +2,9 @@
 
 angular.module('complaints').controller(
         'Complaints.PastApprovalRoutingController',
-        [
-                '$scope',
-                '$stateParams',
-                '$q',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'Util.DateService',
-                'ConfigService',
-                'ObjectService',
-                'LookupService',
-                'Object.LookupService',
-                'Complaint.InfoService',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'Authentication',
-                'PermissionsService',
+        [ '$scope', '$stateParams', '$q', '$translate', '$modal', 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService',
                 'Profile.UserInfoService',
-                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService,
-                        ObjectLookupService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication,
-                        PermissionsService, UserInfoService) {
+                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication, PermissionsService, UserInfoService) {
 
                     $scope.pastApprovers = {};
                     $scope.gridOptions = $scope.gridOptions || {};
@@ -31,19 +13,19 @@ angular.module('complaints').controller(
                     var currentUser = '';
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "complaints",
-                        componentId : "pastapprovals",
-                        retrieveObjectInfo : ComplaintInfoService.getComplaintInfo,
-                        validateObjectInfo : ComplaintInfoService.validateComplaintInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "complaints",
+                        componentId: "pastapprovals",
+                        retrieveObjectInfo: ComplaintInfoService.getComplaintInfo,
+                        validateObjectInfo: ComplaintInfoService.validateComplaintInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         }
                     });
 
                     var gridHelperPastApprovers = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     Authentication.queryUserInfo().then(function(data) {
