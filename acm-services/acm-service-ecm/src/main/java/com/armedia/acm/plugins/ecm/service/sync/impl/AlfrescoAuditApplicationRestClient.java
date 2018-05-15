@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
+/*-
+ * #%L
+ * ACM Service: Enterprise Content Management
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
 
 import org.apache.commons.codec.binary.Base64;
@@ -22,23 +49,15 @@ public class AlfrescoAuditApplicationRestClient
 {
     private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
     private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
-
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     private String protocol;
     private String host;
     private String port;
     private String contextRoot;
     private String username;
     private String password;
-
     private RestTemplate restTemplate;
     private String basicAuthenticationHeaderValue;
-
-    private enum AlfrescoAuthenticationType
-    {
-        BASIC, KERBEROS
-    }
-
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     public String baseUrl()
     {
@@ -211,6 +230,11 @@ public class AlfrescoAuditApplicationRestClient
     public void setPassword(String password)
     {
         this.password = password;
+    }
+
+    private enum AlfrescoAuthenticationType
+    {
+        BASIC, KERBEROS
     }
 
 }

@@ -17,12 +17,12 @@
  */
 angular.module('admin').service('Admin.CMMergeFieldsService', [ '$http', function($http) {
     return ({
-        retrieveMergeFieldsList : retrieveMergeFieldsList,
-        retrieveMergeFieldsVersionsList : retrieveMergeFieldsVersionsList,
-        retrieveMergeFieldsVersionsByType : retrieveMergeFieldsVersionsByType,
-        retrieveActiveMergeFieldsByType : retrieveActiveMergeFieldsByType,
-        saveMergeFieldsData : saveMergeFieldsData,
-        setActiveMergingVersion : setActiveMergingVersion
+        retrieveMergeFieldsList: retrieveMergeFieldsList,
+        retrieveMergeFieldsVersionsList: retrieveMergeFieldsVersionsList,
+        retrieveMergeFieldsVersionsByType: retrieveMergeFieldsVersionsByType,
+        retrieveActiveMergeFieldsByType: retrieveActiveMergeFieldsByType,
+        saveMergeFieldsData: saveMergeFieldsData,
+        setActiveMergingVersion: setActiveMergingVersion
     });
 
     /**
@@ -37,9 +37,9 @@ angular.module('admin').service('Admin.CMMergeFieldsService', [ '$http', functio
      */
     function retrieveMergeFieldsList() {
         return $http({
-            method : "GET",
-            url : 'api/latest/plugin/admin/mergefields',
-            cache : false
+            method: "GET",
+            url: 'api/latest/plugin/admin/mergefields',
+            cache: false
         });
     }
     ;
@@ -56,9 +56,9 @@ angular.module('admin').service('Admin.CMMergeFieldsService', [ '$http', functio
      */
     function retrieveMergeFieldsVersionsList() {
         return $http({
-            method : "GET",
-            url : 'api/latest/plugin/admin/mergefields/versions',
-            cache : false
+            method: "GET",
+            url: 'api/latest/plugin/admin/mergefields/versions',
+            cache: false
         });
     }
     ;
@@ -75,9 +75,9 @@ angular.module('admin').service('Admin.CMMergeFieldsService', [ '$http', functio
      */
     function retrieveMergeFieldsVersionsByType(objectType) {
         return $http({
-            method : "GET",
-            url : 'api/latest/plugin/admin/mergefields/versions/' + objectType,
-            cache : false
+            method: "GET",
+            url: 'api/latest/plugin/admin/mergefields/versions/' + objectType,
+            cache: false
         });
     }
     ;
@@ -94,9 +94,9 @@ angular.module('admin').service('Admin.CMMergeFieldsService', [ '$http', functio
      */
     function retrieveActiveMergeFieldsByType(objectType) {
         return $http({
-            method : "GET",
-            url : 'api/latest/plugin/admin/mergefields/active/' + objectType,
-            cache : false
+            method: "GET",
+            url: 'api/latest/plugin/admin/mergefields/active/' + objectType,
+            cache: false
         });
     }
     ;
@@ -114,9 +114,9 @@ angular.module('admin').service('Admin.CMMergeFieldsService', [ '$http', functio
      */
     function saveMergeFieldsData(mergeFieldsData) {
         return $http({
-            method : "PUT",
-            url : 'api/latest/plugin/admin/mergefields',
-            data : mergeFieldsData
+            method: "PUT",
+            url: 'api/latest/plugin/admin/mergefields',
+            data: mergeFieldsData
         });
     }
 
@@ -133,9 +133,9 @@ angular.module('admin').service('Admin.CMMergeFieldsService', [ '$http', functio
      */
     function setActiveMergingVersion(mergeFieldVersionData) {
         return $http({
-            method : "PUT",
-            url : 'api/latest/plugin/admin/mergefields/version/active',
-            data : mergeFieldVersionData
+            method: "PUT",
+            url: 'api/latest/plugin/admin/mergefields/version/active',
+            data: mergeFieldVersionData
         });
     }
 } ]);

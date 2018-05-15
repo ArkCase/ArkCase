@@ -5,7 +5,7 @@ angular.module('welcome').config([ '$stateProvider', '$urlRouterProvider', funct
     $urlRouterProvider.otherwise('/welcome');
 
     $stateProvider.state('welcome', {
-        url : '/welcome',
-        templateUrl : 'modules/welcome/views/welcome.client.view.html'
+        url: '/welcome',
+        templateUrl: 'modules/welcome/views/welcome.client.view.html'
     });
 } ]);

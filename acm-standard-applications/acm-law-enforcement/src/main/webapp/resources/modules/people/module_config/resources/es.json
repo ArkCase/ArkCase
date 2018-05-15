@@ -18,7 +18,9 @@
         "email.label": "Email",
         "status.label": "Estado",
         "organization.label": "Organización",
-        "identification.label": "Identificación"
+        "organization.type": "es_Organization type",
+        "identification.label": "Identificación",
+        "identification.type": "es_ID type"
     },
     "people.comp.actions": {
         "title": "Comportamiento",

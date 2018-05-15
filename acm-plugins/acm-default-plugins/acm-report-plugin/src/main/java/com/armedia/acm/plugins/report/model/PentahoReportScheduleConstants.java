@@ -1,10 +1,38 @@
 package com.armedia.acm.plugins.report.model;
 
+/*-
+ * #%L
+ * ACM Default Plugin: report
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 /**
  * Created by dwu on 6/9/2017.
  * <p>
  * "jobName":"MasterList",
- * "simpleJobTrigger":{"uiPassParam":"RUN_ONCE", "repeatInterval":0, "repeatCount":0, "startTime":"2017-06-06T15:59:00.000-04:00", "endTime":null},
+ * "simpleJobTrigger":{"uiPassParam":"RUN_ONCE", "repeatInterval":0, "repeatCount":0,
+ * "startTime":"2017-06-06T15:59:00.000-04:00", "endTime":null},
  * "inputFile":"/public/arkcase/MasterList.prpt",
  * "outputFile":"/public/admin",
  * "jobParameters":[
@@ -22,7 +50,7 @@ package com.armedia.acm.plugins.report.model;
 
 public final class PentahoReportScheduleConstants
 {
-    //These are default values
+    // These are default values
     public static final String SIMPLE_JOB_TRIGGER = "simpleJobTrigger";
     public static final String COMPLEX_JOB_TRIGGER = "complexJobTrigger";
     public static final String RUN_ONCE = "RUN_ONCE";

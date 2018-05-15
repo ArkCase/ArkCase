@@ -1,5 +1,32 @@
 package com.armedia.acm.correspondence.service;
 
+/*-
+ * #%L
+ * ACM Service: Correspondence Library
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapConfigurationFromMergeField;
 import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapConfigurationFromMergeFieldVersion;
 import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapMergeFieldFromConfiguration;
@@ -36,16 +63,14 @@ import java.util.stream.Collectors;
 public class CorrespondenceMergeFieldManager implements ApplicationListener<ContextRefreshedEvent>
 {
 
+    private static final String DEFAULT_MERGE_FIELD_VERSION = "1.0";
+    private static final String DEFAULT_MERGE_FIELD_MODIFIER = "System User";
     private Resource correspondenceMergeFieldsVersionConfiguration;
     private Resource correspondenceMergeFieldsConfiguration;
     private SpringContextHolder springContextHolder;
     private ObjectConverter objectConverter;
-
     private List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
     private List<CorrespondenceMergeFieldVersion> mergeFieldsVersions = new ArrayList<>();
-
-    private static final String DEFAULT_MERGE_FIELD_VERSION = "1.0";
-    private static final String DEFAULT_MERGE_FIELD_MODIFIER = "System User";
 
     /*
      * (non-Javadoc)

@@ -3,7 +3,35 @@
  */
 package com.armedia.acm.compressfolder;
 
+/*-
+ * #%L
+ * ACM Service: Folder Compressing Service
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.compressfolder.model.CompressNode;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 
 /**
@@ -28,7 +56,7 @@ public interface FolderCompressor
      * @see #maxSize
      * @see #sizeUnit
      */
-    String compressFolder(Long folderId) throws FolderCompressorException;
+    String compressFolder(Long folderId) throws AcmFolderException;
 
     /**
      * Compresses the folder contents by using the <code>maxSize</code> and <code>sizeUnit</code> for setting the output
@@ -38,14 +66,14 @@ public interface FolderCompressor
      *            object passed from frontend containing the selected nodes and root node
      * @return the path to the file on the file system where the output file was stored on the machine where the
      *         application is running.
-     * @throws FolderCompressorException
+     * @throws AcmFolderException
      *             if a folder for the given <code>folderId</code> does not exist, or there was an
      *             IO exception during retrieving, writing or compressing the folder.
      *
      * @see #maxSize
      * @see #sizeUnit
      */
-    String compressFolder(CompressNode compressNode) throws FolderCompressorException;
+    String compressFolder(CompressNode compressNode) throws AcmFolderException;
 
     /**
      * Compresses the folder contents by using the <code>size</code> and <code>sizeUnit</code> arguments for setting the
@@ -59,13 +87,13 @@ public interface FolderCompressor
      *            size unit used to calculate the max compressed size in bytes.
      * @return the path to the file on the file system where the output file was stored on the machine where the
      *         application is running.
-     * @throws FolderCompressorException
+     * @throws AcmFolderException
      *             if a folder for the given <code>folderId</code> does not exist, or there was an
      *             IO exception during retrieving, writing or compressing the folder.
      */
-    String compressFolder(Long folderId, long size, SizeUnit sizeUnit) throws FolderCompressorException;
+    String compressFolder(Long folderId, long size, SizeUnit sizeUnit) throws AcmFolderException;
 
-    String compressFolder(Long folderId, CompressNode compressNode, long size, SizeUnit sizeUnit) throws FolderCompressorException;
+    String compressFolder(Long folderId, CompressNode compressNode, long size, SizeUnit sizeUnit) throws AcmFolderException;
 
     /**
      * Returns path for the compressed folder file

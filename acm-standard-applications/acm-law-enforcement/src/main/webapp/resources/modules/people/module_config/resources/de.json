@@ -18,7 +18,9 @@
         "email.label": "Email",
         "status.label": "Status",
         "organization.label": "Organisation",
-        "identification.label": "Identifizierung"
+        "organization.type": "de_Organization type",
+        "identification.label": "Identifizierung",
+        "identification.type": "de_ID type"
     },
     "people.comp.actions": {
         "title": "Aktionen",

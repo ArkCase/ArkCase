@@ -1,5 +1,32 @@
 package com.armedia.acm.services.email.service;
 
+/*-
+ * #%L
+ * ACM Service: Email
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static java.util.regex.Pattern.matches;
 
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -40,63 +67,9 @@ import java.util.stream.Stream;
 public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTemplateConfigurationService
 {
     private ObjectConverter objectConverter;
-
-    /**
-     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 8, 2017
-     *
-     */
-    private class FilesystemMailTemplateConfigurationExceptionMapper<ME extends AcmEmailServiceException>
-            implements AcmEmailServiceExceptionMapper<ME>
-    {
-
-        /*
-         * (non-Javadoc)
-         * @see
-         * com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper#mapException(com.armedia.acm.services.
-         * email.service.AcmEmailServiceException)
-         */
-        @Override
-        public Object mapException(ME me)
-        {
-            Map<String, Object> errorDetails = new HashMap<>();
-            if (me instanceof AcmEmailConfigurationIOException)
-            {
-                errorDetails.put("error_cause", "READ_WRITE_ERROR.");
-            }
-            else if (me instanceof AcmEmailConfigurationJsonException)
-            {
-                errorDetails.put("error_cause", "JSON_PARSING_ERROR.");
-            }
-            else if (me instanceof AcmEmailConfigurationException)
-            {
-                errorDetails.put("error_cause", "INTERENAL_SERVER_ERROR.");
-            }
-            else
-            {
-                errorDetails.put("error_cause", "UNKOWN_ERROR.");
-            }
-            errorDetails.put("error_message", me.getMessage());
-            return errorDetails;
-        }
-
-        /*
-         * (non-Javadoc)
-         * @see com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper#getStatusCode()
-         */
-        @Override
-        public HttpStatus getStatusCode()
-        {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-
-    }
-
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private Resource templateConfigurations;
-
     private String templateFolderPath;
-
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /*
@@ -134,6 +107,15 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
         {
             readLock.unlock();
         }
+    }
+
+    /**
+     * @param templateConfigurations
+     *            the templateConfigurations to set
+     */
+    public void setTemplateConfigurations(Resource templateConfigurations)
+    {
+        this.templateConfigurations = templateConfigurations;
     }
 
     /*
@@ -464,15 +446,6 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     }
 
     /**
-     * @param templateConfigurations
-     *            the templateConfigurations to set
-     */
-    public void setTemplateConfigurations(Resource templateConfigurations)
-    {
-        this.templateConfigurations = templateConfigurations;
-    }
-
-    /**
      * @param templateFolderPath
      *            the templateFolderPath to set
      */
@@ -489,6 +462,56 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    /**
+     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 8, 2017
+     *
+     */
+    private class FilesystemMailTemplateConfigurationExceptionMapper<ME extends AcmEmailServiceException>
+            implements AcmEmailServiceExceptionMapper<ME>
+    {
+
+        /*
+         * (non-Javadoc)
+         * @see
+         * com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper#mapException(com.armedia.acm.services.
+         * email.service.AcmEmailServiceException)
+         */
+        @Override
+        public Object mapException(ME me)
+        {
+            Map<String, Object> errorDetails = new HashMap<>();
+            if (me instanceof AcmEmailConfigurationIOException)
+            {
+                errorDetails.put("error_cause", "READ_WRITE_ERROR.");
+            }
+            else if (me instanceof AcmEmailConfigurationJsonException)
+            {
+                errorDetails.put("error_cause", "JSON_PARSING_ERROR.");
+            }
+            else if (me instanceof AcmEmailConfigurationException)
+            {
+                errorDetails.put("error_cause", "INTERENAL_SERVER_ERROR.");
+            }
+            else
+            {
+                errorDetails.put("error_cause", "UNKOWN_ERROR.");
+            }
+            errorDetails.put("error_message", me.getMessage());
+            return errorDetails;
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper#getStatusCode()
+         */
+        @Override
+        public HttpStatus getStatusCode()
+        {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
     }
 
 }

@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
     <flow name="getTestFolderId" doc:name="Get Test Folder Id">
         <description>Lookup a test folder ID from the CMIS repository.</description>
-        <vm:inbound-endpoint address="vm://getTestFolderId.in" exchange-pattern="request-response"
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://getTestFolderId.in" exchange-pattern="request-response"
             doc:name="Get Test Folder ID"></vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>

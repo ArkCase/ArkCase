@@ -24,25 +24,23 @@ angular.module('tasks').controller(
                 'Complaint.InfoService',
                 'SearchService',
                 'Search.QueryBuilderService',
-                function($scope, $stateParams, $translate, $filter, $modal, Util, UtilDateService, ConfigService, LookupService,
-                        ObjectLookupService, TaskInfoService, ObjectModelService, HelperObjectBrowserService, TaskAlertsService,
-                        ObjectService, HelperUiGridService, ObjectParticipantService, CaseInfoService, ComplaintInfoService, SearchService,
-                        SearchQueryBuilder) {
+                function($scope, $stateParams, $translate, $filter, $modal, Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService, HelperObjectBrowserService, TaskAlertsService, ObjectService, HelperUiGridService, ObjectParticipantService,
+                        CaseInfoService, ComplaintInfoService, SearchService, SearchQueryBuilder) {
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "tasks",
-                        componentId : "info",
-                        retrieveObjectInfo : TaskInfoService.getTaskInfo,
-                        validateObjectInfo : TaskInfoService.validateTaskInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "tasks",
+                        componentId: "info",
+                        retrieveObjectInfo: TaskInfoService.getTaskInfo,
+                        validateObjectInfo: TaskInfoService.validateTaskInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
                     var promiseUsers = gridHelper.getUsers();
 
@@ -54,8 +52,8 @@ angular.module('tasks').controller(
                         var options = [];
                         _.each(users, function(user) {
                             options.push({
-                                object_id_s : user.object_id_s,
-                                name : user.name
+                                object_id_s: user.object_id_s,
+                                name: user.name
                             });
                         });
                         $scope.assignableUsers = options;
@@ -66,8 +64,8 @@ angular.module('tasks').controller(
                         var options = [];
                         _.each(groups, function(group) {
                             options.push({
-                                value : group.name,
-                                text : group.name
+                                value: group.name,
+                                text: group.name
                             });
                         });
                         $scope.owningGroups = options;
@@ -81,9 +79,9 @@ angular.module('tasks').controller(
 
                     $scope.openAssigneePickerModal = function() {
                         var participant = {
-                            id : '',
-                            participantLdapId : '',
-                            config : $scope.config
+                            id: '',
+                            participantLdapId: '',
+                            config: $scope.config
                         };
                         showAssigneeModal(participant, false);
                     };
@@ -93,14 +91,14 @@ angular.module('tasks').controller(
                         modalScope.participant = participant || {};
 
                         var modalInstance = $modal.open({
-                            scope : modalScope,
-                            animation : true,
-                            templateUrl : "modules/tasks/views/components/task-assignee-picker-modal.client.view.html",
-                            controller : "Tasks.AssigneePickerController",
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                owningGroup : function() {
+                            scope: modalScope,
+                            animation: true,
+                            templateUrl: "modules/tasks/views/components/task-assignee-picker-modal.client.view.html",
+                            controller: "Tasks.AssigneePickerController",
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                owningGroup: function() {
                                     return $scope.owningGroup;
                                 }
                             }
@@ -147,9 +145,9 @@ angular.module('tasks').controller(
 
                     $scope.openGroupPickerModal = function() {
                         var participant = {
-                            id : '',
-                            participantLdapId : '',
-                            config : $scope.config
+                            id: '',
+                            participantLdapId: '',
+                            config: $scope.config
                         };
                         showGroupModal(participant, false);
                     };
@@ -159,14 +157,14 @@ angular.module('tasks').controller(
                         modalScope.participant = participant || {};
 
                         var modalInstance = $modal.open({
-                            scope : modalScope,
-                            animation : true,
-                            templateUrl : "modules/tasks/views/components/task-group-picker-modal.client.view.html",
-                            controller : "Tasks.GroupPickerController",
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                owningGroup : function() {
+                            scope: modalScope,
+                            animation: true,
+                            templateUrl: "modules/tasks/views/components/task-group-picker-modal.client.view.html",
+                            controller: "Tasks.GroupPickerController",
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                owningGroup: function() {
                                     return $scope.owningGroup;
                                 }
                             }
@@ -192,7 +190,7 @@ angular.module('tasks').controller(
                                 var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(searchQuery, filter, size, start);
                                 if (query) {
                                     SearchService.queryFilteredSearch({
-                                        query : query
+                                        query: query
                                     }, function(data) {
                                         var returnedUsers = data.response.docs;
                                         // Going through th collection of returnedUsers to see if there is a match with the current assignee
@@ -266,7 +264,7 @@ angular.module('tasks').controller(
 
                     $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
                     $scope.picker = {
-                        opened : false
+                        opened: false
                     };
 
                     $scope.taskStartDateBeforeChange = null;
@@ -377,18 +375,18 @@ angular.module('tasks').controller(
                         cfg.topLevelGroupTypes = [ "LDAP_GROUP" ];
 
                         var modalInstance = $modal.open({
-                            animation : $scope.animationsEnabled,
-                            templateUrl : 'modules/tasks/views/components/dialog/user-group-picker.client.view.html',
-                            controller : 'Tasks.UserGroupPickerDialogController',
-                            size : 'lg',
-                            resolve : {
-                                cfg : function() {
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'modules/tasks/views/components/dialog/user-group-picker.client.view.html',
+                            controller: 'Tasks.UserGroupPickerDialogController',
+                            size: 'lg',
+                            resolve: {
+                                cfg: function() {
                                     return cfg;
                                 },
-                                parentType : function() {
+                                parentType: function() {
                                     return $scope.objectInfo.attachedToObjectType;
                                 },
-                                showGroupAndUserPicker : function() {
+                                showGroupAndUserPicker: function() {
                                     return true;
                                 }
                             }

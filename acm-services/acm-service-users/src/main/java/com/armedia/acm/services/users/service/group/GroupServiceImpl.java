@@ -1,5 +1,32 @@
 package com.armedia.acm.services.users.service.group;
 
+/*-
+ * #%L
+ * ACM Service: Users
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectAlreadyExistsException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -14,6 +41,7 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
+import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -23,11 +51,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -36,6 +60,7 @@ public class GroupServiceImpl implements GroupService
     private UserDao userDao;
     private AcmGroupDao groupDao;
     private ExecuteSolrQuery executeSolrQuery;
+    private AcmGroupEventPublisher acmGroupEventPublisher;
 
     @Override
     public AcmGroup findByName(String name)
@@ -294,6 +319,10 @@ public class GroupServiceImpl implements GroupService
             groupDao.getEm().flush();
         }
 
+        if (acmGroup.getType() == AcmGroupType.ADHOC_GROUP)
+        {
+            acmGroupEventPublisher.publishAdHocGroupDeletedEvent(acmGroup);
+        }
         return acmGroup;
     }
 
@@ -461,6 +490,13 @@ public class GroupServiceImpl implements GroupService
         {
             log.warn("Group [{}] was not found.", groupId);
             throw new AcmObjectNotFoundException("GROUP", null, "Group " + groupId + " was not found");
+        }
+
+        Optional<AcmUser> foundUser = group.getUserMembers().stream().filter(u -> u.getUserId().equals(user.getUserId())).findFirst();
+        if (foundUser.isPresent())
+        {
+            log.debug("User [{}] is already a member to the Group [{}]", user.getUserId(), group.getName());
+            return group;
         }
 
         log.debug("Add User [{}] as member to Group [{}]", user.getUserId(), group.getName());
@@ -682,5 +718,10 @@ public class GroupServiceImpl implements GroupService
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher)
+    {
+        this.acmGroupEventPublisher = acmGroupEventPublisher;
     }
 }

@@ -2,24 +2,8 @@
 
 angular.module('organizations').controller(
         'Organizations.ComplaintsController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Organization.InfoService',
-                'Authentication',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'Object.OrganizationService',
-                'OrganizationAssociation.Service',
-                'Object.LookupService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, Authentication,
-                        HelperUiGridService, HelperObjectBrowserService, ObjectOrganizationService, OrganizationAssociationService,
-                        ObjectLookupService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.OrganizationService', 'OrganizationAssociation.Service', 'Object.LookupService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, ObjectOrganizationService, OrganizationAssociationService, ObjectLookupService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -33,22 +17,22 @@ angular.module('organizations').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "organizations",
-                        componentId : "complaints",
-                        retrieveObjectInfo : OrganizationInfoService.getOrganizationInfo,
-                        validateObjectInfo : OrganizationInfoService.validateOrganizationInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "organizations",
+                        componentId: "complaints",
+                        retrieveObjectInfo: OrganizationInfoService.getOrganizationInfo,
+                        validateObjectInfo: OrganizationInfoService.validateOrganizationInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -66,12 +50,11 @@ angular.module('organizations').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
                         var currentObjectId = Util.goodMapValue($scope.objectInfo, "organizationId");
-                        OrganizationAssociationService.getOrganizationAssociations(currentObjectId, ObjectService.ObjectTypes.COMPLAINT)
-                                .then(function(data) {
-                                    $scope.gridOptions.data = data.response.docs;
-                                    $scope.gridOptions.totalItems = data.response.numFound;
-                                    return data;
-                                });
+                        OrganizationAssociationService.getOrganizationAssociations(currentObjectId, ObjectService.ObjectTypes.COMPLAINT).then(function(data) {
+                            $scope.gridOptions.data = data.response.docs;
+                            $scope.gridOptions.totalItems = data.response.numFound;
+                            return data;
+                        });
                     };
 
                     $scope.addComplaintAssociation = function() {
@@ -105,24 +88,24 @@ angular.module('organizations').controller(
 
                         if (rowEntity) {
                             angular.extend(params, {
-                                objectId : rowEntity.parent_object.object_id_s,
-                                objectName : rowEntity.parent_object.name,
-                                type : rowEntity.type_lcs,
-                                description : association.description
+                                objectId: rowEntity.parent_object.object_id_s,
+                                objectName: rowEntity.parent_object.name,
+                                type: rowEntity.type_lcs,
+                                description: association.description
                             });
                         } else {
                             association = new newOrganizationAssociation();
                         }
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-object-association-modal.client.view.html',
-                            controller : 'Common.AddObjectAssociationModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-object-association-modal.client.view.html',
+                            controller: 'Common.AddObjectAssociationModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -149,9 +132,9 @@ angular.module('organizations').controller(
                             } else {
                                 //add row to the grid
                                 rowEntity = {
-                                    object_id_s : response.id,
-                                    type_lcs : response.associationType,
-                                    parent_object : data.solrDocument
+                                    object_id_s: response.id,
+                                    type_lcs: response.associationType,
+                                    parent_object: data.solrDocument
                                 };
                                 $scope.gridOptions.data.push(rowEntity);
                             }
@@ -160,14 +143,14 @@ angular.module('organizations').controller(
 
                     var newOrganizationAssociation = function() {
                         return {
-                            id : null,
-                            associationType : "",
-                            parentId : $scope.objectInfo.id,
-                            parentType : $scope.objectInfo.objectType,
-                            parentTitle : $scope.objectInfo.complaintNumber,
-                            description : "",
-                            organization : null,
-                            className : "com.armedia.acm.plugins.person.model.OrganizationAssociation"
+                            id: null,
+                            associationType: "",
+                            parentId: $scope.objectInfo.id,
+                            parentType: $scope.objectInfo.objectType,
+                            parentTitle: $scope.objectInfo.complaintNumber,
+                            description: "",
+                            organization: null,
+                            className: "com.armedia.acm.plugins.person.model.OrganizationAssociation"
                         };
                     };
                 } ]);

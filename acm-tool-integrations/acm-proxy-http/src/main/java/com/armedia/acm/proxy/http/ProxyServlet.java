@@ -13,6 +13,33 @@
 
 package com.armedia.acm.proxy.http;
 
+/*-
+ * #%L
+ * Tool Integrations: HTTP Proxy
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.commons.io.IOUtils;
@@ -153,46 +180,103 @@ public class ProxyServlet extends HttpServlet
      * A String parameter name to set additional headers for given url matcher
      */
     public static final String P_SET_ADDITIONAL_HEADERS = "setAdditionalHeaders";
-
-    /**
-     * List containing urls which need to be matched for rewriting strings in the content.
-     */
-    protected List<String> responseUrlMatchers;
-
-    /**
-     * Patterns and replacements for replacing String in the response content
-     */
-    private List<String> responseContentRewritePairs;
-
-    /**
-     * List containing content types which needs to be skipped for processing
-     */
-    protected List<String> skipResponseContentTypes;
-
-    /**
-     * List containing patterns for urls which need to be skipped
-     */
-    protected List<String> skipResponseUrlMatchers;
-
-    /**
-     * List containing patterns and parameters for urls which need to be added
-     */
-    protected List<String> appendUrlParams;
-
-    /**
-     * List containing patterns and additional headers for urls which need to be added
-     */
-    protected List<String> additionalHeaders;
-
     /**
      * The parameter name for the target (destination) URI to proxy to.
      */
     protected static final String P_TARGET_URI = "targetUri";
     protected static final String ATTR_TARGET_URI = ProxyServlet.class.getSimpleName() + ".targetUri";
     protected static final String ATTR_TARGET_HOST = ProxyServlet.class.getSimpleName() + ".targetHost";
+    /**
+     * These are the "hop-by-hop" headers that should not be copied.
+     * http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html I use an
+     * HttpClient HeaderGroup class instead of Set&lt;String&gt; because this approach does case insensitive lookup
+     * faster.
+     */
+    protected static final HeaderGroup hopByHopHeaders;
+    protected static final BitSet asciiQueryChars;
+
+    static
+    {
+        hopByHopHeaders = new HeaderGroup();
+        String[] headers = new String[] {
+                "Connection",
+                "Keep-Alive",
+                "Proxy-Authenticate",
+                "Proxy-Authorization",
+                "TE",
+                "Trailers",
+                "Transfer-Encoding",
+                "Upgrade" };
+        for (String header : headers)
+        {
+            hopByHopHeaders.addHeader(new BasicHeader(header, null));
+        }
+    }
+
+    static
+    {
+        char[] c_unreserved = "_-!.~'()*".toCharArray();// plus alphanum
+        char[] c_punct = ",;:$&+=".toCharArray();
+        char[] c_reserved = "?/[]@".toCharArray();// plus punct
+
+        asciiQueryChars = new BitSet(128);
+        for (char c = 'a'; c <= 'z'; c++)
+        {
+            asciiQueryChars.set(c);
+        }
+        for (char c = 'A'; c <= 'Z'; c++)
+        {
+            asciiQueryChars.set(c);
+        }
+        for (char c = '0'; c <= '9'; c++)
+        {
+            asciiQueryChars.set(c);
+        }
+        for (char c : c_unreserved)
+        {
+            asciiQueryChars.set(c);
+        }
+        for (char c : c_punct)
+        {
+            asciiQueryChars.set(c);
+        }
+        for (char c : c_reserved)
+        {
+            asciiQueryChars.set(c);
+        }
+
+        asciiQueryChars.set('%');// leave existing percent escapes in place
+    }
+
+    /**
+     * Logger instance.
+     */
+    public final Logger logger = LoggerFactory.getLogger(ProxyServlet.class);
+    /**
+     * List containing urls which need to be matched for rewriting strings in the content.
+     */
+    protected List<String> responseUrlMatchers;
 
     /* MISC */
+    /**
+     * List containing content types which needs to be skipped for processing
+     */
+    protected List<String> skipResponseContentTypes;
+    /**
+     * List containing patterns for urls which need to be skipped
+     */
+    protected List<String> skipResponseUrlMatchers;
+    /**
+     * List containing patterns and parameters for urls which need to be added
+     */
+    protected List<String> appendUrlParams;
+    /**
+     * List containing patterns and additional headers for urls which need to be added
+     */
+    protected List<String> additionalHeaders;
 
+    // These next 3 are cached here, and should only be referred to in initialization logic. See the
+    // ATTR_* parameters.
     protected boolean doForwardIP = true;
     /**
      * User agents shouldn't send the url fragment but what if it does?
@@ -200,27 +284,77 @@ public class ProxyServlet extends HttpServlet
     protected boolean doSendUrlFragment = true;
     protected boolean doPreserveHost = false;
     protected boolean doPreserveCookies = false;
-
-    // These next 3 are cached here, and should only be referred to in initialization logic. See the
-    // ATTR_* parameters.
     /**
      * From the configured parameter "targetUri".
      */
     protected String targetUri;
     protected URI targetUriObj;// new URI(targetUri)
     protected HttpHost targetHost;// URIUtils.extractHost(targetUriObj);
-
+    /**
+     * Patterns and replacements for replacing String in the response content
+     */
+    private List<String> responseContentRewritePairs;
     /**
      * container for compiled pattern for further reuse
      */
     private Map<String, Pattern> compiledPatterns = new HashMap<>();
-
     private HttpClient proxyClient;
 
     /**
-     * Logger instance.
+     * Encodes characters in the query or fragment part of the URI.
+     * <p>
+     * <p>
+     * Unfortunately, an incoming URI sometimes has characters disallowed by the spec. HttpClient insists that the
+     * outgoing proxied request
+     * has a valid URI because it uses Java's {@link URI}. To be more forgiving, we must escape the problematic
+     * characters. See the URI
+     * class for the spec.
+     *
+     * @param in
+     *            example: name=value&amp;foo=bar#fragment
      */
-    public final Logger logger = LoggerFactory.getLogger(ProxyServlet.class);
+    protected static CharSequence encodeUriQuery(CharSequence in)
+    {
+        // Note that I can't simply use URI.java to encode because it will escape pre-existing escaped things.
+        StringBuilder outBuf = null;
+        Formatter formatter = null;
+        for (int i = 0; i < in.length(); i++)
+        {
+            char c = in.charAt(i);
+            boolean escape = true;
+            if (c < 128)
+            {
+                if (asciiQueryChars.get(c))
+                {
+                    escape = false;
+                }
+            }
+            else if (!Character.isISOControl(c) && !Character.isSpaceChar(c))
+            {// not-ascii
+                escape = false;
+            }
+            if (!escape)
+            {
+                if (outBuf != null)
+                {
+                    outBuf.append(c);
+                }
+            }
+            else
+            {
+                // escape
+                if (outBuf == null)
+                {
+                    outBuf = new StringBuilder(in.length() + 5 * 3);
+                    outBuf.append(in, 0, i);
+                    formatter = new Formatter(outBuf);
+                }
+                // leading %, 0 padded, width 2, capital hex
+                formatter.format("%%%02X", (int) c);// TODO
+            }
+        }
+        return outBuf != null ? outBuf : in;
+    }
 
     @Override
     public String getServletInfo()
@@ -579,32 +713,6 @@ public class ProxyServlet extends HttpServlet
         catch (IOException e)
         {// ignore
             log(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * These are the "hop-by-hop" headers that should not be copied.
-     * http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html I use an
-     * HttpClient HeaderGroup class instead of Set&lt;String&gt; because this approach does case insensitive lookup
-     * faster.
-     */
-    protected static final HeaderGroup hopByHopHeaders;
-
-    static
-    {
-        hopByHopHeaders = new HeaderGroup();
-        String[] headers = new String[] {
-                "Connection",
-                "Keep-Alive",
-                "Proxy-Authenticate",
-                "Proxy-Authorization",
-                "TE",
-                "Trailers",
-                "Transfer-Encoding",
-                "Upgrade" };
-        for (String header : headers)
-        {
-            hopByHopHeaders.addHeader(new BasicHeader(header, null));
         }
     }
 
@@ -1108,99 +1216,6 @@ public class ProxyServlet extends HttpServlet
     public String getTargetUri()
     {
         return targetUri;
-    }
-
-    /**
-     * Encodes characters in the query or fragment part of the URI.
-     * <p>
-     * <p>
-     * Unfortunately, an incoming URI sometimes has characters disallowed by the spec. HttpClient insists that the
-     * outgoing proxied request
-     * has a valid URI because it uses Java's {@link URI}. To be more forgiving, we must escape the problematic
-     * characters. See the URI
-     * class for the spec.
-     *
-     * @param in
-     *            example: name=value&amp;foo=bar#fragment
-     */
-    protected static CharSequence encodeUriQuery(CharSequence in)
-    {
-        // Note that I can't simply use URI.java to encode because it will escape pre-existing escaped things.
-        StringBuilder outBuf = null;
-        Formatter formatter = null;
-        for (int i = 0; i < in.length(); i++)
-        {
-            char c = in.charAt(i);
-            boolean escape = true;
-            if (c < 128)
-            {
-                if (asciiQueryChars.get(c))
-                {
-                    escape = false;
-                }
-            }
-            else if (!Character.isISOControl(c) && !Character.isSpaceChar(c))
-            {// not-ascii
-                escape = false;
-            }
-            if (!escape)
-            {
-                if (outBuf != null)
-                {
-                    outBuf.append(c);
-                }
-            }
-            else
-            {
-                // escape
-                if (outBuf == null)
-                {
-                    outBuf = new StringBuilder(in.length() + 5 * 3);
-                    outBuf.append(in, 0, i);
-                    formatter = new Formatter(outBuf);
-                }
-                // leading %, 0 padded, width 2, capital hex
-                formatter.format("%%%02X", (int) c);// TODO
-            }
-        }
-        return outBuf != null ? outBuf : in;
-    }
-
-    protected static final BitSet asciiQueryChars;
-
-    static
-    {
-        char[] c_unreserved = "_-!.~'()*".toCharArray();// plus alphanum
-        char[] c_punct = ",;:$&+=".toCharArray();
-        char[] c_reserved = "?/[]@".toCharArray();// plus punct
-
-        asciiQueryChars = new BitSet(128);
-        for (char c = 'a'; c <= 'z'; c++)
-        {
-            asciiQueryChars.set(c);
-        }
-        for (char c = 'A'; c <= 'Z'; c++)
-        {
-            asciiQueryChars.set(c);
-        }
-        for (char c = '0'; c <= '9'; c++)
-        {
-            asciiQueryChars.set(c);
-        }
-        for (char c : c_unreserved)
-        {
-            asciiQueryChars.set(c);
-        }
-        for (char c : c_punct)
-        {
-            asciiQueryChars.set(c);
-        }
-        for (char c : c_reserved)
-        {
-            asciiQueryChars.set(c);
-        }
-
-        asciiQueryChars.set('%');// leave existing percent escapes in place
     }
 
     /**

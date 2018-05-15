@@ -18,6 +18,15 @@ import java.util.Date;
 public class CaseDocumentsPage extends ArkCaseTestBase
 {
 
+    // first row
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[3]/span")
+    public WebElement firstDocumentTitle;
+    @FindBy(how = How.XPATH, using = "//*[@title='imageprofile']")
+    public WebElement secondDocumentTitle;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[3]/span")
+    public WebElement chnageCaseStatusButton;
+    @FindBy(how = How.XPATH, using = "/html/body/iframe")
+    public WebElement roiFirstIframe;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/span")
     WebElement documentsTableTitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/thead/tr/th[3]")
@@ -38,25 +47,19 @@ public class CaseDocumentsPage extends ArkCaseTestBase
     WebElement refreshTableButton;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[1]/td[3]/span/span[1]")
     WebElement rootExpander;
-    // first row
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[3]/span")
-    public WebElement firstDocumentTitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[4]")
     WebElement firstDocumentType;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[5]")
     WebElement firstDocumentCreated;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[6]")
     WebElement firstDocumentModified;
+    // second row
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[7]")
     WebElement firstDocumentAuthor;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[8]")
     WebElement firstDocumentVersion;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[9]")
     WebElement firstDocumentStatus;
-    // second row
-
-    @FindBy(how = How.XPATH, using = "//*[@title='imageprofile']")
-    public WebElement secondDocumentTitle;
     @FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[4]")
     WebElement secondDocumentExtension;
     @FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[5]")
@@ -73,8 +76,6 @@ public class CaseDocumentsPage extends ArkCaseTestBase
     WebElement secondDocumentStatus;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[9]")
     WebElement clearCachButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[3]/span")
-    public WebElement chnageCaseStatusButton;
     @FindBy(how = How.XPATH, using = ".//tr[@class='fancytree-folder fancytree-has-children fancytree-lastsib fancytree-lazy fancytree-exp-cdl fancytree-ico-cf']/td[3]")
     WebElement root;
     @FindBy(how = How.XPATH, using = "/html/body/ul/li[2]")
@@ -91,14 +92,11 @@ public class CaseDocumentsPage extends ArkCaseTestBase
     WebElement documentEDelivery;
     @FindBy(how = How.XPATH, using = "/html/body/ul/li[2]/ul/li[3]")
     WebElement documentGeneralRelease;
+    // report of investigation
     @FindBy(how = How.XPATH, using = "/html/body/ul/li[2]/ul/li[2]")
     WebElement documentMedicalRelease;
-    // report of investigation
-
     @FindBy(how = How.XPATH, using = "/html/body/ul/li[2]/ul/li[1]")
     WebElement documentReportOfInvestigation;
-    @FindBy(how = How.XPATH, using = "/html/body/iframe")
-    public WebElement roiFirstIframe;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[1]/input")
     WebElement reportTitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[3]/div[1]/input")

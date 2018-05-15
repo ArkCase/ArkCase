@@ -1,7 +1,7 @@
 <databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-create-user-site-widget-table" author="joseph.mcgrady">
@@ -28,7 +28,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_class_name" type="VARCHAR(1024)"
-                    defaultValue="com.armedia.acm.plugins.dashboard.site.model.Site">
+                defaultValue="com.armedia.acm.plugins.dashboard.site.model.Site">
                 <constraints nullable="false"/>
             </column>
         </createTable>

@@ -1,5 +1,32 @@
 package com.armedia.acm.services.transcribe.model;
 
+/*-
+ * #%L
+ * ACM Service: Transcribe
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.services.transcribe.annotation.ConfigurationProperties;
 import com.armedia.acm.services.transcribe.annotation.ConfigurationProperty;
 
@@ -44,8 +71,14 @@ public class TranscribeConfiguration implements Serializable
     @ConfigurationProperty(key = "transcribe.providers", write = false)
     private List<TranscribeServiceProvider> providers;
 
-    @ConfigurationProperty(key = "transcribe.allowed.media.duration.in.seconds", write = false)
+    @ConfigurationProperty(key = "transcribe.provider.purge.attempts")
+    private int providerPurgeAttempts;
+
+    @ConfigurationProperty(key = "transcribe.allowed.media.duration.in.seconds")
     private long allowedMediaDuration;
+
+    @ConfigurationProperty(key = "transcribe.silent.between.words.in.seconds")
+    private BigDecimal silentBetweenWords;
 
     public boolean isEnabled()
     {
@@ -155,6 +188,16 @@ public class TranscribeConfiguration implements Serializable
         this.providers = providers;
     }
 
+    public int getProviderPurgeAttempts()
+    {
+        return providerPurgeAttempts;
+    }
+
+    public void setProviderPurgeAttempts(int providerPurgeAttempts)
+    {
+        this.providerPurgeAttempts = providerPurgeAttempts;
+    }
+
     public long getAllowedMediaDuration()
     {
         return allowedMediaDuration;
@@ -163,6 +206,16 @@ public class TranscribeConfiguration implements Serializable
     public void setAllowedMediaDuration(long allowedMediaDuration)
     {
         this.allowedMediaDuration = allowedMediaDuration;
+    }
+
+    public BigDecimal getSilentBetweenWords()
+    {
+        return silentBetweenWords;
+    }
+
+    public void setSilentBetweenWords(BigDecimal silentBetweenWords)
+    {
+        this.silentBetweenWords = silentBetweenWords;
     }
 
     @Override
@@ -177,19 +230,23 @@ public class TranscribeConfiguration implements Serializable
                 automaticEnabled == that.automaticEnabled &&
                 newTranscriptionForNewVersion == that.newTranscriptionForNewVersion &&
                 copyTranscriptionForNewVersion == that.copyTranscriptionForNewVersion &&
-                that.cost != null ? that.cost.equals(cost) : cost == null &&
-                confidence == that.confidence &&
-                numberOfFilesForProcessing == that.numberOfFilesForProcessing &&
-                wordCountPerItem == that.wordCountPerItem &&
-                provider == that.provider &&
-                allowedMediaDuration == that.allowedMediaDuration;
+                that.cost != null ? that.cost.equals(cost)
+                        : cost == null &&
+                                confidence == that.confidence &&
+                                numberOfFilesForProcessing == that.numberOfFilesForProcessing &&
+                                wordCountPerItem == that.wordCountPerItem &&
+                                provider == that.provider &&
+                                providerPurgeAttempts == that.providerPurgeAttempts &&
+                                allowedMediaDuration == that.allowedMediaDuration &&
+                                that.silentBetweenWords != null ? that.silentBetweenWords.equals(silentBetweenWords)
+                                        : silentBetweenWords == null;
     }
 
     @Override
     public int hashCode()
     {
         return Objects.hash(enabled, automaticEnabled, newTranscriptionForNewVersion, copyTranscriptionForNewVersion, cost, confidence,
-                numberOfFilesForProcessing, wordCountPerItem, provider, allowedMediaDuration);
+                numberOfFilesForProcessing, wordCountPerItem, provider, providerPurgeAttempts, allowedMediaDuration, silentBetweenWords);
     }
 
     @Override
@@ -205,7 +262,9 @@ public class TranscribeConfiguration implements Serializable
                 ", numberOfFilesForProcessing=" + numberOfFilesForProcessing +
                 ", wordCountPerItem=" + wordCountPerItem +
                 ", provider=" + provider +
+                ", providerPurgeAttempts=" + providerPurgeAttempts +
                 ", allowedMediaDuration=" + allowedMediaDuration +
+                ", silentBetweenWords=" + silentBetweenWords +
                 '}';
     }
 }

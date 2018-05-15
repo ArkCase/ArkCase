@@ -1,5 +1,36 @@
 package com.armedia.acm.auth.okta.services.impl;
 
+/*-
+ * #%L
+ * ACM Service: User Login and Authentication
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.auth.okta.exceptions.OktaException;
 import com.armedia.acm.auth.okta.model.ProviderType;
 import com.armedia.acm.auth.okta.model.factor.Factor;
@@ -8,6 +39,7 @@ import com.armedia.acm.auth.okta.model.factor.FactorStatus;
 import com.armedia.acm.auth.okta.model.factor.FactorType;
 import com.armedia.acm.auth.okta.model.factor.SecurityQuestion;
 import com.armedia.acm.auth.okta.model.user.OktaUser;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,10 +48,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by joseph.mcgrady on 11/13/2017.
@@ -78,7 +106,7 @@ public class FactorServiceImplTest extends EasyMockSupport
     @Test
     public void getFactorByTypeTest() throws OktaException
     {
-        Factor[] expectedFactors = {expectedFactor};
+        Factor[] expectedFactors = { expectedFactor };
         ResponseEntity<Factor[]> responseEntity = new ResponseEntity<>(expectedFactors, HttpStatus.OK);
 
         expect(mockOktaRestService.doRestCall("/api/v1/users/" + expectedUser.getId() + "/factors",
@@ -101,7 +129,7 @@ public class FactorServiceImplTest extends EasyMockSupport
     @Test
     public void listEnrolledFactorsTest() throws OktaException
     {
-        Factor[] expectedFactors = {expectedFactor};
+        Factor[] expectedFactors = { expectedFactor };
         ResponseEntity<Factor[]> responseEntity = new ResponseEntity<>(expectedFactors, HttpStatus.OK);
 
         expect(mockOktaRestService.doRestCall("/api/v1/users/" + expectedUser.getId() + "/factors",
@@ -126,14 +154,15 @@ public class FactorServiceImplTest extends EasyMockSupport
     @Test
     public void listAvailableFactorsTest() throws OktaException
     {
-        Factor[] expectedFactors = {expectedFactor};
+        Factor[] expectedFactors = { expectedFactor };
         ResponseEntity<Factor[]> responseEntity = new ResponseEntity<>(expectedFactors, HttpStatus.OK);
 
         expect(mockOktaRestService.doRestCall("/api/v1/users/" + expectedUser.getId() + "/factors/catalog",
                 HttpMethod.GET, Factor[].class, "parameters")).andReturn(responseEntity).atLeastOnce();
 
         expect(mockOktaRestService.doRestCall("/api/v1/users/" + expectedUser.getId() + "/factors",
-                HttpMethod.GET, Factor[].class, "parameters")).andReturn(new ResponseEntity<>(new Factor[]{new Factor()}, HttpStatus.OK)).times(1);
+                HttpMethod.GET, Factor[].class, "parameters")).andReturn(new ResponseEntity<>(new Factor[] { new Factor() }, HttpStatus.OK))
+                        .times(1);
 
         replayAll();
         List<Factor> factors = unit.listAvailableFactors(expectedUser);
@@ -157,7 +186,7 @@ public class FactorServiceImplTest extends EasyMockSupport
         SecurityQuestion expectedQuestion = new SecurityQuestion();
         expectedQuestion.setQuestion("first_job");
         expectedQuestion.setQuestionText("programmer");
-        SecurityQuestion[] expectedQuestions = {expectedQuestion};
+        SecurityQuestion[] expectedQuestions = { expectedQuestion };
         ResponseEntity<SecurityQuestion[]> responseEntity = new ResponseEntity<>(expectedQuestions, HttpStatus.OK);
 
         expect(mockOktaRestService.doRestCall("/api/v1/users/" + expectedUser.getId() + "/factors/questions",
@@ -191,7 +220,7 @@ public class FactorServiceImplTest extends EasyMockSupport
     @Test
     public void deleteFactorByTypeTest() throws OktaException
     {
-        Factor[] expectedFactors = {expectedFactor};
+        Factor[] expectedFactors = { expectedFactor };
         ResponseEntity<Factor[]> responseEntity = new ResponseEntity<>(expectedFactors, HttpStatus.OK);
         ResponseEntity<Factor> deleteResponseEntity = new ResponseEntity<>(expectedFactor, HttpStatus.OK);
 

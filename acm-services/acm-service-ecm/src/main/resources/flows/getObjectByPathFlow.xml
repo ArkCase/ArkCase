@@ -10,7 +10,8 @@
                http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
 
     <flow name="getObjectByPath">
-        <vm:inbound-endpoint doc:name="Lookup a CMIS object by path" address="vm://getObjectByPath.in" exchange-pattern="request-response"/>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" doc:name="Lookup a CMIS object by path" address="vm://getObjectByPath.in"
+            exchange-pattern="request-response"/>
 
         <cmis:get-object-by-path config-ref="#[message.inboundProperties.configRef]" path="#[message.payload]"/>
 
