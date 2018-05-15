@@ -1083,27 +1083,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public EcmFile updateFile(EcmFile ecmFile) throws AcmObjectNotFoundException
     {
 
-        EcmFile file = getEcmFileDao().find(ecmFile.getId());
-        if (file == null)
-        {
-            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, ecmFile.getId(), "File  not found", null);
-        }
-
-        file = getEcmFileDao().save(ecmFile);
-        return file;
-    }
-
-    @Override
-    public EcmFile updateFile(EcmFile ecmFile, Long fileId, Authentication authentication)
-            throws AcmObjectNotFoundException, AcmUserActionFailedException
-    {
-        if (ecmFile == null || ecmFile.getFileId() == null || fileId == null || !fileId.equals(ecmFile.getFileId()))
-        {
-            log.error("Invalid incoming file [{}]", ecmFile.toString());
-            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null,
-                    "Invalid incoming file", null);
-        }
-
         EcmFile oldFile = findById(ecmFile.getId());
         if (oldFile == null)
         {
@@ -1119,24 +1098,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         ecmFile = getEcmFileDao().save(ecmFile);
 
-        if (ecmFile != null)
-        {
-            if (authentication == null)
-            {
-                authentication = SecurityContextHolder.getContext().getAuthentication();
-            }
-            publishFileUpdatedEvent(ecmFile, authentication, true, eventProperties);
-            log.info("File update successful [{}]", ecmFile);
-            return ecmFile;
-        }
-        throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId,
-                "Failed to update file with fileId: " + fileId, null);
+        publishFileUpdatedEvent(ecmFile, SecurityContextHolder.getContext().getAuthentication(), true, eventProperties);
+        log.info("File update successful [{}]", ecmFile);
+        return ecmFile;
     }
 
     private void publishFileUpdatedEvent(EcmFile file, Authentication authentication, boolean success, Map<String, Object> eventProperties)
     {
-        EcmFileUpdatedEvent event;
-        event = new EcmFileUpdatedEvent(file, authentication);
+        EcmFileUpdatedEvent event = new EcmFileUpdatedEvent(file, authentication);
         event.setEventProperties(eventProperties);
         event.setSucceeded(success);
         applicationEventPublisher.publishEvent(event);

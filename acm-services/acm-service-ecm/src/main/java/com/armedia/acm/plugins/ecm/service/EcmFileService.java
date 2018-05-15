@@ -317,10 +317,6 @@ public interface EcmFileService
     @Transactional
     EcmFile updateFile(EcmFile file) throws AcmObjectNotFoundException;
 
-    @Transactional
-    EcmFile updateFile(EcmFile ecmFile, Long fileId, Authentication authentication)
-            throws AcmObjectNotFoundException, AcmUserActionFailedException;
-
     int getTotalPageCount(String parentObjectType, Long parentObjectId, List<String> totalPageCountFileTypes,
             List<String> totalPageCountMimeTypes, Authentication auth);
 
