@@ -28,7 +28,6 @@ package com.armedia.acm.plugins.ecm.web.api;
  */
 import static org.easymock.EasyMock.anyLong;
 import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
@@ -111,10 +110,9 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
         out.setContainer(acmContainer);
 
         Capture<EcmFile> saved = Capture.newInstance();
-        Capture<Authentication> authentication = Capture.newInstance();
 
         expect(mockEcmFileService.findById(anyLong())).andReturn(in).anyTimes();
-        expect(mockEcmFileService.updateFile(capture(saved), eq(100L), capture(authentication))).andReturn(out);
+        expect(mockEcmFileService.updateFile(capture(saved))).andReturn(out);
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
         expectLastCall();
@@ -154,10 +152,9 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
         in.setContainer(acmContainer);
 
         Capture<EcmFile> saved = Capture.newInstance();
-        Capture<Authentication> authentication = Capture.newInstance();
 
         expect(mockEcmFileService.findById(anyLong())).andReturn(in).anyTimes();
-        expect(mockEcmFileService.updateFile(capture(saved), eq(100L), capture(authentication))).andReturn(null).anyTimes();
+        expect(mockEcmFileService.updateFile(capture(saved))).andReturn(null).anyTimes();
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
 
         replayAll();

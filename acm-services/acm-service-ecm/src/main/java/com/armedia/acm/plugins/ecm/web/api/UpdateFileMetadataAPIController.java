@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
 import org.slf4j.Logger;
@@ -62,7 +63,19 @@ public class UpdateFileMetadataAPIController
     public EcmFile updateFile(@RequestBody EcmFile file, @PathVariable("fileId") Long fileId, Authentication authentication)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
-        return getEcmFileService().updateFile(file, fileId, authentication);
+        if (file == null || file.getFileId() == null || fileId == null || !fileId.equals(file.getFileId()))
+        {
+            log.error("Invalid incoming file [{}]", file.toString());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null,
+                    "Invalid incoming file", null);
+        }
+        file = getEcmFileService().updateFile(file);
+        if (file != null)
+        {
+            return file;
+        }
+        throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId,
+                "Failed to update file with fileId: " + fileId, null);
     }
 
     public EcmFileService getEcmFileService()
