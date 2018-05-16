@@ -1540,6 +1540,13 @@ angular.module('directives').directive(
                                         window.open(baseUrl + '!/viewer/' + urlArgs);
                                     }
                                 }, {
+                                    name: "collaborate",
+                                    execute: function(nodes, args) {
+                                        var node = nodes[0];
+                                        var baseUrl = window.location.href.split('home.html#!')[0];
+                                        window.open(baseUrl + 'office/' + node.data.objectId);
+                                    }
+                                }, {
                                     name: "edit",
                                     execute: function(nodes, args) {
                                     }
