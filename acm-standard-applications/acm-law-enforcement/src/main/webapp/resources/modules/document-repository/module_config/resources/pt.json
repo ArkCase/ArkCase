@@ -19,7 +19,7 @@
         "modified.label": "Data modificada",
         "assignee.label": "Atribuído a",
         "owningGroup.label": "O grupo pertence a",
-        "description.label": "Pt_Description"
+        "description.label": "Descrição"
     },
     "document-repository.comp.actions": {
         "title": "Ações",
@@ -182,10 +182,10 @@
         "name.placeholder": "Insira o nome",
         "descriptionLabel": "Descrição",
         "description.placeholder": "Insira a Descrição",
-        "searchUser": "pt_Search User and Group",
-        "cancelBtn": "pt_Cancel",
-        "okBtn": "pt_OK",
-        "search-placeholder": "pt_Search for user or group",
+        "searchUser": "Pesquise usuário e grupo",
+        "cancelBtn": "Cancelar",
+        "okBtn": "Está bem",
+        "search-placeholder": "Pesquise usuário e grupo",
         "personalRepository": "Meus documentos"
     },
     "document-repository.dialogUserPicker": {
