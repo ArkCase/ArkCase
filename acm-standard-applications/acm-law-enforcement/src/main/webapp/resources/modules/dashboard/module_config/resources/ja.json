@@ -348,6 +348,13 @@
                 "title": "承認者",
                 "description": "承認者を表示",
                 "noDataMessage": "現在、表示する承認者はありません"
+            },
+            "savePromptModal": {
+                "title": "ja_Save dashboard",
+                "info": "ja_You are in edit mode. Do you want to save the changes?",
+                "save": "ja_Save",
+                "doNotSave": "ja_Do not save",
+                "cancel": "ja_Cancel"
             }
         }
     },

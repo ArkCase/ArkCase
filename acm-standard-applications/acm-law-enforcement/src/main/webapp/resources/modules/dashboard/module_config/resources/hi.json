@@ -347,7 +347,14 @@
             "approvers": {
                 "title": "अनुमोदकों",
                 "description": "अनुमोदक प्रदर्शित करता है",
-                "noDataMessage": "वर्तमान में कोई अनुमोदक प्रदर्शित करने के लिए नहीं है"	
+                "noDataMessage": "वर्तमान में कोई अनुमोदक प्रदर्शित करने के लिए नहीं है"
+            },
+            "savePromptModal": {
+                "title": "hi_Save dashboard",
+                "info": "hi_You are in edit mode. Do you want to save the changes?",
+                "save": "hi_Save",
+                "doNotSave": "hi_Do not save",
+                "cancel": "hi_Cancel"
             }
         }
     },
