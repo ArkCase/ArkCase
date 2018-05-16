@@ -43,8 +43,9 @@ angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$
 
     $scope.saveDashboard = function(nextUrl) {
 
-        var params = {}; // Treba da bidi najverojatno widgets update
-        params.url = nextUrl.name;
+        var params = {
+            url: nextUrl.name
+        };
 
         var modalInstance = $modal.open({
             animation: true,
