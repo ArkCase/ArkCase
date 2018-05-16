@@ -232,7 +232,7 @@
         "modal": {
             "title": "タグ",
             "search": "検索タグ",
-            "placeholder": "ja_Add tag",
+            "placeholder": "タグ付けする",
             "buttons": {
                 "cancel": "キャンセル",
                 "ok": "タグを追加する"
@@ -249,7 +249,7 @@
     },
     "complaints.comp.calendar": {
         "title": "日報",
-        "infoMessage": "ja_Calendar Integration Configuration Not Enabled"
+        "infoMessage": "カレンダー統合の設定が有効になっていない"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "リファレンス検索"
@@ -289,7 +289,7 @@
         "searchGroupHeader": "検索グループ"
     },
     "complaints.comp.approvalRouting": {
-        "title": "将来の承認者",
+        "title": "承認者",
         "addNewTooltip": "新しい承認者を追加",
         "noBuckslipMessage": "データなし",
         "button": {
@@ -298,7 +298,7 @@
         "table.columns": {
             "fullName": "フルネーム"
         },
-        "assigne.none": "ja_None",
+        "assigne.none": "なし",
         "assignee.label": "受信機",
         "owningGroup.label": "所有者グループ",
         "priority.label": "優先",

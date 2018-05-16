@@ -2,22 +2,8 @@
 
 angular.module('complaints').controller(
         'Complaints.OrganizationsController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Complaint.InfoService',
-                'Authentication',
-                'Object.LookupService',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'Organization.InfoService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, ComplaintInfoService, Authentication,
-                        ObjectLookupService, HelperUiGridService, HelperObjectBrowserService, OrganizationInfoService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Complaint.InfoService', 'Authentication', 'Object.LookupService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Organization.InfoService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, ComplaintInfoService, Authentication, ObjectLookupService, HelperUiGridService, HelperObjectBrowserService, OrganizationInfoService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -31,34 +17,39 @@ angular.module('complaints').controller(
                     });
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "complaints",
-                        componentId : "organizations",
-                        retrieveObjectInfo : ComplaintInfoService.getComplaintInfo,
-                        validateObjectInfo : ComplaintInfoService.validateComplaintInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "complaints",
+                        componentId: "organizations",
+                        retrieveObjectInfo: ComplaintInfoService.getComplaintInfo,
+                        validateObjectInfo: ComplaintInfoService.validateComplaintInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
 
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
-                        gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
-                        gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
-                        gridHelper.setColumnDefs(config);
-                        gridHelper.setBasicOptions(config);
-                        gridHelper.disableGridScrolling(config);
-                        gridHelper.setUserNameFilterToConfig(promiseUsers, config);
+
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, config).then(function(updatedConfig) {
+                            $scope.config = updatedConfig;
+                            if ($scope.gridApi != undefined)
+                                $scope.gridApi.core.refresh();
+                            gridHelper.addButton(updatedConfig, "edit", null, null, "isEditDisabled");
+                            gridHelper.addButton(updatedConfig, "delete", null, null, "isDeleteDisabled");
+                            gridHelper.setColumnDefs(updatedConfig);
+                            gridHelper.setBasicOptions(updatedConfig);
+                            gridHelper.disableGridScrolling(updatedConfig);
+                        });
                     };
 
                     var onObjectInfoRetrieved = function(objectInfo) {
@@ -87,13 +78,13 @@ angular.module('complaints').controller(
 
                     var newOrganizationAssociation = function() {
                         return {
-                            id : null,
-                            associationType : "",
-                            parentId : $scope.objectInfo.complaintId,
-                            parentType : ObjectService.ObjectTypes.COMPLAINT,
-                            parentTitle : $scope.objectInfo.complaintNumber,
-                            organization : null,
-                            className : "com.armedia.acm.plugins.person.model.OrganizationAssociation"
+                            id: null,
+                            associationType: "",
+                            parentId: $scope.objectInfo.complaintId,
+                            parentType: ObjectService.ObjectTypes.COMPLAINT,
+                            parentTitle: $scope.objectInfo.complaintNumber,
+                            organization: null,
+                            className: "com.armedia.acm.plugins.person.model.OrganizationAssociation"
                         };
                     };
 
@@ -107,24 +98,24 @@ angular.module('complaints').controller(
 
                         if (association) {
                             angular.extend(params, {
-                                organizationId : association.organization.organizationId,
-                                organizationValue : association.organization.organizationValue,
-                                type : association.associationType,
-                                description : association.description
+                                organizationId: association.organization.organizationId,
+                                organizationValue: association.organization.organizationValue,
+                                type: association.associationType,
+                                description: association.description
                             });
                         } else {
                             association = new newOrganizationAssociation();
                         }
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-organization-modal.client.view.html',
-                            controller : 'Common.AddOrganizationModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                            controller: 'Common.AddOrganizationModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }

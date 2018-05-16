@@ -2,26 +2,11 @@
 
 angular.module('document-details').controller(
         'Document.DetailsController',
-        [
-                '$scope',
-                '$translate',
-                '$filter',
-                '$modal',
-                '$q',
-                'Object.LookupService',
-                'Organization.InfoService',
-                'Person.InfoService',
-                'EcmService',
-                'MessageService',
-                'UtilService',
-                'LookupService',
-                'ConfigService',
-                'Helper.LocaleService',
-                function($scope, $translate, $filter, $modal, $q, ObjectLookupService, OrganizationInfoService, PersonInfoService,
-                        EcmService, MessageService, UtilService, LookupService, ConfigService, LocaleHelper) {
+        [ '$scope', '$translate', '$filter', '$modal', '$q', 'Object.LookupService', 'Organization.InfoService', 'Person.InfoService', 'EcmService', 'MessageService', 'UtilService', 'LookupService', 'ConfigService', 'Helper.LocaleService',
+                function($scope, $translate, $filter, $modal, $q, ObjectLookupService, OrganizationInfoService, PersonInfoService, EcmService, MessageService, UtilService, LookupService, ConfigService, LocaleHelper) {
 
                     new LocaleHelper.Locale({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     $scope.$on('document-data', function(event, ecmFile) {
@@ -36,39 +21,36 @@ angular.module('document-details').controller(
                         }
 
                         if (_ecmFile.organizationAssociation) {
-                            promiseGetOrganizationInfo = OrganizationInfoService
-                                    .getOrganizationInfo(_ecmFile.organizationAssociation.targetId);
+                            promiseGetOrganizationInfo = OrganizationInfoService.getOrganizationInfo(_ecmFile.organizationAssociation.targetId);
                         }
 
                         var promises = [ promiseGetUserFullNames, promiseGetPersonInfo, promiseGetOrganizationInfo ];
 
                         // Be sure that all needed information will be loaded. After that proceed with populating all information.
                         // This will show all information on the UI in the same moment
-                        $q.all(promises).then(
-                                function(response) {
-                                    var _activeVersion = $scope.getActiveVersion(_ecmFile);
+                        $q.all(promises).then(function(response) {
+                            var _activeVersion = $scope.getActiveVersion(_ecmFile);
 
-                                    // Keep original EcmFile. We will need later just to get original version-modified date
-                                    $scope.ecmFile = ecmFile;
+                            // Keep original EcmFile. We will need later just to get original version-modified date
+                            $scope.ecmFile = ecmFile;
 
-                                    $scope.details.ecmFile = _ecmFile;
-                                    $scope.details.activeVersion = _activeVersion;
-                                    $scope.details.person = response[1] != null ? (response[1].givenName + ' ' + response[1].familyName)
-                                            .trim() : '';
-                                    $scope.details.organization = response[2] != null ? response[2].organizationValue : '';
-                                    $scope.details.creator = $scope.get(_.find(response[0], {
-                                        id : $scope.details.activeVersion.creator
-                                    }), 'name');
-                                    $scope.details.modifier = $scope.get(_.find(response[0], {
-                                        id : $scope.details.activeVersion.modifier
-                                    }), 'name');
-                                    $scope.details.verModified = _activeVersion.created;
-                                    $scope.details.size = $scope.convert($scope.details.activeVersion.fileSizeBytes);
-                                    $scope.details.verMediaCreated = _activeVersion.mediaCreated;
+                            $scope.details.ecmFile = _ecmFile;
+                            $scope.details.activeVersion = _activeVersion;
+                            $scope.details.person = response[1] != null ? (response[1].givenName + ' ' + response[1].familyName).trim() : '';
+                            $scope.details.organization = response[2] != null ? response[2].organizationValue : '';
+                            $scope.details.creator = $scope.get(_.find(response[0], {
+                                id: $scope.details.activeVersion.creator
+                            }), 'name');
+                            $scope.details.modifier = $scope.get(_.find(response[0], {
+                                id: $scope.details.activeVersion.modifier
+                            }), 'name');
+                            $scope.details.verModified = _activeVersion.created;
+                            $scope.details.size = $scope.convert($scope.details.activeVersion.fileSizeBytes);
+                            $scope.details.verMediaCreated = _activeVersion.mediaCreated;
 
-                                    $scope.saveButton.disabled = false;
-                                    $scope.saveInProgress = false;
-                                });
+                            $scope.saveButton.disabled = false;
+                            $scope.saveInProgress = false;
+                        });
 
                         $scope.objectType = _ecmFile.container.containerObjectType;
 
@@ -86,8 +68,8 @@ angular.module('document-details').controller(
                     $scope.saveInProgress = false;
 
                     $scope.options = {
-                        focus : false,
-                        dialogsInBody : true
+                        focus: false,
+                        dialogsInBody: true
                     };
 
                     $scope.get = function(object, key) {
@@ -123,7 +105,7 @@ angular.module('document-details').controller(
                     $scope.getActiveVersion = function(ecmFile) {
                         if (ecmFile && ecmFile.versions) {
                             var found = _.find(ecmFile.versions, {
-                                versionTag : ecmFile.activeVersionTag
+                                versionTag: ecmFile.activeVersionTag
                             });
                             if (found) {
                                 return found;
@@ -137,8 +119,7 @@ angular.module('document-details').controller(
                         if (ecmFile && ecmFile.versions && activeVersion) {
                             for (var i = 0; i < ecmFile.versions.length; i++) {
                                 // Set strong guard
-                                if (ecmFile.versions[i].versionTag === ecmFile.activeVersionTag
-                                        && ecmFile.versions[i].versionTag === activeVersion.versionTag) {
+                                if (ecmFile.versions[i].versionTag === ecmFile.activeVersionTag && ecmFile.versions[i].versionTag === activeVersion.versionTag) {
                                     ecmFile.versions[i] = activeVersion;
                                 }
                             }
@@ -157,14 +138,14 @@ angular.module('document-details').controller(
                         params.hideAssociationTypes = true;
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-organization-modal.client.view.html',
-                            controller : 'Common.AddOrganizationModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                            controller: 'Common.AddOrganizationModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -199,14 +180,14 @@ angular.module('document-details').controller(
                         params.hideAssociationTypes = true;
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-person-modal.client.view.html',
-                            controller : 'Common.AddPersonModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-person-modal.client.view.html',
+                            controller: 'Common.AddPersonModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -239,19 +220,19 @@ angular.module('document-details').controller(
 
                     $scope.newAssociation = function() {
                         return {
-                            associationId : null,
-                            status : '',
-                            parentId : $scope.details.ecmFile.fileId,
-                            parentType : $scope.details.ecmFile.fileType,
-                            parentTitle : '',
-                            targetId : null,
-                            targetType : '',
-                            targetSubtype : '',
-                            associationType : '',
-                            targetName : '',
-                            targetTitle : '',
-                            category : '',
-                            description : ''
+                            associationId: null,
+                            status: '',
+                            parentId: $scope.details.ecmFile.fileId,
+                            parentType: $scope.details.ecmFile.fileType,
+                            parentTitle: '',
+                            targetId: null,
+                            targetType: '',
+                            targetSubtype: '',
+                            associationType: '',
+                            targetName: '',
+                            targetTitle: '',
+                            category: '',
+                            description: ''
                         };
                     };
 
@@ -262,11 +243,11 @@ angular.module('document-details').controller(
                         $scope.details.ecmFile = $scope.setActiveVersion($scope.details.ecmFile, $scope.details.activeVersion);
 
                         UtilService.serviceCall({
-                            service : EcmService.updateFile,
-                            param : {
-                                fileId : $scope.details.ecmFile.fileId
+                            service: EcmService.updateFile,
+                            param: {
+                                fileId: $scope.details.ecmFile.fileId
                             },
-                            data : JSOG.encode(UtilService.omitNg($scope.details.ecmFile))
+                            data: JSOG.encode(UtilService.omitNg($scope.details.ecmFile))
                         }).then(function(data) {
                             $scope.$broadcast('document-data', data);
                             MessageService.info($translate.instant('documentDetails.comp.details.message.save.success'));

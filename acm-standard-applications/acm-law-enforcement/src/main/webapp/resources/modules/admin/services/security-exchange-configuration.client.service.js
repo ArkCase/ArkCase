@@ -10,8 +10,8 @@
  */
 angular.module('admin').service('Admin.ExchangeConfigurationService', [ '$http', function($http) {
     return ({
-        saveExchangeConfiguration : saveExchangeConfiguration,
-        getExchangeConfiguration : getExchangeConfiguration
+        saveExchangeConfiguration: saveExchangeConfiguration,
+        getExchangeConfiguration: getExchangeConfiguration
     });
     /**
      * @ngdoc method
@@ -27,9 +27,9 @@ angular.module('admin').service('Admin.ExchangeConfigurationService', [ '$http',
      */
     function saveExchangeConfiguration(exchangeConfig) {
         return $http({
-            method : 'PUT',
-            url : 'api/latest/plugin/admin/exchange/configuration',
-            data : exchangeConfig
+            method: 'PUT',
+            url: 'api/latest/plugin/admin/exchange/configuration',
+            data: exchangeConfig
         });
     }
     ;
@@ -46,8 +46,8 @@ angular.module('admin').service('Admin.ExchangeConfigurationService', [ '$http',
      */
     function getExchangeConfiguration() {
         return $http({
-            method : 'GET',
-            url : 'api/latest/plugin/admin/exchange/configuration'
+            method: 'GET',
+            url: 'api/latest/plugin/admin/exchange/configuration'
         });
     }
 } ]);

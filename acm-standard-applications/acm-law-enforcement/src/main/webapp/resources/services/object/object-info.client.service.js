@@ -1,6 +1,8 @@
 'use strict';
 
 /**
+ * @deprecated case, complaint and task are not using this service anymore because of adding angular cache they must have own cache.
+ * 
  * @ngdoc service
  * @name services:Object.InfoService
  *
@@ -10,7 +12,15 @@
 
  * Object.InfoService includes group of REST calls to retrieve and save object info; Objects can be Case, Complaint, Task, etc.
  */
-angular.module('services').factory('Object.InfoService', [ '$resource', 'UtilService', function($resource, Util) {
+angular.module('services').factory('Object.InfoService', [ '$resource', 'UtilService', 'CacheFactory', function($resource, Util, CacheFactory) {
+
+    var objectCache = CacheFactory('objectCache', {
+        maxAge: 1 * 60 * 1000, // Items added to this cache expire after 1 minute
+        cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
+        deleteOnExpire: 'aggressive', // Items will be deleted from this cache when they expire
+        capacity: 1
+    });
+
     var Service = $resource('api/latest/plugin', {}, {
         /**
          * @ngdoc method
@@ -28,12 +38,12 @@ angular.module('services').factory('Object.InfoService', [ '$resource', 'UtilSer
          *
          * @returns {Object} Object returned by $resource
          */
-        get : {
-            method : 'GET',
+        get: {
+            method: 'GET',
             //url: 'api/latest/plugin/casefile/byId/:id',
-            url : 'api/latest/plugin/:type/byId/:id',
-            cache : false,
-            isArray : false
+            url: 'api/latest/plugin/:type/byId/:id',
+            cache: objectCache,
+            isArray: false
         }
 
         /**
@@ -53,10 +63,10 @@ angular.module('services').factory('Object.InfoService', [ '$resource', 'UtilSer
          * @returns {Object} Object returned by $resource
          */
         ,
-        save : {
-            method : 'POST',
-            url : 'api/latest/plugin/:type',
-            cache : false
+        save: {
+            method: 'POST',
+            url: 'api/latest/plugin/:type',
+            cache: false
         }
 
     });
@@ -79,9 +89,35 @@ angular.module('services').factory('Object.InfoService', [ '$resource', 'UtilSer
      */
     Service.getOriginator = function(objectInfo) {
         var pa = _.find(Util.goodMapValue(objectInfo, "personAssociations", []), {
-            personType : "Originator"
+            personType: "Originator"
         });
         return Util.goodMapValue(pa, "person", null);
+    };
+
+    /**
+     * @ngdoc method
+     * @name getObjectInfo
+     * @methodOf services:Object.InfoService
+     *
+     * @description
+     * Query association data
+     *
+     * @param {Number} type  Type in REST path. Can be 'casefile', 'complaint', 'task', etc.
+     * @param {Number} id  Object ID
+     *
+     * @returns {Object} Object returned by $resource
+     */
+    Service.getObjectInfo = function(type, id) {
+        return Util.serviceCall({
+            service: Service.get,
+            param: {
+                type: type,
+                id: id
+            },
+            onSuccess: function(data) {
+                return data;
+            }
+        });
     };
 
     return Service;

@@ -1,5 +1,32 @@
 package com.armedia.acm.services.users.service.ldap;
 
+/*-
+ * #%L
+ * ACM Service: Users
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
@@ -100,13 +127,17 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
 
         LdapTemplate mockTemplate = createMock(LdapTemplate.class);
 
-        expect(mockLdapDao.buildLdapTemplate(mockLdapAuthenticateConfig)).andReturn(mockTemplate);
+        expect(mockLdapDao.buildLdapTemplate(mockLdapAuthenticateConfig, mockUser.getDistinguishedName(), currentPassword))
+                .andReturn(mockTemplate);
 
         expect(mockUserDao.findByUserId("ann-acm")).andReturn(mockUser);
 
         mockLdapUserDao.changeUserPassword(mockUser.getDistinguishedName(), currentPassword, newPassword, mockTemplate,
                 mockLdapAuthenticateConfig);
         expectLastCall().once();
+
+        expect(mockLdapDao.buildLdapTemplate(mockLdapAuthenticateConfig, mockUser.getDistinguishedName(), newPassword))
+                .andReturn(mockTemplate);
 
         LdapUser userEntry = new LdapUser();
         userEntry.setDistinguishedName("cn=ann-acm,dc=arkcase,dc=com");
@@ -131,7 +162,8 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
 
         LdapTemplate mockTemplate = createMock(LdapTemplate.class);
 
-        expect(mockLdapDao.buildLdapTemplate(mockLdapAuthenticateConfig)).andReturn(mockTemplate);
+        expect(mockLdapDao.buildLdapTemplate(mockLdapAuthenticateConfig, mockUser.getDistinguishedName(), currentPassword))
+                .andReturn(mockTemplate);
 
         expect(mockUserDao.findByUserId("ann-acm")).andReturn(mockUser);
 
@@ -180,7 +212,7 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
     }
 
     @Test(expected = AcmUserActionFailedException.class)
-    public void resetUserPasswordNoSuchUser() throws AcmLdapActionFailedException, AcmUserActionFailedException
+    public void resetUserPasswordNoSuchUser() throws AcmUserActionFailedException
     {
         String password = "password";
         PasswordResetToken passwordResetToken = new PasswordResetToken();

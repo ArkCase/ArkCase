@@ -232,7 +232,7 @@
         "modal": {
             "title": "Метка",
             "search": "Поиск дня",
-            "placeholder": "ru_Add tag",
+            "placeholder": "Добавить метку",
             "buttons": {
                 "cancel": "Отмена",
                 "ok": "Добавить тег"
@@ -249,7 +249,7 @@
     },
     "complaints.comp.calendar": {
         "title": "Календарь",
-        "infoMessage": "ru_Calendar Integration Configuration Not Enabled"
+        "infoMessage": "Конфигурация интеграции календарей не включена"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "Поиск ссылок"
@@ -289,7 +289,7 @@
         "searchGroupHeader": "Группа поиска"
     },
     "complaints.comp.approvalRouting": {
-        "title": "Будущие утверждения",
+        "title": "Одобритель",
         "addNewTooltip": "Добавить новый одобритель",
         "noBuckslipMessage": "Нет данных",
         "button": {
@@ -298,7 +298,7 @@
         "table.columns": {
             "fullName": "Полное имя"
         },
-        "assigne.none": "ru_None",
+        "assigne.none": "Никто",
         "assignee.label": "Получатель",
         "owningGroup.label": "Группа владельцев",
         "priority.label": "Приоритет",

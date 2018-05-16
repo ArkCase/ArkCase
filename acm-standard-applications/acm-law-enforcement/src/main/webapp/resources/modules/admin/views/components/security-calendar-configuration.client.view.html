@@ -38,7 +38,7 @@
                                             <label for="email" translate>
                                                 admin.security.calendarConfiguration.calendarConfigForm.email.label
                                             </label>
-                                            <input type="email" required id="email"
+                                            <input type="email" required id="email{{configurableObjectType.id}}"
                                                     placeholder="{{'admin.security.calendarConfiguration.calendarConfigForm.email.placeholder' | translate}}"
                                                     ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].systemEmail"
                                                     class="form-control"
@@ -66,7 +66,7 @@
                                             </label>
                                             <div ng-show="calendarConfigDataModel.configurationsByType[configurableObjectType.id].isPasswordSet === true">
                                                 <button class="btn btn-sm btn-primary"
-                                                        ng-click="calendarConfigDataModel.configurationsByType[configurableObjectType.id].isPasswordSet = false">
+                                                        ng-click="calendarConfigDataModel.configurationsByType[configurableObjectType.id].isPasswordSet = false; passwordRequirementByObjectType[configurableObjectType.id]=true">
                                                     <span translate>admin.security.calendarConfiguration.calendarConfigForm.password.changeButton</span>
                                                 </button>
                                             </div>

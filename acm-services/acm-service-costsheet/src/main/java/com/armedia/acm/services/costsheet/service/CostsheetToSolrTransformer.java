@@ -3,6 +3,33 @@
  */
 package com.armedia.acm.services.costsheet.service;
 
+/*-
+ * #%L
+ * ACM Service: Costsheet
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
@@ -37,7 +64,7 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setObject_type_s(CostsheetConstants.OBJECT_TYPE);
         solr.setTitle_parseable(in.getTitle());
         solr.setDescription_no_html_tags_parseable(in.getDetails());
-        solr.setName(in.getTitle());
+        solr.setName(in.getCostsheetNumber());
 
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
@@ -57,7 +84,7 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
         SolrDocument solr = new SolrDocument();
 
         solr.setId(in.getId() + "-" + CostsheetConstants.OBJECT_TYPE);
-        solr.setName(in.getTitle());
+        solr.setName(in.getCostsheetNumber());
         solr.setTitle_parseable(in.getTitle());
         solr.setObject_id_s(Long.toString(in.getId()));
         solr.setObject_type_s(CostsheetConstants.OBJECT_TYPE);

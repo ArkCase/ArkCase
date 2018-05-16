@@ -1,7 +1,35 @@
 package com.armedia.acm.services.search.service;
 
+/*-
+ * #%L
+ * ACM Service: Search
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentsByQueryRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocumentsQuery;
@@ -28,14 +56,51 @@ public class ExecuteSolrQuery
 
     private MuleContextManager muleContextManager;
     private ObjectConverter objectConverter;
+    private SendDocumentsToSolr sendDocumentsToSolr;
     private boolean enableDocumentACL;
 
+    /**
+     * Executes solr queries and returns results as String
+     * 
+     * @param auth
+     *            Authenticated user
+     * @param core
+     *            SolrCore could be quick or advanced search
+     * @param solrQuery
+     *            actual query
+     * @param firstRow
+     *            starting row
+     * @param maxRows
+     *            how many rows to return
+     * @param sort
+     *            sort by which field
+     * @return results as String
+     * @throws MuleException
+     */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort)
             throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true);
     }
 
+    /**
+     * Executes solr query asynchronously in separate thread and returns results as String
+     * 
+     * @param auth
+     *            Authenticated user
+     * @param core
+     *            SolrCore could be quick or advanced search
+     * @param solrQuery
+     *            actual query
+     * @param firstRow
+     *            starting row
+     * @param maxRows
+     *            how many rows to return
+     * @param sort
+     *            sort by which field
+     * @return results as String in CompletableFuture
+     * @throws MuleException
+     */
     @Async
     public CompletableFuture<String> getResultsByPredefinedQueryAsync(Authentication auth, SolrCore core, String solrQuery, int firstRow,
             int maxRows, String sort)
@@ -44,30 +109,138 @@ public class ExecuteSolrQuery
         return CompletableFuture.completedFuture(getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true));
     }
 
+    /**
+     * Executes solr queries and returns results as String
+     *
+     * @param auth
+     *            Authenticated user
+     * @param core
+     *            SolrCore could be quick or advanced search
+     * @param solrQuery
+     *            actual query
+     * @param firstRow
+     *            starting row
+     * @param maxRows
+     *            how many rows to return
+     * @param sort
+     *            sort by which field
+     * @param indent
+     *            boolean whether results should be indented
+     * @return results as String
+     * @throws MuleException
+     */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
             boolean indent) throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, "", true, false);
     }
 
+    /**
+     * Executes solr queries and returns results as String
+     *
+     * @param auth
+     *            Authenticated user
+     * @param core
+     *            SolrCore could be quick or advanced search
+     * @param solrQuery
+     *            actual query
+     * @param firstRow
+     *            starting row
+     * @param maxRows
+     *            how many rows to return
+     * @param sort
+     *            sort by which field
+     * @param rowQueryParameters
+     *            row query parameters
+     * @return results as String
+     * @throws MuleException
+     */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
             String rowQueryParameters) throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true, rowQueryParameters);
     }
 
+    /**
+     * Executes solr queries and returns results as String
+     *
+     * @param auth
+     *            Authenticated user
+     * @param core
+     *            SolrCore could be quick or advanced search
+     * @param solrQuery
+     *            actual query
+     * @param firstRow
+     *            starting row
+     * @param maxRows
+     *            how many rows to return
+     * @param sort
+     *            sort by which field
+     * @param indent
+     *            boolean whether results should be indented
+     * @param rowQueryParameters
+     *            row query parameters
+     * @return results as String
+     * @throws MuleException
+     */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
             boolean indent, String rowQueryParameters) throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, true, false);
     }
 
+    /**
+     * Executes solr queries and returns results as String
+     *
+     * @param auth
+     *            Authenticated user
+     * @param core
+     *            SolrCore could be quick or advanced search
+     * @param solrQuery
+     *            actual query
+     * @param firstRow
+     *            starting row
+     * @param maxRows
+     *            how many rows to return
+     * @param sort
+     *            sort by which field
+     * @param rowQueryParameters
+     *            row query parameters
+     * @param filterParentRef
+     *            filterParentRef
+     * @return results as String
+     * @throws MuleException
+     */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
             String rowQueryParameters, boolean filterParentRef) throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true, rowQueryParameters, filterParentRef);
     }
 
+    /**
+     * Executes solr queries and returns results as String
+     *
+     * @param auth
+     *            Authenticated user
+     * @param core
+     *            SolrCore could be quick or advanced search
+     * @param solrQuery
+     *            actual query
+     * @param firstRow
+     *            starting row
+     * @param maxRows
+     *            how many rows to return
+     * @param sort
+     *            sort by which field
+     * @param indent
+     *            boolean whether results should be indented
+     * @param rowQueryParameters
+     *            row query parameters
+     * @param filterParentRef
+     *            filterParentRef
+     * @return results as String
+     * @throws MuleException
+     */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
             boolean indent, String rowQueryParameters, boolean filterParentRef) throws MuleException
     {
@@ -75,6 +248,28 @@ public class ExecuteSolrQuery
                 false);
     }
 
+    /**
+     * Executes solr queries and returns results as String
+     *
+     * @param auth
+     *            Authenticated user
+     * @param core
+     *            SolrCore could be quick or advanced search
+     * @param solrQuery
+     *            actual query
+     * @param firstRow
+     *            starting row
+     * @param maxRows
+     *            how many rows to return
+     * @param sort
+     *            sort by which field
+     * @param rowQueryParameters
+     *            row query parameters
+     * @param filterParentRef
+     *            filterParentRef
+     * @return results as String
+     * @throws MuleException
+     */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
             String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents) throws MuleException
     {
@@ -82,8 +277,70 @@ public class ExecuteSolrQuery
                 filterSubscriptionEvents);
     }
 
+    /**
+     * Executes solr queries and returns results as String
+     *
+     * @param auth
+     *            Authenticated user
+     * @param core
+     *            SolrCore could be quick or advanced search
+     * @param solrQuery
+     *            actual query
+     * @param firstRow
+     *            starting row
+     * @param maxRows
+     *            how many rows to return
+     * @param sort
+     *            sort by which field
+     * @param indent
+     *            boolean whether results should be indented
+     * @param rowQueryParameters
+     *            row query parameters
+     * @param filterParentRef
+     *            filterParentRef
+     * @param filterSubscriptionEvents
+     *            boolean whether should filter subscription events
+     * @return results as String
+     * @throws MuleException
+     */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
             boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents) throws MuleException
+    {
+        return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, filterParentRef,
+                filterSubscriptionEvents, SearchConstants.DEFAULT_FIELD);
+    }
+
+    /**
+     * Executes solr queries and returns results as String
+     *
+     * @param auth
+     *            Authenticated user
+     * @param core
+     *            SolrCore could be quick or advanced search
+     * @param solrQuery
+     *            actual query
+     * @param firstRow
+     *            starting row
+     * @param maxRows
+     *            how many rows to return
+     * @param sort
+     *            sort by which field
+     * @param indent
+     *            boolean whether results should be indented
+     * @param rowQueryParameters
+     *            row query parameters
+     * @param filterParentRef
+     *            filterParentRef
+     * @param filterSubscriptionEvents
+     *            boolean whether should filter subscription events
+     * @param defaultField
+     *            which default filed to be set. Can be null(than default field defined in solrconfig.xml is used)
+     * @return results as String
+     * @throws MuleException
+     */
+    public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
+            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents, String defaultField)
+            throws MuleException
     {
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", solrQuery);
@@ -96,6 +353,7 @@ public class ExecuteSolrQuery
         headers.put("rowQueryParametars", rowQueryParameters);
         headers.put("enableDocumentACL", isEnableDocumentACL());
         headers.put("indent", indent ? indent : "");
+        headers.put("df", defaultField);
 
         MuleMessage response = getMuleContextManager().send(core.getMuleEndpointUrl(), "", headers);
 
@@ -113,13 +371,13 @@ public class ExecuteSolrQuery
      * This method executes delete of documents in solr using search query
      * (Beware) it could easily delete all documents if query is not specific
      *
-     * @param toSolrFlow
-     *            Which solr flow (quick search or advanced search to solr flow)
+     * @param queueName
+     *            Which queue to send the request to
      * @param query
      *            Solr Search query for removing found documents
-     * @throws MuleExceptions
+     * @throws MuleException
      */
-    public void sendSolrDeleteQuery(String toSolrFlow, String query) throws MuleException
+    public void sendSolrDeleteQuery(String queueName, String query) throws MuleException
     {
         log.debug("Received query [{}] for deletion.", query);
 
@@ -129,7 +387,7 @@ public class ExecuteSolrQuery
             documentsQuery.setQuery(query);
             SolrDeleteDocumentsByQueryRequest deleteQueryRequest = new SolrDeleteDocumentsByQueryRequest(documentsQuery);
             String json = objectConverter.getJsonMarshaller().marshal(deleteQueryRequest);
-            getMuleContextManager().dispatch(toSolrFlow, json, new HashMap<>());
+            getSendDocumentsToSolr().sendSolrDocuments(queueName, json);
         }
         else
         {
@@ -160,5 +418,15 @@ public class ExecuteSolrQuery
     public void setEnableDocumentACL(boolean enableDocumentACL)
     {
         this.enableDocumentACL = enableDocumentACL;
+    }
+
+    public SendDocumentsToSolr getSendDocumentsToSolr()
+    {
+        return sendDocumentsToSolr;
+    }
+
+    public void setSendDocumentsToSolr(SendDocumentsToSolr sendDocumentsToSolr)
+    {
+        this.sendDocumentsToSolr = sendDocumentsToSolr;
     }
 }

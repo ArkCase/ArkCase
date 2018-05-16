@@ -15,9 +15,14 @@
  */
 angular.module('admin').service('Admin.DashboardConfigService', function($http) {
     return ({
-        getRolesByWidgets : getRolesByWidgets,
-        authorizeRolesForWidget : authorizeRolesForWidget
+        getRolesByWidgets: getRolesByWidgets,
+        authorizeRolesForWidget: authorizeRolesForWidget,
+        getRolesGroups: getRolesGroups,
+        addRoleGroupToWidget: addRoleGroupToWidget,
+        removeRoleGroupToWidget: removeRoleGroupToWidget,
+        getRolesGroupsByName: getRolesGroupsByName
     });
+
     /**
      * @ngdoc method
      * @name getRolesByWidgets
@@ -30,15 +35,14 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
      */
     function getRolesByWidgets() {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/dashboard/widgets/rolesByWidget/all"
+            method: "GET",
+            url: "api/latest/plugin/dashboard/widgets/rolesByWidget/all"
         });
     }
-    ;
 
     /**
      * @ngdoc method
-     * @name getRolesByWidgets
+     * @name authorizeRolesForWidget
      * @methodOf admin.service:Admin.DashboardConfigService
      *
      * @description
@@ -47,13 +51,116 @@ angular.module('admin').service('Admin.DashboardConfigService', function($http) 
      */
     function authorizeRolesForWidget(widget) {
         return $http({
-            method : "POST",
-            url : "api/latest/plugin/dashboard/widgets/set",
-            data : widget,
-            headers : {
-                "Content-Type" : "application/json"
+            method: "POST",
+            url: "api/latest/plugin/dashboard/widgets/set",
+            data: widget,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }
-    ;
+
+    /**
+     * @ngdoc method
+     * @name getRolesGroups
+     * @methodOf admin.service:Admin.DashboardConfigService
+     *
+     * @description
+     *      Retrieves roles and groups for a widget
+     *
+     * @param {object} data that holds:
+     *      {authorized} data.authorized what type of roles/groups will be returned (authorized/notAuthorized)
+     *      {string} widgetName - widget name
+     *      {n} data.n end position
+     *      {start} data.start start position
+     */
+    function getRolesGroups(data) {
+        return $http({
+            method: "GET",
+            url: "api/latest/plugin/dashboard/widgets/" + data.role.key + "/roles",
+            cache: false,
+            params: {
+                authorized: data.isAuthorized,
+                n: (data.n ? data.n : 50)
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name addRoleGroupToWidget
+     * @methodOf admin.service:Admin.DashboardConfigService
+     *
+     * @description
+     *      Performs saving widget with changed roles/groups authorizations(notAuthorization to authorization)
+     *
+     * @param {authorized} isAuthorized what type of roles/groups will be returned (authorized/notAuthorized)
+     *      {string} widgetName - widget name
+     *      {list} groups to be removed from group
+     */
+    function addRoleGroupToWidget(widgetName, rolesGroups, isAuthorized) {
+        return $http({
+            method: "PUT",
+            url: "api/latest/plugin/dashboard/widgets/roleGroupToWidget",
+            cache: false,
+            data: rolesGroups,
+            params: {
+                widgetName: widgetName,
+                authorized: isAuthorized
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name removeRoleGroupToWidget
+     * @methodOf admin.service:Admin.DashboardConfigService
+     *
+     * @description
+     *      Performs saving widget with changed roles/groups authorizations(authorization to notAuthorization)
+     *
+     * @param {isAuthorized} isAuthorized what type of roles/groups will be returned (authorized/notAuthorized)
+     *      {string} widgetName - widget name
+     *      {list} groups to be removed from group
+     */
+    function removeRoleGroupToWidget(widgetName, rolesGroups, isAuthorized) {
+        return $http({
+            method: "PUT",
+            url: "api/latest/plugin/dashboard/widgets/roleGroupToWidget",
+            cache: false,
+            data: rolesGroups,
+            params: {
+                widgetName: widgetName,
+                authorized: isAuthorized
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name getRolesGroupsByName
+     * @methodOf admin.service:Admin.DashboardConfigService
+     *
+     * @description
+     *      Retrieves roles and groups for a widget
+     *
+     * @param {object} data that holds:
+     *      {authorized} data.authorized what type of roles/groups will be returned (authorized/notAuthorized)
+     *      {string} widgetName - widget name
+     *      {n} data.n end position
+     *      {start} data.start start position
+     */
+    function getRolesGroupsByName(data) {
+        return $http({
+            method: "GET",
+            url: "api/latest/plugin/dashboard/widgets/" + data.widget.key + "/roles",
+            cache: false,
+            params: {
+                authorized: data.isAuthorized,
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0),
+                fn: (data.filterWord ? data.filterWord : "")
+            }
+        });
+    }
 });

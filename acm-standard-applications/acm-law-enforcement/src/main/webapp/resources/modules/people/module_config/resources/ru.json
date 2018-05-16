@@ -18,7 +18,9 @@
         "email.label": "Электронная почта",
         "status.label": "Статус",
         "organization.label": "Организация",
-        "identification.label": "Идентификация"
+        "organization.type": "ru_Organization type",
+        "identification.label": "Идентификация",
+        "identification.type": "ru_ID type"
     },
     "people.comp.actions": {
         "title": "Акции",
@@ -222,7 +224,8 @@
             "type.label": "Тип",
             "type.placeholder": "Введите тип",
             "value.label": "URL-адрес",
-            "value.placeholder": "Введите URL-адрес"
+            "value.placeholder": "Введите URL-адрес",
+            "value.title": "ru_Url must be valid (e.g. https://www.google.com)"
         }
     },
     "people.comp.participants": {

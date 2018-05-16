@@ -3,9 +3,39 @@
  */
 package com.armedia.acm.services.costsheet.service;
 
+/*-
+ * #%L
+ * ACM Service: Costsheet
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
+import com.armedia.acm.services.costsheet.pipeline.CostsheetPipelineContext;
+import com.armedia.acm.services.pipeline.PipelineManager;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
@@ -33,6 +63,8 @@ public class CostsheetServiceImpl implements CostsheetService
     private ExecuteSolrQuery executeSolrQuery;
     private List<String> startWorkflowEvents;
 
+    private PipelineManager<AcmCostsheet, CostsheetPipelineContext> pipelineManager;
+
     @Override
     public Properties getProperties()
     {
@@ -45,20 +77,24 @@ public class CostsheetServiceImpl implements CostsheetService
     }
 
     @Override
-    public AcmCostsheet save(AcmCostsheet costsheet)
+    public AcmCostsheet save(AcmCostsheet costsheet) throws PipelineProcessException
     {
-        AcmCostsheet saved = getAcmCostsheetDao().save(costsheet);
+        CostsheetPipelineContext pipelineContext = new CostsheetPipelineContext();
 
-        return saved;
+        return pipelineManager.executeOperation(costsheet, pipelineContext, () -> getAcmCostsheetDao().save(costsheet));
     }
 
     @Override
-    public AcmCostsheet save(AcmCostsheet costsheet, String submissionName)
+    public AcmCostsheet save(AcmCostsheet costsheet, String submissionName) throws PipelineProcessException
     {
-        costsheet.setStatus(getSubmissionStatusesMap().get(submissionName));
-        AcmCostsheet saved = getAcmCostsheetDao().save(costsheet);
+        CostsheetPipelineContext pipelineContext = new CostsheetPipelineContext();
 
-        return saved;
+        return pipelineManager.executeOperation(costsheet, pipelineContext, () -> {
+
+            costsheet.setStatus(getSubmissionStatusesMap().get(submissionName));
+            return getAcmCostsheetDao().save(costsheet);
+        });
+
     }
 
     @Override
@@ -218,5 +254,15 @@ public class CostsheetServiceImpl implements CostsheetService
     public void setStartWorkflowEvents(List<String> startWorkflowEvents)
     {
         this.startWorkflowEvents = startWorkflowEvents;
+    }
+
+    public PipelineManager<AcmCostsheet, CostsheetPipelineContext> getPipelineManager()
+    {
+        return pipelineManager;
+    }
+
+    public void setPipelineManager(PipelineManager<AcmCostsheet, CostsheetPipelineContext> pipelineManager)
+    {
+        this.pipelineManager = pipelineManager;
     }
 }

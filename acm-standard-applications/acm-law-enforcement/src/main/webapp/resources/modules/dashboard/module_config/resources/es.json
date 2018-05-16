@@ -5,6 +5,14 @@
             "leftnav.item": "Painel de Controle"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "es_Select your preferred row count.",
+                    "fiveRows": "es_5",
+                    "tenRows": "es_10",
+                    "twentyFiveRows": "es_25"
+                }
+            },
             "casesByQueue": {
                 "title": "Archivos de caso activo por cola",
                 "description": "Muestra los archivos de casos activos por cola",
@@ -146,22 +154,6 @@
                 "configDescription": "Descripción",
                 "configDescriptionPlaceholder": "Ingrese la descripción del widget"
             },
-            "weather": {
-                "description": "Muestra el tiempo",
-                "label": {
-                    "current": "Actual:",
-                    "enterLocation": "Introducir ubicación",
-                    "description": "Mostrar la temperatura actual de una ciudad",
-                    "location": "Ubicación",
-                    "insertLocationInConfiguration": "Por favor, inserte una ubicación en la configuración del widget",
-                    "zip": "es_Zip Code",
-                    "enterZip": "es_Enter Zip Code"
-                },
-                "title": "Tiempo",
-                "noDataMessage": "Actualmente no hay información del tiempo",
-                "configDescription": "Descripción",
-                "configDescriptionPlaceholder": "Ingrese la descripción del widget"
-            },
             "news": {
                 "description": "Muestra noticias",
                 "label": {
@@ -279,7 +271,8 @@
             "calendar": {
                 "title": "Calendario",
                 "description": "Muestra el gráfico de eventos programados por día",
-                "noDataMessage": "Actualmente no hay eventos para mostrar"
+                "noDataMessage": "Actualmente no hay eventos para mostrar",
+				"calendarIntegrationDisabledMessage": "La integración del calendario está desactivada por el administrador"
             },
             "reworkDetails": {
                 "title": "Detalles de reanudación",
@@ -350,20 +343,22 @@
                 "title": "Personas relacionadas",
                 "description": "Mostrar personas relacionadas",
                 "noDataMessage": "Actualmente no hay personas relacionadas para mostrar"
+			},
+            "approvers": {
+                "title": "Aprobadores",
+                "description": "Mostrar aprobadores",
+                "noDataMessage": "Actualmente no hay aprobadores para mostrar"	
             }
         }
     },
     "dashboard.comp.news": {
         "title": "Widget de noticias"
     },
-    "dashboard.comp.weather": {
-        "title": "Widget de tiempo"
-    },
     "dashboard.comp.myCases": {
         "title": "Mi widget de casos"
     },
     "dashboard.comp.myTasks": {
-        "title": "My Tasks Widget"
+        "title": "Mi widget de tareas"
     },
     "dashboard.comp.myComplaints": {
         "title": "Mi widget de reclamaciones"

@@ -1,7 +1,35 @@
 package com.armedia.acm.services.search.service;
 
+/*-
+ * #%L
+ * ACM Service: Search
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.model.SearchConstants;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,8 +41,11 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +56,11 @@ public class FacetedSearchService
     private transient final Logger log = LoggerFactory.getLogger(this.getClass());
     private AcmPlugin pluginSearch;
     private AcmPlugin pluginEventType;
+    /**
+     * Pattern for matching words separated by white space, and also words which are quoted containing whitespace.
+     * Example: 'Lorem ipsum dolor sit "amet sollicitudin" id' -> Lorem, ipsum, dolor, sit, "amet sollicitudin", id
+     */
+    private Pattern termsPattern = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
 
     public String buildHiddenDocumentsFilter()
     {
@@ -254,7 +290,8 @@ public class FacetedSearchService
     /**
      * Same as ClentUtils.escapeChars, except c == '*' and Character.isWhitespace(c) is removed
      *
-     * @param s String to have Solr's special characters escaped
+     * @param s
+     *            String to have Solr's special characters escaped
      * @return escaped string
      */
     public String escapeQueryChars(String s)
@@ -548,5 +585,50 @@ public class FacetedSearchService
     public void setPluginEventType(AcmPlugin pluginEventType)
     {
         this.pluginEventType = pluginEventType;
+    }
+
+    /**
+     *
+     * splits by whitespace search terms and escapes each term with double quotes.
+     * If term is already escaped with double quotes, it's ignored
+     * 
+     * @param query
+     *            raw query
+     * @return String with escaped search terms
+     */
+    public String escapeTermsInQuery(String query)
+    {
+        if (StringUtils.isEmpty(query))
+        {
+            return "";
+        }
+        query = query.trim();
+        StringBuilder sb = new StringBuilder();
+        for (String term : getSearchTerms(query))
+        {
+            if (term.endsWith("\"") && term.startsWith("\""))
+            {
+                // already escaped with quotes, don't escape it
+                sb.append(" ").append(term);
+            }
+            else
+            {
+                // it must be escaped because term can contain special character which can interfere constructing the
+                // query
+                sb.append(" \"").append(term).append("\"");
+            }
+        }
+        return sb.toString().trim();
+    }
+
+    private List<String> getSearchTerms(String searchString)
+    {
+        Matcher m = termsPattern.matcher(searchString);
+        List<String> terms = new LinkedList<>();
+        while (m.find())
+        {
+            terms.add(m.group(1));
+        }
+        return terms;
     }
 }

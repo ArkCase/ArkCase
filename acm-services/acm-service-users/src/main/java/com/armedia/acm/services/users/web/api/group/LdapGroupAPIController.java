@@ -1,11 +1,37 @@
 package com.armedia.acm.services.users.web.api.group;
 
+/*-
+ * #%L
+ * ACM Service: Users
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
-import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import com.armedia.acm.services.users.service.group.LdapGroupService;
 import com.armedia.acm.services.users.web.api.SecureLdapController;
 
@@ -22,6 +48,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.Valid;
+
 import java.util.Base64;
 
 @Controller
@@ -34,7 +62,7 @@ public class LdapGroupAPIController extends SecureLdapController
 
     @RequestMapping(value = "/{directory:.+}/groups", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup createLdapGroup(@RequestBody AcmGroup group, @PathVariable String directory)
+    public AcmGroup createLdapGroup(@RequestBody @Valid AcmGroup group, @PathVariable String directory)
             throws AcmAppErrorJsonMsg
     {
 
@@ -63,7 +91,7 @@ public class LdapGroupAPIController extends SecureLdapController
 
     @RequestMapping(value = "/{directory:.+}/groups/{parentGroupName:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup createLdapSubgroup(@RequestBody AcmGroup group, @PathVariable String directory,
+    public AcmGroup createLdapSubgroup(@RequestBody @Valid AcmGroup group, @PathVariable String directory,
             @PathVariable String parentGroupName)
             throws AcmAppErrorJsonMsg
     {

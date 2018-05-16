@@ -13,8 +13,8 @@
         "title": "Descripción general"
     },
     "document-repository.comp.info": {
-        "title": "Información",
-        "docRepoId": "ID de repositorio:",
+        "title": "Cargar documentos",
+        "docRepoId": "Identificación del repositorio:",
         "docRepoName": "Nombre del Repositorio de Documentos:",
         "modified.label": "Fecha modificada",
         "assignee.label": "Asignado a",
@@ -24,14 +24,14 @@
     "document-repository.comp.actions": {
         "title": "Acciones",
         "restrict": "¿Restringir?",
-        "subscribe.button": "Suscribir",
+        "subscribe.button": "Suscribirse",
         "unsubscribe.button": "Anular suscripción",
         "delete.button": "Eliminar el repositorio",
         "confirm.delete.documentRepository.msg": "Esta acción eliminará todo el repositorio. ¿Está seguro de que desea continuar?"
     },
     "document-repository.comp.details": {
         "title": "Detalles",
-        "informSaved": "Detalles del repositorio de documentos guardados",
+        "informSaved": "Los detalles del repositorio de documentos han sido salvados",
         "table.columns": {
             "title": "Detalles",
             "modified": "Fecha de última modificación",
@@ -41,7 +41,7 @@
     "document-repository.comp.documents": {
         "title": "Documentos",
         "sendEmail": "Enviar correo electrónico",
-        "filterInputPlaceholder": "Filtrar",
+        "filterInputPlaceholder": "Filtro",
         "searchInputPlaceholder": "Buscar",
         "newTask": "Nueva tarea"
     },
@@ -52,16 +52,16 @@
             "name": "Nombre"
         },
         "dialogUserPicker": {
-            "header": "Elija usuario",
+            "header": "Elegir un usuario",
             "table.columns": {
                 "name": "Nombre",
                 "type": "Tipo",
                 "title": "Título",
-                "id": "Nombre de usuario"
+                "id": "Nombre del usuario"
             }
         },
         "dialogGroupPicker": {
-            "header": "Elige Grupo",
+            "header": "Elegir un grupo",
             "table.columns": {
                 "name": "Nombre"
             }
@@ -71,7 +71,7 @@
         "title": "Notas",
         "table.columns": {
             "note": "Nota",
-            "created": "Creado",
+            "created": "Creado el",
             "creator": "Autor"
         }
     },
@@ -79,11 +79,17 @@
         "title": "Referencias",
         "table.columns": {
             "targetName": "Número",
-            "parentName": "Padre",
+            "parentName": "Principal",
             "targetTitle": "Título",
-            "modified": "Modificado",
+            "modified": "Modificado el",
             "targetType": "Tipo de referencia",
             "status": "Estado"
+        },
+        "message": {
+            "delete": {
+                "success": "es_Reference deleted successfully",
+                "error": "es_Error deleting reference"
+            }
         }
     },
     "document-repository.comp.history": {
@@ -98,23 +104,23 @@
         "title": "Etiquetas",
         "table.columns": {
             "tag": "Etiqueta",
-            "created": "Creado",
-            "createdBy": "Creado por"
+            "created": "Creada el",
+            "createdBy": "Creada por"
         },
         "modal": {
             "title": "Etiqueta",
             "search": "Buscar etiqueta",
             "buttons": {
                 "cancel": "Cancelar",
-                "ok": "Añadir etiqueta"
+                "ok": "Añadir la etiqueta"
             }
         },
         "message": {
             "tagExists": "La etiqueta con ese nombre o descripción o texto ya existe",
-            "tagAssociated": "Ya asociado",
+            "tagAssociated": "La etiqueta ya está asociada",
             "delete": {
-                "success": "Tag eliminado con éxito",
-                "error": "Error al eliminar la etiqueta"
+                "success": "La etiqueta fue eliminada con éxito",
+                "error": "Hubo un error eliminando la etiqueta"
             }
         }
     },
@@ -122,45 +128,45 @@
         "title": "Búsqueda de referencia"
     },
     "document-repository.comp.addreference": {
-        "title": "Añadir referencia",
+        "title": "Añadir una referencia",
         "cancelButton": "Cancelar",
         "confirmButton": "Añadir",
         "search": {
-            "placeholder": "Buscar caso, queja, archivo, tarea",
+            "placeholder": "Buscar casos, demandas, expedientes, asignaciones",
             "btn": "Buscar"
         },
         "grid": {
             "columns": {
-                "id": "Carné de identidad",
+                "id": "Identificación",
                 "name": "Nombre",
                 "type": "Tipo",
                 "title": "Título",
-                "parent": "Padre",
-                "assignee": "Cesionario",
-                "modified": "Modificado"
+                "parent": "Principal",
+                "assignee": "Asignado",
+                "modified": "Modificado el"
             }
         }
     },
     "document-repository.comp.assigneePickerModal": {
-        "title": "Cambiar asignatario",
+        "title": "Cambiar el asignado",
         "assigneeNamelabel": "Nombre del asignado",
         "btnCancelText": "Cancelar",
         "btnSaveText": "Salvar",
-        "searchAssigneeHeader": "Buscar asignatario"
+        "searchAssigneeHeader": "Buscar asignado"
     },
     "document-repository.comp.groupPickerModal": {
-        "title": "Cambiar grupo",
+        "title": "Cambiar el grupo",
         "groupNamelabel": "Nombre del grupo",
         "btnCancelText": "Cancelar",
         "btnSaveText": "Salvar",
-        "searchGroupHeader": "Grupo de búsqueda"
+        "searchGroupHeader": "Buscar grupo"
     },
     "document-repository.userOrGroupSearch": {
-        "id": "UserSearch",
-        "title": "Búsqueda de usuario / grupo",
+        "id": "Buscar usuario",
+        "title": "Buscar usuario o grupo",
         "search": {
             "btn": "Buscar",
-            "placeholder": "Busque el usuario o grupo."
+            "placeholder": "Buscar usuario o grupo"
         },
         "cancelButton": "Cancelar",
         "confirmButton": "Confirmar",
@@ -168,18 +174,18 @@
             "name": "Nombre",
             "type": "Tipo",
             "title": "Título",
-            "username": "Nombre de usuario"
+            "username": "Nombre del usuario"
         }
     },
     "document-repository.newRepository": {
-        "title": "Crear repositorio",
-        "assigneeLabel": "Cesionario",
-        "owningGroupLabel": "Poseer grupo",
-        "assignee.placeholder": "Buscar asignatario",
-        "saveButton": "Crear repositorio",
+        "title": "Crear el repositorio",
+        "assigneeLabel": "Asignado",
+        "owningGroupLabel": "Grupo propietario",
+        "assignee.placeholder": "Buscar asignado",
+        "saveButton": "Crear el repositorio",
         "cancelButton": "Cancelar",
         "nameLabel": "Nombre",
-        "name.placeholder": "Ingrese su nombre",
+        "name.placeholder": "Ingrese el nombre",
         "descriptionLabel": "Descripción",
         "description.placeholder": "Ingrese la descripción",
         "searchUser": "Buscar Usuario y Grupo",
@@ -210,11 +216,11 @@
             "noFilter": "(Sin filtro)"
         },
         "sorters": {
-            "dateAsc": "Ordenar Fecha Asc",
-            "dateDesc": "Ordenar Fecha Dec",
-            "idAsc": "Ordenar identificación Asc",
-            "idDesc": "Ordenar identificación Dec",
-            "nameAsc": "Ordenar por nombre Asc",
+            "dateAsc": "Fecha en orden ascendente",
+            "dateDesc": "Fecha en orden descendiente",
+            "idAsc": "Identificación en orden ascendente",
+            "idDesc": "Identificación en orden descendiente",
+            "nameAsc": "Nombre en orden ascendente",
             "noSort": "(Sin Clasificar)"
         }
     }

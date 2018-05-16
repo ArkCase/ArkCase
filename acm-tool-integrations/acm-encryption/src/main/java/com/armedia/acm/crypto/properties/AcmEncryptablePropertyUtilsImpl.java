@@ -1,10 +1,38 @@
 package com.armedia.acm.crypto.properties;
 
+/*-
+ * #%L
+ * Acm Encryption Tools
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,10 +60,8 @@ import java.util.Map;
 public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUtils
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
-
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private final String encryptedValuePrefix = "ENC(";
     private final String encryptedValueSuffix = ")";
     private AcmEncryptablePropertyEncryptionProperties encryptionProperties;
@@ -109,6 +135,10 @@ public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUt
                 encryptionProperties.getPropertiesEncryptionPassPhraseHashAlgorithm(),
                 encryptionProperties.getPropertiesEncryptionAlgorithm(), encryptionProperties.getPropertiesEncryptionBlockCipherMode(),
                 encryptionProperties.getPropertiesEncryptionPadding()), UTF8_CHARSET);
+
+        // with SHA256 padding, if the plaintext is long enough the decrypted version somehow ends up with a line
+        // return at the end...
+        decryptedValue = StringUtils.trimTrailingWhitespace(decryptedValue);
 
         return decryptedValue;
     }

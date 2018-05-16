@@ -26,10 +26,8 @@ angular.module('cases').controller(
                 'DocTreeExt.Email',
                 'ModalDialogService',
                 'Admin.EmailSenderConfigurationService',
-                function($scope, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService,
-                        ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication,
-                        PermissionsService, ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService,
-                        DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService) {
+                function($scope, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
+                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService) {
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
                         return userInfo;
@@ -40,16 +38,16 @@ angular.module('cases').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "cases",
-                        componentId : "documents",
-                        retrieveObjectInfo : CaseInfoService.getCaseInfo,
-                        validateObjectInfo : CaseInfoService.validateCaseInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "cases",
+                        componentId: "documents",
+                        retrieveObjectInfo: CaseInfoService.getCaseInfo,
+                        validateObjectInfo: CaseInfoService.validateCaseInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -62,21 +60,21 @@ angular.module('cases').controller(
                         $scope.treeConfig = config.docTree;
                         $scope.allowParentOwnerToCancel = config.docTree.allowParentOwnerToCancel;
 
-                        $q.all([ promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages ]).then(
-                                function(data) {
-                                    $scope.treeConfig.formTypes = data[0];
-                                    $scope.treeConfig.fileTypes = data[1];
-                                    $scope.treeConfig.correspondenceForms = data[2];
-                                    $scope.treeConfig.fileLanguages = data[3];
-                                    if (!Util.isEmpty($scope.treeControl)) {
-                                        $scope.treeControl.refreshTree();
-                                    }
-                                });
+                        $q.all([ promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages ]).then(function(data) {
+                            $scope.treeConfig.formTypes = data[0];
+                            $scope.treeConfig.fileTypes = data[1];
+                            $scope.treeConfig.correspondenceForms = data[2];
+                            $scope.treeConfig.fileLanguages = data[3];
+                            if (!Util.isEmpty($scope.treeControl)) {
+                                $scope.treeControl.refreshTree();
+                            }
+                        });
                     };
 
                     $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
                     $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
                     var onObjectInfoRetrieved = function(objectInfo) {
+                        objectInfo.number = objectInfo.caseNumber;
                         $scope.objectInfo = objectInfo;
                         $scope.objectId = objectInfo.id;
                         $scope.assignee = ObjectModelService.getAssignee(objectInfo);
@@ -96,23 +94,22 @@ angular.module('cases').controller(
                         DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
 
                         $scope.treeControl.addCommandHandler({
-                            name : "declare",
-                            onAllowCmd : function(nodes) {
+                            name: "declare",
+                            onAllowCmd: function(nodes) {
                                 return $scope.getActionPermission('declareAsRecords', $scope.objectInfo, $scope.objectType);
                             }
                         });
 
                         $scope.treeControl.addCommandHandler({
-                            name : "rename",
-                            onAllowCmd : function(nodes) {
+                            name: "rename",
+                            onAllowCmd: function(nodes) {
                                 // There are multiple node selected. Rename is not possible for multiple nodes
                                 if (Util.isArrayEmpty(nodes) || nodes.length > 1) {
                                     return 'disable';
                                 }
 
                                 var node = nodes[0];
-                                var objectType = !Util.isEmpty(node.data) && !Util.isEmpty(node.data.objectType) ? node.data.objectType
-                                        .toUpperCase() : '';
+                                var objectType = !Util.isEmpty(node.data) && !Util.isEmpty(node.data.objectType) ? node.data.objectType.toUpperCase() : '';
                                 var action = '';
 
                                 switch (objectType) {
@@ -155,7 +152,7 @@ angular.module('cases').controller(
 
                     $scope.getActionPermission = function(action, object, objectType) {
                         return PermissionsService.getActionPermission(action, object, {
-                            objectType : objectType
+                            objectType: objectType
                         }).then(function success(enabled) {
                             return enabled ? 'enable' : 'disable';
                         }, function error() {
@@ -176,16 +173,16 @@ angular.module('cases').controller(
 
                     $scope.createNewTask = function() {
                         var modalMetadata = {
-                            moduleName : 'tasks',
-                            templateUrl : 'modules/tasks/views/components/task-new-task.client.view.html',
-                            controllerName : 'Tasks.NewTaskController',
-                            params : {
-                                parentType : ObjectService.ObjectTypes.CASE_FILE,
-                                parentObject : $scope.objectInfo.caseNumber,
-                                parentTitle : $scope.objectInfo.title,
-                                parentId : $scope.objectInfo.id,
-                                documentsToReview : $scope.selectedDocuments,
-                                taskType : 'REVIEW_DOCUMENT'
+                            moduleName: 'tasks',
+                            templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html',
+                            controllerName: 'Tasks.NewTaskController',
+                            params: {
+                                parentType: ObjectService.ObjectTypes.CASE_FILE,
+                                parentObject: $scope.objectInfo.caseNumber,
+                                parentTitle: $scope.objectInfo.title,
+                                parentId: $scope.objectInfo.id,
+                                documentsToReview: $scope.selectedDocuments,
+                                taskType: 'REVIEW_DOCUMENT'
                             }
                         };
                         ModalDialogService.showModal(modalMetadata);
@@ -223,13 +220,13 @@ angular.module('cases').controller(
 
                     $scope.onFilter = function() {
                         $scope.$bus.publish('onFilterDocTree', {
-                            filter : $scope.filter
+                            filter: $scope.filter
                         });
                     };
 
                     $scope.onSearch = function() {
                         $scope.$bus.publish('onSearchDocTree', {
-                            searchFilter : $scope.searchFilter
+                            searchFilter: $scope.searchFilter
                         });
                     };
 

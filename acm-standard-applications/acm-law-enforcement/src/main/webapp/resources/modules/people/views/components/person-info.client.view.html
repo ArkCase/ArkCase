@@ -1,56 +1,68 @@
 <div ng-controller="People.InfoController">
     <div class="clearfix">
         <div class="row">
-            <div class="col-xs-12 col-md-10">
+            <div class="col-xs-12 col-md-12">
                 <div class="row">
                     <div class="col-xs-6">
                         <h4><a href="#" editable-text="objectInfo.givenName" onaftersave="savePerson()" permission="editCase"
                                 permission-properties="objectInfo" permission-action="disable" e-required>
-                            {{objectInfo.givenName || "Unknown"}}</a>,
-                            <a href="#" editable-text="objectInfo.middleName" onaftersave="savePerson()" permission="editCase"
-                                    permission-properties="objectInfo" permission-action="disable">
-                                {{objectInfo.middleName}}</a><span ng-show="objectInfo.middleName !== null">,</span>
+                            {{objectInfo.givenName || 'common.value.unknown' | translate}}</a>
+                            <a ng-if="objectInfo.middleName !== null" href="#" editable-text="objectInfo.middleName"
+                                    onaftersave="savePerson()" permission="editCase" permission-properties="objectInfo"
+                                    permission-action="disable">
+                                {{objectInfo.middleName}}</a>
                             <a href="#" editable-text="objectInfo.familyName" onaftersave="savePerson()" permission="editCase"
                                     permission-properties="objectInfo" permission-action="disable" e-required>
-                                {{objectInfo.familyName || "Unknown"}}</a></h4></div>
+                                {{objectInfo.familyName || 'common.value.unknown' | translate}}</a></h4></div>
                     <div class="col-xs-6  text-right">
                         <h4>{{objectInfo.id}}</h4>
                     </div>
 
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-md-5">
-                        <div class="h4 font-bold" ng-show="objectInfo.defaultPhone">
-                            {{objectInfo.defaultPhone.value}} ({{objectInfo.defaultPhone.subType}})
-                        </div>
-                        <small class="text-muted"><span translate>people.comp.info.phone.label</span></small>
-                    </div>
                     <div class="col-xs-12 col-md-4">
-                        <div class="h4 font-bold" ng-show="objectInfo.defaultOrganization">
-                            {{objectInfo.defaultOrganization.organization.organizationValue}}
-                        </div>
-                        <small class="text-muted"><span translate>people.comp.info.organization.label</span></small>
-                    </div>
-                    <div class="col-xs-12 col-md-3">
-                        <div class="h4 font-bold" ng-show="objectInfo.defaultIdentification">
-                            {{objectInfo.defaultIdentification.identificationNumber}}
-                            ({{objectInfo.defaultIdentification.identificationType}})
-                        </div>
+                        <span class="h4 font-bold">
+                            {{objectInfo.defaultIdentification.identificationNumber || 'common.value.unknown' | translate}}
+                        </span><br>
                         <small class="text-muted"><span translate>people.comp.info.identification.label</span></small>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-5">
-                        <div class="h4 font-bold" ng-show="objectInfo.defaultEmail">
-                            {{objectInfo.defaultEmail.value}} ({{objectInfo.defaultEmail.subType}})
-                        </div>
-                        <small class="text-muted"><span translate>people.comp.info.email.label</span></small>
                     </div>
                     <div class="col-xs-12 col-md-4">
                         <div class="h4 font-bold">
-                            {{objectInfo.status}}
+                            {{objectInfo.defaultOrganization.organization.organizationValue || 'common.value.unknown' | translate}}
                         </div>
-                        <small class="text-muted"><span translate>people.comp.info.status.label</span></small>
+                        <small class="text-muted"><span translate>people.comp.info.organization.label</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <span class="h4 font-bold">
+                            {{objectInfo.defaultPhone.value || 'common.value.unknown' | translate}}
+                        </span>
+                        <span class="h4 font-bold" ng-show="objectInfo.defaultPhone">
+                            ({{objectInfo.defaultPhone.subType}})
+                        </span><br />
+                        <small class="text-muted"><span translate>people.comp.info.phone.label</span></small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <span class="h4 font-bold">
+                            {{objectInfo.defaultIdentification.identificationType || 'common.value.unknown' | translate}}
+                        </span><br>
+                        <small class="text-muted"><span translate>people.comp.info.identification.type</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.defaultOrganization.organization.organizationType || 'common.value.unknown' | translate}}
+                        </div>
+                        <small class="text-muted"><span translate>people.comp.info.organization.type</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <span class="h4 font-bold">
+                            {{objectInfo.defaultEmail.value || 'common.value.unknown' | translate}}
+                        </span>
+                        <span class="h4 font-bold" ng-show="objectInfo.defaultEmail">
+                            ({{objectInfo.defaultEmail.subType}})
+                        </span><br />
+                        <small class="text-muted"><span translate>people.comp.info.email.label</span></small>
                     </div>
                 </div>
             </div>

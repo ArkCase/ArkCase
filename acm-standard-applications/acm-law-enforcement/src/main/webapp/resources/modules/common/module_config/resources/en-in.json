@@ -2,6 +2,7 @@
     "common": {
         "select.option.none": "(Select One)",
         "value.unknown": "Unknown",
+        "value.none": "None",
         "_1_": "Please do not use or add custom date formats, because it is error prone to be i18n compliant.",
         "_2_": "Please use one of the predefined formats: ",
         "_3_": "'medium'    - equivalent to 'MMM d, y h:mm:ss a' for en_US locale (e.g. Sep 3, 2010 12:05:08 PM)",
@@ -54,7 +55,8 @@
             "defaultBodyLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
             "defaultBodyAttachments": "Please find attached the documents sent to you from ArkCase.",
             "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
-            "successMessage": "The email was sent successfully"
+            "successMessage": "The email was sent successfully",
+            "noEmailAddress": "There is no entered email for this "
         },
         "menu": {
             "noop": "(Select Item)",
@@ -65,7 +67,7 @@
             "newCorrespondence": "New Correspondence",
             "open": "Open",
             "email": "Email",
-            "newTask": "en-in_New Task",
+            "newTask": "New Task",
             "download": "Download",
             "copy": "Copy",
             "cut": "Cut",
@@ -108,6 +110,10 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "Send As Attachment and Hyperlink",
             "btnCancel.text": "Cancel",
             "btnOk.text": "Send Email"
+        },
+        "participantsDialog": {
+            "titlePart": "Participants for ",
+            "title": "Participants"
         },
         "recipientsDialog": {
             "title": "Choose Recipients",
@@ -175,9 +181,11 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "Choose",
         "not_authorized": "Not Authorized",
+        "not_member": "Not Member",
         "tooltip.move_right": "Move Right",
         "tooltip.move_left": "Move Left",
-        "authorized": "Authorized"
+        "authorized": "Authorized",
+        "member": "Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "Error, 2 characters required."
@@ -188,7 +196,10 @@
         "btnOk.text": "OK",
         "btnCancel.text": "Cancel",
         "edtPlaceholder": "Type in to search",
-        "noData.text": "No Results"
+        "noData.text": "No Results",
+        "pickUserLabel": "Pick Associated User",
+        "pickGroupLabel": "Pick Associated Group",
+        "selectedItemsGrid.label": "Selected entries"
     },
     "common.directive.search": {
         "showMore.button.text": "Show More Values",
@@ -485,7 +496,9 @@
             "day.label": "Day",
             "week.label": "Week",
             "month.label": "Month",
-            "on.label": "On",
+            "_1_": "'on.label' appears not in use. _TO_BE_REMOVED_",
+            "_2_": "If needed it, rephrase message to avoid English centric grammar in message",
+            "_on.label": "On",
             "day.placeholder": "Day",
             "year.placeholder": "Year",
             "dailyRecurrence": {
@@ -601,6 +614,8 @@
             "error.noAccessCombo": "The combination of No Access and Assignee is not allowed.",
             "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
             "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system.",
+            "error.emptyParticipantLdapId": "Participant name cannot be empty",
+            "error.emptyParticipantType": "Participant type cannot be empty",
             "error.ownerUnique": "Only one owner is allowed."
         }
     },
@@ -633,11 +648,12 @@
         "DOC_REPO": "Document Repository",
         "ORGANIZATION": "Organization",
         "PERSON": "Person",
-        "PERSON-ASSOCIATION": "en-in_Person-Association",
-        "PARTICIPANT": "en-in_Participant",
-        "NOTE": "en-in_Note",
-        "PARTICIPANT-ASSOCIATION": "en-in_Participant-Association",
-        "ASSIGNMENT": "en-in_Assignment"
+        "PERSON-ASSOCIATION": "Person-Association",
+        "PARTICIPANT": "Participant",
+        "NOTE": "Note",
+        "PARTICIPANT-ASSOCIATION": "Participant-Association",
+        "ASSIGNMENT": "Assignment",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",

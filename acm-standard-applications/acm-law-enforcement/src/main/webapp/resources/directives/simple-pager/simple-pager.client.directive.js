@@ -44,15 +44,13 @@
  */
 angular.module('directives').directive('simplePager', function() {
     return {
-        restrict : 'E', //match only element name
-        scope : {
-            pagerData : '=', //= : two way binding so that the data can be monitored for changes
-            reloadPage : '='
+        restrict: 'E', //match only element name
+        scope: {
+            pagerData: '=', //= : two way binding so that the data can be monitored for changes
+            reloadPage: '='
         },
 
-        link : function(scope) { //dom operations
-            scope.pagerData.currentPage = 1;
-
+        link: function(scope) { //dom operations
             scope.$watchCollection('pagerData.totalItems', function(totalItems, oldValue) {
                 if (totalItems && totalItems != oldValue) {
                     recalculatePagerNumbers();
@@ -76,6 +74,6 @@ angular.module('directives').directive('simplePager', function() {
                 scope.totalPages = scope.pagerData.totalItems % scope.pagerData.pageSize > 0 ? num + 1 : num;
             }
         },
-        templateUrl : 'directives/simple-pager/simple-pager.client.view.html'
+        templateUrl: 'directives/simple-pager/simple-pager.client.view.html'
     };
 });

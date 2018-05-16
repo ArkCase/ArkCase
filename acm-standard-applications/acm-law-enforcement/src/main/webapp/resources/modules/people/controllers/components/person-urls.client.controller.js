@@ -2,23 +2,8 @@
 
 angular.module('people').controller(
         'People.UrlsController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Person.InfoService',
-                'Authentication',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'PermissionsService',
-                'Object.LookupService',
-                'Object.ModelService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication,
-                        HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -26,22 +11,22 @@ angular.module('people').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "people",
-                        componentId : "urls",
-                        retrieveObjectInfo : PersonInfoService.getPersonInfo,
-                        validateObjectInfo : PersonInfoService.validatePersonInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "people",
+                        componentId: "urls",
+                        retrieveObjectInfo: PersonInfoService.getPersonInfo,
+                        validateObjectInfo: PersonInfoService.validatePersonInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -49,7 +34,7 @@ angular.module('people').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.PERSON
+                            objectType: ObjectService.ObjectTypes.PERSON
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -65,7 +50,7 @@ angular.module('people').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
                         var urls = _.filter($scope.objectInfo.contactMethods, {
-                            type : 'url'
+                            type: 'url'
                         });
                         $scope.gridOptions.data = urls;
                     };
@@ -84,12 +69,12 @@ angular.module('people').controller(
                         //put contactMethod to scope, we will need it when we return from popup
                         $scope.url = url;
                         var item = {
-                            id : '',
-                            parentId : $scope.objectInfo.id,
-                            type : 'url',
-                            subType : '',
-                            value : '',
-                            description : ''
+                            id: '',
+                            parentId: $scope.objectInfo.id,
+                            type: 'url',
+                            subType: '',
+                            value: '',
+                            description: ''
                         };
                         showModal(item, false);
                     };
@@ -97,12 +82,12 @@ angular.module('people').controller(
                     $scope.editRow = function(rowEntity) {
                         $scope.url = rowEntity;
                         var item = {
-                            id : rowEntity.id,
-                            type : rowEntity.type,
-                            subLookup : rowEntity.subType,
-                            subType : rowEntity.subType,
-                            value : rowEntity.value,
-                            description : rowEntity.description
+                            id: rowEntity.id,
+                            type: rowEntity.type,
+                            subLookup: rowEntity.subType,
+                            subType: rowEntity.subType,
+                            value: rowEntity.value,
+                            description: rowEntity.description
                         };
                         showModal(item, true);
 
@@ -125,13 +110,13 @@ angular.module('people').controller(
                         params.isDefault = $scope.isDefault(url);
 
                         var modalInstance = $modal.open({
-                            animation : true,
-                            templateUrl : 'modules/people/views/components/person-urls-modal.client.view.html',
-                            controller : 'People.UrlsModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            animation: true,
+                            templateUrl: 'modules/people/views/components/person-urls-modal.client.view.html',
+                            controller: 'People.UrlsModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -143,7 +128,7 @@ angular.module('people').controller(
                                 url = $scope.url;
                             else {
                                 url = _.find($scope.objectInfo.contactMethods, {
-                                    id : data.url.id
+                                    id: data.url.id
                                 });
                             }
                             url.type = 'url';
@@ -156,7 +141,7 @@ angular.module('people').controller(
                             }
 
                             var urls = _.filter($scope.objectInfo.contactMethods, {
-                                type : 'url'
+                                type: 'url'
                             });
                             if (data.isDefault || urls.length == 1) {
                                 $scope.objectInfo.defaultUrl = url;
@@ -182,8 +167,10 @@ angular.module('people').controller(
                         return promiseSaveInfo;
                     }
 
-                    $scope.isDefault = function(data) {
-                        return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultUrl");
-
+                    $scope.isDefault = function(url) {
+                        var defaultUrl = $scope.objectInfo.defaultUrl;
+                        var comparisonProperties = [ "id", "type", "subType", "value", "description" ];
+                        return Util.objectsComparisonByGivenProperties(defaultUrl, url, comparisonProperties);
                     }
+
                 } ]);

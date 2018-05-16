@@ -3,6 +3,34 @@
  */
 package com.armedia.acm.objectchangestatus.service;
 
+/*-
+ * #%L
+ * ACM Service: Object Change Status
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
@@ -21,12 +49,9 @@ import javax.persistence.PersistenceContext;
 public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
 {
 
-    private AcmDataService acmDataService;
-
-    private UserTrackerService userTrackerService;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
-
+    private AcmDataService acmDataService;
+    private UserTrackerService userTrackerService;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -36,7 +61,7 @@ public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
         log.debug("Changing object status: type [{}], id [{}], new status: [{}]",
                 objectType, objectId, status);
 
-        AcmAbstractDao<AcmStatefulEntity> dao = getAcmDataService().getDaoByObjectType(objectType);
+        AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
 
         if (dao != null)
         {
@@ -44,20 +69,20 @@ public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
 
             try
             {
-                entity = dao.find(objectId);
+                entity = (AcmStatefulEntity) dao.find(objectId);
             }
             catch (EntityNotFoundException e)
             {
                 // try and flush our SQL in case we are trying to operate on a brand new object
                 entityManager.flush();
-                entity = dao.find(objectId);
+                entity = (AcmStatefulEntity) dao.find(objectId);
             }
 
             if (entity != null)
             {
                 log.debug("Found object of type [{}], setting status to [{}]", entity.getClass().getName(), status);
                 entity.setStatus(status);
-                dao.save(entity);
+                dao.save((AcmObject) entity);
 
                 // now we have to flush our changes so other objects in a workflow will see our changes.
                 entityManager.flush();

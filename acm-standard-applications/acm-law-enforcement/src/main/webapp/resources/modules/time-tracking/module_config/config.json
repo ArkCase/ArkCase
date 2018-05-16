@@ -62,8 +62,8 @@
                     "details",
                     "person",
                     "summary",
-                    "tags",
-                    "approvers"
+                    "tasks",
+                    "tags"
                 ]
             },
             {
@@ -99,11 +99,11 @@
                 ]
             },
             {
-                "type": "p/TIMESHEET/approvers",
-                "icon": "fa fa-users",
-                "label": "timeTracking.tree.nodeTypes.approvers.label",
+                "type": "p/TIMESHEET/tasks",
+                "icon": "fa fa-check-circle",
+                "label": "timeTracking.tree.nodeTypes.tasks.label",
                 "components": [
-                    "approvers"
+                    "tasks"
                 ]
             },
             {
@@ -190,17 +190,82 @@
                     ]
                 },
                 {
-                    "id": "approvers",
+                    "id": "tasks",
                     "type": "component",
                     "columnDefs": [
                         {
-                            "name": "fullName",
-                            "displayName": "timeTracking.comp.approvers.table.columns.fullName",
+                            "field": "alerts",
+                            "displayName": "",
+                            "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'timeTracking.comp.tasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'timeTracking.comp.tasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+                            "width": 40,
+                            "enableSorting": false,
+                            "enableColumnMenu": false
+                        },
+                        {
+                            "name": "title",
+                            "field": "title_parseable",
+                            "sortField": "title_parseable_lcs",
+                            "displayName": "timeTracking.comp.tasks.table.columns.title",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{row.entity.title_parseable}}</div>"
+                        },
+                        {
+                            "name": "assignee",
+                            "field": "assignee_s",
+                            "displayName": "timeTracking.comp.tasks.table.columns.assignee",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        },
+                        {
+                            "name": "created",
+                            "field": "create_tdt",
+                            "displayName": "timeTracking.comp.tasks.table.columns.created",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'shortDate' }}</div>"
+                        },
+                        {
+                            "name": "priority",
+                            "field": "priority_s",
+                            "displayName": "timeTracking.comp.tasks.table.columns.priority",
                             "headerCellFilter": "translate"
                         },
                         {
-                            "name": "userId",
-                            "displayName": "timeTracking.comp.approvers.table.columns.userId",
+                            "name": "due",
+                            "field": "due_tdt",
+                            "displayName": "timeTracking.comp.tasks.table.columns.due",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
+                        },
+                        {
+                            "name": "status",
+                            "field": "status_s",
+                            "displayName": "timeTracking.comp.tasks.table.columns.status",
+                            "headerCellFilter": "translate"
+                        }
+                    ]
+                },
+                {
+                    "id": "hoursSummary",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "date",
+                            "displayName": "timeTracking.widgets.summary.table.columns.date",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "object.title",
+                            "displayName": "timeTracking.widgets.summary.table.columns.objectTitle",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "object.number",
+                            "displayName": "timeTracking.widgets.summary.table.columns.objectNumber",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "value",
+                            "displayName": "timeTracking.widgets.summary.table.columns.hours",
                             "headerCellFilter": "translate"
                         }
                     ]
@@ -290,9 +355,20 @@
                     "headerCellFilter": "translate"
                 },
                 {
+                    "name": "chargeRole",
+                    "displayName": "timeTracking.comp.summary.table.columns.role",
+                    "headerCellFilter": "translate"
+                },
+                {
                     "name": "value",
                     "displayName": "timeTracking.comp.summary.table.columns.value",
                     "headerCellFilter": "translate"
+                },
+                {
+                    "name": "totalCost",
+                    "displayName": "timeTracking.comp.summary.table.columns.cost",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>${{ row.entity.totalCost | number : 2}}</div>"
                 },
                 {
                     "name": "date",
@@ -348,9 +424,9 @@
             "filterName": "Object Type"
         },
         {
-            "id": "approvers",
-            "title": "timeTracking.comp.approvers.title",
-            "icon": "fa fa-users",
+            "id": "tasks",
+            "title": "timeTracking.comp.tasks.title",
+            "icon": "fa fa-check-circle",
             "enabled": true,
             "configurable": true,
             "type": "grid",
@@ -364,13 +440,52 @@
             "paginationPageSize": 5,
             "columnDefs": [
                 {
-                    "name": "fullName",
-                    "displayName": "timeTracking.comp.approvers.table.columns.fullName",
+                    "field": "alerts",
+                    "displayName": "",
+                    "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'timeTracking.comp.tasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'timeTracking.comp.tasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+                    "width": 40,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                },
+                {
+                    "name": "title",
+                    "field": "title_parseable",
+                    "sortField": "title_parseable_lcs",
+                    "displayName": "timeTracking.comp.tasks.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
+                },
+                {
+                    "name": "assignee",
+                    "field": "assignee_s",
+                    "displayName": "timeTracking.comp.tasks.table.columns.assignee",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "created",
+                    "field": "create_tdt",
+                    "displayName": "timeTracking.comp.tasks.table.columns.created",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'shortDate' }}</div>"
+                },
+                {
+                    "name": "priority",
+                    "field": "priority_s",
+                    "displayName": "timeTracking.comp.tasks.table.columns.priority",
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "userId",
-                    "displayName": "timeTracking.comp.approvers.table.columns.userId",
+                    "name": "due",
+                    "field": "due_tdt",
+                    "displayName": "timeTracking.comp.tasks.table.columns.due",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
+                },
+                {
+                    "name": "status",
+                    "field": "status_s",
+                    "displayName": "timeTracking.comp.tasks.table.columns.status",
                     "headerCellFilter": "translate"
                 }
             ]

@@ -1,5 +1,32 @@
 package com.armedia.acm.pluginmanager.service;
 
+/*-
+ * #%L
+ * ACM Service: Plugin Manager
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivileges;
@@ -8,6 +35,7 @@ import com.armedia.acm.spring.SpringContextHolder;
 import com.armedia.acm.spring.events.AbstractContextHolderEvent;
 import com.armedia.acm.spring.events.ContextAddedEvent;
 import com.armedia.acm.spring.events.ContextRemovedEvent;
+import com.armedia.acm.spring.events.ContextReplacedEvent;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -217,26 +245,40 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
         String eventFile = event.getContextName();
         if ((event instanceof ContextRemovedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME))
         {
-            // clear all privileges
-            configurablePrivilegesByRole.clear();
-            configurableUrlPrivileges.clear();
-            // add non configurable privileges
-            configurablePrivilegesByRole.putAll(privilegesByRole);
-            configurableUrlPrivileges.addAll(urlPrivileges);
+            clearPrivileges();
         }
         else if ((event instanceof ContextAddedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME))
         {
-            // read all privileges
-            Map<String, AcmPluginPrivileges> pluginsPrivileges = springContextHolder.getAllBeansOfType(AcmPluginPrivileges.class);
-
-            log.info("{} plugins privileges(s) found.", pluginsPrivileges.size());
-
-            // get privileges from configuration files located in ${user.home}/.arkcase/acm
-            pluginsPrivileges.forEach((key, value) -> {
-                log.debug("Registering plugins privileges '{}'.", key);
-                registerPluginPrivileges(value);
-            });
+            loadPrivileges();
         }
+        else if ((event instanceof ContextReplacedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME))
+        {
+            clearPrivileges();
+            loadPrivileges();
+        }
+    }
 
+    private void loadPrivileges()
+    {
+        // read all privileges
+        Map<String, AcmPluginPrivileges> pluginsPrivileges = springContextHolder.getAllBeansOfType(AcmPluginPrivileges.class);
+
+        log.info("{} plugins privileges(s) found.", pluginsPrivileges.size());
+
+        // get privileges from configuration files located in ${user.home}/.arkcase/acm
+        pluginsPrivileges.forEach((key, value) -> {
+            log.debug("Registering plugins privileges '{}'.", key);
+            registerPluginPrivileges(value);
+        });
+    }
+
+    private void clearPrivileges()
+    {
+        // clear all privileges
+        configurablePrivilegesByRole.clear();
+        configurableUrlPrivileges.clear();
+        // add non configurable privileges
+        configurablePrivilegesByRole.putAll(privilegesByRole);
+        configurableUrlPrivileges.addAll(urlPrivileges);
     }
 }

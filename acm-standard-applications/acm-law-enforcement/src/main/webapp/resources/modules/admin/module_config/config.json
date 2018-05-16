@@ -97,10 +97,6 @@
                 {
                     "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.complaints.label",
                     "id": "COMPLAINT"
-                },
-                {
-                    "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.tasks.label",
-                    "id": "TASK"
                 }
             ]
         },
@@ -670,6 +666,23 @@
                     "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
                 }
             ],
+            "selectedItemsGrid": {
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.name",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "delete",
+                        "cellEditableCondition": false,
+                        "width": 40,
+                        "cellClass": "text-center",
+                        "headerCellTemplate": "<span></span>",
+                        "cellTemplate": "<span><i class='fa fa-trash-o' style='cursor :pointer' ng-click='grid.appScope.gridSelectedItems.deleteRow(row.entity)'></i></span>"
+                    }
+                ]
+            },
             "paginationPageSizes": [
                 5,
                 10,
@@ -944,6 +957,63 @@
                 }
             ],
             "rowTemplate": "modules/admin/views/components/application-draggable-rows.view.html"
+        },
+        {
+            "id": "timesheetConfiguration",
+            "title": "admin.forms.timesheetConfiguration.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "chargeRole",
+                    "displayName": "admin.forms.timesheetConfiguration.chargeRole",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "rate",
+                    "displayName": "admin.forms.timesheetConfiguration.rate",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "active",
+                    "displayName": "admin.forms.timesheetConfiguration.active.active",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
+            "id": "holiday",
+            "title": "admin.application.holiday.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "holidayName",
+                    "displayName": "admin.application.holiday.grid.holidayName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "holidayDate",
+                    "displayName": "admin.application.holiday.grid.holidayDate",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20
         }
     ],
     "tree": {
@@ -1000,6 +1070,13 @@
                 "label": "admin.security.ldap.user.management.title",
                 "components": [
                     "security.ldap-user-management"
+                ]
+            },
+            {
+                "type": "p/security/ldapGroup",
+                "label": "admin.security.group.management.title",
+                "components": [
+                    "security.group-management"
                 ]
             },
             {
@@ -1085,9 +1162,9 @@
             },
             {
                 "type": "p/forms/config",
-                "label": "admin.forms.config",
+                "label": "admin.forms.timesheetConfiguration.title",
                 "components": [
-                    "forms.config"
+                    "timesheet.config"
                 ]
             },
             {
@@ -1165,6 +1242,13 @@
                 ]
             },
             {
+                "type": "p/application/holiday",
+                "label": "admin.application.holiday.title",
+                "components": [
+                    "application-holiday.config"
+                ]
+            },
+            {
                 "type": "p/branding",
                 "label": "admin.branding.title",
                 "icon": "fa fa-wrench",
@@ -1215,6 +1299,19 @@
                 "label": "admin.documentManagement.cmisConfiguration",
                 "components": [
                     "cmis-configuration"
+                ]
+            },
+            {
+                "type": "p/transcription",
+                "label": "admin.transcription.title",
+                "icon": "fa fa-wrench",
+                "components": []
+            },
+            {
+                "type": "p/transcription/transcriptionManagement",
+                "label": "admin.transcription.transcriptionManagement",
+                "components": [
+                    "transcription-management"
                 ]
             }
         ]

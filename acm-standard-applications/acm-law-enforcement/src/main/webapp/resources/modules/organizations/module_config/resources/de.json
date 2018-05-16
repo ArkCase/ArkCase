@@ -21,7 +21,8 @@
         "identification.label": "Identifikation",
         "primary.label": "Hauptkontakt",
         "parent.label": "Elternorganisation",
-        "parent.placeholder": "Geben Sie die übergeordnete Organisation ein"
+        "parent.placeholder": "Geben Sie die übergeordnete Organisation ein",
+        "type.label": "de_Type"
     },
     "organizations.comp.actions": {
         "title": "Aktionen",
@@ -213,7 +214,8 @@
             "type.label": "Art",
             "type.placeholder": "Geben Sie den Typ ein",
             "value.label": "URL",
-            "value.placeholder": "Geben Sie die URL ein"
+            "value.placeholder": "Geben Sie die URL ein",
+            "value.title": "de_Url must be valid (e.g. https://www.google.com)"
         }
     },
     "organizations.comp.participants": {

@@ -18,7 +18,9 @@
         "email.label": "電子郵箱",
         "status.label": "狀態",
         "organization.label": "組織",
-        "identification.label": "身份號碼"
+        "organization.type": "zh-tw_Organization type",
+        "identification.label": "身份號碼",
+        "identification.type": "zh-tw_ID type"
     },
     "people.comp.actions": {
         "title": "行動",
@@ -222,7 +224,8 @@
             "type.label": "類型",
             "type.placeholder": "鍵入類型",
             "value.label": "網址",
-            "value.placeholder": "鍵入網址"
+            "value.placeholder": "鍵入網址",
+            "value.title": "zh-tw_Url must be valid (e.g. https://www.google.com)"
         }
     },
     "people.comp.participants": {

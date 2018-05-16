@@ -2,20 +2,8 @@
 
 angular.module('dashboard.my-tasks').controller(
         'Dashboard.MyTasksController',
-        [
-                '$scope',
-                '$translate',
-                'Authentication',
-                'Dashboard.DashboardService',
-                'ObjectService',
-                '$state',
-                'Task.AlertsService',
-                'UtilService',
-                'Util.DateService',
-                'ConfigService',
-                'params',
-                function($scope, $translate, Authentication, DashboardService, ObjectService, $state, TaskAlertsService, Util,
-                        UtilDateService, ConfigService, params) {
+        [ '$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state', 'Task.AlertsService', 'UtilService', 'Util.DateService', 'ConfigService', 'params',
+                function($scope, $translate, Authentication, DashboardService, ObjectService, $state, TaskAlertsService, Util, UtilDateService, ConfigService, params) {
                     var vm = this;
                     vm.config = null;
                     var userInfo = null;
@@ -23,23 +11,23 @@ angular.module('dashboard.my-tasks').controller(
                     var userGroupList = null;
 
                     var paginationOptions = {
-                        pageNumber : 1,
-                        pageSize : 5,
-                        sortBy : 'id',
-                        sortDir : 'desc'
+                        pageNumber: 1,
+                        pageSize: 5,
+                        sortBy: 'id',
+                        sortDir: 'desc'
                     };
 
                     vm.gridOptions = {
-                        enableColumnResizing : true,
-                        enableRowSelection : true,
-                        enableSelectAll : false,
-                        enableRowHeaderSelection : false,
-                        useExternalPagination : true,
-                        useExternalSorting : true,
-                        multiSelect : false,
-                        noUnselect : false,
-                        columnDefs : [],
-                        onRegisterApi : function(gridApi) {
+                        enableColumnResizing: true,
+                        enableRowSelection: true,
+                        enableSelectAll: false,
+                        enableRowHeaderSelection: false,
+                        useExternalPagination: true,
+                        useExternalSorting: true,
+                        multiSelect: false,
+                        noUnselect: false,
+                        columnDefs: [],
+                        onRegisterApi: function(gridApi) {
                             vm.gridApi = gridApi;
 
                             gridApi.core.on.sortChanged($scope, function(grid, sortColumns) {
@@ -97,12 +85,12 @@ angular.module('dashboard.my-tasks').controller(
 
                     function getPage() {
                         DashboardService.queryMyTasks({
-                            userId : userInfo.userId,
-                            userGroupList : userGroupList,
-                            sortBy : paginationOptions.sortBy,
-                            sortDir : paginationOptions.sortDir,
-                            startWith : (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,
-                            pageSize : paginationOptions.pageSize
+                            userId: userInfo.userId,
+                            userGroupList: userGroupList,
+                            sortBy: paginationOptions.sortBy,
+                            sortDir: paginationOptions.sortDir,
+                            startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,
+                            pageSize: paginationOptions.pageSize
                         }, function(data) {
                             vm.gridOptions.data = [];
                             vm.gridOptions.totalItems = data.response.numFound;

@@ -1,5 +1,32 @@
 package com.armedia.acm.services.users.service.ldap;
 
+/*-
+ * #%L
+ * ACM Service: Users
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
@@ -13,6 +40,7 @@ import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.LdapTemplate;
 
 /**
@@ -51,40 +79,55 @@ public class LdapAuthenticateService
     public void changeUserPassword(String userName, String currentPassword, String newPassword) throws AcmUserActionFailedException
     {
         log.debug("Changing password for user:{}", userName);
-        LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig);
         AcmUser acmUser = userDao.findByUserId(userName);
+        LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig, acmUser.getDistinguishedName(), currentPassword);
         try
         {
             ldapUserDao.changeUserPassword(acmUser.getDistinguishedName(), currentPassword, newPassword, ldapTemplate,
                     ldapAuthenticateConfig);
             log.debug("Password changed successfully for User: {}", userName);
-            savePasswordExpirationDate(acmUser, ldapTemplate);
         }
         catch (AcmLdapActionFailedException e)
         {
             throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", null);
         }
+        try
+        {
+            ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig, acmUser.getDistinguishedName(), newPassword);
+            savePasswordExpirationDate(acmUser, ldapTemplate);
+        }
+        catch (Exception e)
+        {
+            log.warn("Password expiration date was not set for user [{}]", acmUser.getUserId(), e);
+        }
     }
 
     public void resetUserPassword(String token, String password) throws AcmUserActionFailedException
     {
+        AcmUser user = userDao.findByPasswordResetToken(token);
+        if (user == null)
+        {
+            throw new AcmUserActionFailedException("reset password", "USER", null, "User not found!", null);
+        }
+        LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig);
         try
         {
-            AcmUser user = userDao.findByPasswordResetToken(token);
-            if (user == null)
-            {
-                throw new AcmUserActionFailedException("reset password", "USER", null, "User not found!", null);
-            }
             log.debug("Changing password for user: [{}]", user.getUserId());
 
-            LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig);
             ldapUserDao.changeUserPasswordWithAdministrator(user.getDistinguishedName(), password, ldapTemplate, ldapAuthenticateConfig);
-            savePasswordExpirationDate(user, ldapTemplate);
-            invalidateToken(user);
         }
         catch (AcmLdapActionFailedException e)
         {
             throw new AcmUserActionFailedException("reset password", "USER", null, "Change password action failed!", e);
+        }
+        try
+        {
+            savePasswordExpirationDate(user, ldapTemplate);
+            invalidateToken(user);
+        }
+        catch (AuthenticationException e)
+        {
+            log.warn("Password expiration date was not set for user [{}]", user.getUserId(), e);
         }
     }
 

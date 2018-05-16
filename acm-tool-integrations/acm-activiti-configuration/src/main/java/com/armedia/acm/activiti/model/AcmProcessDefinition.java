@@ -1,5 +1,32 @@
 package com.armedia.acm.activiti.model;
 
+/*-
+ * #%L
+ * Tool Integrations: Activiti Configuration
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
@@ -46,8 +73,8 @@ public class AcmProcessDefinition implements AcmEntity
     private String fileName;
     @Column(name = "cm_pd_is_active")
     private boolean active;
-    @Column(name = "cm_pd_md5_hex")
-    private String md5Hash;
+    @Column(name = "cm_pd_sha256_hex")
+    private String sha256Hash;
 
     @Column(name = "cm_pd_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -140,14 +167,14 @@ public class AcmProcessDefinition implements AcmEntity
         this.active = active;
     }
 
-    public String getMd5Hash()
+    public String getSha256Hash()
     {
-        return md5Hash;
+        return sha256Hash;
     }
 
-    public void setMd5Hash(String md5Hash)
+    public void setSha256Hash(String sha256Hash)
     {
-        this.md5Hash = md5Hash;
+        this.sha256Hash = sha256Hash;
     }
 
     @Override

@@ -1,12 +1,41 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+/*-
+ * #%L
+ * ACM Service: Enterprise Content Management
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -38,11 +67,11 @@ import java.util.Map;
 public class ReplaceFileAPIController
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileService fileService;
     private EcmFileTransaction fileTransaction;
     private FileEventPublisher fileEventPublisher;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private FolderAndFilesUtils folderAndFilesUtils;
 
     @PreAuthorize("hasPermission(#fileToBeReplacedId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/replace/{fileToBeReplacedId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -55,11 +84,13 @@ public class ReplaceFileAPIController
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
 
         EcmFile fileToBeReplaced = getFileService().findById(fileToBeReplacedId);
+        EcmFileVersion fileToBeReplacedVersion = getFolderAndFilesUtils().getVersion(fileToBeReplaced,
+                fileToBeReplaced.getActiveVersionTag());
         EcmFile replacedFile;
         if (fileToBeReplaced == null)
         {
             log.debug("File, fileId: {} does not exist, and can not be replaced", fileToBeReplacedId);
-            getFileEventPublisher().publishFileReplacedEvent(null, authentication, ipAddress, false);
+            getFileEventPublisher().publishFileReplacedEvent(null, null, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                     fileToBeReplacedId, "File not found.", null);
         }
@@ -73,13 +104,13 @@ public class ReplaceFileAPIController
             }
 
             replacedFile = getFileTransaction().updateFileTransactionEventAware(authentication, fileToBeReplaced, replacementStream);
-            getFileEventPublisher().publishFileReplacedEvent(replacedFile, authentication, ipAddress, true);
+            getFileEventPublisher().publishFileReplacedEvent(replacedFile, fileToBeReplacedVersion, authentication, ipAddress, true);
         }
         catch (MuleException | IOException e)
         {
             log.error("Exception occurred while trying to replace file: {}, {}", fileToBeReplaced.getFileName(), e.getMessage(),
                     e);
-            getFileEventPublisher().publishFileReplacedEvent(fileToBeReplaced, authentication, ipAddress, false);
+            getFileEventPublisher().publishFileReplacedEvent(fileToBeReplaced, fileToBeReplacedVersion, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                     fileToBeReplacedId, e.getMessage(), e);
 
@@ -135,5 +166,15 @@ public class ReplaceFileAPIController
     public void setFileService(EcmFileService fileService)
     {
         this.fileService = fileService;
+    }
+
+    public FolderAndFilesUtils getFolderAndFilesUtils()
+    {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
+    {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }

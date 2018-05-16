@@ -1,5 +1,32 @@
 package com.armedia.acm.web.api;
 
+/*-
+ * #%L
+ * ACM Shared Web Artifacts
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import org.slf4j.MDC;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -27,16 +54,6 @@ public class MDCThreadPoolExecutor extends ThreadPoolExecutor
             RejectedExecutionHandler rejectedExecutionHandler)
     {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, rejectedExecutionHandler);
-    }
-
-    /**
-     * All executions will have MDC injected. {@code ThreadPoolExecutor}'s submission methods ({@code submit()} etc.)
-     * all delegate to this.
-     */
-    @Override
-    public void execute(Runnable command)
-    {
-        super.execute(wrap(command, MDC.getCopyOfContextMap()));
     }
 
     public static Runnable wrap(final Runnable runnable, final Map<String, String> context)
@@ -69,5 +86,15 @@ public class MDCThreadPoolExecutor extends ThreadPoolExecutor
                 }
             }
         };
+    }
+
+    /**
+     * All executions will have MDC injected. {@code ThreadPoolExecutor}'s submission methods ({@code submit()} etc.)
+     * all delegate to this.
+     */
+    @Override
+    public void execute(Runnable command)
+    {
+        super.execute(wrap(command, MDC.getCopyOfContextMap()));
     }
 }

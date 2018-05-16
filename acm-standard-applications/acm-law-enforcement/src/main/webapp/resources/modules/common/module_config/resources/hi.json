@@ -2,15 +2,29 @@
     "common": {
         "select.option.none": "(एक चुनें)",
         "value.unknown": "अज्ञात",
-        "defaultDateFormat": "hi_MM/DD/YYYY",
-        "defaultTimeFormat": "hi_hh:mm:ss",
-        "defaultDateTimeFormat": "hi_MM/DD/YYYY hh:mm",
-        "defaultDatePickerFormat": "hi_MM/dd/yyyy",
-        "defaultDateUIFormat": "hi_MM/dd/yyyy",
-        "defaultDateTimeUIFormat": "hi_MM/dd/yyyy HH:mm"
+        "value.none": "कोई नहीं",
+        "_1_": "कृपया कोई भी कस्टम दिनांक शैलियों का उपयोग न करें या उन्हें कोई त्रुटि न होने दें.",
+        "_2_": "कृपया पूर्वनिर्धारित स्वरूपों में से एक का उपयोग करें: ",
+        "_3_": "'मध्यम'        - के बराबर 'एमएमएम डी, वाई एच: मिमी: एसएस ए' en_US लोकेल के लिए (3 सितंबर, 2010 12:05:08 अपराह्न के रूप में)",
+        "_4_": "'कम'           - के बराबर 'एम/डी/वाईवाई एच: मिमी ए' en_US लोकेल के लिए (जैसे 9/3/10 12:05 PM)",
+        "_5_": "'पूर्णतिथि'     - के बराबर 'EEEE, एमएमएमएम डी,वाई' en_US लोकेल के लिए (शुक्रवार की तरह, 3 सितंबर, 2010)",
+        "_6_": "'लंबीतिथि'    - के बराबर 'एमएमएमएम डी, वाई' en_US लोकेल के लिए (3 सितंबर, 2010 तक)",
+        "_7_": "'मध्यमतिथि' - के बराबर 'एमएमएम डी, वाई' en_US लोकेल के लिए (3 सितंबर, 2010 तक)",
+        "_8_": "'कमतारीख'  - के बराबर 'एम/डी/वाईवाई' en_US लोकेल के लिए (जैसे 9/3/10)",
+        "_9_": "'मध्यमसमय'- के बराबर 'एच: मिमी: एसएस ए' en_US लोकेल के लिए (जैसे 12:05:08 )",
+        "_10": "'कमसमय'   - के बराबर 'एच: मिमी ए' en_US लोकेल के लिए (जैसे 12:05 )",
+        "_11": " ",
+        "_12": "निम्नलिखित दिनांक स्वरूपों को चरणबद्ध किया गया है। यदि ग्राहक प्रारूप को अनुकूलित करने का अनुरोध करते हैं, तो हमें इसकी आवश्यकता है ",
+        "_13": "i18n की चिंताओं के कारण ऐसा करने से बचने के लिए उन्हें शिक्षित करने के लिए",
+        "defaultDateFormat": "एमएम / डीडी / वाई वाई वाई वाई",
+        "defaultTimeFormat": "एचएच: मिमी: एसएस",
+        "defaultDateTimeFormat": "एमएम / डीडी / वाई वाई वाई वाई एचएच: मिमी ",
+        "defaultDatePickerFormat": "एमएम / डीडी / वाई वाई वाई वाई",
+        "defaultDateUIFormat": "एमएम / डीडी / वाई वाई वाई वाई",
+        "defaultDateTimeUIFormat": "एमएम / डीडी / वाई वाई वाई वाई एचएच: मिमी"
     },
     "common.frevvo": {
-        "defaultDateFormat": "hi_YYYY-MM-DD"
+        "defaultDateFormat": "वाई वाई वाई वाई-एमएम -डीडी"
     },
     "common.service": {
         "error.invalidData": "अमान्य डेटा"
@@ -41,7 +55,8 @@
             "defaultBodyLinks": "कृपया दस्तावेज़ (ओं) को देखने के लिए नीचे दिए गए लिंक का पालन करें 3 दिन में लिंक की समय सीमा समाप्त हो जाती है।",
             "defaultBodyAttachments": "ArkCase से आपको भेजे गए दस्तावेज़ों को संलग्न करें।",
             "defaultFooter": "ArkCase द्वारा संचालित, एंटरप्राइज़ केस मैनेजमेंट प्लेटफ़ॉर्म, http://www.arkcase.com",
-            "successMessage": "ई - मेल को सफलतापूर्वक भेजा गया था"
+            "successMessage": "ई - मेल को सफलतापूर्वक भेजा गया था",
+            "noEmailAddress": "hi_There is no entered email for this "
         },
         "menu": {
             "noop": "(वस्तु चुनें)",
@@ -52,7 +67,7 @@
             "newCorrespondence": "न्यू पत्राचार",
             "open": "खुला",
             "email": "ईमेल",
-            "newTask": "hi_New Task",
+            "newTask": "नया कार्य",
             "download": "डाउनलोड",
             "copy": "कॉपी",
             "cut": "कट गया",
@@ -95,6 +110,10 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "अनुलग्नक और हाइपरलिंक के रूप में भेजें",
             "btnCancel.text": "रद्द करना",
             "btnOk.text": "ईमेल भेजें"
+        },
+        "participantsDialog": {
+            "titlePart": "प्रतिभागियों के लिए ",
+            "title": "प्रतिभागियों"
         },
         "recipientsDialog": {
             "title": "प्राप्तकर्ता चुनें",
@@ -162,12 +181,14 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "चुनें",
         "not_authorized": "अधिकृत नहीं",
+        "not_member": "hi_Not Member",
         "tooltip.move_right": "दाएँ चले",
         "tooltip.move_left": "बाएं खिसको",
-        "authorized": "अधिकृत"
+        "authorized": "अधिकृत",
+        "member": "hi_Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
-        "pattern.title": "hi_Error, 2 characters required."
+        "pattern.title": "त्रुटि, 2 वर्ण आवश्यक हैं."
     },
     "common.directive.searchModal": {
         "header": "खोज",
@@ -175,7 +196,10 @@
         "btnOk.text": "ठीक",
         "btnCancel.text": "रद्द करना",
         "edtPlaceholder": "खोज में टाइप करें",
-        "noData.text": "कोई परिणाम नहीं"
+        "noData.text": "कोई परिणाम नहीं",
+        "pickUserLabel": "संबद्ध उपयोगकर्ता चुनें",
+        "pickGroupLabel": "संबद्ध समूह चुनें",
+        "selectedItemsGrid.label": "चयनित प्रविष्टियां"
     },
     "common.directive.search": {
         "showMore.button.text": "अधिक मूल्य दिखाएं",
@@ -472,7 +496,9 @@
             "day.label": "दिन",
             "week.label": "सप्ताह",
             "month.label": "महीना",
-            "on.label": "पर",
+            "_1_": "'लेबल.पर' प्रतीत नहीं होता है उपयोग में. _निकाले जाने के लिए_",
+            "_2_": "यदि आवश्यक हो, तो संदेश में अंग्रेजी केंद्रित व्याकरण से बचने के लिए रीफ्रेश संदेश",
+            "_on.label": "पर",
             "day.placeholder": "दिन",
             "year.placeholder": "साल",
             "dailyRecurrence": {
@@ -566,7 +592,7 @@
     },
     "common.directive.coreParticipants": {
         "title": "प्रतिभागियों",
-        "replaceFolderChildrenParticipants": "hi_Replace child documents participants",
+        "replaceFolderChildrenParticipants": "बच्चे दस्तावेज़ प्रतिभागियों को बदलें",
         "modal": {
             "addParticipant.label": "प्रतिभागी को जोड़ें",
             "editParticipant.label": "रिकॉर्ड संपादित करें",
@@ -576,7 +602,7 @@
             "btnCancel.text": "रद्द करना",
             "dialogUserPicker.header": "खोज उपयोगकर्ता",
             "dialogGroupPicker.header": "खोज समूह",
-            "replaceChildrenParticipant": "hi_replace children participant"
+            "replaceChildrenParticipant": "बच्चों के प्रतिभागी की जगह"
         },
         "message": {
             "error.groupType": "मालिक का समूह एक व्यक्ति नहीं हो सकता",
@@ -588,6 +614,8 @@
             "error.noAccessCombo": "नो एक्सेस और एसिग्ने के संयोजन की अनुमति नहीं है",
             "error.duplicateUserOrGroup": "अमान्य प्रतिभागी प्रतिभागी के लिए डुप्लिकेट प्रविष्टियां मिलती हैं",
             "error.userOrGroupNotFound": "अमान्य प्रतिभागी सिस्टम में भाग लेने वाले सहभागी प्रविष्टि",
+            "error.emptyParticipantLdapId": "प्रतिभागी का नाम खाली नहीं हो सकता",
+            "error.emptyParticipantType": "प्रतिभागी प्रकार रिक्त नहीं हो सकता",
             "error.ownerUnique": "केवल एक मालिक की अनुमति है"
         }
     },
@@ -620,11 +648,12 @@
         "DOC_REPO": "दस्तावेज़ रिपॉजिटरी",
         "ORGANIZATION": "संगठन",
         "PERSON": "व्यक्ति",
-        "PERSON-ASSOCIATION": "hi_Person-Association",
-        "PARTICIPANT": "hi_Participant",
-        "NOTE": "hi_Note",
-        "PARTICIPANT-ASSOCIATION": "hi_Participant-Association",
-        "ASSIGNMENT": "hi_Assignment"
+        "PERSON-ASSOCIATION": "व्यक्ति-एसोसिएशन",
+        "PARTICIPANT": "प्रतिभागी",
+        "NOTE": "ध्यान दें",
+        "PARTICIPANT-ASSOCIATION": "प्रतिभागी-एसोसिएशन",
+        "ASSIGNMENT": "असाइनमेंट",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "उपयोगकर्ता चुनें",
@@ -880,8 +909,3 @@
         }
     }
 }
-
-
-
-
-

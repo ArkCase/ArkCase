@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+/*-
+ * #%L
+ * ACM Service: Enterprise Content Management
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
@@ -13,6 +40,7 @@ import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
+import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -23,9 +51,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.tika.exception.TikaException;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -34,6 +65,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by armdev on 4/22/14.
@@ -49,6 +81,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUploadPipelineManager;
     private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUpdatePipelineManager;
     private CmisConfigUtils cmisConfigUtils;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
@@ -112,8 +145,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
 
     }
-
-    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
@@ -397,8 +428,23 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
         try
         {
+            CMISCloudConnectorConnectionManager manager = cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId());
+
+            String alfrescoUser = manager.getUsername();
+            Authentication authentication = SecurityContextHolder.getContext() != null
+                    ? SecurityContextHolder.getContext().getAuthentication()
+                    : null;
+
+            if (authentication != null && authentication.getName() != null)
+            {
+                alfrescoUser = StringUtils.substringBeforeLast(authentication.getName(), "@");
+            }
+
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUser);
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+
             Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId()));
+            messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, manager);
             MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId(), messageProps);
 
             InputStream result = ((ContentStream) message.getPayload()).getStream();

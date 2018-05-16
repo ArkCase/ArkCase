@@ -232,7 +232,7 @@
         "modal": {
             "title": "标签",
             "search": "搜索标签",
-            "placeholder": "zh-cn_Add tag",
+            "placeholder": "添加标签",
             "buttons": {
                 "cancel": "取消",
                 "ok": "添加标签"
@@ -249,7 +249,7 @@
     },
     "complaints.comp.calendar": {
         "title": "日历",
-        "infoMessage": "zh-cn_Calendar Integration Configuration Not Enabled"
+        "infoMessage": "日历集成配置未启用"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "参考搜索"
@@ -289,7 +289,7 @@
         "searchGroupHeader": "搜索组"
     },
     "complaints.comp.approvalRouting": {
-        "title": "未来审批",
+        "title": "审批",
         "addNewTooltip": "添加新审批",
         "noBuckslipMessage": "没有数据",
         "button": {
@@ -298,7 +298,7 @@
         "table.columns": {
             "fullName": "全名"
         },
-        "assigne.none": "zh-cn_None",
+        "assigne.none": "没有",
         "assignee.label": "指定人",
         "owningGroup.label": "拥有集团",
         "priority.label": "优先",

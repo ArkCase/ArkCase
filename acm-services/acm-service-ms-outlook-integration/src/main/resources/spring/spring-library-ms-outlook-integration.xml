@@ -4,8 +4,6 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
-    <bean id="outlookSpringConfiguration" class="com.armedia.acm.service.outlook.config.OutlookSpringConfiguration"/>
-
     <bean id="outlookEventPublisher" class="com.armedia.acm.service.outlook.service.OutlookEventPublisher"/>
 
     <bean id="msOutlookIntegrationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">

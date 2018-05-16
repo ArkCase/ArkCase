@@ -250,6 +250,10 @@
             "deleteUserMsg": "您確定要刪除此用戶嗎？",
             "user": "用戶"
         },
+        "security.group.management": {
+            "title": "zh-tw_Group Management",
+            "group": "zh-tw_Group"
+        },
         "security.calendarConfiguration": {
             "title": "日曆配置",
             "calendarConfigForm": {
@@ -366,7 +370,9 @@
                 "choose.file": "zh-tw_Choose File",
                 "download": "zh-tw_Download",
                 "save": "保存",
-                "cancel": "取消"
+                "cancel": "取消",
+                "validationResponse": "zh-tw_Email Template already exists with selected parameters",
+                "uploadError": "zh-tw_File upload canceled due to incorrect type of file. You can only upload html file."
             },
             "objectTypes": {
                 "caseFile": "zh-tw_Case File",
@@ -572,6 +578,20 @@
             "historyDays.label": "保持審計和通知事件（天）",
             "inform": "設置成功保存",
             "apply.label": "生效"
+        },
+        "holiday": {
+            "title": "zh-tw_Holiday Schedule",
+            "grid": {
+                "holidayName": "zh-tw_Name of Holiday",
+                "holidayDate": "zh-tw_Date of holiday"
+            },
+            "cancel": "zh-tw_Cancel",
+            "save": "zh-tw_Save",
+            "message": "zh-tw_The holiday you entered is not saved! Date of Holiday already exist!",
+            "placeholder": {
+                "name": "zh-tw_Enter Name of Holiday",
+                "date": "zh-tw_Enter Date of Holiday"
+            }
         }
     },
     "branding.title": "品牌",

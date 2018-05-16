@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.person.web.api;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Person
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -8,6 +35,7 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationEventPublisher;
 import com.armedia.acm.plugins.person.service.OrganizationService;
+import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -51,6 +79,7 @@ public class OrganizationAPIController
 
     @PreAuthorize("#in.organizationId == null or hasPermission(#in.organizationId, 'ORGANIZATION', 'editOrganization')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public Organization upsertOrganization(@RequestBody Organization in, Authentication auth, HttpSession httpSession)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException
@@ -105,6 +134,7 @@ public class OrganizationAPIController
 
     @PreAuthorize("hasPermission(#organizationId, 'ORGANIZATION', 'viewOrganizationPage')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public Organization getOrganization(@PathVariable("id") Long organizationId) throws AcmObjectNotFoundException
     {

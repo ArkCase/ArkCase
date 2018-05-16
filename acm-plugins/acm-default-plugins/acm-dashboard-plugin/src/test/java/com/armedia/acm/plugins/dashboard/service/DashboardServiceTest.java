@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.dashboard.service;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Dashboard
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isA;
 import static org.junit.Assert.assertEquals;
@@ -96,10 +123,6 @@ public class DashboardServiceTest extends EasyMockSupport
         casesByQueue.setWidgetId(1209L);
         casesByQueue.setWidgetName("casesByQueue");
 
-        Widget weather = new Widget();
-        weather.setWidgetId(1211L);
-        weather.setWidgetName("weather");
-
         List<Widget> widgetsByUserRoles = new ArrayList<>();
         widgetsByUserRoles.add(news);
         widgetsByUserRoles.add(teamWorkload);
@@ -109,7 +132,6 @@ public class DashboardServiceTest extends EasyMockSupport
         listOfDashboardWidgetOnly.add(news);
         listOfDashboardWidgetOnly.add(teamWorkload);
         listOfDashboardWidgetOnly.add(casesByQueue);
-        listOfDashboardWidgetOnly.add(weather);
 
         expect(mockUserDao.findByUserId(user.getUserId())).andReturn(user);
         expect(mockDashboardDao.getDashboardConfigForUserAndModuleName(user, "DASHBOARD")).andReturn(dashboard).anyTimes();

@@ -1,5 +1,32 @@
 package com.armedia.acm.audit.dao;
 
+/*-
+ * #%L
+ * ACM Service: Audit Library
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.data.AcmAbstractDao;
 
@@ -13,6 +40,7 @@ import javax.persistence.Query;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 9/4/14.
@@ -59,7 +87,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                 "WHERE  ae.objectType = :objectType " +
                 "AND    ae.objectId = :objectId " +
                 "AND 	ae.status != 'DELETE' " +
-                "ORDER BY ae.eventDate";
+                "ORDER BY ae.eventDate, ae.id";
 
         Query findAudits = getEm().createQuery(queryText);
         findAudits.setParameter("objectId", objectId);
@@ -81,33 +109,41 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         switch (sort)
         {
         case "eventType":
-            sortBy = "COALESCE(lu.auditBuisinessName, ae.fullEventType)";
+            sortBy = "COALESCE(lu.cm_value, al.cm_audit_activity)";
             break;
         case "userId":
-            sortBy = "ae.userId";
+            sortBy = "al.cm_audit_user";
             break;
         default:
-            sortBy = "ae.eventDate";
+            sortBy = "al.cm_audit_datetime";
             break;
         }
 
-        String queryText = "SELECT ae " +
-                "FROM   AuditEvent ae LEFT OUTER JOIN AcmAuditLookup lu ON ae.fullEventType=lu.auditEventName " +
-                "WHERE  ae.status != 'DELETE' " +
-                "AND ((ae.objectType = :objectType AND ae.objectId = :objectId AND ae.parentObjectId = NULL) " +
-                "OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) " +
-                (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
-                "AND ae.eventResult = 'success' " +
-                "ORDER BY " + sortBy + " " + direction;
-        Query query = getEm().createQuery(queryText);
+        /*
+         * we need to create native query because of nesting queries.
+         * Because of MySQL "late row lookup" problem for slow performance when using order by and limit
+         * we need to use this trick to increase performance when there are lot of rows.
+         */
+        String queryText = "SELECT al.* " +
+                "FROM (SELECT ae.cm_audit_id AS id" +
+                " FROM acm_audit_log ae" +
+                " WHERE ae.cm_audit_status != 'DELETE'" +
+                " AND ((ae.cm_object_type = ?2 AND ae.cm_object_id = ?1) OR" +
+                " (ae.cm_parent_object_type = ?2 AND ae.cm_parent_object_id = ?1))" +
+                (eventTypes != null && eventTypes.size() > 0 ? "      AND ae.cm_audit_activity IN ("
+                        + eventTypes.stream().map(et -> "'" + et + "'").collect(Collectors.joining(",")) + ")" : "")
+                +
+                "      AND ae.cm_audit_activity_result = 'success'" +
+                "  ) tmp" +
+                " JOIN acm_audit_log al" +
+                "    ON al.cm_audit_id = tmp.id" +
+                "  LEFT OUTER JOIN acm_audit_event_type_lu lu ON al.cm_audit_activity = lu.cm_key" +
+                " ORDER BY " + sortBy + " " + direction + ", al.cm_audit_id " + direction;
+        Query query = getEm().createNativeQuery(queryText, AuditEvent.class);
         query.setFirstResult(startRow);
         query.setMaxResults(maxRows);
-        query.setParameter("objectId", objectId);
-        query.setParameter("objectType", objectType);
-        if (eventTypes != null)
-        {
-            query.setParameter("eventTypes", eventTypes);
-        }
+        query.setParameter(1, objectId);
+        query.setParameter(2, objectType);
 
         List<AuditEvent> results = query.getResultList();
         return results;
@@ -141,7 +177,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         String queryText = "SELECT ae " +
                 "FROM   AuditEvent ae " +
                 "WHERE ae.status != 'DELETE' " +
-                "ORDER BY ae." + sortBy + " " + sort;
+                "ORDER BY ae." + sortBy + " " + sort + ", ae.id " + sort;
         Query query = getEm().createQuery(queryText);
         query.setFirstResult(startRow);
         query.setMaxResults(maxRows);

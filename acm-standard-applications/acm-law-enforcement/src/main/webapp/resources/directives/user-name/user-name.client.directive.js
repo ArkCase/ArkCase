@@ -37,13 +37,13 @@
  */
 angular.module('directives').directive('userName', [ '$q', 'ApplicationConfigService', function($q, ApplicationConfigService) {
     return {
-        restrict : 'E',
-        transclude : true,
-        scope : {
-            user : '='
+        restrict: 'E',
+        transclude: true,
+        scope: {
+            user: '='
         },
 
-        link : function(scope, element, attrs) {
+        link: function(scope, element, attrs) {
 
             var user = null;
             scope.displayName = "";
@@ -55,7 +55,7 @@ angular.module('directives').directive('userName', [ '$q', 'ApplicationConfigSer
             });
         },
 
-        template : '{{displayName}}'
+        template: '{{displayName}}'
     };
 
     function update(scope, user) {

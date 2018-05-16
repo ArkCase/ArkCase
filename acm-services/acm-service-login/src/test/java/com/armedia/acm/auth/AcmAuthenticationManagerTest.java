@@ -1,5 +1,32 @@
 package com.armedia.acm.auth;
 
+/*-
+ * #%L
+ * ACM Service: User Login and Authentication
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
@@ -159,6 +186,36 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         expect(mockSecondProvider.authenticate(mockAuthentication)).andReturn(null);
         expect(mockAuthentication.getName()).andReturn("ann-acm").times(2);
         expect(mockUserDao.isUserPasswordExpired("ann-acm")).andReturn(false);
+
+        Capture<AuthenticationServiceException> authenticationServiceExceptionCapture = Capture.newInstance();
+        mockEventPublisher.publishAuthenticationFailure(capture(authenticationServiceExceptionCapture), eq(mockAuthentication));
+        expectLastCall().once();
+
+        replayAll();
+
+        unit.authenticate(mockAuthentication);
+
+        verifyAll();
+
+        AuthenticationServiceException actualException = authenticationServiceExceptionCapture.getValue();
+        AuthenticationServiceException expected = new AuthenticationServiceException(
+                ExceptionUtils.getRootCauseMessage(badCredentialsException), badCredentialsException);
+        assertNotNull(actualException);
+        assertEquals(expected, actualException);
+    }
+
+    @Test(expected = AuthenticationServiceException.class)
+    public void authenticate_emptyUsername_shouldThrowBadCredentials()
+    {
+        Map<String, AuthenticationProvider> providers = getAuthenticationProviderMap();
+
+        BadCredentialsException badCredentialsException = new BadCredentialsException("Bad credentials");
+
+        expect(mockContextHolder.getAllBeansOfType(AuthenticationProvider.class)).andReturn(providers);
+        expect(mockFirstProvider.authenticate(mockAuthentication)).andThrow(badCredentialsException);
+        expect(mockSecondProvider.authenticate(mockAuthentication)).andReturn(null);
+        expect(mockAuthentication.getName()).andReturn("").times(2);
+        expect(mockUserDao.isUserPasswordExpired("")).andReturn(false);
 
         Capture<AuthenticationServiceException> authenticationServiceExceptionCapture = Capture.newInstance();
         mockEventPublisher.publishAuthenticationFailure(capture(authenticationServiceExceptionCapture), eq(mockAuthentication));
