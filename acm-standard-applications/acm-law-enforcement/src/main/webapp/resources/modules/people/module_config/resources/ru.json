@@ -589,7 +589,7 @@
                 "organizationAssociations": "Организация удалена"
             },
             "personAliases.alias": {
-                "aliasType": "Alias ​​- Type Changed",
+                "aliasType": "Псевдоним - Тип изменен",
                 "aliasValue": "Псевдоним - значение изменено",
                 "description": "Псевдоним - Описание Изменено"
             }
