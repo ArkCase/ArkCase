@@ -8,6 +8,9 @@
             "leftnav.item": "खोज"
         },
         "comp": {
+		    "facetedSearch": {
+                "title": "खोज पहलू"
+            },
             "grid": {
                 "columns": {
                     "id": "ID",

@@ -8,6 +8,9 @@
             "leftnav.item": "Поиск"
         },
         "comp": {
+		    "facetedSearch": {
+                "title": "Границы поиска"
+            },
             "grid": {
                 "columns": {
                     "id": "ID",
