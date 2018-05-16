@@ -18,8 +18,10 @@ public class WopiFileInfo
 
     private Boolean userCanWrite;
 
+    private Boolean readOnly;
+
     public WopiFileInfo(Long id, String name, String extension, String ownerId, String version, Long size,
-            String userId, Boolean userCanWrite)
+            String userId, Boolean userCanWrite, Boolean readOnly)
     {
         this.id = id;
         this.name = name;
@@ -29,6 +31,7 @@ public class WopiFileInfo
         this.size = size;
         this.userId = userId;
         this.userCanWrite = userCanWrite;
+        this.readOnly = readOnly;
     }
 
     public Long getId()
@@ -69,5 +72,10 @@ public class WopiFileInfo
     public Boolean getUserCanWrite()
     {
         return userCanWrite;
+    }
+
+    public Boolean getReadOnly()
+    {
+        return readOnly;
     }
 }

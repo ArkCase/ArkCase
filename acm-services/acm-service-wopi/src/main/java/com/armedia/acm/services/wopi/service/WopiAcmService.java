@@ -40,7 +40,6 @@ public class WopiAcmService
         }
         boolean userCanWrite = permissionEvaluator.hasPermission(authentication, file.getId(),
                 "FILE", "write|group-write");
-
         Optional<EcmFileVersion> ecmFileVersion = file.getVersions().stream()
                 .filter(fileVersion -> fileVersion.getVersionTag().equals(file.getActiveVersionTag()))
                 .findFirst();
@@ -48,7 +47,7 @@ public class WopiAcmService
 
         return Optional.of(new WopiFileInfo(file.getFileId(), file.getFileName(),
                 file.getFileExtension(), file.getCreator(), file.getActiveVersionTag(),
-                fileSize, authentication.getName(), userCanWrite));
+                fileSize, authentication.getName(), userCanWrite, !userCanWrite));
     }
 
     public InputStreamResource getFileContents(Long id) throws AcmUserActionFailedException, MuleException
