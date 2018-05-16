@@ -13,7 +13,8 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
             If the object ID does not represent a CMIS document while check-out/check-in, the flow returns the Mule NullPayload.
         </description>
 
-        <vm:inbound-endpoint address="vm://renameFile.in" exchange-pattern="request-response" doc:name="Rename File"></vm:inbound-endpoint>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://renameFile.in" exchange-pattern="request-response"
+            doc:name="Rename File"></vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 

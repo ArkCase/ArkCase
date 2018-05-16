@@ -18,7 +18,9 @@
         "email.label": "Email",
         "status.label": "Statut",
         "organization.label": "Organisation",
-        "identification.label": "Identification"
+        "organization.type": "fr_Organization type",
+        "identification.label": "Identification",
+        "identification.type": "fr_ID type"
     },
     "people.comp.actions": {
         "title": "Actions",
@@ -222,7 +224,8 @@
             "type.label": "Type",
             "type.placeholder": "Entrer le type",
             "value.label": "URL",
-            "value.placeholder": "Entrez l'URL"
+            "value.placeholder": "Entrez l'URL",
+            "value.title": "fr_Url must be valid (e.g. https://www.google.com)"
         }
     },
     "people.comp.participants": {

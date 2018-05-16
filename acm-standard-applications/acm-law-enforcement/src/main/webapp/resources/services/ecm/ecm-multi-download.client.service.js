@@ -10,7 +10,7 @@ angular.module('services').factory('Ecm.MultiDownloadService', [ function() {
          * TODO Create angular style multidownload functionality instead of this library usage
          * @param files list of files URLs
          */
-        multiDownload : function(files) {
+        multiDownload: function(files) {
             multiDownload(files);
         }
     }

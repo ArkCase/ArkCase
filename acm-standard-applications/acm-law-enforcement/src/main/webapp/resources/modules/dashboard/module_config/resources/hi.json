@@ -5,6 +5,14 @@
             "leftnav.item": "डैशबोर्ड"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "hi_Select your preferred row count.",
+                    "fiveRows": "hi_5",
+                    "tenRows": "hi_10",
+                    "twentyFiveRows": "hi_25"
+                }
+            },
             "casesByQueue": {
                 "title": "कतार द्वारा सक्रिय केस फ़ाइलें",
                 "description": "कतार द्वारा सक्रिय केस फाइल प्रदर्शित करता है",
@@ -146,22 +154,6 @@
                 "configDescription": "विवरण",
                 "configDescriptionPlaceholder": "विजेट विवरण दर्ज करें"
             },
-            "weather": {
-                "description": "मौसम प्रदर्शित करता है",
-                "label": {
-                    "current": "वर्तमान:",
-                    "enterLocation": "स्थान दर्ज करें",
-                    "description": "एक शहर का वर्तमान तापमान प्रदर्शित करें",
-                    "location": "स्थान",
-                    "insertLocationInConfiguration": "विजेट विन्यास में एक स्थान डालें",
-                    "zip": "hi_Zip Code",
-                    "enterZip": "hi_Enter Zip Code"
-                },
-                "title": "मौसम",
-                "noDataMessage": "वर्तमान में कोई मौसम जानकारी नहीं है",
-                "configDescription": "विवरण",
-                "configDescriptionPlaceholder": "विजेट विवरण दर्ज करें"
-            },
             "news": {
                 "description": "प्रदर्शित समाचार",
                 "label": {
@@ -204,7 +196,7 @@
                 "title": "दस्तावेज़",
                 "description": "फ़ोल्डर के द्वारा दस्तावेजों का चार्ट दिखाता है",
                 "noDataMessage": "वर्तमान में प्रदर्शित करने के लिए कोई दस्तावेज़ नहीं हैं",
-                "series": "hi_Number of Documents"
+                "series": "दस्तावेजों की संख्या"
             },
             "locations": {
                 "title": "स्थान",
@@ -224,7 +216,8 @@
             "emails": {
                 "title": "ईमेल पता",
                 "description": "ईमेल विवरण प्रदर्शित करता है",
-                "noDataMessage": "वर्तमान में प्रदर्शित करने के लिए कोई ईमेल पते नहीं हैं"
+                "noDataMessage": "वर्तमान में प्रदर्शित करने के लिए कोई ईमेल पते नहीं हैं",
+				"calendarIntegrationDisabledMessage": "व्यवस्थापक द्वारा कैलेंडर एकीकरण अक्षम कर दिया गया है"
             },
             "urls": {
                 "title": "यूआरएल",
@@ -302,7 +295,7 @@
                 "noDataMessage": "वर्तमान में प्रदर्शित करने के लिए कोई कार्यप्रवाह नहीं है"
             },
             "signature": {
-                "title": "eSignature",
+                "title": "ईहस्ताक्षर",
                 "description": "ई-हस्ताक्षर विजेट",
                 "noDataMessage": "वर्तमान में प्रदर्शित करने के लिए कोई ई-हस्ताक्षर नहीं हैं"
             },
@@ -350,14 +343,16 @@
                 "title": "संबंधित लोग",
                 "description": "संबंधित लोगों को प्रदर्शित करें",
                 "noDataMessage": "वर्तमान में कोई भी संबंधित लोगों को प्रदर्शित करने के लिए नहीं"
+			},
+            "approvers": {
+                "title": "अनुमोदकों",
+                "description": "अनुमोदक प्रदर्शित करता है",
+                "noDataMessage": "वर्तमान में कोई अनुमोदक प्रदर्शित करने के लिए नहीं है"	
             }
         }
     },
     "dashboard.comp.news": {
         "title": "समाचार विजेट"
-    },
-    "dashboard.comp.weather": {
-        "title": "समाचार विजेट..."
     },
     "dashboard.comp.myCases": {
         "title": "मेरे मामले विजेट"

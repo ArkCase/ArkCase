@@ -29,6 +29,7 @@
         </property>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="startWorkflowEvents" ref="startWorkflowEventsForTimesheet"/>
+        <property name="pipelineManager" ref="timesheetPipelineManager"/>
     </bean>
 
     <bean id="timesheetEventPublisher" class="com.armedia.acm.services.timesheet.service.TimesheetEventPublisher"/>

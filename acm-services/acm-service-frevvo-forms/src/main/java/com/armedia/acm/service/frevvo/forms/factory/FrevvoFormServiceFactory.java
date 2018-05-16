@@ -3,11 +3,37 @@
  */
 package com.armedia.acm.service.frevvo.forms.factory;
 
+/*-
+ * #%L
+ * ACM Service: Frevvo Forms Service
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusService;
 import com.armedia.acm.form.electroniccommunication.service.ElectronicCommunicationService;
 import com.armedia.acm.form.plainconfiguration.service.PlainConfigurationFormService;
 import com.armedia.acm.form.project.service.ProjectService;
-import com.armedia.acm.form.time.service.TimeService;
 import com.armedia.acm.forms.roi.service.ROIService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
@@ -104,37 +130,6 @@ public class FrevvoFormServiceFactory
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
             service.setAcmFolderService(frevvoFormController.getAcmFolderService());
-            service.setObjectConverter(getObjectConverter());
-
-            return service;
-        }
-
-        if (FrevvoFormName.TIMESHEET.equals(name))
-        {
-            String contextPath = request.getServletContext().getContextPath();
-
-            TimeService service = new TimeService();
-
-            service.setEcmFileService(frevvoFormController.getEcmFileService());
-            service.setServletContextPath(contextPath);
-            service.setProperties(frevvoFormController.getProperties());
-            service.setRequest(request);
-            service.setAuthentication(authentication);
-            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
-            service.setUserDao(frevvoFormController.getUserDao());
-            service.setUserActionDao(frevvoFormController.getUserActionDao());
-            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
-            service.setTimesheetService(frevvoFormController.getTimesheetService());
-            service.setAcmTimesheetDao(frevvoFormController.getAcmTimesheetDao());
-            service.setTimeFactory(frevvoFormController.getTimeFactory());
-            service.setSearchResults(frevvoFormController.getSearchResults());
-            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
-            service.setAcmContainerDao(frevvoFormController.getAcmContainerDao());
-            service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
-            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
-            service.setTimesheetEventPublisher(frevvoFormController.getTimesheetEventPublisher());
-            service.setLookupDao(frevvoFormController.getLookupDao());
-            service.setTranslationService(frevvoFormController.getTranslationService());
             service.setObjectConverter(getObjectConverter());
 
             return service;

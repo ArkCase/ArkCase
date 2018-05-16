@@ -22,10 +22,12 @@
 
     <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
     <bean id="acmContainerFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmContainerDao">
-    	<property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
     <bean id="acmFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmFolderDao"/>
-    
+
+    <bean id="ecmFileVersionDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao"/>
+
     <bean id="fileParticipantsThreadPoolTaskExecutor" class="com.armedia.acm.web.api.MDCThreadPoolTaskExecutor">
         <property name="corePoolSize" value="5"/>
         <property name="threadPriority" value="1"/>
@@ -37,7 +39,7 @@
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
-    
+
     <bean id="fileParticipantService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService">
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
@@ -105,7 +107,7 @@
         <property name="pageCountService" ref="pageCountService"/>
     </bean>
     <bean id="ecmFileParticipantsHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.postsave.EcmFileParticipantsHandler">
+        class="com.armedia.acm.plugins.ecm.pipeline.postsave.EcmFileParticipantsHandler">
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
     <!-- This pipeline uploads document content to Alfresco and the metadata to the acm3 database -->
@@ -205,6 +207,18 @@
     <bean id="acmFolderToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmFolderToSolrTransformer">
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
         <property name="folderService" ref="acmFolderService"/>
+    </bean>
+
+    <bean id="contentFileSolrPostClient" class="com.armedia.acm.plugins.ecm.service.impl.ContentFileSolrPostClient">
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
+        <property name="solrContentFileHandler" value="${solr.contentFileHandler}"/>
+        <property name="solrRestClient" ref="solrRestClient"/>
+    </bean>
+
+    <bean id="solrPostContentFileQueueListener" class="com.armedia.acm.plugins.ecm.service.impl.SolrPostContentFileQueueListener">
+        <property name="solrPostClient" ref="contentFileSolrPostClient"/>
     </bean>
 
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule"

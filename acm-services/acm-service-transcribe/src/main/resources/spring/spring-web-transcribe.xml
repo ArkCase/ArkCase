@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="createTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.CreateTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
+    <bean id="getTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.GetTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
+    <bean id="updateTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.UpdateTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
+    <bean id="completeTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.CompleteTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
+    <bean id="cancelTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.CancelTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+
+    <bean id="compileTranscribeAPIController" class="com.armedia.acm.services.transcribe.web.api.CompileTranscribeAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
+</beans>

@@ -21,7 +21,8 @@
         "identification.label": "ID",
         "primary.label": "Primary Contact",
         "parent.label": "Parent Organization",
-        "parent.placeholder": "Enter Parent Organization"
+        "parent.placeholder": "Enter Parent Organization",
+        "type.label": "Type"
     },
     "organizations.comp.actions": {
         "title": "Actions",
@@ -213,7 +214,8 @@
             "type.label": "Type",
             "type.placeholder": "Enter Type",
             "value.label": "URL",
-            "value.placeholder": "Enter URL"
+            "value.placeholder": "Enter URL",
+            "value.title": "Url must be valid (e.g. https://www.google.com)"
         }
     },
     "organizations.comp.participants": {

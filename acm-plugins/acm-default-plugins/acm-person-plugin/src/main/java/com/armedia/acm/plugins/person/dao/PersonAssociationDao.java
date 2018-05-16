@@ -1,12 +1,39 @@
 package com.armedia.acm.plugins.person.dao;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Person
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -15,7 +42,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
 {
@@ -30,22 +56,6 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
         return PersonAssociation.class;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
-    @Override
-    public PersonAssociation save(PersonAssociation toSave)
-    {
-        if (toSave.getId() != null && toSave.getPerson() != null)
-        {
-            Optional<PersonAssociation> found = toSave.getPerson().getAssociationsFromObjects().stream()
-                    .filter(pa -> pa.getId().equals(toSave.getId())).findFirst();
-            if (found == null || !found.isPresent())
-            {
-                toSave.getPerson().getAssociationsFromObjects().add(toSave);
-            }
-        }
-        return super.save(toSave);
-    }
-
     public List<Person> findPersonByParentIdAndParentType(String parentType, Long parentId)
     {
 
@@ -58,7 +68,7 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
         personInAssociation.setParameter("parentType", parentType.toUpperCase());
         personInAssociation.setParameter("parentId", parentId);
 
-        List<Person> retrival = (List<Person>) personInAssociation.getResultList();
+        List<Person> retrival = personInAssociation.getResultList();
 
         return retrival;
 

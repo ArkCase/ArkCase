@@ -21,7 +21,8 @@
         "identification.label": "Identification",
         "primary.label": "Contact principal",
         "parent.label": "Organisation des parents",
-        "parent.placeholder": "Entrez l'organisation parente"
+        "parent.placeholder": "Entrez l'organisation parente",
+        "type.label": "fr_Type"
     },
     "organizations.comp.actions": {
         "title": "Actions",
@@ -213,7 +214,8 @@
             "type.label": "Type",
             "type.placeholder": "Entrer le type",
             "value.label": "URL",
-            "value.placeholder": "Entrez l'URL"
+            "value.placeholder": "Entrez l'URL",
+            "value.title": "fr_Url must be valid (e.g. https://www.google.com)"
         }
     },
     "organizations.comp.participants": {

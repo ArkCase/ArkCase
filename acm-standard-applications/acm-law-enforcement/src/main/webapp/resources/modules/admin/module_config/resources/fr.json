@@ -250,6 +250,10 @@
             "deleteUserMsg": "Êtes-vous sûr de vouloir supprimer cet utilisateur?",
             "user": "Utilisateur"
         },
+        "security.group.management": {
+            "title": "fr_Group Management",
+            "group": "fr_Group"
+        },
         "security.calendarConfiguration": {
             "title": "Configuration du calendrier",
             "calendarConfigForm": {
@@ -366,7 +370,9 @@
                 "choose.file": "fr_Choose File",
                 "download": "fr_Download",
                 "save": "Sauvegarder",
-                "cancel": "Annuler"
+                "cancel": "Annuler",
+                "validationResponse": "fr_Email Template already exists with selected parameters",
+                "uploadError": "fr_File upload canceled due to incorrect type of file. You can only upload html file."
             },
             "objectTypes": {
                 "caseFile": "fr_Case File",
@@ -571,6 +577,20 @@
                 "historyDays.label": "Conserver les événements d'audit et de notification (en jours)",
                 "inform": "Paramètre enregistré avec succès",
                 "apply.label": "Appliquer"
+            },
+            "holiday": {
+                "title": "fr_Holiday Schedule",
+                "grid": {
+                    "holidayName": "fr_Name of Holiday",
+                    "holidayDate": "fr_Date of holiday"
+                },
+                "cancel": "fr_Cancel",
+                "save": "fr_Save",
+                "message": "fr_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "fr_Enter Name of Holiday",
+                    "date": "fr_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "L'image de marque",
@@ -764,10 +784,10 @@
         "title": "Sécurité - Grille de configuration Ldap"
     },
     "admin.comp.correspondenceManagementMergeFields": {
-        "title": "Grille des champs de fusion de Correspondence Management"
+        "title": "Grille des champs de fusion de Gestion de la Correspondance"
     },
     "admin.comp.correspondenceManagementMergeFieldsVersions": {
-        "title": "Correspondance Management Merge Fields version grille"
+        "title": "Champs de fusion de gestion de correspondance version grille"
     },
     "admin.comp.correspondenceManagementTemplates": {
         "title": "Grille des modèles de gestion de correspondance"
@@ -794,7 +814,7 @@
         "title": "Hiérarchie de l'organisation"
     },
     "admin.comp.cmisConfiguration": {
-        "title": "CMIS Configuration Grid"
+        "title": "CMIS Grille de configuration"
     },
     "admin.comp.emailTemplates": {
         "title": "Modèles d'email"

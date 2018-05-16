@@ -7,7 +7,7 @@
     "components": [
         {
             "id": "eventHistory",
-            "title": "Event History",
+            "title": "History",
             "icon": "fa fa-bell-o",
             "enabled": true,
             "type": "grid",
@@ -26,19 +26,22 @@
                 {
                     "name": "eventType",
                     "displayName": "documentDetails.comp.eventHistory.table.columns.eventType",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "width": 130
                 },
                 {
                     "name": "eventDate",
                     "displayName": "documentDetails.comp.eventHistory.table.columns.eventDate",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.eventDate | date : 'short' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.eventDate | date : 'short' }}</div>",
+                    "width": 130
                 },
                 {
                     "name": "userId",
                     "displayName": "documentDetails.comp.eventHistory.table.columns.userId",
                     "headerCellFilter": "translate",
-                    "lookup": "userFullNames"
+                    "lookup": "userFullNames",
+                    "width": 130
                 }
             ]
         },
@@ -88,7 +91,7 @@
         },
         {
             "id": "versionHistory",
-            "title": "Version History",
+            "title": "Versions",
             "icon": "fa fa-comments",
             "enabled": true,
             "type": "grid",
@@ -107,21 +110,24 @@
                 {
                     "name": "versionTag",
                     "displayName": "documentDetails.comp.versionHistory.table.columns.versionTag",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "width": 130
                 },
                 {
                     "name": "created",
                     "displayName": "documentDetails.comp.versionHistory.table.columns.created",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
-                    "enableCellEdit": false
+                    "enableCellEdit": false,
+                    "width": 130
                 },
                 {
                     "name": "creator",
                     "displayName": "documentDetails.comp.versionHistory.table.columns.creator",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
-                    "lookup": "userFullNames"
+                    "lookup": "userFullNames",
+                    "width": 130
                 }
             ]
         },
@@ -148,14 +154,16 @@
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
-                    "lookup": "participantTypes"
+                    "lookup": "participantTypes",
+                    "width": 150
                 },
                 {
                     "name": "participantLdapId",
                     "displayName": "documentDetails.comp.participants.table.columns.name",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
-                    "lookup": "participantNames"
+                    "lookup": "participantNames",
+                    "width": 150
                 }
             ],
             "dialogUserPicker": {

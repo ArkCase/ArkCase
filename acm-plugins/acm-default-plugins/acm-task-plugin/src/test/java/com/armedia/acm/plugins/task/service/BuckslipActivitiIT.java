@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.task.service;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Tasks
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
@@ -45,28 +72,21 @@ import java.util.Map;
 @ContextConfiguration(locations = { "/spring/spring-library-task-activiti-test.xml" })
 public class BuckslipActivitiIT extends EasyMockSupport
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private ProcessEngine pe;
-
     @Autowired
     private RepositoryService repo;
-
     @Autowired
     private RuntimeService rt;
-
     @Autowired
     private TaskService ts;
-
     @Autowired
     private HistoryService hs;
-
     @Autowired
     private BuckslipTaskHelper buckslipTaskHelper;
-
     @Autowired
     private BuckslipTaskCompletedListener buckslipTaskCompletedListener;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private UserDao userDaoMock;
 
     private ApplicationEventPublisher mockApplicationEventPublisher;
@@ -116,15 +136,22 @@ public class BuckslipActivitiIT extends EasyMockSupport
 
     public void basicPath(boolean nonConcurEndsApprovals, String lastTaskOutcome)
     {
-        expect(userDaoMock.findByUserId("jerry")).andReturn(new AcmUser());
-        expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
+        AcmUser addedByUser = new AcmUser();
+        addedByUser.setFullName("Added By User");
+
+        AcmUser jerry = new AcmUser();
+        jerry.setFullName("jerry Full");
+
+        AcmUser bob = new AcmUser();
+        bob.setFullName("bob Full");
+        expect(userDaoMock.findByUserId("jerry")).andReturn(jerry);
+        expect(userDaoMock.findByUserId("bob")).andReturn(bob);
+        expect(userDaoMock.findByUserId("addedByUser")).andReturn(addedByUser).atLeastOnce();
         if (!"WITHDRAW".equals(lastTaskOutcome)
                 && !(nonConcurEndsApprovals && "NON_CONCUR".equals(lastTaskOutcome)))
         {
             expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
         }
-
-
 
         replayAll();
 
@@ -148,6 +175,7 @@ public class BuckslipActivitiIT extends EasyMockSupport
         processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
         processVariables.put("documentType", documentType);
         processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, strFutureTasks);
+        processVariables.put("approverFullName", "Bill Graham");
 
         // nonconcur is false by default
         if (nonConcurEndsApprovals)
@@ -245,6 +273,7 @@ public class BuckslipActivitiIT extends EasyMockSupport
         expect(userDaoMock.findByUserId("jerry")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
+        expect(userDaoMock.findByUserId("addedByUser")).andReturn(new AcmUser()).atLeastOnce();
 
         replayAll();
 
@@ -332,8 +361,10 @@ public class BuckslipActivitiIT extends EasyMockSupport
         task.put("taskName", taskName);
         task.put("groupName", groupName);
         task.put("details", "Task Details");
-        task.put("addedBy", "user");
+        task.put("addedBy", "addedByUser");
         task.put("maxTaskDurationInDays", taskDuration);
+        task.put("approverFullName", approverId + " Full");
+        task.put("addedByFullName", "Added By User");
         futureTasks.put(task);
     }
 
@@ -346,6 +377,7 @@ public class BuckslipActivitiIT extends EasyMockSupport
         expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("bill")).andReturn(new AcmUser());
+        expect(userDaoMock.findByUserId("addedByUser")).andReturn(new AcmUser()).atLeastOnce();
 
         replayAll();
 

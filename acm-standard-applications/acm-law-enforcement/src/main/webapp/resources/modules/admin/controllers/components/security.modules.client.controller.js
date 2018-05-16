@@ -1,103 +1,219 @@
 'use strict';
 
-angular.module('admin').controller(
-        'Admin.ModulesController',
-        [ '$scope', 'Admin.ModulesService', 'Admin.SelectPrivilegesService', '$q',
-                function($scope, modulesService, selectPrivilegesService, $q) {
-                    var tempAppModulesPromise = modulesService.getAppModules();
-                    var tempAppRolesPromise = selectPrivilegesService.getAppRoles();
+angular.module('admin').controller('Admin.ModulesController', [ '$scope', 'Admin.ModulesService', 'Admin.SelectPrivilegesService', '$q', function($scope, ModulesService, SelectPrivilegesService, $q) {
+    var tempAppModulesPromise = ModulesService.getAppModulesPaged({});
+    var tempAppRolesPromise = SelectPrivilegesService.getAppRoles();
 
-                    $scope.appModules = [];
-                    $scope.appRoles = [];
-                    $scope.modulesData = {
-                        "chooseObject" : $scope.appModules,
-                        "selectedNotAuthorized" : [],
-                        "selectedAuthorized" : []
-                    };
-                    $scope.currentAuthRoles = [];
+    $scope.fillList = fillList;
+    $scope.retrieveDataScroll = retrieveDataScroll;
+    //scroll functions
+    $scope.privilegeScroll = privilegeScroll;
+    $scope.unauthorizedScroll = unauthorizedScroll;
+    $scope.authorizedScroll = authorizedScroll;
+    //filter functions
+    $scope.chooseAppRoleFilter = chooseAppRoleFilter;
+    $scope.appRoleUnauthorizedFilter = appRoleUnauthorizedFilter;
+    $scope.appRoleAuthorizedFilter = appRoleAuthorizedFilter;
+    $scope.appRoles = [];
+    $scope.lastSelectedModule = {};
+    // Loaded data after the initialization
+    var initModulesData = {
+        "notAuthorized": [],
+        "authorized": []
+    };
+    $scope.modulesData = {
+        "chooseObject": [],
+        "selectedNotAuthorized": [],
+        "selectedAuthorized": []
+    };
+    $scope.scrollLoadData = {
+        "loadObjectsScroll": $scope.privilegeScroll,
+        "loadUnauthorizedScroll": $scope.unauthorizedScroll,
+        "loadAuthorizedScroll": $scope.authorizedScroll
+    };
+    $scope.filterData = {
+        "objectsFilter": $scope.chooseAppRoleFilter,
+        "unauthorizedFilter": $scope.appRoleUnauthorizedFilter,
+        "authorizedFilter": $scope.appRoleAuthorizedFilter
+    };
 
-                    //wait all promises to resolve
-                    $q.all([ tempAppModulesPromise, tempAppRolesPromise ]).then(function(payload) {
+    var currentAuthRoles = [];
 
-                        //get all appRoles
-                        $scope.modulesData.chooseObject = payload[0].data;
+    function fillList(listToFill, data) {
+        _.forEach(data, function(obj) {
+            listToFill.push({
+                key: obj,
+                name: obj
+            });
+        });
+    }
 
-                        //get all app roles
-                        $scope.appRoles = payload[1].data;
-                    });
+    function retrieveDataScroll(data, methodName, panelName) {
+        ModulesService[methodName](data).then(function(response) {
+            if (_.isArray(response.data)) {
+                $scope.fillList($scope.modulesData[panelName], response.data);
+            } else {
+                $scope.fillList($scope.modulesData[panelName], response.data);
+            }
 
-                    //callback function when app role is selected
-                    $scope.onObjSelect = function(selectedObject, authorized, notAuthorized) {
+            if (panelName === "selectedAuthorized") {
+                currentAuthRoles = [];
+                _.forEach($scope.modulesData[panelName], function(obj) {
+                    currentAuthRoles.push(obj.key);
+                });
+            }
+        }, function() {
+            $log.error('Error during calling the method ' + methodName);
+        });
+    }
 
-                        var rolesForModulePromise = modulesService.getRolesForModulePrivilege(selectedObject['privilege']);
-                        rolesForModulePromise.then(function(payload) {
-                            //set authorized roles
-                            $scope.currentAuthRoles = payload.data;
-                            angular.forEach($scope.currentAuthRoles, function(element) {
-                                //we need to create wrapper to provide a name property
-                                var authObject = {};
-                                authObject.key = element;
-                                authObject.name = element;
-                                authorized.push(authObject);
-                            });
+    function privilegeScroll() {
+        var data = {
+            start: $scope.modulesData.chooseObject.length
+        };
+        ModulesService.getAppModulesPaged(data).then(function(response) {
+            $scope.modulesData.chooseObject = $scope.modulesData.chooseObject.concat(response.data);
+            $scope.onObjSelect($scope.lastSelectedModule);
+        });
+    }
 
-                            //set not authorized roles.
-                            angular.forEach($scope.appRoles, function(role) {
-                                if ($scope.currentAuthRoles.indexOf(role) == -1) {
-                                    //we need to create wrapper to provide a name property
-                                    var notAuthorizedRole = {};
-                                    notAuthorizedRole.key = role;
-                                    notAuthorizedRole.name = role;
-                                    notAuthorized.push(notAuthorizedRole);
-                                }
-                            });
-                        });
-                    };
+    function authorizedScroll() {
+        var data = {
+            module: $scope.lastSelectedModule,
+            start: $scope.modulesData.selectedAuthorized.length,
+            isAuthorized: true
+        };
+        $scope.retrieveDataScroll(data, "getRolesForModulePaged", "selectedAuthorized");
+    }
 
-                    //callback function when groups are moved
-                    $scope.onAuthRoleSelected = function(selectedObject, authorized, notAuthorized) {
-                        var toBeAdded = [];
-                        var toBeRemoved = [];
-                        var deferred = $q.defer();
+    function unauthorizedScroll() {
+        var data = {
+            module: $scope.lastSelectedModule,
+            start: $scope.modulesData.selectedNotAuthorized.length,
+            isAuthorized: false
+        };
+        $scope.retrieveDataScroll(data, "getRolesForModulePaged", "selectedNotAuthorized");
+    }
 
-                        //get roles which needs to be added
-                        angular.forEach(authorized, function(role) {
-                            if ($scope.currentAuthRoles.indexOf(role.key) == -1) {
-                                toBeAdded.push(role.key);
-                            }
-                        });
-                        //perform adding on server
-                        if (toBeAdded.length > 0) {
-                            modulesService.addRolesToModule(selectedObject['privilege'], toBeAdded).then(function() {
-                                deferred.resolve();
-                            }, function() {
-                                deferred.reject();
-                            });
+    function chooseAppRoleFilter(data) {
+        ModulesService.getAppModulesByName(data).then(function(response) {
+            $scope.modulesData.chooseObject = response.data;
+            $scope.onObjSelect($scope.modulesData.chooseObject[0]);
+        });
+    }
 
-                            $scope.currentAuthRoles = $scope.currentAuthRoles.concat(toBeAdded);
-                            return deferred.promise;
-                        }
+    function appRoleUnauthorizedFilter(searchData) {
+        $scope.modulesData.selectedNotAuthorized = [];
 
-                        //get roles which needs to be removed
-                        angular.forEach(notAuthorized, function(role) {
-                            if ($scope.currentAuthRoles.indexOf(role.key) != -1) {
-                                toBeRemoved.push(role.key);
-                            }
-                        });
-                        if (toBeRemoved.length > 0) {
-                            //perform removing on server
-                            modulesService.removeRolesFromModule(selectedObject['privilege'], toBeRemoved).then(function() {
-                                deferred.resolve();
-                            }, function() {
-                                deferred.reject();
-                            });
+        var data = {
+            isAuthorized: false,
+            module: $scope.lastSelectedModule,
+            filterWord: searchData.filterWord
+        };
+        ModulesService.getRolesForModuleByName(data).then(function(response) {
+            $scope.modulesData.selectedNotAuthorized = [];
+            $scope.fillList($scope.modulesData.selectedNotAuthorized, response.data);
+        });
+    }
 
-                            //remove from $scope.currentAuthRoles
-                            angular.forEach(toBeRemoved, function(element) {
-                                $scope.currentAuthRoles.splice($scope.currentAuthRoles.indexOf(element), 1);
-                            });
+    function appRoleAuthorizedFilter(searchData) {
+        $scope.modulesData.selectedAuthorized = [];
 
-                            return deferred.promise;
-                        }
-                    };
-                } ]);
+        var data = {
+            isAuthorized: true,
+            module: $scope.lastSelectedModule,
+            filterWord: searchData.filterWord
+        };
+        ModulesService.getRolesForModuleByName(data).then(function(response) {
+            $scope.modulesData.selectedAuthorized = [];
+            $scope.fillList($scope.modulesData.selectedAuthorized, response.data);
+        });
+    }
+
+    //wait all promises to resolve
+    $q.all([ tempAppModulesPromise, tempAppRolesPromise ]).then(function(payload) {
+        //get N appPrivileges
+        $scope.modulesData.chooseObject = payload[0].data;
+
+        //get all app roles
+        $scope.appRoles = payload[1].data;
+
+        $scope.onObjSelect($scope.modulesData.chooseObject[0]);
+    });
+
+    //callback function when app role is selected
+    $scope.onObjSelect = function(selectedObject) {
+        $scope.lastSelectedModule = {};
+        $scope.lastSelectedModule = selectedObject;
+
+        var data = {
+            module: selectedObject,
+            isAuthorized: false
+        };
+        var unAuthorizedRolesGroupsForWidgetPromise = ModulesService.getRolesForModulePaged(data);
+        data.isAuthorized = true;
+        var authorizedRolesGroupsForWidgetPromise = ModulesService.getRolesForModulePaged(data);
+
+        $q.all([ authorizedRolesGroupsForWidgetPromise, unAuthorizedRolesGroupsForWidgetPromise ]).then(function(payload) {
+            $scope.modulesData.selectedAuthorized = [];
+            $scope.modulesData.selectedNotAuthorized = [];
+            currentAuthRoles = [];
+            _.forEach(payload[0].data, function(item) {
+                var element = {};
+                element.key = item;
+                element.name = item;
+                $scope.modulesData.selectedAuthorized.push(element);
+                currentAuthRoles.push(element.key);
+            });
+
+            fillList($scope.modulesData.selectedNotAuthorized, payload[1].data);
+        });
+    };
+
+    //callback function when groups are moved
+    $scope.onAuthRoleSelected = function(selectedObject, authorized, notAuthorized) {
+        var toBeAdded = [];
+        var toBeRemoved = [];
+        var deferred = $q.defer();
+
+        //get roles which needs to be added
+        angular.forEach(authorized, function(role) {
+            if (currentAuthRoles.indexOf(role.key) == -1) {
+                toBeAdded.push(role.key);
+            }
+        });
+        //perform adding on server
+        if (toBeAdded.length > 0) {
+            ModulesService.addRolesToModule(selectedObject['privilege'], toBeAdded).then(function() {
+                deferred.resolve();
+            }, function() {
+                deferred.reject();
+            });
+
+            currentAuthRoles = currentAuthRoles.concat(toBeAdded);
+            return deferred.promise;
+        }
+
+        //get roles which needs to be removed
+        angular.forEach(notAuthorized, function(role) {
+            if (currentAuthRoles.indexOf(role.key) != -1) {
+                toBeRemoved.push(role.key);
+            }
+        });
+        if (toBeRemoved.length > 0) {
+            //perform removing on server
+            ModulesService.removeRolesFromModule(selectedObject['privilege'], toBeRemoved).then(function() {
+                deferred.resolve();
+            }, function() {
+                deferred.reject();
+            });
+
+            //remove from currentAuthRoles
+            angular.forEach(toBeRemoved, function(element) {
+                currentAuthRoles.splice(currentAuthRoles.indexOf(element), 1);
+            });
+
+            return deferred.promise;
+        }
+    };
+} ]);

@@ -13,12 +13,12 @@
 angular.module('admin').service('Admin.LdapConfigService', [ '$http', function($http) {
 
     return ({
-        retrieveDirectories : retrieveDirectories,
-        createDirectory : createDirectory,
-        deleteDirectory : deleteDirectory,
-        updateDirectory : updateDirectory,
-        startPartialSync : startPartialSync,
-        startFullSync : startFullSync
+        retrieveDirectories: retrieveDirectories,
+        createDirectory: createDirectory,
+        deleteDirectory: deleteDirectory,
+        updateDirectory: updateDirectory,
+        startPartialSync: startPartialSync,
+        startFullSync: startFullSync
     });
 
     /**
@@ -33,8 +33,8 @@ angular.module('admin').service('Admin.LdapConfigService', [ '$http', function($
      */
     function retrieveDirectories() {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/admin/ldapconfiguration/directories"
+            method: "GET",
+            url: "api/latest/plugin/admin/ldapconfiguration/directories"
         });
     }
 
@@ -53,11 +53,11 @@ angular.module('admin').service('Admin.LdapConfigService', [ '$http', function($
      */
     function createDirectory(dir) {
         return $http({
-            method : "POST",
-            url : "api/latest/plugin/admin/ldapconfiguration/directories",
-            data : dir,
-            headers : {
-                "Content-Type" : "application/json"
+            method: "POST",
+            url: "api/latest/plugin/admin/ldapconfiguration/directories",
+            data: dir,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }
@@ -77,8 +77,8 @@ angular.module('admin').service('Admin.LdapConfigService', [ '$http', function($
     function deleteDirectory(dirId) {
         var url = 'api/latest/plugin/admin/ldapconfiguration/directories/' + dirId;
         return $http({
-            method : "DELETE",
-            url : url
+            method: "DELETE",
+            url: url
         });
     }
 
@@ -97,11 +97,11 @@ angular.module('admin').service('Admin.LdapConfigService', [ '$http', function($
     function updateDirectory(dir) {
         var url = 'api/latest/plugin/admin/ldapconfiguration/directories/' + dir["ldapConfig.id"];
         return $http({
-            method : "PUT",
-            url : url,
-            data : dir,
-            headers : {
-                "Content-Type" : "application/json"
+            method: "PUT",
+            url: url,
+            data: dir,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }
@@ -121,10 +121,10 @@ angular.module('admin').service('Admin.LdapConfigService', [ '$http', function($
      */
     function startPartialSync(dir) {
         return $http({
-            method : "POST",
-            url : "api/latest/ldap/" + dir + "/partial-sync",
-            headers : {
-                "Content-Type" : "application/json"
+            method: "POST",
+            url: "api/latest/ldap/" + dir + "/partial-sync",
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }
@@ -144,10 +144,10 @@ angular.module('admin').service('Admin.LdapConfigService', [ '$http', function($
      */
     function startFullSync(dir) {
         return $http({
-            method : "POST",
-            url : "api/latest/ldap/" + dir + "/full-sync",
-            headers : {
-                "Content-Type" : "application/json"
+            method: "POST",
+            url: "api/latest/ldap/" + dir + "/full-sync",
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }

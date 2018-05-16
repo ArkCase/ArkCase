@@ -21,7 +21,8 @@
         "identification.label": "識別番号",
         "primary.label": "一次連絡先",
         "parent.label": "親組織",
-        "parent.placeholder": "親組織を入力"
+        "parent.placeholder": "親組織を入力",
+        "type.label": "ja_Type"
     },
     "organizations.comp.actions": {
         "title": "操作",
@@ -213,7 +214,8 @@
             "type.label": "タイプ",
             "type.placeholder": "タイプ入力",
             "value.label": "URL",
-            "value.placeholder": "URLを入力"
+            "value.placeholder": "URLを入力",
+            "value.title": "ja_Url must be valid (e.g. https://www.google.com)"
         }
     },
     "organizations.comp.participants": {

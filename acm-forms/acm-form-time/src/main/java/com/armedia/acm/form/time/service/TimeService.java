@@ -3,6 +3,33 @@
  */
 package com.armedia.acm.form.time.service;
 
+/*-
+ * #%L
+ * ACM Forms: Time
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.form.time.model.TimeForm;
 import com.armedia.acm.form.time.model.TimeItem;
@@ -10,6 +37,7 @@ import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.objectonverter.DateFormats;
+import com.armedia.acm.plugins.admin.service.TimesheetConfigurationService;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
@@ -46,6 +74,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
     private AcmTimesheetDao acmTimesheetDao;
     private TimesheetEventPublisher timesheetEventPublisher;
     private TimeFactory timeFactory;
+    private TimesheetConfigurationService timesheetConfigurationService;
 
     @Override
     public Object init()
@@ -84,7 +113,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
             if (timesheet != null)
             {
                 form = getTimeFactory().asFrevvoTimeForm(timesheet);
-                form = (TimeForm) populateEditInformation(form, timesheet.getContainer(), FrevvoFormName.TIMESHEET.toLowerCase());
+                form = (TimeForm) populateEditInformation(form, timesheet.getContainer(), getFormName().toLowerCase());
                 if (form.getItems() != null)
                 {
                     String objectIdString = getRequest().getParameter("_id");
@@ -205,7 +234,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
         String submissionName = getRequest().getParameter("submission_name");
 
         // Unmarshall XML to object
-        TimeForm form = (TimeForm) convertFromXMLToObject(cleanXML(xml), TimeForm.class);
+        TimeForm form = (TimeForm) convertFromXMLToObject(cleanXML(xml), getFormClass());
 
         if (form == null)
         {
@@ -234,7 +263,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
                 .checkWorkflowStartup(TimesheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
 
         FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(),
-                FrevvoFormName.TIMESHEET.toUpperCase(), saved.getId());
+                getFormName().toUpperCase(), saved.getId());
 
         getTimesheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles,
                 startWorkflow);
@@ -261,6 +290,9 @@ public class TimeService extends FrevvoFormChargeAbstractService
         // Set period (now)
         form.setPeriod(new Date());
 
+        // Set timesheet config
+        form.setTimesheetConfig(getTimesheetConfigurationService().getConfig());
+
         LOG.debug("setting form types");
         List<String> types = getStandardLookupEntries("timesheetTypes");
 
@@ -269,6 +301,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
         LOG.debug("creating time item");
         TimeItem item = new TimeItem();
         item.setTypeOptions(types);
+        item.setChargeRoles(getStandardLookupEntries("timesheetChargeRoles"));
         form.setItems(Arrays.asList(item));
 
         // Init Statuses
@@ -343,6 +376,16 @@ public class TimeService extends FrevvoFormChargeAbstractService
     public void setTimeFactory(TimeFactory timeFactory)
     {
         this.timeFactory = timeFactory;
+    }
+
+    public TimesheetConfigurationService getTimesheetConfigurationService()
+    {
+        return timesheetConfigurationService;
+    }
+
+    public void setTimesheetConfigurationService(TimesheetConfigurationService timesheetConfigurationService)
+    {
+        this.timesheetConfigurationService = timesheetConfigurationService;
     }
 
     @Override

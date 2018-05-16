@@ -1,26 +1,51 @@
 package com.armedia.acm.plugins.dashboard.web.api;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Dashboard
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmWidgetException;
 import com.armedia.acm.plugins.dashboard.model.widget.RolesGroupByWidgetDto;
-import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleName;
+import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmRole;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,20 +60,21 @@ public class GetRolesByWidgetsAPIController
     private UserDao userDao;
     private WidgetDao widgetDao;
     private WidgetEventPublisher eventPublisher;
+    private DashboardService dashboardService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/rolesByWidget/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<RolesGroupByWidgetDto> getRolesGroupedByWidget(Authentication authentication, HttpSession session)
-            throws AcmWidgetException, AcmObjectNotFoundException
+            throws AcmWidgetException
     {
         log.info("List of all, authorized and not authorized roles grouped by widget'");
 
         List<RolesGroupByWidgetDto> result = null;
         try
         {
-            result = addNotAuthorizedRolesPerWidget(getWidgetDao().getRolesGroupByWidget());
-            raiseGetEvent(authentication, session, result, true);
+            result = dashboardService.addNotAuthorizedRolesPerWidget(getWidgetDao().getRolesGroupByWidget());
+            dashboardService.raiseGetEvent(authentication, session, result, true);
             return result;
         }
         catch (AcmObjectNotFoundException e)
@@ -57,83 +83,60 @@ public class GetRolesByWidgetsAPIController
         }
     }
 
-    protected void raiseGetEvent(Authentication authentication, HttpSession session, List<RolesGroupByWidgetDto> rolesPerWidgets,
-            boolean succeeded)
+    @RequestMapping(value = "/{widgetName:.+}/roles", method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+    })
+    @ResponseBody
+    public List<WidgetRoleName> findRolesByWidgetPaged(
+            @PathVariable(value = "widgetName") String widgetName,
+            @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "widgetName") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows, Authentication authentication,
+            HttpSession session)
+            throws IOException
     {
-        String ipAddress = (String) session.getAttribute("acm_ip_address");
-        getEventPublisher().publishGeRolesByWidgets(rolesPerWidgets, authentication, ipAddress, succeeded);
+        List<WidgetRoleName> result = new ArrayList<>();
+        try
+        {
+            result = dashboardService.getRolesByWidgetPaged(widgetName, sortBy, sortDirection, startRow, maxRows, authorized,
+                    getWidgetDao().getRolesGroupByWidget());
+            dashboardService.raiseGetEvent(authentication, session, getWidgetDao().getRolesGroupByWidget(), true);
+        }
+        catch (Exception e)
+        {
+            log.warn("Can't retrieve privileges", e);
+        }
+        return result;
     }
 
-    private List<RolesGroupByWidgetDto> addNotAuthorizedRolesPerWidget(List<RolesGroupByWidgetDto> rolesPerWidget)
+    @RequestMapping(value = "/{widgetName:.+}/roles", params = { "fn" }, method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+    })
+    @ResponseBody
+    public List<WidgetRoleName> findRolesByWidgetPaged(
+            @PathVariable(value = "widgetName") String widgetName,
+            @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "fn") String filterName,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "widgetName") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows, Authentication authentication,
+            HttpSession session)
     {
-        List<AcmRole> allRoles = getUserDao().findAllRoles();
-        List<Widget> allWidgets = getWidgetDao().findAll();
-        List<WidgetRoleName> notAuthorized = new ArrayList<>();
-        boolean isNotAuthorized = true;
-        List<RolesGroupByWidgetDto> tmpRolesPerWidget = new ArrayList<>();
-        boolean isAddedToRolesGroupByWidgetLsit = false;
-        for (RolesGroupByWidgetDto rolePerW : rolesPerWidget)
+        List<WidgetRoleName> result = new ArrayList<>();
+        try
         {
-            rolePerW.setName(widgetName(rolePerW.getWidgetName()));
-            for (AcmRole role : allRoles)
-            {
-                for (WidgetRoleName roleName : rolePerW.getWidgetAuthorizedRoles())
-                {
-                    if (roleName.getName().equals(role.getRoleName()))
-                    {
-                        isNotAuthorized = false;
-                        break;
-                    }
-                }
-                if (isNotAuthorized)
-                {
-                    notAuthorized.add(new WidgetRoleName(role.getRoleName()));
-                }
-                isNotAuthorized = true;
-            }
-            rolePerW.setWidgetNotAuthorizedRoles(notAuthorized);
-            notAuthorized = new ArrayList<>();
+            result = dashboardService.getRolesByWidget(widgetName, sortBy, sortDirection, startRow, maxRows, filterName, authorized,
+                    getWidgetDao().getRolesGroupByWidget());
+            dashboardService.raiseGetEvent(authentication, session, getWidgetDao().getRolesGroupByWidget(), true);
         }
-        for (Widget widget : allWidgets)
+        catch (Exception e)
         {
-            for (RolesGroupByWidgetDto roleW : rolesPerWidget)
-            {
-                if (roleW.getWidgetName().equals(widget.getWidgetName()))
-                {
-                    tmpRolesPerWidget.add(roleW);
-                    isAddedToRolesGroupByWidgetLsit = true;
-                    break;
-                }
-            }
-            if (!isAddedToRolesGroupByWidgetLsit)
-            {
-                RolesGroupByWidgetDto rolesGBW = new RolesGroupByWidgetDto();
-                rolesGBW.setWidgetName(widget.getWidgetName());
-                rolesGBW.setName(widgetName(widget.getWidgetName()));
-                List<WidgetRoleName> notAuth = new ArrayList<>();
-                for (AcmRole role : allRoles)
-                {
-                    notAuth.add(new WidgetRoleName(role.getRoleName()));
-                }
-                rolesGBW.setWidgetNotAuthorizedRoles(notAuth);
-                rolesGBW.setWidgetAuthorizedRoles(new ArrayList<>());
-                tmpRolesPerWidget.add(rolesGBW);
-            }
-            isAddedToRolesGroupByWidgetLsit = false;
+            log.warn("Can't retrieve privileges {}", e);
         }
-        return tmpRolesPerWidget;
-    }
-
-    private String widgetName(String camelName)
-    {
-        StringBuffer stringBuffer = new StringBuffer();
-        // create sentence from camelString
-        for (String w : camelName.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))
-        {
-            stringBuffer.append(w.substring(0, 1).toUpperCase() + w.substring(1));
-            stringBuffer.append(" ");
-        }
-        return stringBuffer.toString();
+        return result;
     }
 
     public WidgetDao getWidgetDao()
@@ -146,16 +149,6 @@ public class GetRolesByWidgetsAPIController
         this.widgetDao = widgetDao;
     }
 
-    public WidgetEventPublisher getEventPublisher()
-    {
-        return eventPublisher;
-    }
-
-    public void setEventPublisher(WidgetEventPublisher eventPublisher)
-    {
-        this.eventPublisher = eventPublisher;
-    }
-
     public UserDao getUserDao()
     {
         return userDao;
@@ -164,5 +157,25 @@ public class GetRolesByWidgetsAPIController
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public DashboardService getDashboardService()
+    {
+        return dashboardService;
+    }
+
+    public void setDashboardService(DashboardService dashboardService)
+    {
+        this.dashboardService = dashboardService;
+    }
+
+    public WidgetEventPublisher getEventPublisher()
+    {
+        return eventPublisher;
+    }
+
+    public void setEventPublisher(WidgetEventPublisher eventPublisher)
+    {
+        this.eventPublisher = eventPublisher;
     }
 }

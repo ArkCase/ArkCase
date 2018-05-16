@@ -250,6 +250,10 @@
             "deleteUserMsg": "Вы уверены, что хотите удалить этого пользователя?",
             "user": "Пользователь"
         },
+        "security.group.management": {
+            "title": "ru_Group Management",
+            "group": "ru_Group"
+        },
         "security.calendarConfiguration": {
             "title": "Настройка календаря",
             "calendarConfigForm": {
@@ -366,7 +370,9 @@
                 "choose.file": "ru_Choose File",
                 "download": "ru_Download",
                 "save": "Сохранить",
-                "cancel": "Отмена"
+                "cancel": "Отмена",
+                "validationResponse": "ru_Email Template already exists with selected parameters",
+                "uploadError": "ru_File upload canceled due to incorrect type of file. You can only upload html file."
             },
             "objectTypes": {
                 "caseFile": "ru_Case File",
@@ -571,6 +577,20 @@
                 "historyDays.label": "Сохранять события аудита и уведомления (в днях)",
                 "inform": "Установка успешно сохранена",
                 "apply.label": "Подать заявление"
+            },
+            "holiday": {
+                "title": "ru_Holiday Schedule",
+                "grid": {
+                    "holidayName": "ru_Name of Holiday",
+                    "holidayDate": "ru_Date of holiday"
+                },
+                "cancel": "ru_Cancel",
+                "save": "ru_Save",
+                "message": "ru_The holiday you entered is not saved! Date of Holiday already exist!",
+                "placeholder": {
+                    "name": "ru_Enter Name of Holiday",
+                    "date": "ru_Enter Date of Holiday"
+                }
             }
         },
         "branding.title": "Брендинг",

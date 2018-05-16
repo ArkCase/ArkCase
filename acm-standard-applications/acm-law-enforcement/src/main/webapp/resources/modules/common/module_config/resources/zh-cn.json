@@ -2,15 +2,29 @@
     "common": {
         "select.option.none": "（选择一个）",
         "value.unknown": "未知",
-        "defaultDateFormat": "zh-cn_MM/DD/YYYY",
-        "defaultTimeFormat": "zh-cn_hh:mm:ss",
-        "defaultDateTimeFormat": "zh-cn_MM/DD/YYYY hh:mm",
-        "defaultDatePickerFormat": "zh-cn_MM/dd/yyyy",
-        "defaultDateUIFormat": "zh-cn_MM/dd/yyyy",
-        "defaultDateTimeUIFormat": "zh-cn_MM/dd/yyyy HH:mm"
+        "value.none": "没有",
+        "_1_": "请不要使用或添加自定义日期格式，因为它很容易出错，符合国际化标准.",
+        "_2_": "请使用其中一种预定义的格式: ",
+        "_3_": "'中'       - 相当于 'MMM d, y h:mm:ss a' 对于en_US语言环境 (例如，2010年9月3日12:05:08 PM)",
+        "_4_": "'短'       - 相当于 'M/d/yy h:mm a' 对于en_US语言环境 (例如 9/3/10 12:05 PM)",
+        "_5_": "'完整的日期'- 相当于 'EEEE, MMMM d, y' 对于en_US语言环境 (例如，2010年9月3日星期五)",
+        "_6_": "'长日期'   - 相当于 'MMMM d, y' 对于en_US语言环境 (例如，2010年9月3日)",
+        "_7_": "'中等日期' - 相当于 'MMM d, y' 对于en_US语言环境 (例如，2010年9月3日)",
+        "_8_": "'短日期'   - 相当于 'M/d/yy' 对于en_US语言环境 (例如 9/3/10)",
+        "_9_": "'中等时间' - 相当于 'h:mm:ss a' 对于en_US语言环境 (e.g. 12:05:08 PM)",
+        "_10": "'短时间'  - 相当于 'h:mm a' 对于en_US语言环境 (例如 12:05 PM)",
+        "_11": " ",
+        "_12": "以下日期格式被删除。 如果客户需要自定义格式，我们需要 ",
+        "_13": "教育他们避免这样做，因为国际上的关注",
+        "defaultDateFormat": "年月日",
+        "defaultTimeFormat": "hh:mm:ss",
+        "defaultDateTimeFormat": "年月日 hh:mm",
+        "defaultDatePickerFormat": "年月日",
+        "defaultDateUIFormat": "年月日",
+        "defaultDateTimeUIFormat": "年月日 HH:mm"
     },
     "common.frevvo": {
-        "defaultDateFormat": "zh-cn_YYYY-MM-DD"
+        "defaultDateFormat": "年月日"
     },
     "common.service": {
         "error.invalidData": "不正确数据"
@@ -41,7 +55,8 @@
             "defaultBodyLinks": "请按照以下链接查看文件。链接在3天内到期。",
             "defaultBodyAttachments": "请附上从ArkCase发送给您的文件。",
             "defaultFooter": "由ArkCase提供，企业案例管理平台，http://www.arkcase.com",
-            "successMessage": "电子邮件已成功发送"
+            "successMessage": "电子邮件已成功发送",
+            "noEmailAddress": "zh-cn_There is no entered email for this "
         },
         "menu": {
             "noop": "（选择物品）",
@@ -52,7 +67,7 @@
             "newCorrespondence": "创建新信件",
             "open": "打开",
             "email": "电子邮件",
-            "newTask": "zh-cn_New Task",
+            "newTask": "新任务",
             "download": "下载",
             "copy": "复制",
             "cut": "切割",
@@ -95,6 +110,10 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "作为附件发送和超链接",
             "btnCancel.text": "取消",
             "btnOk.text": "发电子邮件"
+        },
+        "participantsDialog": {
+            "titlePart": "参加者 ",
+            "title": "参与者"
         },
         "recipientsDialog": {
             "title": "选择收件人",
@@ -157,17 +176,19 @@
     },
     "common.directive.simplePager": {
         "rowCountLabel": "每页项目数",
-        "pagerCountLabel": "第{{pageTotal}}分之{{pageCount}}项"
+        "pagerCountLabel": "第{{页总}}分之{{页计数}}项"
     },
     "common.directive.objectAuthorizationRoles": {
         "choose": "选择",
         "not_authorized": "未经授权",
+        "not_member": "zh-cn_Not Member",
         "tooltip.move_right": "向右移",
         "tooltip.move_left": "向左移动",
-        "authorized": "合法"
+        "authorized": "合法",
+        "member": "Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
-        "pattern.title": "zh-cn_Error, 2 characters required."
+        "pattern.title": "错误，需要2个字符."
     },
     "common.directive.searchModal": {
         "header": "搜索",
@@ -175,7 +196,10 @@
         "btnOk.text": "確定",
         "btnCancel.text": "消除",
         "edtPlaceholder": "鍵入搜索內容",
-        "noData.text": "無結果"
+        "noData.text": "無結果",
+        "pickUserLabel": "选择关联的用户",
+        "pickGroupLabel": "选择相关组",
+        "selectedItemsGrid.label": "选定的项目"
     },
     "common.directive.search": {
         "showMore.button.text": "显示更多",
@@ -472,7 +496,9 @@
             "day.label": "天",
             "week.label": "周",
             "month.label": "月",
-            "on.label": "上",
+            "_1_": "'on.label' 似乎没有被使用。 _即将被删除_",
+            "_2_": "如有必要修改消息以避免消息中以英文为中心的语法",
+            "_on.label": "上",
             "day.placeholder": "天",
             "year.placeholder": "年",
             "dailyRecurrence": {
@@ -566,7 +592,7 @@
     },
     "common.directive.coreParticipants": {
         "title": "参与者",
-        "replaceFolderChildrenParticipants": "zh-cn_Replace child documents participants",
+        "replaceFolderChildrenParticipants": "替换子文档参与者",
         "modal": {
             "addParticipant.label": "添加参与者",
             "editParticipant.label": "编辑记录",
@@ -576,7 +602,7 @@
             "btnCancel.text": "取消",
             "dialogUserPicker.header": "搜索用户",
             "dialogGroupPicker.header": "搜索组",
-            "replaceChildrenParticipant": "zh-cn_replace children participant"
+            "replaceChildrenParticipant": "替换儿童参与者"
         },
         "message": {
             "error.groupType": "拥有的团体不能成为一个人。",
@@ -588,7 +614,9 @@
             "error.noAccessCombo": "禁止访问和受让人的组合是不允许的。",
             "error.duplicateUserOrGroup": "无效的参与者。为参与者找到重复的条目。",
             "error.userOrGroupNotFound": "无效的参与者。系统中缺少参与者条目。",
-            "error.ownerUnique": "只有一个所有者是允许的。"
+            "error.emptyParticipantLdapId": "参与者姓名不能为空",
+            "error.emptyParticipantType": "参与者类型不能为空",
+            "error.ownerUnique": "只有一个所有者允许."
         }
     },
     "common.directive.progressIndicator": {
@@ -620,11 +648,12 @@
         "DOC_REPO": "文档库",
         "ORGANIZATION": "组织",
         "PERSON": "人员",
-        "PERSON-ASSOCIATION": "zh-cn_Person-Association",
-        "PARTICIPANT": "zh-cn_Participant",
-        "NOTE": "zh-cn_Note",
-        "PARTICIPANT-ASSOCIATION": "zh-cn_Participant-Association",
-        "ASSIGNMENT": "zh-cn_Assignment"
+        "PERSON-ASSOCIATION": "人员-协会",
+        "PARTICIPANT": "参加者",
+        "NOTE": "注意",
+        "PARTICIPANT-ASSOCIATION": "参加者-协会",
+        "ASSIGNMENT": "分配",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "选择用户",
@@ -635,7 +664,7 @@
             "id": "用户名"
         }
     },
-    "common.objects.objectWasCreatedMessage": "创建了{{objectTypeString}} - {{objectId}}。",
+    "common.objects.objectWasCreatedMessage": "创建了{{对象类型字符串}} - {{对象ID}}。",
     "common.newPerson": {
         "title": "人员",
         "addAnother": "加上另一个",
@@ -742,7 +771,7 @@
         }
     },
     "common.dialogObjectPicker": {
-        "header": "搜索{{objectLabel}}",
+        "header": "搜索{{对象标签}}",
         "table.columns": {
             "name": "名称",
             "id": "识别号",
@@ -875,7 +904,7 @@
                 "eventType": "事件名称",
                 "eventDate": "事件日期",
                 "userId": "用户",
-                "details.btn.text": "查看{{count}}个更改"
+                "details.btn.text": "查看{{计数}}个更改"
             }
         }
     }

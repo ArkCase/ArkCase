@@ -22,12 +22,12 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
          * @param {String} query Query to send to the server
          * @returns {HttpPromise} Future info about faceted search
          */
-        queryFilteredSearchForUser : {
-            method : 'GET',
-            url : "api/v1/plugin/search/advancedSearch?q=:query&start=:start&n=:maxRows",
-            cache : false,
-            isArray : false,
-            transformResponse : function transformReponseForUser(data, headerGetter) {
+        queryFilteredSearchForUser: {
+            method: 'GET',
+            url: "api/v1/plugin/search/advancedSearch?q=:query&start=:start&n=:maxRows",
+            cache: false,
+            isArray: false,
+            transformResponse: function transformReponseForUser(data, headerGetter) {
                 if (Util.validateSolrData(JSON.parse(data))) {
                     var result = {};
                     var searchObj = JSON.parse(data);
@@ -41,8 +41,8 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
                             for (var i = 0; i < items.length; i += 2) {
                                 if (items[i + 1] > 0) {
                                     newItems.push({
-                                        name : items[i],
-                                        count : items[i + 1]
+                                        name: items[i],
+                                        count: items[i + 1]
                                     });
                                 }
                             }
@@ -67,12 +67,12 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
          * @param {String} query Query to send to the server
          * @returns {HttpPromise} Future info about faceted search
          */
-        queryFilteredSearch : {
-            method : 'GET',
-            url : "api/v1/plugin/search/facetedSearch?q=:query",
-            cache : false,
-            isArray : false,
-            transformResponse : Util.transformSearchResponse
+        queryFilteredSearch: {
+            method: 'GET',
+            url: "api/v2/plugin/search/facetedSearch?q=:query",
+            cache: false,
+            isArray: false,
+            transformResponse: Util.transformSearchResponse
         },
 
         /**
@@ -86,14 +86,14 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
          * @param {String} unescapedQuery Query to send to the server
          * @returns {HttpPromise} Future info about faceted search
          */
-        unescapedQueryFilteredSearch : {
-            method : 'GET',
-            url : "api/v1/plugin/search/facetedSearch?unescapedQuery=:unescapedQuery",
-            cache : false,
-            isArray : false,
-            transformResponse : Util.transformSearchResponse
+        unescapedQueryFilteredSearch: {
+            method: 'GET',
+            url: "api/v1/plugin/search/facetedSearch?unescapedQuery=:unescapedQuery",
+            cache: false,
+            isArray: false,
+            transformResponse: Util.transformSearchResponse
         },
-        
+
         /**
          * @ngdoc method
          * @name queryAutoSuggestSearch
@@ -105,12 +105,12 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
          * @param {String} query Query to send to the server
          * @returns {HttpPromise} Future info about auto-suggest search
          */
-        queryAutoSuggestSearch : {
-            method : 'GET',
-            url : "api/v1/plugin/search/suggest?q=:query&core=:core&filter=:filter",
-            cache : false,
-            isArray : false,
-            transformResponse : function(data, headerGetter) {
+        queryAutoSuggestSearch: {
+            method: 'GET',
+            url: "api/v1/plugin/search/suggest?q=:query&core=:core&filter=:filter",
+            cache: false,
+            isArray: false,
+            transformResponse: function(data, headerGetter) {
                 var searchObj = JSON.parse(data);
                 if (Util.validateSolrData(searchObj)) {
                     return searchObj;
@@ -129,12 +129,12 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
          * @param {String} query Query to send to the server
          * @returns {HttpPromise} Future info about auto-suggest search
          */
-        queryAutoSuggestSearchNoFilters : {
-            method : 'GET',
-            url : "api/v1/plugin/search/suggest?q=:query&core=:core",
-            cache : false,
-            isArray : false,
-            transformResponse : function(data, headerGetter) {
+        queryAutoSuggestSearchNoFilters: {
+            method: 'GET',
+            url: "api/v1/plugin/search/suggest?q=:query&core=:core",
+            cache: false,
+            isArray: false,
+            transformResponse: function(data, headerGetter) {
                 var searchObj = JSON.parse(data);
                 if (Util.validateSolrData(searchObj)) {
                     return searchObj;
@@ -154,12 +154,12 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
          * @param {String} query Query to send to the server, no added facets
          * @returns {HttpPronmise} Future info about advanced search
          */
-        querySimpleSearch : {
-            method : 'GET',
-            url : "api/v1/plugin/search/advancedSearch?q=:query",
-            cache : false,
-            isArray : false,
-            transformResponse : function(data, headerGetter) {
+        querySimpleSearch: {
+            method: 'GET',
+            url: "api/v1/plugin/search/advancedSearch?q=:query",
+            cache: false,
+            isArray: false,
+            transformResponse: function(data, headerGetter) {
                 var searchObj = JSON.parse(data);
                 if (Util.validateSolrData(searchObj)) {
                     return searchObj;
@@ -184,7 +184,7 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
      * @returns {String} The export URL
      */
     Service.exportUrl = function(query, exportType, reportName, fields, titles) {
-        var url = "api/v1/plugin/search/facetedSearch?q=" + query;
+        var url = "api/v2/plugin/search/facetedSearch?q=" + query;
         if (fields instanceof Array && fields.length > 0) {
             url += "&fields=" + fields.join(',');
             url += "&titles=" + encodeURI(titles.join(','));

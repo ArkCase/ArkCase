@@ -3,14 +3,45 @@
  */
 package com.armedia.acm.services.timesheet.model;
 
+/*-
+ * #%L
+ * ACM Service: Timesheet
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,6 +63,9 @@ import java.util.Date;
 @Entity
 @Table(name = "acm_time")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = AcmTime.class)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.services.timesheet.model.AcmTime")
 public class AcmTime implements Serializable, AcmObject, AcmEntity
 {
 
@@ -57,6 +91,12 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_time_type")
     private String type;
 
+    @Column(name = "cm_time_charge_code")
+    private String chargeRole;
+
+    @Column(name = "cm_time_total_cost")
+    private Double totalCost;
+
     @Column(name = "cm_time_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
@@ -77,6 +117,9 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_time_modified")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @Override
     public Long getId()
@@ -127,6 +170,26 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
     public void setType(String type)
     {
         this.type = type;
+    }
+
+    public String getChargeRole()
+    {
+        return chargeRole;
+    }
+
+    public void setChargeRole(String chargeRole)
+    {
+        this.chargeRole = chargeRole;
+    }
+
+    public Double getTotalCost()
+    {
+        return totalCost;
+    }
+
+    public void setTotalCost(Double totalCost)
+    {
+        this.totalCost = totalCost;
     }
 
     public Date getDate()
@@ -204,4 +267,13 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
         return TimeConstants.OBJECT_TYPE;
     }
 
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
+    }
 }

@@ -2,23 +2,8 @@
 
 angular.module('people').controller(
         'People.PhonesController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Person.InfoService',
-                'Authentication',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'PermissionsService',
-                'Object.LookupService',
-                'Object.ModelService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication,
-                        HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -26,22 +11,22 @@ angular.module('people').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "people",
-                        componentId : "phones",
-                        retrieveObjectInfo : PersonInfoService.getPersonInfo,
-                        validateObjectInfo : PersonInfoService.validatePersonInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "people",
+                        componentId: "phones",
+                        retrieveObjectInfo: PersonInfoService.getPersonInfo,
+                        validateObjectInfo: PersonInfoService.validatePersonInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -49,7 +34,7 @@ angular.module('people').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.PERSON
+                            objectType: ObjectService.ObjectTypes.PERSON
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -65,7 +50,7 @@ angular.module('people').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
                         var phones = _.filter($scope.objectInfo.contactMethods, {
-                            type : 'phone'
+                            type: 'phone'
                         });
                         $scope.gridOptions.data = phones;
                     };
@@ -84,12 +69,12 @@ angular.module('people').controller(
                         //put contactMethod to scope, we will need it when we return from popup
                         $scope.phone = phone;
                         var item = {
-                            id : '',
-                            parentId : $scope.objectInfo.id,
-                            type : 'phone',
-                            subType : '',
-                            value : '',
-                            description : ''
+                            id: '',
+                            parentId: $scope.objectInfo.id,
+                            type: 'phone',
+                            subType: '',
+                            value: '',
+                            description: ''
                         };
                         showModal(item, false);
                     };
@@ -97,12 +82,12 @@ angular.module('people').controller(
                     $scope.editRow = function(rowEntity) {
                         $scope.phone = rowEntity;
                         var item = {
-                            id : rowEntity.id,
-                            type : rowEntity.type,
-                            subType : rowEntity.subType,
-                            subLookup : rowEntity.subType,
-                            value : rowEntity.value,
-                            description : rowEntity.description
+                            id: rowEntity.id,
+                            type: rowEntity.type,
+                            subType: rowEntity.subType,
+                            subLookup: rowEntity.subType,
+                            value: rowEntity.value,
+                            description: rowEntity.description
                         };
                         showModal(item, true);
                     };
@@ -124,13 +109,13 @@ angular.module('people').controller(
                         params.isDefault = $scope.isDefault(phone);
 
                         var modalInstance = $modal.open({
-                            animation : true,
-                            templateUrl : 'modules/people/views/components/person-phones-modal.client.view.html',
-                            controller : 'People.PhonesModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            animation: true,
+                            templateUrl: 'modules/people/views/components/person-phones-modal.client.view.html',
+                            controller: 'People.PhonesModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -141,7 +126,7 @@ angular.module('people').controller(
                                 phone = $scope.phone;
                             else {
                                 phone = _.find($scope.objectInfo.contactMethods, {
-                                    id : data.phone.id
+                                    id: data.phone.id
                                 });
                             }
                             phone.type = 'phone';
@@ -154,7 +139,7 @@ angular.module('people').controller(
                             }
 
                             var phones = _.filter($scope.objectInfo.contactMethods, {
-                                type : 'phone'
+                                type: 'phone'
                             });
                             if (data.isDefault || phones.length == 1) {
                                 $scope.objectInfo.defaultPhone = phone;
@@ -180,7 +165,10 @@ angular.module('people').controller(
                         return promiseSaveInfo;
                     }
 
-                    $scope.isDefault = function(data) {
-                        return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultPhone");
+                    $scope.isDefault = function(phone) {
+                        var defaultPhone = $scope.objectInfo.defaultPhone;
+                        var comparisonProperties = [ "description", "id", "subType", "type", "value" ];
+                        return Util.objectsComparisonByGivenProperties(defaultPhone, phone, comparisonProperties);
                     }
+
                 } ]);

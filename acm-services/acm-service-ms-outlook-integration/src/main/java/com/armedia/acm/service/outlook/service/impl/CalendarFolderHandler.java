@@ -1,5 +1,32 @@
 package com.armedia.acm.service.outlook.service.impl;
 
+/*-
+ * #%L
+ * ACM Service: MS Outlook integration
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static com.armedia.acm.service.outlook.service.impl.AcmEntityAdapter.getContainer;
 import static com.armedia.acm.service.outlook.service.impl.AcmEntityAdapter.getNotifiableEntityTitle;
 import static com.armedia.acm.service.outlook.service.impl.AcmEntityAdapter.getParticipants;
@@ -29,22 +56,10 @@ import java.util.List;
 public class CalendarFolderHandler
 {
 
-    @FunctionalInterface
-    public static interface CalendarFolderHandlerCallback
-    {
-
-        void callback(AcmOutlookUser outlookUser, Long objectId, String objectType, String folderName, AcmContainer container,
-                List<AcmParticipant> participants);
-
-    }
-
     private Logger log = LoggerFactory.getLogger(getClass());
-
     @PersistenceContext
     private EntityManager em;
-
     private String entityTypeForQuery;
-
     private String entityIdForQuery;
 
     /**
@@ -98,6 +113,15 @@ public class CalendarFolderHandler
     public void setEntityIdForQuery(String entityIdForQuery)
     {
         this.entityIdForQuery = entityIdForQuery;
+    }
+
+    @FunctionalInterface
+    public static interface CalendarFolderHandlerCallback
+    {
+
+        void callback(AcmOutlookUser outlookUser, Long objectId, String objectType, String folderName, AcmContainer container,
+                List<AcmParticipant> participants);
+
     }
 
 }

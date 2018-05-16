@@ -1,38 +1,64 @@
 package com.armedia.acm.services.functionalaccess.service;
 
+/*-
+ * #%L
+ * ACM Service: Functional Access Control
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.event.AdHocGroupDeletedEvent;
+import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author riste.tutureski
  */
-public class FunctionalAccessServiceImpl implements FunctionalAccessService, ApplicationListener<ConfigurationFileChangedEvent>
+public class FunctionalAccessServiceImpl implements FunctionalAccessService, ApplicationListener<ApplicationEvent>
 {
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -47,40 +73,57 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     private ExecuteSolrQuery executeSolrQuery;
 
     @Override
-    public void onApplicationEvent(ConfigurationFileChangedEvent configurationFileChangedEvent)
+    public void onApplicationEvent(ApplicationEvent event)
     {
-        File eventFile = configurationFileChangedEvent.getConfigFile();
-        if ("applicationRoles.properties".equals(eventFile.getName()))
+        if (event instanceof ConfigurationFileChangedEvent)
         {
-            String filename = eventFile.getName();
-            LOG.debug("[{}] has changed!", filename);
+            File eventFile = ((ConfigurationFileChangedEvent) event).getConfigFile();
 
-            try
+            if ("applicationRoles.properties".equals(eventFile.getName()))
             {
-                applicationRolesProperties = getPropertyFileManager().readFromFile(eventFile);
+                String filename = eventFile.getName();
+                LOG.debug("[{}] has changed!", filename);
+
+                try
+                {
+                    applicationRolesProperties = getPropertyFileManager().readFromFile(eventFile);
+                }
+                catch (IOException e)
+                {
+                    LOG.info("Could not read new properties; keeping the old properties.");
+                }
+
             }
-            catch (IOException e)
+
+            if ("applicationRoleToUserGroup.properties".equals(eventFile.getName()))
             {
-                LOG.info("Could not read new properties; keeping the old properties.");
+                String filename = eventFile.getName();
+                LOG.info("[{}] has changed!", filename);
+
+                try
+                {
+                    applicationRolesToGroupsProperties = getPropertyFileManager().readFromFile(eventFile);
+                    roleToGroupMapping.reloadRoleToGroupMap(applicationRolesToGroupsProperties);
+                }
+                catch (IOException e)
+                {
+                    LOG.info("Could not read new properties; keeping the old properties.");
+                }
             }
 
         }
-
-        if ("applicationRoleToUserGroup.properties".equals(eventFile.getName()))
+        else if (event instanceof LdapGroupDeletedEvent || event instanceof AdHocGroupDeletedEvent)
         {
-            String filename = eventFile.getName();
-            LOG.info("[{}] has changed!", filename);
+            AcmGroup group = (AcmGroup) event.getSource();
+            String groupName = group.getName();
+            Map<String, Set<String>> roleToGroupsMap = roleToGroupMapping.getRoleToGroupsMapIgnoreCaseSensitive();
+            Map<String, List<String>> roleToGroupsMapToPropertyFile = roleToGroupsMap.entrySet().stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey,
+                            entry -> entry.getValue().stream().filter(name -> !name.equals(groupName)).collect(Collectors.toList())));
 
-            try
-            {
-                applicationRolesToGroupsProperties = getPropertyFileManager().readFromFile(eventFile);
-                roleToGroupMapping.reloadRoleToGroupMap(applicationRolesToGroupsProperties);
-            }
-            catch (IOException e)
-            {
-                LOG.info("Could not read new properties; keeping the old properties.");
-            }
+            saveApplicationRolesToGroups(roleToGroupsMapToPropertyFile, group.getModifier());
         }
+
     }
 
     @Override
@@ -102,6 +145,124 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     }
 
     @Override
+    public List<String> getApplicationRolesPaged(String sortDirection, Integer startRow, Integer maxRows)
+    {
+        List<String> result = getApplicationRoles();
+
+        if (sortDirection.contains("DESC"))
+        {
+            result.sort(Collections.reverseOrder());
+        }
+        else
+        {
+            Collections.sort(result);
+        }
+
+        if (startRow > result.size())
+        {
+            return result;
+        }
+        maxRows = maxRows > result.size() ? result.size() : maxRows;
+
+        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getApplicationRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterName)
+    {
+        List<String> result = new ArrayList<>(getApplicationRoles());
+
+        if (sortDirection.contains("DESC"))
+        {
+            result.sort(Collections.reverseOrder());
+        }
+        else
+        {
+            Collections.sort(result);
+        }
+
+        if (startRow > result.size())
+        {
+            return result;
+        }
+        maxRows = maxRows > result.size() ? result.size() : maxRows;
+
+        if (!filterName.isEmpty())
+        {
+            result.removeIf(role -> !(role.toLowerCase().contains(filterName.toLowerCase())));
+        }
+
+        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
+    }
+
+    private List<String> getGroupsBySolrQuery(Authentication auth, String sortDirection,
+            Integer startRow,
+            Integer maxRows, String query) throws MuleException
+    {
+        List<String> result = new ArrayList<>();
+        String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                sortDirection);
+        SearchResults searchResults = new SearchResults();
+        JSONArray docs = searchResults.getDocuments(solrResponse);
+
+        for (int i = 0; i < docs.length(); i++)
+        {
+            result.add((String) docs.getJSONObject(i).get("name"));
+        }
+        return result;
+    }
+
+    @Override
+    public List<String> getGroupsByRolePaged(Authentication auth, String roleName, Integer startRow, Integer maxRows,
+            String sortDirection,
+            Boolean authorized) throws MuleException
+    {
+        return getGroupsByRole(auth, roleName, startRow, maxRows, sortDirection, authorized, "");
+    }
+
+    @Override
+    public List<String> getGroupsByRoleByName(Authentication auth, String roleName, Integer startRow, Integer maxRows,
+            String sortDirection,
+            Boolean authorized, String filterQuery) throws MuleException
+    {
+        return getGroupsByRole(auth, roleName, startRow, maxRows, sortDirection, authorized, filterQuery);
+    }
+
+    @Override
+    public List<String> getGroupsByRole(Authentication auth, String roleName, Integer startRow, Integer maxRows,
+            String sortDirection,
+            Boolean authorized, String filterQuery) throws MuleException
+    {
+        Set<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().get(roleName.toUpperCase());
+        List<String> retrieveGroupsByRole = groupsByRole == null ? new ArrayList<>() : new ArrayList<>(groupsByRole);
+        String query = "";
+
+        if (authorized)
+        {
+            if (retrieveGroupsByRole.isEmpty())
+            {
+                return retrieveGroupsByRole;
+            }
+            query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND "
+                    + retrieveGroupsByRole.stream().collect(Collectors.joining("\" OR name_lcs:\"", "(name_lcs:\"", "\")"));
+        }
+        else
+        {
+            query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+            if (!retrieveGroupsByRole.isEmpty())
+            {
+                query += " AND " + retrieveGroupsByRole.stream().collect(Collectors.joining("\" AND -name_lcs:\"", "-name_lcs:\"", "\""));
+            }
+        }
+
+        if (!filterQuery.isEmpty())
+        {
+            query += " AND name_partial:" + filterQuery;
+        }
+        return getGroupsBySolrQuery(auth, sortDirection, startRow, maxRows, query);
+    }
+
+    @Override
     public Map<String, List<String>> getApplicationRolesToGroups()
     {
         return roleToGroupMapping.getRoleToGroupsMap().entrySet().stream()
@@ -111,6 +272,13 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     @Override
     public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, Authentication auth)
     {
+        return saveApplicationRolesToGroups(rolesToGroups, auth.getName());
+    }
+
+    @Override
+    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, String user)
+    {
+
         boolean success = false;
         try
         {
@@ -126,7 +294,70 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
         if (success)
         {
-            getEventPublisher().publishFunctionalAccessUpdateEvent(rolesToGroups, auth);
+            getEventPublisher().publishFunctionalAccessUpdateEventOnRolesToGroupMap(rolesToGroups, user);
+        }
+
+        return success;
+    }
+
+    @Override
+    public boolean saveGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth) throws AcmEncryptionException
+    {
+
+        String roleUpdated = "";
+        boolean success;
+        try
+        {
+            roleUpdated += getPropertyFileManager().load(getRolesToGroupsPropertyFileLocation(), roleName, null)
+                    + groups.stream().collect(Collectors.joining(",", ",", ""));
+            getPropertyFileManager().store(roleName, roleUpdated, getRolesToGroupsPropertyFileLocation(), false);
+            success = true;
+        }
+        catch (Exception e)
+        {
+            LOG.error("Cannot save groups to application role", e);
+            success = false;
+        }
+
+        if (success)
+        {
+            getEventPublisher().publishFunctionalAccessUpdateEvent(groups, auth);
+        }
+
+        return success;
+    }
+
+    @Override
+    public boolean removeGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth)
+    {
+
+        List<String> roleGroups;
+        String roleUpdated = "";
+        boolean success;
+        try
+        {
+            roleGroups = new ArrayList<>(
+                    Arrays.asList(getPropertyFileManager().load(getRolesToGroupsPropertyFileLocation(), roleName, null).split(",")));
+
+            for (String g : groups)
+            {
+                roleGroups.remove(g);
+            }
+
+            roleUpdated += roleGroups.stream().collect(Collectors.joining(","));
+
+            getPropertyFileManager().store(roleName, roleUpdated, getRolesToGroupsPropertyFileLocation(), false);
+            success = true;
+        }
+        catch (Exception e)
+        {
+            LOG.error("Cannot save groups to application role", e);
+            success = false;
+        }
+
+        if (success)
+        {
+            getEventPublisher().publishFunctionalAccessUpdateEvent(groups, auth);
         }
 
         return success;
@@ -342,5 +573,4 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     {
         this.executeSolrQuery = executeSolrQuery;
     }
-
 }

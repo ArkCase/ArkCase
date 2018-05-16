@@ -5,6 +5,14 @@
             "leftnav.item": "ダッシュボード"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "ja_Select your preferred row count.",
+                    "fiveRows": "ja_5",
+                    "tenRows": "ja_10",
+                    "twentyFiveRows": "ja_25"
+                }
+            },
             "casesByQueue": {
                 "title": "キューによるアクティブ案件文書",
                 "description": "アクティブな案件文書をキューで表示する",
@@ -146,22 +154,6 @@
                 "configDescription": "説明",
                 "configDescriptionPlaceholder": "ウィジェットの説明を入力"
             },
-            "weather": {
-                "description": "天気を表示する",
-                "label": {
-                    "current": "現在：",
-                    "enterLocation": "場所を入力",
-                    "description": "都市の現在の温度を表示する",
-                    "location": "場所",
-                    "insertLocationInConfiguration": "ウィジェット設定に場所を挿入してください",
-                    "zip": "ja_Zip Code",
-                    "enterZip": "ja_Enter Zip Code"
-                },
-                "title": "天気",
-                "noDataMessage": "現在、天気情報はありません",
-                "configDescription": "説明",
-                "configDescriptionPlaceholder": "ウィジェットの説明を入力"
-            },
             "news": {
                 "description": "ニュースを表示する",
                 "label": {
@@ -204,7 +196,7 @@
                 "title": "文書",
                 "description": "フォルダごとの文書のチャートを表示する",
                 "noDataMessage": "現在表示する文書がありません",
-                "series": "ja_Number of Documents"
+                "series": "ドキュメントの数"
             },
             "locations": {
                 "title": "場所",
@@ -279,7 +271,8 @@
             "calendar": {
                 "title": "カレンダー",
                 "description": "1日にスケジュールされたイベントのチャートを表示する",
-                "noDataMessage": "現在、表示するイベントはありません"
+                "noDataMessage": "現在、表示するイベントはありません",
+				"calendarIntegrationDisabledMessage": "カレンダー統合を無効にする管理者"
             },
             "reworkDetails": {
                 "title": "リワークの詳細",
@@ -350,14 +343,16 @@
                 "title": "関連する人物",
                 "description": "関連する人々を表示する",
                 "noDataMessage": "現在表示する関連人はいません"
+			},
+            "approvers": {
+                "title": "承認者",
+                "description": "承認者を表示",
+                "noDataMessage": "現在、表示する承認者はありません"
             }
         }
     },
     "dashboard.comp.news": {
         "title": "ニュースウィジェット"
-    },
-    "dashboard.comp.weather": {
-        "title": "天気ウィジェット"
     },
     "dashboard.comp.myCases": {
         "title": "私のケースウィジェット"

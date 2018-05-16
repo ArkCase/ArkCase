@@ -2,6 +2,7 @@
     "common": {
         "select.option.none": "(Select One)",
         "value.unknown": "Unknown",
+        "value.none": "None",
         "_1_": "Please do not use or add custom date formats, because it is error prone to be i18n compliant.",
         "_2_": "Please use one of the predefined formats: ",
         "_3_": "'medium'    - equivalent to 'MMM d, y h:mm:ss a' for en_US locale (e.g. Sep 3, 2010 12:05:08 PM)",
@@ -14,7 +15,7 @@
         "_10": "'shortTime' - equivalent to 'h:mm a' for en_US locale (e.g. 12:05 PM)",
         "_11": " ",
         "_12": "Following date formats are phased out. If customers request to have customize format, we need ",
-        "_13": "to educate them to avoid doing so, because of i18n conerns",
+        "_13": "to educate them to avoid doing so, because of i18n concerns",
         "defaultDateFormat": "MM/DD/YYYY",
         "defaultTimeFormat": "hh:mm:ss",
         "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
@@ -54,7 +55,8 @@
             "defaultBodyLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
             "defaultBodyAttachments": "Please find attached the documents sent to you from ArkCase.",
             "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
-            "successMessage": "The email was sent successfully"
+            "successMessage": "The email was sent successfully",
+            "noEmailAddress": "There is no entered email for this "
         },
         "menu": {
             "noop": "(Select Item)",
@@ -179,9 +181,11 @@
     "common.directive.objectAuthorizationRoles": {
         "choose": "Choose",
         "not_authorized": "Not Authorized",
+        "not_member": "Not Member",
         "tooltip.move_right": "Move Right",
         "tooltip.move_left": "Move Left",
-        "authorized": "Authorized"
+        "authorized": "Authorized",
+        "member": "Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "Error, 2 characters required."
@@ -194,7 +198,8 @@
         "edtPlaceholder": "Type in to search",
         "noData.text": "No Results",
         "pickUserLabel": "Pick Associated User",
-        "pickGroupLabel": "Pick Associated Group"
+        "pickGroupLabel": "Pick Associated Group",
+        "selectedItemsGrid.label": "Selected entries"
     },
     "common.directive.search": {
         "showMore.button.text": "Show More Values",
@@ -647,7 +652,8 @@
         "PARTICIPANT": "Participant",
         "NOTE": "Note",
         "PARTICIPANT-ASSOCIATION": "Participant-Association",
-        "ASSIGNMENT": "Assignment"
+        "ASSIGNMENT": "Assignment",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",

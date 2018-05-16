@@ -1,5 +1,32 @@
 package com.armedia.acm.crypto;
 
+/*-
+ * #%L
+ * Acm Encryption Tools
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -21,15 +48,16 @@ public class AcmCryptoUtilsImplTest
 
     private String passwordToBeEncrypted;
     private String userPassword;
-    private String md5Hex;
+    private String sha256Hex;
     private AcmCryptoUtils cryptoUtils;
 
     @Before
-    public void setUp()
+    public void setUp() throws Exception
     {
         passwordToBeEncrypted = "password";
         userPassword = "userPassword";
-        md5Hex = DigestUtils.md5Hex(userPassword);
+
+        sha256Hex = DigestUtils.sha256Hex(userPassword);
 
         cryptoUtils = new AcmCryptoUtilsImpl();
     }
@@ -37,7 +65,7 @@ public class AcmCryptoUtilsImplTest
     @Test
     public void testEncryptData() throws Exception
     {
-        byte[] encrypted = cryptoUtils.encryptData(md5Hex.getBytes(), passwordToBeEncrypted.getBytes(), true);
+        byte[] encrypted = cryptoUtils.encryptData(sha256Hex.getBytes(), passwordToBeEncrypted.getBytes(), true);
 
         assertNotNull(encrypted);
     }
@@ -45,12 +73,12 @@ public class AcmCryptoUtilsImplTest
     @Test
     public void testDecryptData() throws Exception
     {
-        byte[] encrypted = cryptoUtils.encryptData(md5Hex.getBytes(), passwordToBeEncrypted.getBytes(), true);
+        byte[] encrypted = cryptoUtils.encryptData(sha256Hex.getBytes(), passwordToBeEncrypted.getBytes(), true);
 
         assertNotNull(encrypted);
         assertNotEquals(passwordToBeEncrypted, new String(encrypted));
 
-        byte[] decryptData = cryptoUtils.decryptData(md5Hex.getBytes(), encrypted, true);
+        byte[] decryptData = cryptoUtils.decryptData(sha256Hex.getBytes(), encrypted, true);
 
         assertEquals(passwordToBeEncrypted, new String(decryptData));
     }

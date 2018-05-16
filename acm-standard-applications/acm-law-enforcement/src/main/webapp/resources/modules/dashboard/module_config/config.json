@@ -22,14 +22,6 @@
             "format": "json"
         },
         {
-            "id": "weather",
-            "title": "dashboard.comp.weather.title",
-            "configurable": true,
-            "APPID": "672e193bbf022bdc749986f7be4c0364",
-            "units": "imperial",
-            "type": "like"
-        },
-        {
             "id": "myCases",
             "title": "dashboard.comp.myCases.title",
             "configurable": true,
@@ -304,6 +296,34 @@
             "configurable": true,
             "redirectSettings": {
             }
+        },
+        {
+            "id": "userWebsites",
+            "title": "Websites Widget",
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                25
+            ],
+            "paginationPageSize": 5,
+            "rowHeight": "auto",
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "dashboard.widgets.userWebsites.table.header.name",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true,
+                    "width": 300
+                },
+                {
+                    "name": "url",
+                    "displayName": "dashboard.widgets.userWebsites.table.header.url",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true,
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.url}}</a>"
+                }
+            ]
         }
     ],
     "modules": [

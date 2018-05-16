@@ -1,0 +1,71 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        <span ng-hide="isEdit" translate>profile.mfa.modal.create</span>
+        <span ng-show="isEdit" translate>profile.mfa.modal.edit</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <div ng-hide="isEdit">
+        <label class="control-label" for="factorType">
+            <span translate>profile.mfa.modal.factorType.label</span>
+            <span class="required-asterisk">*</span>
+        </label>
+        <div class="form-group">
+            <select id="factorType"
+                    ng-model="factorInfo.factorType"
+                    ng-disabled="isEdit"
+                    ng-options="factor.value as factor.label for factor in availableFactors"
+                    required="required"
+                    class="form-control">
+                <option value="" translate>profile.mfa.modal.factorType.placeholder</option>
+            </select>
+        </div>
+    </div>
+    <div ng-show="isEdit">
+        <label class="control-label" for="factorTypeReadOnly">
+            <span translate>profile.mfa.modal.factorType.label</span>
+            <span class="required-asterisk">*</span>
+        </label>
+        <div class="form-group">
+            <input id="factorTypeReadOnly"
+                   ng-model="factorTypeLabel"
+                   ng-disabled="true"
+                   type="text"
+                   class="form-control"/>
+        </div>
+    </div>
+    <div class="form-group" ng-show="'email' == factorInfo.factorType">
+        <label class="control-label" for="emailAddress">
+            <span translate>profile.mfa.modal.emailAddress.label</span>
+            <span class="required-asterisk">*</span>
+        </label>
+        <input id="emailAddress"
+               ng-model="factorInfo.profile.email"
+               type="email"
+               required="required"
+               maxlength="35"
+               placeholder="{{'profile.mfa.modal.emailAddress.placeholder' | translate}}"
+               class="form-control"/>
+    </div>
+    <div class="form-group" ng-show="'sms' == factorInfo.factorType">
+        <label class="control-label" for="phoneNumber">
+            <span translate>profile.mfa.modal.phoneNumber.label</span>
+            <span class="required-asterisk">*</span>
+        </label>
+        <input id="phoneNumber"
+               ng-model="factorInfo.profile.phoneNumber"
+               type="text"
+               required="required"
+               maxlength="20"
+               placeholder="{{'profile.mfa.modal.phoneNumber.placeholder' | translate}}"
+               class="form-control"/>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-sm btn-secondary pull-left" ng-click="cancel()">
+        <span translate>profile.mfa.modal.cancel</span>
+    </button>
+    <button class="btn btn-sm btn-primary pull-right" ng-click="confirm()" ng-disabled="disableConfirm()">
+        <span translate>profile.mfa.modal.save</span>
+    </button>
+</div>

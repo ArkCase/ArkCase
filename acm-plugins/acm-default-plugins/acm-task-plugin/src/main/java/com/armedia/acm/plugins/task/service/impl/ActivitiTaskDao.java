@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.task.service.impl;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Tasks
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -57,6 +84,7 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -1421,6 +1449,51 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         {
             log.debug("Diagram for task id = [{}] cannot be retrieved", id);
             throw new AcmTaskException("Diagram for task id = [" + id + "] cannot be retrieved");
+        }
+
+        return diagram;
+    }
+
+    @Override
+    public byte[] getDiagram(String processId) throws AcmTaskException
+    {
+        byte[] diagram = null;
+        if (StringUtils.isNotEmpty(processId))
+        {
+            InputStream inputStream = null;
+            try
+            {
+                ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().processInstanceId(processId)
+                        .singleResult();
+                BpmnModel model = getActivitiRepositoryService().getBpmnModel(processInstance.getProcessDefinitionId());
+                List<String> activeActivityIds = getActivitiRuntimeService().getActiveActivityIds(processId);
+                inputStream = ProcessDiagramGenerator.generateDiagram(model, "png", activeActivityIds);
+                diagram = IOUtils.toByteArray(inputStream);
+            }
+            catch (Exception e)
+            {
+                log.warn("Cannot take diagram for Process ID=[{}]", processId);
+            }
+            finally
+            {
+                if (inputStream != null)
+                {
+                    try
+                    {
+                        inputStream.close();
+                    }
+                    catch (IOException e)
+                    {
+                        log.error("Can't close input stream after generating task diagram image.", e);
+                    }
+                }
+            }
+        }
+
+        if (diagram == null)
+        {
+            log.debug("Diagram for Process ID = [{}] cannot be retrieved", processId);
+            throw new AcmTaskException("Diagram for Process ID = [" + processId + "] cannot be retrieved");
         }
 
         return diagram;

@@ -1,5 +1,32 @@
 package com.armedia.acm.services.users.service.group;
 
+/*-
+ * #%L
+ * ACM Service: Users
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectAlreadyExistsException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -14,6 +41,7 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
+import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -23,10 +51,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -35,6 +60,7 @@ public class GroupServiceImpl implements GroupService
     private UserDao userDao;
     private AcmGroupDao groupDao;
     private ExecuteSolrQuery executeSolrQuery;
+    private AcmGroupEventPublisher acmGroupEventPublisher;
 
     @Override
     public AcmGroup findByName(String name)
@@ -87,25 +113,111 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
+    public String buildGroupsSolrQuery()
+    {
+        String query = "object_type_s:GROUP AND status_lcs:ACTIVE";
+
+        return query;
+    }
+
+    @Override
+    public String buildGroupsSolrQuery(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection)
+            throws MuleException
+    {
+        String query = "object_type_s:GROUP AND status_lcs:ACTIVE";
+
+        log.debug("User [{}] is searching for [{}]", auth.getName(), query);
+
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                sortBy + " " + sortDirection);
+    }
+
+    @Override
+    public String buildGroupsAdHocSolrQuery()
+    {
+        String query = "object_type_s:GROUP AND object_sub_type_s:ADHOC_GROUP AND status_lcs:ACTIVE";
+
+        return query;
+    }
+
+    @Override
+    public String buildGroupsAdHocByNameSolrQuery(String fq)
+    {
+        String query = "object_type_s:GROUP AND object_sub_type_s:ADHOC_GROUP AND status_lcs:ACTIVE AND name_partial:" + fq;
+
+        return query;
+    }
+
+    @Override
+    public String buildGroupsByNameSolrQuery(String fq)
+    {
+        String query = "object_type_s:GROUP AND status_lcs:ACTIVE AND name_partial:"
+                + fq;
+
+        return query;
+    }
+
+    @Override
     public String buildGroupsForUserByNameSolrQuery(Boolean authorized, String userId, String searchFilter)
     {
-        return buildGroupsForUserSolrQuery(authorized, userId) + " AND name_partial:" + searchFilter;
+        String query = buildGroupsForUserSolrQuery(authorized, userId) + " AND name_partial:" + searchFilter;
+
+        return query;
+    }
+
+    @Override
+    public String getAdHocMemberGroupsByMatchingName(Authentication auth, Integer startRow, Integer maxRows, String sortBy,
+            String sortDirection,
+            Boolean authorized, String groupId, String searchFilter, String groupType) throws MuleException
+    {
+        String query = "object_type_s:GROUP AND -object_id_s:" + groupId + " AND status_lcs:ACTIVE AND object_sub_type_s:"
+                + groupType
+                + (authorized ? " AND groups_member_of_id_ss:" + groupId
+                        : " AND -groups_member_of_id_ss:" + groupId + " AND -child_id_ss:" + groupId)
+                + " AND name_partial:" + searchFilter;
+
+        log.debug("User [{}] is searching for [{}]", auth.getName(), query);
+
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                sortBy + " " + sortDirection);
     }
 
     @Override
     public String buildGroupsForUserSolrQuery(Boolean authorized, String userId)
     {
-        String solrQuery = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED"
+        AcmUser user = userDao.findByUserId(userId);
+        if (user == null)
+        {
+            return "";
+        }
+        return "object_type_s:GROUP AND "
+                + "(object_sub_type_s:ADHOC_GROUP OR (object_sub_type_s:LDAP_GROUP AND directory_name_s:"
+                + user.getUserDirectoryName()
+                + ")) AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED"
                 + (authorized ? " AND member_id_ss:" : " AND -member_id_ss:") + userId;
+    }
 
-        return solrQuery;
+    @Override
+    public String getAdHocMemberGroups(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection,
+            Boolean authorized, String groupId, String groupType) throws MuleException
+    {
+        String query = "object_type_s:GROUP AND -object_id_s:" + groupId + " AND status_lcs:ACTIVE AND object_sub_type_s:"
+                + groupType
+                + (authorized ? " AND groups_member_of_id_ss:" + groupId
+                        : " AND -groups_member_of_id_ss:" + groupId + " AND -child_id_ss:" + groupId);
+
+        log.debug("User [{}] is searching for [{}]", auth.getName(), query);
+
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                sortBy + " " + sortDirection);
     }
 
     @Override
     public String getGroupsByNameFilter(Authentication authentication, String nameFilter, int start, int max, String sortBy, String sortDir)
             throws MuleException
     {
-        String query = "object_type_s:GROUP AND status_lcs:ACTIVE AND -ascendants_id_ss:* AND name_partial:" + nameFilter;
+        String query = "object_type_s:GROUP AND status_lcs:ACTIVE AND -ascendants_id_ss:* AND name_partial:"
+                + nameFilter;
         return executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, start, max,
                 sortBy + " " + sortDir);
     }
@@ -113,7 +225,6 @@ public class GroupServiceImpl implements GroupService
     @Override
     public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException
     {
-
         log.info("Taking all groups and ascendant groups from Solr. Authenticated user is [{}]",
                 usernamePasswordAuthenticationToken.getName());
 
@@ -208,6 +319,10 @@ public class GroupServiceImpl implements GroupService
             groupDao.getEm().flush();
         }
 
+        if (acmGroup.getType() == AcmGroupType.ADHOC_GROUP)
+        {
+            acmGroupEventPublisher.publishAdHocGroupDeletedEvent(acmGroup);
+        }
         return acmGroup;
     }
 
@@ -216,6 +331,64 @@ public class GroupServiceImpl implements GroupService
     public AcmGroup removeGroupMembership(String groupName, String parentGroupName) throws AcmObjectNotFoundException
     {
         return removeGroupMembership(groupName, parentGroupName, false);
+    }
+
+    @Override
+    @Transactional
+    public List<AcmGroup> removeGroupsMembership(String parentGroupName, List<String> subGroups) throws AcmObjectNotFoundException
+    {
+        List<AcmGroup> result = new ArrayList<>();
+        subGroups.forEach(group -> {
+            try
+            {
+                log.warn("Removing group [{}] from parent [{}]", group, parentGroupName);
+                result.add(removeGroupFromParent(group, parentGroupName, false));
+            }
+            catch (AcmObjectNotFoundException e)
+            {
+                log.warn("Group [{}] cannot be removed", group);
+                e.printStackTrace();
+            }
+        });
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public AcmGroup removeGroupFromParent(String groupName, String parentGroupName, boolean flushInstructions)
+            throws AcmObjectNotFoundException
+    {
+        AcmGroup acmGroup = findByName(groupName);
+        AcmGroup parentGroup = findByName(parentGroupName);
+
+        if (acmGroup == null || parentGroup == null)
+        {
+            String groupNotFound = acmGroup == null ? groupName : parentGroupName;
+            log.warn("Group [{}] not found", groupNotFound);
+            throw new AcmObjectNotFoundException("GROUP", null, "Group with name " + groupNotFound + " not found");
+        }
+
+        log.debug("Remove group member [{}] from group [{}]", groupName, parentGroupName);
+        parentGroup.removeGroupMember(acmGroup);
+
+        log.debug("Build ancestors string for group: [{}]", groupName);
+        acmGroup.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(acmGroup));
+        save(acmGroup);
+
+        Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
+
+        descendantGroups.forEach(group -> {
+            log.debug("Build ancestors string for descendants group: [{}]", groupName);
+            String ancestorsStringList = AcmGroupUtils.buildAncestorsStringForAcmGroup(group);
+            group.setAscendantsList(ancestorsStringList);
+            save(group);
+        });
+
+        if (flushInstructions)
+        {
+            groupDao.getEm().flush();
+        }
+        return acmGroup;
     }
 
     @Override
@@ -317,6 +490,13 @@ public class GroupServiceImpl implements GroupService
         {
             log.warn("Group [{}] was not found.", groupId);
             throw new AcmObjectNotFoundException("GROUP", null, "Group " + groupId + " was not found");
+        }
+
+        Optional<AcmUser> foundUser = group.getUserMembers().stream().filter(u -> u.getUserId().equals(user.getUserId())).findFirst();
+        if (foundUser.isPresent())
+        {
+            log.debug("User [{}] is already a member to the Group [{}]", user.getUserId(), group.getName());
+            return group;
         }
 
         log.debug("Add User [{}] as member to Group [{}]", user.getUserId(), group.getName());
@@ -447,8 +627,31 @@ public class GroupServiceImpl implements GroupService
         String ancestorsStringList = AcmGroupUtils.buildAncestorsStringForAcmGroup(subGroup);
         subGroup.setAscendantsList(ancestorsStringList);
         Set<AcmGroup> descendants = AcmGroupUtils.findDescendantsForAcmGroup(subGroup);
-        descendants.forEach(group -> group.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(group)));
+        descendants.forEach(group -> {
+            group.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(group));
+            groupDao.save(group);
+        });
         return subGroup;
+    }
+
+    @Override
+    @Transactional
+    public List<AcmGroup> addGroupMembers(String parentId, List<String> memberIds) throws AcmCreateObjectFailedException
+    {
+        List<AcmGroup> members = new ArrayList<>();
+        for (String groupId : memberIds)
+        {
+            AcmGroup acmGroup = groupDao.findByName(groupId);
+            if (acmGroup != null)
+            {
+                members.add(addGroupMember(groupId, parentId));
+            }
+            else
+            {
+                log.warn("Group with id [{}] not found", groupId);
+            }
+        }
+        return members;
     }
 
     @Override
@@ -515,5 +718,10 @@ public class GroupServiceImpl implements GroupService
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher)
+    {
+        this.acmGroupEventPublisher = acmGroupEventPublisher;
     }
 }

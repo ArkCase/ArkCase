@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.report.service;
 
+/*-
+ * #%L
+ * ACM Default Plugin: report
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -14,8 +41,11 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.report.model.PentahoFileProperties;
 import com.armedia.acm.plugins.report.model.PentahoReportScheduleConstants;
+import com.armedia.acm.web.api.MDCConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +57,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.TimeZone;
+import java.util.UUID;
 
 /**
  * Created by joseph.mcgrady on 6/13/2017.
@@ -49,8 +80,15 @@ public class PentahoUploadGeneratedReportService
         DocumentRepository documentRepository = getDocumentRepositoryDao().findByName(getReportDocumentRepository());
         if (documentRepository != null)
         {
-            Authentication auth = new UsernamePasswordAuthenticationToken(getUploadUserId(), "SYSTEM");
-            getAuditPropertyEntityAdapter().setUserId(getUploadUserId());
+            String uploadUserId = (getUploadUserId() == null) ? "admin" : getUploadUserId();
+            Authentication auth = new UsernamePasswordAuthenticationToken(uploadUserId, uploadUserId);
+            getAuditPropertyEntityAdapter().setUserId(uploadUserId);
+            if (MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY) == null)
+            {
+                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, uploadUserId);
+                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+            }
+
             AcmContainer container = documentRepository.getContainer();
             AcmFolder yearFolder = null;
             EcmFile ecmFile = null;
@@ -62,15 +100,18 @@ public class PentahoUploadGeneratedReportService
                         reportDataStream, PentahoReportScheduleConstants.EXCEL_MIMETYPE, fileName,
                         auth, yearFolder.getCmisFolderId(),
                         container.getContainerObjectType(), container.getContainerObjectId());
-            } catch (AcmCreateObjectFailedException e)
+            }
+            catch (AcmCreateObjectFailedException e)
             {
                 LOGGER.error("Fail to create object", e);
-            } catch (AcmUserActionFailedException e)
+            }
+            catch (AcmUserActionFailedException e)
             {
                 LOGGER.error("User action fail", e);
             }
             return ecmFile;
-        } else
+        }
+        else
         {
             throw new AcmObjectNotFoundException("Document Repository", null, "Failed to find report document repository");
         }
@@ -82,22 +123,27 @@ public class PentahoUploadGeneratedReportService
         if (container != null)
         {
             String year = "" + LocalDateTime.now().getYear();
-            Optional<AcmFolder> folderFound = container.getFolder().getChildrenFolders().stream().filter(f -> year.equals(f.getName())).findAny();
+            Optional<AcmFolder> folderFound = container.getFolder().getChildrenFolders().stream().filter(f -> year.equals(f.getName()))
+                    .findAny();
             if (folderFound.isPresent())
             {
                 yearFolder = folderFound.get();
-            } else
+            }
+            else
             {
                 try
                 {
                     yearFolder = acmFolderService.addNewFolder(container.getFolder().getId(), year);
-                } catch (AcmCreateObjectFailedException e)
+                }
+                catch (AcmCreateObjectFailedException e)
                 {
                     LOGGER.error("Year folder creation failed", e);
-                } catch (AcmUserActionFailedException e)
+                }
+                catch (AcmUserActionFailedException e)
                 {
                     LOGGER.error("User action failed", e);
-                } catch (AcmObjectNotFoundException e)
+                }
+                catch (AcmObjectNotFoundException e)
                 {
                     LOGGER.error("Year folder not found", e);
                 }
@@ -111,7 +157,8 @@ public class PentahoUploadGeneratedReportService
         String fileName = generateFileName(pentahoFileProperties);
         String nameNoExtension = fileName.substring(0, fileName.lastIndexOf("."));
         String extension = fileName.substring(fileName.lastIndexOf("."));
-        EcmFile[] filesFound = getEcmFileDao().findByFolderId(acmFolder.getId()).stream().filter(f -> f.getFileName().contains(nameNoExtension)).toArray(EcmFile[]::new);
+        EcmFile[] filesFound = getEcmFileDao().findByFolderId(acmFolder.getId()).stream()
+                .filter(f -> f.getFileName().contains(nameNoExtension)).toArray(EcmFile[]::new);
         if (filesFound.length > 0)
         {
             fileName = nameNoExtension + "-" + filesFound.length + extension;

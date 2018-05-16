@@ -1,5 +1,32 @@
 package com.armedia.acm.services.users.dao.ldap;
 
+/*-
+ * #%L
+ * ACM Service: Users
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
@@ -94,8 +121,6 @@ public class SpringLdapUserDao
     public void changeUserPassword(String dn, String password, String newPassword, LdapTemplate ldapTemplate, AcmLdapConfig config)
             throws AcmLdapActionFailedException
     {
-        String strippedBaseDn = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
-
         try
         {
             ContextSource contextSource = new RetryExecutor<ContextSource>().retryResult(ldapTemplate::getContextSource);
@@ -108,17 +133,16 @@ public class SpringLdapUserDao
             mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE,
                     Directory.valueOf(config.getDirectoryType()).getPasswordAttribute(newPassword));
             // Perform the update
+            String strippedBaseDn = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
             new RetryExecutor().retryChecked(() -> context.modifyAttributes(strippedBaseDn, mods));
             context.close();
         }
         catch (AuthenticationException e)
         {
-            log.warn("User: [{}] failed to authenticate. ", dn);
             throw e;
         }
         catch (Exception e)
         {
-            log.warn("Changing the password for User: [{}] failed. ", dn, e);
             throw new AcmLdapActionFailedException("LDAP action failed to execute", e);
         }
     }

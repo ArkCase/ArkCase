@@ -1,5 +1,32 @@
 package com.armedia.acm.spring;
 
+/*-
+ * #%L
+ * Tool Integrations: Copy from Classpath to Working Folder
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,26 +47,21 @@ import java.util.List;
  */
 public class SpringConfigCopier implements ApplicationContextAware
 {
-    private List<String> resourcePatterns;
-
-    private PathMatchingResourcePatternResolver resolver;
-
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     /**
      * Built-in Spring configuration files are copied to this folder
      */
     String builtinFolderPath;
-
     /**
      * Custom Spring configuration files are copied to this folder
      */
     String customFolderPath;
-
     /**
      * Root custom folder, mapped to web application root (see context.xml)
      */
     String customRoot;
+    private List<String> resourcePatterns;
+    private PathMatchingResourcePatternResolver resolver;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException

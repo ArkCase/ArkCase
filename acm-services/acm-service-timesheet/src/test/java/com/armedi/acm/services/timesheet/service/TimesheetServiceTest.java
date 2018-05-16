@@ -3,16 +3,46 @@
  */
 package com.armedi.acm.services.timesheet.service;
 
+/*-
+ * #%L
+ * ACM Service: Timesheet
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
+import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
+import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
 import com.armedia.acm.services.timesheet.service.TimesheetServiceImpl;
 
 import org.apache.commons.io.IOUtils;
@@ -51,6 +81,7 @@ public class TimesheetServiceTest extends EasyMockSupport
     private Authentication mockAuthentication;
     private AcmTimesheetDao mockAcmTimesheetDao;
     private ExecuteSolrQuery mockExecuteSolrQuery;
+    private PipelineManager<AcmTimesheet, TimesheetPipelineContext> pipelineManager;
     private Map<String, String> submissionStatusesMap;
 
     @Before
@@ -61,6 +92,7 @@ public class TimesheetServiceTest extends EasyMockSupport
         mockAuthentication = createMock(Authentication.class);
         mockAcmTimesheetDao = createMock(AcmTimesheetDao.class);
         mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
+        pipelineManager = createMock(PipelineManager.class);
 
         submissionStatusesMap = new HashMap<>();
         submissionStatusesMap.put("Save", "DRAFT");
@@ -69,6 +101,7 @@ public class TimesheetServiceTest extends EasyMockSupport
         timesheetService.setAcmTimesheetDao(mockAcmTimesheetDao);
         timesheetService.setExecuteSolrQuery(mockExecuteSolrQuery);
         timesheetService.setSubmissionStatusesMap(submissionStatusesMap);
+        timesheetService.setPipelineManager(pipelineManager);
     }
 
     @Test
@@ -98,7 +131,8 @@ public class TimesheetServiceTest extends EasyMockSupport
         Capture<AcmTimesheet> timesheetCapture = new Capture<>();
 
         expect(mockAcmTimesheetDao.save(capture(timesheetCapture))).andReturn(timesheet);
-
+        expect(pipelineManager.executeOperation(anyObject(AcmTimesheet.class), anyObject(TimesheetPipelineContext.class),
+                anyObject(PipelineManager.PipelineManagerOperation.class))).andAnswer(() -> mockAcmTimesheetDao.save(timesheet));
         replayAll();
 
         AcmTimesheet saved = timesheetService.save(timesheet);
@@ -135,7 +169,8 @@ public class TimesheetServiceTest extends EasyMockSupport
         Capture<AcmTimesheet> timesheetCapture = new Capture<>();
 
         expect(mockAcmTimesheetDao.save(capture(timesheetCapture))).andReturn(timesheet);
-
+        expect(pipelineManager.executeOperation(anyObject(AcmTimesheet.class), anyObject(TimesheetPipelineContext.class),
+                anyObject(PipelineManager.PipelineManagerOperation.class))).andAnswer(() -> mockAcmTimesheetDao.save(timesheet));
         replayAll();
 
         AcmTimesheet saved = timesheetService.save(timesheet, "Save");
@@ -173,7 +208,8 @@ public class TimesheetServiceTest extends EasyMockSupport
         Capture<AcmTimesheet> timesheetCapture = new Capture<>();
 
         expect(mockAcmTimesheetDao.save(capture(timesheetCapture))).andReturn(timesheet);
-
+        expect(pipelineManager.executeOperation(anyObject(AcmTimesheet.class), anyObject(TimesheetPipelineContext.class),
+                anyObject(PipelineManager.PipelineManagerOperation.class))).andAnswer(() -> mockAcmTimesheetDao.save(timesheet));
         replayAll();
 
         AcmTimesheet saved = timesheetService.save(timesheet, "Submit");

@@ -3,11 +3,39 @@
  */
 package com.armedia.acm.services.costsheet.model;
 
+/*-
+ * #%L
+ * ACM Service: Costsheet
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -52,7 +80,7 @@ import java.util.List;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.services.costsheet.model.AcmCostsheet")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStatefulEntity, AcmParentObjectInfo
+public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStatefulEntity, AcmParentObjectInfo, AcmContainerEntity
 {
 
     private static final long serialVersionUID = 6290288826480329085L;
@@ -75,6 +103,9 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
 
     @Column(name = "cm_costsheet_object_number")
     private String parentNumber;
+
+    @Column(name = "cm_costsheet_number")
+    private String costsheetNumber;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "costsheet")
     private List<AcmCost> costs = new ArrayList<>();
@@ -160,7 +191,18 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
         {
             getContainer().setContainerObjectId(getId());
             getContainer().setContainerObjectType(getObjectType());
+            getContainer().setContainerObjectTitle(getCostsheetNumber());
         }
+    }
+
+    public String getCostsheetNumber()
+    {
+        return costsheetNumber;
+    }
+
+    public void setCostsheetNumber(String costsheetNumber)
+    {
+        this.costsheetNumber = costsheetNumber;
     }
 
     @Override
@@ -314,11 +356,13 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
         this.participants = participants;
     }
 
+    @Override
     public AcmContainer getContainer()
     {
         return container;
     }
 
+    @Override
     public void setContainer(AcmContainer container)
     {
         this.container = container;

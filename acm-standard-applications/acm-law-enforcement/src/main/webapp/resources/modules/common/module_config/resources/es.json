@@ -2,15 +2,29 @@
     "common": {
         "select.option.none": "(Seleccionar uno)",
         "value.unknown": "Desconocido",
-        "defaultDateFormat": "Es_MM/DD/YYYY",
-        "defaultTimeFormat": "Es_hh:mm:ss",
-        "defaultDateTimeFormat": "Es_MM/DD/YYYY hh:mm",
-        "defaultDatePickerFormat": "Es_MM/dd/yyyy",
-        "defaultDateUIFormat": "Es_MM/dd/yyyy",
-        "defaultDateTimeUIFormat": "Es_MM/dd/yyyy HH:mm"
+        "value.none": "Ninguna",
+        "_1_": "No utilice estilos de fecha personalizados ni los agregue, ya que son propensos a errores.",
+        "_2_": "Use uno de los formatos predefinidos: ",
+        "_3_": "'medio'     - equivalente a 'MMM d, a h:mm:ss a' para la configuración en_US (p.ej. 3 de septiembre de 2010, 12:05:08 p.m.)",
+        "_4_": "'corto'     - equivalente a 'M/d/aa h:mm a' para la configuración en_US (p.ej. 9/3/10 12:05 PM)",
+        "_5_": "'fechaCompleta'  - equivalente a 'EEEE, MMMM d, a' para la configuración en_US (p.ej. Viernes, 3 de septiembre de 2010)",
+        "_6_": "'largaFecha'  - equivalente a 'MMMM d, a' para la configuración en_US (p.ej. 3 de septiembre de 2010)",
+        "_7_": "'medioFecha'- equivalente a 'MMM d, a' para la configuración en_US (p.ej. 3 de septiembre de 2010)",
+        "_8_": "'cortaFecha' - equivalente a 'M/d/aa' para la configuración en_US (p.ej. 9/3/10)",
+        "_9_": "'tiempoMedio'- equivalente a 'h:mm:ss a' para la configuración en_US (p.ej. 12:05:08 PM)",
+        "_10": "'cortoTiempo' - equivalente a 'h:mm a' para la configuración en_US (p.ej. 12:05 PM)",
+        "_11": " ",
+        "_12": "Se eliminan los siguientes formatos de fecha. Si los clientes solicitan personalizar el formato, necesitamos ",
+        "_13": "Educarlos para evitar esto porque tienen preocupaciones",
+        "defaultDateFormat": "MM/DD/AAAA",
+        "defaultTimeFormat": "hh:mm:ss",
+        "defaultDateTimeFormat": "MM/DD/AAAA hh:mm",
+        "defaultDatePickerFormat": "MM/dd/AAAA",
+        "defaultDateUIFormat": "MM/dd/aaaa",
+        "defaultDateTimeUIFormat": "MM/dd/aaaa HH:mm"
     },
     "common.frevvo": {
-        "defaultDateFormat": "Es_YYYY-MM-DD"
+        "defaultDateFormat": "AAAA-MM-DD"
     },
     "common.service": {
         "error.invalidData": "Datos no válidos"
@@ -18,30 +32,31 @@
     "common.objects": {
         "progressNoData": "[ Sin datos ]",
         "progressLoading": "Cargando datos ",
-        "progressError": "Error al cargar datos "
+        "progressError": "Hubo un error cargando los datos"
     },
     "common.service.messageService": {
-        "authorizationError": "No estás autorizado para tomar esta acción",
+        "authorizationError": "No está autorizado para ejecutar esta acción",
         "actionMessages": {
             "success": "La acción fue exitosa",
             "error": "Error de acción"
         }
     },
     "common.directive.docTree": {
-        "btnRefresh": "Refrescar",
-        "waitUploading": "Subiendo ...",
-        "confirmVersion": "¿Seguro que volverás a la versión anterior?",
-        "declareSuccessful": "Declara exitoso. Refreshing Document Tree ...",
-        "prevItems": " artículos arriba ...",
-        "prevItemsTooltip": "Revisa los artículos anteriores",
-        "moreItems": " mas cosas...",
+        "btnRefresh": "Recargar",
+        "waitUploading": "Cargando...",
+        "confirmVersion": "¿Seguro que quiere retroceder a la versión anterior?",
+        "declareSuccessful": "Exito recargando el árbol del documento...",
+        "prevItems": "los artículos de arriba...",
+        "prevItemsTooltip": "Revise los artículos anteriores",
+        "moreItems": "más artículos...",
         "moreItemsTooltip": "Cargar más artículos",
         "moreItemsBegin": "Mas cosas...",
         "email": {
             "defaultBodyLinks": "Por favor, siga los enlaces a continuación para ver el documento (s). Los enlaces caducan en 3 días.",
             "defaultBodyAttachments": "Adjuntamos los documentos enviados por ArkCase.",
             "defaultFooter": "Desarrollado por ArkCase, plataforma Enterprise Case Management, http://www.arkcase.com",
-            "successMessage": "El correo electrónico fue enviado con éxito"
+            "successMessage": "El correo electrónico fue enviado con éxito",
+            "noEmailAddress": "es_There is no entered email for this "
         },
         "menu": {
             "noop": "(Seleccione un artículo)",
@@ -52,7 +67,7 @@
             "newCorrespondence": "Nueva correspondencia",
             "open": "Abierto",
             "email": "Email",
-            "newTask": "es_New Task",
+            "newTask": "Nueva tarea",
             "download": "Descargar",
             "copy": "Dupdo",
             "cut": "Cortar",
@@ -67,8 +82,8 @@
         "table.columns": {
             "title": "Título",
             "type": "Tipo",
-            "created": "Creado",
-            "modified": "Modificado",
+            "created": "Creado el",
+            "modified": "Modificado el",
             "modifier": "Modificado por",
             "version": "Versión",
             "status": "Estado"
@@ -83,7 +98,7 @@
             "btnOk.text": "DE ACUERDO"
         },
         "emailDialog": {
-            "title": "Email",
+            "title": "Correo electrónico",
             "recipients.label": "Destinatarios:",
             "recipients.placeholder": "Elija destinatarios",
             "subject.label": "Tema:",
@@ -96,6 +111,10 @@
             "btnCancel.text": "Cancelar",
             "btnOk.text": "Enviar correo electrónico"
         },
+        "participantsDialog": {
+            "titlePart": "Participantes para ",
+            "title": "Participantes"
+        },
         "recipientsDialog": {
             "title": "Elija destinatarios",
             "search.placeholder": "Destinatarios de búsqueda",
@@ -105,7 +124,7 @@
             "addRecipients.button": "Agregar recipientes",
             "gridColumns": {
                 "name": "Nombre",
-                "email": "Email"
+                "email": "Correo electrónico"
             }
         },
         "mediaDialog": {
@@ -144,7 +163,7 @@
     },
     "common.directive.objectTree": {
         "btnPrev.title": "Eregistros anteriores...",
-        "btnPrev.toolTip": "Revisar registros previos",
+        "btnPrev.toolTip": "Revisar registros anteriores",
         "btnNext.titleUnknownSize": "Más registros ...",
         "btnNext.title": " más registros ...",
         "btnNext.toolTip": "Cargar más registros",
@@ -160,22 +179,27 @@
         "pagerCountLabel": "{{pageCount}} de {{pageTotal}} artículos"
     },
     "common.directive.objectAuthorizationRoles": {
-        "choose": "Escoger",
+        "choose": "Elija",
         "not_authorized": "No autorizado",
+        "not_member": "es_Not Member",
         "tooltip.move_right": "Mover a la derecha",
         "tooltip.move_left": "Mover hacia la izquierda",
-        "authorized": "Autorizado"
+        "authorized": "Autorizado",
+        "member": "es_Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
-        "pattern.title": "es_Error, 2 characters required."
+        "pattern.title": "Error, se requieren 2 caracteres."
     },
     "common.directive.searchModal": {
         "header": "Buscar",
         "btnSearch.text": "Buscar",
-        "btnOk.text": "DE ACUERDO",
+        "btnOk.text": "Aceptar",
         "btnCancel.text": "Cancelar",
         "edtPlaceholder": "Escriba para buscar",
-        "noData.text": "Sin resultados"
+        "noData.text": "Sin resultados",
+        "pickUserLabel": "Elige usuario asociado",
+        "pickGroupLabel": "Elige un grupo asociado",
+        "selectedItemsGrid.label": "Entradas seleccionadas"
     },
     "common.directive.search": {
         "showMore.button.text": "Mostrar más valores",
@@ -214,7 +238,7 @@
             "names.incidentType%": "Tipo de incidente",
             "fields.incidentType.agricultural%": "Agrícola",
             "fields.incidentType.arson%": "Incendio provocado",
-            "fields.incidentType.backgroundInvestigation%": "Investigacion de antecedentes",
+            "fields.incidentType.backgroundInvestigation%": "Investigación de Antecedentes",
             "fields.incidentType.benefitsAppeal%": "Llamamiento de beneficios",
             "fields.incidentType.businessDispute%": "Disputa sobre mejores negocios",
             "fields.incidentType.clinicalFraud%": "Fraude de Investigador Clínico",
@@ -232,14 +256,14 @@
             "fields.incidentType.laborRacketeering%": "La delincuencia organizada",
             "fields.incidentType.local%": "Local",
             "fields.incidentType.murder%": "Asesinato",
-            "fields.incidentType.newDrugFraud%": "Nuevo fraude a la aplicación de drogas",
-            "fields.incidentType.payoff%": "Saldar",
+            "fields.incidentType.newDrugFraud%": "Fraude de aplicación de nuevos medicamentos",
+            "fields.incidentType.payoff%": "Ganancia",
             "fields.incidentType.pensionWaiver%": "Solicitud de exención de pensión",
             "fields.incidentType.pollution%": "Contaminación",
             "fields.incidentType.productTampering%": "Manipulación del producto",
             "fields.incidentType.assetTheftMisuse%": "Robo o mal uso del activo",
             "names.objectType%": "Tipo de objeto",
-            "fields.objectType.participant%": "Partícipe",
+            "fields.objectType.participant%": "Participante",
             "fields.objectType.contactMethod%": "Metodo de contacto",
             "fields.objectType.task%": "Tarea",
             "fields.objectType.file%": "Archivo",
@@ -263,46 +287,46 @@
             "fields.objectType.objectLock%": "Objeto de bloqueo",
             "names.state%": "Estado",
             "names.parentType%": "Tipo de padre",
-            "fields.parentType.container%": "Envase",
-            "fields.parentType.caseFile%": "Expediente",
+            "fields.parentType.container%": "Contenedor",
+            "fields.parentType.caseFile%": "Archivo de caso",
             "fields.parentType.complaint%": "Queja",
             "fields.parentType.organization%": "Organización",
             "fields.parentType.person%": "Persona",
             "fields.parentType.task%": "Tarea",
             "fields.parentType.file%": "Archivo",
             "fields.parentType.group%": "Grupo",
-            "fields.parentType.docRepo%": "Doc Repo",
+            "fields.parentType.docRepo%": "Depósito de documentos",
             "fields.parentType.costsheet%": "Hoja de coste",
-            "fields.parentType.timesheet%": "Parte de horas",
+            "fields.parentType.timesheet%": "Hoja de tiempos",
             "names.owner%": "Propietario",
-            "names.parentObjectType%": "Tipo de objeto primario",
-            "fields.parentObjectType.container%": "Envase",
-            "fields.parentObjectType.caseFile%": "Expediente",
+            "names.parentObjectType%": "Tipo de objeto principal",
+            "fields.parentObjectType.container%": "Contenedor",
+            "fields.parentObjectType.caseFile%": "Archivo de caso",
             "fields.parentObjectType.complaint%": "Queja",
             "fields.parentObjectType.organization%": "Organización",
             "fields.parentObjectType.person%": "Persona",
             "fields.parentObjectType.task%": "Tarea",
             "fields.parentObjectType.file%": "Archivo",
             "fields.parentObjectType.group%": "Grupo",
-            "fields.parentObjectType.docRepo%": "Doc Repo",
+            "fields.parentObjectType.docRepo%": "Depósito de documentos",
             "fields.parentObjectType.costsheet%": "Hoja de coste",
-            "fields.parentObjectType.timesheet%": "Parte de horas",
+            "fields.parentObjectType.timesheet%": "Hoja de tiempos",
             "names.personOrganization%": "Persona, tipo de organización",
             "names.city%": "Ciudad",
-            "names.createDate%": "Fecha de Creación",
-            "fields.createDate.previousWeek%": "Semana pasada",
+            "names.createDate%": "Crear fecha",
+            "fields.createDate.previousWeek%": "Semana anterior",
             "fields.createDate.previousMonth%": "Mes anterior",
             "fields.createDate.previousYear%": "Año anterior",
             "names.dueDate%": "Fecha de vencimiento",
-            "fields.dueDate.previousWeek%": "Semana pasada",
+            "fields.dueDate.previousWeek%": "Semana anterior",
             "fields.dueDate.previousMonth%": "Mes anterior",
             "fields.dueDate.previousYear%": "Año anterior",
             "names.incidentDate%": "Fecha del incidente",
-            "fields.incidentDate.previousWeek%": "Semana pasada",
+            "fields.incidentDate.previousWeek%": "Semana anterior",
             "fields.incidentDate.previousMonth%": "Mes anterior",
             "fields.incidentDate.previousYear%": "Año anterior",
             "names.modifyDate%": "Modificar fecha",
-            "fields.modifyDate.previousWeek%": "Semana pasada",
+            "fields.modifyDate.previousWeek%": "Semana anterior",
             "fields.modifyDate.previousMonth%": "Mes anterior",
             "fields.modifyDate.previousYear%": "Año anterior"
         }
@@ -472,7 +496,9 @@
             "day.label": "Día",
             "week.label": "Semana",
             "month.label": "Mes",
-            "on.label": "En",
+            "_1_": "'en.etiqueta' parece no estar en uso. _Ser_Eliminado_",
+            "_2_": "Si es necesario, reformule el mensaje para evitar la gramática centrada en inglés en el mensaje",
+            "_on.label": "En",
             "day.placeholder": "Día",
             "year.placeholder": "Año",
             "dailyRecurrence": {
@@ -566,7 +592,7 @@
     },
     "common.directive.coreParticipants": {
         "title": "Participantes",
-        "replaceFolderChildrenParticipants": "es_Replace child documents participants",
+        "replaceFolderChildrenParticipants": "Reemplazar los documentos de niños participantes",
         "modal": {
             "addParticipant.label": "Añada participante",
             "editParticipant.label": "Editar registro",
@@ -576,7 +602,7 @@
             "btnCancel.text": "Cancelar",
             "dialogUserPicker.header": "Usuario de búsqueda",
             "dialogGroupPicker.header": "Grupo de búsqueda",
-            "replaceChildrenParticipant": "es_replace children participant"
+            "replaceChildrenParticipant": "Reemplazar a los niños participantes"
         },
         "message": {
             "error.groupType": "El grupo propietario no puede ser una persona.",
@@ -588,6 +614,8 @@
             "error.noAccessCombo": "La combinación de No Access y Assignee no está permitida.",
             "error.duplicateUserOrGroup": "Participante inválido Entradas duplicadas encontradas para el participante.",
             "error.userOrGroupNotFound": "Participante inválido Falta la entrada del participante en el sistema.",
+            "error.emptyParticipantLdapId": "El nombre del participante no puede estar vacío",
+            "error.emptyParticipantType": "El tipo de participante no puede estar vacío",
             "error.ownerUnique": "Solo se permite un dueño."
         }
     },
@@ -620,11 +648,12 @@
         "DOC_REPO": "Repositorio de documentos",
         "ORGANIZATION": "Organización",
         "PERSON": "Persona",
-        "PERSON-ASSOCIATION": "es_Person-Association",
-        "PARTICIPANT": "es_Participant",
-        "NOTE": "es_Note",
-        "PARTICIPANT-ASSOCIATION": "es_Participant-Association",
-        "ASSIGNMENT": "es_Assignment"
+        "PERSON-ASSOCIATION": "Persona-Asociación",
+        "PARTICIPANT": "Partícipe",
+        "NOTE": "Nota",
+        "PARTICIPANT-ASSOCIATION": "Partícipe-Asociación",
+        "ASSIGNMENT": "Asignación",
+        "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {
         "header": "Elija usuario",
@@ -880,8 +909,3 @@
         }
     }
 }
-
-
-
-
-

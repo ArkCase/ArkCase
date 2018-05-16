@@ -22,36 +22,45 @@ angular.module('complaints').controller(
                 'Profile.UserInfoService',
                 'Object.TaskService',
                 'Task.InfoService',
-                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService,
-                        ObjectLookupService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication,
-                        PermissionsService, UserInfoService, ObjectTaskService, TaskInfoService) {
+                'Complaint.FutureApprovalService',
+                'MessageService',
+                'Acm.StoreService',
+                'ModalDialogService',
+                '$timeout',
+                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication, PermissionsService, UserInfoService,
+                        ObjectTaskService, TaskInfoService, ComplaintFutureApprovalService, MessageService, Store, ModalDialogService, $timeout) {
 
                     $scope.userSearchConfig = null;
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.oldData = null;
                     $scope.taskInfo = null;
+                    $scope.showInitButton = false;
+                    $scope.showWithdrawButton = false;
+                    $scope.initInProgress = false;
+                    $scope.withdrawInProgress = false;
+                    $scope.nonConcurEndsApprovals = true;
 
                     var currentUser = '';
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "complaints",
-                        componentId : "approvalRouting",
-                        retrieveObjectInfo : ComplaintInfoService.getComplaintInfo,
-                        validateObjectInfo : ComplaintInfoService.validateComplaintInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "complaints",
+                        componentId: "approvalRouting",
+                        retrieveObjectInfo: ComplaintInfoService.getComplaintInfo,
+                        validateObjectInfo: ComplaintInfoService.validateComplaintInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     ConfigService.getModuleConfig("complaints").then(function(moduleConfig) {
                         $scope.userSearchConfig = _.find(moduleConfig.components, {
-                            id : "userSearch"
+                            id: "userSearch"
                         });
                         return moduleConfig;
                     });
@@ -71,65 +80,129 @@ angular.module('complaints').controller(
                         gridHelper.disableGridScrolling(config);
                     };
 
+                    var applyFutureTasksDataToGrid = function(data) {
+                        $scope.gridOptions.data = data;
+                        $scope.gridOptions.noData = false;
+                        $scope.oldData = angular.copy($scope.gridOptions.data);
+                    };
+
+                    var showInitWithdrawButtons = function(processId) {
+                        if (Util.isEmpty(processId)) {
+                            return;
+                        }
+
+                        ComplaintFutureApprovalService.isWorkflowInitiable(processId).then(function(response) {
+                            $scope.showInitButton = response.data;
+                        });
+                        ComplaintFutureApprovalService.isWorkflowWithdrawable(processId).then(function(response) {
+                            $scope.showWithdrawButton = response.data;
+                        });
+                    };
+
+                    var fetchBuckslipProcess = function(buckslipProcess) {
+                        $scope.buckslipProcess = buckslipProcess;
+                        showInitWithdrawButtons($scope.buckslipProcess.businessProcessId);
+                        applyFutureTasksDataToGrid($scope.buckslipProcess.futureTasks);
+                    };
+
                     $scope.$bus.subscribe('buckslip-task-object-updated', function(objectInfo) {
-
-                        $scope.taskInfo = objectInfo;
-
-                        //set future approvers info
-                        if (!Util.isArrayEmpty($scope.taskInfo.buckslipFutureApprovers)) {
-                            var data = [];
-                            _.forEach(objectInfo.buckslipFutureApprovers, function(userProfile) {
-                                data.push(convertProfileToUser(userProfile));
+                        //set future tasks
+                        if (!Util.isEmpty(objectInfo.id)) {
+                            ComplaintFutureApprovalService.getBuckslipProcessesForChildren("COMPLAINT", objectInfo.id).then(function(response) {
+                                if (!Util.isArrayEmpty(response.data)) {
+                                    fetchBuckslipProcess(response.data[0]);
+                                }
                             });
-                            $scope.gridOptions.data = data;
-                            $scope.gridOptions.noData = false;
+
+                            ComplaintFutureApprovalService.getBusinessProcessVariableForObject("COMPLAINT", objectInfo.id, "nonConcurEndsApprovals", true).then(function(response) {
+                                if (!Util.isEmpty(response.data)) {
+                                    $scope.nonConcurEndsApprovals = response.data;
+                                }
+                            });
+
+                        } else if (!Util.isEmpty(objectInfo.buckslipFutureTasks)) {
+                            $scope.taskInfo = objectInfo;
+                            ComplaintFutureApprovalService.getBuckslipProcessesForChildren(objectInfo.parentObjectType, objectInfo.parentObjectId).then(function(response) {
+                                fetchBuckslipProcess(response.data[0]);
+                                $scope.nonConcurEndsApprovals = $scope.buckslipProcess.nonConcurEndsApprovals;
+                            });
                         } else {
                             $scope.gridOptions.data = [];
                             $scope.gridOptions.noData = true;
                             $scope.noDataMessage = $translate.instant('complaints.comp.approvalRouting.noBuckslipMessage');
                         }
-                        $scope.oldData = angular.copy($scope.gridOptions.data);
-
                     });
 
+                    $scope.$bus.publish('buckslip-task-object-updated-subscribe-created', true);
+
                     $scope.userSearch = function() {
-                        var modalInstance = $modal.open({
-                            animation : $scope.animationsEnabled,
-                            templateUrl : 'modules/complaints/views/components/complaint-user-search.client.view.html',
-                            controller : 'Complaints.UserSearchController',
-                            size : 'lg',
-                            resolve : {
-                                $filter : function() {
-                                    return $scope.config.userSearch.userFacetFilter;
-                                },
-                                $extraFilter : function() {
-                                    return $scope.config.userSearch.userFacetExtraFilter;
-                                },
-                                $config : function() {
-                                    return $scope.userSearchConfig;
-                                }
+                        var modalMetadata = {
+                            moduleName: "complaints",
+                            templateUrl: "modules/complaints/views/components/complaint-new-future-task.client.view.html",
+                            controllerName: "Complaint.NewFutureTaskController"
+                        };
+                        ModalDialogService.showModal(modalMetadata).then(function(result) {
+                            var futureTask = {
+                                approverId: result.pickedUserId,
+                                approverFullName: result.pickedUserName,
+                                groupName: result.pickedGroupId,
+                                taskName: result.futureTaskTitle,
+                                details: result.futureTaskDetails,
+                                addedByFullName: currentUser
+                            }
+                            if (!Util.isEmpty(futureTask.approverId) && !Util.isEmpty(futureTask.taskName)) {
+                                $scope.buckslipProcess.futureTasks.push(futureTask);
                             }
                         });
+                    };
 
-                        modalInstance.result.then(function(chosenUser) {
-                            if (chosenUser) {
-                                UserInfoService.getUserInfoById(chosenUser.object_id_s).then(function(user) {
-                                    var userConverted = convertProfileToUser(user);
-                                    if (!$scope.gridOptions.data) {
-                                        $scope.gridOptions.data = [ userConverted ];
-                                    } else {
-                                        $scope.gridOptions.data.push(userConverted);
-                                    }
-                                    $scope.gridOptions.noData = false;
+                    var cleanCachedCaseFile = function(caseId) {
+                        var cacheChildTaskData = new Store.CacheFifo(ObjectTaskService.CacheNames.CHILD_TASK_DATA);
+                        var cacheKey = ObjectService.ObjectTypes.COMPLAINT + "." + caseId + "." + 0 + "." + 100 + "." + '' + "." + '';
+                        cacheChildTaskData.remove(cacheKey);
+                    };
+
+                    $scope.initiateTask = function() {
+                        if (!Util.isEmpty($scope.buckslipProcess)) {
+                            $scope.initInProgress = true;
+                            $scope.buckslipProcess.nonConcurEndsApprovals = $scope.nonConcurEndsApprovals;
+                            ComplaintFutureApprovalService.updateBuckslipProcess($scope.buckslipProcess).then(function(result) {
+                                ComplaintFutureApprovalService.initiateRoutingWorkflow($scope.buckslipProcess.businessProcessId).then(function(result) {
+                                    cleanCachedCaseFile($stateParams.id);
+                                    $timeout(function() {
+                                        $scope.$emit('report-object-refreshed', $stateParams.id);
+                                        MessageService.info($translate.instant('complaints.comp.approvalRouting.processInitialize.successfull'));
+
+                                        $scope.initInProgress = false;
+                                    }, 2000);
+                                }, function(reason) {
+                                    MessageService.error($translate.instant('complaints.comp.approvalRouting.processInitialize.fail'));
                                 });
+                            }, function(reason) {
+                                MessageService.error($translate.instant('complaints.comp.approvalRouting.businessProcessUpdate.fail'));
+                            });
+                        }
+                    };
 
-                            }
+                    $scope.withdrawTask = function() {
+                        if (!Util.isEmpty($scope.taskInfo.taskId)) {
+                            $scope.withdrawInProgress = true;
+                            ComplaintFutureApprovalService.withdrawRoutingWorkflow($scope.taskInfo.taskId).then(function(result) {
+                                cleanCachedCaseFile($stateParams.id);
+                                $timeout(function() {
+                                    $scope.$emit('report-object-refreshed', $stateParams.id);
+                                    $scope.$bus.publish('buckslip-task-object-updated', {
+                                        'id': $stateParams.id
+                                    });
+                                    MessageService.info($translate.instant('complaints.comp.approvalRouting.processWithdraw.successfull'));
 
-                        }, function() {
-                            // Cancel button was clicked.
-                            return [];
-                        });
-
+                                    $scope.nonConcurEndsApprovals = true;
+                                    $scope.withdrawInProgress = false;
+                                }, 2000);
+                            }, function(reason) {
+                                MessageService.error($translate.instant('complaints.comp.approvalRouting.processWithdraw.fail'));
+                            });
+                        }
                     };
 
                     $scope.deleteRow = function(rowEntity) {
@@ -183,28 +256,18 @@ angular.module('complaints').controller(
                     };
 
                     $scope.saveTask = function() {
-                        var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-                        if (TaskInfoService.validateTaskInfo($scope.taskInfo)) {
-
-                            $scope.taskInfo.buckslipFutureApprovers = $scope.gridOptions.data;
-                            promiseSaveInfo = TaskInfoService.saveTaskInfo($scope.taskInfo);
-                            promiseSaveInfo.then(function(taskInfo) {
-                                $scope.$bus.publish('buckslip-task-object-updated', taskInfo);
-                                return taskInfo;
-                            }, function(error) {
-                                $scope.$emit("report-object-update-failed", error);
-                                return error;
-                            })
-                        }
-                        return promiseSaveInfo;
+                        ComplaintFutureApprovalService.updateBuckslipProcess($scope.buckslipProcess).then(function(result) {
+                            $scope.oldData = angular.copy($scope.gridOptions.data);
+                            MessageService.info($translate.instant('complaints.comp.approvalRouting.businessProcessUpdate.successfull'));
+                        }, function(reason) {
+                            MessageService.error($translate.instant('complaints.comp.approvalRouting.businessProcessUpdate.fail'));
+                        });
                     };
-
-                    $scope.$bus.publish('buckslip-task-object-updated-subscribe-created', true);
 
                     gridHelper.addCustomButton = function(config, name, icon, clickFn, readOnlyFn, colName, tooltip) {
                         if (Util.isEmpty(icon) || Util.isEmpty(clickFn) || Util.isEmpty(readOnlyFn)) {
                             var found = _.find(HelperUiGridService.CommonButtons, {
-                                name : name
+                                name: name
                             });
                             if (found) {
                                 if (Util.isEmpty(icon)) {
@@ -222,7 +285,7 @@ angular.module('complaints').controller(
                         var cellTemplate = configureCellTemplate(clickFn, icon, readOnlyFn, tooltip, name);
                         var columnDefs = Util.goodArray(config.columnDefs);
                         var columnDef = _.find(columnDefs, {
-                            name : colName
+                            name: colName
                         });
 
                         if (columnDefs) {
@@ -244,22 +307,21 @@ angular.module('complaints').controller(
                             }
                         } else {
                             columnDef = {
-                                name : colName,
-                                cellEditableCondition : false,
-                                enableFiltering : false,
-                                enableHiding : false,
-                                enableSorting : false,
-                                enableColumnResizing : true,
-                                headerCellTemplate : "<span></span>",
-                                cellTemplate : cellTemplate
+                                name: colName,
+                                cellEditableCondition: false,
+                                enableFiltering: false,
+                                enableHiding: false,
+                                enableSorting: false,
+                                enableColumnResizing: true,
+                                headerCellTemplate: "<span></span>",
+                                cellTemplate: cellTemplate
                             };
                             columnDefs.push(columnDef);
                         }
                     };
 
                     var configureCellTemplate = function(clickFn, icon, readOnlyFn, tooltip, name) {
-                        var cellTemplate = "<a class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn
-                                + "(row.entity)'";
+                        var cellTemplate = "<a class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
 
                         if (tooltip) {
                             cellTemplate += " tooltip='" + tooltip + "' tooltip-append-to-body='true' tooltip-popup-delay='400'";
@@ -277,8 +339,8 @@ angular.module('complaints').controller(
                     function convertProfileToUser(userProfile) {
                         //we are using for now just this to fields, if needed add rest of them
                         var user = {
-                            userId : userProfile.userId,
-                            fullName : userProfile.fullName
+                            userId: userProfile.userId,
+                            fullName: userProfile.fullName
                         };
                         return user;
                     }

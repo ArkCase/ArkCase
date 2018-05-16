@@ -1,5 +1,32 @@
 package com.armedia.acm.services.participants.model;
 
+/*-
+ * #%L
+ * ACM Service: Participants
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
@@ -28,6 +55,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -89,6 +117,61 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     @Column(name = "cm_replace_children_participant", insertable = false, updatable = false)
     @Convert(converter = BooleanToStringConverter.class)
     private boolean replaceChildrenParticipant;
+
+    @Transient
+    private boolean isEditableUser = true;
+
+    @Transient
+    private boolean isEditableType = true;
+
+    @Transient
+    private boolean isDeletable = true;
+
+    public static AcmParticipant createRulesTestParticipant(AcmParticipant participant)
+    {
+        AcmParticipant copyParticipant = new AcmParticipant();
+        copyParticipant.setParticipantLdapId(participant.getParticipantLdapId());
+        copyParticipant.setObjectId(participant.getObjectId());
+        copyParticipant.setParticipantType(participant.getParticipantType());
+        copyParticipant.setObjectType(participant.getObjectType());
+        copyParticipant.setCreated(participant.getCreated());
+        copyParticipant.setCreator(participant.getCreator());
+        copyParticipant.setModified(participant.getModified());
+        copyParticipant.setModifier(participant.getModifier());
+        copyParticipant.setReplaceChildrenParticipant(participant.isReplaceChildrenParticipant());
+
+        return copyParticipant;
+    }
+
+    public boolean isEditableUser()
+    {
+        return isEditableUser;
+    }
+
+    public void setEditableUser(boolean editableUser)
+    {
+        isEditableUser = editableUser;
+    }
+
+    public boolean isEditableType()
+    {
+        return isEditableType;
+    }
+
+    public void setEditableType(boolean editableType)
+    {
+        isEditableType = editableType;
+    }
+
+    public boolean isDeletable()
+    {
+        return isDeletable;
+    }
+
+    public void setDeletable(boolean deletable)
+    {
+        isDeletable = deletable;
+    }
 
     @PrePersist
     public void beforeInsert()

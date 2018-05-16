@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.casefile.model;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Case File
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.core.AcmStatefulEntity;
@@ -294,17 +321,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     {
         personAssoc.setParentId(getId());
         personAssoc.setParentType(getObjectType());
-
-        if (personAssoc.getPerson().getAssociationsFromObjects() == null)
-        {
-            personAssoc.getPerson().setAssociationsFromObjects(new ArrayList<>());
-        }
-
-        if (!personAssoc.getPerson().getAssociationsFromObjects().contains(personAssoc))
-        {
-            personAssoc.getPerson().getAssociationsFromObjects().add(personAssoc);
-        }
-
     }
 
     @Override
@@ -559,6 +575,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         return participants;
     }
 
+    @Override
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;

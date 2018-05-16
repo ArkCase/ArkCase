@@ -13,13 +13,15 @@
     <bean id="SearchChildrenAPIController" class="com.armedia.acm.services.search.web.api.SearchChildrenAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
-    <bean id="searchObjectByTypeAPIController" class="com.armedia.acm.services.search.web.api.SearchObjectByTypeAPIController">
+    <bean id="searchObjectByTypeAPIController"
+        class="com.armedia.acm.services.search.web.api.SearchObjectByTypeAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="searchEventPublisher" ref="acmSearchEventPublisher"/>
     </bean>
 
-    <bean id="searchNotificationsAPIController" class="com.armedia.acm.services.search.web.api.SearchNotificationsAPIController">
+    <bean id="searchNotificationsAPIController"
+        class="com.armedia.acm.services.search.web.api.SearchNotificationsAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="searchEventPublisher" ref="acmSearchEventPublisher"/>
@@ -38,7 +40,8 @@
         class="com.armedia.acm.services.search.web.api.ComplaintsSearchByAssignedUserAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
-    <bean id="caseFilesSearchByCreatorAPIController" class="com.armedia.acm.services.search.web.api.CaseFilesSearchByCreatorAPIController">
+    <bean id="caseFilesSearchByCreatorAPIController"
+        class="com.armedia.acm.services.search.web.api.CaseFilesSearchByCreatorAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
     <bean id="complaintsSearchByCreatedDateAPIController"
@@ -50,6 +53,12 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
     <bean id="facetedSearchAPIController" class="com.armedia.acm.services.search.web.api.FacetedSearchAPIController">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="facetedSearchService" ref="facetedSearchService"/>
+    </bean>
+    <bean id="facetedSearchAPIControllerV2"
+        class="com.armedia.acm.services.search.web.api.FacetedSearchAPIControllerV2">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="facetedSearchService" ref="facetedSearchService"/>

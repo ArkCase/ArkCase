@@ -5,6 +5,14 @@
             "leftnav.item": "Dashboard"
         },
         "widgets": {
+            "pagination": {
+                "default": {
+                    "label": "Select your preferred row count.",
+                    "fiveRows": "5",
+                    "tenRows": "10",
+                    "twentyFiveRows": "25"
+                }
+            },
             "casesByQueue": {
                 "title": "Active Case Files by Queue",
                 "description": "Displays active case files by queue",
@@ -143,22 +151,6 @@
                     }
                 },
                 "noDataMessage": "Currently there is no workflow report info",
-                "configDescription": "Description",
-                "configDescriptionPlaceholder": "Enter widget description"
-            },
-            "weather": {
-                "description": "Displays weather",
-                "label": {
-                    "current": "Current:",
-                    "enterLocation": "Enter Location",
-                    "description": "Display the current temperature of a city",
-                    "location": "Location",
-                    "insertLocationInConfiguration": "Please insert a location in the widget configuration",
-                    "zip": "Zip Code",
-                    "enterZip": "Enter Zip Code"
-                },
-                "title": "Weather",
-                "noDataMessage": "Currently there are no weather info",
                 "configDescription": "Description",
                 "configDescriptionPlaceholder": "Enter widget description"
             },
@@ -356,14 +348,30 @@
                 "title": "Approvers",
                 "description": "Displays Approvers",
                 "noDataMessage": "Currently there are no approvers to display"
+            },
+            "userWebsites": {
+                "title": "Websites",
+                "description": "Displays user websites",
+                "noDataMessage": "Currently there is no website info",
+                "table": {
+                    "header": {
+                        "name": "Site Name",
+                        "url": "URL"
+                    }
+                },
+                "modal": {
+                    "addWebsite": "Add Website",
+                    "editWebsite": "Edit Website",
+                    "save": "Save",
+                    "cancel": "Cancel",
+                    "name": "Site Name",
+                    "url": "URL"
+                }
             }
         }
     },
     "dashboard.comp.news": {
         "title": "News Widget"
-    },
-    "dashboard.comp.weather": {
-        "title": "Weather Widget"
     },
     "dashboard.comp.myCases": {
         "title": "My Cases Widget"

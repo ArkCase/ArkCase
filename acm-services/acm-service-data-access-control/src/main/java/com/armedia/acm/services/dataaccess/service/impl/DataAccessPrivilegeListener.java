@@ -1,5 +1,32 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+/*-
+ * #%L
+ * ACM Service: Data Access Control
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.data.AcmBeforeInsertListener;
 import com.armedia.acm.data.AcmBeforeUpdateListener;
@@ -30,6 +57,7 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
     private ParticipantsBusinessRule participantsBusinessRule;
     private AcmParticipantService participantService;
     private EntityParticipantsChangedEventPublisher entityParticipantsChangedEventPublisher;
+    private boolean documentACLEnabled;
 
     @Override
     public void beforeInsert(Object object) throws AcmAccessControlException
@@ -54,7 +82,18 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
             applyDataAccessRules(assignedObject);
             updateParentPointers(assignedObject);
             validateParticipantAssignmentRules(assignedObject);
-            handleParticipantsChanged(assignedObject);
+
+            // AFDP-5567 2018-03-07 quick fix to avoid updating file and folder participants when document ACL is
+            // disabled.
+            // The act of looking up the current participants seems to cause database deadlocks and unique key
+            // violations in PostgreSQL environments; or possibly in situations where there are many participant
+            // changes to be applied. This code should still be fixed such that the participant differences are found
+            // via Nebojsha's object-diff algorithm, or by the acm_object_history table, or some other way that doesn't
+            // issue a SELECT against the same rows that are being updated in this transaction.
+            if (isDocumentACLEnabled())
+            {
+                handleParticipantsChanged(assignedObject);
+            }
         }
     }
 
@@ -158,24 +197,24 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
         getAssignmentBusinessRule().applyRules(assignedObject);
     }
 
-    public void setAssignmentBusinessRule(AcmAssignedObjectBusinessRule assignmentBusinessRule)
-    {
-        this.assignmentBusinessRule = assignmentBusinessRule;
-    }
-
     public AcmAssignedObjectBusinessRule getAssignmentBusinessRule()
     {
         return assignmentBusinessRule;
     }
 
-    public void setAccessControlBusinessRule(AcmAssignedObjectBusinessRule accessControlBusinessRule)
+    public void setAssignmentBusinessRule(AcmAssignedObjectBusinessRule assignmentBusinessRule)
     {
-        this.accessControlBusinessRule = accessControlBusinessRule;
+        this.assignmentBusinessRule = assignmentBusinessRule;
     }
 
     public AcmAssignedObjectBusinessRule getAccessControlBusinessRule()
     {
         return accessControlBusinessRule;
+    }
+
+    public void setAccessControlBusinessRule(AcmAssignedObjectBusinessRule accessControlBusinessRule)
+    {
+        this.accessControlBusinessRule = accessControlBusinessRule;
     }
 
     public ParticipantsBusinessRule getParticipantsBusinessRule()
@@ -206,5 +245,15 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
     public void setEntityParticipantsChangedEventPublisher(EntityParticipantsChangedEventPublisher entityParticipantsChangedEventPublisher)
     {
         this.entityParticipantsChangedEventPublisher = entityParticipantsChangedEventPublisher;
+    }
+
+    public boolean isDocumentACLEnabled()
+    {
+        return documentACLEnabled;
+    }
+
+    public void setDocumentACLEnabled(boolean documentACLEnabled)
+    {
+        this.documentACLEnabled = documentACLEnabled;
     }
 }

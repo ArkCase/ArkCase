@@ -63,7 +63,8 @@
                     "person",
                     "summary",
                     "tags",
-                    "approvers"
+                    "tasks",
+                    "documents"
                 ]
             },
             {
@@ -99,11 +100,19 @@
                 ]
             },
             {
-                "type": "p/COSTSHEET/approvers",
-                "label": "costTracking.tree.nodeTypes.approvers.label",
-                "icon": "fa fa-users",
+                "type": "p/COSTSHEET/tasks",
+                "label": "costTracking.tree.nodeTypes.tasks.label",
+                "icon": "fa fa-check-circle",
                 "components": [
-                    "approvers"
+                    "tasks"
+                ]
+            },
+            {
+                "type": "p/COSTSHEET/documents",
+                "label": "costTracking.tree.nodeTypes.documents.label",
+                "icon": "fa fa-file",
+                "components": [
+                    "documents"
                 ]
             },
             {
@@ -163,8 +172,89 @@
                     ]
                 },
                 {
-                    "id": "summary",
+                    "id": "documents",
                     "type": "component"
+                },
+                {
+                    "id": "tasks",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "field": "alerts",
+                            "displayName": "",
+                            "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'costTracking.comp.tasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'costTracking.comp.tasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+                            "width": 40,
+                            "enableSorting": false,
+                            "enableColumnMenu": false
+                        },
+                        {
+                            "name": "title",
+                            "field": "title_parseable",
+                            "sortField": "title_parseable_lcs",
+                            "displayName": "costTracking.comp.tasks.table.columns.title",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{row.entity.title_parseable}}</div>"
+                        },
+                        {
+                            "name": "assignee",
+                            "field": "assignee_s",
+                            "displayName": "costTracking.comp.tasks.table.columns.assignee",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        },
+                        {
+                            "name": "created",
+                            "field": "create_tdt",
+                            "displayName": "costTracking.comp.tasks.table.columns.created",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'shortDate' }}</div>"
+                        },
+                        {
+                            "name": "priority",
+                            "field": "priority_s",
+                            "displayName": "costTracking.comp.tasks.table.columns.priority",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "due",
+                            "field": "due_tdt",
+                            "displayName": "costTracking.comp.tasks.table.columns.due",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
+                        },
+                        {
+                            "name": "status",
+                            "field": "status_s",
+                            "displayName": "costTracking.comp.tasks.table.columns.status",
+                            "headerCellFilter": "translate"
+                        }
+                    ]
+                },
+                {
+                    "id": "expenses",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "date",
+                            "displayName": "costTracking.comp.expenses.table.columns.date",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "title",
+                            "displayName": "costTracking.comp.expenses.table.columns.title",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "description",
+                            "displayName": "costTracking.comp.expenses.table.columns.description",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "value",
+                            "displayName": "costTracking.comp.expenses.table.columns.amount",
+                            "headerCellFilter": "translate"
+                        }
+                    ]
                 },
                 {
                     "id": "tags",
@@ -190,17 +280,17 @@
                     ]
                 },
                 {
-                    "id": "approvers",
+                    "id": "tasks",
                     "type": "component",
                     "columnDefs": [
                         {
-                            "name": "fullName",
-                            "displayName": "costTracking.comp.approvers.table.columns.fullName",
+                            "name": "title",
+                            "displayName": "costTracking.comp.tasks.table.columns.fullName",
                             "headerCellFilter": "translate"
                         },
                         {
-                            "name": "userId",
-                            "displayName": "costTracking.comp.approvers.table.columns.userId",
+                            "name": "assignee",
+                            "displayName": "costTracking.comp.tasks.table.columns.userId",
                             "headerCellFilter": "translate"
                         }
                     ]
@@ -351,9 +441,30 @@
             "filterName": "Object Type"
         },
         {
-            "id": "approvers",
-            "title": "costTracking.comp.approvers.title",
-            "icon": "fa fa-users",
+            "id": "documents",
+            "title": "costTracking.comp.documents.title",
+            "icon": "fa fa-file",
+            "enabled": true,
+            "configurable": true,
+            "type": "empty",
+            "docTree": {
+                "email": {
+                    "emailSubject": "$title",
+                    "subjectRegex": "(.*)\\$([^\\s]+)",
+                    "objectTypeRegexGroup": 1,
+                    "objectNumberRegexGroup": 2
+                },
+                "noteRequiredOnCheckin": false,
+                "allowParentOwnerToCancel": false,
+                "menu": {
+                    "subMenuForms": "costTracking.comp.documents.menu.forms"
+                }
+            }
+        },
+        {
+            "id": "tasks",
+            "title": "costTracking.comp.tasks.title",
+            "icon": "fa fa-check-circle",
             "enabled": true,
             "configurable": true,
             "type": "grid",
@@ -367,13 +478,52 @@
             "paginationPageSize": 5,
             "columnDefs": [
                 {
-                    "name": "fullName",
-                    "displayName": "costTracking.comp.approvers.table.columns.fullName",
+                    "field": "alerts",
+                    "displayName": "",
+                    "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'costTracking.comp.tasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'costTracking.comp.tasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+                    "width": 40,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                },
+                {
+                    "name": "title",
+                    "field": "title_parseable",
+                    "sortField": "title_parseable_lcs",
+                    "displayName": "costTracking.comp.tasks.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
+                },
+                {
+                    "name": "assignee",
+                    "field": "assignee_s",
+                    "displayName": "costTracking.comp.tasks.table.columns.assignee",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "created",
+                    "field": "create_tdt",
+                    "displayName": "costTracking.comp.tasks.table.columns.created",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'shortDate' }}</div>"
+                },
+                {
+                    "name": "priority",
+                    "field": "priority_s",
+                    "displayName": "costTracking.comp.tasks.table.columns.priority",
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "userId",
-                    "displayName": "costTracking.comp.approvers.table.columns.userId",
+                    "name": "due",
+                    "field": "due_tdt",
+                    "displayName": "costTracking.comp.tasks.table.columns.due",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
+                },
+                {
+                    "name": "status",
+                    "field": "status_s",
+                    "displayName": "costTracking.comp.tasks.table.columns.status",
                     "headerCellFilter": "translate"
                 }
             ]

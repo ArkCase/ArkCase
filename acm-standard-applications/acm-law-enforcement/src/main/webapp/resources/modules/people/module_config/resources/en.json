@@ -18,7 +18,9 @@
         "email.label": "Email",
         "status.label": "Status",
         "organization.label": "Organization",
-        "identification.label": "ID"
+        "organization.type": "Organization type",
+        "identification.label": "ID",
+        "identification.type": "ID type"
     },
     "people.comp.actions": {
         "title": "Actions",
@@ -222,7 +224,8 @@
             "type.label": "Type",
             "type.placeholder": "Enter Type",
             "value.label": "URL",
-            "value.placeholder": "Enter URL"
+            "value.placeholder": "Enter URL",
+            "value.title": "Url must be valid (e.g. https://www.google.com)"
         }
     },
     "people.comp.participants": {

@@ -25,7 +25,7 @@
         "dueDate.label": "Date d'échéance"
     },
     "complaints.comp.actions": {
-        "title": "Actions",
+        "title": "Actes",
         "restrict": "Restreindre?",
         "new.button": "Nouvelle plainte",
         "close.button": "Fermer la plainte",
@@ -45,7 +45,7 @@
     },
     "complaints.comp.documents": {
         "title": "Des documents",
-        "sendEmail": "Envoyer un e-mail",
+        "sendEmail": "Envoyer un Email",
         "filterInputPlaceholder": "Filtre",
         "searchInputPlaceholder": "Chercher",
         "menu": {
@@ -161,9 +161,9 @@
         }
     },
     "complaints.comp.notes": {
-        "title": "Notes",
+        "title": "Remarques",
         "table.columns": {
-            "note": "Note",
+            "note": "Remarque",
             "created": "Créé",
             "creator": "Auteur"
         }
@@ -232,7 +232,7 @@
         "modal": {
             "title": "Étiquette",
             "search": "Vous cherchez un jour",
-            "placeholder": "fr_Add tag",
+            "placeholder": "Ajouter une étiquette",
             "buttons": {
                 "cancel": "Annuler",
                 "ok": "Ajouter un tag"
@@ -249,7 +249,7 @@
     },
     "complaints.comp.calendar": {
         "title": "Calendrier",
-        "infoMessage": "fr_Calendar Integration Configuration Not Enabled"
+        "infoMessage": "La configuration d'intégration de calendrier n'est pas activée"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "Recherche de référence"
@@ -289,7 +289,7 @@
         "searchGroupHeader": "Groupe de recherche"
     },
     "complaints.comp.approvalRouting": {
-        "title": "Routage d'approbation",
+        "title": "Approbateurs",
         "addNewTooltip": "Ajouter un nouvel approbateur",
         "noBuckslipMessage": "Pas de données",
         "button": {
@@ -298,7 +298,7 @@
         "table.columns": {
             "fullName": "Nom complet"
         },
-        "assigne.none": "fr_None",
+        "assigne.none": "Aucun",
         "assignee.label": "Destinataire",
         "owningGroup.label": "Groupe de propriétaires",
         "priority.label": "Priorité",
@@ -338,9 +338,9 @@
             "locations.label": "Emplacements",
             "people.label": "Personnes",
             "organizations.label": "Organisations",
-            "documents.label": "Documents",
+            "documents.label": "Des documents",
             "participants.label": "Participants",
-            "notes.label": "Notes",
+            "notes.label": "Remarques",
             "tasks.label": "Tâches",
             "references.label": "Références",
             "history.label": "Histoire",
@@ -361,8 +361,8 @@
             "noFilter": "(Pas de filtre)"
         },
         "sorters": {
-            "incidentDateAsc": "Sort Incident Date Asc",
-            "incidentDateDesc": "Sort Incident Date Déc",
+            "incidentDateAsc": "Trier la date de l'incident Asc",
+            "incidentDateDesc": "Trier la date de l'incident Déc",
             "createdDateAsc": "Trier Date créée Asc",
             "createdDateDesc": "Trier Date créée Déc",
             "nameAsc": "Trier par nom Asc",

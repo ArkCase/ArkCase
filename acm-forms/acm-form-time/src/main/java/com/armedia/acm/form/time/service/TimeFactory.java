@@ -3,6 +3,33 @@
  */
 package com.armedia.acm.form.time.service;
 
+/*-
+ * #%L
+ * ACM Forms: Time
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.AcmTitleEntity;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.form.time.model.TimeForm;
@@ -18,12 +45,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author riste.tutureski
@@ -128,7 +157,7 @@ public class TimeFactory extends FrevvoFormFactory
      * @param form
      * @return
      */
-    private List<AcmTime> asAcmTimes(TimeForm form)
+    protected List<AcmTime> asAcmTimes(TimeForm form)
     {
         LOG.debug("Converting Frevvo Time Items to Acm Times.");
 
@@ -154,7 +183,7 @@ public class TimeFactory extends FrevvoFormFactory
      * @param form
      * @return
      */
-    private List<AcmTime> getTimesFromItem(TimeItem item, TimeForm form)
+    protected List<AcmTime> getTimesFromItem(TimeItem item, TimeForm form)
     {
         LOG.debug("Taking Times from Frevvo Time Item.");
 
@@ -217,11 +246,22 @@ public class TimeFactory extends FrevvoFormFactory
      * @param offset
      * @return
      */
-    private AcmTime createAcmTime(Long id, Double value, TimeItem item, TimeForm form, int offset)
+    protected AcmTime createAcmTime(Long id, Double value, TimeItem item, TimeForm form, int offset)
     {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(form.getPeriod());
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+
+        Double totalWeekHours = 0.0;
+        totalWeekHours += Objects.nonNull(item.getSunday()) ? item.getSunday() : 0.0;
+        totalWeekHours += Objects.nonNull(item.getMonday()) ? item.getMonday() : 0.0;
+        totalWeekHours += Objects.nonNull(item.getTuesday()) ? item.getTuesday() : 0.0;
+        totalWeekHours += Objects.nonNull(item.getWednesday()) ? item.getWednesday() : 0.0;
+        totalWeekHours += Objects.nonNull(item.getThursday()) ? item.getThursday() : 0.0;
+        totalWeekHours += Objects.nonNull(item.getFriday()) ? item.getFriday() : 0.0;
+        totalWeekHours += Objects.nonNull(item.getSaturday()) ? item.getSaturday() : 0.0;
+
+        Double costPerHour = item.getTotalCost() / totalWeekHours;
 
         AcmTime time = null;
 
@@ -238,6 +278,8 @@ public class TimeFactory extends FrevvoFormFactory
         time.setObjectId(item.getObjectId());
         time.setCode(item.getCode());
         time.setType(item.getType());
+        time.setChargeRole(item.getChargeRole());
+        time.setTotalCost(value * costPerHour);
 
         calendar.add(Calendar.DATE, offset);
         time.setDate(calendar.getTime());
@@ -262,14 +304,24 @@ public class TimeFactory extends FrevvoFormFactory
 
         if (timesheet != null && timesheet.getTimes() != null)
         {
+            Map<List<String>, Double> totalCostsPerObject = timesheet.getTimes()
+                    .stream()
+                    .collect(Collectors.groupingBy(o -> Arrays.asList(o.getType(), o.getCode()),
+                            Collectors.summingDouble(AcmTime::getTotalCost)));
+
             Map<String, TimeItem> itemsMap = new HashMap<>();
             timesheet.getTimes().forEach(time -> {
-                TimeItem item = itemsMap.computeIfAbsent(time.getCode(), key -> new TimeItem());
+                TimeItem item = itemsMap.computeIfAbsent(time.getCode() + ":" + time.getType(), key -> new TimeItem());
+
+                List<String> timeItemKey = Arrays.asList(time.getType(), time.getCode());
+                Double timeItemTotalCost = totalCostsPerObject.getOrDefault(timeItemKey, 0.0);
 
                 item.setObjectId(time.getObjectId());
                 item.setCode(time.getCode());
                 item.setType(time.getType());
                 item.setTitle(getObjectTitleByObjectCode(item.getObjectId(), item.getType()));
+                item.setChargeRole(time.getChargeRole());
+                item.setTotalCost(timeItemTotalCost);
 
                 item = setTimeFromAcmTime(item, time);
             });

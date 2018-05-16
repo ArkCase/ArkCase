@@ -2,23 +2,8 @@
 
 angular.module('organizations').controller(
         'Organizations.IDsController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Organization.InfoService',
-                'Authentication',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'PermissionsService',
-                'Object.LookupService',
-                'Object.ModelService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, Authentication,
-                        HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -26,22 +11,22 @@ angular.module('organizations').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "organizations",
-                        componentId : "ids",
-                        retrieveObjectInfo : OrganizationInfoService.getOrganizationInfo,
-                        validateObjectInfo : OrganizationInfoService.validateOrganizationInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "organizations",
+                        componentId: "ids",
+                        retrieveObjectInfo: OrganizationInfoService.getOrganizationInfo,
+                        validateObjectInfo: OrganizationInfoService.validateOrganizationInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -49,7 +34,7 @@ angular.module('organizations').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editOrganization', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.ORGANIZATION
+                            objectType: ObjectService.ObjectTypes.ORGANIZATION
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -79,11 +64,11 @@ angular.module('organizations').controller(
 
                         $scope.identification = identification;
                         var item = {
-                            identificationID : '',
-                            identificationType : '',
-                            identificationNumber : '',
-                            identificationIssuer : '',
-                            identificationYearIssued : ''
+                            identificationID: '',
+                            identificationType: '',
+                            identificationNumber: '',
+                            identificationIssuer: '',
+                            identificationYearIssued: ''
                         };
                         showModal(item, false);
                     };
@@ -91,12 +76,18 @@ angular.module('organizations').controller(
                     $scope.editRow = function(rowEntity) {
                         $scope.identification = rowEntity;
                         var item = {
-                            identificationID : rowEntity.identificationID,
-                            identificationType : rowEntity.identificationType,
-                            identificationNumber : rowEntity.identificationNumber,
-                            identificationIssuer : rowEntity.identificationIssuer,
-                            identificationYearIssued : new Date(rowEntity.identificationYearIssued)
+                            identificationID: rowEntity.identificationID,
+                            identificationType: rowEntity.identificationType,
+                            identificationNumber: rowEntity.identificationNumber,
+                            identificationIssuer: rowEntity.identificationIssuer
                         };
+
+                        if (Util.isEmpty(rowEntity.identificationYearIssued)) {
+                            item.identificationYearIssued = '';
+                        } else {
+                            item.identificationYearIssued = new Date(rowEntity.identificationYearIssued);
+                        }
+
                         showModal(item, true);
                     };
 
@@ -119,13 +110,13 @@ angular.module('organizations').controller(
                         params.isDefault = $scope.isDefault(identification);
 
                         var modalInstance = $modal.open({
-                            animation : true,
-                            templateUrl : 'modules/organizations/views/components/organization-ids-modal.client.view.html',
-                            controller : 'Organizations.IDsModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            animation: true,
+                            templateUrl: 'modules/organizations/views/components/organization-ids-modal.client.view.html',
+                            controller: 'Organizations.IDsModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -136,7 +127,7 @@ angular.module('organizations').controller(
                                 identification = $scope.identification;
                             else {
                                 identification = _.find($scope.objectInfo.identifications, {
-                                    identificationID : data.identification.identificationID
+                                    identificationID: data.identification.identificationID
                                 });
                             }
 
@@ -172,8 +163,10 @@ angular.module('organizations').controller(
                         return promiseSaveInfo;
                     }
 
-                    $scope.isDefault = function(data) {
-                        return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultIdentification");
+                    $scope.isDefault = function(identification) {
+                        var defaultIdentification = $scope.objectInfo.defaultIdentification;
+                        var comparisonProperties = [ "identificationID", "identificationType", "identificationNumber", "identificationIssuer" ];
+                        return Util.objectsComparisonByGivenProperties(defaultIdentification, identification, comparisonProperties);
                     }
                 }
 
