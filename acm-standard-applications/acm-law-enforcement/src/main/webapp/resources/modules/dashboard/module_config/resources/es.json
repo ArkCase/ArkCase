@@ -347,7 +347,14 @@
             "approvers": {
                 "title": "Aprobadores",
                 "description": "Mostrar aprobadores",
-                "noDataMessage": "Actualmente no hay aprobadores para mostrar"	
+                "noDataMessage": "Actualmente no hay aprobadores para mostrar"
+            },
+            "savePromptModal": {
+                "title": "es_Save dashboard",
+                "info": "es_You are in edit mode. Do you want to save the changes?",
+                "save": "es_Save",
+                "doNotSave": "es_Do not save",
+                "cancel": "es_Cancel"
             }
         }
     },
