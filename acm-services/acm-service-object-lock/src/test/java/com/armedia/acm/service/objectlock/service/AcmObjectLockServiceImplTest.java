@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.service.objectlock.dao.AcmObjectLockDao;
-import com.armedia.acm.service.objectlock.exception.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -75,15 +74,27 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
         AcmObjectLock lock = new AcmObjectLock(objectId, objectType);
         lock.setCreator(authName);
         EasyMock.expect(acmObjectLockDao.findLock(objectId, objectType)).andReturn(lock);
+        Capture<AcmObjectLock> objectLockCapture = EasyMock.newCapture();
+        EasyMock.expect(acmObjectLockDao.save(capture(objectLockCapture))).andAnswer(new IAnswer<AcmObjectLock>()
+        {
+            @Override
+            public AcmObjectLock answer() throws Throwable
+            {
+                objectLockCapture.getValue().setId(1l);
+                return objectLockCapture.getValue();
+            }
+        });
+        Capture<AcmObjectLockEvent> capturedEvent = EasyMock.newCapture();
+        mockApplicationEventPublisher.publishEvent(capture(capturedEvent));
 
         replayAll();
 
-        acmObjectLockService.createLock(objectId, objectType, lockType, true, authMock);
+        acmObjectLockService.createLock(objectId, objectType, lockType, 1000l, authMock);
 
         verifyAll();
     }
 
-    @Test(expected = AcmObjectLockException.class)
+    @Test
     public void testCreateExistingDifferentUserLock() throws Exception
     {
         long objectId = 1l;
@@ -92,10 +103,22 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
         AcmObjectLock lock = new AcmObjectLock(objectId, objectType);
         lock.setCreator("differentUser");
         EasyMock.expect(acmObjectLockDao.findLock(objectId, objectType)).andReturn(lock);
+        Capture<AcmObjectLock> objectLockCapture = EasyMock.newCapture();
+        EasyMock.expect(acmObjectLockDao.save(capture(objectLockCapture))).andAnswer(new IAnswer<AcmObjectLock>()
+        {
+            @Override
+            public AcmObjectLock answer() throws Throwable
+            {
+                objectLockCapture.getValue().setId(1l);
+                return objectLockCapture.getValue();
+            }
+        });
+        Capture<AcmObjectLockEvent> capturedEvent = EasyMock.newCapture();
+        mockApplicationEventPublisher.publishEvent(capture(capturedEvent));
 
         replayAll();
 
-        acmObjectLockService.createLock(objectId, objectType, lockType, true, authMock);
+        acmObjectLockService.createLock(objectId, objectType, lockType, 1000l, authMock);
 
         verifyAll();
     }
@@ -123,7 +146,7 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
 
         replayAll();
 
-        acmObjectLockService.createLock(objectId, objectType, lockType, true, authMock);
+        acmObjectLockService.createLock(objectId, objectType, lockType, 1000l, authMock);
 
         verifyAll();
     }
@@ -135,6 +158,7 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
         String objectType = "CASE_FILE";
         String lockType = "OBJECT_LOCK";
         AcmObjectLock lock = new AcmObjectLock(objectId, objectType);
+        lock.setLockType(lockType);
         lock.setCreator(authName);
         EasyMock.expect(acmObjectLockDao.findLock(objectId, objectType)).andReturn(lock);
 

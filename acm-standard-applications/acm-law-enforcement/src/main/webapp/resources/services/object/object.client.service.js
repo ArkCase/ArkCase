@@ -42,11 +42,10 @@ angular
 
                                 ,
                                 LockTypes : {
-                                    WORD_EDIT_LOCK : "WORD_EDIT_LOCK",
-                                    CHECKOUT_LOCK : "CHECKOUT_LOCK",
-                                    CHECKIN_LOCK : "CHECKIN_LOCK",
-                                    CANCEL_LOCK : "CANCEL_LOCK",
-                                    OBJECT_LOCK : "OBJECT_LOCK"
+                                    WRITE : "WRITE",
+                                    READ : "READ",
+                                    SHARED_WRITE : "SHARED_WRITE",
+                                    DELETE : "DELETE"
                                 }
 
                                 ,

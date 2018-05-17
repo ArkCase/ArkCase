@@ -227,7 +227,6 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
-        <property name="objectLockService" ref="objectLockService"/>
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 

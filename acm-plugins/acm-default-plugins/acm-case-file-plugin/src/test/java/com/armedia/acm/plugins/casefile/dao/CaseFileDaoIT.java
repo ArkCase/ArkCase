@@ -4,12 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +48,7 @@ public class CaseFileDaoIT
     private CaseFileDao caseFileDao;
 
     @Autowired
-    private AcmObjectLockService acmObjectLockService;
+    private AcmObjectLockingManager acmObjectLockingManager;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -101,7 +102,7 @@ public class CaseFileDaoIT
 
     @Test
     @Transactional
-    public void saveCaseFileWithLock()
+    public void saveCaseFileWithLock() throws AcmObjectLockException
     {
         assertNotNull(caseFileDao);
         assertNotNull(entityManager);
@@ -124,7 +125,8 @@ public class CaseFileDaoIT
 
         CaseFile saved = caseFileDao.save(caseFile);
 
-        acmObjectLockService.createLock(saved.getId(), saved.getObjectType(), "OBJECT_LOCK", true, authentication);
+        acmObjectLockingManager.acquireObjectLock(saved.getId(), saved.getObjectType(), "OBJECT_LOCK", null, false,
+                authentication.getName());
 
         entityManager.flush();
 

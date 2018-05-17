@@ -24,8 +24,9 @@ angular.module('services').factory(
                 'Helper.NoteService',
                 'Object.NoteService',
                 'Profile.UserInfoService',
+                'MessageService',
                 function($q, $modal, $translate, Util, Authentication, ObjectService, PermissionsService, LockingService,
-                        HelperNoteService, ObjectNoteService, UserInfoService) {
+                        HelperNoteService, ObjectNoteService, UserInfoService, MessageService) {
                     var userId = "";
                     Authentication.queryUserInfo().then(function(userInfo) {
                         userId = userInfo.userId;
@@ -89,7 +90,7 @@ angular.module('services').factory(
                                             var node = nodes[0];
                                             var fileId = node.data.objectId;
                                             LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                                    ObjectService.LockTypes.CHECKOUT_LOCK, true).then(function(lockedFile) {
+                                                    ObjectService.LockTypes.WRITE, true).then(function(lockedFile) {
                                                 if (lockedFile) {
                                                     DocTree._doDownload(node);
 
@@ -106,6 +107,8 @@ angular.module('services').factory(
                                                         }
                                                     }
                                                 }
+                                            }, function(errorMessage) {
+                                                MessageService.error(errorMessage);
                                             });
                                         }
                                     },
@@ -118,7 +121,7 @@ angular.module('services').factory(
                                             $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function(files) {
                                                 args = args || {};
                                                 args.files = files;
-                                                args.lockType = ObjectService.LockTypes.CHECKIN_LOCK;
+                                                args.lockType = ObjectService.LockTypes.WRITE;
                                                 var checkinFiles = DocTree.Command.findHandler("checkinFiles/");
                                                 DocTree.Command.handleCommand(checkinFiles, nodes, args);
                                             });
@@ -129,7 +132,7 @@ angular.module('services').factory(
                                         execute : function(nodes, args) {
                                             var node = nodes[0];
                                             var fileId = node.data.objectId;
-                                            var lockType = ObjectService.LockTypes.CANCEL_LOCK;
+                                            var lockType = ObjectService.LockTypes.WRITE;
                                             if (args && args.lockType) {
                                                 lockType = args.lockType;
                                             }
@@ -147,6 +150,8 @@ angular.module('services').factory(
                                                                 return unlockedFile;
                                                             }
                                                         }
+                                                    }, function(errorMessage) {
+                                                        MessageService.error(errorMessage);
                                                     });
                                         }
                                     }, {
@@ -263,7 +268,7 @@ angular.module('services').factory(
                                     } else if (lock && lock.creator !== scope.user) {
                                         //there is lock on object but it is not by the user so checkin is disabled
                                         return "disable";
-                                    } else if (lock.lockType !== ObjectService.LockTypes.CHECKOUT_LOCK) {
+                                    } else if (lock.lockType !== ObjectService.LockTypes.WRITE) {
                                         //object has lock and it is by the user but it isn't checkout
                                         //it is probably edit in word so checkin should be disabled
                                         return "disable";

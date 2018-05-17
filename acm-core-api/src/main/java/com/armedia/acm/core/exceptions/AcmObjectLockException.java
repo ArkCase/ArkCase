@@ -1,4 +1,4 @@
-package com.armedia.acm.service.objectlock.exception;
+package com.armedia.acm.core.exceptions;
 
 /**
  * Created by nebojsha on 25.08.2015.

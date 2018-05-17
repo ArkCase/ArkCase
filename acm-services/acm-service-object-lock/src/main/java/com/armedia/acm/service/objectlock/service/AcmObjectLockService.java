@@ -4,6 +4,8 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by nebojsha on 25.08.2015.
@@ -12,7 +14,9 @@ public interface AcmObjectLockService
 {
     AcmObjectLock findLock(Long objectId, String objectType);
 
-    AcmObjectLock createLock(Long objectId, String objectType, String lockType, Boolean lockInDB, Authentication auth);
+    @Deprecated
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    AcmObjectLock createLock(Long objectId, String objectType, String lockType, Long expiry, Boolean lockInDB, Authentication auth);
 
     /**
      * This version of createLock is to maintain backwards compatibility with the method that takes a "LockInDB"
@@ -24,9 +28,19 @@ public interface AcmObjectLockService
      * @param auth
      * @return
      */
-    AcmObjectLock createLock(Long objectId, String objectType, String lockType, Authentication auth);
+    AcmObjectLock createLock(Long objectId, String objectType, String lockType, Long expiry, Authentication auth);
 
+    @Deprecated
+    AcmObjectLock createLock(Long objectId, String objectType, String lockType, Long expiry, Boolean lockInDB, String userId);
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    AcmObjectLock createLock(Long objectId, String objectType, String lockType, Long expiry, String userId);
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     void removeLock(Long objectId, String objectType, String lockType, Authentication auth);
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    void removeLock(Long objectId, String objectType, String lockType, String userId);
 
     /**
      * queries documents which doesn't have lock.
@@ -97,5 +111,8 @@ public interface AcmObjectLockService
     String getObjectLocks(String parentObjectType, Authentication auth, String objectId, String creator, int firstRow, int maxRows,
             String sort,
             String fqParams) throws MuleException;
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    void removeExpiredLocks();
 
 }

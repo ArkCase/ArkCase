@@ -74,15 +74,16 @@ public class AcmObjectLockAPIControllerTest extends EasyMockSupport
         expect(mockAuthentication.getName()).andReturn(user).anyTimes();
 
         Capture<Authentication> authenticationCapture = EasyMock.newCapture();
-        expect(objectLockServiceMock.createLock(eq(1123l), eq("CASE_FILE"), eq("OBJECT_LOCK"), eq(true), capture(authenticationCapture)))
-                .andAnswer(() -> {
-                    AcmObjectLock lock = new AcmObjectLock();
-                    lock.setCreator(user);
-                    lock.setId(1l);
-                    lock.setObjectId(1123l);
-                    lock.setObjectType("CASE_FILE");
-                    return lock;
-                });
+        expect(objectLockServiceMock.createLock(eq(1123l), eq("CASE_FILE"), eq("OBJECT_LOCK"), eq(null),
+                capture(authenticationCapture)))
+                        .andAnswer(() -> {
+                            AcmObjectLock lock = new AcmObjectLock();
+                            lock.setCreator(user);
+                            lock.setId(1l);
+                            lock.setObjectId(1123l);
+                            lock.setObjectType("CASE_FILE");
+                            return lock;
+                        });
 
         session.setAttribute("acm_ip_address", "127.0.0.1");
 
