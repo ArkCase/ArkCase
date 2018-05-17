@@ -347,7 +347,14 @@
             "approvers": {
                 "title": "Approbateurs",
                 "description": "Afficher les approbateurs",
-                "noDataMessage": "Actuellement, il n'y a pas d'approbateur à afficher"	
+                "noDataMessage": "Actuellement, il n'y a pas d'approbateur à afficher"
+            },
+            "savePromptModal": {
+                "title": "fr_Save dashboard",
+                "info": "fr_You are in edit mode. Do you want to save the changes?",
+                "save": "fr_Save",
+                "doNotSave": "fr_Do not save",
+                "cancel": "fr_Cancel"
             }
         }
     },
