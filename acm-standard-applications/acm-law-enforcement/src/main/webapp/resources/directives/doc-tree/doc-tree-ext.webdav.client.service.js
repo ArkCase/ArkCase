@@ -61,14 +61,14 @@ angular.module('services').factory(
                                     promiseTicket.then(function(ticketData) {
                                         var acmTicket = ticketData.data;
                                         LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                                ObjectService.LockTypes.WORD_EDIT_LOCK, false).then(
+                                                ObjectService.LockTypes.WRITE, false).then(
                                                 function(lockedFile) {
                                                     var absUrl = $location.absUrl();
                                                     var baseHref = $browser.baseHref();
                                                     var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
 
                                                     ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + acmTicket + "/"
-                                                            + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK
+                                                            + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WRITE
                                                             + "/" + node.data.objectId + node.data.ext, appUrl + "webdav",
                                                             protocolInstallMessage);
                                                     function protocolInstallMessage(message) {
