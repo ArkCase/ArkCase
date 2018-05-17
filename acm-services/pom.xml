@@ -58,6 +58,7 @@
         <module>acm-service-ldap-syncer</module>
         <module>acm-service-alfresco-ldap-syncer</module>
         <module>acm-service-transcribe</module>
+        <module>acm-service-convert-folder</module>
     </modules>
 
 </project>
