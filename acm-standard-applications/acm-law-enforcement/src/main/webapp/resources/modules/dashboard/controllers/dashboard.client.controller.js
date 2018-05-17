@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$scope', 'ConfigService', 'Dashboard.DashboardService', 'Helper.DashboardService', function($rootScope, $scope, ConfigService, DashboardService, DashboardHelper) {
+angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$scope', 'ConfigService', 'Dashboard.DashboardService', 'Helper.DashboardService', '$modal', '$state', function($rootScope, $scope, ConfigService, DashboardService, DashboardHelper, $modal, $state) {
 
     new DashboardHelper.Dashboard({
         scope: $scope,
@@ -23,6 +23,8 @@ angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$
     });
 
     var widgetsPerRoles;
+    var isEditMode = false;
+
     var onDashboardConfigRetrieved = function(data) {
         DashboardService.getWidgetsPerRoles(function(widgets) {
             widgetsPerRoles = widgets;
@@ -39,7 +41,54 @@ angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$
         };
     };
 
+    $scope.saveDashboard = function(nextUrl) {
+
+        var params = {
+            url: nextUrl.name
+        };
+
+        var modalInstance = $modal.open({
+            animation: true,
+            size: 'md',
+            backdrop: 'static',
+            resolve: {
+                params: function() {
+                    return params;
+                }
+            },
+            templateUrl: "modules/dashboard/templates/save-dashboard.html",
+            controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+                var saveUser = false;
+                $scope.onClickSave = function() {
+                    saveUser = true;
+                    isEditMode = false;
+                    $modalInstance.close(saveUser);
+                    $state.go(params.url);
+                };
+                $scope.onClickCancel = function() {
+                    $modalInstance.dismiss();
+                };
+                $scope.onClickDoNotSave = function() {
+                    saveUser = false;
+                    isEditMode = false;
+                    $modalInstance.close(saveUser);
+                    $state.go(params.url);
+                };
+
+            } ]
+        });
+
+        modalInstance.result.then(function(result) {
+            if (result) {
+                $rootScope.$broadcast('adfDashboardRetrieveChangedModel');
+            }
+        }, function(error) {
+
+        });
+    };
+
     $scope.$on('adfDashboardChanged', function(event, name, model) {
+        isEditMode = false;
         DashboardService.saveConfig({
             dashboardConfig: angular.toJson(model),
             module: "DASHBOARD"
@@ -47,4 +96,18 @@ angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$
         $scope.dashboard.model = model;
     });
 
+    $scope.$on('adfDashboardEditMode', function() {
+        isEditMode = true;
+    });
+
+    $scope.$on('adfDashboardEditsCancelled', function() {
+        isEditMode = false;
+    });
+
+    $scope.$on("$stateChangeStart", function(event, nextUrl, currentUrl) {
+        if (isEditMode) {
+            event.preventDefault();
+            $scope.saveDashboard(nextUrl);
+        }
+    });
 } ]);
