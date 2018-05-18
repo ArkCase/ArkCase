@@ -27,14 +27,16 @@ public class AcmReleaseObjectLockAspect
     private AcmObjectLockingManager objectLockingManager;
 
     @Around(value = "@annotation(acmReleaseObjectLock)")
-    public Object aroundReleaseObjectLock(ProceedingJoinPoint pjp, AcmReleaseObjectLock releaseObjectLock)
+    public Object aroundReleaseObjectLock(ProceedingJoinPoint pjp, AcmReleaseObjectLock acmReleaseObjectLock)
             throws Throwable, AcmObjectLockException
     {
         Object[] args = pjp.getArgs();
-        String objectType = releaseObjectLock.objectType();
-        Long objectId = getObjectId(pjp, releaseObjectLock, args);
-        String lockType = releaseObjectLock.lockType();
-        boolean unlockChildObjects = releaseObjectLock.unlockChildObjects();
+        String objectType = acmReleaseObjectLock.objectType();
+        Long objectId = getObjectId(pjp, acmReleaseObjectLock, args);
+        String lockType = acmReleaseObjectLock.lockType();
+        boolean unlockChildObjects = acmReleaseObjectLock.unlockChildObjects();
+        Long lockId = acmReleaseObjectLock.lockIdArgIndex() != -1 ? (Long) args[acmReleaseObjectLock.lockIdArgIndex()]
+                : null;
         String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
         if (userId == null)
         {
@@ -51,7 +53,7 @@ public class AcmReleaseObjectLockAspect
             // time, we cannot lock nor release a lock from such objects, but we don't raise an error
             if (objectId != null)
             {
-                objectLockingManager.releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId);
+                objectLockingManager.releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId, lockId);
             }
             return ret;
         }

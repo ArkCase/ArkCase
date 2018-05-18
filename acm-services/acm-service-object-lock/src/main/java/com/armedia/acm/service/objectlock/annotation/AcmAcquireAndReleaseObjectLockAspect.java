@@ -30,15 +30,17 @@ public class AcmAcquireAndReleaseObjectLockAspect
     private AcmObjectLockService objectLockService;
 
     @Around(value = "@annotation(acmAcquireAndReleaseObjectLock)")
-    public Object aroundAcquireObjectLock(ProceedingJoinPoint pjp, AcmAcquireAndReleaseObjectLock acquireAndReleaseObjectLock)
+    public Object aroundAcquireObjectLock(ProceedingJoinPoint pjp, AcmAcquireAndReleaseObjectLock acmAcquireAndReleaseObjectLock)
             throws Throwable, AcmObjectLockException
     {
         Object[] args = pjp.getArgs();
-        String objectType = acquireAndReleaseObjectLock.objectType();
-        Long objectId = getObjectId(pjp, acquireAndReleaseObjectLock, args);
-        String lockType = acquireAndReleaseObjectLock.lockType();
-        boolean lockChildObjects = acquireAndReleaseObjectLock.lockChildObjects();
-        boolean unlockChildObjects = acquireAndReleaseObjectLock.unlockChildObjects();
+        String objectType = acmAcquireAndReleaseObjectLock.objectType();
+        Long objectId = getObjectId(pjp, acmAcquireAndReleaseObjectLock, args);
+        String lockType = acmAcquireAndReleaseObjectLock.lockType();
+        boolean lockChildObjects = acmAcquireAndReleaseObjectLock.lockChildObjects();
+        boolean unlockChildObjects = acmAcquireAndReleaseObjectLock.unlockChildObjects();
+        Long lockId = acmAcquireAndReleaseObjectLock.lockIdArgIndex() != -1 ? (Long) args[acmAcquireAndReleaseObjectLock.lockIdArgIndex()]
+                : null;
 
         String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
         if (userId == null)
@@ -77,7 +79,7 @@ public class AcmAcquireAndReleaseObjectLockAspect
                     if (objectLock == null
                             || (objectLock != null && objectLock.getLockType().equals(lockType) && !objectLock.getCreator().equals(userId)))
                     {
-                        objectLockingManager.releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId);
+                        objectLockingManager.releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId, lockId);
                     }
                 }
             }

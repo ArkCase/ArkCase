@@ -61,4 +61,9 @@ public @interface AcmAcquireAndReleaseObjectLock
      * set to true the child objects are unlocked at the end, otherwise, they are not unlocked.
      */
     boolean unlockChildObjects() default true;
+
+    /**
+     * The index of the lockId argument in the method parameters.
+     */
+    int lockIdArgIndex() default -1;
 }

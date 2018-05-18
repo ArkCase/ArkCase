@@ -62,7 +62,7 @@ public class ContainerLockingProvider implements ObjectLockingProvider
                             && !existingLock.getLockType().equals(lockType))
                     {
                         throw new AcmObjectLockException(String.format(
-                                "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object is already has a lock of type {} by user: [{}]",
+                                "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
                                 userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
                     }
                     break;
@@ -71,7 +71,7 @@ public class ContainerLockingProvider implements ObjectLockingProvider
                             && !existingLock.getLockType().equals(lockType))
                     {
                         throw new AcmObjectLockException(String.format(
-                                "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object is already has a lock of type {} by user: [{}]",
+                                "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
                                 userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
                     }
                     break;
@@ -80,7 +80,7 @@ public class ContainerLockingProvider implements ObjectLockingProvider
                             && !existingLock.getLockType().equals(lockType))
                     {
                         throw new AcmObjectLockException(String.format(
-                                "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object is already has a lock of type {} by user: [{}]",
+                                "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
                                 userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
                     }
                     break;
@@ -99,7 +99,7 @@ public class ContainerLockingProvider implements ObjectLockingProvider
                     if (!existingLock.getLockType().equals(FileLockType.READ.name()))
                     {
                         throw new AcmObjectLockException(String.format(
-                                "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object is already has a lock of type {} by user: [{}]",
+                                "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
                                 userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
                     }
                     break;
@@ -108,13 +108,13 @@ public class ContainerLockingProvider implements ObjectLockingProvider
                             && !existingLock.getLockType().equals(FileLockType.SHARED_WRITE.name()))
                     {
                         throw new AcmObjectLockException(String.format(
-                                "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object is already has a lock of type {} by user: [{}]",
+                                "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
                                 userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
                     }
                     break;
                 case DELETE:
                     throw new AcmObjectLockException(String.format(
-                            "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object is already has a lock of type {} by user: [{}]",
+                            "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
                             userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
                 default:
                     throw new AcmObjectLockException("Unimplemented handling of lock type: " + lockType);
@@ -205,7 +205,8 @@ public class ContainerLockingProvider implements ObjectLockingProvider
 
     @Override
     @Transactional
-    public synchronized void releaseObjectLock(Long objectId, String objectType, String lockType, boolean unlockChildObjects, String userId)
+    public synchronized void releaseObjectLock(Long objectId, String objectType, String lockType, boolean unlockChildObjects, String userId,
+            Long lockId)
             throws AcmObjectLockException
     {
         log.trace("Releasing object lock[objectId={}, objectType={}, lockType={}] for user: [{}]", objectId, objectType,
@@ -243,7 +244,7 @@ public class ContainerLockingProvider implements ObjectLockingProvider
                         && !existingLock.getLockType().equals(FileLockType.WRITE.name()))
                 {
                     throw new AcmObjectLockException(String.format(
-                            "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object is already has a lock of type {} by user: [{}]",
+                            "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
                             userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
                 }
                 break;
@@ -252,7 +253,7 @@ public class ContainerLockingProvider implements ObjectLockingProvider
                         && !existingLock.getLockType().equals(FileLockType.SHARED_WRITE.name()))
                 {
                     throw new AcmObjectLockException(String.format(
-                            "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object is already has a lock of type {} by user: [{}]",
+                            "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
                             userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
                 }
                 break;
@@ -261,7 +262,7 @@ public class ContainerLockingProvider implements ObjectLockingProvider
                         && !existingLock.getLockType().equals(FileLockType.DELETE.name()))
                 {
                     throw new AcmObjectLockException(String.format(
-                            "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object is already has a lock of type {} by user: [{}]",
+                            "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
                             userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
                 }
                 break;
@@ -279,7 +280,7 @@ public class ContainerLockingProvider implements ObjectLockingProvider
                 if (!existingLock.getLockType().equals(FileLockType.READ.name()))
                 {
                     throw new AcmObjectLockException(String.format(
-                            "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object is already has a lock of type {} by user: [{}]",
+                            "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
                             userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
                 }
                 break;
@@ -292,13 +293,13 @@ public class ContainerLockingProvider implements ObjectLockingProvider
                         && !existingLock.getLockType().equals(FileLockType.SHARED_WRITE.name()))
                 {
                     throw new AcmObjectLockException(String.format(
-                            "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object is already has a lock of type {} by user: [{}]",
+                            "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
                             userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
                 }
                 break;
             case DELETE:
                 throw new AcmObjectLockException(String.format(
-                        "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object is already has a lock of type {} by user: [{}]",
+                        "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
                         userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
             default:
                 throw new AcmObjectLockException("Unimplemented handling of lock type: " + lockType);
@@ -317,11 +318,12 @@ public class ContainerLockingProvider implements ObjectLockingProvider
                 return;
             }
 
-            folderLockingProvider.releaseObjectLock(container.getFolder().getId(), objectType, lockType, unlockChildObjects, userId);
+            folderLockingProvider.releaseObjectLock(container.getFolder().getId(), objectType, lockType, unlockChildObjects, userId,
+                    lockId);
             if (!container.getFolder().equals(container.getAttachmentFolder()))
             {
                 folderLockingProvider.releaseObjectLock(container.getAttachmentFolder().getId(), objectType, lockType, unlockChildObjects,
-                        userId);
+                        userId, lockId);
             }
         }
     }

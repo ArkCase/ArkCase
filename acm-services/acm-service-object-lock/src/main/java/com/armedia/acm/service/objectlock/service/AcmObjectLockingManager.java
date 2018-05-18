@@ -91,17 +91,20 @@ public class AcmObjectLockingManager
      *            for complex objects if this flag is set to true, the required lock is released on the child objects
      * @param userId
      *            the ID of the user that requires the lock to be released
+     * @param lockId
+     *            the ID of the lock to be released. Most of the implementations don't require this argument.
+     *            SHARED_WRITE implementation requires it.
      * @throws AcmObjectLockException
      *             when the required lock cannot be released for the specified object
      */
-    public void releaseObjectLock(Long objectId, String objectType, String lockType, boolean unlockChildObjects, String userId)
+    public void releaseObjectLock(Long objectId, String objectType, String lockType, boolean unlockChildObjects, String userId, Long lockId)
             throws AcmObjectLockException
     {
         if (objectId == null)
         {
             throw new AcmObjectLockException("Cannot release lock from object with id=null!");
         }
-        getObjectLockingProvider(objectType).releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId);
+        getObjectLockingProvider(objectType).releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId, lockId);
     }
 
     private ObjectLockingProvider getObjectLockingProvider(String objectType)

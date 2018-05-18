@@ -34,7 +34,18 @@ import java.nio.file.Files;
  * Created by nebojsha on 25.08.2015.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/spring/spring-library-object-lock-test.xml", })
+@ContextConfiguration(locations = {
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-object-lock.xml",
+        "/spring/spring-library-object-lock-test.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-object-lock-mule-test.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-object-converter.xml"
+})
 public class AcmObjectLockServiceImplTest extends EasyMockSupport
 {
 

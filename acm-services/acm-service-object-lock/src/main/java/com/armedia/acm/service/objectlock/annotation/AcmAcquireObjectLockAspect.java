@@ -27,15 +27,15 @@ public class AcmAcquireObjectLockAspect
     private AcmObjectLockingManager objectLockingManager;
 
     @Around(value = "@annotation(acmAcquireObjectLock)")
-    public Object aroundAcquireObjectLock(ProceedingJoinPoint pjp, AcmAcquireObjectLock acquireObjectLock)
+    public Object aroundAcquireObjectLock(ProceedingJoinPoint pjp, AcmAcquireObjectLock acmAcquireObjectLock)
             throws Throwable, AcmObjectLockException
     {
         Object[] args = pjp.getArgs();
-        String objectType = acquireObjectLock.objectType();
-        Long objectId = getObjectId(pjp, acquireObjectLock, args);
-        String lockType = acquireObjectLock.lockType();
-        Long expiry = acquireObjectLock.expiryTime();
-        boolean lockChildObjects = acquireObjectLock.lockChildObjects();
+        String objectType = acmAcquireObjectLock.objectType();
+        Long objectId = getObjectId(pjp, acmAcquireObjectLock, args);
+        String lockType = acmAcquireObjectLock.lockType();
+        Long expiry = acmAcquireObjectLock.expiryTime();
+        boolean lockChildObjects = acmAcquireObjectLock.lockChildObjects();
         String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
         if (userId == null)
         {
