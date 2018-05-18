@@ -178,7 +178,7 @@
         "rowCountLabel": "每頁項目數",
         "pagerCountLabel": "第{{pageTotal}}分之{{pageCount}}項"
     },
-    "common.directive.objectAuthorizationRoles": {
+    "common.directive.objectAuthorization": {
         "choose": "選擇",
         "not_authorized": "未經授權",
         "not_member": "Not Member",
