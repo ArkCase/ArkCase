@@ -178,7 +178,7 @@
         "rowCountLabel": "आइटम प्रति पेज",
         "pagerCountLabel": "{{pageTotal}} में से {{pageCount}} आइटम"
     },
-    "common.directive.objectAuthorizationRoles": {
+    "common.directive.objectAuthorization": {
         "choose": "चुनें",
         "not_authorized": "अधिकृत नहीं",
         "not_member": "hi_Not Member",

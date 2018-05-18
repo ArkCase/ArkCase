@@ -14,11 +14,10 @@
     </div>
     <panel-view header="{{'admin.security.ldap.user.management.title' | translate}}" collapsible="false">
         <div class="row">
-            <object-authorization-roles data="userData" object-display-name="name" on-object-selected="onObjSelect"
+            <object-authorization data="userData" object-display-name="name" on-object-selected="onObjSelect"
                     role-display-name="name" on-auth-role-change="onAuthRoleSelected"
-                    object-title="{{'admin.security.ldap.user.management.user' | translate}}"
-                    pagination-data-control="scrollLoadData" filter-data-control="filterData"
-                    selected-object="lastSelectedUser" />
+                    object-title="{{'admin.security.ldap.user.management.user' | translate}}" pagination-data-control="scrollLoadData"
+                    filter-data-control="filterData" selected-object="lastSelectedUser" object-type="!role" />
         </div>
     </panel-view>
 </div>

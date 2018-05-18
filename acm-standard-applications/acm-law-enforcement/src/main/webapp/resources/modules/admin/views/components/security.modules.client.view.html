@@ -1,10 +1,10 @@
 <div ng-controller="Admin.ModulesController">
     <panel-view header="{{'admin.security.modules' | translate}}" collapsible="false">
         <div class="row">
-            <object-authorization-roles data="modulesData" object-display-name="name" on-object-selected="onObjSelect"
+            <object-authorization data="modulesData" object-display-name="name" on-object-selected="onObjSelect"
                     role-display-name="name" on-auth-role-change="onAuthRoleSelected"
                     object-title="{{'admin.security.modules.module' | translate}}" pagination-data-control="scrollLoadData"
-                    filter-data-control="filterData" selected-object="lastSelectedModule" />
+                    filter-data-control="filterData" selected-object="lastSelectedModule" object-type="role" />
         </div>
     </panel-view>
 </div>
