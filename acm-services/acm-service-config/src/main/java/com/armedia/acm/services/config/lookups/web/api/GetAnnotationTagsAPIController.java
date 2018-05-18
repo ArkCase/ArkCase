@@ -31,10 +31,8 @@ public class GetAnnotationTagsAPIController
     @ResponseBody
     public String[] annotationsTags(Authentication authentication, HttpSession session) throws AcmListObjectsFailedException
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Finding annotation types");
-        }
+
+        log.debug("Finding annotation types");
 
         List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags").getEntries();
         return lookupEntries.stream().map(StandardLookupEntry::getKey).toArray(String[]::new);
