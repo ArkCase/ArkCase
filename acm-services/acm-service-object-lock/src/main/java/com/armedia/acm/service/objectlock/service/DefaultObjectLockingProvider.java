@@ -89,7 +89,7 @@ public class DefaultObjectLockingProvider implements ObjectLockingProvider
     }
 
     @Override
-    public void releaseObjectLock(Long objectId, String objectType, String lockType, boolean unlockChildObjects, String userId)
+    public void releaseObjectLock(Long objectId, String objectType, String lockType, boolean unlockChildObjects, String userId, Long lockId)
             throws AcmObjectLockException
     {
         log.trace("Releasing object lock[objectId={}, objectType={}, lockType={}] for user: [{}]", objectId, objectType,

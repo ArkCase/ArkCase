@@ -5,11 +5,11 @@
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     
     <bean class="com.armedia.acm.service.objectlock.annotation.AcmAcquireObjectLockAspect">
-        <property name="objectLockingManager" ref="objectLockingManager"/>
+        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
     </bean>
 
     <bean class="com.armedia.acm.service.objectlock.annotation.AcmReleaseObjectLockAspect">
-        <property name="objectLockingManager" ref="objectLockingManager"/>
+        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
     </bean>
 
     <bean id="defaultObjectLockingProvider" class="com.armedia.acm.service.objectlock.service.DefaultObjectLockingProvider">

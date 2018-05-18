@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-object-lock.xml",
+        "/spring/spring-library-object-lock-test.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-object-lock-mule-test.xml",
         "/spring/spring-library-user-service.xml",

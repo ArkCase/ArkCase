@@ -83,10 +83,11 @@ public class AcmObjectLockAPIController
             "/api/latest/plugin/{objectType}/{objectId}/lock" }, method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
     public void unlockObject(@PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") Long objectId,
-            @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType, Authentication auth)
+            @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType,
+            @RequestParam(value = "lockId", required = false) Long lockId, Authentication auth)
             throws MuleException, IOException, AcmObjectLockException
     {
-        objectLockingManager.releaseObjectLock(objectId, objectType, lockType, true, auth.getName());
+        objectLockingManager.releaseObjectLock(objectId, objectType, lockType, true, auth.getName(), lockId);
     }
 
     /**
@@ -169,7 +170,6 @@ public class AcmObjectLockAPIController
             "/api/v1/plugin/locks/{objectType}/lock" }, method = RequestMethod.DELETE)
     @ResponseBody
     public String releaseMultipleLocks(@PathVariable(value = "objectType") String objectType,
-
             @RequestParam(value = "parentObjectIds") List<Long> objectIds,
             @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType, Authentication auth)
             throws MuleException
@@ -182,7 +182,7 @@ public class AcmObjectLockAPIController
             log.debug("Trying to remove the lock on object [{}] of type [{}]", objectId, objectType);
             try
             {
-                objectLockingManager.releaseObjectLock(objectId, objectType, lockType, true, auth.getName());
+                objectLockingManager.releaseObjectLock(objectId, objectType, lockType, true, auth.getName(), null);
                 log.debug("Successfully removed the lock on object [{}] of type [{}]", objectId, objectType);
                 result.put("status", "Success");
             }

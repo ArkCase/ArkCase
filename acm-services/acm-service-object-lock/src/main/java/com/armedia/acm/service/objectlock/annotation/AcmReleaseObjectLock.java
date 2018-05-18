@@ -49,6 +49,11 @@ public @interface AcmReleaseObjectLock
     int acmObjectArgIndex() default -1;
 
     /**
+     * The index of the lockId argument in the method parameters.
+     */
+    int lockIdArgIndex() default -1;
+
+    /**
      * For complex objects that include child objects, like AcmFolder that has multiple subfolders and files. If this is
      * set to true the child objects are unlocked at the end, otherwise, they are not unlocked.
      */

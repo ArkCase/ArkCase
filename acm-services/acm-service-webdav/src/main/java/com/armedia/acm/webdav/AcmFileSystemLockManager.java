@@ -198,7 +198,7 @@ public class AcmFileSystemLockManager implements LockManager
             try
             {
                 getObjectLockingManager().releaseObjectLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(),
-                        false, authentication.getName());
+                        false, authentication.getName(), null);
             }
             catch (AcmObjectLockException e)
             {
@@ -244,7 +244,7 @@ public class AcmFileSystemLockManager implements LockManager
         return objectLockingManager;
     }
 
-    public void setObjectLockService(AcmObjectLockingManager objectLockingManager)
+    public void setObjectLockingManager(AcmObjectLockingManager objectLockingManager)
     {
         this.objectLockingManager = objectLockingManager;
     }

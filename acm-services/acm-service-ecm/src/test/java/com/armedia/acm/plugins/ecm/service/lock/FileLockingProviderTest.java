@@ -240,7 +240,7 @@ public class FileLockingProviderTest extends EasyMockSupport
         String userId = "userId";
 
         // when
-        fileObjectLockingProvider.releaseObjectLock(objectId, objectType, lockType, false, userId);
+        fileObjectLockingProvider.releaseObjectLock(objectId, objectType, lockType, false, userId, null);
 
         // then
         fail("AcmObjectLockException should have been thrown for unknown lock type!");
@@ -262,7 +262,7 @@ public class FileLockingProviderTest extends EasyMockSupport
 
             // when
             replayAll();
-            fileObjectLockingProvider.releaseObjectLock(objectId, objectType, lockType, false, userId);
+            fileObjectLockingProvider.releaseObjectLock(objectId, objectType, lockType, false, userId, null);
 
             // then
             verifyAll();
@@ -272,41 +272,43 @@ public class FileLockingProviderTest extends EasyMockSupport
     @Test
     public void releaseLocksWhenExistingLocks()
     {
-        // testData object: objectId, releasedLockObjectType, releasedLockType, releasedLockUserId, existingLockType,
-        // existingLockUserId, deleteLockFromDatabase, expectException
+        // testData object: objectId, releasedLockObjectType, releasedLockType, releasedLockUserId, existingLockId,
+        // existingLockType, existingLockUserId, deleteLockFromDatabase, lockIdToRelease, expectException
         Object[][] testData = {
-                { 1L, "FILE", "READ", "userId", "READ", "userId", true, false },
-                { 1L, "FILE", "READ", "userId", "READ", "anotherUserId", false, false },
-                { 1L, "FILE", "READ", "userId", "WRITE", "userId", false, false },
-                { 1L, "FILE", "READ", "userId", "WRITE", "anotherUserId", false, false },
-                { 1L, "FILE", "READ", "userId", "SHARED_WRITE", "userId", false, false },
-                { 1L, "FILE", "READ", "userId", "SHARED_WRITE", "anotherUserId", false, false },
-                { 1L, "FILE", "READ", "userId", "DELETE", "userId", false, false },
-                { 1L, "FILE", "READ", "userId", "DELETE", "anotherUserId", false, false },
-                { 1L, "FILE", "WRITE", "userId", "READ", "userId", false, false },
-                { 1L, "FILE", "WRITE", "userId", "READ", "anotherUserId", false, false },
-                { 1L, "FILE", "WRITE", "userId", "WRITE", "userId", true, false },
-                { 1L, "FILE", "WRITE", "userId", "WRITE", "anotherUserId", false, true },
-                { 1L, "FILE", "WRITE", "userId", "SHARED_WRITE", "userId", false, true },
-                { 1L, "FILE", "WRITE", "userId", "SHARED_WRITE", "anotherUserId", false, true },
-                { 1L, "FILE", "WRITE", "userId", "DELETE", "userId", false, true },
-                { 1L, "FILE", "WRITE", "userId", "DELETE", "anotherUserId", false, true },
-                { 1L, "FILE", "DELETE", "userId", "READ", "userId", false, false },
-                { 1L, "FILE", "DELETE", "userId", "READ", "anotherUserId", false, true },
-                { 1L, "FILE", "DELETE", "userId", "DELETE", "userId", true, false },
-                { 1L, "FILE", "DELETE", "userId", "DELETE", "anotherUserId", false, true },
-                { 1L, "FILE", "DELETE", "userId", "WRITE", "userId", false, true },
-                { 1L, "FILE", "DELETE", "userId", "WRITE", "anotherUserId", false, true },
-                { 1L, "FILE", "DELETE", "userId", "SHARED_WRITE", "userId", false, true },
-                { 1L, "FILE", "DELETE", "userId", "SHARED_WRITE", "anotherUserId", false, true },
-                { 1L, "FILE", "SHARED_WRITE", "userId", "READ", "userId", false, false },
-                { 1L, "FILE", "SHARED_WRITE", "userId", "READ", "anotherUserId", false, false },
-                { 1L, "FILE", "SHARED_WRITE", "userId", "SHARED_WRITE", "userId", true, false },
-                { 1L, "FILE", "SHARED_WRITE", "userId", "SHARED_WRITE", "anotherUserId", true, false },
-                { 1L, "FILE", "SHARED_WRITE", "userId", "WRITE", "userId", false, true },
-                { 1L, "FILE", "SHARED_WRITE", "userId", "WRITE", "anotherUserId", false, true },
-                { 1L, "FILE", "SHARED_WRITE", "userId", "DELETE", "userId", false, true },
-                { 1L, "FILE", "SHARED_WRITE", "userId", "DELETE", "anotherUserId", false, true }
+                { 1L, "FILE", "READ", "userId", "READ", "userId", 1l, true, null, false },
+                { 1L, "FILE", "READ", "userId", "READ", "anotherUserId", 1l, false, null, false },
+                { 1L, "FILE", "READ", "userId", "WRITE", "userId", 1l, false, null, false },
+                { 1L, "FILE", "READ", "userId", "WRITE", "anotherUserId", 1l, false, null, false },
+                { 1L, "FILE", "READ", "userId", "SHARED_WRITE", "userId", 1l, false, null, false },
+                { 1L, "FILE", "READ", "userId", "SHARED_WRITE", "anotherUserId", 1l, false, null, false },
+                { 1L, "FILE", "READ", "userId", "DELETE", "userId", 1l, false, null, false },
+                { 1L, "FILE", "READ", "userId", "DELETE", "anotherUserId", 1l, false, null, false },
+                { 1L, "FILE", "WRITE", "userId", "READ", "userId", 1l, false, null, false },
+                { 1L, "FILE", "WRITE", "userId", "READ", "anotherUserId", 1l, false, null, false },
+                { 1L, "FILE", "WRITE", "userId", "WRITE", "userId", 1l, true, null, false },
+                { 1L, "FILE", "WRITE", "userId", "WRITE", "anotherUserId", 1l, false, null, true },
+                { 1L, "FILE", "WRITE", "userId", "SHARED_WRITE", "userId", 1l, false, null, true },
+                { 1L, "FILE", "WRITE", "userId", "SHARED_WRITE", "anotherUserId", 1l, false, null, true },
+                { 1L, "FILE", "WRITE", "userId", "DELETE", "userId", 1l, false, null, true },
+                { 1L, "FILE", "WRITE", "userId", "DELETE", "anotherUserId", 1l, false, null, true },
+                { 1L, "FILE", "DELETE", "userId", "READ", "userId", 1l, false, null, false },
+                { 1L, "FILE", "DELETE", "userId", "READ", "anotherUserId", 1l, false, null, true },
+                { 1L, "FILE", "DELETE", "userId", "DELETE", "userId", 1l, true, null, false },
+                { 1L, "FILE", "DELETE", "userId", "DELETE", "anotherUserId", 1l, false, null, true },
+                { 1L, "FILE", "DELETE", "userId", "WRITE", "userId", 1l, false, null, true },
+                { 1L, "FILE", "DELETE", "userId", "WRITE", "anotherUserId", 1l, false, null, true },
+                { 1L, "FILE", "DELETE", "userId", "SHARED_WRITE", "userId", 1l, false, null, true },
+                { 1L, "FILE", "DELETE", "userId", "SHARED_WRITE", "anotherUserId", 1l, false, null, true },
+                { 1L, "FILE", "SHARED_WRITE", "userId", "READ", "userId", 1l, false, null, false },
+                { 1L, "FILE", "SHARED_WRITE", "userId", "READ", "anotherUserId", 1l, false, null, false },
+                { 1L, "FILE", "SHARED_WRITE", "userId", "SHARED_WRITE", "userId", 1l, true, 1l, false },
+                { 1L, "FILE", "SHARED_WRITE", "userId", "SHARED_WRITE", "anotherUserId", 1l, true, 1l, false },
+                { 1L, "FILE", "SHARED_WRITE", "userId", "SHARED_WRITE", "userId", 1l, false, null, true },
+                { 1L, "FILE", "SHARED_WRITE", "userId", "SHARED_WRITE", "anotherUserId", 1l, false, null, true },
+                { 1L, "FILE", "SHARED_WRITE", "userId", "WRITE", "userId", 1l, false, null, true },
+                { 1L, "FILE", "SHARED_WRITE", "userId", "WRITE", "anotherUserId", 1l, false, null, true },
+                { 1L, "FILE", "SHARED_WRITE", "userId", "DELETE", "userId", 1l, false, null, true },
+                { 1L, "FILE", "SHARED_WRITE", "userId", "DELETE", "anotherUserId", 1l, false, null, true }
         };
 
         for (Object[] data : testData)
@@ -314,6 +316,7 @@ public class FileLockingProviderTest extends EasyMockSupport
             EasyMock.reset(objectLockDaoMock, applicationEventPublisherMock);
 
             AcmObjectLock existingObjectLock = new AcmObjectLock();
+            existingObjectLock.setId((Long) data[6]);
             existingObjectLock.setObjectId((Long) data[0]);
             existingObjectLock.setObjectType((String) data[1]);
             existingObjectLock.setLockType((String) data[4]);
@@ -322,7 +325,7 @@ public class FileLockingProviderTest extends EasyMockSupport
             existingObjectLock.setCreated(existingLockCreated);
 
             expect(objectLockDaoMock.findLock((Long) data[0], (String) data[1])).andReturn(existingObjectLock).anyTimes();
-            if ((Boolean) data[6])
+            if ((Boolean) data[7])
             {
                 objectLockDaoMock.remove(anyObject(AcmObjectLock.class));
                 expectLastCall();
@@ -336,16 +339,16 @@ public class FileLockingProviderTest extends EasyMockSupport
             {
                 System.out.println("Releasing lock with test data: " + Arrays.toString(data));
                 fileObjectLockingProvider.releaseObjectLock((Long) data[0], (String) data[1], (String) data[2], false,
-                        (String) data[3]);
+                        (String) data[3], (Long) data[8]);
 
-                if ((Boolean) data[7])
+                if ((Boolean) data[9])
                 {
                     fail("Exception should have been thrown at testData: " + Arrays.toString(data) + "!");
                 }
             }
             catch (AcmObjectLockException e)
             {
-                if (!(Boolean) data[7])
+                if (!(Boolean) data[9])
                 {
                     fail("Exception should not have been thrown at testData: " + Arrays.toString(data) + "!");
                 }
