@@ -63,7 +63,7 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
             secondGrid: '@',
             pickUserLabel: '@',
             pickGroupLabel: '@',
-            showSelectedItemsGrid: '@?'
+            showSelectedItemsGrid: '=?'
         },
 
         link: function(scope, el, attrs) {
