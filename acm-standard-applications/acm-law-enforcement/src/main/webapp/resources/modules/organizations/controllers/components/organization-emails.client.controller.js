@@ -169,6 +169,9 @@ angular.module('organizations').controller(
 
                     $scope.isDefault = function(email) {
                         var defaultEmail = $scope.objectInfo.defaultEmail;
+                        if (Util.isEmpty(defaultEmail)) {
+                            return true;
+                        }
                         var comparisonProperties = [ "id", "type", "subType", "value", "description" ];
                         return Util.objectsComparisonByGivenProperties(defaultEmail, email, comparisonProperties);
                     }
