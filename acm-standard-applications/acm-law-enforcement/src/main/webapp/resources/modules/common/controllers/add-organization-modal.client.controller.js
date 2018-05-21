@@ -47,7 +47,7 @@ angular.module('common').controller('Common.AddOrganizationModalController',
             }
             if (params.isFirstOrganization) {
                 $scope.isDefault = params.isFirstOrganization;
-                $scope.hideNoField = !params.isFirstOrganization;
+                $scope.hideNoField = params.isFirstOrganization;
             }
             $scope.type = _.find($scope.types, function(type) {
                 return type.key == params.type;

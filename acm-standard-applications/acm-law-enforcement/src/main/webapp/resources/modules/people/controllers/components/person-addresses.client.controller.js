@@ -177,6 +177,9 @@ angular.module('people').controller(
 
                     $scope.isDefault = function(address) {
                         var defaultAddress = $scope.objectInfo.defaultAddress;
+                        if (Util.isEmpty(defaultAddress)) {
+                            return true;
+                        }
                         var comparisonProperties = [ "id", "streetAddress", "streetAddress2", "city", "state", "zip", "country" ];
                         return Util.objectsComparisonByGivenProperties(defaultAddress, address, comparisonProperties);
                     }

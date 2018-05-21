@@ -178,7 +178,7 @@
         "rowCountLabel": "Objets par page",
         "pagerCountLabel": "{{pageCount}} sur {{pageTotal}} articles"
     },
-    "common.directive.objectAuthorizationRoles": {
+    "common.directive.objectAuthorization": {
         "choose": "Choisir",
         "not_authorized": "Pas autorisé",
         "not_member": "fr_Not Member",
