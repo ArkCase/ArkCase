@@ -188,10 +188,10 @@
         "name.placeholder": "名前を入力",
         "descriptionLabel": "説明",
         "description.placeholder": "説明を入力",
-        "searchUser": "ja_Search User and Group",
-        "cancelBtn": "ja_Cancel",
-        "okBtn": "ja_OK",
-        "search-placeholder": "ja_Search for user or group",
+        "searchUser": "ユーザーとグループの検索",
+        "cancelBtn": "キャンセル",
+        "okBtn": "OK",
+        "search-placeholder": "ユーザーとグループの検索",
         "personalRepository": "私の文書"
     },
     "document-repository.dialogUserPicker": {

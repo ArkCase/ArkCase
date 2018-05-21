@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="stateOfArkcaseRegistry"
+          class="com.armedia.acm.service.stateofarkcase.dao.StateOfArkcaseRegistryImpl"/>
+    <bean id="stateOfArkcaseReport"
+          class="com.armedia.acm.service.stateofarkcase.service.StateOfArkcaseReportGenerator">
+        <property name="mapper" ref="sourceObjectMapper"/>
+        <property name="stateOfArkcaseRegistry" ref="stateOfArkcaseRegistry"/>
+    </bean>
+
+    <bean id="errorsLogFileService"
+          class="com.armedia.acm.service.stateofarkcase.service.ErrorsLogFileService">
+        <constructor-arg index="0" value="file-errors-log"/>
+    </bean>
+
+</beans>

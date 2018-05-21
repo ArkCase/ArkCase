@@ -92,6 +92,10 @@
     <bean id="accessControlRuleChecker" class="com.armedia.acm.services.dataaccess.service.impl.AccessControlRuleCheckerImpl"
         init-method="postConstruct">
         <property name="configurationFile" ref="rulesConfigurationFile"/>
+        <property name="getObjectExpression" value="${dac.fallbackExpression.getObject}"/>
+        <property name="editObjectExpression" value="${dac.fallbackExpression.editObject}"/>
+        <property name="insertObjectExpression" value="${dac.fallbackExpression.insertObject}"/>
+        <property name="deleteObjectExpression" value="${dac.fallbackExpression.deleteObject}"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
