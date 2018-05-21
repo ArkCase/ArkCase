@@ -9,4 +9,8 @@
     <bean id="lookupsApi" class="com.armedia.acm.services.config.lookups.web.api.LookupsApiController">
         <property name="lookupDao" ref="lookupDao"/>
     </bean>
+
+    <bean id="getAnnotationTagsAPIController" class="com.armedia.acm.services.config.lookups.web.api.GetAnnotationTagsAPIController">
+        <property name="lookupDao" ref="lookupDao"/>
+    </bean>
 </beans>

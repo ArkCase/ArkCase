@@ -347,7 +347,14 @@
 			"approvers": {
                 "title": "Genehmiger",
                 "description": "Zeigt Genehmiger an",
-                "noDataMessage": "Zurzeit sind keine Genehmigenden zum Anzeigen vorhanden"	
+                "noDataMessage": "Zurzeit sind keine Genehmigenden zum Anzeigen vorhanden"
+            },
+            "savePromptModal": {
+                "title": "de_Save dashboard",
+                "info": "de_You are in edit mode. Do you want to save the changes?",
+                "save": "de_Save",
+                "doNotSave": "de_Do not save",
+                "cancel": "de_Cancel"
             }
         }
     },

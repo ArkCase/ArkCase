@@ -1,12 +1,43 @@
 package com.armedia.acm.services.search.model.solr;
 
+/*-
+ * #%L
+ * ACM Service: Search
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SolrContentDocument extends SolrAdvancedSearchDocument
 {
@@ -16,6 +47,93 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
 
     private String cmis_version_series_id_s;
 
+    protected void listToUrlValues(Map<String, Object> values, List<? extends Object> list, String key)
+    {
+        if (list != null)
+        {
+            for (int a = 0; a < list.size(); a++)
+            {
+                values.put("literal." + key + "." + a, list.get(a));
+            }
+        }
+    }
+
+    /**
+     * 
+     * @return a map suitable for use in the Spring RestTemplate postForEntity method. The partner method
+     *         buildUrlTemlpate() provides the template needed by Spring.
+     */
+    public Map<String, Object> buildUrlValues()
+    {
+        Map<String, Object> values = new HashMap<>();
+
+        listToUrlValues(values, getAllow_acl_ss(), "allow_acl_ss");
+        listToUrlValues(values, getDeny_acl_ss(), "deny_acl_ss");
+
+        values.put("literal.hidden_b", isHidden_b());
+        values.put("literal.parent_ref_s", getParent_ref_s());
+        values.put("literal.status_lcs", getStatus_lcs());
+        values.put("literal.protected_object_b", isProtected_object_b());
+        values.put("literal.public_doc_b", isPublic_doc_b());
+        values.put("literal.id", getId());
+        values.put("literal.object_type_s", getObject_type_s());
+        values.put("literal.object_id_s", getObject_id_s());
+        values.put("literal.modified_date_tdt", getModified_date_tdt());
+        values.put("literal.modifier_lcs", getModifier_lcs());
+        values.put("literal.create_date_tdt", getCreate_date_tdt());
+        values.put("literal.creator_lcs", getCreator_lcs());
+        values.put("literal.name", getName());
+        values.put("literal.parent_id_s", getParent_id_s());
+        values.put("literal.parent_type_s", getParent_type_s());
+        values.put("literal.parent_number_lcs", getParent_number_lcs());
+        values.put("literal.title_parseable", getTitle_parseable());
+        values.put("literal.title_parseable_lcs", getTitle_parseable_lcs());
+        values.put("literal.assignee_full_name_lcs", getAssignee_full_name_lcs());
+        values.put("literal.type_lcs", getType_lcs());
+        values.put("literal.ext_s", getExt_s());
+        values.put("literal.mime_type_s", getMime_type_s());
+
+        if (getAdditionalProperties() != null)
+        {
+            for (Map.Entry<String, Object> entry : getAdditionalProperties().entrySet())
+            {
+                if (getSkipAdditionalPropertiesInURL() != null && !getSkipAdditionalPropertiesInURL().contains(entry.getKey()))
+                {
+                    values.put("literal." + entry.getKey(), entry.getValue());
+                }
+            }
+        }
+
+        return values;
+    }
+
+    /**
+     * 
+     * @return a URL template for use by the Spring Rest Template. You must also provide the values, via
+     *         buildUrlValues().
+     */
+    public String buildUrlTemplate()
+    {
+        final List<String> multivalueProperties = Arrays.asList("literal.allow_acl_ss", "literal.deny_acl_ss");
+        return buildUrlValues().keySet().stream().
+        // Solr multivalued elements are represented in the buildUrlValues map as e.g. "literal.allow_acl_ss.0",
+        // "literal.deny_acl_ss.1".
+        // We want the URL template to be e.g. "literal.allow_acl_ss={literal.allow_acl_ss.0}",
+        // "literal.deny_acl_ss={literal.deny_acl_ss.1"
+                map(k -> String.format("%s={%s}",
+                        multivalueProperties.contains(StringUtils.substringBeforeLast(k, ".")) ? StringUtils.substringBeforeLast(k, ".")
+                                : k,
+                        k))
+                .collect(Collectors.joining("&"));
+    }
+
+    /**
+     * This method is no longer used in the content-file-to-Solr flow. Kept for backwards compatibility.
+     * 
+     * @deprecated use buildUrlTemplate and buildUrlValues
+     * @return
+     */
+    @Deprecated
     public String getUrl()
     {
         String url = "literal.allow_acl_ss=" + (getAllow_acl_ss() == null ? null : String.join("&literal.allow_acl_ss=", getAllow_acl_ss()))
@@ -91,11 +209,13 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
         this.skipAdditionalPropertiesInURL = skipAdditionalPropertiesInURL;
     }
 
+    @Override
     public String getCmis_version_series_id_s()
     {
         return cmis_version_series_id_s;
     }
 
+    @Override
     public void setCmis_version_series_id_s(String cmis_version_series_id_s)
     {
         this.cmis_version_series_id_s = cmis_version_series_id_s;
