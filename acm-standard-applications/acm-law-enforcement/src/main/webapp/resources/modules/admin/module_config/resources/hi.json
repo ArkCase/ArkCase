@@ -24,6 +24,7 @@
             "addNewDirectory": "नई निर्देशिका जोड़ें",
             "editRecord": "रिकॉर्ड संपादित करें",
             "id": "आईडी",
+            "id.validationMessage": "hi_The ID can only consist of letters, numbers or dots.",
             "directoryType": "निर्देशिका सर्वर का चयन करें",
             "ldapUrl": "एलडीएपी यूआरएल",
             "base": "आधार",

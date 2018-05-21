@@ -25,6 +25,7 @@
             "addNewDirectory": "Add New Directory",
             "editRecord": "Edit Record",
             "id": "ID",
+            "id.validationMessage": "The ID can only consist of letters, numbers or dots.",
             "directoryType": "Select directory server",
             "ldapUrl": "LDAP Url",
             "base": "Base",

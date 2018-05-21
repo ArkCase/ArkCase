@@ -24,6 +24,7 @@
             "addNewDirectory": "Neues Verzeichnis hinzufügen",
             "editRecord": "Datensatz bearbeiten",
             "id": "ID",
+            "id.validationMessage": "de_The ID can only consist of letters, numbers or dots.",
             "directoryType": "Verzeichnisserver auswählen",
             "ldapUrl": "LDAP-URL",
             "base": "Base",

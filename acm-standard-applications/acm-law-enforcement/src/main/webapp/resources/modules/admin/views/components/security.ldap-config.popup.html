@@ -18,7 +18,8 @@
         <div class="form-group" ng-hide="isEdit">
             <label>{{ 'admin.security.ldapConfig.data.id' | translate }}</label>
             <input class="form-control" type="text" ng-model="dir.id" ng-pattern="/^[a-zA-Z0-9.]*$/"
-                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.id' | translate }}" required>
+                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.id' | translate }}"
+                    title="{{'admin.security.ldapConfig.data.id.validationMessage' | translate}}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.ldapUrl' | translate }}</label>
@@ -37,7 +38,7 @@
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.authUserPassword' | translate }}</label>
-            <input class="form-control" type="text" ng-model="dir.authUserPassword"
+            <input class="form-control" type="password" ng-model="dir.authUserPassword"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.authUserPassword' | translate }}" required>
         </div>
         <div class="form-group">
@@ -92,11 +93,8 @@
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.userDomain' | translate }}</label>
-            <i>
-                <small><span translate>admin.security.ldapConfig.data.userDomainNote</span></small>
-            </i>
             <input class="form-control" type="text" ng-model="dir.userDomain"
-                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userDomain' | translate }}">
+                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userDomain' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.syncPageSize' | translate }}</label>

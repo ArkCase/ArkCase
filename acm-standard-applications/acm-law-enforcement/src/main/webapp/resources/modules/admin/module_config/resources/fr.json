@@ -24,6 +24,7 @@
             "addNewDirectory": "Ajouter un nouveau répertoire",
             "editRecord": "Modifier l'enregistrement",
             "id": "ID",
+            "id.validationMessage": "fr_The ID can only consist of letters, numbers or dots.",
             "directoryType": "Sélectionnez le serveur de répertoire",
             "ldapUrl": "URL LDAP",
             "base": "Base",
