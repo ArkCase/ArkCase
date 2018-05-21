@@ -140,7 +140,7 @@ public class CorrespondenceGenerator
         return template.getDocumentType() + " " + sdf.format(new Date()) + ".docx";
     }
 
-    private Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult) throws IOException
+    protected Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult) throws IOException
     {
         Map<String, String> retval = new HashMap<>();
 
@@ -256,7 +256,7 @@ public class CorrespondenceGenerator
         return 0;
     }
 
-    private Map<String, Object> query(CorrespondenceTemplate template, Object[] queryArguments)
+    protected Map<String, Object> query(CorrespondenceTemplate template, Object[] queryArguments)
     {
         Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
         CorrespondenceQuery correspondenceQuery = correspondenceQueryBeansMap.values().stream()

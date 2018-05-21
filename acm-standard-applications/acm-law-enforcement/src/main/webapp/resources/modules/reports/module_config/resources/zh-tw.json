@@ -19,6 +19,7 @@
             "label": "至"
         },
         "dropdown": {
+		    "__comment__": "__ 這個'下拉'似乎沒有被使用，我們是否仍然需要？ __",
             "turnaround": "請求者周轉時間",
             "requester": "請求者類型摘要",
             "pending": "掛單訂單報告",
