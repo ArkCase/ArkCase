@@ -38,6 +38,7 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
         DocumentRepository docRepo = new DocumentRepository();
         docRepo.setParticipants(getOldParticipantList(4));
         list.add(docRepo);
+        docRepo.setCreator("theCreator");
 
         expect(documentDao.findAll()).andReturn(list);
         expect(documentDao.save(list.get(0))).andAnswer(new IAnswer<DocumentRepository>()
@@ -45,8 +46,7 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
             @Override
             public DocumentRepository answer() throws Throwable
             {
-                List<AcmParticipant> participants = docRepo.getParticipants();
-                for (AcmParticipant participant : participants)
+                for (AcmParticipant participant : list.get(0).getParticipants())
                 {
                     switch (participant.getParticipantLdapId())
                     {
@@ -57,7 +57,7 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
                     }
                     case "theCollaborator":
                     {
-                        assertTrue(participant.getParticipantType().equals("reader"));
+                        assertTrue(participant.getParticipantType().equals("collaborator"));
                         break;
                     }
                     case "theOwningGroup":
@@ -77,7 +77,14 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
                     }
                     case "theAssignee":
                     {
-                        assertTrue(participant.getParticipantType().equals("owner"));
+                        if (participant.getParticipantLdapId().equals("theCreator"))
+                        {
+                            assertTrue(participant.getParticipantType().equals("owner"));
+                        }
+                        else
+                        {
+                            assertTrue(participant.getParticipantType().equals("reader"));
+                        }
                         break;
                     }
                     }
@@ -85,6 +92,9 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
                 return null;
             }
         });
+        replayAll();
+        executor.execute();
+
     }
 
     @Test
@@ -97,7 +107,7 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
             @Override
             public DocumentRepository answer() throws Throwable
             {
-                assertTrue(list.get(0).getParticipants().size() == getOldParticipantList(1).size());
+                assertTrue(list.get(0).getParticipants().size() == getOldParticipantList(1).size() - 1);
                 return null;
             }
         });
@@ -106,7 +116,7 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
             @Override
             public DocumentRepository answer() throws Throwable
             {
-                assertTrue(list.get(1).getParticipants().size() == 3);
+                assertTrue(list.get(1).getParticipants().size() == 0);
                 // additional check if match participants
                 return null;
             }
@@ -116,23 +126,29 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
             @Override
             public DocumentRepository answer() throws Throwable
             {
-                assertTrue(list.get(2).getParticipants().size() == 0);
+                assertTrue(list.get(2).getParticipants().size() == 3);
                 return null;
             }
         });
+        replayAll();
+        executor.execute();
     }
 
     private List<DocumentRepository> getDocumentRepositoryList()
     {
         List<DocumentRepository> list = new ArrayList<>();
+
         DocumentRepository docRepo = new DocumentRepository();
+        docRepo.setCreator("theCreator");
         docRepo.setParticipants(getOldParticipantList(1));
 
         DocumentRepository docRepo2 = new DocumentRepository();
         docRepo2.setParticipants(getOldParticipantList(2));
+        docRepo2.setCreator("theCreator");
 
         DocumentRepository docRepo3 = new DocumentRepository();
         docRepo3.setParticipants(getOldParticipantList(3));
+        docRepo3.setCreator("theCreator");
 
         list.add(docRepo);
         list.add(docRepo2);
@@ -160,6 +176,7 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
             list.add(getParticipant("theReader", "collaborator"));
             list.add(getParticipant("theOwningGroup", "owning group"));
             list.add(getParticipant("theReader", "assignee"));
+            break;
         }
         case 4:
         {
@@ -169,6 +186,8 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
             list.add(getParticipant("theFollower", "follower"));
             list.add(getParticipant("theCoOwner", "co-owner"));
             list.add(getParticipant("theAssignee", "assignee"));
+            list.add(getParticipant("theCreator", "assignee"));
+            break;
         }
         }
         return list;
