@@ -24,6 +24,7 @@
             "addNewDirectory": "新しいディレクトリを追加する",
             "editRecord": "レコードの編集",
             "id": "ID",
+            "id.validationMessage": "ja_The ID can only consist of letters, numbers or dots.",
             "directoryType": "ディレクトリサーバーを選択",
             "ldapUrl": "LDAPのURL",
             "base": "ベース",

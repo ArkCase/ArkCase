@@ -24,6 +24,7 @@
             "addNewDirectory": "添加新目錄",
             "editRecord": "編輯記錄",
             "id": "ID",
+            "id.validationMessage": "zh-tw_The ID can only consist of letters, numbers or dots.",
             "directoryType": "選擇目錄服務器",
             "ldapUrl": "LDAP網址",
             "base": "基礎",

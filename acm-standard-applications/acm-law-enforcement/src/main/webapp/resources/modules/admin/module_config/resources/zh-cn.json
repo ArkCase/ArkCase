@@ -24,6 +24,7 @@
             "addNewDirectory": "添加新目录",
             "editRecord": "编辑记录",
             "id": "ID",
+            "id.validationMessage": "zh-cn_The ID can only consist of letters, numbers or dots.",
             "directoryType": "选择目录服务器",
             "ldapUrl": "LDAP网址",
             "base": "基础",

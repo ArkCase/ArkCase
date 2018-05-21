@@ -24,6 +24,7 @@
             "addNewDirectory": "Добавить новый каталог",
             "editRecord": "Изменить запись",
             "id": "ID",
+            "id.validationMessage": "ru_The ID can only consist of letters, numbers or dots.",
             "directoryType": "Выбрать сервер каталогов",
             "ldapUrl": "URL-адрес LDAP",
             "base": "База",

@@ -31,6 +31,7 @@
             "addNewDirectory": "Agrege un directorio nuevo",
             "editRecord": "Edite el registro",
             "id": "Identificación",
+            "id.validationMessage": "es_The ID can only consist of letters, numbers or dots.",
             "directoryType": "Seleccione el servidor de directorio",
             "ldapUrl": "LDAP URL",
             "base": "Base",
