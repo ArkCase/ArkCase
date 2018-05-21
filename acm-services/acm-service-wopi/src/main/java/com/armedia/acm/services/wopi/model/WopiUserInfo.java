@@ -1,8 +1,8 @@
-package com.armedia.acm.service.objectlock.model;
+package com.armedia.acm.services.wopi.model;
 
 /*-
  * #%L
- * ACM Service: Object lock
+ * ACM Service: Wopi service
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,22 +27,31 @@ package com.armedia.acm.service.objectlock.model;
  * #L%
  */
 
-/**
- * Created by dragan.simonovski on 04/25/2016.
- */
-public interface AcmObjectLockConstants
+public class WopiUserInfo
 {
-    String WORD_EDIT_LOCK = "WORD_EDIT_LOCK";
-    String CHECKOUT_LOCK = "CHECKOUT_LOCK";
-    String CHECKIN_LOCK = "CHECKIN_LOCK";
-    String CANCEL_LOCK = "CANCEL_LOCK";
-    String OBJECT_LOCK = "OBJECT_LOCK";
-    /**
-     * this should be used when objects needs to be locked for long running tasks.
-     */
-    String LOCK_FOR_PROCESSING = "OBJECT_PROCESSING_LOCK";
+    private final String fullName;
+    private final String id;
+    private final String lang;
 
-    String EXCLUSIVE_TREE_LOCK = "EXCLUSIVE_TREE_LOCK";
+    public WopiUserInfo(String fullName, String id, String lang)
+    {
+        this.fullName = fullName;
+        this.id = id;
+        this.lang = lang;
+    }
 
-    String SHARED_LOCK = "SHARED_LOCK";
+    public String getFullName()
+    {
+        return fullName;
+    }
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public String getLang()
+    {
+        return lang;
+    }
 }
