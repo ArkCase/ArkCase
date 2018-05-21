@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -64,6 +65,12 @@ public class DefaultFolderConverter implements FolderConverter
     private AcmFolderService folderService;
 
     private Map<String, List<FileConverter>> convertersByType;
+
+    public DefaultFolderConverter(List<FileConverter> converters)
+    {
+        convertersByType = new HashMap<>();
+        setConverters(converters);
+    }
 
     /*
      * (non-Javadoc)
@@ -124,7 +131,7 @@ public class DefaultFolderConverter implements FolderConverter
      * @param converters
      *            the converters to set
      */
-    public void setConverters(List<FileConverter> converters)
+    private void setConverters(List<FileConverter> converters)
     {
         for (FileConverter converter : converters)
         {
@@ -137,6 +144,15 @@ public class DefaultFolderConverter implements FolderConverter
                 computedConverters.add(converter);
             }
         }
+    }
+
+    /**
+     * @param folderService
+     *            the folderService to set
+     */
+    public void setFolderService(AcmFolderService folderService)
+    {
+        this.folderService = folderService;
     }
 
 }
