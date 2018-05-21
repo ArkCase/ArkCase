@@ -103,10 +103,10 @@ angular.module('services').factory('PermissionsService', [ '$q', '$http', '$log'
     };
 
     function findParentPermission(rules, actionName, objectType) {
-        for ( var parentPermission in parentPermissions) {
-            if (actionName.toLowerCase().match(parentPermission.expr)) {
+        for ( var index in parentPermissions) {
+            if (actionName.toLowerCase().match(parentPermissions[index].expr)) {
                 return _.filter(rules.data.accessControlRuleList, {
-                    actionName: parentPermission.parentActionName,
+                    actionName: parentPermissions[index].parentActionName,
                     objectType: objectType
                 });
             }
