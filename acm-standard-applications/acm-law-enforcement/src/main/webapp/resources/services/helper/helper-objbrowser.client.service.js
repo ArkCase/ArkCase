@@ -299,7 +299,7 @@ angular.module('services').factory(
                             });
 
                             that.scope.$on('report-object-refreshed', function(e, objectId) {
-                                that.resetObjectInfo();
+                                that.resetObjectInfo(e.currentScope.objectId);
                                 SyncDataLoader.reset(that.moduleId, [ objectId ]);
                                 SyncDataLoader.load(that.moduleId, that.getObjectInfo, [ objectId ], function(objectInfo) {
                                     that.scope.objectInfo = objectInfo;
