@@ -55,8 +55,8 @@ import java.util.stream.Collectors;
 
 public class CorrespondenceService
 {
-    private static final String TEMP_FILE_PREFIX = "template-";
-    private static final String TEMP_FILE_SUFFIX = ".docx";
+    protected static final String TEMP_FILE_PREFIX = "template-";
+    protected static final String TEMP_FILE_SUFFIX = ".docx";
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private SpringContextHolder springContextHolder;
     private CorrespondenceGenerator correspondenceGenerator;
@@ -107,7 +107,7 @@ public class CorrespondenceService
 
     }
 
-    private CorrespondenceTemplate findTemplate(String templateName)
+    protected CorrespondenceTemplate findTemplate(String templateName)
     {
         Collection<CorrespondenceTemplate> templates = templateManager.getActiveVersionTemplates();
         for (CorrespondenceTemplate template : templates)
