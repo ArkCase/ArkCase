@@ -164,6 +164,9 @@ angular.module('people').controller(
 
                     $scope.isDefault = function(alias) {
                         var defaultAlias = $scope.objectInfo.defaultAlias;
+                        if (Util.isEmpty(defaultAlias)) {
+                            return true;
+                        }
                         var comparisonProperties = [ "id", "aliasType", "aliasValue", "description" ];
                         return Util.objectsComparisonByGivenProperties(defaultAlias, alias, comparisonProperties);
                     }
