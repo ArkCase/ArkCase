@@ -9,23 +9,26 @@
  *
  * The Permissions service. Performs checking user permissions for action depends on user roles, and objectProperties, like orderInfo, queueInfo
  */
-angular.module('services').factory('PermissionsService', [ '$q', '$http', '$log', '$interpolate', 'Authentication', 'Object.ModelService', function($q, $http, $log, $interpolate, Authentication, ObjectModelService) {
+angular.module('services').factory('PermissionsService', [ '$q', '$http', '$log', '$interpolate', 'Authentication', 'Object.ModelService', 'LookupService', function($q, $http, $log, $interpolate, Authentication, ObjectModelService, LookupService) {
     // Initial rules loading
     var rules = queryRules();
     var userProfile = Authentication.queryUserInfo();
-    var parentPermissions = [ {
-        expr: "(get|list|read|download|view|subscribe).*",
-        parentActionName: "getObject"
-    }, {
-        expr: "(save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename).*",
-        parentActionName: "editObject"
-    }, {
-        expr: "(create).*",
-        parentActionName: "insertObject"
-    }, {
-        expr: "(delete).*",
-        parentActionName: "deleteObject"
-    } ];
+    var parentPermissions = [];
+    LookupService.getConfig('dacService').then(function(data) {
+        parentPermissions = [ {
+            expr: "(" + data["dac.fallbackExpression.getObject"] + ").*",
+            parentActionName: "getObject"
+        }, {
+            expr: "(" + data["dac.fallbackExpression.editObject"] + ").*",
+            parentActionName: "editObject"
+        }, {
+            expr: "(" + data["dac.fallbackExpression.insertObject"] + ").*",
+            parentActionName: "insertObject"
+        }, {
+            expr: "(" + data["dac.fallbackExpression.deleteObject"] + ").*",
+            parentActionName: "deleteObject"
+        } ];
+    });
 
     return {
         /**
