@@ -55,7 +55,8 @@
             "defaultBodyLinks": "Veuillez suivre les liens ci-dessous pour voir le (s) document (s). Les liens expirent dans 3 jours.",
             "defaultBodyAttachments": "Veuillez trouver ci-joint les documents qui vous ont été envoyés par ArkCase.",
             "defaultFooter": "Propulsé par ArkCase, la plate-forme Enterprise Case Management, http://www.arkcase.com",
-            "successMessage": "L'e-mail a été envoyé avec succès"
+            "successMessage": "L'e-mail a été envoyé avec succès",
+            "noEmailAddress": "fr_There is no entered email for this "
         },
         "menu": {
             "noop": "(Sélectionner un article)",
@@ -177,7 +178,7 @@
         "rowCountLabel": "Objets par page",
         "pagerCountLabel": "{{pageCount}} sur {{pageTotal}} articles"
     },
-    "common.directive.objectAuthorizationRoles": {
+    "common.directive.objectAuthorization": {
         "choose": "Choisir",
         "not_authorized": "Pas autorisé",
         "not_member": "fr_Not Member",

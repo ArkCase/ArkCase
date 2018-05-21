@@ -2,8 +2,8 @@
     "common": {
         "select.option.none": "（選択する）",
         "value.unknown": "不明",
-        "value.none": "なし", 
-		"_1_": "I18nに準拠したエラーが発生する可能性があるため、カスタム日付形式を使用または追加しないでください.",
+        "value.none": "なし",
+        "_1_": "I18nに準拠したエラーが発生する可能性があるため、カスタム日付形式を使用または追加しないでください.",
         "_2_": "定義済みのフォーマットのいずれかを使用してください: ",
         "_3_": "'中'       - に相当 'MMM d, y h:mm:ss a' en_USロケールの場合 (たとえば、2010年9月3日12：05：08 PM)",
         "_4_": "'ショート'    - に相当 'M/d/yy h:mm a' en_USロケールの場合 (例えば 9/3/10 12:05 PM)",
@@ -55,7 +55,8 @@
             "defaultBodyLinks": "これらの文書を見るには、以下のリンクをクリックしてください。リンクは3日間で有効期限が切れます。",
             "defaultBodyAttachments": "ArkCaseから送付された書類を添付してください。",
             "defaultFooter": "ArkCase、エンタープライズケースマネジメントプラットフォーム、http://www.arkcase.com",
-            "successMessage": "電子メールが正常に送信されました"
+            "successMessage": "電子メールが正常に送信されました",
+            "noEmailAddress": "ja_There is no entered email for this "
         },
         "menu": {
             "noop": "（選択項目）",
@@ -109,10 +110,10 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "添付ファイルとハイパーリンクとして送信",
             "btnCancel.text": "キャンセル",
             "btnOk.text": "メールを送る"
-		},
+        },
         "participantsDialog": {
             "titlePart": "Participants for ",
-            "title": "Participants"	
+            "title": "Participants"
         },
         "recipientsDialog": {
             "title": "受信者を選択",
@@ -177,7 +178,7 @@
         "rowCountLabel": "ページあたりのアイテム数",
         "pagerCountLabel": "{{pageCount}}番目の{{pageTotal}}の項目"
     },
-    "common.directive.objectAuthorizationRoles": {
+    "common.directive.objectAuthorization": {
         "choose": "選択する",
         "not_authorized": "許可されていません",
         "not_member": "ja_Not Member",
@@ -196,9 +197,9 @@
         "btnCancel.text": "キャンセル",
         "edtPlaceholder": "検索するには入力",
         "noData.text": "結果なし",
-		"pickUserLabel": "関連付けられたユーザを選ぶ",
+        "pickUserLabel": "関連付けられたユーザを選ぶ",
         "pickGroupLabel": "関連グループを選択",
-		"selectedItemsGrid.label": "選択されたエントリ"
+        "selectedItemsGrid.label": "選択されたエントリ"
     },
     "common.directive.search": {
         "showMore.button.text": "もっと表示",
@@ -613,7 +614,7 @@
             "error.noAccessCombo": "無アクセスと譲受人の組み合わせは許可されていません。",
             "error.duplicateUserOrGroup": "参加者が無効です。参加者の重複したエントリが見つかりました。",
             "error.userOrGroupNotFound": "参加者が無効です。参加者のエントリがシステムにありません。",
-			"error.emptyParticipantLdapId": "参加者名は空にできません",
+            "error.emptyParticipantLdapId": "参加者名は空にできません",
             "error.emptyParticipantType": "参加者の種類は空にできません",
             "error.ownerUnique": "所有者は1人だけです。"
         }

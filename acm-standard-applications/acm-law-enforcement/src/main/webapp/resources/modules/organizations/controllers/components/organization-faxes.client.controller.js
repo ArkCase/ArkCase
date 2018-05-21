@@ -168,6 +168,9 @@ angular.module('organizations').controller(
 
                     $scope.isDefault = function(fax) {
                         var defaultFax = $scope.objectInfo.defaultFax;
+                        if (Util.isEmpty(defaultFax)) {
+                            return true;
+                        }
                         var comparisonProperties = [ "description", "id", "subType", "type", "value" ];
                         return Util.objectsComparisonByGivenProperties(defaultFax, fax, comparisonProperties);
                     }

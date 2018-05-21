@@ -10,7 +10,7 @@
  *
  * DueDate.Service provides functions for calculation for due date without holidays and weekends
  */
-angular.module('services').service('DueDate.Service',['$translate', function($translate) {
+angular.module('services').service('DueDate.Service', [ '$translate', function($translate) {
 
     return ({
         dueDateWorkingDays: dueDateWorkingDays,
@@ -52,7 +52,7 @@ angular.module('services').service('DueDate.Service',['$translate', function($tr
     function workingDays(startDate, holidays) {
         var momentObject = moment(startDate);
         var today = moment();
-        var days = 0;
+        var days = -1;
         while (momentObject < today) {
             momentObject.add(1, 'days');
 
@@ -66,7 +66,7 @@ angular.module('services').service('DueDate.Service',['$translate', function($tr
     function workingDaysWithWeekends(startDate, holidays) {
         var momentObject = moment(startDate);
         var today = moment();
-        var days = 0;
+        var days = -1;
         while (momentObject < today) {
             momentObject.add(1, 'days');
 
@@ -113,4 +113,4 @@ angular.module('services').service('DueDate.Service',['$translate', function($tr
         }) !== undefined;
     }
 
-}]);
+} ]);
