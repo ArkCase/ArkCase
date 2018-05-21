@@ -348,6 +348,13 @@
                 "title": "Approvers",
                 "description": "Displays Approvers",
                 "noDataMessage": "Currently there are no approvers to display"
+            },
+            "savePromptModal": {
+                "title": "Save dashboard",
+                "info": "You are in edit mode. Do you want to save the changes?",
+                "save": "Save",
+                "doNotSave": "Do not save",
+                "cancel": "Cancel"
             }
         }
     },

@@ -169,6 +169,9 @@ angular.module('people').controller(
 
                     $scope.isDefault = function(url) {
                         var defaultUrl = $scope.objectInfo.defaultUrl;
+                        if (Util.isEmpty(defaultUrl)) {
+                            return true;
+                        }
                         var comparisonProperties = [ "id", "type", "subType", "value", "description" ];
                         return Util.objectsComparisonByGivenProperties(defaultUrl, url, comparisonProperties);
                     }

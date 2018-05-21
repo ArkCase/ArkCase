@@ -178,7 +178,7 @@
         "rowCountLabel": "Itens por página",
         "pagerCountLabel": "{{pageCount}}  {{pageTotal}} itens"
     },
-    "common.directive.objectAuthorizationRoles": {
+    "common.directive.objectAuthorization": {
         "choose": "Escolher",
         "not_authorized": "Não autorizado",
         "not_member": "pt_Not Member",
