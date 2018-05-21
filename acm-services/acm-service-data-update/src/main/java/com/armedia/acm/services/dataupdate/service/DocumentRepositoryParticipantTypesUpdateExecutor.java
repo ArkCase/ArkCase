@@ -37,7 +37,7 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
                 {
                 case "assignee":
                 {
-                    if (participant.getCreator().equals(participant.getParticipantLdapId()))
+                    if (repository.getCreator().equals(participant.getParticipantLdapId()))
                     {
 
                         mapedParticipantType = "owner";
