@@ -30,6 +30,7 @@ package com.armedia.acm.services.dataupdate.executors;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertTrue;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.documentrepository.dao.DocumentRepositoryDao;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.services.dataupdate.service.DocumentRepositoryParticipantTypesUpdateExecutor;
@@ -48,13 +49,16 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
 
     DocumentRepositoryDao documentDao;
     DocumentRepositoryParticipantTypesUpdateExecutor executor;
+    AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Before
     public void setUp() throws Exception
     {
         executor = new DocumentRepositoryParticipantTypesUpdateExecutor();
         documentDao = createMock(DocumentRepositoryDao.class);
+        auditPropertyEntityAdapter = new AuditPropertyEntityAdapter();
         executor.setDocumentDao(documentDao);
+        executor.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
 
     }
 
