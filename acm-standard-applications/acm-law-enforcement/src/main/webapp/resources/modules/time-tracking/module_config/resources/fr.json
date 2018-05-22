@@ -14,7 +14,8 @@
     },
     "timeTracking.comp.info": {
         "title": "Information",
-        "lastModified.label": "Dernière modification"
+        "lastModified.label": "Dernière modification",
+		"state": "Etat"
     },
     "timeTracking.comp.actions": {
         "title": "Actes",
@@ -38,11 +39,13 @@
         }
     },
     "timeTracking.comp.summary": {
-        "title": "Heures",
+        "title": "Heures/Coût",
         "table.columns": {
             "code": "ID du parent",
             "type": "Type de parent",
+			"role": "Rôle de charge",
             "value": "Heures totales",
+			"cost": "Coût total",
             "date": "Date de facturation",
             "modified": "Date modifiée"
         }
@@ -72,7 +75,7 @@
         }
     },
     "timeTracking.comp.tasks": {
-        "title": "Approbateurs",
+        "title": "Les tâches",
         "table.columns": {
             "title": "Title",
             "assignee": "Assignee",
@@ -97,6 +100,16 @@
             "idDesc": "Trier ID de Temps Déc",
             "nameDesc": "Trier par nom Déc",
             "noSort": "(Non Trier)"
+        }
+   },
+    "timeTracking.widgets.summary": {
+        "table": {
+            "columns": {
+                "date": "Date",
+                "objectTitle": "Titre de l'objet",
+                "objectNumber": "Numéro de l'objet",
+                "hours": "Heures"
+            }
         }
     }
 }

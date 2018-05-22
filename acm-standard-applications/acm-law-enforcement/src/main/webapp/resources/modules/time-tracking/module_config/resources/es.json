@@ -14,7 +14,8 @@
     },
     "timeTracking.comp.info": {
         "title": "Información",
-        "lastModified.label": "Última modificación"
+        "lastModified.label": "Última modificación",
+		"state": "Estado"
     },
     "timeTracking.comp.actions": {
         "title": "Acciones",
@@ -38,11 +39,13 @@
         }
     },
     "timeTracking.comp.summary": {
-        "title": "Horas",
+        "title": "Horas/osto",
         "table.columns": {
             "code": "Identificación de los padres",
             "type": "Tipo de padre",
+			"role": "Rol de cargo",
             "value": "Horas totales",
+			"cost": "Coste total",
             "date": "Fecha cargada",
             "modified": "Fecha modificada"
         }
@@ -72,7 +75,7 @@
         }
     },
     "timeTracking.comp.tasks": {
-        "title": "Aprobadores",
+        "title": "Tareas",
         "table.columns": {
             "title": "Title",
             "assignee": "Assignee",
@@ -97,6 +100,16 @@
             "idDesc": "Ordenar tiempos de la identificación Dec",
             "nameDesc": "Ordenar por nombre Dec",
             "noSort": "(No Ordenar)"
+        }
+    },
+    "timeTracking.widgets.summary": {
+        "table": {
+            "columns": {
+                "date": "Fecha",
+                "objectTitle": "Título del objeto",
+                "objectNumber": "Número de objeto",
+                "hours": "Horas"
+            }
         }
     }
 }
