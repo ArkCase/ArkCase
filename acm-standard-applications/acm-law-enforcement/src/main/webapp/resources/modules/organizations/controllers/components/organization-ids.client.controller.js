@@ -165,6 +165,9 @@ angular.module('organizations').controller(
 
                     $scope.isDefault = function(identification) {
                         var defaultIdentification = $scope.objectInfo.defaultIdentification;
+                        if (Util.isEmpty(defaultIdentification)) {
+                            return true;
+                        }
                         var comparisonProperties = [ "identificationID", "identificationType", "identificationNumber", "identificationIssuer" ];
                         return Util.objectsComparisonByGivenProperties(defaultIdentification, identification, comparisonProperties);
                     }

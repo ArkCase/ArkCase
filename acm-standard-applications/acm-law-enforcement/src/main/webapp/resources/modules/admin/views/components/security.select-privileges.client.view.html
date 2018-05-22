@@ -11,11 +11,11 @@
     </div>
     <panel-view header="{{'admin.security.selectPrivileges' | translate}}" collapsible="false">
         <div class="row">
-            <object-authorization-roles data="rolesData" object-display-name="name" on-object-selected="onObjSelect"
+            <object-authorization data="rolesData" object-display-name="name" on-object-selected="onObjSelect"
                     role-display-name="name" on-auth-role-change="onAuthRoleSelected"
                     object-title="{{'admin.security.selectPrivileges.applicationRole' | translate}}"
-                    pagination-data-control="scrollLoadData" filter-data-control="filterData"
-                    selected-object="lastSelectedRole" />
+                    pagination-data-control="scrollLoadData" filter-data-control="filterData" selected-object="lastSelectedRole"
+                    object-type="!role" />
         </div>
     </panel-view>
 </div>

@@ -50,6 +50,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -262,5 +265,14 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
     public AcmObject findByName(String name)
     {
         return findByCaseNumber(name);
+    }
+
+    public Long getCaseCount(LocalDateTime until)
+    {
+        String queryText = "SELECT COUNT(caseFile) FROM CaseFile caseFile WHERE caseFile.created <= :until";
+
+        Query query = getEm().createQuery(queryText);
+        query.setParameter("until", Date.from(ZonedDateTime.of(until, ZoneId.systemDefault()).toInstant()));
+        return (Long) query.getSingleResult();
     }
 }
