@@ -55,6 +55,7 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
 
         for (DocumentRepository repository : documentRepositoryList)
         {
+            Boolean shouldUpdate = false;
             List<AcmParticipant> newParticipants = new ArrayList<>();
             List<AcmParticipant> participants = repository.getParticipants();
             for (AcmParticipant participant : participants)
@@ -101,6 +102,7 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
                         participant.setParticipantType(mapedParticipantType);
                         newParticipants.add(participant);
                     }
+                    shouldUpdate = true;
                 }
                 else
                 {
@@ -109,8 +111,11 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
 
             }
 
-            repository.setParticipants(newParticipants);
-            documentDao.save(repository);
+            if (shouldUpdate)
+            {
+                repository.setParticipants(newParticipants);
+                documentDao.save(repository);
+            }
         }
     }
 
