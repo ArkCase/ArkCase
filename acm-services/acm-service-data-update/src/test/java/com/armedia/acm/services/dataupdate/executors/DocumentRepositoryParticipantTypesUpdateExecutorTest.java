@@ -57,7 +57,6 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
         executor = new DocumentRepositoryParticipantTypesUpdateExecutor();
         documentDao = createMock(DocumentRepositoryDao.class);
         auditPropertyEntityAdapter = new AuditPropertyEntityAdapter();
-        // auditPropertyEntityAdapter.setUserId(AcmDataUpdateService.DATA_UPDATE_MODIFIER);
         executor.setDocumentDao(documentDao);
         executor.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
 
