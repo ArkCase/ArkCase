@@ -874,6 +874,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     /**
      * @return the notes
      */
+    @JsonIgnore
     public List<Note> getNotes()
     {
         return notes;
