@@ -99,6 +99,7 @@ public abstract class PdfConverterBase implements FileConverter
             metadata.setFileType(file.getFileType());
             metadata.setFileLang(file.getFileLang());
             metadata.setFileName(createFileName(file));
+            metadata.setCmisRepositoryId(file.getCmisRepositoryId());
             metadata.setFileActiveVersionMimeType(APPLICATION_PDF);
 
             fileService.upload(auth, file.getParentObjectType(), file.getParentObjectId(), file.getFolder().getCmisFolderId(),

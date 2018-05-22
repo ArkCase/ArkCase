@@ -91,15 +91,22 @@ public class DefaultFolderConverter implements FolderConverter
 
             for (AcmObject obj : folderChildren)
             {
-                String objectType = obj.getObjectType().toUpperCase();
-                // if child object is a folder, convert it's contents
-                if (OBJECT_FOLDER_TYPE.equals(objectType))
+                try
                 {
-                    convertFolder(obj.getId(), auth);
+                    String objectType = obj.getObjectType().toUpperCase();
+                    // if child object is a folder, convert it's contents
+                    if (OBJECT_FOLDER_TYPE.equals(objectType))
+                    {
+                        convertFolder(obj.getId(), auth);
+                    }
+                    else
+                    {
+                        convertFile(EcmFile.class.cast(obj), auth);
+                    }
                 }
-                else
+                catch (ConversionException ce)
                 {
-                    convertFile(EcmFile.class.cast(obj), auth);
+                    continue;
                 }
             }
         }
@@ -119,11 +126,29 @@ public class DefaultFolderConverter implements FolderConverter
     private void convertFile(EcmFile file, Authentication auth) throws ConversionException
     {
         List<FileConverter> converters = convertersByType.get(file.getFileExtension());
+        if (converters == null)
+        {
+            return;
+        }
+        ConversionException ex = new ConversionException(
+                String.format("Error converting file [%s] of type [%s] with version [%s].", file.getFileName(),
+                        file.getFileExtension(), file.getActiveVersionTag()));
         for (FileConverter converter : converters)
         {
-            log.debug("Using converter of type [{}] to convert file [{}] of type [{}].", converter.getClass().getName(),
-                    file.getFileName() + "." + file.getFileExtension(), file.getFileExtension());
-            converter.convert(file, auth);
+            try
+            {
+                log.debug("Using converter of type [{}] to convert file [{}] of type [{}].", converter.getClass().getName(),
+                        file.getFileName() + "." + file.getFileExtension(), file.getFileExtension());
+                converter.convert(file, auth);
+            }
+            catch (ConversionException ce)
+            {
+                ex.addSuppressed(ce);
+            }
+        }
+        if (ex.getSuppressed().length > 0)
+        {
+            throw ex;
         }
     }
 
