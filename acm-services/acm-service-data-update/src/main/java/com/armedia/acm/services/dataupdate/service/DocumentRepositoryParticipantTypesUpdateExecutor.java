@@ -27,19 +27,24 @@ package com.armedia.acm.services.dataupdate.service;
  * #L%
  */
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.documentrepository.dao.DocumentRepositoryDao;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.web.api.MDCConstants;
 
+import org.slf4j.MDC;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmDataUpdateExecutor
 {
     private DocumentRepositoryDao documentDao;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Override
     public String getUpdateId()
@@ -51,6 +56,13 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void execute()
     {
+
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, "DATA_UPDATE");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY, "localhost");
+        auditPropertyEntityAdapter.setUserId(AcmDataUpdateService.DATA_UPDATE_MODIFIER);
+
         List<DocumentRepository> documentRepositoryList = documentDao.findAll();
 
         for (DocumentRepository repository : documentRepositoryList)
@@ -127,5 +139,15 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
     public void setDocumentDao(DocumentRepositoryDao documentDao)
     {
         this.documentDao = documentDao;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }
