@@ -178,7 +178,7 @@
         "rowCountLabel": "ページあたりのアイテム数",
         "pagerCountLabel": "{{pageCount}}番目の{{pageTotal}}の項目"
     },
-    "common.directive.objectAuthorizationRoles": {
+    "common.directive.objectAuthorization": {
         "choose": "選択する",
         "not_authorized": "許可されていません",
         "not_member": "ja_Not Member",

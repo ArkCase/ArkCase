@@ -186,33 +186,43 @@ angular.module('admin').controller(
                                     $scope.initialActiveBPMNVersion = undefined;
                                     $scope.activateBtnDisabled = true;
 
-                                    $scope.changeActive = function() {
-                                        if ($scope.activeBPMN && $scope.activeBPMN.version != $scope.initialActiveBPMNVersion) {
-                                            $scope.activateBtnDisabled = false;
-                                        } else {
-                                            $scope.activateBtnDisabled = true;
-                                        }
-                                    };
-
-                                    angular.forEach(payload.data, function(row) {
-                                        if (row.active) {
-                                            $scope.activeBPMN = row;
-                                            $scope.initialActiveBPMNVersion = row.version;
-                                        }
-                                    });
                                     var gridHelper = new HelperUiGridService.Grid({
                                         scope: $scope
                                     });
-                                    var promiseUsers = gridHelper.getUsers();
 
+                                    $scope.gridOptions = {
+                                        enableRowHeaderSelection: false,
+                                        enableFullRowSelection: true,
+                                        multiSelect: false,
+                                        data: [],
+                                        onRegisterApi: function(gridApi) {
+                                            $scope.gridApi = gridApi;
+                                            $scope.gridApi.selection.setMultiSelect(false);
+                                            $scope.gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+                                                if (!row.isSelected) {
+                                                    $scope.activateBtnDisabled = true;
+                                                } else {
+                                                    var selectedRow = row.entity;
+                                                    $scope.activeBPMN = selectedRow;
+                                                    $scope.initialActiveBPMNVersion = selectedRow.version;
+                                                    $scope.activateBtnDisabled = false;
+                                                }
+                                            });
+                                        }
+                                    };
+
+                                    $scope.gridOptions.data = payload.data;
+
+                                    var promiseUsers = gridHelper.getUsers();
                                     var onConfigRetrieved = function(config) {
                                         $scope.config = config;
                                         //first the filter is set, and after that everything else,
                                         //so that the data loads with the new filter applied
                                         gridHelper.setUserNameFilterToConfig(promiseUsers).then(function(updatedConfig) {
                                             $scope.config = updatedConfig;
-                                            if ($scope.gridApi != undefined)
+                                            if ($scope.gridApi != undefined) {
                                                 $scope.gridApi.core.refresh();
+                                            }
                                             gridHelper.setColumnDefs(updatedConfig);
                                             gridHelper.setBasicOptions(updatedConfig);
                                             gridHelper.disableGridScrolling(updatedConfig);
@@ -220,11 +230,11 @@ angular.module('admin').controller(
                                     };
 
                                     onConfigRetrieved(params.config);
-                                    $scope.gridOptions.data = payload.data;
 
                                     $scope.activate = function() {
                                         $modalInstance.close($scope.activeBPMN);
                                     };
+
                                     $scope.cancel = function() {
                                         $modalInstance.dismiss('cancel');
                                     };

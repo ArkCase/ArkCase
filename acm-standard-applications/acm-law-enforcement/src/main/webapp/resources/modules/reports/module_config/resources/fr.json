@@ -19,6 +19,7 @@
             "label": "À"
         },
         "dropdown": {
+		    "__comment__": "__ Cette «liste déroulante» ne semble pas être utilisée, avons-nous encore besoin de ça? __",
             "turnaround": "Délai d'exécution par le demandeur",
             "requester": "Récapitulatif du type de demandeur",
             "pending": "Rapport sur les commandes en attente",

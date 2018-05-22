@@ -348,6 +348,13 @@
                 "title": "审批",
                 "description": "显示审批者",
                 "noDataMessage": "当前没有要显示的审批者"
+            },
+            "savePromptModal": {
+                "title": "zh-cn_Save dashboard",
+                "info": "zh-cn_You are in edit mode. Do you want to save the changes?",
+                "save": "zh-cn_Save",
+                "doNotSave": "zh-cn_Do not save",
+                "cancel": "zh-cn_Cancel"
             }
         }
     },

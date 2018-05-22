@@ -43,4 +43,6 @@ public interface AcmObjectLockConstants
     String LOCK_FOR_PROCESSING = "OBJECT_PROCESSING_LOCK";
 
     String EXCLUSIVE_TREE_LOCK = "EXCLUSIVE_TREE_LOCK";
+
+    String SHARED_LOCK = "SHARED_LOCK";
 }

@@ -364,14 +364,16 @@ angular.module('admin').controller(
                         return deferred.promise;
                     };
 
-                    function openMembersPicker(params) {
+                    function openMembersPicker(params, showSelectedItemsGrid) {
                         params.config = $scope.cfg;
+                        params.showSelectedItemsGrid = Util.isEmpty(showSelectedItemsGrid);
                         return $modal.open({
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/admin/views/components/security.org-hierarchy.users-groups-picker.client.view.html',
                             controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
                                 $scope.modalInstance = $modalInstance;
                                 $scope.filter = params.filter;
+                                $scope.showSelectedItemsGrid = params.showSelectedItemsGrid;
                                 $scope.config = params.config;
                                 $scope.header = params.header ? params.header : $translate.instant('admin.security.organizationalHierarchy.addMembers.title');
                             } ],
@@ -773,7 +775,7 @@ angular.module('admin').controller(
                         var params = {
                             filter: "\"Object Type\": USER %26status_lcs:VALID"
                         };
-                        var modalInstance = openMembersPicker(params);
+                        var modalInstance = openMembersPicker(params, true);
 
                         modalInstance.result.then(function(memberSelected) {
                             //ok button clicked
