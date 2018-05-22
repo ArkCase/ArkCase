@@ -14,7 +14,8 @@
     },
     "timeTracking.comp.info": {
         "title": "जानकारी",
-        "lastModified.label": "अंतिम संशोधित"
+        "lastModified.label": "अंतिम संशोधित",
+		"state": "राज्य"
     },
     "timeTracking.comp.actions": {
         "title": "क्रियाएं",
@@ -38,11 +39,13 @@
         }
     },
     "timeTracking.comp.summary": {
-        "title": "घंटे",
+        "title": "घंटे / लागत",
         "table.columns": {
             "code": "मूल आईडी",
             "type": "माता पिता का प्रकार",
+			"role": "चार्ज रोल",
             "value": "कुल घंटे",
+			"cost": "कुल लागत",
             "date": "तिथि चार्ज",
             "modified": "संशोधित तिथि"
         }
@@ -72,14 +75,14 @@
         }
     },
     "timeTracking.comp.tasks": {
-        "title": "",
+        "title": "कार्य",
         "table.columns": {
-            "title": "Title",
-            "assignee": "Assignee",
-            "created": "Created",
-            "priority": "Priority",
-            "due": "Due Date",
-            "status": "Status"
+            "title": "शीर्षक",
+            "assignee": "संपत्ति-भागी",
+            "created": "बनाया था",
+            "priority": "प्राथमिकता",
+            "due": "नियत तारीख",
+            "status": "स्थिति"
         }
     },
     "timeTracking.tree": {
@@ -88,7 +91,7 @@
             "person.label": "व्यक्ति",
             "summary.label": "घंटे",
             "tags.label": "टैग",
-            "tasks.label": ""
+            "tasks.label": "कार्य"
         },
         "sorters": {
             "dateAsc": "दिनांक आरोही क्रमबद्ध करें",
@@ -97,6 +100,16 @@
             "idDesc": "टाइम्सशीट आईडी क्रमबद्ध करें",
             "nameDesc": "टाइम्सशीट नाम से क्रमबद्ध करें",
             "noSort": "(कोई सॉर्ट नहीं)"
+        }
+    },
+    "timeTracking.widgets.summary": {
+        "table": {
+            "columns": {
+                "date": "तारीख",
+                "objectTitle": "ऑब्जेक्ट शीर्षक",
+                "objectNumber": "वस्तु संख्या",
+                "hours": "घंटे"
+            }
         }
     }
 }

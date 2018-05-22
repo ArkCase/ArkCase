@@ -14,7 +14,8 @@
     },
     "timeTracking.comp.info": {
         "title": "信息",
-        "lastModified.label": "上次更改时间"
+        "lastModified.label": "上次更改时间",
+		"state": "州"
     },
     "timeTracking.comp.actions": {
         "title": "行动",
@@ -38,11 +39,13 @@
         }
     },
     "timeTracking.comp.summary": {
-        "title": "时间总结",
+        "title": "时间/成本",
         "table.columns": {
             "code": "原属识别号",
             "type": "原属类型",
+			"role": "收费角色",
             "value": "小时总数",
+			"cost": "总成本",
             "date": "用费日期",
             "modified": "更改日期"
         }
@@ -74,12 +77,12 @@
     "timeTracking.comp.tasks": {
         "title": "审批",
         "table.columns": {
-            "title": "Title",
-            "assignee": "Assignee",
-            "created": "Created",
-            "priority": "Priority",
-            "due": "Due Date",
-            "status": "Status"
+            "title": "标题",
+            "assignee": "代理人",
+            "created": "创建",
+            "priority": "优先",
+            "due": "截止日期",
+            "status": "状态"
         }
     },
     "timeTracking.tree": {
@@ -88,7 +91,7 @@
             "person.label": "成员",
             "summary.label": "时间小结",
             "tags.label": "标签",
-            "tasks.label": "zh-cn_Approvers"
+            "tasks.label": "任务"
         },
         "sorters": {
             "dateAsc": "按日期排序",
@@ -98,5 +101,15 @@
             "nameDesc": "按名称排序",
             "noSort": "(不排序)"
         }
-    }
-}
+	},
+    "timeTracking.widgets.summary": {
+        "table": {
+            "columns": {
+                "date": "日期",
+                "objectTitle": "对象标题",
+                "objectNumber": "对象编号",
+                "hours": "小时"
+            }
+        }
+    }	
+}    
