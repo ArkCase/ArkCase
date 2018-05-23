@@ -6,22 +6,22 @@ package com.armedia.acm.convertfolder;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -52,8 +52,8 @@ public class ImageToPdfConverter extends PdfConverterBase implements FileConvert
 
     private static class BoundingBox
     {
-        private float width;
-        private float height;
+        private final float width;
+        private final float height;
 
         BoundingBox(float width, float height)
         {
@@ -97,7 +97,8 @@ public class ImageToPdfConverter extends PdfConverterBase implements FileConvert
 
     }
 
-    private static final List<String> SUPPORTED_TYPES_EXTENSION = Collections.unmodifiableList(Arrays.asList(".jpg", ".gif", ".png"));
+    private static final List<String> SUPPORTED_TYPES_EXTENSION = Collections
+            .unmodifiableList(Arrays.asList("jpg", "jpeg", "tif", "tiff", "gif", "bmp", "png"));
 
     /**
      * Logger instance.
@@ -120,7 +121,7 @@ public class ImageToPdfConverter extends PdfConverterBase implements FileConvert
      * java.io.File)
      */
     @Override
-    protected void performConversion(EcmFile file, String tempUploadFolderPath, File tempOriginFile, File tempPdfFile)
+    protected void performConversion(EcmFile file, File tempOriginFile, File tempPdfFile)
             throws ConversionException
     {
         try (PDDocument doc = new PDDocument())

@@ -160,8 +160,7 @@ public class DefaultFolderConverter implements FolderConverter
     {
         for (FileConverter converter : converters)
         {
-            List<String> supportedFileExtensions = converter.getSupportedTypesExtensions().stream().map(ext -> ext.substring(1))
-                    .collect(Collectors.toList());
+            List<String> supportedFileExtensions = converter.getSupportedTypesExtensions();
             for (String fileExtension : supportedFileExtensions)
             {
                 List<FileConverter> computedConverters = convertersByType.computeIfAbsent(fileExtension,
