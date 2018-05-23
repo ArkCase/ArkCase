@@ -1,0 +1,200 @@
+package com.armedia.acm.plugins.onlyoffice.model;
+
+import org.codehaus.jackson.annotate.JsonProperty;
+
+import java.util.List;
+
+public class CallBackData
+{
+    /**
+     * Defines the object received if the new user connected to the document co-editing or disconnected from it. In the
+     * first case the type field value is 1, in the other case - 0. The userid field value is the identifier of the user
+     * who connected to or disconnected from the document co-editing.
+     */
+    @JsonProperty(value = "actions")
+    private List<OOAction> actions;
+    /**
+     * Defines the array of objects with the document changes history. The object is present when the status value is
+     * equal to 2 or 3 only. Must be sent as a property changes of the object sent as the argument to the refreshHistory
+     * method. Deprecated since version 4.2, please use history instead.
+     */
+    @JsonProperty(value = "changeshistory")
+    private List<OOChangeHistory> changesHistory;
+    /**
+     * Defines the link to the file with the document editing data used to track and display the document changes
+     * history. The link is present when the status value is equal to 2 or 3 only. The file must be saved and its
+     * address must be sent as changesUrl parameter using the setHistoryData method to show the changes corresponding to
+     * the specific document version.
+     */
+    @JsonProperty(value = "changesurl")
+    private String changesUrl;
+    /**
+     * Defines the type of initiator when the force saving request is performed. Can have the following values:
+     * 0 - the force saving request is performed to the command service,
+     * 1 - the force saving request is performed each time the saving is done (e.g. the Save button is clicked), which
+     * is only available when the forcesave option is set to true.
+     * 2 - the force saving request is performed by timer with the settings from the server config.
+     * The type is present when the status value is equal to 6 or 7 only.
+     */
+    @JsonProperty(value = "forcesavetype")
+    private Integer forceSaveType;
+    /**
+     * Defines the object with the document changes history. The object is present when the status value is equal to 2
+     * or 3 only. It contains the object serverVersion and changes, which must be sent as properties serverVersion and
+     * changes of the object sent as the argument to the refreshHistory method.
+     */
+    @JsonProperty(value = "history")
+    private OOHistory history;
+    /**
+     * Defines the edited document identifier.
+     */
+    @JsonProperty(value = "key")
+    private String key;
+    /**
+     * Defines the status of the document. Can have the following values:
+     * 0 - no document with the key identifier could be found,
+     * 1 - document is being edited,
+     * 2 - document is ready for saving,
+     * 3 - document saving error has occurred,
+     * 4 - document is closed with no changes,
+     * 6 - document is being edited, but the current document state is saved,
+     * 7 - error has occurred while force saving the document.
+     */
+    @JsonProperty(value = "status")
+    private Integer status;
+    /**
+     * Defines the link to the edited document to be saved with the document storage service. The link is present when
+     * the status value is equal to 2 or 3 only.
+     */
+    @JsonProperty(value = "url")
+    private String url;
+    /**
+     * Defines the custom information sent to the command service in case it was present in the request.
+     */
+    @JsonProperty(value = "userdata")
+    private String userData;
+    /**
+     * Defines the list of the identifiers of the users who opened the document for editing; when the document has been
+     * changed the users will return the identifier of the user who was the last to edit the document (for status 2 and
+     * status 6 replies).
+     */
+    @JsonProperty(value = "users")
+    private List<String> users;
+
+    public List<OOAction> getActions()
+    {
+        return actions;
+    }
+
+    public void setActions(List<OOAction> actions)
+    {
+        this.actions = actions;
+    }
+
+    public List<OOChangeHistory> getChangesHistory()
+    {
+        return changesHistory;
+    }
+
+    public void setChangesHistory(List<OOChangeHistory> changesHistory)
+    {
+        this.changesHistory = changesHistory;
+    }
+
+    public String getChangesUrl()
+    {
+        return changesUrl;
+    }
+
+    public void setChangesUrl(String changesUrl)
+    {
+        this.changesUrl = changesUrl;
+    }
+
+    public Integer getForceSaveType()
+    {
+        return forceSaveType;
+    }
+
+    public void setForceSaveType(Integer forceSaveType)
+    {
+        this.forceSaveType = forceSaveType;
+    }
+
+    public OOHistory getHistory()
+    {
+        return history;
+    }
+
+    public void setHistory(OOHistory history)
+    {
+        this.history = history;
+    }
+
+    public String getKey()
+    {
+        return key;
+    }
+
+    public void setKey(String key)
+    {
+        this.key = key;
+    }
+
+    public Integer getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(Integer status)
+    {
+        this.status = status;
+    }
+
+    public String getUrl()
+    {
+        return url;
+    }
+
+    public void setUrl(String url)
+    {
+        this.url = url;
+    }
+
+    public String getUserData()
+    {
+        return userData;
+    }
+
+    public void setUserData(String userData)
+    {
+        this.userData = userData;
+    }
+
+    public List<String> getUsers()
+    {
+        return users;
+    }
+
+    public void setUsers(List<String> users)
+    {
+        this.users = users;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "CallBackData{" +
+                "actions=" + actions +
+                ", changesHistory=" + changesHistory +
+                ", changesUrl='" + changesUrl + '\'' +
+                ", forceSaveType=" + forceSaveType +
+                ", history=" + history +
+                ", key='" + key + '\'' +
+                ", status=" + status +
+                ", url='" + url + '\'' +
+                ", userData='" + userData + '\'' +
+                ", users=" + users +
+                '}';
+    }
+}
