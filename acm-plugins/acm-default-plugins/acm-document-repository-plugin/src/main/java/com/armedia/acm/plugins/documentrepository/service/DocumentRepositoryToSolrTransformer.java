@@ -135,7 +135,7 @@ public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTr
         solr.setDescription_no_html_tags_parseable(in.getDetails());
         solr.setStatus_s(in.getStatus());
 
-        String assigneeUserId = ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants());
+        String assigneeUserId = ParticipantUtils.getOwnerIdFromParticipants(in.getParticipants());
         solr.setAssignee_s(assigneeUserId);
 
         // needed a _lcs property for sorting
