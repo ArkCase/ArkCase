@@ -19,6 +19,7 @@
             "label": "A"
         },
         "dropdown": {
+		    "__comment__": "__ Este 'menú desplegable' no parece estar en uso, ¿todavía lo necesitamos? __",
             "turnaround": "Tiempo de respuesta por el solicitante",
             "requester": "Resumen del tipo de solicitante",
             "pending": "Informe de pedidos pendientes",

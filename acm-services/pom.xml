@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
@@ -51,6 +52,7 @@
         <module>acm-service-timesheet</module>
         <module>acm-service-users</module>
         <module>acm-service-webdav</module>
+        <module>acm-service-wopi</module>
         <module>acm-service-calendar</module>
         <module>acm-service-calendar-integration-exchange</module>
         <module>acm-service-labels</module>
@@ -58,6 +60,8 @@
         <module>acm-service-ldap-syncer</module>
         <module>acm-service-alfresco-ldap-syncer</module>
         <module>acm-service-transcribe</module>
+        <module>acm-service-state-of-arkcase</module>
+        <module>acm-service-arkcase-identifier</module>
         <module>acm-service-convert-folder</module>
     </modules>
 
