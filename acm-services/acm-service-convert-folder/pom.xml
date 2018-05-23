@@ -25,13 +25,11 @@
         <dependency>
             <groupId>org.docx4j</groupId>
             <artifactId>docx4j</artifactId>
-            <version>3.3.7</version>
         </dependency>
 
         <dependency>
             <groupId>org.docx4j</groupId>
             <artifactId>docx4j-export-fo</artifactId>
-            <version>3.3.6</version>
         </dependency>
 
       <!-- testing -->

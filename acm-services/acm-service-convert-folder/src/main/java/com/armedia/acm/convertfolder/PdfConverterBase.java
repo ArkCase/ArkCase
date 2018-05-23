@@ -91,7 +91,7 @@ public abstract class PdfConverterBase implements FileConverter
 
         File tempPdfFile = new File(tempUploadFolderPath + File.separator + createFileName(file));
 
-        performConversion(file, tempUploadFolderPath, tempOriginFile, tempPdfFile);
+        performConversion(file, tempOriginFile, tempPdfFile);
 
         try (FileInputStream fis = new FileInputStream(tempPdfFile))
         {
@@ -121,7 +121,22 @@ public abstract class PdfConverterBase implements FileConverter
 
     }
 
-    protected abstract void performConversion(EcmFile file, String tempUploadFolderPath, File tempOriginFile, File tempPdfFile)
+    /**
+     * Performs the actual conversion of the input file into pdf format. The implementations have to ensure that they
+     * will remove the <code>tempOriginFile</code> regardless of the outcome of the conversion. Also, in case of an
+     * exception, they have to ensure that they will remove the <code>tempPdfFile</code>.
+     *
+     * @param file
+     *            the file being converted.
+     * @param tempOriginFile
+     *            the temporary copy on the local storage of the contents of <code>file</code>. It is stored on the file
+     *            system in order to avoid keeping a byte array in memory, which would result in huge consumption of
+     *            memory.
+     * @param tempPdfFile
+     *            the temporary copy on the local storage of the result of the conversion.
+     * @throws ConversionException
+     */
+    protected abstract void performConversion(EcmFile file, File tempOriginFile, File tempPdfFile)
             throws ConversionException;
 
     /**
