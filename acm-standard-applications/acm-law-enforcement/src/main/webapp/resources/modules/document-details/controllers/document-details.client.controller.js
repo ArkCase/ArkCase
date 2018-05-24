@@ -218,7 +218,7 @@ angular.module('document-details').controller(
                             $scope.showVideoPlayer = true;
                         } else if ($scope.mediaType === "pdf" && "pdfjs" === $scope.ecmFileProperties['ecm.viewer.pdfViewer']) {
                             $scope.config = {
-                                    src: $sce.trustAsResourceUrl('/arkcase/api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId)
+                                    src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId)
                                 };
                             $scope.showPdfJs = true;
                         }
