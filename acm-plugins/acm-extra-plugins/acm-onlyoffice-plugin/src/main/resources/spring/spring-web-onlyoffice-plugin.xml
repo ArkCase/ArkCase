@@ -4,9 +4,7 @@
 
     <bean id="OnlyOfficeEditorController"
           class="com.armedia.acm.plugins.onlyoffice.web.controllers.OnlyOfficeController">
-        <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="onlyOfficeService" ref="onlyOfficeService"/>
     </bean>
 
 </beans>

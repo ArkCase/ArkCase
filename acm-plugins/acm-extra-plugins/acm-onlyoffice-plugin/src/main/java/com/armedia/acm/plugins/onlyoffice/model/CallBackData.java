@@ -12,14 +12,14 @@ public class CallBackData
      * who connected to or disconnected from the document co-editing.
      */
     @JsonProperty(value = "actions")
-    private List<OOAction> actions;
+    private List<Action> actions;
     /**
      * Defines the array of objects with the document changes history. The object is present when the status value is
      * equal to 2 or 3 only. Must be sent as a property changes of the object sent as the argument to the refreshHistory
      * method. Deprecated since version 4.2, please use history instead.
      */
     @JsonProperty(value = "changeshistory")
-    private List<OOChangeHistory> changesHistory;
+    private List<ChangeHistory> changesHistory;
     /**
      * Defines the link to the file with the document editing data used to track and display the document changes
      * history. The link is present when the status value is equal to 2 or 3 only. The file must be saved and its
@@ -44,7 +44,7 @@ public class CallBackData
      * changes of the object sent as the argument to the refreshHistory method.
      */
     @JsonProperty(value = "history")
-    private OOHistory history;
+    private History history;
     /**
      * Defines the edited document identifier.
      */
@@ -81,22 +81,22 @@ public class CallBackData
     @JsonProperty(value = "users")
     private List<String> users;
 
-    public List<OOAction> getActions()
+    public List<Action> getActions()
     {
         return actions;
     }
 
-    public void setActions(List<OOAction> actions)
+    public void setActions(List<Action> actions)
     {
         this.actions = actions;
     }
 
-    public List<OOChangeHistory> getChangesHistory()
+    public List<ChangeHistory> getChangesHistory()
     {
         return changesHistory;
     }
 
-    public void setChangesHistory(List<OOChangeHistory> changesHistory)
+    public void setChangesHistory(List<ChangeHistory> changesHistory)
     {
         this.changesHistory = changesHistory;
     }
@@ -121,12 +121,12 @@ public class CallBackData
         this.forceSaveType = forceSaveType;
     }
 
-    public OOHistory getHistory()
+    public History getHistory()
     {
         return history;
     }
 
-    public void setHistory(OOHistory history)
+    public void setHistory(History history)
     {
         this.history = history;
     }
