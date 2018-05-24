@@ -1,6 +1,4 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
-<%@page import="com.armedia.acm.plugins.onlyoffice.helpers.DocumentManager" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
@@ -10,17 +8,12 @@
     <title>ONLYOFFICE</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css"
-          href="${pageContext.servletContext.contextPath}/custom_assets/css/editor.css"/>
-
-    <% DocumentManager.init(request, response); %>
+          href="${pageContext.servletContext.contextPath}/custom_assets/css/editorConfig.css"/>
 
     <script type="text/javascript" src="${docserviceApiUrl}"></script>
-
     <script type="text/javascript" language="javascript">
 
         var docEditor;
-        var fileName = "${model.fileName}";
-        var fileType = "${fn:replace(fileInfo.fileActiveVersionNameExtension,".", "")}";
 
         var innerAlert = function (message) {
             if (console && console.log)
@@ -28,7 +21,7 @@
         };
 
         var onReady = function () {
-            innerAlert("Document editor ready");
+            innerAlert("Document editorConfig ready");
         };
 
         var onDocumentStateChange = function (event) {
@@ -51,60 +44,23 @@
 
         var сonnectEditor = function () {
 
-            docEditor = new DocsAPI.DocEditor("iframeEditor",
-                {
-                    width: "100%",
-                    height: "100%",
-                    type: "${type}",
-                    documentType: "text",
+            var config = ${config};
+            config.events = {
+                "onReady": onReady,
+                "onDocumentStateChange": onDocumentStateChange,
+                'onRequestEditRights': onRequestEditRights,
+                "onError": onError,
+                "onOutdatedVersion": onOutdatedVersion
+            };
+            config.editorConfig.customization = {
+                about: true,
+                feedback: true,
+                goback: {
+                    url: "/api/v1/plugin/ecm/download/",
 
-                    document: {
-                        title: fileName,
-                        url: "http://192.168.56.1:8080${pageContext.servletContext.contextPath}/api/v1/plugin/ecm/download?ecmFileId=${fileInfo.fileId}&acm_ticket=${token}",
-                        fileType: fileType,
-                        key: "${fileInfo.fileId}_${fileInfo.activeVersionTag}",
-                        info: {
-                            author: "${fileInfo.creator}",
-                            created: "${fileInfo.created}"
-                        },
-                        permissions: {
-                            edit: true,
-                            download: true
-                        }
-                    },
-                    editorConfig: {
-                        mode: "edit",
-                        lang: "en",
-                        callbackUrl: "http://192.168.56.1:8080${pageContext.servletContext.contextPath}/onlyoffice/callback?acm_ticket=${token}",
-
-                        user: {
-                            id: "${user.userId}",
-                            name: "${user.fullName}"
-                        },
-
-                        embedded: {
-                            saveUrl: "http://192.168.56.1:8080${pageContext.servletContext.contextPath}/api/v1/plugin/ecm/download?ecmFileId=${fileInfo.fileId}?acm_ticket=${token}",
-                            embedUrl: "http://192.168.56.1:8080${pageContext.servletContext.contextPath}/api/v1/plugin/ecm/download?ecmFileId=${fileInfo.fileId}?acm_ticket=${token}",
-                            shareUrl: "http://192.168.56.1:8080${pageContext.servletContext.contextPath}/api/v1/plugin/ecm/download?ecmFileId=${fileInfo.fileId}?acm_ticket=${token}",
-                            toolbarDocked: "top"
-                        },
-
-                        customization: {
-                            about: true,
-                            feedback: true,
-                            goback: {
-                                url: "/api/v1/plugin/ecm/download/",
-                            }
-                        }
-                    },
-                    events: {
-                        "onReady": onReady,
-                        "onDocumentStateChange": onDocumentStateChange,
-                        'onRequestEditRights': onRequestEditRights,
-                        "onError": onError,
-                        "onOutdatedVersion": onOutdatedVersion,
-                    }
-                });
+                }
+            };
+            docEditor = new DocsAPI.DocEditor("iframeEditor", config);
         };
 
         if (window.addEventListener) {
@@ -112,24 +68,6 @@
         } else if (window.attachEvent) {
             window.attachEvent("load", сonnectEditor);
         }
-
-        function getXmlHttp() {
-            var xmlhttp;
-            try {
-                xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-            } catch (e) {
-                try {
-                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-                } catch (ex) {
-                    xmlhttp = false;
-                }
-            }
-            if (!xmlhttp && typeof XMLHttpRequest !== "undefined") {
-                xmlhttp = new XMLHttpRequest();
-            }
-            return xmlhttp;
-        }
-
     </script>
 
 </head>

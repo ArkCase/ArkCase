@@ -1,10 +1,10 @@
 package com.armedia.acm.plugins.onlyoffice.model;
 
-public class OOChangeHistory
+public class History
 {
     @Override
     public String toString()
     {
-        return "OOChangeHistory{}";
+        return "History{}";
     }
 }

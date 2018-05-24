@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.onlyoffice.model;
 
-public class OOAction
+public class Action
 {
     private Integer type;
     private String userid;
@@ -28,7 +28,7 @@ public class OOAction
     @Override
     public String toString()
     {
-        return "OOAction{" +
+        return "Action{" +
                 "type=" + type +
                 ", userid='" + userid + '\'' +
                 '}';
