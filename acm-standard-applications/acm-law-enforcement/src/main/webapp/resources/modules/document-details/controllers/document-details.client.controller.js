@@ -46,6 +46,7 @@ angular.module('document-details').controller(
                         selectedIds: $stateParams['selectedIds']
                     };
                     $scope.showVideoPlayer = false;
+                    $scope.showPdfJs = false;
                     $scope.transcriptionTabActive = false;
 
                     var transcriptionConfigurationPromise = TranscriptionManagementService.getTranscribeConfiguration();
@@ -197,7 +198,10 @@ angular.module('document-details').controller(
                             $scope.fileType = $scope.ecmFile.fileType;
                         }
 
-                        $scope.mediaType = $scope.ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 ? "video" : ($scope.ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? "audio" : "other");
+                        $scope.mediaType = $scope.ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 ? "video" : 
+                            ($scope.ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? "audio" : 
+                                "application/pdf" === $scope.ecmFile.fileActiveVersionMimeType ? "pdf" :
+                                "other");
 
                         if ($scope.mediaType === "video" || $scope.mediaType === "audio") {
                             $scope.config = {
@@ -212,7 +216,13 @@ angular.module('document-details').controller(
                                 autoPlay: false
                             };
                             $scope.showVideoPlayer = true;
-                        } else {
+                        } else if ($scope.mediaType === "pdf" && "pdfjs" === $scope.ecmFileProperties['ecm.viewer.pdfViewer']) {
+                            $scope.config = {
+                                    src: $sce.trustAsResourceUrl('/arkcase/api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId)
+                                };
+                            $scope.showPdfJs = true;
+                        }
+                        else {
                             // Opens the selected document in the snowbound viewer
                             $scope.openSnowboundViewer();
                         }

@@ -24,8 +24,16 @@
             </videogular>
         </div>
         <div ng-switch-when="false">
-            <iframe class="snowbound-iframe" style="display:none;" onload="this.style.display='block'"
-                    ng-src="{{documentViewerUrl}}"></iframe>
+            <div ng-switch on="showPdfJs">
+                <div ng-switch-when="true" class="snowbound-iframe">
+                    <pdfjs-viewer download="true" print="true" open="false" src="{{ config.src }}"></pdfjs-viewer>
+                </div>
+                <div ng-switch-when="false">
+                    <iframe class="snowbound-iframe" style="display:none;" onload="this.style.display='block'"
+                        ng-src="{{documentViewerUrl}}"></iframe>
+                </div>
+            </div>
+            
         </div>
     </div>
 </div>
