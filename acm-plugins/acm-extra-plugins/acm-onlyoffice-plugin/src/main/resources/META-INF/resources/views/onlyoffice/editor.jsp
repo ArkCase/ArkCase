@@ -8,7 +8,7 @@
     <title>ONLYOFFICE</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css"
-          href="${pageContext.servletContext.contextPath}/custom_assets/css/editorConfig.css"/>
+          href="${pageContext.servletContext.contextPath}/custom_assets/css/editor.css"/>
 
     <script type="text/javascript" src="${docserviceApiUrl}"></script>
     <script type="text/javascript" language="javascript">
@@ -52,14 +52,7 @@
                 "onError": onError,
                 "onOutdatedVersion": onOutdatedVersion
             };
-            config.editorConfig.customization = {
-                about: true,
-                feedback: true,
-                goback: {
-                    url: "/api/v1/plugin/ecm/download/",
-
-                }
-            };
+            
             docEditor = new DocsAPI.DocEditor("iframeEditor", config);
         };
 

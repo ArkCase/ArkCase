@@ -4,6 +4,11 @@ public class CallbackResponse
 {
     private int error;
 
+    public CallbackResponse(int error)
+    {
+        this.error = error;
+    }
+
     public CallbackResponse()
     {
         error = 0;
