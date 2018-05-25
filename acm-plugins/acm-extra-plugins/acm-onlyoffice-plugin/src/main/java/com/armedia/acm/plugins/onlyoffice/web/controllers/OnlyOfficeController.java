@@ -3,7 +3,8 @@ package com.armedia.acm.plugins.onlyoffice.web.controllers;
 import com.armedia.acm.plugins.onlyoffice.helpers.ConfigManager;
 import com.armedia.acm.plugins.onlyoffice.model.CallBackData;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
-import com.armedia.acm.plugins.onlyoffice.service.OnlyOfficeService;
+import com.armedia.acm.plugins.onlyoffice.service.CallbackService;
+import com.armedia.acm.plugins.onlyoffice.service.ConfigService;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,12 +24,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class OnlyOfficeController
 {
     private Logger logger = LoggerFactory.getLogger(getClass());
-    private OnlyOfficeService onlyOfficeService;
+    private ConfigService configService;
+    private CallbackService callbackService;
 
     @RequestMapping(value = "/editor")
     public ModelAndView editor(
             @RequestParam(name = "file") Long fileId,
-            @RequestParam(name = "mode") String mode,
             Authentication auth)
     {
         try
@@ -37,7 +38,7 @@ public class OnlyOfficeController
             // FIXME use already defined bean object mappper instead of creating new
             ObjectMapper om = new ObjectMapper();
             om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            mav.addObject("config", om.writeValueAsString(onlyOfficeService.getConfig(fileId, auth)));
+            mav.addObject("config", om.writeValueAsString(configService.getConfig(fileId, auth)));
             mav.addObject("docserviceApiUrl", ConfigManager.getProperty("files.docservice.url.api"));
             return mav;
         }
@@ -52,14 +53,20 @@ public class OnlyOfficeController
 
     @RequestMapping(value = "/callback", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public @ResponseBody CallbackResponse callbackHandler(@RequestBody CallBackData callBackData)
+    public @ResponseBody CallbackResponse callbackHandler(@RequestBody CallBackData callBackData,
+            Authentication auth)
     {
         logger.info("got Callback [{}]", callBackData);
-        return new CallbackResponse();
+        return callbackService.handleCallback(callBackData, auth);
     }
 
-    public void setOnlyOfficeService(OnlyOfficeService onlyOfficeService)
+    public void setConfigService(ConfigService configService)
     {
-        this.onlyOfficeService = onlyOfficeService;
+        this.configService = configService;
+    }
+
+    public void setCallbackService(CallbackService callbackService)
+    {
+        this.callbackService = callbackService;
     }
 }

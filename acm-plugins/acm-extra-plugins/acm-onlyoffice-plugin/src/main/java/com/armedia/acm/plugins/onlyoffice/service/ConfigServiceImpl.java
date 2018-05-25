@@ -3,44 +3,32 @@ package com.armedia.acm.plugins.onlyoffice.service;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.plugins.onlyoffice.model.CallBackData;
-import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
 import com.armedia.acm.plugins.onlyoffice.model.config.Config;
 import com.armedia.acm.plugins.onlyoffice.model.config.Document;
 import com.armedia.acm.plugins.onlyoffice.model.config.DocumentInfo;
 import com.armedia.acm.plugins.onlyoffice.model.config.DocumentPermissions;
 import com.armedia.acm.plugins.onlyoffice.model.config.EditorConfig;
 import com.armedia.acm.plugins.onlyoffice.model.config.EditorCustomization;
+import com.armedia.acm.plugins.onlyoffice.model.config.GoBack;
 import com.armedia.acm.plugins.onlyoffice.model.config.User;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
 import java.text.SimpleDateFormat;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-public class OnlyOfficeServiceImpl implements OnlyOfficeService
+public class ConfigServiceImpl implements ConfigService
 {
+    private Logger logger = LoggerFactory.getLogger(getClass());
     private EcmFileDao ecmFileDao;
     private EcmFileService ecmFileService;
     private UserDao userDao;
     private String arkcaseBaseUrl;
     private AuthenticationTokenService authenticationTokenService;
-
-    public void setEcmFileDao(EcmFileDao ecmFileDao)
-    {
-        this.ecmFileDao = ecmFileDao;
-    }
-
-    @Override
-    public CallbackResponse processCallback(CallBackData callBackInfo)
-    {
-
-        throw new NotImplementedException();
-    }
 
     @Override
     public Config getConfig(Long fileId, Authentication auth)
@@ -115,6 +103,10 @@ public class OnlyOfficeServiceImpl implements OnlyOfficeService
             editorConfig.setCustomization(new EditorCustomization());
         }
         EditorCustomization customization = editorConfig.getCustomization();
+        GoBack goBack = new GoBack();
+        goBack.setUrl(arkcaseBaseUrl);
+        goBack.setBlank(true);
+        customization.setGoback(goBack);
 
     }
 
@@ -131,6 +123,11 @@ public class OnlyOfficeServiceImpl implements OnlyOfficeService
     public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
     {
         this.authenticationTokenService = authenticationTokenService;
+    }
+
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
+        this.ecmFileDao = ecmFileDao;
     }
 
     public void setEcmFileService(EcmFileService ecmFileService)

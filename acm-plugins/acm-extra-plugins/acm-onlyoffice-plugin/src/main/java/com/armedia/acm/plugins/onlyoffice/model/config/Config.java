@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.onlyoffice.model.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * The config base section allows to change the platform type used, document display size (width and height) and type of
  * the document opened.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Config
 {
     /**

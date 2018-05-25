@@ -1581,14 +1581,12 @@ angular
                                                                 + "/" + selectedIdsList;
                                                         window.open(baseUrl + '!/viewer/' + urlArgs);
                                                     }
-                                                },
-                                                {
+                                                }, {
                                                     name : "co-edit",
                                                     execute : function(nodes, args) {
                                                         var node = nodes[0];
                                                         var baseUrl = window.location.href.split('home.html#!')[0];
-                                                        window.open(baseUrl + 'onlyoffice/editor?file=' + node.data.objectId + '&fileExt='
-                                                                + node.data.ext + '&mode=desktop/');
+                                                        window.open(baseUrl + 'onlyoffice/editor?file=' + node.data.objectId);
 
                                                     }
                                                 }, {
