@@ -343,7 +343,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
-    public String download(Long id) throws MuleException
+    public String download(Long id) throws AcmUserActionFailedException
     {
         try
         {
@@ -354,19 +354,21 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         catch (MuleException e)
         {
-            throw e;
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DOWNLOAD_FILE,
+                    EcmFileConstants.OBJECT_FILE_TYPE, id, "Download file failed", e);
         }
     }
 
+    @Override
     @AcmAcquireObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE")
-    public String downloadWithLock(Long id) throws MuleException
+    public String checkout(Long id) throws AcmUserActionFailedException
     {
         return download(id);
     }
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
-    public InputStream downloadAsInputStream(Long id) throws MuleException, AcmUserActionFailedException
+    public InputStream downloadAsInputStream(Long id) throws AcmUserActionFailedException
     {
         try
         {
@@ -893,7 +895,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 12, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public EcmFile copyFile(Long fileId, AcmFolder targetFolder, AcmContainer targetContainer)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
     {

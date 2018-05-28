@@ -34,7 +34,7 @@ public class AcmAcquireObjectLockAspect
         String objectType = acmAcquireObjectLock.objectType();
         Long objectId = getObjectId(pjp, acmAcquireObjectLock, args);
         String lockType = acmAcquireObjectLock.lockType();
-        Long expiry = acmAcquireObjectLock.expiryTime();
+        Long expiry = acmAcquireObjectLock.expiryTimeInMilliseconds();
         boolean lockChildObjects = acmAcquireObjectLock.lockChildObjects();
         String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
         if (userId == null)

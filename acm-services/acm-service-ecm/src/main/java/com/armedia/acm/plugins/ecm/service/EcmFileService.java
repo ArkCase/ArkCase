@@ -11,7 +11,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
@@ -174,22 +173,33 @@ public interface EcmFileService
             Authentication authentication) throws AcmCreateObjectFailedException;
 
     /**
+     * Returns the file with the given Id and acquires a WRITE lock.
+     * 
+     * @param id
+     *            the file id
+     * @return the file contents as String
+     * 
+     * @throws AcmUserActionFailedException
+     */
+    String checkout(Long id) throws AcmUserActionFailedException;
+
+    /**
      * @param id
      *            - id of EcmFile
      * @return
-     * @throws AcmObjectNotFoundException
+     * @throws AcmUserActionFailedException
      */
-    String download(Long id) throws MuleException;
+    String download(Long id) throws AcmUserActionFailedException;
 
     /**
      * @param id
      *            - id of EcmFile
      * @return InputStream from the CMIS payload
-     * @throws AcmObjectNotFoundException
+     * @throws AcmUserActionFailedException
      * @usage Needed to create attachments for Exchange Web Services (EWS)
      */
 
-    InputStream downloadAsInputStream(Long id) throws MuleException, AcmUserActionFailedException;
+    InputStream downloadAsInputStream(Long id) throws AcmUserActionFailedException;
 
     AcmContainer createContainerFolder(String objectType, Long objectId, String cmisRepositoryId) throws AcmCreateObjectFailedException;
 

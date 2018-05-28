@@ -73,7 +73,7 @@ public class AcmObjectLockingManager
         }
         if (expiry == null || expiry == 0)
         {
-            expiry = getObjectLockingProvider(objectType).getExpiryTime();
+            expiry = getObjectLockingProvider(objectType).getExpiryTimeInMilliseconds();
         }
         return getObjectLockingProvider(objectType).acquireObjectLock(objectId, objectType, lockType, expiry, lockChildObjects, userId);
     }
