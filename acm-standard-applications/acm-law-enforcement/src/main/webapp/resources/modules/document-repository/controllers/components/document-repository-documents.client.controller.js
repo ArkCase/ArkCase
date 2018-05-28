@@ -24,10 +24,8 @@ angular.module('document-repository').controller(
                 'DocTreeExt.Email',
                 'ModalDialogService',
                 'Admin.EmailSenderConfigurationService',
-                function($scope, $stateParams, $modal, $translate, $q, $timeout, Util, LocaleService, ObjectService, ObjectLookupService,
-                        DocumentRepositoryInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService,
-                        ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail, ModalDialogService,
-                        EmailSenderConfigurationService) {
+                function($scope, $stateParams, $modal, $translate, $q, $timeout, Util, LocaleService, ObjectService, ObjectLookupService, DocumentRepositoryInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
+                        DocTreeExtCheckin, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -45,16 +43,16 @@ angular.module('document-repository').controller(
                     };
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "document-repository",
-                        componentId : "documents",
-                        retrieveObjectInfo : DocumentRepositoryInfoService.getDocumentRepositoryInfo,
-                        validateObjectInfo : DocumentRepositoryInfoService.validateDocumentRepositoryInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "document-repository",
+                        componentId: "documents",
+                        retrieveObjectInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                        validateObjectInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -101,12 +99,12 @@ angular.module('document-repository').controller(
 
                     $scope.createNewTask = function() {
                         var modalMetadata = {
-                            moduleName : 'tasks',
-                            templateUrl : 'modules/tasks/views/components/task-new-task.client.view.html',
-                            controllerName : 'Tasks.NewTaskController',
-                            params : {
-                                taskType : 'REVIEW_DOCUMENT',
-                                documentsToReview : $scope.selectedDocuments
+                            moduleName: 'tasks',
+                            templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html',
+                            controllerName: 'Tasks.NewTaskController',
+                            params: {
+                                taskType: 'REVIEW_DOCUMENT',
+                                documentsToReview: $scope.selectedDocuments
                             }
                         };
                         ModalDialogService.showModal(modalMetadata);
@@ -144,13 +142,13 @@ angular.module('document-repository').controller(
 
                     $scope.onFilter = function() {
                         $scope.$bus.publish('onFilterDocTree', {
-                            filter : $scope.filter
+                            filter: $scope.filter
                         });
                     };
 
                     $scope.onSearch = function() {
                         $scope.$bus.publish('onSearchDocTree', {
-                            searchFilter : $scope.searchFilter
+                            searchFilter: $scope.searchFilter
                         });
                     };
 

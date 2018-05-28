@@ -27,10 +27,10 @@ angular.module('services').factory('Object.TagsService', [ '$resource', '$transl
          *
          * @returns {Object} Object returned by $resource
          */
-        _getTags : {
-            method : 'GET',
-            url : 'api/latest/service/tag',
-            isArray : true
+        _getTags: {
+            method: 'GET',
+            url: 'api/latest/service/tag',
+            isArray: true
         },
 
         /**
@@ -49,10 +49,10 @@ angular.module('services').factory('Object.TagsService', [ '$resource', '$transl
          *
          * @returns {Object} Object returned by $resource
          */
-        _getAssociateTags : {
-            method : 'GET',
-            url : 'api/latest/service/tag/:objectType/:objectId',
-            isArray : true
+        _getAssociateTags: {
+            method: 'GET',
+            url: 'api/latest/service/tag/:objectType/:objectId',
+            isArray: true
         },
 
         /**
@@ -73,9 +73,9 @@ angular.module('services').factory('Object.TagsService', [ '$resource', '$transl
          *
          * @returns {Object} Object returned by $resource
          */
-        _associateTag : {
-            method : 'PUT',
-            url : 'api/latest/service/tag/:objectId/:objectType/:objectTitle/:tagId'
+        _associateTag: {
+            method: 'PUT',
+            url: 'api/latest/service/tag/:objectId/:objectType/:objectTitle/:tagId'
         },
 
         /**
@@ -95,9 +95,9 @@ angular.module('services').factory('Object.TagsService', [ '$resource', '$transl
          *
          * @returns {Object} Object returned by $resource
          */
-        _createTag : {
-            method : 'PUT',
-            url : 'api/latest/service/tag?name=:tagName&desc=:tagDesc&text=:tagText'
+        _createTag: {
+            method: 'PUT',
+            url: 'api/latest/service/tag?name=:tagName&desc=:tagDesc&text=:tagText'
         },
 
         /**
@@ -117,9 +117,9 @@ angular.module('services').factory('Object.TagsService', [ '$resource', '$transl
          *
          * @returns {Object} Object returned by $resource
          */
-        _removeTag : {
-            method : 'DELETE',
-            url : 'api/latest/service/tag/:objectId/:objectType/:tagId'
+        _removeTag: {
+            method: 'DELETE',
+            url: 'api/latest/service/tag/:objectId/:objectType/:tagId'
         }
 
     });
@@ -137,8 +137,8 @@ angular.module('services').factory('Object.TagsService', [ '$resource', '$transl
      */
     Service.getTags = function() {
         return Util.serviceCall({
-            service : Service._getTags,
-            onSuccess : function(data) {
+            service: Service._getTags,
+            onSuccess: function(data) {
                 if (Service.validateTags(data)) {
                     return data;
                 }
@@ -161,13 +161,13 @@ angular.module('services').factory('Object.TagsService', [ '$resource', '$transl
      */
     Service.getAssociateTags = function(objectId, objectType) {
         return Util.serviceCall({
-            service : Service._getAssociateTags,
-            param : {
-                objectId : objectId,
-                objectType : objectType
+            service: Service._getAssociateTags,
+            param: {
+                objectId: objectId,
+                objectType: objectType
             },
-            data : {},
-            onSuccess : function(data) {
+            data: {},
+            onSuccess: function(data) {
                 if (Service.validateTags(data)) {
                     return data;
                 }
@@ -192,15 +192,15 @@ angular.module('services').factory('Object.TagsService', [ '$resource', '$transl
      */
     Service.associateTag = function(objectId, objectType, objectTitle, tagId) {
         return Util.serviceCall({
-            service : Service._associateTag,
-            param : {
-                objectId : objectId,
-                objectType : objectType,
-                objectTitle : objectTitle,
-                tagId : tagId
+            service: Service._associateTag,
+            param: {
+                objectId: objectId,
+                objectType: objectType,
+                objectTitle: objectTitle,
+                tagId: tagId
             },
-            data : {},
-            onSuccess : function(data) {
+            data: {},
+            onSuccess: function(data) {
                 if (Service.validateNewTagAssociation(data)) {
                     return data;
                 }
@@ -224,14 +224,14 @@ angular.module('services').factory('Object.TagsService', [ '$resource', '$transl
      */
     Service.createTag = function(tagName, tagDesc, tagText) {
         return Util.serviceCall({
-            service : Service._createTag,
-            param : {
-                tagName : tagName,
-                tagDesc : tagDesc,
-                tagText : tagText
+            service: Service._createTag,
+            param: {
+                tagName: tagName,
+                tagDesc: tagDesc,
+                tagText: tagText
             },
-            data : {},
-            onSuccess : function(data) {
+            data: {},
+            onSuccess: function(data) {
                 if (Service.validateTag(data)) {
                     return data;
                 }
@@ -255,14 +255,14 @@ angular.module('services').factory('Object.TagsService', [ '$resource', '$transl
      */
     Service.removeAssociateTag = function(objectId, objectType, tagId) {
         return Util.serviceCall({
-            service : Service._removeTag,
-            param : {
-                objectId : objectId,
-                objectType : objectType,
-                tagId : tagId
+            service: Service._removeTag,
+            param: {
+                objectId: objectId,
+                objectType: objectType,
+                tagId: tagId
             },
-            data : {},
-            onSuccess : function(data) {
+            data: {},
+            onSuccess: function(data) {
                 if (Service.validateRemovedAssociatedTag(data)) {
                     return data;
                 }

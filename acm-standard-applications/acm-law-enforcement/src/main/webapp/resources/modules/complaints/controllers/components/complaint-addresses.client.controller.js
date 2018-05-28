@@ -1,22 +1,8 @@
 'use strict';
 angular.module('complaints').controller(
         'Complaint.LocationsController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Complaint.InfoService',
-                'Authentication',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'PermissionsService',
-                'Object.ModelService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, ComplaintInfoService, Authentication,
-                        HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectModelService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Complaint.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.ModelService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, ComplaintInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectModelService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -24,22 +10,22 @@ angular.module('complaints').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "complaints",
-                        componentId : "addresses",
-                        retrieveObjectInfo : ComplaintInfoService.getComplaintInfo,
-                        validateObjectInfo : ComplaintInfoService.validateComplaintInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "complaints",
+                        componentId: "addresses",
+                        retrieveObjectInfo: ComplaintInfoService.getComplaintInfo,
+                        validateObjectInfo: ComplaintInfoService.validateComplaintInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -47,7 +33,7 @@ angular.module('complaints').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editComplaint', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.COMPLAINT
+                            objectType: ObjectService.ObjectTypes.COMPLAINT
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -74,30 +60,30 @@ angular.module('complaints').controller(
                         address.className = "com.armedia.acm.plugins.addressable.model.PostalAddress";
                         $scope.address = address;
                         var item = {
-                            id : '',
-                            parentId : $scope.objectInfo.id,
-                            addressType : '',
-                            streetAddress : '',
-                            streetAddress2 : '',
-                            city : '',
-                            state : '',
-                            zip : '',
-                            country : ''
+                            id: '',
+                            parentId: $scope.objectInfo.id,
+                            addressType: '',
+                            streetAddress: '',
+                            streetAddress2: '',
+                            city: '',
+                            state: '',
+                            zip: '',
+                            country: ''
                         };
                         showModal(item, false);
                     };
                     $scope.editRow = function(rowEntity) {
                         $scope.address = rowEntity;
                         var item = {
-                            id : rowEntity.id,
-                            parentId : $scope.objectInfo.id,
-                            addressType : rowEntity.type,
-                            streetAddress : rowEntity.streetAddress,
-                            streetAddress2 : rowEntity.streetAddress2,
-                            city : rowEntity.city,
-                            state : rowEntity.state,
-                            zip : rowEntity.zip,
-                            country : rowEntity.country
+                            id: rowEntity.id,
+                            parentId: $scope.objectInfo.id,
+                            addressType: rowEntity.type,
+                            streetAddress: rowEntity.streetAddress,
+                            streetAddress2: rowEntity.streetAddress2,
+                            city: rowEntity.city,
+                            state: rowEntity.state,
+                            zip: rowEntity.zip,
+                            country: rowEntity.country
 
                         };
                         showModal(item, true);
@@ -125,13 +111,13 @@ angular.module('complaints').controller(
                         params.hideNoField = params.isDefault;
 
                         var modalInstance = $modal.open({
-                            animation : true,
-                            templateUrl : 'modules/complaints/views/components/complaint-addresses-modal.client.view.html',
-                            controller : 'Complaint.AddressesModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            animation: true,
+                            templateUrl: 'modules/complaints/views/components/complaint-addresses-modal.client.view.html',
+                            controller: 'Complaint.AddressesModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -143,7 +129,7 @@ angular.module('complaints').controller(
                                 address = $scope.address;
                             else {
                                 address = _.find($scope.objectInfo.addresses, {
-                                    id : data.address.id
+                                    id: data.address.id
                                 });
                             }
                             address.type = data.address.addressType;

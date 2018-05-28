@@ -2,23 +2,8 @@
 
 angular.module('people').controller(
         'People.AddressesController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Person.InfoService',
-                'Authentication',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'PermissionsService',
-                'Object.LookupService',
-                'Object.ModelService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication,
-                        HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -26,22 +11,22 @@ angular.module('people').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "people",
-                        componentId : "addresses",
-                        retrieveObjectInfo : PersonInfoService.getPersonInfo,
-                        validateObjectInfo : PersonInfoService.validatePersonInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "people",
+                        componentId: "addresses",
+                        retrieveObjectInfo: PersonInfoService.getPersonInfo,
+                        validateObjectInfo: PersonInfoService.validatePersonInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -49,7 +34,7 @@ angular.module('people').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.PERSON
+                            objectType: ObjectService.ObjectTypes.PERSON
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -85,30 +70,30 @@ angular.module('people').controller(
                         address.className = "com.armedia.acm.plugins.addressable.model.PostalAddress";
                         $scope.address = address;
                         var item = {
-                            id : '',
-                            parentId : $scope.objectInfo.id,
-                            addressType : '',
-                            streetAddress : '',
-                            streetAddress2 : '',
-                            city : '',
-                            state : '',
-                            zip : '',
-                            country : ''
+                            id: '',
+                            parentId: $scope.objectInfo.id,
+                            addressType: '',
+                            streetAddress: '',
+                            streetAddress2: '',
+                            city: '',
+                            state: '',
+                            zip: '',
+                            country: ''
                         };
                         showModal(item, false);
                     };
                     $scope.editRow = function(rowEntity) {
                         $scope.address = rowEntity;
                         var item = {
-                            id : rowEntity.id,
-                            parentId : $scope.objectInfo.id,
-                            addressType : rowEntity.type,
-                            streetAddress : rowEntity.streetAddress,
-                            streetAddress2 : rowEntity.streetAddress2,
-                            city : rowEntity.city,
-                            state : rowEntity.state,
-                            zip : rowEntity.zip,
-                            country : rowEntity.country
+                            id: rowEntity.id,
+                            parentId: $scope.objectInfo.id,
+                            addressType: rowEntity.type,
+                            streetAddress: rowEntity.streetAddress,
+                            streetAddress2: rowEntity.streetAddress2,
+                            city: rowEntity.city,
+                            state: rowEntity.state,
+                            zip: rowEntity.zip,
+                            country: rowEntity.country
 
                         };
                         showModal(item, true);
@@ -135,13 +120,13 @@ angular.module('people').controller(
                         params.isDefault = $scope.isDefault(address);
 
                         var modalInstance = $modal.open({
-                            animation : true,
-                            templateUrl : 'modules/people/views/components/person-addresses-modal.client.view.html',
-                            controller : 'People.AddressesModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            animation: true,
+                            templateUrl: 'modules/people/views/components/person-addresses-modal.client.view.html',
+                            controller: 'People.AddressesModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -153,7 +138,7 @@ angular.module('people').controller(
                                 address = $scope.address;
                             else {
                                 address = _.find($scope.objectInfo.addresses, {
-                                    id : data.address.id
+                                    id: data.address.id
                                 });
                             }
                             address.type = data.address.addressType;
@@ -192,6 +177,9 @@ angular.module('people').controller(
 
                     $scope.isDefault = function(address) {
                         var defaultAddress = $scope.objectInfo.defaultAddress;
+                        if (Util.isEmpty(defaultAddress)) {
+                            return true;
+                        }
                         var comparisonProperties = [ "id", "streetAddress", "streetAddress2", "city", "state", "zip", "country" ];
                         return Util.objectsComparisonByGivenProperties(defaultAddress, address, comparisonProperties);
                     }

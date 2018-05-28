@@ -2,27 +2,9 @@
 
 angular.module('cases').controller(
         'Tasks.PastApprovalRoutingController',
-        [
-                '$scope',
-                '$stateParams',
-                '$q',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'Util.DateService',
-                'ConfigService',
-                'ObjectService',
-                'LookupService',
-                'Object.LookupService',
-                'Task.InfoService',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'Authentication',
-                'PermissionsService',
+        [ '$scope', '$stateParams', '$q', '$translate', '$modal', 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService',
                 'Profile.UserInfoService',
-                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService,
-                        ObjectLookupService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication,
-                        PermissionsService, UserInfoService) {
+                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication, PermissionsService, UserInfoService) {
 
                     $scope.pastApprovers = {};
                     $scope.gridOptions = $scope.gridOptions || {};
@@ -31,22 +13,22 @@ angular.module('cases').controller(
                     var currentUser = '';
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "tasks",
-                        componentId : "pastapprovals",
-                        retrieveObjectInfo : TaskInfoService.getTaskInfo,
-                        validateObjectInfo : TaskInfoService.validateTaskInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "tasks",
+                        componentId: "pastapprovals",
+                        retrieveObjectInfo: TaskInfoService.getTaskInfo,
+                        validateObjectInfo: TaskInfoService.validateTaskInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelperPastApprovers = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     Authentication.queryUserInfo().then(function(data) {

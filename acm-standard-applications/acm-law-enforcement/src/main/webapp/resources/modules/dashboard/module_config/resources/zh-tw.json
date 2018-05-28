@@ -347,7 +347,14 @@
             "approvers": {
                 "title": "審批",
                 "description": "顯示批准者",
-                "noDataMessage": "當前沒有要顯示的核准者"	
+                "noDataMessage": "當前沒有要顯示的核准者"
+            },
+            "savePromptModal": {
+                "title": "zh-tw_Save dashboard",
+                "info": "zh-tw_You are in edit mode. Do you want to save the changes?",
+                "save": "zh-ctw_Save",
+                "doNotSave": "zh-tw_Do not save",
+                "cancel": "zh-tw_Cancel"
             }
         }
     },

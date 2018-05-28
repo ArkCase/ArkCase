@@ -10,19 +10,19 @@
  *
  * DueDate.Service provides functions for calculation for due date without holidays and weekends
  */
-angular.module('services').service('DueDate.Service', function() {
+angular.module('services').service('DueDate.Service', [ '$translate', function($translate) {
 
     return ({
-        dueDateWorkingDays : dueDateWorkingDays,
-        dueDateWithWeekends : dueDateWithWeekends,
-        workingDays : workingDays,
-        workingDaysWithWeekends : workingDaysWithWeekends,
-        daysLeft : daysLeft,
-        daysLeftWithWeekends : daysLeftWithWeekends
+        dueDateWorkingDays: dueDateWorkingDays,
+        dueDateWithWeekends: dueDateWithWeekends,
+        workingDays: workingDays,
+        workingDaysWithWeekends: workingDaysWithWeekends,
+        daysLeft: daysLeft,
+        daysLeftWithWeekends: daysLeftWithWeekends
     });
 
     function dueDateWorkingDays(startDate, days, holidays) {
-        var momentObject = moment(startDate).utc();
+        var momentObject = moment(startDate);
         var count = 0;
         while (count < days) {
             momentObject.add(1, 'days');
@@ -32,11 +32,11 @@ angular.module('services').service('DueDate.Service', function() {
             }
 
         }
-        return momentObject.format("YYYY-MM-DD");
+        return momentObject.format($translate.instant("common.frevvo.defaultDateFormat"));
     }
 
     function dueDateWithWeekends(startDate, days, holidays) {
-        var momentObject = moment(startDate).utc();
+        var momentObject = moment(startDate);
         var count = 0;
         while (count < days) {
             momentObject.add(1, 'days');
@@ -46,13 +46,13 @@ angular.module('services').service('DueDate.Service', function() {
             }
 
         }
-        return momentObject.format("YYYY-MM-DD");
+        return momentObject.format($translate.instant("common.frevvo.defaultDateFormat"));
     }
 
     function workingDays(startDate, holidays) {
-        var momentObject = moment(startDate).utc();
+        var momentObject = moment(startDate);
         var today = moment();
-        var days = 0;
+        var days = -1;
         while (momentObject < today) {
             momentObject.add(1, 'days');
 
@@ -64,9 +64,9 @@ angular.module('services').service('DueDate.Service', function() {
     }
 
     function workingDaysWithWeekends(startDate, holidays) {
-        var momentObject = moment(startDate).utc();
+        var momentObject = moment(startDate);
         var today = moment();
-        var days = 0;
+        var days = -1;
         while (momentObject < today) {
             momentObject.add(1, 'days');
 
@@ -78,7 +78,7 @@ angular.module('services').service('DueDate.Service', function() {
     }
 
     function daysLeft(holidays, dueDate) {
-        var dueDate = moment(dueDate).utc();
+        var dueDate = moment(dueDate);
         var momentDate = moment();
         var days = 0;
         while (momentDate < dueDate) {
@@ -91,7 +91,7 @@ angular.module('services').service('DueDate.Service', function() {
     }
 
     function daysLeftWithWeekends(holidays, dueDate) {
-        var dueDate = moment(dueDate).utc();
+        var dueDate = moment(dueDate);
         var momentDate = moment();
         var days = 0;
         while (momentDate < dueDate) {
@@ -109,8 +109,8 @@ angular.module('services').service('DueDate.Service', function() {
 
     function isHoliday(holidays, momentObject) {
         return _.find(holidays, function(holiday) {
-            return holiday.holidayDate === momentObject.format("YYYY-MM-DD");
+            return holiday.holidayDate === momentObject.format($translate.instant("common.frevvo.defaultDateFormat"));
         }) !== undefined;
     }
 
-});
+} ]);

@@ -2,84 +2,69 @@
 
 angular.module('dashboard.details', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('details', {
-        title : 'preference.overviewWidgets.details.title',
-        description : 'dashboard.widgets.details.description',
-        controller : 'Dashboard.DetailsController',
-        reload : true,
-        templateUrl : 'modules/dashboard/views/components/details-widget.client.view.html',
-        commonName : 'details'
+        title: 'preference.overviewWidgets.details.title',
+        description: 'dashboard.widgets.details.description',
+        controller: 'Dashboard.DetailsController',
+        reload: true,
+        templateUrl: 'modules/dashboard/views/components/details-widget.client.view.html',
+        commonName: 'details'
     });
 }).controller(
         'Dashboard.DetailsController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                'UtilService',
-                'Case.InfoService',
-                'Complaint.InfoService',
-                'Task.InfoService',
-                'CostTracking.InfoService',
-                'TimeTracking.InfoService',
-                'Helper.ObjectBrowserService',
-                'Helper.UiGridService',
-                'DocumentRepository.InfoService',
-                'Person.InfoService',
+        [ '$scope', '$stateParams', '$translate', 'UtilService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'DocumentRepository.InfoService', 'Person.InfoService',
                 'Organization.InfoService',
-                function($scope, $stateParams, $translate, Util, CaseInfoService, ComplaintInfoService, TaskInfoService,
-                        CostTrackingInfoService, TimeTrackingInfoService, HelperObjectBrowserService, HelperUiGridService,
-                        DocumentRepositoryInfoService, PersonInfoService, OrganizationInfoService) {
+                function($scope, $stateParams, $translate, Util, CaseInfoService, ComplaintInfoService, TaskInfoService, CostTrackingInfoService, TimeTrackingInfoService, HelperObjectBrowserService, HelperUiGridService, DocumentRepositoryInfoService, PersonInfoService, OrganizationInfoService) {
 
                     var modules = [ {
-                        name : "CASE_FILE",
-                        configName : "cases",
-                        getInfo : CaseInfoService.getCaseInfo,
-                        validateInfo : CaseInfoService.validateCaseInfo
+                        name: "CASE_FILE",
+                        configName: "cases",
+                        getInfo: CaseInfoService.getCaseInfo,
+                        validateInfo: CaseInfoService.validateCaseInfo
                     }, {
-                        name : "COMPLAINT",
-                        configName : "complaints",
-                        getInfo : ComplaintInfoService.getComplaintInfo,
-                        validateInfo : ComplaintInfoService.validateComplaintInfo
+                        name: "COMPLAINT",
+                        configName: "complaints",
+                        getInfo: ComplaintInfoService.getComplaintInfo,
+                        validateInfo: ComplaintInfoService.validateComplaintInfo
                     }, {
-                        name : "COSTSHEET",
-                        configName : "cost-tracking",
-                        getInfo : CostTrackingInfoService.getCostsheetInfo,
-                        validateInfo : CostTrackingInfoService.validateCostsheet
+                        name: "COSTSHEET",
+                        configName: "cost-tracking",
+                        getInfo: CostTrackingInfoService.getCostsheetInfo,
+                        validateInfo: CostTrackingInfoService.validateCostsheet
                     }, {
-                        name : "TIMESHEET",
-                        configName : "time-tracking",
-                        getInfo : TimeTrackingInfoService.getTimesheetInfo,
-                        validateInfo : TimeTrackingInfoService.validateTimesheet
+                        name: "TIMESHEET",
+                        configName: "time-tracking",
+                        getInfo: TimeTrackingInfoService.getTimesheetInfo,
+                        validateInfo: TimeTrackingInfoService.validateTimesheet
                     }, {
-                        name : "TASK",
-                        configName : "tasks",
-                        getInfo : TaskInfoService.getTaskInfo,
-                        validateInfo : TaskInfoService.validateTaskInfo
+                        name: "TASK",
+                        configName: "tasks",
+                        getInfo: TaskInfoService.getTaskInfo,
+                        validateInfo: TaskInfoService.validateTaskInfo
                     }, {
-                        name : "ADHOC",
-                        configName : "tasks",
-                        getInfo : TaskInfoService.getTaskInfo,
-                        validateInfo : TaskInfoService.validateTaskInfo
+                        name: "ADHOC",
+                        configName: "tasks",
+                        getInfo: TaskInfoService.getTaskInfo,
+                        validateInfo: TaskInfoService.validateTaskInfo
                     }, {
-                        name : "DOC_REPO",
-                        configName : "document-repository",
-                        getInfo : DocumentRepositoryInfoService.getDocumentRepositoryInfo,
-                        validateInfo : DocumentRepositoryInfoService.validateDocumentRepositoryInfo
+                        name: "DOC_REPO",
+                        configName: "document-repository",
+                        getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                        validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
                     }, {
-                        name : "MY_DOC_REPO",
-                        configName : "my-documents",
-                        getInfo : DocumentRepositoryInfoService.getDocumentRepositoryInfo,
-                        validateInfo : DocumentRepositoryInfoService.validateDocumentRepositoryInfo
+                        name: "MY_DOC_REPO",
+                        configName: "my-documents",
+                        getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                        validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
                     }, {
-                        name : "PERSON",
-                        configName : "people",
-                        getInfo : PersonInfoService.getPersonInfo,
-                        validateInfo : PersonInfoService.validatePersonInfo
+                        name: "PERSON",
+                        configName: "people",
+                        getInfo: PersonInfoService.getPersonInfo,
+                        validateInfo: PersonInfoService.validatePersonInfo
                     }, {
-                        name : "ORGANIZATION",
-                        configName : "organizations",
-                        getInfo : OrganizationInfoService.getOrganizationInfo,
-                        validateInfo : OrganizationInfoService.validateOrganizationInfo
+                        name: "ORGANIZATION",
+                        configName: "organizations",
+                        getInfo: OrganizationInfoService.getOrganizationInfo,
+                        validateInfo: OrganizationInfoService.validateOrganizationInfo
                     } ];
 
                     var module = _.find(modules, function(module) {
@@ -87,26 +72,26 @@ angular.module('dashboard.details', [ 'adf.provider' ]).config(function(dashboar
                     });
 
                     $scope.gridOptions = {
-                        enableColumnResizing : true,
-                        columnDefs : []
+                        enableColumnResizing: true,
+                        columnDefs: []
                     };
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
                     var promiseUsers = gridHelper.getUsers();
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : module.configName,
-                        componentId : "main",
-                        retrieveObjectInfo : module.getInfo,
-                        validateObjectInfo : module.validateInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: module.configName,
+                        componentId: "main",
+                        retrieveObjectInfo: module.getInfo,
+                        validateObjectInfo: module.validateInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         },
-                        onConfigRetrieved : function(componentConfig) {
+                        onConfigRetrieved: function(componentConfig) {
                             onConfigRetrieved(componentConfig);
                         }
                     });

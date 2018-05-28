@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
     <flow name="renameFolder" doc:name="Rename Folder">
         <description></description>
 
-        <vm:inbound-endpoint address="vm://renameFolder.in" exchange-pattern="request-response"
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://renameFolder.in" exchange-pattern="request-response"
             doc:name="Rename Folder"></vm:inbound-endpoint>
 
         <timer-interceptor/>

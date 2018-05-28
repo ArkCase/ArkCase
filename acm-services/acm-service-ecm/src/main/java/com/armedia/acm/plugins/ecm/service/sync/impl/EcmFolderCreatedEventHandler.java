@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
+/*-
+ * #%L
+ * ACM Service: Enterprise Content Management
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -21,9 +48,8 @@ import javax.persistence.PersistenceException;
  */
 public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEvent>
 {
-    private AcmFolderDao folderDao;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private AcmFolderDao folderDao;
     private AcmFolderService folderService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private EcmFileParticipantService fileParticipantService;
@@ -106,19 +132,14 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
         }
     }
 
-    public void setFolderDao(AcmFolderDao folderDao)
-    {
-        this.folderDao = folderDao;
-    }
-
     public AcmFolderDao getFolderDao()
     {
         return folderDao;
     }
 
-    public void setFolderService(AcmFolderService folderService)
+    public void setFolderDao(AcmFolderDao folderDao)
     {
-        this.folderService = folderService;
+        this.folderDao = folderDao;
     }
 
     public AcmFolderService getFolderService()
@@ -126,14 +147,19 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
         return folderService;
     }
 
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    public void setFolderService(AcmFolderService folderService)
     {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+        this.folderService = folderService;
     }
 
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
     {
         return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
     public EcmFileParticipantService getFileParticipantService()

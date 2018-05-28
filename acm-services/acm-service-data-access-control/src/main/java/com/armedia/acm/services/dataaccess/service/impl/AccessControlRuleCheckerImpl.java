@@ -1,5 +1,32 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+/*-
+ * #%L
+ * ACM Service: Data Access Control
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
@@ -42,6 +69,11 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
 
     private ObjectConverter objectConverter;
 
+    // Fallback parent expressions
+    private String getObjectExpression;
+    private String editObjectExpression;
+    private String insertObjectExpression;
+    private String deleteObjectExpression;
     /**
      * Logger instance.
      */
@@ -170,23 +202,23 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     private String getFallbackPermissionName(String permission)
     {
         String parentActionName = null;
-        if (permission.toLowerCase().matches("(get|list|read|download|view|subscribe).*"))
+        if (permission.toLowerCase().matches("(" + getObjectExpression + ").*"))
         {
             // read parent permission
             parentActionName = "getObject";
         }
         else if (permission.toLowerCase()
-                .matches("(save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename|write).*"))
+                .matches("(" + editObjectExpression + ").*"))
         {
             // write parent permission
             parentActionName = "editObject";
         }
-        else if (permission.toLowerCase().matches("(create).*"))
+        else if (permission.toLowerCase().matches("(" + insertObjectExpression + ").*"))
         {
             // insert parent permission
             parentActionName = "insertObject";
         }
-        else if (permission.toLowerCase().matches("(delete).*"))
+        else if (permission.toLowerCase().matches("(" + deleteObjectExpression + ").*"))
         {
             // delete parent permission
             parentActionName = "deleteObject";
@@ -485,5 +517,45 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public String getGetObjectExpression()
+    {
+        return getObjectExpression;
+    }
+
+    public void setGetObjectExpression(String getObjectExpression)
+    {
+        this.getObjectExpression = getObjectExpression;
+    }
+
+    public String getEditObjectExpression()
+    {
+        return editObjectExpression;
+    }
+
+    public void setEditObjectExpression(String editObjectExpression)
+    {
+        this.editObjectExpression = editObjectExpression;
+    }
+
+    public String getInsertObjectExpression()
+    {
+        return insertObjectExpression;
+    }
+
+    public void setInsertObjectExpression(String insertObjectExpression)
+    {
+        this.insertObjectExpression = insertObjectExpression;
+    }
+
+    public String getDeleteObjectExpression()
+    {
+        return deleteObjectExpression;
+    }
+
+    public void setDeleteObjectExpression(String deleteObjectExpression)
+    {
+        this.deleteObjectExpression = deleteObjectExpression;
     }
 }

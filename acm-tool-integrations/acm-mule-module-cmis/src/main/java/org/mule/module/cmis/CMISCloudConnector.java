@@ -8,6 +8,33 @@
 
 package org.mule.module.cmis;
 
+/*-
+ * #%L
+ * ACM Mule CMIS Connector
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import org.apache.chemistry.opencmis.client.api.ChangeEvents;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
@@ -55,6 +82,8 @@ import java.util.Map;
 public class CMISCloudConnector implements CMISFacade
 {
 
+    // This object will be used to hold the concurrency for the connection manager features
+    private final Object threadSafeLock;
     /**
      * Reference to a CMISFacade implementation in case you want to
      * use another implementation or initialize the default in a
@@ -62,11 +91,7 @@ public class CMISCloudConnector implements CMISFacade
      * attributes.
      */
     private CMISFacade facade;
-
     private String connectionIdentifier;
-
-    // This object will be used to hold the concurrency for the connection manager features
-    private final Object threadSafeLock;
 
     public CMISCloudConnector()
     {
@@ -173,6 +198,11 @@ public class CMISCloudConnector implements CMISFacade
     public String getConnectionIdentifier()
     {
         return this.connectionIdentifier;
+    }
+
+    public void setConnectionIdentifier(String connectionIdentifier)
+    {
+        this.connectionIdentifier = connectionIdentifier;
     }
 
     /**
@@ -363,10 +393,10 @@ public class CMISCloudConnector implements CMISFacade
      * Creates a new folder in the repository if it doesn't already exist.
      * <p/>
      * {@sample.xml ../../../doc/cmis-connector.xml.sample cmis:getOrCreateFolderByPath}
-     * 
+     *
      * @param folderPath
      *            Path to the folder
-     * 
+     *
      * @return the {@link ObjectId} of the created
      */
     @Override
@@ -1009,10 +1039,5 @@ public class CMISCloudConnector implements CMISFacade
     public void setFacade(CMISFacade facade)
     {
         this.facade = facade;
-    }
-
-    public void setConnectionIdentifier(String connectionIdentifier)
-    {
-        this.connectionIdentifier = connectionIdentifier;
     }
 }

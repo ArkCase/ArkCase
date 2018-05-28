@@ -59,10 +59,10 @@ angular.module('adf.provider').provider('ArkCaseDashboard', function(dashboardPr
     var that = this;
     this.$get = function() {
         return {
-            widgets : this.widgets,
-            structure : this.structure,
-            setLocale : this.setLocale,
-            addLocale : this.addLocale
+            widgets: this.widgets,
+            structure: this.structure,
+            setLocale: this.setLocale,
+            addLocale: this.addLocale
         // messageTemplate: messageTemplate,
         // loadingTemplate: loadingTemplate,
         // locales: this.getLocales,

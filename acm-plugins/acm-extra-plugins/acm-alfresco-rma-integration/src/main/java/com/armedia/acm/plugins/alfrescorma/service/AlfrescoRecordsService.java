@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+/*-
+ * #%L
+ * ACM Extra Plugin: Alfresco RMA Integration
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
@@ -36,6 +63,12 @@ public class AlfrescoRecordsService implements InitializingBean
     private Map<String, Object> alfrescoRmaPropertiesMap;
     private EcmFileDao ecmFileDao;
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
+    private DeclareRecordService declareRecordService;
+    private SetRecordMetadataService setRecordMetadataService;
+    private FindFolderService findFolderService;
+    private CreateOrFindRecordFolderService createOrFindRecordFolderService;
+    private MoveToRecordFolderService moveToRecordFolderService;
+    private CompleteRecordService completeRecordService;
 
     @Override
     public void afterPropertiesSet() throws Exception
@@ -44,13 +77,6 @@ public class AlfrescoRecordsService implements InitializingBean
 
         getEncryptablePropertyUtils().decryptProperties(alfrescoRmaPropertiesMap);
     }
-
-    private DeclareRecordService declareRecordService;
-    private SetRecordMetadataService setRecordMetadataService;
-    private FindFolderService findFolderService;
-    private CreateOrFindRecordFolderService createOrFindRecordFolderService;
-    private MoveToRecordFolderService moveToRecordFolderService;
-    private CompleteRecordService completeRecordService;
 
     public void declareAllContainerFilesAsRecords(Authentication auth, AcmContainer container, Date receiveDate, String recordFolderName)
     {
@@ -214,6 +240,11 @@ public class AlfrescoRecordsService implements InitializingBean
         this.ecmFileService = ecmFileService;
     }
 
+    public Properties getAlfrescoRmaProperties()
+    {
+        return alfrescoRmaProperties;
+    }
+
     public void setAlfrescoRmaProperties(Properties alfrescoRmaProperties)
     {
         this.alfrescoRmaProperties = alfrescoRmaProperties;
@@ -225,11 +256,6 @@ public class AlfrescoRecordsService implements InitializingBean
                     .forEach((entry) -> stringObjectMap.put((String) entry.getKey(), entry.getValue()));
             setAlfrescoRmaPropertiesMap(stringObjectMap);
         }
-    }
-
-    public Properties getAlfrescoRmaProperties()
-    {
-        return alfrescoRmaProperties;
     }
 
     public EcmFileDao getEcmFileDao()

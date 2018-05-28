@@ -22,10 +22,10 @@ angular.module('admin').factory('Admin.TranscriptionManagementService', [ '$http
          *
          * @returns {Object} http promise
          */
-        getTranscribeConfiguration : function() {
+        getTranscribeConfiguration: function() {
             return $http({
-                method : 'GET',
-                url : 'api/v1/plugin/admin/transcribe/configuration'
+                method: 'GET',
+                url: 'api/v1/plugin/admin/transcribe/configuration'
             });
         },
         /**
@@ -41,11 +41,11 @@ angular.module('admin').factory('Admin.TranscriptionManagementService', [ '$http
          * @returns {Object} http promise
          */
 
-        saveTranscribeConfiguration : function(transcribeConfig) {
+        saveTranscribeConfiguration: function(transcribeConfig) {
             return $http({
-                method : 'POST',
-                url : 'api/v1/plugin/admin/transcribe/configuration',
-                data : transcribeConfig
+                method: 'POST',
+                url: 'api/v1/plugin/admin/transcribe/configuration',
+                data: transcribeConfig
             })
 
         }

@@ -84,6 +84,12 @@
             "modified": "Модифицированный",
             "targetType": "Тип ссылки",
             "status": "Положение дел"
+        },
+        "message": {
+            "delete": {
+                "success": "ru_Reference deleted successfully",
+                "error": "ru_Error deleting reference"
+            }
         }
     },
     "document-repository.comp.history": {
@@ -182,10 +188,10 @@
         "name.placeholder": "Введите имя",
         "descriptionLabel": "Описание",
         "description.placeholder": "Введите описание",
-        "searchUser": "ru_Search User and Group",
-        "cancelBtn": "ru_Cancel",
-        "okBtn": "ru_OK",
-        "search-placeholder": "ru_Search for user or group",
+        "searchUser": "Поиск пользователя и группы",
+        "cancelBtn": "Отмена",
+        "okBtn": "OK",
+        "search-placeholder": "Поиск пользователя и группы",
         "personalRepository": "Мои документы"
     },
     "document-repository.dialogUserPicker": {

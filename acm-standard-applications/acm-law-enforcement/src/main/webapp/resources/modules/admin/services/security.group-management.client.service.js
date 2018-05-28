@@ -2,13 +2,13 @@
 
 angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '$http', 'base64', function($resource, $http, base64) {
     return ({
-        getGroups : getGroups,
-        getAdHocGroups : getAdHocGroups,
-        getGroupsAdhocFiltered : getGroupsAdhocFiltered,
-        getAdhocGroupsForAdhocGroup : getAdhocGroupsForAdhocGroup,
-        getAdhocGroupsForAdhocGroupFiltered : getAdhocGroupsForAdhocGroupFiltered,
-        addGroupSubGroups : addGroupSubGroups,
-        deleteGroupSubGroups : deleteGroupSubGroups
+        getGroups: getGroups,
+        getAdHocGroups: getAdHocGroups,
+        getGroupsAdhocFiltered: getGroupsAdhocFiltered,
+        getAdhocGroupsForAdhocGroup: getAdhocGroupsForAdhocGroup,
+        getAdhocGroupsForAdhocGroupFiltered: getAdhocGroupsForAdhocGroupFiltered,
+        addGroupSubGroups: addGroupSubGroups,
+        deleteGroupSubGroups: deleteGroupSubGroups
     });
     /**
      * @ngdoc method
@@ -26,11 +26,11 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
      */
     function getGroups(data) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/users/groups/get',
-            params : {
-                n : (data.n ? data.n : 50),
-                start : (data.start ? data.start : 0)
+            method: 'GET',
+            url: 'api/latest/users/groups/get',
+            params: {
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0)
             }
         });
     }
@@ -51,11 +51,11 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
      */
     function getAdHocGroups(data) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/users/groups/adhoc',
-            params : {
-                n : (data.n ? data.n : 50),
-                start : (data.start ? data.start : 0)
+            method: 'GET',
+            url: 'api/latest/users/groups/adhoc',
+            params: {
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0)
             }
         });
     }
@@ -77,12 +77,12 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
      */
     function getGroupsAdhocFiltered(data) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/users/groups/adhoc',
-            params : {
-                n : (data.n ? data.n : 50),
-                start : (data.start ? data.start : 0),
-                fq : (data.filterWord ? data.filterWord : "")
+            method: 'GET',
+            url: 'api/latest/users/groups/adhoc',
+            params: {
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0),
+                fq: (data.filterWord ? data.filterWord : "")
             }
         });
     }
@@ -103,14 +103,14 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
      */
     function getAdhocGroupsForAdhocGroup(data) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/users/' + data.member.key + '/groups/adhoc',
-            cache : false,
-            params : {
-                n : (data.n ? data.n : 50),
-                start : (data.start ? data.start : 0),
-                authorized : data.isAuthorized,
-                groupType : (data.member.type ? data.member.type : "")
+            method: 'GET',
+            url: 'api/latest/users/' + data.member.key + '/groups/adhoc',
+            cache: false,
+            params: {
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0),
+                authorized: data.isAuthorized,
+                groupType: (data.member.type ? data.member.type : "")
             }
         });
     }
@@ -132,14 +132,14 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
      */
     function getAdhocGroupsForAdhocGroupFiltered(data) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/users/' + data.member.key + '/groups/adhoc',
-            params : {
-                n : (data.n ? data.n : 50),
-                start : (data.start ? data.start : 0),
-                authorized : data.isAuthorized,
-                fq : (data.filterWord ? data.filterWord : ""),
-                groupType : (data.member.type ? data.member.type : "")
+            method: 'GET',
+            url: 'api/latest/users/' + data.member.key + '/groups/adhoc',
+            params: {
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0),
+                authorized: data.isAuthorized,
+                fq: (data.filterWord ? data.filterWord : ""),
+                groupType: (data.member.type ? data.member.type : "")
             }
         });
     }
@@ -159,12 +159,12 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
     function addGroupSubGroups(data) {
         var parentId = base64.urlencode(data.parentId);
         return $http({
-            method : 'POST',
-            url : 'api/latest/users/group/' + parentId,
-            headers : {
-                "Content-Type" : "application/json"
+            method: 'POST',
+            url: 'api/latest/users/group/' + parentId,
+            headers: {
+                "Content-Type": "application/json"
             },
-            data : data.groups
+            data: data.groups
         });
     }
 
@@ -183,12 +183,12 @@ angular.module('admin').factory('Admin.GroupManagementService', [ '$resource', '
     function deleteGroupSubGroups(data) {
         var parentId = base64.urlencode(data.parentId);
         return $http({
-            method : 'DELETE',
-            url : 'api/latest/users/groups/' + parentId,
-            headers : {
-                "Content-Type" : "application/json"
+            method: 'DELETE',
+            url: 'api/latest/users/groups/' + parentId,
+            headers: {
+                "Content-Type": "application/json"
             },
-            data : data.groups
+            data: data.groups
         });
     }
 } ]);
