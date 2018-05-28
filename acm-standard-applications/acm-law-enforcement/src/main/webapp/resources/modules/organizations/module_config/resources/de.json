@@ -21,7 +21,8 @@
         "identification.label": "Identifikation",
         "primary.label": "Hauptkontakt",
         "parent.label": "Elternorganisation",
-        "parent.placeholder": "Geben Sie die übergeordnete Organisation ein"
+        "parent.placeholder": "Geben Sie die übergeordnete Organisation ein",
+        "type.label": "de_Type"
     },
     "organizations.comp.actions": {
         "title": "Aktionen",

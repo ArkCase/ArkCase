@@ -18,7 +18,9 @@
         "email.label": "電子メール",
         "status.label": "状態",
         "organization.label": "組織",
-        "identification.label": "識別番号"
+        "organization.type": "ja_Organization type",
+        "identification.label": "識別番号",
+        "identification.type": "ja_ID type"
     },
     "people.comp.actions": {
         "title": "株式",

@@ -10,9 +10,8 @@
  *
  * Contains REST calls for Admin Email Templates Configuration
  */
-angular.module('admin').factory('Admin.EmailTemplatesService', ['$resource', 'UtilService', 'Upload',
-   '$http', function ($resource, Util, Upload, $http) {
-        var Service = $resource('api/latest/plugin', {}, {
+angular.module('admin').factory('Admin.EmailTemplatesService', [ '$resource', 'UtilService', 'Upload', '$http', function($resource, Util, Upload, $http) {
+    var Service = $resource('api/latest/plugin', {}, {
 
         /**
          * @ngdoc method
@@ -48,13 +47,13 @@ angular.module('admin').factory('Admin.EmailTemplatesService', ['$resource', 'Ut
          *
          * @returns {Object} Object returned by $resource
          */
-        _delete : {
-            method : 'DELETE',
-            url : 'api/latest/service/email/configure/template/:templateName',
-            cache : false
+        _delete: {
+            method: 'DELETE',
+            url: 'api/latest/service/email/configure/template/:templateName',
+            cache: false
         }
 
-        });
+    });
 
     /**
      * @ngdoc method
@@ -68,8 +67,8 @@ angular.module('admin').factory('Admin.EmailTemplatesService', ['$resource', 'Ut
      */
     Service.listEmailTemplates = function() {
         return Util.serviceCall({
-            service : Service.list,
-            onSuccess : function(data) {
+            service: Service.list,
+            onSuccess: function(data) {
                 return data;
             }
         });
@@ -85,9 +84,9 @@ angular.module('admin').factory('Admin.EmailTemplatesService', ['$resource', 'Ut
      *
      * @returns {Object} Promise
      */
-    Service.getEmailTemplate = function (templateName) {
+    Service.getEmailTemplate = function(templateName) {
         return $http({
-            url: 'api/latest/service/email/configure/template/'+ templateName,
+            url: 'api/latest/service/email/configure/template/' + templateName,
             method: 'GET'
         });
     };
@@ -106,11 +105,11 @@ angular.module('admin').factory('Admin.EmailTemplatesService', ['$resource', 'Ut
      */
     Service.deleteEmailTemplate = function(templateName) {
         return Util.serviceCall({
-            service : Service._delete,
-            param : {
-                templateName : templateName
+            service: Service._delete,
+            param: {
+                templateName: templateName
             },
-            onSuccess : function(data) {
+            onSuccess: function(data) {
                 return data;
             }
         });
@@ -128,7 +127,7 @@ angular.module('admin').factory('Admin.EmailTemplatesService', ['$resource', 'Ut
      *
      * @returns {Object} Promise
      */
-    Service.validateEmailTemplate = function (template) {
+    Service.validateEmailTemplate = function(template) {
         return $http({
             url: 'api/latest/service/email/configure/template/validate',
             method: 'PUT',
@@ -136,7 +135,7 @@ angular.module('admin').factory('Admin.EmailTemplatesService', ['$resource', 'Ut
         });
     };
 
-        /**
+    /**
      * @ngdoc method
      * @name saveEmailTemplate
      * @methodOf services:Admin.EmailSTemplatesService
@@ -151,13 +150,13 @@ angular.module('admin').factory('Admin.EmailTemplatesService', ['$resource', 'Ut
      */
     Service.saveEmailTemplate = function(template, file) {
         return Upload.upload({
-            url : 'api/latest/service/email/configure/template',
-            method : 'PUT',
-            fields : {
-                data : template
+            url: 'api/latest/service/email/configure/template',
+            method: 'PUT',
+            fields: {
+                data: template
             },
-            sendFieldsAs : 'json-blob',
-            file : file
+            sendFieldsAs: 'json-blob',
+            file: file
         });
     };
 

@@ -2,23 +2,8 @@
 
 angular.module('organizations').controller(
         'Organizations.AddressesController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Organization.InfoService',
-                'Authentication',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'PermissionsService',
-                'Object.LookupService',
-                'Object.ModelService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, Authentication,
-                        HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -26,22 +11,22 @@ angular.module('organizations').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "organizations",
-                        componentId : "addresses",
-                        retrieveObjectInfo : OrganizationInfoService.getOrganizationInfo,
-                        validateObjectInfo : OrganizationInfoService.validateOrganizationInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "organizations",
+                        componentId: "addresses",
+                        retrieveObjectInfo: OrganizationInfoService.getOrganizationInfo,
+                        validateObjectInfo: OrganizationInfoService.validateOrganizationInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -49,7 +34,7 @@ angular.module('organizations').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editOrganization', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.ORGANIZATION
+                            objectType: ObjectService.ObjectTypes.ORGANIZATION
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -85,30 +70,30 @@ angular.module('organizations').controller(
                         address.className = "com.armedia.acm.plugins.addressable.model.PostalAddress";
                         $scope.address = address;
                         var item = {
-                            id : '',
-                            parentId : $scope.objectInfo.id,
-                            addressType : '',
-                            streetAddress : '',
-                            streetAddress2 : '',
-                            city : '',
-                            state : '',
-                            zip : '',
-                            country : ''
+                            id: '',
+                            parentId: $scope.objectInfo.id,
+                            addressType: '',
+                            streetAddress: '',
+                            streetAddress2: '',
+                            city: '',
+                            state: '',
+                            zip: '',
+                            country: ''
                         };
                         showModal(item, false);
                     };
                     $scope.editRow = function(rowEntity) {
                         $scope.address = rowEntity;
                         var item = {
-                            id : rowEntity.id,
-                            parentId : $scope.objectInfo.id,
-                            addressType : rowEntity.type,
-                            streetAddress : rowEntity.streetAddress,
-                            streetAddress2 : rowEntity.streetAddress2,
-                            city : rowEntity.city,
-                            state : rowEntity.state,
-                            zip : rowEntity.zip,
-                            country : rowEntity.country
+                            id: rowEntity.id,
+                            parentId: $scope.objectInfo.id,
+                            addressType: rowEntity.type,
+                            streetAddress: rowEntity.streetAddress,
+                            streetAddress2: rowEntity.streetAddress2,
+                            city: rowEntity.city,
+                            state: rowEntity.state,
+                            zip: rowEntity.zip,
+                            country: rowEntity.country
 
                         };
                         showModal(item, true);
@@ -137,13 +122,13 @@ angular.module('organizations').controller(
                         params.isDefault = $scope.isDefault(address);
 
                         var modalInstance = $modal.open({
-                            animation : true,
-                            templateUrl : 'modules/organizations/views/components/organization-addresses-modal.client.view.html',
-                            controller : 'Organizations.AddressesModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            animation: true,
+                            templateUrl: 'modules/organizations/views/components/organization-addresses-modal.client.view.html',
+                            controller: 'Organizations.AddressesModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -155,7 +140,7 @@ angular.module('organizations').controller(
                                 address = $scope.address;
                             else {
                                 address = _.find($scope.objectInfo.addresses, {
-                                    id : data.address.id
+                                    id: data.address.id
                                 });
                             }
                             address.type = data.address.addressType;
@@ -194,6 +179,9 @@ angular.module('organizations').controller(
 
                     $scope.isDefault = function(address) {
                         var defaultAddress = $scope.objectInfo.defaultAddress;
+                        if (Util.isEmpty(defaultAddress)) {
+                            return true;
+                        }
                         var comparisonProperties = [ "id", "streetAddress", "streetAddress2", "city", "state", "zip", "country" ];
                         return Util.objectsComparisonByGivenProperties(defaultAddress, address, comparisonProperties);
                     }

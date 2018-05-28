@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+/*-
+ * #%L
+ * ACM Service: Enterprise Content Management
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmParticipantsException;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -31,17 +58,15 @@ import java.util.stream.Collectors;
  */
 public class EcmFileParticipantService
 {
+    private static List<String> fileParticipantTypes = Arrays.asList("*", "group-write", "group-read", "group-no-access", "write", "read",
+            "no-access");
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     private EcmFileDao fileDao;
     private AcmFolderDao folderDao;
     private AcmFolderService folderService;
     private AcmParticipantService participantService;
     private Properties ecmFileServiceProperties;
     private EcmFileParticipantServiceHelper fileParticipantServiceHelper;
-
-    private static List<String> fileParticipantTypes = Arrays.asList("*", "group-write", "group-read", "group-no-access", "write", "read",
-            "no-access");
 
     /**
      * Sets the file's participants from the parent folder's participants and persists the file instance with the

@@ -2,23 +2,8 @@
 
 angular.module('people').controller(
         'People.NewPersonController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                'Person.InfoService',
-                '$state',
-                'Object.LookupService',
-                'MessageService',
-                '$timeout',
-                'UtilService',
-                '$modal',
-                'ConfigService',
-                'Organization.InfoService',
-                'ObjectService',
-                'modalParams',
-                function($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util,
-                        $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams) {
+        [ '$scope', '$stateParams', '$translate', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService', 'modalParams',
+                function($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -26,9 +11,9 @@ angular.module('people').controller(
 
                     //used for showing/hiding buttons in communication accounts
                     var contactMethodsCounts = {
-                        'url' : 0,
-                        'phone' : 0,
-                        'email' : 0
+                        'url': 0,
+                        'phone': 0,
+                        'email': 0
                     };
 
                     ConfigService.getModuleConfig("common").then(function(moduleConfig) {
@@ -41,21 +26,21 @@ angular.module('people').controller(
 
                     //new person with predefined values
                     $scope.person = {
-                        className : 'com.armedia.acm.plugins.person.model.Person',
-                        contactMethods : [],
-                        identifications : [],
-                        addresses : [],
-                        organizationAssociations : [ {} ],
-                        defaultEmail : {
-                            type : 'email'
+                        className: 'com.armedia.acm.plugins.person.model.Person',
+                        contactMethods: [],
+                        identifications: [],
+                        addresses: [],
+                        organizationAssociations: [ {} ],
+                        defaultEmail: {
+                            type: 'email'
                         },
-                        defaultPhone : {
-                            type : 'phone'
+                        defaultPhone: {
+                            type: 'phone'
                         },
-                        defaultUrl : {
-                            type : 'url'
+                        defaultUrl: {
+                            type: 'url'
                         },
-                        details : ''
+                        details: ''
                     };
 
                     //contact methods subtypes types
@@ -90,7 +75,7 @@ angular.module('people').controller(
                         $timeout(function() {
                             contactMethodsCounts[contactType]++;
                             $scope.person.contactMethods.push({
-                                type : contactType
+                                type: contactType
                             });
                         }, 0);
                     };
@@ -163,9 +148,9 @@ angular.module('people').controller(
                         promiseSavePerson.then(function(objectInfo) {
                             var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.PERSON);
                             var personWasCreatedMessage = $translate.instant('people.comp.editPerson.informCreated', {
-                                personType : objectTypeString,
-                                firstName : objectInfo.data.givenName,
-                                lastName : objectInfo.data.familyName
+                                personType: objectTypeString,
+                                firstName: objectInfo.data.givenName,
+                                lastName: objectInfo.data.familyName
                             });
                             MessageService.info(personWasCreatedMessage);
                             ObjectService.showObject(ObjectService.ObjectTypes.PERSON, objectInfo.data.id);
@@ -203,30 +188,30 @@ angular.module('people').controller(
                         });
                         var association = index > -1 ? $scope.person.organizationAssociations[index] : {};
                         var params = {
-                            showSetPrimary : true,
-                            isDefault : false,
-                            types : $scope.organizationTypes,
-                            isFirstOrganization : Util.isEmpty(associationFound) ? true : false
+                            showSetPrimary: true,
+                            isDefault: false,
+                            types: $scope.organizationTypes,
+                            isFirstOrganization: Util.isEmpty(associationFound) ? true : false
                         };
                         //set this params for editing
                         if (association.organization) {
                             angular.extend(params, {
-                                organizationId : association.organization.organizationId,
-                                organizationValue : association.organization.organizationValue,
-                                type : association.personToOrganizationAssociationType,
-                                isDefault : Util.isEmpty(association.defaultOrganization) ? true : false
+                                organizationId: association.organization.organizationId,
+                                organizationValue: association.organization.organizationValue,
+                                type: association.personToOrganizationAssociationType,
+                                isDefault: Util.isEmpty(association.defaultOrganization) ? true : false
                             });
                         }
 
                         var modalInstance = $modal.open({
-                            scope : $scope,
-                            animation : true,
-                            templateUrl : 'modules/common/views/add-organization-modal.client.view.html',
-                            controller : 'Common.AddOrganizationModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                            controller: 'Common.AddOrganizationModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -246,7 +231,7 @@ angular.module('people').controller(
 
                     function setOrganizationAssociation(association, data) {
                         association.person = {
-                            id : $scope.person.id
+                            id: $scope.person.id
                         };
                         association.organization = data.organization;
                         association.personToOrganizationAssociationType = data.type;

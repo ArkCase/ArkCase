@@ -17,15 +17,27 @@ public class DashboardPage extends ArkCaseTestBase
 
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[1]/div/span/a/i")
     public WebElement editButton;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[1]/div/span/a/i")
-    WebElement addWidgetButton;
     @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[1]/h4")
     public WebElement addWidgettitle;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[2]/div/div[1]/div[1]/div[1]/div/h3")
+    public WebElement widgetTitle;
+    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div[2]/div[3]/label/input")
+    public WebElement radioButtonTripleFour;
+    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[3]/button")
+    public WebElement closeEditDashboard;
+    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div[2]/div[1]/label/input")
+    public WebElement radioButtonTwelve;
+    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div[2]/div[2]/label/input")
+    public WebElement radioButtonSixSix;
+    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div[2]/div[4]/label/input")
+    public WebElement radioButtonFourEight;
+    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div[2]/div[5]/label/input")
+    public WebElement radioButtonEightFour;
+    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[1]/div/span/a/i")
+    WebElement addWidgetButton;
     // cases by status
     @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/div/dl/dt[1]/a")
     WebElement casesByStatus;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[2]/div/div[1]/div[1]/div[1]/div/h3")
-    public WebElement widgetTitle;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[2]/div/div[1]/div[1]/div[1]/div/h3/span/a[1]/i")
     WebElement widgetReload;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[2]/div/div[1]/div[1]/div[1]/div/h3/span/a[2]/i")
@@ -123,18 +135,10 @@ public class DashboardPage extends ArkCaseTestBase
     // edit dashboard
     @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div[1]/input")
     WebElement dashboardTitleInput;
-    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div[2]/div[3]/label/input")
-    public WebElement radioButtonTripleFour;
-    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[3]/button")
-    public WebElement closeEditDashboard;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[2]/div/div[3]")
     WebElement checkThirdColumn;
-    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div[2]/div[1]/label/input")
-    public WebElement radioButtonTwelve;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[2]/div/div")
     WebElement layoutTwelve;
-    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div[2]/div[2]/label/input")
-    public WebElement radioButtonSixSix;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[2]/div/div[2]")
     WebElement layoutSixSix;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[2]/div/div[2]")
@@ -143,10 +147,6 @@ public class DashboardPage extends ArkCaseTestBase
     WebElement thirdLayout;
     @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[2]/div/div[1]")
     WebElement layoutFourEight;
-    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div[2]/div[4]/label/input")
-    public WebElement radioButtonFourEight;
-    @FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/form/div[2]/div[5]/label/input")
-    public WebElement radioButtonEightFour;
 
     public void editButtonClick()
     {

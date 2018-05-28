@@ -381,7 +381,7 @@ GO
 
     <changeSet id="13-rename-replaceChildrenParticipant-column" author="bojan.milenkoski">
         <dropColumn tableName="acm_participant" columnName="replaceChildrenParticipant"/>
-        <addColumn tableName="acm_participant" >
+        <addColumn tableName="acm_participant">
             <column name="cm_replace_children_participant" type="VARCHAR(32)" defaultValue="false">
                 <constraints nullable="true"/>
             </column>

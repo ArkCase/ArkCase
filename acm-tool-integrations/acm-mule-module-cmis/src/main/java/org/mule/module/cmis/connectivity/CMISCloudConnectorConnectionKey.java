@@ -1,6 +1,33 @@
 
 package org.mule.module.cmis.connectivity;
 
+/*-
+ * #%L
+ * ACM Mule CMIS Connector
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import javax.annotation.Generated;
 
 /**
@@ -58,8 +85,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
+     * Retrieves baseUrl
+     *
+     */
+    public String getBaseUrl()
+    {
+        return this.baseUrl;
+    }
+
+    /**
      * Sets baseUrl
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -69,17 +105,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves baseUrl
-     * 
+     * Retrieves username
+     *
      */
-    public String getBaseUrl()
+    public String getUsername()
     {
-        return this.baseUrl;
+        return this.username;
     }
 
     /**
      * Sets username
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -89,17 +125,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves username
-     * 
+     * Retrieves connectionTimeout
+     *
      */
-    public String getUsername()
+    public String getConnectionTimeout()
     {
-        return this.username;
+        return this.connectionTimeout;
     }
 
     /**
      * Sets connectionTimeout
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -109,17 +145,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves connectionTimeout
-     * 
+     * Retrieves useAlfrescoExtension
+     *
      */
-    public String getConnectionTimeout()
+    public String getUseAlfrescoExtension()
     {
-        return this.connectionTimeout;
+        return this.useAlfrescoExtension;
     }
 
     /**
      * Sets useAlfrescoExtension
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -129,17 +165,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves useAlfrescoExtension
-     * 
+     * Retrieves cxfPortProvider
+     *
      */
-    public String getUseAlfrescoExtension()
+    public String getCxfPortProvider()
     {
-        return this.useAlfrescoExtension;
+        return this.cxfPortProvider;
     }
 
     /**
      * Sets cxfPortProvider
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -149,17 +185,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves cxfPortProvider
-     * 
+     * Retrieves repositoryId
+     *
      */
-    public String getCxfPortProvider()
+    public String getRepositoryId()
     {
-        return this.cxfPortProvider;
+        return this.repositoryId;
     }
 
     /**
      * Sets repositoryId
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -169,17 +205,17 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves repositoryId
-     * 
+     * Retrieves password
+     *
      */
-    public String getRepositoryId()
+    public String getPassword()
     {
-        return this.repositoryId;
+        return this.password;
     }
 
     /**
      * Sets password
-     * 
+     *
      * @param value
      *            Value to set
      */
@@ -189,32 +225,23 @@ public class CMISCloudConnectorConnectionKey
     }
 
     /**
-     * Retrieves password
-     * 
+     * Retrieves endpoint
+     *
      */
-    public String getPassword()
+    public String getEndpoint()
     {
-        return this.password;
+        return this.endpoint;
     }
 
     /**
      * Sets endpoint
-     * 
+     *
      * @param value
      *            Value to set
      */
     public void setEndpoint(String value)
     {
         this.endpoint = value;
-    }
-
-    /**
-     * Retrieves endpoint
-     * 
-     */
-    public String getEndpoint()
-    {
-        return this.endpoint;
     }
 
     public int hashCode()

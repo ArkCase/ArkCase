@@ -1,5 +1,32 @@
 package com.armedia.acm.services.users.dao;
 
+/*-
+ * #%L
+ * ACM Service: Users
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.config.model.AcmConfig;
 import com.armedia.acm.services.users.model.AcmRole;
@@ -28,6 +55,9 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -35,15 +65,11 @@ import java.util.Optional;
 
 public class UserDao extends AcmAbstractDao<AcmUser>
 {
+    private static String DEFAULT_LOCALE_CODE = null;
     @PersistenceContext
     private EntityManager entityManager;
-
     private Cache quietUserLookupCache;
-
     private List<AcmConfig> configList;
-
-    private static String DEFAULT_LOCALE_CODE = null;
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
     public void init()
@@ -340,5 +366,14 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public void setConfigList(List<AcmConfig> configList)
     {
         this.configList = configList;
+    }
+
+    public Long getUserCount(LocalDateTime until)
+    {
+        String queryText = "SELECT COUNT(acmUser) FROM AcmUser acmUser where acmUser.created < :until";
+
+        Query query = getEm().createQuery(queryText);
+        query.setParameter("until", Date.from(ZonedDateTime.of(until, ZoneId.systemDefault()).toInstant()));
+        return (Long) query.getSingleResult();
     }
 }

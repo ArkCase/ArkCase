@@ -84,6 +84,12 @@
             "modified": "Modificado el",
             "targetType": "Tipo de referencia",
             "status": "Estado"
+        },
+        "message": {
+            "delete": {
+                "success": "es_Reference deleted successfully",
+                "error": "es_Error deleting reference"
+            }
         }
     },
     "document-repository.comp.history": {
@@ -182,10 +188,10 @@
         "name.placeholder": "Ingrese el nombre",
         "descriptionLabel": "Descripción",
         "description.placeholder": "Ingrese la descripción",
-        "searchUser": "Buscar usuarios",
+        "searchUser": "Buscar Usuario y Grupo",
         "cancelBtn": "Cancelar",
-        "okBtn": "es_OK",
-        "search-placeholder": "es_Search for user or group",
+        "okBtn": "De acuerdo",
+        "search-placeholder": "Buscar usuario o grupo",
         "personalRepository": "Mis documentos"
     },
     "document-repository.dialogUserPicker": {

@@ -2,21 +2,8 @@
 
 angular.module('directives').controller(
         'Directives.CoreCalendarEventDetailsModalController',
-        [
-                '$scope',
-                '$modalInstance',
-                'Object.CalendarService',
-                'MessageService',
-                'Util.DateService',
-                'coreCalendarConfig',
-                '$modal',
-                'Directives.CalendarUtilService',
-                'eventDetails',
-                '$filter',
-                '$rootScope',
-                'params',
-                function($scope, $modalInstance, CalendarService, MessageService, DateService, coreCalendarConfig, $modal,
-                        CalendarUtilService, eventDetails, $filter, $rootScope, params) {
+        [ '$scope', '$modalInstance', 'Object.CalendarService', 'MessageService', 'Util.DateService', 'coreCalendarConfig', '$modal', 'Directives.CalendarUtilService', 'eventDetails', '$filter', '$rootScope', 'params',
+                function($scope, $modalInstance, CalendarService, MessageService, DateService, coreCalendarConfig, $modal, CalendarUtilService, eventDetails, $filter, $rootScope, params) {
 
                     $scope.eventDetails = eventDetails;
                     $scope.priorityOptions = CalendarUtilService.PRIORITY_OPTIONS;
@@ -28,7 +15,7 @@ angular.module('directives').controller(
                     var processEventDetails = function() {
                         if (!$scope.eventDetails.recurrenceDetails) {
                             $scope.eventDetails.recurrenceDetails = {
-                                recurrenceType : 'ONLY_ONCE'
+                                recurrenceType: 'ONLY_ONCE'
                             };
                         }
                         $scope.eventDetails.start = moment($scope.eventDetails.start).toDate();
@@ -73,21 +60,21 @@ angular.module('directives').controller(
                     $scope.editEvent = function() {
                         if ($scope.eventDetails.recurrenceDetails.recurrenceType !== 'ONLY_ONCE') {
                             var params = {
-                                eventDataModel : $scope.eventDetails,
-                                objectId : $scope.objectId,
-                                objectType : $scope.objectType
+                                eventDataModel: $scope.eventDetails,
+                                objectId: $scope.objectId,
+                                objectType: $scope.objectType
                             };
 
                             var modalInstance = $modal.open({
-                                animation : $scope.animationsEnabled,
-                                templateUrl : 'directives/core-calendar/core-calendar-update-event-modal.client.view.html',
-                                controller : 'Directives.CoreCalendarUpdateEventController',
-                                size : 'md',
-                                resolve : {
-                                    coreCalendarConfig : function() {
+                                animation: $scope.animationsEnabled,
+                                templateUrl: 'directives/core-calendar/core-calendar-update-event-modal.client.view.html',
+                                controller: 'Directives.CoreCalendarUpdateEventController',
+                                size: 'md',
+                                resolve: {
+                                    coreCalendarConfig: function() {
                                         return $scope.coreCalendarConfig;
                                     },
-                                    params : function() {
+                                    params: function() {
                                         return params;
                                     }
                                 }
@@ -103,21 +90,21 @@ angular.module('directives').controller(
                             scope.existingEvent = $scope.eventDetails;
 
                             var modalInstance = $modal.open({
-                                animation : true,
-                                templateUrl : 'directives/core-calendar/core-calendar-new-event-modal.client.view.html',
-                                controller : 'Directives.CoreCalendarNewEventModalController',
-                                size : 'lg',
-                                backdrop : 'static',
-                                scope : scope,
-                                resolve : {
-                                    coreCalendarConfig : function() {
+                                animation: true,
+                                templateUrl: 'directives/core-calendar/core-calendar-new-event-modal.client.view.html',
+                                controller: 'Directives.CoreCalendarNewEventModalController',
+                                size: 'lg',
+                                backdrop: 'static',
+                                scope: scope,
+                                resolve: {
+                                    coreCalendarConfig: function() {
                                         return $scope.coreCalendarConfig;
                                     },
-                                    params : function() {
+                                    params: function() {
                                         return {
-                                            objectType : $scope.objectType,
-                                            objectId : $scope.objectId,
-                                            updateMaster : false
+                                            objectType: $scope.objectType,
+                                            objectId: $scope.objectId,
+                                            updateMaster: false
                                         };
                                     }
                                 }
@@ -132,18 +119,18 @@ angular.module('directives').controller(
 
                     $scope.deleteEvent = function() {
                         var params = {
-                            eventDataModel : $scope.eventDetails,
-                            objectId : $scope.objectId,
-                            objectType : $scope.objectType
+                            eventDataModel: $scope.eventDetails,
+                            objectId: $scope.objectId,
+                            objectType: $scope.objectType
                         };
 
                         var modalInstance = $modal.open({
-                            animation : $scope.animationsEnabled,
-                            templateUrl : 'directives/core-calendar/core-calendar-delete-event-modal.client.view.html',
-                            controller : 'Directives.CoreCalendarDeleteEventController',
-                            size : 'md',
-                            resolve : {
-                                params : function() {
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'directives/core-calendar/core-calendar-delete-event-modal.client.view.html',
+                            controller: 'Directives.CoreCalendarDeleteEventController',
+                            size: 'md',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -161,12 +148,11 @@ angular.module('directives').controller(
                     };
 
                     $scope.downloadAttachment = function(file) {
-                        CalendarService.getCalendarEventAttachment($scope.objectType, $scope.objectId, file.eventId, file.attachmentId)
-                                .then(function(result) {
-                                    CalendarUtilService.downloadCalendarEventAttachment(result);
-                                }, function(err) {
-                                    MessageService.errorAction();
-                                });
+                        CalendarService.getCalendarEventAttachment($scope.objectType, $scope.objectId, file.eventId, file.attachmentId).then(function(result) {
+                            CalendarUtilService.downloadCalendarEventAttachment(result);
+                        }, function(err) {
+                            MessageService.errorAction();
+                        });
                     }
 
                     processEventDetails();

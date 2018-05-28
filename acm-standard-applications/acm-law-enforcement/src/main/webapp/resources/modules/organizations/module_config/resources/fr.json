@@ -21,7 +21,8 @@
         "identification.label": "Identification",
         "primary.label": "Contact principal",
         "parent.label": "Organisation des parents",
-        "parent.placeholder": "Entrez l'organisation parente"
+        "parent.placeholder": "Entrez l'organisation parente",
+        "type.label": "fr_Type"
     },
     "organizations.comp.actions": {
         "title": "Actions",

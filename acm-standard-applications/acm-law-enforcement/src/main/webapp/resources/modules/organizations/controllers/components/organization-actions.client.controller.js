@@ -2,35 +2,18 @@
 
 angular.module('organizations').controller(
         'Organizations.ActionsController',
-        [
-                '$scope',
-                '$state',
-                '$stateParams',
-                '$q',
-                'UtilService',
-                'ConfigService',
-                'ObjectService',
-                'Authentication',
-                'Object.LookupService',
-                'Organization.LookupService',
-                'Object.SubscriptionService',
-                'Organization.InfoService',
-                'Helper.ObjectBrowserService',
-                'Object.ModelService',
-                'Profile.UserInfoService',
-                '$translate',
-                function($scope, $state, $stateParams, $q, Util, ConfigService, ObjectService, Authentication, ObjectLookupService,
-                        OrganizationLookupService, ObjectSubscriptionService, OrganizationInfoService, HelperObjectBrowserService,
-                        ObjectModelService, UserInfoService, $translate) {
+        [ '$scope', '$state', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Organization.LookupService', 'Object.SubscriptionService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService',
+                'Profile.UserInfoService', '$translate',
+                function($scope, $state, $stateParams, $q, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, OrganizationLookupService, ObjectSubscriptionService, OrganizationInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, $translate) {
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "organizations",
-                        componentId : "actions",
-                        retrieveObjectInfo : OrganizationInfoService.getOrganizationInfo,
-                        validateObjectInfo : OrganizationInfoService.validateOrganizationInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "organizations",
+                        componentId: "actions",
+                        retrieveObjectInfo: OrganizationInfoService.getOrganizationInfo,
+                        validateObjectInfo: OrganizationInfoService.validateOrganizationInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -43,13 +26,11 @@ angular.module('organizations').controller(
                         $scope.$bus.subscribe("object.changed/ORGANIZATION/" + $scope.objectInfo.organizationId, function() {
                             if (activationMode) {
                                 $scope.$emit("report-tree-updated");
-                                $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop"
-                                        : "fa fa-play-circle";
+                                $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
                             }
                         });
                         if ($scope.activationIcon != "fa fa-circle-o-notch fa-spin") {
-                            $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop"
-                                    : "fa fa-play-circle";
+                            $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
                             activationMode = false;
                         }
                     };

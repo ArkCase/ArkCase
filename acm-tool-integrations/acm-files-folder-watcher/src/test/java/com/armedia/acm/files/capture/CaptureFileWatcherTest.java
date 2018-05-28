@@ -1,5 +1,32 @@
 package com.armedia.acm.files.capture;
 
+/*-
+ * #%L
+ * Tool Integrations: Folder Watcher
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
@@ -35,32 +62,24 @@ import java.util.List;
 @RunWith(EasyMockRunner.class)
 public class CaptureFileWatcherTest extends EasyMockSupport
 {
+    // do not put a period before the extension
+    private final String allowedFileExtensions = "pdf,xml";
     @Mock
     private FileObject mockFileObject;
-
     @Mock
     private ApplicationEventPublisher mockPublisher;
-
     @Mock
     private FileChangeEvent mockFileChangeEvent;
-
     @Mock
     private FileName mockFileName;
-
     private FileWatcher unit;
     private String fileSeparator = File.separator;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     private boolean runningOnWindows = System.getProperty("os.name").startsWith("Windows");
-
     // for this test to pass, Windows and Linux require different file URL prefixes
     private final String fileUrlPrefix = runningOnWindows ? "file:///C:" : "file:///";
-
     private final String baseFolderPath = fileUrlPrefix + fileSeparator + "temp";
-
-    // do not put a period before the extension
-    private final String allowedFileExtensions = "pdf,xml";
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

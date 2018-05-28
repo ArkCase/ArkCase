@@ -84,6 +84,12 @@
             "modified": "更改日期",
             "targetType": "參考類型",
             "status": "狀態"
+        },
+        "message": {
+            "delete": {
+                "success": "zh-tw_Reference deleted successfully",
+                "error": "zh-tw_Error deleting reference"
+            }
         }
     },
     "document-repository.comp.history": {
@@ -182,10 +188,10 @@
         "name.placeholder": "鍵入名字",
         "descriptionLabel": "描述",
         "description.placeholder": "鍵入說​​明",
-        "searchUser": "zh-tw_Search User and Group",
-        "cancelBtn": "zh-tw_Cancel",
-        "okBtn": "zh-tw_OK",
-        "search-placeholder": "zh-tw_Search for user or group",
+        "searchUser": "搜索用戶和組",
+        "cancelBtn": "取消",
+        "okBtn": "好",
+        "search-placeholder": "搜索用戶和組",
         "personalRepository": "我的文檔"
     },
     "document-repository.dialogUserPicker": {

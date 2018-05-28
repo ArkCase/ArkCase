@@ -41,8 +41,7 @@ angular.module('audit').factory(
                          * @param {String} pentahoPassword Pentaho password
                          * @returns {String} Builded url for audit report url that will be shown in iframe
                          */
-                        getUrl : function(pentahoHost, pentahoPort, auditReportUri, startDate, endDate, objectType, objectId, useBaseUrl,
-                                pentahoUser, pentahoPassword, showXmlReport) {
+                        getUrl: function(pentahoHost, pentahoPort, auditReportUri, startDate, endDate, objectType, objectId, useBaseUrl, pentahoUser, pentahoPassword, showXmlReport) {
                             var useUrl = useBaseUrl || false;
                             var amendedPentahoPort = "";
 
@@ -53,11 +52,8 @@ angular.module('audit').factory(
                                 }
                             }
 
-                            var reportUrl = pentahoHost + amendedPentahoPort + auditReportUri + "?startDate="
-                                    + UtilDateService.goodIsoDate(startDate) + "&endDate=" + UtilDateService.goodIsoDate(endDate)
-                                    + "&objectType=" + objectType + "&objectId=" + objectId + "&dateFormat="
-                                    + encodeURIComponent(UtilDateService.defaultDateFormat) + "&timeZone="
-                                    + encodeURIComponent(UtilDateService.getTimeZoneOffset());
+                            var reportUrl = pentahoHost + amendedPentahoPort + auditReportUri + "?startDate=" + UtilDateService.goodIsoDate(startDate) + "&endDate=" + UtilDateService.goodIsoDate(endDate) + "&objectType=" + objectType + "&objectId=" + objectId + "&dateFormat="
+                                    + encodeURIComponent(UtilDateService.defaultDateFormat) + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset());
                             if (useUrl) {
                                 var absUrl = $location.absUrl();
                                 var baseHref = $browser.baseHref();

@@ -22,9 +22,8 @@ angular.module('tasks').controller(
                 'DocTreeExt.Checkin',
                 'DocTreeExt.Email',
                 'Admin.EmailSenderConfigurationService',
-                function($scope, $stateParams, $q, $modal, $translate, Util, LocaleService, ConfigService, ObjectService,
-                        ObjectLookupService, TaskInfoService, HelperObjectBrowserService, Authentication, DocTreeService,
-                        PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail, EmailSenderConfigurationService) {
+                function($scope, $stateParams, $q, $modal, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail,
+                        EmailSenderConfigurationService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -36,16 +35,16 @@ angular.module('tasks').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        moduleId : "tasks",
-                        componentId : "attachments",
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        retrieveObjectInfo : TaskInfoService.getTaskInfo,
-                        validateObjectInfo : TaskInfoService.validateTaskInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        moduleId: "tasks",
+                        componentId: "attachments",
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        retrieveObjectInfo: TaskInfoService.getTaskInfo,
+                        validateObjectInfo: TaskInfoService.validateTaskInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -70,7 +69,7 @@ angular.module('tasks').controller(
                         $scope.objectInfo = objectInfo;
                         $scope.objectId = objectInfo.taskId;
                         PermissionsService.getActionPermission('editAttachments', objectInfo, {
-                            objectType : ObjectService.ObjectTypes.TASK
+                            objectType: ObjectService.ObjectTypes.TASK
                         }).then(function(result) {
                             $scope.isReadOnly = !result;
                         });
@@ -90,8 +89,8 @@ angular.module('tasks').controller(
                         DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
 
                         treeControl.addCommandHandler({
-                            name : "remove",
-                            onAllowCmd : function(nodes) {
+                            name: "remove",
+                            onAllowCmd: function(nodes) {
                                 var len = 0;
                                 if (Util.isArray(nodes[0].children)) {
                                     len = nodes[0].children.length;
@@ -119,13 +118,13 @@ angular.module('tasks').controller(
 
                     $scope.onFilter = function() {
                         $scope.$bus.publish('onFilterDocTree', {
-                            filter : $scope.filter
+                            filter: $scope.filter
                         });
                     };
 
                     $scope.onSearch = function() {
                         $scope.$bus.publish('onSearchDocTree', {
-                            searchFilter : $scope.searchFilter
+                            searchFilter: $scope.searchFilter
                         });
                     };
 

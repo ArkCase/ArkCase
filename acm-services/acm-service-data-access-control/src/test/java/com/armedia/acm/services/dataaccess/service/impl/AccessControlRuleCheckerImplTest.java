@@ -1,18 +1,40 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+/*-
+ * #%L
+ * ACM Service: Data Access Control
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
-import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.easymock.EasyMock;
-import org.easymock.EasyMockRunner;
-import org.easymock.EasyMockSupport;
-import org.easymock.Mock;
-import org.easymock.TestSubject;
+import org.easymock.*;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,12 +48,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Petar Ilin <petar.ilin@armedia.com> on 06.11.2015.
@@ -43,7 +60,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
      * Access Control rule checker.
      */
     @TestSubject
-    private AccessControlRuleChecker accessControlRuleChecker = new AccessControlRuleCheckerImpl();
+    private AccessControlRuleCheckerImpl accessControlRuleChecker = new AccessControlRuleCheckerImpl();
 
     /**
      * Access Control rules mock.
@@ -79,6 +96,12 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         propertiesMapping = new HashMap<>();
         propertiesMapping.put("object_sub_type_s", "objectSubType");
         propertiesMapping.put("status_lcs", "status");
+
+        accessControlRuleChecker.setGetObjectExpression("get|list|read|download|view|subscribe");
+        accessControlRuleChecker
+                .setEditObjectExpression("save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename|write");
+        accessControlRuleChecker.setInsertObjectExpression("create");
+        accessControlRuleChecker.setDeleteObjectExpression("delete");
     }
 
     @Test
