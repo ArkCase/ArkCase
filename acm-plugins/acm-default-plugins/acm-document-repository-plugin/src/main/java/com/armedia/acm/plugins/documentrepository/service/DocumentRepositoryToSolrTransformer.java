@@ -74,7 +74,7 @@ public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTr
 
         solr.setStatus_lcs(in.getStatus());
 
-        String assigneeUserId = ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants());
+        String assigneeUserId = ParticipantUtils.getOwnerIdFromParticipants(in.getParticipants());
         solr.setAssignee_id_lcs(assigneeUserId);
 
         solr.setTitle_parseable_lcs(in.getName());
