@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.businessprocess.service.QueueService;
 import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse.ErrorReason;
@@ -88,6 +89,10 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 
         startLeaveProcess(context, caseFile);
         startEnterProcess(context, caseFile);
+
+        // the unlock of the case file should be released from the UI,
+        // but extensions already rely on the service releasing the lock, so we'll leave this here
+        getAcmObjectLockService().removeLock(caseId, CaseFileConstants.OBJECT_TYPE, "OBJECT_LOCK", context.getAuthentication().getName());
 
         // we don't need to explicitly save the case file. Since the casefile is a managed entity (because we did
         // not detach it) any changes we made are automatically applied at the end of the transaction.

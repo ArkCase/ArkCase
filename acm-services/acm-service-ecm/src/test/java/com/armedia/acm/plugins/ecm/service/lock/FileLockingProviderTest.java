@@ -16,7 +16,6 @@ import com.armedia.acm.service.objectlock.service.AcmObjectLockServiceImpl;
 
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
-import org.easymock.IAnswer;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +47,7 @@ public class FileLockingProviderTest extends EasyMockSupport
 
         fileObjectLockingProvider = new FileLockingProvider();
         fileObjectLockingProvider.setObjectLockService(objectLockService);
-        fileObjectLockingProvider.setExpiryTime(10_000l);
+        fileObjectLockingProvider.setExpiryTimeInMilliseconds(10_000l);
     }
 
     @Test(expected = AcmObjectLockException.class)
@@ -80,15 +79,8 @@ public class FileLockingProviderTest extends EasyMockSupport
         {
             EasyMock.reset(objectLockDaoMock, applicationEventPublisherMock);
             expect(objectLockDaoMock.findLock(objectId, objectType)).andReturn(null).anyTimes();
-            expect(objectLockDaoMock.save(anyObject(AcmObjectLock.class))).andAnswer(
-                    new IAnswer<AcmObjectLock>()
-                    {
-                        @Override
-                        public AcmObjectLock answer() throws Throwable
-                        {
-                            return (AcmObjectLock) EasyMock.getCurrentArguments()[0];
-                        }
-                    });
+            expect(objectLockDaoMock.save(anyObject(AcmObjectLock.class)))
+                    .andAnswer(() -> (AcmObjectLock) EasyMock.getCurrentArguments()[0]);
             expect(objectLockDaoMock.getExpiredLocks()).andReturn(new ArrayList<>());
             applicationEventPublisherMock.publishEvent(anyObject(AcmObjectLockEvent.class));
             expectLastCall();
@@ -105,7 +97,7 @@ public class FileLockingProviderTest extends EasyMockSupport
             assertEquals(userId, objectLock.getCreator());
             assertTrue("Created date should be set now!",
                     Math.abs(new Date().getTime() - objectLock.getCreated().getTime()) < 100000);
-            assertEquals(fileObjectLockingProvider.getExpiryTime().longValue(),
+            assertEquals(fileObjectLockingProvider.getExpiryTimeInMilliseconds().longValue(),
                     objectLock.getExpiry().getTime() - objectLock.getCreated().getTime());
         }
     }
@@ -166,15 +158,8 @@ public class FileLockingProviderTest extends EasyMockSupport
             expect(objectLockDaoMock.getExpiredLocks()).andReturn(new ArrayList<>());
             if ((Boolean) data[8])
             {
-                expect(objectLockDaoMock.save(anyObject(AcmObjectLock.class))).andAnswer(
-                        new IAnswer<AcmObjectLock>()
-                        {
-                            @Override
-                            public AcmObjectLock answer() throws Throwable
-                            {
-                                return (AcmObjectLock) EasyMock.getCurrentArguments()[0];
-                            }
-                        });
+                expect(objectLockDaoMock.save(anyObject(AcmObjectLock.class)))
+                        .andAnswer(() -> (AcmObjectLock) EasyMock.getCurrentArguments()[0]);
                 applicationEventPublisherMock.publishEvent(anyObject(AcmObjectLockEvent.class));
                 expectLastCall();
             }
@@ -224,7 +209,7 @@ public class FileLockingProviderTest extends EasyMockSupport
                 }
                 assertTrue("Created date should be set now! Test data: " + Arrays.toString(data),
                         Math.abs(new Date().getTime() - objectLock.getCreated().getTime()) < 1000);
-                assertEquals(fileObjectLockingProvider.getExpiryTime().longValue(),
+                assertEquals(fileObjectLockingProvider.getExpiryTimeInMilliseconds().longValue(),
                         objectLock.getExpiry().getTime() - objectLock.getCreated().getTime());
             }
         }

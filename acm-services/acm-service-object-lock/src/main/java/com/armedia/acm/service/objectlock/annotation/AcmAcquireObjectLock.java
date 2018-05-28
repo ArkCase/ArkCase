@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  * Example usage:
  * 
  * // @formatter:off
- *       @AcmAcquireObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE", expiryTime = 600_000)
+ *       @AcmAcquireObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE", expiryTimeInMilliseconds = 600_000)
  *       public String downloadWithLock(Long id) throws MuleException
  *       
  *       @AcmAcquireObjectLock(acmObjectArgIndex = 0, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false)
@@ -55,7 +55,7 @@ public @interface AcmAcquireObjectLock
      * The lock expiry time in milliseconds. If left to 0, the expiry time of the lock will be set by the
      * {@link ObjectLockingProvider} implementation.
      */
-    long expiryTime() default 0;
+    long expiryTimeInMilliseconds() default 0;
 
     /**
      * For complex objects that include child objects, like AcmFolder that has multiple subfolders and files. If this is

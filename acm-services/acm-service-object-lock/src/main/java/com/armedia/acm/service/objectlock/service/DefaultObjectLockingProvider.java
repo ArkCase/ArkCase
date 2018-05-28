@@ -22,7 +22,7 @@ public class DefaultObjectLockingProvider implements ObjectLockingProvider
     private Map<String, Object> locks = new ConcurrentHashMap<>();
 
     private AcmObjectLockService objectLockService;
-    private Long expiryTime;
+    private Long expiryTimeInMilliseconds;
 
     @Override
     public void checkIfObjectLockCanBeAcquired(Long objectId, String objectType, String lockType, boolean checkChildObjects, String userId)
@@ -60,7 +60,7 @@ public class DefaultObjectLockingProvider implements ObjectLockingProvider
 
         if (expiry == null || expiry == 0)
         {
-            expiry = getExpiryTime();
+            expiry = getExpiryTimeInMilliseconds();
         }
 
         synchronized (getLock(objectId.toString() + objectType))
@@ -102,14 +102,14 @@ public class DefaultObjectLockingProvider implements ObjectLockingProvider
     }
 
     @Override
-    public Long getExpiryTime()
+    public Long getExpiryTimeInMilliseconds()
     {
-        return expiryTime;
+        return expiryTimeInMilliseconds;
     }
 
-    public void setExpiryTime(Long expiryTime)
+    public void setExpiryTimeInMilliseconds(Long expiryTimeInMilliseconds)
     {
-        this.expiryTime = expiryTime;
+        this.expiryTimeInMilliseconds = expiryTimeInMilliseconds;
     }
 
     private synchronized Object getLock(String lockKey)

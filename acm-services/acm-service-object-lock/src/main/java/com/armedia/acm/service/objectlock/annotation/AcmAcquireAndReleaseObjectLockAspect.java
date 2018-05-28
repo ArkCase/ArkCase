@@ -42,6 +42,8 @@ public class AcmAcquireAndReleaseObjectLockAspect
         Long lockId = acmAcquireAndReleaseObjectLock.lockIdArgIndex() != -1 ? (Long) args[acmAcquireAndReleaseObjectLock.lockIdArgIndex()]
                 : null;
 
+        boolean lockAquired = false;
+
         String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
         if (userId == null)
         {
@@ -65,6 +67,7 @@ public class AcmAcquireAndReleaseObjectLockAspect
                 {
                     objectLockingManager.acquireObjectLock(objectId, objectType, lockType, null, lockChildObjects, userId);
                 }
+                lockAquired = true;
             }
             Object ret = null;
             try
@@ -73,14 +76,10 @@ public class AcmAcquireAndReleaseObjectLockAspect
             }
             finally
             {
-                if (objectId != null)
+                // release the lock only if it was acquired previously
+                if (objectId != null && lockAquired)
                 {
-                    // release the lock only if it was acquired previously
-                    if (objectLock == null
-                            || (objectLock != null && objectLock.getLockType().equals(lockType) && !objectLock.getCreator().equals(userId)))
-                    {
-                        objectLockingManager.releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId, lockId);
-                    }
+                    objectLockingManager.releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId, lockId);
                 }
             }
 

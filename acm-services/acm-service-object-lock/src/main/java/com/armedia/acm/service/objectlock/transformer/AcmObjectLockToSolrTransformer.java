@@ -61,7 +61,7 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-        solr.setAdditionalProperty("expiry", in.getExpiry());
+        solr.setAdditionalProperty("expiry_tdt", in.getExpiry());
 
         return solr;
     }

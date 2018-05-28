@@ -16,7 +16,7 @@ public interface ObjectLockingProvider
      * 
      * @return the default lock expiry time in milliseconds
      */
-    Long getExpiryTime();
+    Long getExpiryTimeInMilliseconds();
 
     /**
      * Checks if a lock type can be acquired for a given {@link AcmObject}, specified by the objectId and object type.
