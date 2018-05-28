@@ -7,13 +7,10 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.onlyoffice.model.CallBackData;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
 import com.armedia.acm.plugins.onlyoffice.model.StatusConstants;
-import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
-import com.armedia.acm.services.users.dao.UserDao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,10 +22,6 @@ public class CallbackServiceImpl implements CallbackService
     private Logger logger = LoggerFactory.getLogger(getClass());
     private EcmFileDao ecmFileDao;
     private EcmFileService ecmFileService;
-    private UserDao userDao;
-    private String arkcaseBaseUrl;
-    private AuthenticationTokenService authenticationTokenService;
-    private RestTemplate restTemplate;
 
     @Override
     public CallbackResponse handleCallback(CallBackData callBackData, Authentication authentication)
@@ -140,25 +133,5 @@ public class CallbackServiceImpl implements CallbackService
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
-    }
-
-    public void setUserDao(UserDao userDao)
-    {
-        this.userDao = userDao;
-    }
-
-    public void setArkcaseBaseUrl(String arkcaseBaseUrl)
-    {
-        this.arkcaseBaseUrl = arkcaseBaseUrl;
-    }
-
-    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
-    {
-        this.authenticationTokenService = authenticationTokenService;
-    }
-
-    public void setRestTemplate(RestTemplate restTemplate)
-    {
-        this.restTemplate = restTemplate;
     }
 }

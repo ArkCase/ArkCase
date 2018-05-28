@@ -9,7 +9,6 @@
 
     <bean id="onlyOfficeConfigService"
           class="com.armedia.acm.plugins.onlyoffice.service.ConfigServiceImpl">
-        <property name="ecmFileService" ref="ecmFileService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
@@ -20,10 +19,6 @@
           class="com.armedia.acm.plugins.onlyoffice.service.CallbackServiceImpl">
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="authenticationTokenService" ref="authenticationTokenService"/>
-        <property name="arkcaseBaseUrl" value="${arkcase.baseurl}"/>
-        <property name="restTemplate" ref="restTemplate"/>
     </bean>
 
 </beans>
