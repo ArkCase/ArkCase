@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.onlyoffice.service;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.onlyoffice.model.config.Config;
 import com.armedia.acm.plugins.onlyoffice.model.config.Document;
 import com.armedia.acm.plugins.onlyoffice.model.config.DocumentInfo;
@@ -25,7 +24,6 @@ public class ConfigServiceImpl implements ConfigService
 {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private EcmFileDao ecmFileDao;
-    private EcmFileService ecmFileService;
     private UserDao userDao;
     private String arkcaseBaseUrl;
     private AuthenticationTokenService authenticationTokenService;
@@ -128,10 +126,5 @@ public class ConfigServiceImpl implements ConfigService
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
-    }
-
-    public void setEcmFileService(EcmFileService ecmFileService)
-    {
-        this.ecmFileService = ecmFileService;
     }
 }
