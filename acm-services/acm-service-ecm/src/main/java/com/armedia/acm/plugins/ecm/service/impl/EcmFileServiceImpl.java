@@ -53,6 +53,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
+import com.armedia.acm.service.objectlock.annotation.AcmAcquireObjectLock;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -328,6 +330,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public EcmFile update(EcmFile ecmFile, MultipartFile file, Authentication authentication) throws AcmCreateObjectFailedException
     {
         try
@@ -341,6 +344,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public EcmFile update(EcmFile ecmFile, InputStream inputStream, Authentication authentication) throws AcmCreateObjectFailedException
     {
         log.info("The user '{}' is updating file: '{}'", authentication.getName(), ecmFile.getFileName());
@@ -366,7 +370,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public String download(Long id) throws MuleException
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
+    public String download(Long id) throws AcmUserActionFailedException
     {
         try
         {
@@ -377,12 +382,21 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         catch (MuleException e)
         {
-            throw e;
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DOWNLOAD_FILE,
+                    EcmFileConstants.OBJECT_FILE_TYPE, id, "Download file failed", e);
         }
     }
 
     @Override
-    public InputStream downloadAsInputStream(Long id) throws MuleException, AcmUserActionFailedException
+    @AcmAcquireObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE")
+    public String checkout(Long id) throws AcmUserActionFailedException
+    {
+        return download(id);
+    }
+
+    @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
+    public InputStream downloadAsInputStream(Long id) throws AcmUserActionFailedException
     {
         try
         {
@@ -591,6 +605,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public EcmFile setFilesActiveVersion(Long fileId, String versionTag) throws PersistenceException
     {
 
@@ -628,6 +643,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 3, objectType = "FOLDER", lockType = "READ", lockChildObjects = false, unlockChildObjects = false)
     public AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId,
             int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException
     {
@@ -642,12 +658,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String query = "(object_type_s:FILE OR object_type_s:FOLDER) AND parent_folder_id_i:" + folderId;
         String filterQuery = category == null ? "fq=hidden_b:false"
                 : "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in
-        // case
-        // some
-        // bad
-        // data
-        // gets
-        // through
+        // case some bad data gets through
 
         AcmCmisObjectList retval = findObjects(auth, container, folderId, EcmFileConstants.CATEGORY_ALL, query, filterQuery, startRow,
                 maxRows, sortBy, sortDirection);
@@ -656,6 +667,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @PreAuthorize("hasPermission(#container.folder.id, 'FOLDER', 'read|group-read|write|group-write')")
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "CONTAINER", lockType = "READ", lockChildObjects = false, unlockChildObjects = false)
     public AcmCmisObjectList listFolderContents(Authentication auth, AcmContainer container, String category, String sortBy,
             String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException
     {
@@ -669,12 +681,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         String filterQuery = category == null ? "fq=hidden_b:false"
                 : "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in
-        // case
-        // some
-        // bad
-        // data
-        // gets
-        // through
+        // case some bad data gets through
 
         return findObjects(auth, container, container.getFolder().getId(), category, query, filterQuery, startRow, maxRows, sortBy,
                 sortDirection);
@@ -682,6 +689,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "CONTAINER", lockType = "READ", lockChildObjects = false, unlockChildObjects = false)
     public AcmCmisObjectList listFlatSearchResults(Authentication auth, AcmContainer container, String category, String sortBy,
             String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException
     {
@@ -698,6 +706,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @PreAuthorize("hasPermission(#container.folder.id, 'FOLDER', 'read|group-read|write|group-write')")
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "CONTAINER", lockType = "READ", lockChildObjects = false, unlockChildObjects = false)
     public AcmCmisObjectList listFileFolderByCategory(Authentication auth, AcmContainer container, String sortBy, String sortDirection,
             int startRow, int maxRows, String category) throws AcmListObjectsFailedException
     {
@@ -713,6 +722,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write')")
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 1, objectType = "FILE", lockType = "WRITE")
     public void declareFileAsRecord(Long fileId, Authentication authentication) throws AcmObjectNotFoundException
     {
 
@@ -738,6 +748,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'read|group-read|write|group-write')")
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "WRITE")
     public void declareFolderAsRecord(Long folderId, Authentication authentication, String parentObjectType, Long parentObjectId)
             throws AcmObjectNotFoundException, AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
@@ -765,6 +776,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 2, objectType = "FOLDER", lockType = "READ", lockChildObjects = false, unlockChildObjects = false)
     private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, Long folderId, String category, String query,
             String filterQuery, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException
     {
@@ -889,6 +901,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
@@ -910,6 +923,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public EcmFile copyFile(Long fileId, AcmFolder targetFolder, AcmContainer targetContainer)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
@@ -1064,6 +1078,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public EcmFile updateFileType(Long fileId, String fileType) throws AcmObjectNotFoundException
     {
         EcmFile file = getEcmFileDao().find(fileId);
@@ -1080,6 +1095,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public EcmFile updateFile(EcmFile ecmFile) throws AcmObjectNotFoundException
     {
 
@@ -1164,6 +1180,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public EcmFile updateSecurityField(Long fileId, String securityFieldValue) throws AcmObjectNotFoundException
     {
         EcmFile file = getEcmFileDao().find(fileId);
@@ -1264,6 +1281,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
     {
@@ -1277,6 +1295,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
     {
@@ -1331,12 +1350,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
         deleteFile(objectId, false);
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId, Boolean allVersions) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
@@ -1398,6 +1419,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
@@ -1432,6 +1454,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
         newFileName = getFolderAndFilesUtils().getBaseFileName(newFileName);

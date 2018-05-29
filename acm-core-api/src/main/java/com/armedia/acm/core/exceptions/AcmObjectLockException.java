@@ -1,4 +1,4 @@
-package com.armedia.acm.service.objectlock.model;
+package com.armedia.acm.core.exceptions;
 
 /*-
  * #%L
@@ -28,21 +28,17 @@ package com.armedia.acm.service.objectlock.model;
  */
 
 /**
- * Created by dragan.simonovski on 04/25/2016.
+ * Created by nebojsha on 25.08.2015.
  */
-public interface AcmObjectLockConstants
+public class AcmObjectLockException extends RuntimeException
 {
-    String WORD_EDIT_LOCK = "WORD_EDIT_LOCK";
-    String CHECKOUT_LOCK = "CHECKOUT_LOCK";
-    String CHECKIN_LOCK = "CHECKIN_LOCK";
-    String CANCEL_LOCK = "CANCEL_LOCK";
-    String OBJECT_LOCK = "OBJECT_LOCK";
-    /**
-     * this should be used when objects needs to be locked for long running tasks.
-     */
-    String LOCK_FOR_PROCESSING = "OBJECT_PROCESSING_LOCK";
+    public AcmObjectLockException(String message)
+    {
+        super(message);
+    }
 
-    String EXCLUSIVE_TREE_LOCK = "EXCLUSIVE_TREE_LOCK";
-
-    String SHARED_LOCK = "SHARED_LOCK";
+    public AcmObjectLockException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
 }

@@ -1,8 +1,8 @@
-package com.armedia.acm.service.objectlock.exception;
+package com.armedia.acm.plugins.ecm.service.lock;
 
 /*-
  * #%L
- * ACM Service: Object lock
+ * ACM Service: Enterprise Content Management
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,18 +27,30 @@ package com.armedia.acm.service.objectlock.exception;
  * #L%
  */
 
-/**
- * Created by nebojsha on 25.08.2015.
- */
-public class AcmObjectLockException extends RuntimeException
-{
-    public AcmObjectLockException(String message)
-    {
-        super(message);
-    }
+import com.armedia.acm.core.exceptions.AcmObjectLockException;
 
-    public AcmObjectLockException(String message, Throwable cause)
+/**
+ * If new locking types are added in this enumeration, then the {@link FileLockingProvider} must be updated to
+ * handle these types.
+ * 
+ * Created by bojan.milenkoski on 03/05/2018.
+ */
+public enum FileLockType
+{
+    READ, WRITE, DELETE, SHARED_WRITE;
+
+    public static FileLockType fromName(String lockType) throws AcmObjectLockException
     {
-        super(message, cause);
+        FileLockType objectLockType = null;
+        try
+        {
+            objectLockType = FileLockType.valueOf(lockType);
+        }
+        catch (Exception e)
+        {
+            throw new AcmObjectLockException("Unknown lock type: " + lockType);
+        }
+
+        return objectLockType;
     }
 }
