@@ -33,7 +33,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
 import org.apache.commons.io.FileUtils;
-import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -81,7 +80,7 @@ public abstract class PdfConverterBase implements FileConverter
         {
             FileUtils.copyInputStreamToFile(fileByteStream, tempOriginFile);
         }
-        catch (IOException | MuleException | AcmUserActionFailedException e)
+        catch (IOException | AcmUserActionFailedException e)
         {
             FileUtils.deleteQuietly(tempOriginFile);
             log.warn("Failed to retrieve file [{}] with id [{}] of type [{}].", fileName, file.getId(), file.getFileExtension(), e);
