@@ -14,7 +14,7 @@
 
     <bean id="defaultObjectLockingProvider" class="com.armedia.acm.service.objectlock.service.DefaultObjectLockingProvider">
         <property name="objectLockService" ref="objectLockService"/>
-        <property name="expiryTime" value="600000"/>
+        <property name="expiryTimeInMilliseconds" value="600000"/>
     </bean>
  
     <bean id="objectLockDao" class="com.armedia.acm.service.objectlock.dao.AcmObjectLockDao"/>
