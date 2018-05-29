@@ -52,7 +52,7 @@ import java.util.List;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 26, 2018
  *
  */
-public class DocXToPdfConverter extends PdfConverterBase implements FileConverter
+public class DocxToPdfConverter extends PdfConverterBase implements FileConverter
 {
 
     private static final List<String> SUPPORTED_TYPES_EXTENSIONS = Collections.unmodifiableList(Arrays.asList("docx"));

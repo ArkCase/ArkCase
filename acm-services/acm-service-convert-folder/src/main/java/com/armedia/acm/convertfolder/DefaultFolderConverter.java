@@ -125,7 +125,7 @@ public class DefaultFolderConverter implements FolderConverter
      */
     private void convertFile(EcmFile file, Authentication auth) throws ConversionException
     {
-        List<FileConverter> converters = convertersByType.get(file.getFileExtension());
+        List<FileConverter> converters = convertersByType.get(file.getFileExtension().toLowerCase());
         if (converters == null)
         {
             return;
@@ -160,7 +160,8 @@ public class DefaultFolderConverter implements FolderConverter
     {
         for (FileConverter converter : converters)
         {
-            List<String> supportedFileExtensions = converter.getSupportedTypesExtensions();
+            List<String> supportedFileExtensions = converter.getSupportedTypesExtensions().stream().map(ext -> ext.toLowerCase())
+                    .collect(Collectors.toList());
             for (String fileExtension : supportedFileExtensions)
             {
                 List<FileConverter> computedConverters = convertersByType.computeIfAbsent(fileExtension,
