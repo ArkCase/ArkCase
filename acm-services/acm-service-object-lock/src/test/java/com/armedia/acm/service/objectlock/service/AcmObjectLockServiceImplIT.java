@@ -73,7 +73,7 @@ import java.nio.file.Files;
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-object-converter.xml"
 })
-public class AcmObjectLockServiceImplTest extends EasyMockSupport
+public class AcmObjectLockServiceImplIT extends EasyMockSupport
 {
 
     @Autowired
