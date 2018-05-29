@@ -4,6 +4,7 @@
 
     <bean id="objectLockAPIController" class="com.armedia.acm.plugins.objectlockplugin.web.api.AcmObjectLockAPIController">
         <property name="objectLockService" ref="objectLockService"/>
+        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
     </bean>
 
 </beans>

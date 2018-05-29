@@ -5,4 +5,12 @@
     <bean id="objectLockService" class="com.armedia.acm.service.objectlock.service.AcmObjectLockServiceImpl">
 
     </bean>
+    
+    <bean id="acmObjectLockingManager" class="com.armedia.acm.service.objectlock.service.AcmObjectLockingManager">
+        <property name="defaultObjectLockingProvider" ref="defaultObjectLockingProvider"/>
+        <property name="objectLockingProvidersMap">
+            <map>
+            </map>
+        </property>
+    </bean>
 </beans>

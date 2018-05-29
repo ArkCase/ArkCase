@@ -48,10 +48,7 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-import com.armedia.acm.service.objectlock.exception.AcmObjectLockException;
-import com.armedia.acm.service.objectlock.model.AcmObjectLock;
-import com.armedia.acm.service.objectlock.model.AcmObjectLockConstants;
-import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
@@ -86,7 +83,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -107,10 +103,10 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private FolderAndFilesUtils folderAndFilesUtils;
     private Properties ecmFileServiceProperties;
     private CmisConfigUtils cmisConfigUtils;
-    private AcmObjectLockService objectLockService;
     private EcmFileParticipantService fileParticipantService;
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public AcmFolder addNewFolder(Long parentFolderId, String newFolderName)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
@@ -122,6 +118,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     @Override
     @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public AcmFolder addNewFolder(Long parentFolderId, String newFolderName, Long parentId, String parentType)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
@@ -132,6 +129,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public AcmFolder addNewFolder(AcmFolder parentFolder, String newFolderName)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
@@ -288,6 +286,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "DELETE")
     public AcmFolder renameFolder(Long folderId, String newFolderName)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
@@ -323,6 +322,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "READ", lockChildObjects = false, unlockChildObjects = false)
     public List<AcmObject> getFolderChildren(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
         List<AcmObject> objectList = new ArrayList<>();
@@ -343,6 +343,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FOLDER", lockType = "DELETE")
     public AcmFolder moveFolder(AcmFolder folderForMoving, AcmFolder dstFolder)
             throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException
     {
@@ -405,6 +406,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FOLDER", lockType = "DELETE")
     public AcmFolder moveRootFolder(AcmFolder folderForMoving, AcmFolder dstFolder)
             throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException
     {
@@ -467,6 +469,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public AcmFolder copyFolder(Long folderToBeCopiedId, Long copyDstFolderId, Long targetObjectId, String targetObjectType)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
     {
@@ -478,6 +481,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public AcmFolder copyFolder(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
     {
@@ -648,6 +652,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "DELETE", lockChildObjects = false, unlockChildObjects = false)
     public void deleteFolderIfEmpty(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
@@ -693,6 +698,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "DELETE")
     public void deleteFolderTreeSafe(Long folderId, Authentication authentication)
             throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
@@ -702,35 +709,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         {
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
         }
-        Set<EcmFile> childrenFiles = new HashSet<>();
-        Set<AcmFolder> childrenFolders = new HashSet<>();
-        findFolderChildren(folder, childrenFiles, childrenFolders);
-
-        Function<AcmObject, String> acmObjectToKey = acmObject -> String.format("%s_%d", acmObject.getObjectType(), acmObject.getId());
-
-        Map<String, String> folderContentFolderEntries = childrenFolders.stream()
-                .collect(Collectors.toMap(acmObjectToKey, AcmFolder::getObjectType));
-
-        Map<String, String> folderContentEntries = childrenFiles.stream().collect(Collectors.toMap(acmObjectToKey, EcmFile::getObjectType));
-
-        folderContentFolderEntries.put(acmObjectToKey.apply(folder), folder.getObjectType());
-
-        folderContentEntries.putAll(folderContentFolderEntries);
-
-        lockAndDeleteFolderTree(folderId, authentication, folderContentEntries);
-
-        log.info("Removing object locks");
-        // Remove LOCK for all sub-folders
-        // For FILE the LOCK is removed with deleting the FILE handled with cascade remove
-        removeObjectLocks(folderContentFolderEntries, authentication);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    private void lockAndDeleteFolderTree(Long folderId, Authentication authentication, Map<String, String> folderContentEntries)
-            throws AcmObjectNotFoundException, AcmUserActionFailedException
-    {
-        log.info("Putting object locks");
-        putObjectLocks(folderContentEntries, authentication);
 
         log.info("Deleting folder tree");
         deleteFolderTree(folderId, authentication);
@@ -738,6 +716,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "DELETE")
     public void deleteFolderTree(Long folderId, Authentication authentication)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
@@ -779,98 +758,17 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
     }
 
-    private void putObjectLocks(Map<String, String> folderContentEntries, Authentication authentication) throws AcmUserActionFailedException
-    {
-        // Find if any of the files or folders already has a LOCK.
-        // If this is true abort the operation.
-        for (Map.Entry<String, String> entry : folderContentEntries.entrySet())
-        {
-            String[] parts = entry.getKey().split("_");
-            Long id = Long.parseLong(parts[1]);
-            AcmObjectLock objectLock = objectLockService.findLock(id, entry.getValue());
-            if (objectLock != null)
-            {
-                log.warn("Object {}: {} already has a lock", entry.getValue(), id);
-                throw new AcmUserActionFailedException("create object lock", entry.getValue(), id,
-                        String.format("Can't add lock. Object %s: %s is already locked", entry.getValue(), id), null);
-            }
-        }
-
-        // None of the files or folders has a LOCK.
-        // Set EXCLUSIVE TREE LOCK to all entries
-        for (Map.Entry<String, String> entry : folderContentEntries.entrySet())
-        {
-            String[] parts = entry.getKey().split("_");
-            Long id = Long.parseLong(parts[1]);
-            try
-            {
-                objectLockService.createLock(id, entry.getValue(), AcmObjectLockConstants.EXCLUSIVE_TREE_LOCK, authentication);
-            }
-            catch (AcmObjectLockException e)
-            {
-                log.warn("Can't add lock to object {}: {} ", entry.getValue(), id, e.getMessage());
-                throw new AcmUserActionFailedException("create object lock", entry.getValue(), id,
-                        String.format("Can't add lock to object %s: %s", entry.getValue(), id), e);
-            }
-        }
-    }
-
-    private void removeObjectLocks(Map<String, String> folderContentEntries, Authentication authentication)
-    {
-        for (Map.Entry<String, String> entry : folderContentEntries.entrySet())
-        {
-            String[] parts = entry.getKey().split("_");
-            Long id = Long.parseLong(parts[1]);
-            try
-            {
-                objectLockService.removeLock(id, entry.getValue(), AcmObjectLockConstants.EXCLUSIVE_TREE_LOCK, authentication);
-            }
-            catch (AcmObjectLockException e)
-            {
-                log.warn("Can't remove locks for object: {} with id: {} ", entry.getValue(), id, e);
-            }
-        }
-    }
-
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "CONTAINER", lockType = "DELETE")
     public void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException
     {
-        AcmFolder rootFolder = container.getFolder();
-        Set<EcmFile> childrenFiles = new HashSet<>();
-        Set<AcmFolder> childrenFolders = new HashSet<>();
-
-        findFolderChildren(rootFolder, childrenFiles, childrenFolders);
-
-        Function<AcmObject, String> acmObjectToKey = acmObject -> String.format("%s_%d", acmObject.getObjectType(), acmObject.getId());
-
-        Map<String, String> folderContentFolderEntries = childrenFolders.stream()
-                .collect(Collectors.toMap(acmObjectToKey, AcmFolder::getObjectType));
-
-        folderContentFolderEntries.put(acmObjectToKey.apply(rootFolder), rootFolder.getObjectType());
-
-        Map<String, String> folderContentEntries = childrenFiles.stream().collect(Collectors.toMap(acmObjectToKey, EcmFile::getObjectType));
-
-        folderContentEntries.putAll(folderContentFolderEntries);
-
-        deleteAndLockContainer(container.getId(), authentication, folderContentEntries);
-
-        log.info("Removing object locks");
-        removeObjectLocks(folderContentEntries, authentication);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    private void deleteAndLockContainer(Long containerId, Authentication authentication, Map<String, String> contentEntries)
-            throws AcmUserActionFailedException
-    {
-        log.info("Putting object locks");
-        putObjectLocks(contentEntries, authentication);
-
         log.info("Deleting container and it's content");
-        deleteContainer(containerId, authentication);
+        deleteContainer(container.getId(), authentication);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "CONTAINER", lockType = "DELETE")
     public void deleteContainer(Long containerId, Authentication authentication) throws AcmUserActionFailedException
     {
         AcmContainer container = containerDao.find(containerId);
@@ -879,7 +777,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         deleteAlfrescoFolderTree(rootFolder);
     }
 
-    public void deleteFilesWithProgress(Set<EcmFile> files, AcmProgressIndicator acmProgressIndicator, int progressCounter, int total)
+    private void deleteFilesWithProgress(Set<EcmFile> files, AcmProgressIndicator acmProgressIndicator, int progressCounter, int total)
     {
         for (EcmFile file : files)
         {
@@ -892,7 +790,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
     }
 
-    public void deleteFoldersWithProgress(Set<AcmFolder> folders, AcmProgressIndicator acmProgressIndicator, int progressCounter, int total)
+    private void deleteFoldersWithProgress(Set<AcmFolder> folders, AcmProgressIndicator acmProgressIndicator, int progressCounter,
+            int total)
     {
         for (AcmFolder subFolder : folders)
         {
@@ -907,6 +806,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "CONTAINER", lockType = "DELETE")
     public void deleteContainerAndContent(AcmContainer container, String user)
     {
         AcmProgressIndicator acmProgressIndicator = new AcmProgressIndicator();
@@ -947,7 +847,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         applicationEventPublisher.publishEvent(new AcmProgressEvent(acmProgressIndicator));
     }
 
-    @Transactional
     private void deleteFolderContent(Long folderId, String user)
     {
         AcmProgressIndicator acmProgressIndicator = new AcmProgressIndicator();
@@ -1113,6 +1012,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "CONTAINER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public void addFolderStructure(AcmContainer container, AcmFolder parentFolder, JSONArray folderStructure)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
@@ -1287,6 +1187,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 2, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public void copyFolderStructure(Long folderId, AcmContainer containerOfCopy, AcmFolder rootFolderOfCopy)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmFolderException
     {
@@ -1334,6 +1235,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 2, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public void copyDocumentStructure(Long documentId, AcmContainer containerOfCopy, AcmFolder rootFolderOfCopy)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
     {
@@ -1543,16 +1445,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         this.cmisConfigUtils = cmisConfigUtils;
     }
 
-    public AcmObjectLockService getObjectLockService()
-    {
-        return objectLockService;
-    }
-
-    public void setObjectLockService(AcmObjectLockService objectLockService)
-    {
-        this.objectLockService = objectLockService;
-    }
-
     public EcmFileParticipantService getFileParticipantService()
     {
         return fileParticipantService;
@@ -1562,5 +1454,4 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     {
         this.fileParticipantService = fileParticipantService;
     }
-
 }
