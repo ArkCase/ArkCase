@@ -43,78 +43,58 @@
  */
 angular.module('directives').directive(
         'coreParticipants',
-        [
-                '$stateParams',
-                '$q',
-                '$translate',
-                '$modal',
-                'Acm.StoreService',
-                'UtilService',
-                'ConfigService',
-                'Case.InfoService',
-                'LookupService',
-                'Object.LookupService',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'Object.ParticipantService',
-                'Object.ModelService',
-                'MessageService',
-                'SearchService',
-                'Search.QueryBuilderService',
-                function($stateParams, $q, $translate, $modal, Store, Util, ConfigService, CaseInfoService, LookupService,
-                        ObjectLookupService, HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService, ObjectModelService,
-                        MessageService, SearchService, SearchQueryBuilder) {
+        [ '$stateParams', '$q', '$translate', '$modal', 'Acm.StoreService', 'UtilService', 'ConfigService', 'Case.InfoService', 'LookupService', 'Object.LookupService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService', 'Object.ModelService', 'MessageService',
+                'SearchService', 'Search.QueryBuilderService',
+                function($stateParams, $q, $translate, $modal, Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService, HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService, ObjectModelService, MessageService, SearchService, SearchQueryBuilder) {
                     return {
-                        restrict : 'E',
-                        scope : {
-                            participantsInit : '='
+                        restrict: 'E',
+                        scope: {
+                            participantsInit: '='
                         },
-                        link : function(scope, element, attrs) {
+                        link: function(scope, element, attrs) {
 
                             var typeOwningGroup = "owning group";
                             var typeAssignee = "assignee";
                             var typeOwner = "owner";
 
                             new HelperObjectBrowserService.Component({
-                                scope : scope,
-                                stateParams : $stateParams,
-                                moduleId : scope.participantsInit.moduleId,
-                                componentId : scope.participantsInit.componentId,
-                                objectId : scope.participantsInit.objectId,
-                                showReplaceChildrenParticipants : scope.participantsInit.showReplaceChildrenParticipants,
-                                retrieveObjectInfo : scope.participantsInit.retrieveObjectInfo,
-                                validateObjectInfo : scope.participantsInit.validateObjectInfo,
-                                resetComponentData : scope.participantsInit.resetComponentData,
-                                onConfigRetrieved : function(componentConfig) {
+                                scope: scope,
+                                stateParams: $stateParams,
+                                moduleId: scope.participantsInit.moduleId,
+                                componentId: scope.participantsInit.componentId,
+                                objectId: scope.participantsInit.objectId,
+                                showReplaceChildrenParticipants: scope.participantsInit.showReplaceChildrenParticipants,
+                                retrieveObjectInfo: scope.participantsInit.retrieveObjectInfo,
+                                validateObjectInfo: scope.participantsInit.validateObjectInfo,
+                                resetComponentData: scope.participantsInit.resetComponentData,
+                                onConfigRetrieved: function(componentConfig) {
                                     return onConfigRetrieved(componentConfig);
                                 },
-                                onObjectInfoRetrieved : function(objectInfo) {
+                                onObjectInfoRetrieved: function(objectInfo) {
                                     onObjectInfoRetrieved(objectInfo);
                                 }
                             });
 
                             var gridHelper = new HelperUiGridService.Grid({
-                                scope : scope
+                                scope: scope
                             });
                             var promiseUsers = gridHelper.getUsers();
 
-                            var promiseTypes = ObjectLookupService.getParticipantTypes(scope.participantsInit.objectType).then(
-                                    function(participantTypes) {
-                                        scope.participantTypes = participantTypes;
-                                        return participantTypes;
-                                    });
+                            var promiseTypes = ObjectLookupService.getParticipantTypes(scope.participantsInit.objectType).then(function(participantTypes) {
+                                scope.participantTypes = participantTypes;
+                                return participantTypes;
+                            });
 
                             var onConfigRetrieved = function(config) {
                                 if (!scope.participantsInit.participantsTitle)
-                                    scope.participantsInit.participantsTitle = $translate
-                                            .instant("common.directive.coreParticipants.title");
+                                    scope.participantsInit.participantsTitle = $translate.instant("common.directive.coreParticipants.title");
                                 scope.config = config;
                                 gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
                                 gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
                                 gridHelper.setColumnDefs(config);
                                 gridHelper.setBasicOptions(config);
                                 gridHelper.disableGridScrolling(config);
-                                gridHelper.setUserNameFilter(promiseUsers);
+                                gridHelper.setUserNameFilterToConfig(promiseUsers);
                             };
 
                             var showModal = function(participant, isEdit, showReplaceChildrenParticipants) {
@@ -130,14 +110,14 @@ angular.module('directives').directive(
                                 params.owningGroup = ObjectModelService.getParticipantByType(scope.objectInfo, typeOwningGroup);
 
                                 var modalInstance = $modal.open({
-                                    scope : modalScope,
-                                    animation : true,
-                                    templateUrl : "directives/core-participants/core-participants-modal.client.view.html",
-                                    controller : "Directives.CoreParticipantsModalController",
-                                    size : 'lg',
-                                    backdrop : 'static',
-                                    resolve : {
-                                        params : function() {
+                                    scope: modalScope,
+                                    animation: true,
+                                    templateUrl: "directives/core-participants/core-participants-modal.client.view.html",
+                                    controller: "Directives.CoreParticipantsModalController",
+                                    size: 'lg',
+                                    backdrop: 'static',
+                                    resolve: {
+                                        params: function() {
                                             return params;
                                         }
                                     }
@@ -169,20 +149,16 @@ angular.module('directives').directive(
                                             participant.participantLdapId = data.participant.participantLdapId;
                                             participant.id = data.participant.id;
 
-                                            if (data.participant.participantType == typeNoAccess
-                                                    && assignee == data.participant.participantLdapId) {
-                                                MessageService.error($translate
-                                                        .instant("common.directive.coreParticipants.message.error.noAccessCombo"));
+                                            if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
+                                                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
                                             } else {
                                                 participant.participantType = data.participant.participantType;
                                                 participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
                                                 var participantPerson = owner ? owner : assignee;
                                                 if (!Util.isEmpty(participantPerson) && !Util.isEmpty(owningGroup)) {
-                                                    if (!ObjectParticipantService
-                                                            .isParticipantMemberOfGroup(participantPerson, owningGroup)) {
+                                                    if (!ObjectParticipantService.isParticipantMemberOfGroup(participantPerson, owningGroup)) {
                                                         _.remove(scope.objectInfo.participants, function(p) {
-                                                            return p.participantLdapId == participantPerson
-                                                                    && (p.participantType == "assignee" || p.participantType == "owner")
+                                                            return p.participantLdapId == participantPerson && (p.participantType == "assignee" || p.participantType == "owner")
                                                         });
                                                     }
                                                 }
@@ -191,10 +167,8 @@ angular.module('directives').directive(
                                             var participant = {};
                                             participant.participantLdapId = data.participant.participantLdapId;
 
-                                            if (data.participant.participantType == typeNoAccess
-                                                    && assignee == data.participant.participantLdapId) {
-                                                MessageService.error($translate
-                                                        .instant("common.directive.coreParticipants.message.error.noAccessCombo"));
+                                            if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
+                                                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
                                             } else {
                                                 participant.participantType = data.participant.participantType;
                                                 participant.className = scope.config.className;
@@ -202,9 +176,7 @@ angular.module('directives').directive(
                                                 scope.objectInfo.participants.push(participant);
                                             }
                                         }
-                                        if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants,
-                                                scope.participantsInit.objectType != "FOLDER"
-                                                        && scope.participantsInit.objectType != "FILE")) {
+                                        if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants, scope.participantsInit.objectType != "FOLDER" && scope.participantsInit.objectType != "FILE")) {
                                             saveObjectInfoAndRefresh();
                                         } else {
                                             refresh();
@@ -225,11 +197,11 @@ angular.module('directives').directive(
                                 //put participant to scope, we will need it when we return from popup
                                 scope.participant = participant;
                                 var item = {
-                                    id : '',
-                                    participantType : '',
-                                    participantLdapId : '',
-                                    participantTypes : scope.participantTypes,
-                                    config : scope.config
+                                    id: '',
+                                    participantType: '',
+                                    participantLdapId: '',
+                                    participantTypes: scope.participantTypes,
+                                    config: scope.config
                                 };
                                 showModal(item, false, scope.participantsInit.showReplaceChildrenParticipants);
                             };
@@ -293,10 +265,9 @@ angular.module('directives').directive(
                             };
 
                             var refresh = function() {
-                                scope.$emit('report-object-refreshed', scope.participantsInit.objectId ? scope.participantsInit.objectId
-                                        : $stateParams.id);
+                                scope.$emit('report-object-refreshed', scope.participantsInit.objectId ? scope.participantsInit.objectId : $stateParams.id);
                             };
                         },
-                        templateUrl : 'directives/core-participants/core-participants.client.view.html'
+                        templateUrl: 'directives/core-participants/core-participants.client.view.html'
                     }
                 } ]);

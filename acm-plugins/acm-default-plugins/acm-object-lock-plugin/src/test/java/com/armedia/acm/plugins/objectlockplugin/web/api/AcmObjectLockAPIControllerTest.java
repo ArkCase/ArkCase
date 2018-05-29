@@ -28,7 +28,6 @@ package com.armedia.acm.plugins.objectlockplugin.web.api;
  */
 
 import static junit.framework.Assert.assertEquals;
-import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
@@ -38,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.easymock.Capture;
@@ -58,6 +58,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+
+import java.util.Date;
 
 /**
  * Created by nebojsha on 28.10.2015.
@@ -81,6 +83,7 @@ public class AcmObjectLockAPIControllerTest extends EasyMockSupport
 
     private MockMvc mockMvc;
     private AcmObjectLockService objectLockServiceMock;
+    private AcmObjectLockingManager objectLockingManagerMock;
 
     @Autowired
     private AcmObjectLockAPIController objectLockAPIController;
@@ -89,8 +92,10 @@ public class AcmObjectLockAPIControllerTest extends EasyMockSupport
     public void setup()
     {
         objectLockServiceMock = createMock(AcmObjectLockService.class);
+        objectLockingManagerMock = createMock(AcmObjectLockingManager.class);
         mockAuthentication = createMock(Authentication.class);
         objectLockAPIController.setObjectLockService(objectLockServiceMock);
+        objectLockAPIController.setObjectLockingManager(objectLockingManagerMock);
         this.mockMvc = MockMvcBuilders.standaloneSetup(objectLockAPIController).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
@@ -98,18 +103,21 @@ public class AcmObjectLockAPIControllerTest extends EasyMockSupport
     public void testLockObject() throws Exception
     {
         final String user = "user";
+        final Date expiry = new Date();
         expect(mockAuthentication.getName()).andReturn(user).anyTimes();
 
         Capture<Authentication> authenticationCapture = EasyMock.newCapture();
-        expect(objectLockServiceMock.createLock(eq(1123l), eq("CASE_FILE"), eq("OBJECT_LOCK"), eq(true), capture(authenticationCapture)))
-                .andAnswer(() -> {
-                    AcmObjectLock lock = new AcmObjectLock();
-                    lock.setCreator(user);
-                    lock.setId(1l);
-                    lock.setObjectId(1123l);
-                    lock.setObjectType("CASE_FILE");
-                    return lock;
-                });
+        expect(objectLockingManagerMock.acquireObjectLock(eq(1123l), eq("CASE_FILE"), eq("OBJECT_LOCK"), eq(null), eq(true),
+                eq(user)))
+                        .andAnswer(() -> {
+                            AcmObjectLock lock = new AcmObjectLock();
+                            lock.setCreator(user);
+                            lock.setId(1l);
+                            lock.setObjectId(1123l);
+                            lock.setObjectType("CASE_FILE");
+                            lock.setExpiry(expiry);
+                            return lock;
+                        });
 
         session.setAttribute("acm_ip_address", "127.0.0.1");
 
@@ -118,14 +126,14 @@ public class AcmObjectLockAPIControllerTest extends EasyMockSupport
         MvcResult result = mockMvc.perform(put("/api/v1/plugin/CASE_FILE/1123/lock").session(session).principal(mockAuthentication))
                 .andExpect(status().isOk()).andReturn();
 
-        assertEquals(user, authenticationCapture.getValue().getName());
-
         ObjectMapper mapper = new ObjectMapper();
         AcmObjectLock objLock = mapper.readValue(result.getResponse().getContentAsString(), AcmObjectLock.class);
 
         assertEquals(Long.valueOf(1l), objLock.getId());
         assertEquals(Long.valueOf(1123l), objLock.getObjectId());
         assertEquals("CASE_FILE", objLock.getObjectType());
+        assertEquals(user, objLock.getCreator());
+        assertEquals(expiry, objLock.getExpiry());
 
         verifyAll();
     }
@@ -136,7 +144,7 @@ public class AcmObjectLockAPIControllerTest extends EasyMockSupport
         final String user = "user";
         expect(mockAuthentication.getName()).andReturn(user).anyTimes();
 
-        objectLockServiceMock.removeLock(1123l, "CASE_FILE", "OBJECT_LOCK", mockAuthentication);
+        objectLockingManagerMock.releaseObjectLock(1123l, "CASE_FILE", "OBJECT_LOCK", true, user, null);
         expectLastCall();
 
         session.setAttribute("acm_ip_address", "127.0.0.1");
