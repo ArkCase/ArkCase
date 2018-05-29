@@ -132,7 +132,7 @@ public class WopiFilesApiController
     public ResponseEntity<Long> getLock(@PathVariable Long id, Authentication authentication)
     {
         log.info("Get lock for file [{}] per user [{}]", id, authentication.getName());
-        return new ResponseEntity<>(wopiService.getLock(id), HttpStatus.OK);
+        return new ResponseEntity<>(wopiService.getSharedLock(id), HttpStatus.OK);
     }
 
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
@@ -141,7 +141,7 @@ public class WopiFilesApiController
     public ResponseEntity<Long> refreshLock(@PathVariable Long id, @PathVariable Long lockId, Authentication authentication)
     {
         log.info("Refresh lock for file [{}] per user [{}]", id, authentication.getName());
-        return new ResponseEntity<>(wopiService.refreshLock(lockId), HttpStatus.OK);
+        return new ResponseEntity<>(wopiService.lock(lockId, authentication), HttpStatus.OK);
     }
 
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")

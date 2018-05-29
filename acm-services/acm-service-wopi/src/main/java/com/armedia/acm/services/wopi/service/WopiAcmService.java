@@ -33,9 +33,10 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+import com.armedia.acm.plugins.ecm.service.lock.FileLockType;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
-import com.armedia.acm.service.objectlock.model.AcmObjectLockConstants;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.wopi.model.WopiFileInfo;
 
@@ -52,6 +53,7 @@ import java.util.Optional;
 public class WopiAcmService
 {
     private EcmFileService ecmFileService;
+    private AcmObjectLockingManager objectLockingManager;
     private AcmObjectLockService objectLockService;
     private EcmFileTransaction fileTransaction;
     private ArkPermissionEvaluator permissionEvaluator;
@@ -94,29 +96,23 @@ public class WopiAcmService
         fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, resource.getInputStream());
     }
 
-    public Long getLock(Long fileId)
+    public Long getSharedLock(Long fileId)
     {
         AcmObjectLock lock = objectLockService.findLock(fileId, "FILE");
-        return lock != null ? lock.getId() : null;
+        return lock != null && lock.getLockType().equals(FileLockType.SHARED_WRITE.name()) ? lock.getId() : null;
     }
 
     public Long lock(Long fileId, Authentication authentication)
     {
-        AcmObjectLock lock = objectLockService.createLock(fileId, "FILE",
-                AcmObjectLockConstants.SHARED_LOCK, authentication);
+        AcmObjectLock lock = objectLockingManager.acquireObjectLock(fileId, "FILE",
+                FileLockType.SHARED_WRITE.name(), null, false, authentication.getName());
         return lock.getId();
-    }
-
-    public Long refreshLock(Long lockKey)
-    {
-        AcmObjectLock lock = objectLockService.findLock(lockKey);
-        return lock != null ? lock.getId() : null;
     }
 
     public Long unlock(Long fileId, Long lockKey, Authentication authentication)
     {
         // should be able to remove lock even if the request did not come from the user who originally created the lock
-        objectLockService.removeLock(fileId, "FILE", AcmObjectLockConstants.SHARED_LOCK, authentication);
+        objectLockingManager.releaseObjectLock(fileId, "FILE", FileLockType.SHARED_WRITE.name(), false, authentication.getName(), lockKey);
         return 0L;
     }
 
@@ -136,9 +132,9 @@ public class WopiAcmService
         this.ecmFileService = ecmFileService;
     }
 
-    public void setObjectLockService(AcmObjectLockService objectLockService)
+    public void setObjectLockingManager(AcmObjectLockingManager objectLockingManager)
     {
-        this.objectLockService = objectLockService;
+        this.objectLockingManager = objectLockingManager;
     }
 
     public void setFileTransaction(EcmFileTransaction fileTransaction)
@@ -149,5 +145,15 @@ public class WopiAcmService
     public void setPermissionEvaluator(ArkPermissionEvaluator permissionEvaluator)
     {
         this.permissionEvaluator = permissionEvaluator;
+    }
+
+    public AcmObjectLockService getObjectLockService()
+    {
+        return objectLockService;
+    }
+
+    public void setObjectLockService(AcmObjectLockService objectLockService)
+    {
+        this.objectLockService = objectLockService;
     }
 }
