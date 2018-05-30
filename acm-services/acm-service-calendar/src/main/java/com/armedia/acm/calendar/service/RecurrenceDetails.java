@@ -1,5 +1,32 @@
 package com.armedia.acm.calendar.service;
 
+/*-
+ * #%L
+ * ACM Service: Calendar Service
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static com.armedia.acm.calendar.service.AcmCalendarEvent.ZONED_DATE_TIME_FORMAT;
 
 import com.armedia.acm.calendar.service.RecurrenceDetails.Daily;
@@ -39,31 +66,13 @@ import java.util.EnumSet;
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public abstract class RecurrenceDetails
 {
-    /**
-     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 30, 2017
-     *
-     */
-    public static enum EventRecurrence
-    {
-        ONLY_ONCE, DAILY, WEEKLY, MONTHLY, YEARLY;
-    }
-
-    public static enum WeekOfMonth
-    {
-        FIRST, SECOND, THIRD, FOURTH, LAST;
-    }
-
     private EventRecurrence recurrenceType;
-
     private Integer interval;
-
     private Integer endAfterOccurrances;
-
     @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime startAt;
-
     @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
@@ -149,6 +158,20 @@ public abstract class RecurrenceDetails
     public void setEndBy(ZonedDateTime endBy)
     {
         this.endBy = endBy;
+    }
+
+    /**
+     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 30, 2017
+     *
+     */
+    public static enum EventRecurrence
+    {
+        ONLY_ONCE, DAILY, WEEKLY, MONTHLY, YEARLY;
+    }
+
+    public static enum WeekOfMonth
+    {
+        FIRST, SECOND, THIRD, FOURTH, LAST;
     }
 
     public static final class OnlyOnce extends RecurrenceDetails

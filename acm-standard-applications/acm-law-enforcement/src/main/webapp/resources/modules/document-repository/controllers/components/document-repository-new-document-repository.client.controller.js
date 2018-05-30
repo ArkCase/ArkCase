@@ -110,7 +110,7 @@ angular
                             };
 
                             $scope.saveNewDocumentRepository = function() {
-                                setParticipants();
+                                $scope.docRepo.participants = [];
                                 $scope.loading = true;
                                 DocumentRepositoryInfoService.saveDocumentRepository($scope.docRepo).then(function(data) {
                                     if ($scope.isPersonalDocRepo()) {
@@ -129,20 +129,6 @@ angular
                                     }
                                 });
                             };
-
-                            function setParticipants() {
-                                $scope.docRepo.participants = [];
-                                var assignee = {};
-                                assignee.participantLdapId = $scope.assignee.object_id_s;
-                                assignee.participantType = "assignee";
-                                $scope.docRepo.participants.push(assignee);
-                                if (!$scope.isPersonalDocRepo()) {
-                                    var owningGroup = {};
-                                    owningGroup.participantType = "owning group";
-                                    owningGroup.participantLdapId = $scope.owningGroup.participantLdapId;
-                                    $scope.docRepo.participants.push(owningGroup);
-                                }
-                            }
 
                             $scope.isPersonalDocRepo = function() {
                                 return $scope.docRepo.repositoryType === 'PERSONAL';

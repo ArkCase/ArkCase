@@ -1,5 +1,32 @@
 package com.armedia.acm.compressfolder.web.api;
 
+/*-
+ * #%L
+ * ACM Service: Folder Compressing Service
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isA;
 import static org.junit.Assert.assertEquals;
@@ -10,9 +37,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.armedia.acm.compressfolder.DefaultFolderCompressor;
 import com.armedia.acm.compressfolder.FolderCompressor;
-import com.armedia.acm.compressfolder.FolderCompressorException;
 import com.armedia.acm.compressfolder.model.CompressNode;
 import com.armedia.acm.compressfolder.model.FileFolderNode;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.easymock.EasyMockSupport;
@@ -119,7 +146,7 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
 
         long folderId = 101l;
 
-        expect(mockedFolderCompressor.compressFolder(folderId)).andThrow(new FolderCompressorException(folderId));
+        expect(mockedFolderCompressor.compressFolder(folderId)).andThrow(new AcmFolderException(folderId));
 
         replayAll();
 

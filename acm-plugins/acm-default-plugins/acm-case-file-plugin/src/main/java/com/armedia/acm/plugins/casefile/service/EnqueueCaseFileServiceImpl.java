@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.casefile.service;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Case File
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.plugins.businessprocess.model.EnterQueueModel;
 import com.armedia.acm.plugins.businessprocess.model.LeaveCurrentQueueModel;
 import com.armedia.acm.plugins.businessprocess.model.NextPossibleQueuesModel;
@@ -13,7 +40,6 @@ import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse.ErrorReason;
-import com.armedia.acm.service.objectlock.model.AcmObjectLockConstants;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 
 import org.slf4j.Logger;
@@ -47,97 +73,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 
     private SaveCaseFileBusinessRule saveCaseFileBusinessRule;
 
-    public CaseFileDao getCaseFileDao()
-    {
-        return caseFileDao;
-    }
-
-    public void setCaseFileDao(CaseFileDao caseFileDao)
-    {
-        this.caseFileDao = caseFileDao;
-    }
-
-    public LeaveCurrentQueueBusinessRule getLeaveCurrentQueueBusinessRule()
-    {
-        return leaveCurrentQueueBusinessRule;
-    }
-
     private AcmObjectLockService acmObjectLockService;
-
-    public void setLeaveCurrentQueueBusinessRule(LeaveCurrentQueueBusinessRule leaveCurrentQueueBusinessRule)
-    {
-        this.leaveCurrentQueueBusinessRule = leaveCurrentQueueBusinessRule;
-    }
-
-    public CaseFileNextPossibleQueuesBusinessRule getCaseFileNextPossibleQueuesBusinessRule()
-    {
-        return caseFileNextPossibleQueuesBusinessRule;
-    }
-
-    public void setCaseFileNextPossibleQueuesBusinessRule(CaseFileNextPossibleQueuesBusinessRule caseFileNextPossibleQueuesBusinessRule)
-    {
-        this.caseFileNextPossibleQueuesBusinessRule = caseFileNextPossibleQueuesBusinessRule;
-    }
-
-    public EnterQueueBusinessRule getEnterQueueBusinessRule()
-    {
-        return enterQueueBusinessRule;
-    }
-
-    public void setEnterQueueBusinessRule(EnterQueueBusinessRule enterQueueBusinessRule)
-    {
-        this.enterQueueBusinessRule = enterQueueBusinessRule;
-    }
-
-    public OnLeaveQueueBusinessRule getOnLeaveQueueBusinessRule()
-    {
-        return onLeaveQueueBusinessRule;
-    }
-
-    public void setOnLeaveQueueBusinessRule(OnLeaveQueueBusinessRule onLeaveQueueBusinessRule)
-    {
-        this.onLeaveQueueBusinessRule = onLeaveQueueBusinessRule;
-    }
-
-    public OnEnterQueueBusinessRule getOnEnterQueueBusinessRule()
-    {
-        return onEnterQueueBusinessRule;
-    }
-
-    public void setOnEnterQueueBusinessRule(OnEnterQueueBusinessRule onEnterQueueBusinessRule)
-    {
-        this.onEnterQueueBusinessRule = onEnterQueueBusinessRule;
-    }
-
-    public QueueService getQueueService()
-    {
-        return queueService;
-    }
-
-    public void setQueueService(QueueService queueService)
-    {
-        this.queueService = queueService;
-    }
-
-    public StartBusinessProcessService getStartBusinessProcessService()
-    {
-        return startBusinessProcessService;
-    }
-
-    public void setStartBusinessProcessService(StartBusinessProcessService startBusinessProcessService)
-    {
-        this.startBusinessProcessService = startBusinessProcessService;
-    }
-
-    public SaveCaseFileBusinessRule getSaveCaseFileBusinessRule()
-    {
-        return saveCaseFileBusinessRule;
-    }
-
-    public void setSaveCaseFileBusinessRule(SaveCaseFileBusinessRule saveCaseFileBusinessRule)
-    {
-        this.saveCaseFileBusinessRule = saveCaseFileBusinessRule;
-    }
 
     @Override
     @Transactional
@@ -181,8 +117,9 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         startLeaveProcess(context, caseFile);
         startEnterProcess(context, caseFile);
 
-        getAcmObjectLockService().removeLock(caseId, CaseFileConstants.OBJECT_TYPE, AcmObjectLockConstants.OBJECT_LOCK,
-                context.getAuthentication());
+        // the unlock of the case file should be released from the UI,
+        // but extensions already rely on the service releasing the lock, so we'll leave this here
+        getAcmObjectLockService().removeLock(caseId, CaseFileConstants.OBJECT_TYPE, "OBJECT_LOCK", context.getAuthentication().getName());
 
         // we don't need to explicitly save the case file. Since the casefile is a managed entity (because we did
         // not detach it) any changes we made are automatically applied at the end of the transaction.
@@ -264,6 +201,96 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         processVariables.put("OBJECT_TYPE", "CASE_FILE");
         processVariables.put("OBJECT_ID", caseFile.getId());
         return processVariables;
+    }
+
+    public CaseFileDao getCaseFileDao()
+    {
+        return caseFileDao;
+    }
+
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
+        this.caseFileDao = caseFileDao;
+    }
+
+    public LeaveCurrentQueueBusinessRule getLeaveCurrentQueueBusinessRule()
+    {
+        return leaveCurrentQueueBusinessRule;
+    }
+
+    public void setLeaveCurrentQueueBusinessRule(LeaveCurrentQueueBusinessRule leaveCurrentQueueBusinessRule)
+    {
+        this.leaveCurrentQueueBusinessRule = leaveCurrentQueueBusinessRule;
+    }
+
+    public CaseFileNextPossibleQueuesBusinessRule getCaseFileNextPossibleQueuesBusinessRule()
+    {
+        return caseFileNextPossibleQueuesBusinessRule;
+    }
+
+    public void setCaseFileNextPossibleQueuesBusinessRule(CaseFileNextPossibleQueuesBusinessRule caseFileNextPossibleQueuesBusinessRule)
+    {
+        this.caseFileNextPossibleQueuesBusinessRule = caseFileNextPossibleQueuesBusinessRule;
+    }
+
+    public EnterQueueBusinessRule getEnterQueueBusinessRule()
+    {
+        return enterQueueBusinessRule;
+    }
+
+    public void setEnterQueueBusinessRule(EnterQueueBusinessRule enterQueueBusinessRule)
+    {
+        this.enterQueueBusinessRule = enterQueueBusinessRule;
+    }
+
+    public OnLeaveQueueBusinessRule getOnLeaveQueueBusinessRule()
+    {
+        return onLeaveQueueBusinessRule;
+    }
+
+    public void setOnLeaveQueueBusinessRule(OnLeaveQueueBusinessRule onLeaveQueueBusinessRule)
+    {
+        this.onLeaveQueueBusinessRule = onLeaveQueueBusinessRule;
+    }
+
+    public OnEnterQueueBusinessRule getOnEnterQueueBusinessRule()
+    {
+        return onEnterQueueBusinessRule;
+    }
+
+    public void setOnEnterQueueBusinessRule(OnEnterQueueBusinessRule onEnterQueueBusinessRule)
+    {
+        this.onEnterQueueBusinessRule = onEnterQueueBusinessRule;
+    }
+
+    public QueueService getQueueService()
+    {
+        return queueService;
+    }
+
+    public void setQueueService(QueueService queueService)
+    {
+        this.queueService = queueService;
+    }
+
+    public StartBusinessProcessService getStartBusinessProcessService()
+    {
+        return startBusinessProcessService;
+    }
+
+    public void setStartBusinessProcessService(StartBusinessProcessService startBusinessProcessService)
+    {
+        this.startBusinessProcessService = startBusinessProcessService;
+    }
+
+    public SaveCaseFileBusinessRule getSaveCaseFileBusinessRule()
+    {
+        return saveCaseFileBusinessRule;
+    }
+
+    public void setSaveCaseFileBusinessRule(SaveCaseFileBusinessRule saveCaseFileBusinessRule)
+    {
+        this.saveCaseFileBusinessRule = saveCaseFileBusinessRule;
     }
 
     public AcmObjectLockService getAcmObjectLockService()

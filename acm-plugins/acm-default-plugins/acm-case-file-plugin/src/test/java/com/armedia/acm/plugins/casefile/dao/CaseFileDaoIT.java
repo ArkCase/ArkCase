@@ -1,15 +1,43 @@
 package com.armedia.acm.plugins.casefile.dao;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Case File
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +75,7 @@ public class CaseFileDaoIT
     private CaseFileDao caseFileDao;
 
     @Autowired
-    private AcmObjectLockService acmObjectLockService;
+    private AcmObjectLockingManager acmObjectLockingManager;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -101,7 +129,7 @@ public class CaseFileDaoIT
 
     @Test
     @Transactional
-    public void saveCaseFileWithLock()
+    public void saveCaseFileWithLock() throws AcmObjectLockException
     {
         assertNotNull(caseFileDao);
         assertNotNull(entityManager);
@@ -124,7 +152,8 @@ public class CaseFileDaoIT
 
         CaseFile saved = caseFileDao.save(caseFile);
 
-        acmObjectLockService.createLock(saved.getId(), saved.getObjectType(), "OBJECT_LOCK", true, authentication);
+        acmObjectLockingManager.acquireObjectLock(saved.getId(), saved.getObjectType(), "OBJECT_LOCK", null, false,
+                authentication.getName());
 
         entityManager.flush();
 

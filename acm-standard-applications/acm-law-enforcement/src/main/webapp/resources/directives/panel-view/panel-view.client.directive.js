@@ -26,21 +26,21 @@
  */
 angular.module('directives').directive('panelView', [ '$q', function($q) {
     return {
-        restrict : 'E',
-        transclude : true,
-        scope : {
-            header : '@',
-            collapsible : '=',
-            collapsed : '='
+        restrict: 'E',
+        transclude: true,
+        scope: {
+            header: '@',
+            collapsible: '=',
+            collapsed: '='
         },
 
-        link : function(scope, element, attrs) {
+        link: function(scope, element, attrs) {
             scope.onCollapseIconClick = function($event) {
                 $event.preventDefault();
                 scope.collapsed = !scope.collapsed;
             };
         },
 
-        templateUrl : 'directives/panel-view/panel-view.client.view.html'
+        templateUrl: 'directives/panel-view/panel-view.client.view.html'
     };
 } ]);

@@ -3,6 +3,33 @@
  */
 package com.armedia.acm.form.time.service;
 
+/*-
+ * #%L
+ * ACM Forms: Time
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.form.time.model.TimeForm;
 import com.armedia.acm.form.time.model.TimeItem;
@@ -20,6 +47,7 @@ import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.common.base.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -29,8 +57,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author riste.tutureski
@@ -348,11 +378,13 @@ public class TimeService extends FrevvoFormChargeAbstractService
         this.timeFactory = timeFactory;
     }
 
-    public TimesheetConfigurationService getTimesheetConfigurationService() {
+    public TimesheetConfigurationService getTimesheetConfigurationService()
+    {
         return timesheetConfigurationService;
     }
 
-    public void setTimesheetConfigurationService(TimesheetConfigurationService timesheetConfigurationService) {
+    public void setTimesheetConfigurationService(TimesheetConfigurationService timesheetConfigurationService)
+    {
         this.timesheetConfigurationService = timesheetConfigurationService;
     }
 

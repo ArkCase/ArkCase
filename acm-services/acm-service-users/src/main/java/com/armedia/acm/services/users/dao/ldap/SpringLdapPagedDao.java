@@ -1,10 +1,38 @@
 package com.armedia.acm.services.users.dao.ldap;
 
+/*-
+ * #%L
+ * ACM Service: Users
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +42,7 @@ import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.LdapTemplate;
 
 import javax.naming.directory.SearchControls;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +55,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
     private PagedResultsDirContextProcessorBuilder builder = new PagedResultsDirContextProcessorBuilder();
 
     private <T> List<T> fetchLdapPaged(LdapTemplate template, String searchBase, String searchFilter,
-                                       SearchControls searchControls, int pageSize, ContextMapper contextMapper)
+            SearchControls searchControls, int pageSize, ContextMapper contextMapper)
     {
         List<T> result = new ArrayList<>();
         // for the first paged-search request we pass null cookie
@@ -65,7 +94,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
     }
 
     public List<LdapUser> findUsers(LdapTemplate template, AcmLdapSyncConfig syncConfig,
-                                    String[] attributes, Optional<String> ldapLastSyncDate)
+            String[] attributes, Optional<String> ldapLastSyncDate)
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -112,7 +141,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        searchControls.setReturningAttributes(new String[]{"cn", "member"});
+        searchControls.setReturningAttributes(new String[] { "cn", "member" });
 
         AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(syncConfig, template);
 

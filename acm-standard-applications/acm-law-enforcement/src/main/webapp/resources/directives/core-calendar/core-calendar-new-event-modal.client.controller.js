@@ -2,21 +2,10 @@
 
 angular.module('directives').controller(
         'Directives.CoreCalendarNewEventModalController',
-        [
-                '$scope',
-                '$modal',
-                '$modalInstance',
-                'Object.CalendarService',
-                'MessageService',
-                'Util.DateService',
-                'coreCalendarConfig',
-                'Directives.CalendarUtilService',
-                'params',
-                'Helper.LocaleService',
-                function($scope, $modal, $modalInstance, CalendarService, MessageService, DateService, coreCalendarConfig,
-                        CalendarUtilService, params, LocaleHelper) {
+        [ '$scope', '$modal', '$modalInstance', 'Object.CalendarService', 'MessageService', 'Util.DateService', 'coreCalendarConfig', 'Directives.CalendarUtilService', 'params', 'Helper.LocaleService', 'Util.DateService', 'UtilService',
+                function($scope, $modal, $modalInstance, CalendarService, MessageService, DateService, coreCalendarConfig, CalendarUtilService, params, LocaleHelper, UtilDateService, Util) {
                     new LocaleHelper.Locale({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     $scope.objectId = params.objectId;
@@ -30,15 +19,15 @@ angular.module('directives').controller(
                     $scope.reminderOptions = CalendarUtilService.REMINDER_OPTIONS;
 
                     $scope.summernoteOptions = {
-                        focus : true,
-                        dialogsInBody : true,
-                        height : 300
+                        focus: true,
+                        dialogsInBody: true,
+                        height: 300
                     };
 
                     $scope.timePickerModel = {};
                     $scope.attachmentModel = {
-                        filesToAttach : [],
-                        attachedFiles : []
+                        filesToAttach: [],
+                        attachedFiles: []
                     };
 
                     var requiredAttendees = [];
@@ -48,28 +37,15 @@ angular.module('directives').controller(
                         $scope.calendarId = res.data.calendarId;
                     });
 
-                    /*Make start/end time with intervals of 30 minutes*/
-                    var setInitialStartEndTime = function() {
-                        var currentMinutes = $scope.eventDataModel.start.getMinutes();
-                        var currentHours = $scope.eventDataModel.start.getHours();
-
-                        if (currentMinutes < 30) {
-                            $scope.eventDataModel.start.setMinutes(30);
-                            $scope.eventDataModel.end.setMinutes(0);
-                            $scope.eventDataModel.end.setHours(currentHours + 1);
-                        } else {
-                            $scope.eventDataModel.start.setMinutes(0);
-                            $scope.eventDataModel.start.setHours(currentHours + 1);
-                            $scope.eventDataModel.end.setMinutes(30);
-                            $scope.eventDataModel.end.setHours(currentHours + 1);
-                        }
-                        $scope.eventDataModel.start.setSeconds(0);
-                        $scope.eventDataModel.end.setSeconds(0);
-                    };
-
                     $scope.onTimeChanged = function(start, end) {
+                        var todayDate = new Date();
+                        var todayTime = todayDate.getTime();
                         var startTime = start ? start.getTime() : 0;
                         var endTime = end ? end.getTime() : 0;
+
+                        if (startTime < todayTime) {
+                            $scope.eventDataModel.start = start;
+                        }
 
                         if (startTime > endTime) {
                             $scope.eventDataModel.end = start;
@@ -115,18 +91,18 @@ angular.module('directives').controller(
 
                     $scope.chooseAttendees = function(attendeeType) {
                         var modalInstance = $modal.open({
-                            animation : $scope.animationsEnabled,
-                            templateUrl : 'directives/core-calendar/core-calendar-choose-event-attendees-modal.client.view.html',
-                            controller : 'Directives.CoreCalendarChooseEventAttendeesController',
-                            size : 'lg',
-                            resolve : {
-                                $config : function() {
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'directives/core-calendar/core-calendar-choose-event-attendees-modal.client.view.html',
+                            controller: 'Directives.CoreCalendarChooseEventAttendeesController',
+                            size: 'lg',
+                            resolve: {
+                                $config: function() {
                                     return coreCalendarConfig.chooseEventAttendeesDialog.dialogUserPicker;
                                 },
-                                attendeeType : function() {
+                                attendeeType: function() {
                                     return attendeeType;
                                 },
-                                attendees : function() {
+                                attendees: function() {
                                     return attendeeType === 'REQUIRED' ? requiredAttendees : optionalAttendees;
                                 }
                             }
@@ -148,16 +124,16 @@ angular.module('directives').controller(
 
                     $scope.setEventRecurrence = function() {
                         var params = {
-                            eventDataModel : $scope.eventDataModel
+                            eventDataModel: $scope.eventDataModel
                         };
 
                         var modalInstance = $modal.open({
-                            animation : $scope.animationsEnabled,
-                            templateUrl : 'directives/core-calendar/core-calendar-set-event-recurrence-modal.client.view.html',
-                            controller : 'Directives.CoreCalendarSetEventRecurrenceController',
-                            size : 'lg',
-                            resolve : {
-                                $params : function() {
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'directives/core-calendar/core-calendar-set-event-recurrence-modal.client.view.html',
+                            controller: 'Directives.CoreCalendarSetEventRecurrenceController',
+                            size: 'lg',
+                            resolve: {
+                                $params: function() {
                                     return params;
                                 }
                             }
@@ -166,15 +142,10 @@ angular.module('directives').controller(
                         modalInstance.result.then(function(modalData) {
                             if (modalData.modalAction === 'setEventRecurrence') {
                                 $scope.eventDataModel.recurrenceDetails = modalData.recurrenceDataModel;
-                                $scope.eventDataModel.start = modalData.eventStartDate;
-                                $scope.eventDataModel.end = modalData.eventEndDate;
                                 $scope.recurrenceDescription = CalendarUtilService.buildEventRecurrenceString($scope.eventDataModel);
                                 $scope.recurrentEvent = true;
                             } else if (modalData.modalAction === 'removeCurrentRecurrence') {
                                 $scope.eventDataModel.recurrenceDetails = modalData.recurrenceDataModel;
-                                $scope.eventDataModel.start = modalData.eventStartDate;
-                                $scope.eventDataModel.end = modalData.eventEndDate;
-                                $scope.minEndDate = $scope.eventDataModel.start;
                                 $scope.recurrentEvent = false;
                             }
                         }, function() {
@@ -194,22 +165,20 @@ angular.module('directives').controller(
                     if (!$scope.existingEvent) {
                         /*Set initial Event data*/
                         $scope.eventDataModel = {
-                            start : new Date(),
-                            end : new Date(),
-                            recurrenceDetails : {
-                                recurrenceType : 'ONLY_ONCE'
+                            start: new Date(),
+                            end: new Date(),
+                            recurrenceDetails: {
+                                recurrenceType: 'ONLY_ONCE'
                             },
-                            priority : 'NORMAL',
-                            allDayEvent : false,
-                            sensitivity : 'NORMAL',
-                            remindIn : -1
+                            priority: 'NORMAL',
+                            allDayEvent: false,
+                            sensitivity: 'NORMAL',
+                            remindIn: -1
                         };
 
-                        $scope.minStartDate = new Date();
                         $scope.minEndDate = new Date();
                         $scope.recurrentEvent = false;
 
-                        setInitialStartEndTime();
                     } else {
                         $scope.eventDataModel = angular.copy($scope.existingEvent);
                         $scope.attachmentModel.attachedFiles = angular.copy($scope.eventDataModel.files);
@@ -217,8 +186,7 @@ angular.module('directives').controller(
                         $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
                         $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
                         if ($scope.eventDataModel.recurrenceDetails.recurrenceType !== 'ONLY_ONCE') {
-                            $scope.eventDataModel.recurrenceDetails.startAt = moment($scope.eventDataModel.recurrenceDetails.startAt)
-                                    .toDate();
+                            $scope.eventDataModel.recurrenceDetails.startAt = moment($scope.eventDataModel.recurrenceDetails.startAt).toDate();
                             $scope.eventDataModel.recurrenceDetails.endBy = moment($scope.eventDataModel.recurrenceDetails.endBy).toDate();
                             $scope.recurrentEvent = $scope.updateMaster;
                             $scope.recurrenceDescription = CalendarUtilService.buildEventRecurrenceString($scope.eventDataModel);
@@ -261,14 +229,11 @@ angular.module('directives').controller(
                     var processEventDataModel = function() {
                         $scope.eventDataModel.start = DateService.dateToIso($scope.eventDataModel.start);
                         $scope.eventDataModel.end = DateService.dateToIso($scope.eventDataModel.end);
-                        if ($scope.eventDataModel.recurrenceDetails.startAt
-                                && $scope.eventDataModel.recurrenceDetails.startAt instanceof Date) {
-                            $scope.eventDataModel.recurrenceDetails.startAt = DateService
-                                    .dateToIso($scope.eventDataModel.recurrenceDetails.startAt);
+                        if ($scope.eventDataModel.recurrenceDetails.startAt && $scope.eventDataModel.recurrenceDetails.startAt instanceof Date) {
+                            $scope.eventDataModel.recurrenceDetails.startAt = DateService.dateToIso($scope.eventDataModel.recurrenceDetails.startAt);
                         }
                         if ($scope.eventDataModel.recurrenceDetails.endBy) {
-                            $scope.eventDataModel.recurrenceDetails.endBy = DateService
-                                    .dateToIso($scope.eventDataModel.recurrenceDetails.endBy);
+                            $scope.eventDataModel.recurrenceDetails.endBy = DateService.dateToIso($scope.eventDataModel.recurrenceDetails.endBy);
                         }
                         $scope.eventDataModel.attendees = requiredAttendees.concat(optionalAttendees);
                         $scope.eventDataModel.objectId = $scope.objectId;
@@ -279,49 +244,70 @@ angular.module('directives').controller(
                     /*Perform adding of the event to the calendar*/
                     $scope.addEvent = function() {
                         processEventDataModel();
-                        CalendarService.createNewEvent($scope.calendarId, $scope.eventDataModel, $scope.attachmentModel.filesToAttach)
-                                .then(
-                                        function(res) {
-                                            MessageService.succsessAction();
-                                            $modalInstance.close('ADD_EVENT');
-                                        },
-                                        function(err) {
-                                            $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
-                                            $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
-                                            if ($scope.eventDataModel.recurrenceDetails.startAt) {
-                                                $scope.eventDataModel.recurrenceDetails.startAt = DateService
-                                                        .isoToDate($scope.eventDataModel.recurrenceDetails.startAt);
-                                            }
-                                            if ($scope.eventDataModel.recurrenceDetails.endBy) {
-                                                $scope.eventDataModel.recurrenceDetails.endBy = DateService
-                                                        .isoToDate($scope.eventDataModel.recurrenceDetails.endBy);
-                                            }
-                                            MessageService.errorAction();
-                                        });
+                        CalendarService.createNewEvent($scope.calendarId, $scope.eventDataModel, $scope.attachmentModel.filesToAttach).then(function(res) {
+                            MessageService.succsessAction();
+                            $modalInstance.close('ADD_EVENT');
+                        }, function(err) {
+                            $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
+                            $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
+                            if ($scope.eventDataModel.recurrenceDetails.startAt) {
+                                $scope.eventDataModel.recurrenceDetails.startAt = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.startAt);
+                            }
+                            if ($scope.eventDataModel.recurrenceDetails.endBy) {
+                                $scope.eventDataModel.recurrenceDetails.endBy = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.endBy);
+                            }
+                            MessageService.errorAction();
+                        });
                     };
 
                     /*Perform editing of the event*/
                     $scope.editEvent = function() {
                         processEventDataModel();
-                        CalendarService.updateEvent($scope.eventDataModel, $scope.attachmentModel.filesToAttach, $scope.updateMaster).then(
-                                function(res) {
-                                    MessageService.succsessAction();
-                                    $modalInstance.close('EDIT_EVENT');
-                                },
-                                function(err) {
-                                    $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
-                                    $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
-                                    if ($scope.eventDataModel.recurrenceDetails.startAt) {
-                                        $scope.eventDataModel.recurrenceDetails.startAt = DateService
-                                                .isoToDate($scope.eventDataModel.recurrenceDetails.startAt);
-                                    }
-                                    if ($scope.eventDataModel.recurrenceDetails.endBy) {
-                                        $scope.eventDataModel.recurrenceDetails.endBy = DateService
-                                                .isoToDate($scope.eventDataModel.recurrenceDetails.endBy);
-                                    }
+                        CalendarService.updateEvent($scope.eventDataModel, $scope.attachmentModel.filesToAttach, $scope.updateMaster).then(function(res) {
+                            MessageService.succsessAction();
+                            $modalInstance.close('EDIT_EVENT');
+                        }, function(err) {
+                            $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
+                            $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
+                            if ($scope.eventDataModel.recurrenceDetails.startAt) {
+                                $scope.eventDataModel.recurrenceDetails.startAt = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.startAt);
+                            }
+                            if ($scope.eventDataModel.recurrenceDetails.endBy) {
+                                $scope.eventDataModel.recurrenceDetails.endBy = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.endBy);
+                            }
 
-                                    MessageService.errorAction();
-                                });
+                            MessageService.errorAction();
+                        });
+                    };
+
+                    $scope.startDateChanged = function(startDate) {
+                        var todayDate = new Date();
+                        if (Util.isEmpty($scope.eventDataModel.start) || moment($scope.eventDataModel.start).isBefore(todayDate)) {
+                            $scope.eventDataModel.start = todayDate;
+                        }
+
+                        if (moment($scope.eventDataModel.start).isAfter($scope.eventDataModel.end)) {
+                            $scope.eventDataModel.end = UtilDateService.convertToCurrentTime($scope.eventDataModel.start);
+                        }
+
+                        $scope.eventDataModel.end = UtilDateService.setSameTime($scope.eventDataModel.start, $scope.eventDataModel.end);
+                        $scope.minEndDate = $scope.eventDataModel.start;
+                    };
+
+                    $scope.endDateChanged = function() {
+                        var validateDate = DateService.validateToDate($scope.eventDataModel.start, $scope.eventDataModel.end);
+                        $scope.eventDataModel.start = validateDate.from;
+                        $scope.eventDataModel.end = validateDate.to;
+                        var todayDate = new Date();
+                        if (Util.isEmpty($scope.eventDataModel.end)) {
+                            $scope.eventDataModel.end = todayDate;
+                        }
+
+                        if (moment($scope.eventDataModel.end).isBefore($scope.eventDataModel.start)) {
+                            $scope.eventDataModel.end = UtilDateService.convertToCurrentTime($scope.eventDataModel.start);
+                        }
+
+                        $scope.eventDataModel.start = UtilDateService.setSameTime($scope.eventDataModel.start, $scope.eventDataModel.end);
                     };
 
                     /*Cancel the modal dialog*/

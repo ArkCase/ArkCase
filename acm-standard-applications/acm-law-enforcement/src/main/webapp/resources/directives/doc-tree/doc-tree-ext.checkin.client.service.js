@@ -12,20 +12,8 @@
  */
 angular.module('services').factory(
         'DocTreeExt.Checkin',
-        [
-                '$q',
-                '$modal',
-                '$translate',
-                'UtilService',
-                'Authentication',
-                'ObjectService',
-                'PermissionsService',
-                'Object.LockingService',
-                'Helper.NoteService',
-                'Object.NoteService',
-                'Profile.UserInfoService',
-                function($q, $modal, $translate, Util, Authentication, ObjectService, PermissionsService, LockingService,
-                        HelperNoteService, ObjectNoteService, UserInfoService) {
+        [ '$q', '$modal', '$translate', 'UtilService', 'Authentication', 'ObjectService', 'PermissionsService', 'Object.LockingService', 'Helper.NoteService', 'Object.NoteService', 'Profile.UserInfoService', 'MessageService',
+                function($q, $modal, $translate, Util, Authentication, ObjectService, PermissionsService, LockingService, HelperNoteService, ObjectNoteService, UserInfoService, MessageService)) {
                     var userId = "";
                     Authentication.queryUserInfo().then(function(userInfo) {
                         userId = userInfo.userId;
@@ -44,25 +32,22 @@ angular.module('services').factory(
                          * @param {Object} DocTree  DocTree object defined in doc-tree directive
                          *
                          */
-                        getColumnRenderers : function(DocTree) {
+                        getColumnRenderers: function(DocTree) {
                             return [ {
-                                name : "lock",
-                                renderer : function(element, node, columnDef, isReadOnly) {
+                                name: "lock",
+                                renderer: function(element, node, columnDef, isReadOnly) {
                                     $(element).empty();
                                     if (Util.goodMapValue(node, "data.lock")) {
                                         //UserInfoService.getUserInfoByIdQuietly(node.data.lock.creator).then(function (userInfo) {
-                                        UserInfoService.getUserInfoById(node.data.lock.creator).then(
-                                                function(userInfo) {
-                                                    var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle")
-                                                            + userInfo.fullName;
-                                                    var jqSpan = $("<span class='ui-icon ui-icon-locked' title='" + lockedTitle + "'/>")
-                                                            .appendTo($(element));
-                                                    jqSpan.hover(function() {
-                                                        $(this).tooltip('show');
-                                                    }, function() {
-                                                        $(this).tooltip('hide');
-                                                    });
-                                                });
+                                        UserInfoService.getUserInfoById(node.data.lock.creator).then(function(userInfo) {
+                                            var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle") + userInfo.fullName;
+                                            var jqSpan = $("<span class='ui-icon ui-icon-locked' title='" + lockedTitle + "'/>").appendTo($(element));
+                                            jqSpan.hover(function() {
+                                                $(this).tooltip('show');
+                                            }, function() {
+                                                $(this).tooltip('hide');
+                                            });
+                                        });
                                     }
                                     $(element).addClass("");
                                 }
@@ -81,121 +66,120 @@ angular.module('services').factory(
                          *
                          */
                         ,
-                        getCommandHandlers : function(DocTree) {
-                            return [
-                                    {
-                                        name : "checkout",
-                                        execute : function(nodes, args) {
-                                            var node = nodes[0];
-                                            var fileId = node.data.objectId;
-                                            LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                                    ObjectService.LockTypes.CHECKOUT_LOCK, true).then(function(lockedFile) {
-                                                if (lockedFile) {
-                                                    DocTree._doDownload(node);
+                        getCommandHandlers: function(DocTree) {
+                            return [ {
+                                name: "checkout",
+                                execute: function(nodes, args) {
+                                    var node = nodes[0];
+                                    var fileId = node.data.objectId;
+                                    LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(function(lockedFile) {
+                                        if (lockedFile) {
+                                            DocTree._doDownload(node);
 
-                                                    node.data.lock = lockedFile;
-                                                    var cacheKey = DocTree.getCacheKeyByNode(node.parent);
-                                                    var folderList = DocTree.cacheFolderList.get(cacheKey);
-                                                    if (DocTree.Validator.validateFolderList(folderList)) {
-                                                        var locked = DocTree.findFolderItemIdx(fileId, folderList);
-                                                        if (0 <= locked) {
-                                                            folderList.children[locked].lock = lockedFile;
-                                                            DocTree.cacheFolderList.put(cacheKey, folderList);
-                                                            DocTree.refreshNode(node);
-                                                            return lockedFile;
-                                                        }
-                                                    }
+                                            node.data.lock = lockedFile;
+                                            var cacheKey = DocTree.getCacheKeyByNode(node.parent);
+                                            var folderList = DocTree.cacheFolderList.get(cacheKey);
+                                            if (DocTree.Validator.validateFolderList(folderList)) {
+                                                var locked = DocTree.findFolderItemIdx(fileId, folderList);
+                                                if (0 <= locked) {
+                                                    folderList.children[locked].lock = lockedFile;
+                                                    DocTree.cacheFolderList.put(cacheKey, folderList);
+                                                    DocTree.refreshNode(node);
+                                                    return lockedFile;
                                                 }
-                                            });
-                                        }
-                                    },
-                                    {
-                                        name : "checkin",
-                                        execute : function(nodes, args) {
-                                            var selectFiles = DocTree.Command.findHandler("selectReplacement/");
-                                            selectFiles.execute(nodes, args);
-
-                                            $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function(files) {
-                                                args = args || {};
-                                                args.files = files;
-                                                args.lockType = ObjectService.LockTypes.CHECKIN_LOCK;
-                                                var checkinFiles = DocTree.Command.findHandler("checkinFiles/");
-                                                DocTree.Command.handleCommand(checkinFiles, nodes, args);
-                                            });
-                                        }
-                                    },
-                                    {
-                                        name : "cancelEditing",
-                                        execute : function(nodes, args) {
-                                            var node = nodes[0];
-                                            var fileId = node.data.objectId;
-                                            var lockType = ObjectService.LockTypes.CANCEL_LOCK;
-                                            if (args && args.lockType) {
-                                                lockType = args.lockType;
                                             }
-                                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE, lockType).then(
-                                                    function(unlockedFile) {
-                                                        node.data.lock = "";
-                                                        var cacheKey = DocTree.getCacheKeyByNode(node.parent);
-                                                        var folderList = DocTree.cacheFolderList.get(cacheKey);
-                                                        if (unlockedFile) {
-                                                            var unlocked = DocTree.findFolderItemIdx(fileId, folderList);
-                                                            if (0 <= unlocked) {
-                                                                folderList.children[unlocked].lock = "";
-                                                                DocTree.cacheFolderList.put(cacheKey, folderList);
-                                                                DocTree.refreshNode(node);
-                                                                return unlockedFile;
-                                                            }
-                                                        }
-                                                    });
                                         }
-                                    }, {
-                                        name : "checkinFiles/",
-                                        execute : function(nodes, args) {
-                                            return DocTree.Command.executeSubmitFiles(nodes, args);
-                                        },
-                                        onPostCmd : function(nodes, args) {
-                                            var node = nodes[0];
-                                            var noteHelper = new HelperNoteService.Note();
-                                            var fileId = node.data.objectId;
-                                            var isNoteRequired = Util.goodMapValue(DocTree, "treeConfig.noteRequiredOnCheckin", true);
-                                            var note = noteHelper.createNote(fileId, ObjectService.ObjectTypes.FILE, userId);
-                                            var params = {
-                                                config : Util.goodMapValue(DocTree.treeConfig, "comment", {}),
-                                                note : note,
-                                                isNoteRequired : isNoteRequired
-                                            };
+                                    }, function(errorMessage) {
+                                        MessageService.error(errorMessage);
+                                    });
+                                }
+                            }, {
+                                name: "checkin",
+                                execute: function(nodes, args) {
+                                    var selectFiles = DocTree.Command.findHandler("selectReplacement/");
+                                    selectFiles.execute(nodes, args);
 
-                                            var modalInstance = $modal.open({
-                                                templateUrl : "directives/doc-tree/doc-tree-ext.checkin.dialog.html",
-                                                controller : 'directives.DocTreeCheckinDialogController',
-                                                animation : true,
-                                                size : 'lg',
-                                                backdrop : 'static',
-                                                resolve : {
-                                                    params : function() {
-                                                        return params;
-                                                    }
-                                                }
-                                            });
-
-                                            modalInstance.result.then(function(data) {
-                                                if (data.note.note != null && data.note.note.length > 0) {
-                                                    //we have text in note so we will save the note
-                                                    data.note.tag = node.data.version;
-                                                    ObjectNoteService.saveNote(data.note);
-                                                }
-
-                                                var cancelEditing = DocTree.Command.findHandler("cancelEditing");
-                                                var checkinArgs = {};
-                                                if (args && args.lockType) {
-                                                    checkinArgs.lockType = args.lockType;
-                                                }
-                                                DocTree.Command.handleCommand(cancelEditing, nodes, checkinArgs);
-                                            });
-
+                                    $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function(files) {
+                                        args = args || {};
+                                        args.files = files;
+                                        args.lockType = ObjectService.LockTypes.WRITE;
+                                        var checkinFiles = DocTree.Command.findHandler("checkinFiles/");
+                                        DocTree.Command.handleCommand(checkinFiles, nodes, args);
+                                    });
+                                }
+                            }, {
+                                name: "cancelEditing",
+                                execute: function(nodes, args) {
+                                    var node = nodes[0];
+                                    var fileId = node.data.objectId;
+                                    var lockType = ObjectService.LockTypes.WRITE;
+                                    if (args && args.lockType) {
+                                        lockType = args.lockType;
+                                    }
+                                    LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE, lockType).then(function(unlockedFile) {
+                                        node.data.lock = "";
+                                        var cacheKey = DocTree.getCacheKeyByNode(node.parent);
+                                        var folderList = DocTree.cacheFolderList.get(cacheKey);
+                                        if (unlockedFile) {
+                                            var unlocked = DocTree.findFolderItemIdx(fileId, folderList);
+                                            if (0 <= unlocked) {
+                                                folderList.children[unlocked].lock = "";
+                                                DocTree.cacheFolderList.put(cacheKey, folderList);
+                                                DocTree.refreshNode(node);
+                                                return unlockedFile;
+                                            }
                                         }
-                                    } ];
+                                    }, function(errorMessage) {
+                                        MessageService.error(errorMessage);
+                                    });
+                                }
+                            }, {
+                                name: "checkinFiles/",
+                                execute: function(nodes, args) {
+                                    return DocTree.Command.executeSubmitFiles(nodes, args);
+                                },
+                                onPostCmd: function(nodes, args) {
+                                    var node = nodes[0];
+                                    var noteHelper = new HelperNoteService.Note();
+                                    var fileId = node.data.objectId;
+                                    var isNoteRequired = Util.goodMapValue(DocTree, "treeConfig.noteRequiredOnCheckin", true);
+                                    var note = noteHelper.createNote(fileId, ObjectService.ObjectTypes.FILE, userId);
+                                    var params = {
+                                        config: Util.goodMapValue(DocTree.treeConfig, "comment", {}),
+                                        note: note,
+                                        isNoteRequired: isNoteRequired
+                                    };
+
+                                    var modalInstance = $modal.open({
+                                        templateUrl: "directives/doc-tree/doc-tree-ext.checkin.dialog.html",
+                                        controller: 'directives.DocTreeCheckinDialogController',
+                                        animation: true,
+                                        size: 'lg',
+                                        backdrop: 'static',
+                                        resolve: {
+                                            params: function() {
+                                                return params;
+                                            }
+                                        }
+                                    });
+
+                                    modalInstance.result.then(function(data) {
+                                        if (data.note.note != null && data.note.note.length > 0) {
+                                            //we have text in note so we will save the note
+                                            data.note.tag = node.data.version;
+                                            ObjectNoteService.saveNote(data.note);
+                                        }
+
+                                        var cancelEditing = DocTree.Command.findHandler("cancelEditing");
+                                        var checkinArgs = {};
+                                        if (args && args.lockType) {
+                                            checkinArgs.lockType = args.lockType;
+                                        }
+                                        DocTree.Command.handleCommand(cancelEditing, nodes, checkinArgs);
+                                    });
+
+                                }
+                            } ];
                         }
 
                         /**
@@ -211,10 +195,10 @@ angular.module('services').factory(
                          *
                          */
                         ,
-                        handleCheckout : function(treeControl, scope) {
+                        handleCheckout: function(treeControl, scope) {
                             treeControl.addCommandHandler({
-                                name : "checkout",
-                                onAllowCmd : function(nodes) {
+                                name: "checkout",
+                                onAllowCmd: function(nodes) {
                                     var fileObject = nodes[0].data;
                                     var lock = fileObject.lock;
                                     if (lock) {
@@ -223,7 +207,7 @@ angular.module('services').factory(
                                         var df = $q.defer();
                                         //check permission for lock
                                         PermissionsService.getActionPermission('lock', fileObject, {
-                                            objectType : ObjectService.ObjectTypes.FILE
+                                            objectType: ObjectService.ObjectTypes.FILE
                                         }).then(function success(hasPermission) {
                                             if (hasPermission)
                                                 df.resolve("");
@@ -251,10 +235,10 @@ angular.module('services').factory(
                          *
                          */
                         ,
-                        handleCheckin : function(treeControl, scope) {
+                        handleCheckin: function(treeControl, scope) {
                             treeControl.addCommandHandler({
-                                name : "checkin",
-                                onAllowCmd : function(nodes) {
+                                name: "checkin",
+                                onAllowCmd: function(nodes) {
                                     var fileObject = nodes[0].data;
                                     var lock = fileObject.lock;
                                     if (!lock) {
@@ -263,7 +247,7 @@ angular.module('services').factory(
                                     } else if (lock && lock.creator !== scope.user) {
                                         //there is lock on object but it is not by the user so checkin is disabled
                                         return "disable";
-                                    } else if (lock.lockType !== ObjectService.LockTypes.CHECKOUT_LOCK) {
+                                    } else if (lock.lockType !== ObjectService.LockTypes.WRITE) {
                                         //object has lock and it is by the user but it isn't checkout
                                         //it is probably edit in word so checkin should be disabled
                                         return "disable";
@@ -279,7 +263,7 @@ angular.module('services').factory(
 
                                         //check permission for unlock
                                         PermissionsService.getActionPermission('unlock', fileObject, {
-                                            objectType : ObjectService.ObjectTypes.FILE
+                                            objectType: ObjectService.ObjectTypes.FILE
                                         }).then(function success(hasPermission) {
                                             if (hasPermission)
                                                 df.resolve("");
@@ -306,17 +290,16 @@ angular.module('services').factory(
                          *
                          */
                         ,
-                        handleCancelEditing : function(treeControl, scope) {
+                        handleCancelEditing: function(treeControl, scope) {
                             treeControl.addCommandHandler({
-                                name : "cancelEditing",
-                                onAllowCmd : function(nodes) {
+                                name: "cancelEditing",
+                                onAllowCmd: function(nodes) {
                                     var fileObject = nodes[0].data;
                                     var lock = fileObject.lock;
                                     if (!lock) {
                                         //there is no lock so cancel is disabled
                                         return "disable";
-                                    } else if (lock.creator == scope.user
-                                            || (scope.allowParentOwnerToCancel && lock.creator == scope.assignee)) {
+                                    } else if (lock.creator == scope.user || (scope.allowParentOwnerToCancel && lock.creator == scope.assignee)) {
 
                                         //object has lock and user is creator or owner of parent object
                                         //so they should be able to unlock
@@ -324,7 +307,7 @@ angular.module('services').factory(
                                         var df = $q.defer();
 
                                         PermissionsService.getActionPermission('unlock', fileObject, {
-                                            objectType : ObjectService.ObjectTypes.FILE
+                                            objectType: ObjectService.ObjectTypes.FILE
                                         }).then(function success(hasPermission) {
                                             if (hasPermission)
                                                 df.resolve("");
@@ -341,12 +324,12 @@ angular.module('services').factory(
                                         var df = $q.defer();
 
                                         PermissionsService.getActionPermission('cancelLock', fileObject, {
-                                            objectType : ObjectService.ObjectTypes.FILE
+                                            objectType: ObjectService.ObjectTypes.FILE
                                         }).then(function success(hasCancelPermission) {
                                             if (hasCancelPermission) {
                                                 //check permission for unlock
                                                 PermissionsService.getActionPermission('unlock', fileObject, {
-                                                    objectType : ObjectService.ObjectTypes.FILE
+                                                    objectType: ObjectService.ObjectTypes.FILE
                                                 }).then(function success(hasPermission) {
                                                     if (hasPermission)
                                                         df.resolve("");
@@ -370,17 +353,16 @@ angular.module('services').factory(
                     return Service;
                 } ]);
 
-angular.module('directives').controller('directives.DocTreeCheckinDialogController',
-        [ '$scope', '$modalInstance', 'UtilService', 'params', function($scope, $modalInstance, Util, params) {
-            $scope.modalInstance = $modalInstance;
+angular.module('directives').controller('directives.DocTreeCheckinDialogController', [ '$scope', '$modalInstance', 'UtilService', 'params', function($scope, $modalInstance, Util, params) {
+    $scope.modalInstance = $modalInstance;
 
-            $scope.config = params.config;
-            $scope.note = params.note;
-            $scope.isNoteRequired = params.isNoteRequired;
+    $scope.config = params.config;
+    $scope.note = params.note;
+    $scope.isNoteRequired = params.isNoteRequired;
 
-            $scope.onClickOk = function() {
-                $modalInstance.close({
-                    note : $scope.note
-                });
-            };
-        } ]);
+    $scope.onClickOk = function() {
+        $modalInstance.close({
+            note: $scope.note
+        });
+    };
+} ]);

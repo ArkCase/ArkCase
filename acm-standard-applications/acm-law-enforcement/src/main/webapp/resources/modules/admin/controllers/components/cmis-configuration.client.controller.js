@@ -2,28 +2,17 @@
 
 angular.module('admin').controller(
         'Admin.CMISConfigurationController',
-        [
-                '$scope',
-                '$modal',
-                'Helper.UiGridService',
-                'Admin.CmisConfigService',
-                'UtilService',
-                'Admin.ModalDialogService',
-                'MessageService',
-                '$translate',
-                'Object.LookupService',
-                'Dialog.BootboxService',
-                function($scope, $modal, HelperUiGridService, CmisConfigService, Util, modalDialogService, messageService, $translate,
-                        ObjectLookupService, DialogService) {
+        [ '$scope', '$modal', 'Helper.UiGridService', 'Admin.CmisConfigService', 'UtilService', 'Admin.ModalDialogService', 'MessageService', '$translate', 'Object.LookupService', 'Dialog.BootboxService',
+                function($scope, $modal, HelperUiGridService, CmisConfigService, Util, modalDialogService, messageService, $translate, ObjectLookupService, DialogService) {
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     //get config and init grid settings
                     $scope.config.$promise.then(function(config) {
                         var componentConfig = angular.copy(_.find(config.components, {
-                            id : 'cmisConfiguration'
+                            id: 'cmisConfiguration'
                         }));
                         $scope.config = config;
 
@@ -33,14 +22,14 @@ angular.module('admin').controller(
                         // gridHelper.addButton(componentConfig, 'delete');
 
                         $scope.gridOptions = {
-                            enableColumnResizing : true,
-                            enableRowSelection : true,
-                            enableRowHeaderSelection : false,
-                            multiSelect : false,
-                            noUnselect : false,
-                            columnDefs : componentConfig.columnDefs,
-                            totalItems : 0,
-                            data : []
+                            enableColumnResizing: true,
+                            enableRowSelection: true,
+                            enableRowHeaderSelection: false,
+                            multiSelect: false,
+                            noUnselect: false,
+                            columnDefs: componentConfig.columnDefs,
+                            totalItems: 0,
+                            data: []
                         };
 
                         reloadGrid();
@@ -57,14 +46,14 @@ angular.module('admin').controller(
                         modalScope.testConnection = testConnection;
 
                         var modalInstance = $modal.open({
-                            scope : modalScope,
-                            templateUrl : 'modules/admin/views/components/cmis-configuration.addconfig.modal.html',
-                            backdrop : 'static',
-                            controller : function($scope, $modalInstance) {
+                            scope: modalScope,
+                            templateUrl: 'modules/admin/views/components/cmis-configuration.addconfig.modal.html',
+                            backdrop: 'static',
+                            controller: function($scope, $modalInstance) {
                                 $scope.ok = function() {
                                     $modalInstance.close({
-                                        cmisConfig : $scope.cmisConfig,
-                                        isEdit : $scope.isEdit
+                                        cmisConfig: $scope.cmisConfig,
+                                        isEdit: $scope.isEdit
                                     });
                                 };
                                 $scope.cancel = function() {
@@ -76,72 +65,57 @@ angular.module('admin').controller(
                         modalInstance.result.then(function(result) {
                             addPrefixInKey(result.cmisConfig);
                             if (result.isEdit) {
-                                CmisConfigService.updateCmisConfiguration(result.cmisConfig).then(
-                                        function() {
-                                            reloadGrid();
-                                            messageService.info($translate
-                                                    .instant('admin.documentManagement.cmisConfiguration.messages.update.success'));
-                                        },
-                                        function() {
-                                            messageService.error($translate
-                                                    .instant('admin.documentManagement.cmisConfiguration.messages.update.error'));
-                                        })
+                                CmisConfigService.updateCmisConfiguration(result.cmisConfig).then(function() {
+                                    reloadGrid();
+                                    messageService.info($translate.instant('admin.documentManagement.cmisConfiguration.messages.update.success'));
+                                }, function() {
+                                    messageService.error($translate.instant('admin.documentManagement.cmisConfiguration.messages.update.error'));
+                                })
                             } else {
                                 if (result.cmisConfig.useAlfrescoExtension != true) {
                                     result.cmisConfig.useAlfrescoExtension = "false"
                                 }
-                                CmisConfigService.createCmisConfiguration(result.cmisConfig).then(
-                                        function() {
-                                            reloadGrid();
-                                            messageService.info($translate
-                                                    .instant('admin.documentManagement.cmisConfiguration.messages.insert.success'));
-                                        },
-                                        function() {
-                                            messageService.error($translate
-                                                    .instant('admin.documentManagement.cmisConfiguration.messages.insert.error'));
-                                        });
+                                CmisConfigService.createCmisConfiguration(result.cmisConfig).then(function() {
+                                    reloadGrid();
+                                    messageService.info($translate.instant('admin.documentManagement.cmisConfiguration.messages.insert.success'));
+                                }, function() {
+                                    messageService.error($translate.instant('admin.documentManagement.cmisConfiguration.messages.insert.error'));
+                                });
                             }
                         });
 
                         function testConnection() {
                             var cmisUrlTest = {
-                                baseUrl : modalScope.cmisConfig.baseUrl,
-                                username : modalScope.cmisConfig.username,
-                                password : modalScope.cmisConfig.password,
-                                repositoryId : ""
+                                baseUrl: modalScope.cmisConfig.baseUrl,
+                                username: modalScope.cmisConfig.username,
+                                password: modalScope.cmisConfig.password,
+                                repositoryId: ""
                             };
-                            CmisConfigService.urlValidation(cmisUrlTest).then(
-                                    function(response) {
-                                        DialogService.alert($translate
-                                                .instant('admin.documentManagement.cmisConfiguration.messages.test.conection.success'));
-                                    }, function(response) {
-                                        DialogService.alert(response.data.message);
-                                    });
+                            CmisConfigService.urlValidation(cmisUrlTest).then(function(response) {
+                                DialogService.alert($translate.instant('admin.documentManagement.cmisConfiguration.messages.test.conection.success'));
+                            }, function(response) {
+                                DialogService.alert(response.data.message);
+                            });
                         }
                     };
 
                     $scope.deleteRow = function(rowEntity) {
                         $scope.deleteDir = rowEntity;
                         var modalOptions = {
-                            closeButtonText : $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.cancelBtn'),
-                            actionButtonText : $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.deleteBtn'),
-                            headerText : $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.headerText'),
-                            bodyText : $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.bodyText')
+                            closeButtonText: $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.cancelBtn'),
+                            actionButtonText: $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.deleteBtn'),
+                            headerText: $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.headerText'),
+                            bodyText: $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.bodyText')
                         };
-                        modalDialogService.showModal({}, modalOptions).then(
-                                function() {
-                                    CmisConfigService.deleteCmisConfiguration($scope.deleteDir.id).then(
-                                            function() {
-                                                gridHelper.deleteRow($scope.deleteDir);
-                                                messageService.info($translate
-                                                        .instant('admin.documentManagement.cmisConfiguration.messages.delete.success'));
-                                            },
-                                            function(response) {
+                        modalDialogService.showModal({}, modalOptions).then(function() {
+                            CmisConfigService.deleteCmisConfiguration($scope.deleteDir.id).then(function() {
+                                gridHelper.deleteRow($scope.deleteDir);
+                                messageService.info($translate.instant('admin.documentManagement.cmisConfiguration.messages.delete.success'));
+                            }, function(response) {
 
-                                                messageService.error($translate
-                                                        .instant('admin.documentManagement.cmisConfiguration.messages.delete.error'));
-                                            });
-                                });
+                                messageService.error($translate.instant('admin.documentManagement.cmisConfiguration.messages.delete.error'));
+                            });
+                        });
                     };
 
                     $scope.editRow = function(rowEntity) {

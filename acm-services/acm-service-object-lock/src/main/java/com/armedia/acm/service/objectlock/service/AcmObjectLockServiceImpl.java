@@ -1,7 +1,33 @@
 package com.armedia.acm.service.objectlock.service;
 
+/*-
+ * #%L
+ * ACM Service: Object lock
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.service.objectlock.dao.AcmObjectLockDao;
-import com.armedia.acm.service.objectlock.exception.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
 import com.armedia.acm.service.objectlock.model.AcmObjectUnlockEvent;
@@ -15,7 +41,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 /**
  * Created by nebojsha on 25.08.2015.
@@ -36,64 +65,76 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     }
 
     @Override
-    @Transactional
-    public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Authentication auth)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Long expiry, Authentication auth)
     {
-        return createLock(objectId, objectType, lockType, Boolean.TRUE, auth);
+        return createLock(objectId, objectType, lockType, expiry, Boolean.TRUE, auth.getName());
     }
 
     @Override
-    @Transactional
-    public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Boolean lockInDB, Authentication auth)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Long expiry, Boolean lockInDB, String userId)
     {
-
-        log.debug("[{}] about to create object lock[objectId={}, objectType={}, lockType={}]", auth.getName(), objectId, objectType,
+        log.debug("[{}] about to create object lock[objectId={}, objectType={}, lockType={}]", userId, objectId, objectType,
                 lockType);
+
+        AcmObjectLock objectLock = null;
+
         AcmObjectLock existingLock = acmObjectLockDao.findLock(objectId, objectType);
 
         if (existingLock != null)
         {
-            // if current user is same as creator of the lock than just return existingLock, else throw an exception
-            if (existingLock.getCreator().equals(auth.getName()))
-            {
-                return existingLock;
-            }
-            else
-            {
-                log.warn(
-                        "[{}] not able to create object lock[objectId={}, objectType={}, lockType={}]. Reason: Object lock already exists for: [{}]",
-                        auth.getName(), objectId, objectType, lockType, existingLock.getCreator());
-                throw new AcmObjectLockException("Lock already exist for different user.");
-            }
+            objectLock = existingLock;
+        }
+        else
+        {
+            objectLock = new AcmObjectLock();
+            objectLock.setObjectId(objectId);
+            objectLock.setObjectType(objectType);
         }
 
-        AcmObjectLock ol = new AcmObjectLock();
-        ol.setObjectId(objectId);
-        ol.setObjectType(objectType);
-        ol.setLockType(lockType);
+        objectLock.setCreated(new Date());
+        objectLock.setCreator(userId);
+        objectLock.setLockType(lockType);
+
+        objectLock.setExpiry(new Date(objectLock.getCreated().getTime() + expiry));
 
         if (lockInDB)
         {
-            log.info("Saving lock [{}] for object [{}:{}]", ol.getLockType(), ol.getObjectType(), ol.getObjectId());
-            AcmObjectLock lock = acmObjectLockDao.save(ol);
-            AcmObjectLockEvent event = new AcmObjectLockEvent(lock, auth.getName(), true);
+            log.info("Saving lock [{}] for object [{}:{}]", objectLock.getLockType(), objectLock.getObjectType(), objectLock.getObjectId());
+            AcmObjectLock lock = acmObjectLockDao.save(objectLock);
+            AcmObjectLockEvent event = new AcmObjectLockEvent(lock, userId, true);
             getApplicationEventPublisher().publishEvent(event);
 
             return lock;
         }
         else
         {
-            return ol;
+            return objectLock;
         }
     }
 
     @Override
-    @Transactional
-    public void removeLock(Long objectId, String objectType, String lockType, Authentication auth)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Long expiry, String userId)
     {
-        AcmObjectLock ol = acmObjectLockDao.findLock(objectId, objectType);
+        return createLock(objectId, objectType, lockType, expiry, Boolean.TRUE, userId);
+    }
 
-        if (ol == null)
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Long expiry, Boolean lockInDB, Authentication auth)
+    {
+        return createLock(objectId, objectType, lockType, expiry, lockInDB, auth.getName());
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public void removeLock(Long objectId, String objectType, String lockType, String userId)
+    {
+        AcmObjectLock objectLock = acmObjectLockDao.findLock(objectId, objectType);
+
+        if (objectLock == null)
         {
             // it is not an exception - the caller wanted the lock to be removed - and there is no lock to remove.
             // the object is no longer locked, so we have success.
@@ -101,12 +142,36 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             return;
         }
 
-        acmObjectLockDao.remove(ol);
+        if (!objectLock.getLockType().equals(lockType))
+        {
+            log.info("[{}] with id [{}] does not have lock of type [{}] , no need to unlock it.", objectType, objectId, lockType);
+            return;
+        }
 
-        ol.setLockType(lockType);
+        if (!objectLock.getCreator().equals(userId))
+        {
+            log.info("[{}] with id [{}] is not locked by user [{}], no need to unlock it.", objectType, objectId, userId);
+            return;
+        }
 
-        AcmObjectUnlockEvent event = new AcmObjectUnlockEvent(ol, auth.getName(), true);
+        acmObjectLockDao.remove(objectLock);
+
+        AcmObjectUnlockEvent event = new AcmObjectUnlockEvent(objectLock, userId, true);
         getApplicationEventPublisher().publishEvent(event);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public void removeLock(Long objectId, String objectType, String lockType, Authentication auth)
+    {
+        removeLock(objectId, objectType, lockType, auth.getName());
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public void removeExpiredLocks()
+    {
+        acmObjectLockDao.getExpiredLocks().forEach(objectLock -> acmObjectLockDao.remove(objectLock));
     }
 
     @Override

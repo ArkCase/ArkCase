@@ -16,16 +16,20 @@
  */
 angular.module('admin').service('Admin.ReportsConfigService', function($http) {
     return ({
-        getReports : getReports,
-        getReportsByMatchingName : getReportsByMatchingName,
-        getReportsPaged : getReportsPaged,
-        getUserGroups : getUserGroups,
-        getGroupsForReport : getGroupsForReport,
-        getGroupsForReportByName : getGroupsForReportByName,
-        getReportsUserGroups : getReportsUserGroups,
-        saveReportsUserGroups : saveReportsUserGroups,
-        saveReports : saveReports,
-        syncReports : syncReports
+        getReports: getReports,
+        getReportsByMatchingName: getReportsByMatchingName,
+        getReportsPaged: getReportsPaged,
+        getUserGroups: getUserGroups,
+        getGroupsForReport: getGroupsForReport,
+        getGroupsForReportByName: getGroupsForReportByName,
+        getReportsUserGroups: getReportsUserGroups,
+        getReportsGroupsPaged: getReportsGroupsPaged,
+        getReportsGroupsByName: getReportsGroupsByName,
+        saveReportsUserGroups: saveReportsUserGroups,
+        addGroupsToReport: addGroupsToReport,
+        removeGroupsFromReport: removeGroupsFromReport,
+        saveReports: saveReports,
+        syncReports: syncReports
     });
 
     /**
@@ -40,8 +44,9 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getReports() {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/report/get/pentaho"
+            method: "GET",
+            url: "api/latest/plugin/report/get/pentaho",
+            cache: false
         });
     }
 
@@ -61,13 +66,14 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getReportsByMatchingName(data) {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/report/pentaho",
-            params : {
-                fn : (data.filterWord ? data.filterWord : ""),
-                dir : (data.dir ? data.dir : "ASC"),
-                start : (data.start ? data.start : 0),
-                n : (data.n ? data.n : 50)
+            method: "GET",
+            url: "api/latest/plugin/report/pentaho",
+            cache: false,
+            params: {
+                fn: (data.filterWord ? data.filterWord : ""),
+                dir: (data.dir ? data.dir : "ASC"),
+                start: (data.start ? data.start : 0),
+                n: (data.n ? data.n : 50)
             }
         });
     }
@@ -87,12 +93,13 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getReportsPaged(data) {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/report/pentaho",
-            params : {
-                dir : (data.dir ? data.dir : "ASC"),
-                start : (data.start ? data.start : 0),
-                n : (data.n ? data.n : 50)
+            method: "GET",
+            url: "api/latest/plugin/report/pentaho",
+            cache: false,
+            params: {
+                dir: (data.dir ? data.dir : "ASC"),
+                start: (data.start ? data.start : 0),
+                n: (data.n ? data.n : 50)
             }
         });
     }
@@ -109,8 +116,9 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getUserGroups() {
         return $http({
-            method : "GET",
-            url : "api/latest/users/groups/get"
+            method: "GET",
+            url: "api/latest/users/groups/get",
+            cache: false
         });
     }
 
@@ -130,13 +138,14 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getGroupsForReport(data) {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/report/" + data.report.key + "/groups",
-            params : {
-                authorized : data.isAuthorized,
-                dir : (data.dir ? data.dir : ""),
-                n : (data.n ? data.n : 50),
-                start : (data.start ? data.start : 0)
+            method: "GET",
+            url: "api/latest/plugin/report/" + data.report.key + "/groups",
+            cache: false,
+            params: {
+                authorized: data.isAuthorized,
+                dir: (data.dir ? data.dir : ""),
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0)
             }
         });
     }
@@ -157,14 +166,15 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getGroupsForReportByName(data) {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/report/" + data.report.key + "/groups",
-            params : {
-                authorized : data.isAuthorized,
-                dir : (data.dir ? data.dir : ""),
-                n : (data.n ? data.n : 50),
-                start : (data.start ? data.start : 0),
-                fq : (data.filterWord ? data.filterWord : "")
+            method: "GET",
+            url: "api/latest/plugin/report/" + data.report.key + "/groups",
+            cache: false,
+            params: {
+                authorized: data.isAuthorized,
+                dir: (data.dir ? data.dir : ""),
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0),
+                fq: (data.filterWord ? data.filterWord : "")
             }
         });
     }
@@ -181,8 +191,54 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function getReportsUserGroups() {
         return $http({
-            method : "GET",
-            url : "api/latest/plugin/report/reporttogroupsmap"
+            method: "GET",
+            cache: false,
+            url: "api/latest/plugin/report/reporttogroupsmap"
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name getReportsGroupsPaged
+     * @methodOf admin.service:Admin.ReportsConfigService
+     *
+     * @description
+     * Performs retrieving all reports(only names) paged
+     *
+     * @returns {HttpPromise} Future info about reports with user groups
+     */
+    function getReportsGroupsPaged(data) {
+        return $http({
+            method: "GET",
+            cache: false,
+            url: "api/latest/plugin/report/reportstogroups",
+            params: {
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0)
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name getReportsGroupsByName
+     * @methodOf admin.service:Admin.ReportsConfigService
+     *
+     * @description
+     * Performs retrieving all reports(only names) by name
+     *
+     * @returns {HttpPromise} Future info about reports with user groups
+     */
+    function getReportsGroupsByName(data) {
+        return $http({
+            method: "GET",
+            cache: false,
+            url: "api/latest/plugin/report/reportstogroups",
+            params: {
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0),
+                fq: (data.filterWord ? data.filterWord : "")
+            }
         });
     }
 
@@ -198,11 +254,62 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function saveReportsUserGroups(reportsUserGroups) {
         return $http({
-            method : "POST",
-            url : "api/latest/plugin/report/reporttogroupsmap",
-            data : reportsUserGroups,
-            headers : {
-                "Content-Type" : "application/json"
+            method: "POST",
+            url: "api/latest/plugin/report/reporttogroupsmap",
+            data: reportsUserGroups,
+            cache: false,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name addGroupsToReport
+     * @methodOf admin.service:Admin.FunctionalAccessControlService
+     *
+     * @description
+     * Performs saving groups to a privilege
+     *
+     * @param {object} roleName - privilege name
+     *        {list}  groups - groups which will be added to the privilege with name privilegeName
+     *
+     * @returns void
+     */
+    function addGroupsToReport(privilegeName, groups) {
+        return $http({
+            method: 'PUT',
+            url: 'api/latest/plugin/report/' + privilegeName + '/groups',
+            data: groups,
+            cache: false,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name removeGroupsFromReport
+     * @methodOf admin.service:Admin.FunctionalAccessControlService
+     *
+     * @description
+     * Performs removing groups from a privilege
+     *
+     * @param {object} privilegeName - privilege name
+     *        {list} groups - groups which will be added to the privilege with name privilegeName
+     *
+     * @returns void
+     */
+    function removeGroupsFromReport(privilegeName, groups) {
+        return $http({
+            method: 'DELETE',
+            url: 'api/latest/plugin/report/' + privilegeName + '/groups',
+            data: groups,
+            cache: false,
+            headers: {
+                'Content-Type': 'application/json'
             }
         });
     }
@@ -219,11 +326,12 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function saveReports(reports) {
         return $http({
-            method : "POST",
-            url : "api/latest/plugin/report/save",
-            data : reports,
-            headers : {
-                "Content-Type" : "application/json"
+            method: "POST",
+            url: "api/latest/plugin/report/save",
+            data: reports,
+            cache: false,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }
@@ -239,10 +347,11 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      */
     function syncReports() {
         return $http({
-            method : "PUT",
-            url : "api/latest/plugin/report/sync",
-            headers : {
-                "Content-Type" : "application/json"
+            method: "PUT",
+            url: "api/latest/plugin/report/sync",
+            cache: false,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }

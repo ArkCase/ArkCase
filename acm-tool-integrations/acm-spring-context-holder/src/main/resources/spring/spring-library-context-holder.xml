@@ -4,4 +4,6 @@
 
     <bean id="acmContextHolder" class="com.armedia.acm.spring.SpringContextHolder"/>
 
+    <bean id="arkCaseSpringConfiguration" class="com.armedia.acm.spring.ArkCaseSpringConfiguration"/>
+
 </beans>

@@ -19,6 +19,7 @@
             "label": "Zu"
         },
         "dropdown": {
+		    "__comment__": "__ Dieses 'dropdown' scheint nicht in Gebrauch zu sein, brauchen wir das noch? __",
             "turnaround": "Bearbeitungszeit nach Anforderer",
             "requester": "Zusammenfassung des Anforderertyps",
             "pending": "Bericht über ausstehende Bestellungen",

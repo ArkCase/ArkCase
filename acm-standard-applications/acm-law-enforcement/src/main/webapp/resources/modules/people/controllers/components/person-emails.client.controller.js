@@ -2,23 +2,8 @@
 
 angular.module('people').controller(
         'People.EmailsController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Person.InfoService',
-                'Authentication',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'PermissionsService',
-                'Object.LookupService',
-                'Object.ModelService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication,
-                        HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -26,22 +11,22 @@ angular.module('people').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "people",
-                        componentId : "emails",
-                        retrieveObjectInfo : PersonInfoService.getPersonInfo,
-                        validateObjectInfo : PersonInfoService.validatePersonInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "people",
+                        componentId: "emails",
+                        retrieveObjectInfo: PersonInfoService.getPersonInfo,
+                        validateObjectInfo: PersonInfoService.validatePersonInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -49,7 +34,7 @@ angular.module('people').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.PERSON
+                            objectType: ObjectService.ObjectTypes.PERSON
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -65,7 +50,7 @@ angular.module('people').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
                         var emails = _.filter($scope.objectInfo.contactMethods, {
-                            type : 'email'
+                            type: 'email'
                         });
                         $scope.gridOptions.data = emails;
                     };
@@ -84,12 +69,12 @@ angular.module('people').controller(
                         //put contactMethod to scope, we will need it when we return from popup
                         $scope.email = email;
                         var item = {
-                            id : '',
-                            parentId : $scope.objectInfo.id,
-                            type : 'email',
-                            subType : '',
-                            value : '',
-                            description : ''
+                            id: '',
+                            parentId: $scope.objectInfo.id,
+                            type: 'email',
+                            subType: '',
+                            value: '',
+                            description: ''
                         };
                         showModal(item, false);
                     };
@@ -97,12 +82,12 @@ angular.module('people').controller(
                     $scope.editRow = function(rowEntity) {
                         $scope.email = rowEntity;
                         var item = {
-                            id : rowEntity.id,
-                            type : rowEntity.type,
-                            subType : rowEntity.subType,
-                            subLookup : rowEntity.subType,
-                            value : rowEntity.value,
-                            description : rowEntity.description
+                            id: rowEntity.id,
+                            type: rowEntity.type,
+                            subType: rowEntity.subType,
+                            subLookup: rowEntity.subType,
+                            value: rowEntity.value,
+                            description: rowEntity.description
                         };
                         showModal(item, true);
                     };
@@ -124,13 +109,13 @@ angular.module('people').controller(
                         params.isDefault = $scope.isDefault(email);
 
                         var modalInstance = $modal.open({
-                            animation : true,
-                            templateUrl : 'modules/people/views/components/person-emails-modal.client.view.html',
-                            controller : 'People.EmailsModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            animation: true,
+                            templateUrl: 'modules/people/views/components/person-emails-modal.client.view.html',
+                            controller: 'People.EmailsModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -142,7 +127,7 @@ angular.module('people').controller(
                                 email = $scope.email;
                             else {
                                 email = _.find($scope.objectInfo.contactMethods, {
-                                    id : data.email.id
+                                    id: data.email.id
                                 });
                             }
                             email.type = 'email';
@@ -155,7 +140,7 @@ angular.module('people').controller(
                             }
 
                             var emails = _.filter($scope.objectInfo.contactMethods, {
-                                type : 'email'
+                                type: 'email'
                             });
                             if (data.isDefault || emails.length == 1) {
                                 $scope.objectInfo.defaultEmail = email;
@@ -183,6 +168,9 @@ angular.module('people').controller(
 
                     $scope.isDefault = function(email) {
                         var defaultEmail = $scope.objectInfo.defaultEmail;
+                        if (Util.isEmpty(defaultEmail)) {
+                            return true;
+                        }
                         var comparisonProperties = [ "id", "type", "subType", "value", "description" ];
                         return Util.objectsComparisonByGivenProperties(defaultEmail, email, comparisonProperties);
                     }

@@ -1,5 +1,32 @@
 package com.armedia.acm.calendar.service.integration.exchange;
 
+/*-
+ * #%L
+ * ACM Service: Exchange Integration Calendar Service
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService.PROCESS_USER;
 
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
@@ -58,46 +85,21 @@ import microsoft.exchange.webservices.data.search.FindItemsResults;
 public class CalendarEntityHandler
 {
 
-    public static enum PermissionType
-    {
-        READ, WRITE, DELETE;
-    }
-
-    @FunctionalInterface
-    public static interface ServiceConnector
-    {
-        Optional<ExchangeService> connect(Long objectId);
-    }
-
+    protected Map<String, PropertyDefinition> sortFields;
     @PersistenceContext
     private EntityManager em;
-
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private OutlookDao outlookDao;
-
     private AcmContainerDao containerEntityDao;
-
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-
-    protected Map<String, PropertyDefinition> sortFields;
-
     private List<String> closedStates;
-
     private String entityType;
-
     private String entityTypeForQuery;
-
     private String entityIdForQuery;
-
     private PermissionEvaluator permissionEvaluator;
-
     private Object readPermission;
-
     private Object writePermission;
-
     private Object deletePermission;
-
     private AcmOutlookFolderCreatorDao folderCreatorDao;
 
     public CalendarEntityHandler()
@@ -522,6 +524,17 @@ public class CalendarEntityHandler
     public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
     {
         this.folderCreatorDao = folderCreatorDao;
+    }
+
+    public static enum PermissionType
+    {
+        READ, WRITE, DELETE;
+    }
+
+    @FunctionalInterface
+    public static interface ServiceConnector
+    {
+        Optional<ExchangeService> connect(Long objectId);
     }
 
 }

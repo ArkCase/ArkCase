@@ -2,37 +2,20 @@
 
 angular.module('people').controller(
         'Person.AliasesController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                'UtilService',
-                'ConfigService',
-                'Person.InfoService',
-                'MessageService',
-                'Helper.ObjectBrowserService',
-                'Helper.UiGridService',
-                'Authentication',
-                'Person.PicturesService',
-                '$modal',
-                'PermissionsService',
-                'ObjectService',
-                'Object.LookupService',
+        [ '$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'Person.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', 'Person.PicturesService', '$modal', 'PermissionsService', 'ObjectService', 'Object.LookupService',
                 'Object.ModelService',
-                function($scope, $stateParams, $translate, Util, ConfigService, PersonInfoService, MessageService,
-                        HelperObjectBrowserService, HelperUiGridService, Authentication, PersonPicturesService, $modal, PermissionsService,
-                        ObjectService, ObjectLookupService, ObjectModelService) {
+                function($scope, $stateParams, $translate, Util, ConfigService, PersonInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, PersonPicturesService, $modal, PermissionsService, ObjectService, ObjectLookupService, ObjectModelService) {
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "people",
-                        componentId : "aliases",
-                        retrieveObjectInfo : PersonInfoService.getPersonInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "people",
+                        componentId: "aliases",
+                        retrieveObjectInfo: PersonInfoService.getPersonInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -42,7 +25,7 @@ angular.module('people').controller(
                     var currentUser = '';
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -54,7 +37,7 @@ angular.module('people').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.PERSON
+                            objectType: ObjectService.ObjectTypes.PERSON
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -91,22 +74,22 @@ angular.module('people').controller(
                         alias.creator = $scope.userId;
                         $scope.alias = alias;
                         var item = {
-                            id : '',
-                            parentId : $scope.objectInfo.id,
-                            aliasType : '',
-                            aliasValue : '',
-                            description : ''
+                            id: '',
+                            parentId: $scope.objectInfo.id,
+                            aliasType: '',
+                            aliasValue: '',
+                            description: ''
                         };
                         showModal(item, false);
                     };
                     $scope.editRow = function(rowEntity) {
                         $scope.alias = rowEntity;
                         var item = {
-                            id : rowEntity.id,
-                            parentId : $scope.objectInfo.id,
-                            aliasType : rowEntity.aliasType,
-                            aliasValue : rowEntity.aliasValue,
-                            description : rowEntity.description
+                            id: rowEntity.id,
+                            parentId: $scope.objectInfo.id,
+                            aliasType: rowEntity.aliasType,
+                            aliasValue: rowEntity.aliasValue,
+                            description: rowEntity.description
                         };
                         showModal(item, true);
                     };
@@ -128,13 +111,13 @@ angular.module('people').controller(
                         params.isDefault = $scope.isDefault(alias);
 
                         var modalInstance = $modal.open({
-                            animation : true,
-                            templateUrl : "modules/people/views/components/person-aliases-modal.client.view.html",
-                            controller : 'Person.AliasesModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            animation: true,
+                            templateUrl: "modules/people/views/components/person-aliases-modal.client.view.html",
+                            controller: 'Person.AliasesModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -146,7 +129,7 @@ angular.module('people').controller(
                                 alias = $scope.alias;
                             else {
                                 alias = _.find($scope.objectInfo.personAliases, {
-                                    id : data.alias.id
+                                    id: data.alias.id
                                 });
                             }
                             alias.aliasType = data.alias.aliasType;
@@ -181,6 +164,9 @@ angular.module('people').controller(
 
                     $scope.isDefault = function(alias) {
                         var defaultAlias = $scope.objectInfo.defaultAlias;
+                        if (Util.isEmpty(defaultAlias)) {
+                            return true;
+                        }
                         var comparisonProperties = [ "id", "aliasType", "aliasValue", "description" ];
                         return Util.objectsComparisonByGivenProperties(defaultAlias, alias, comparisonProperties);
                     }

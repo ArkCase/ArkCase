@@ -1,11 +1,38 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+/*-
+ * #%L
+ * ACM Service: Data Access Control
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
-
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -17,16 +44,8 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -50,6 +69,11 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
 
     private ObjectConverter objectConverter;
 
+    // Fallback parent expressions
+    private String getObjectExpression;
+    private String editObjectExpression;
+    private String insertObjectExpression;
+    private String deleteObjectExpression;
     /**
      * Logger instance.
      */
@@ -113,57 +137,51 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
         Map<String, Object> targetObjectProperties = retrieveTargetObjectProperties(accessControlRules.getPropertiesMapping(),
                 solrJsonResult);
 
-        // loop trough configured access control rules, break on first positive match
-        for (AccessControlRule accessControlRule : accessControlRules.getAccessControlRuleList())
+        for (String permission : permissions)
         {
-            for (String permission : permissions)
-            {
-                // check if action name matches
-                if (permission == null || !permission.equals(accessControlRule.getActionName()))
+
+            List<AccessControlRule> permissionRules = accessControlRules.getAccessControlRuleList().stream().filter(rule -> {
+                if (targetType.equals(rule.getObjectType()) && permission.equals(rule.getActionName()))
                 {
-                    log.trace("Non matching permission [{} != {}], ignoring", accessControlRule.getActionName(), permission);
-                    continue;
-                }
-                // check if target type matches
-                if (targetType == null || !targetType.equals(accessControlRule.getObjectType()))
-                {
-                    log.trace("Non matching target type [{} != {}], ignoring", accessControlRule.getObjectType(), targetType);
-                    continue;
-                }
-                // check if target sub type matches (NOTE: it is optional in JSON rules structure)
-                if (accessControlRule.getObjectSubType() != null)
-                {
-                    // FIXME: unsafe - "object_sub_type_s" to "objectSubType" mapping has to be defined in
-                    // accessControlRules.json
-                    String targetSubType = (String) targetObjectProperties.get("objectSubType");
-                    if (targetSubType == null || !targetSubType.equals(accessControlRule.getObjectSubType()))
+                    if (rule.getObjectSubType() != null) // optional field in rule
                     {
-                        log.trace("Non matching target sub type [{} != {}], ignoring", accessControlRule.getObjectSubType(), targetSubType);
-                        continue;
+                        String targetSubType = (String) targetObjectProperties.get("objectSubType");
+                        if (targetSubType == null || !targetSubType.equals(rule.getObjectSubType()))
+                        {
+                            return false;
+                        }
                     }
+                    return true;
                 }
-                // check if "ALL" roles match
-                if (!checkRolesAll(accessControlRule.getUserRolesAll(), authentication.getAuthorities(), targetObjectProperties))
+                return false;
+            }).collect(Collectors.toList());
+            if (permissionRules.size() == 0)
+            { // no permissions found add fallback parent permission
+                String fallbackPermission = getFallbackPermissionName(permission);
+                permissionRules = accessControlRules.getAccessControlRuleList().stream()
+                        .filter(rule -> rule.getObjectType().contains(targetType) && rule.getActionName().equals(fallbackPermission))
+                        .collect(Collectors.toList());
+            }
+            for (AccessControlRule rule : permissionRules)
+            {
+                if (!checkRolesAll(rule.getUserRolesAll(), authentication.getAuthorities(), targetObjectProperties))
                 {
                     // log entry created in checkRolesAll() method
                     continue;
                 }
                 // check if "ANY" roles match
-                if (!checkRolesAny(accessControlRule.getUserRolesAny(), authentication.getAuthorities(), targetObjectProperties))
+                if (!checkRolesAny(rule.getUserRolesAny(), authentication.getAuthorities(), targetObjectProperties))
                 {
                     // log entry created in checkRolesAny() method
                     continue;
                 }
-                // all initial checks passed, proceed with checking required object properties
-                granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
 
-                // proceed with checking if user is any of required participant types
-                granted = granted && checkParticipantTypes(accessControlRule.getUserIsParticipantTypeAny(), authentication, solrJsonResult);
-
-                if (granted)
+                if (evaluate(rule.getObjectProperties(), authentication, targetObjectProperties)
+                        && checkParticipantTypes(rule.getUserIsParticipantTypeAny(), authentication, solrJsonResult))
                 {
+                    granted = true;
                     log.debug("[{}] is granted executing [{}] on object of type [{}] with id [{}], matching rule [{}]",
-                            authentication.getName(), permission, targetType, targetId, accessControlRule);
+                            authentication.getName(), permission, targetType, targetId, rule);
                     break;
                 }
             }
@@ -172,12 +190,40 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
                 break;
             }
         }
+
         if (!granted)
         {
             log.warn("[{}] is denied executing [{}] on object of type [{}] with id [{}], no matching rule found", authentication.getName(),
                     StringUtils.join(permissions, ","), targetType, targetId);
         }
         return granted;
+    }
+
+    private String getFallbackPermissionName(String permission)
+    {
+        String parentActionName = null;
+        if (permission.toLowerCase().matches("(" + getObjectExpression + ").*"))
+        {
+            // read parent permission
+            parentActionName = "getObject";
+        }
+        else if (permission.toLowerCase()
+                .matches("(" + editObjectExpression + ").*"))
+        {
+            // write parent permission
+            parentActionName = "editObject";
+        }
+        else if (permission.toLowerCase().matches("(" + insertObjectExpression + ").*"))
+        {
+            // insert parent permission
+            parentActionName = "insertObject";
+        }
+        else if (permission.toLowerCase().matches("(" + deleteObjectExpression + ").*"))
+        {
+            // delete parent permission
+            parentActionName = "deleteObject";
+        }
+        return parentActionName;
     }
 
     /**
@@ -471,5 +517,45 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public String getGetObjectExpression()
+    {
+        return getObjectExpression;
+    }
+
+    public void setGetObjectExpression(String getObjectExpression)
+    {
+        this.getObjectExpression = getObjectExpression;
+    }
+
+    public String getEditObjectExpression()
+    {
+        return editObjectExpression;
+    }
+
+    public void setEditObjectExpression(String editObjectExpression)
+    {
+        this.editObjectExpression = editObjectExpression;
+    }
+
+    public String getInsertObjectExpression()
+    {
+        return insertObjectExpression;
+    }
+
+    public void setInsertObjectExpression(String insertObjectExpression)
+    {
+        this.insertObjectExpression = insertObjectExpression;
+    }
+
+    public String getDeleteObjectExpression()
+    {
+        return deleteObjectExpression;
+    }
+
+    public void setDeleteObjectExpression(String deleteObjectExpression)
+    {
+        this.deleteObjectExpression = deleteObjectExpression;
     }
 }

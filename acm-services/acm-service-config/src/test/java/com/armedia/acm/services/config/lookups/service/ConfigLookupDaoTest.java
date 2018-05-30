@@ -1,5 +1,32 @@
 package com.armedia.acm.services.config.lookups.service;
 
+/*-
+ * #%L
+ * ACM Service: Config
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -33,12 +60,10 @@ public class ConfigLookupDaoTest extends EasyMockSupport
 {
     private static final Configuration configuration = Configuration.builder().jsonProvider(new JacksonJsonNodeJsonProvider())
             .mappingProvider(new JacksonMappingProvider()).build();
-
+    private final String lookupsExtFileLocation = "lookups-ext.json";
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
-
     private ConfigLookupDao configLookupDao;
-    private final String lookupsExtFileLocation = "lookups-ext.json";
 
     @Before
     public void setUp() throws Exception

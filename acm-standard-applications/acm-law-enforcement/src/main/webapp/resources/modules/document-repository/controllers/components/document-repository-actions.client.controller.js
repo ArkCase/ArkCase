@@ -2,31 +2,17 @@
 
 angular.module('document-repository').controller(
         'DocumentRepository.ActionsController',
-        [
-                '$scope',
-                '$state',
-                '$stateParams',
-                '$q',
-                '$modal',
-                'UtilService',
-                'ConfigService',
-                'ObjectService',
-                'Authentication',
-                'Object.SubscriptionService',
-                'Object.ModelService',
-                'DocumentRepository.InfoService',
-                'Helper.ObjectBrowserService',
-                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication,
-                        ObjectSubscriptionService, ObjectModelService, DocumentRepositoryInfoService, HelperObjectBrowserService) {
+        [ '$scope', '$state', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.SubscriptionService', 'Object.ModelService', 'DocumentRepository.InfoService', 'Helper.ObjectBrowserService',
+                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectSubscriptionService, ObjectModelService, DocumentRepositoryInfoService, HelperObjectBrowserService) {
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "document-repository",
-                        componentId : "actions",
-                        retrieveObjectInfo : DocumentRepositoryInfoService.getDocumentRepositoryInfo,
-                        validateObjectInfo : DocumentRepositoryInfoService.validateDocumentRepositoryInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "document-repository",
+                        componentId: "actions",
+                        retrieveObjectInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                        validateObjectInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -34,20 +20,18 @@ angular.module('document-repository').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.restricted = objectInfo.restricted;
 
-                        Authentication.queryUserInfo().then(
-                                function(userInfo) {
-                                    $scope.userId = userInfo.userId;
-                                    ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.DOC_REPO,
-                                            $scope.objectInfo.id).then(function(subscriptions) {
-                                        var found = _.find(subscriptions, {
-                                            userId : userInfo.userId,
-                                            subscriptionObjectType : ObjectService.ObjectTypes.DOC_REPO,
-                                            objectId : $scope.objectInfo.id
-                                        });
-                                        $scope.showBtnSubscribe = Util.isEmpty(found);
-                                        $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
-                                    });
+                        Authentication.queryUserInfo().then(function(userInfo) {
+                            $scope.userId = userInfo.userId;
+                            ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.DOC_REPO, $scope.objectInfo.id).then(function(subscriptions) {
+                                var found = _.find(subscriptions, {
+                                    userId: userInfo.userId,
+                                    subscriptionObjectType: ObjectService.ObjectTypes.DOC_REPO,
+                                    objectId: $scope.objectInfo.id
                                 });
+                                $scope.showBtnSubscribe = Util.isEmpty(found);
+                                $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+                            });
+                        });
                     };
 
                     $scope.onClickRestrict = function() {
@@ -63,21 +47,19 @@ angular.module('document-repository').controller(
                     };
 
                     $scope.subscribe = function(docRepoInfo) {
-                        ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.DOC_REPO, docRepoInfo.id).then(
-                                function(data) {
-                                    $scope.showBtnSubscribe = false;
-                                    $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
-                                    return data;
-                                });
+                        ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.DOC_REPO, docRepoInfo.id).then(function(data) {
+                            $scope.showBtnSubscribe = false;
+                            $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+                            return data;
+                        });
                     };
 
                     $scope.unsubscribe = function(docRepoInfo) {
-                        ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.DOC_REPO, docRepoInfo.id).then(
-                                function(data) {
-                                    $scope.showBtnSubscribe = true;
-                                    $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
-                                    return data;
-                                });
+                        ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.DOC_REPO, docRepoInfo.id).then(function(data) {
+                            $scope.showBtnSubscribe = true;
+                            $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+                            return data;
+                        });
                     };
 
                     $scope.deleteDR = function(docRepoId) {

@@ -18,7 +18,9 @@
         "email.label": "电子邮箱",
         "status.label": "状态",
         "organization.label": "组织",
-        "identification.label": "身份号码"
+        "organization.type": "zh-cn_Organization type",
+        "identification.label": "身份号码",
+        "identification.type": "zh-cn_ID type"
     },
     "people.comp.actions": {
         "title": "行动",
