@@ -16,12 +16,14 @@
  */
 angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService", function($http, Util) {
     return ({
-        getAppModules : getAppModules,
-        getAppModulesPaged : getAppModulesPaged,
-        getAppModulesByName : getAppModulesByName,
-        getRolesForModulePrivilege : getRolesForModulePrivilege,
-        addRolesToModule : addRolesToModule,
-        removeRolesFromModule : removeRolesFromModule
+        getAppModules: getAppModules,
+        getAppModulesPaged: getAppModulesPaged,
+        getAppModulesByName: getAppModulesByName,
+        getRolesForModulePrivilege: getRolesForModulePrivilege,
+        getRolesForModulePaged: getRolesForModulePaged,
+        getRolesForModuleByName: getRolesForModuleByName,
+        addRolesToModule: addRolesToModule,
+        removeRolesFromModule: removeRolesFromModule
     });
 
     /**
@@ -36,8 +38,9 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
      */
     function getAppModules() {
         return $http({
-            method : 'GET',
-            url : 'api/latest/plugin/admin/moduleconfiguration/modules'
+            method: 'GET',
+            cache: false,
+            url: 'api/latest/plugin/admin/moduleconfiguration/modules'
         });
     }
 
@@ -57,12 +60,13 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
      */
     function getAppModulesPaged(data) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/plugin/admin/moduleconfiguration/modules/paged',
-            params : {
-                dir : (data.dir ? data.dir : "name_lcs ASC"),
-                n : (data.n ? data.n : 50),
-                start : (data.start ? data.start : 0)
+            method: 'GET',
+            url: 'api/latest/plugin/admin/moduleconfiguration/modules/paged',
+            cache: false,
+            params: {
+                dir: (data.dir ? data.dir : "name_lcs ASC"),
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0)
             }
         });
     }
@@ -83,11 +87,12 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
      */
     function getAppModulesByName(data) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/plugin/admin/moduleconfiguration/modules',
-            params : {
-                fn : (data.filterWord ? data.filterWord : ""),
-                n : (Util.isEmpty(data.filterWord) ? 50 : 10000)
+            method: 'GET',
+            url: 'api/latest/plugin/admin/moduleconfiguration/modules',
+            cache: false,
+            params: {
+                fn: (data.filterWord ? data.filterWord : ""),
+                n: (data.n ? data.n : 50)
             }
         });
     }
@@ -106,8 +111,59 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
      */
     function getRolesForModulePrivilege(modulePrivilege) {
         return $http({
-            method : 'GET',
-            url : 'api/latest/plugin/admin/rolesprivileges/privileges/' + modulePrivilege + '/roles'
+            method: 'GET',
+            cache: false,
+            url: 'api/latest/plugin/admin/rolesprivileges/privileges/' + modulePrivilege + '/roles'
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name getRolesForModulePaged
+     * @methodOf admin.service:Admin.ModulesService
+     *
+     * @description
+     * Performs retrieving roles for provided module paged
+     *
+     * @param {string} modulePrivilege privilege for which roles will be retrieved
+     *
+     * @returns {HttpPromise} Future info roles for module privilege
+     */
+    function getRolesForModulePaged(data) {
+        return $http({
+            method: 'GET',
+            cache: false,
+            url: 'api/latest/plugin/admin/rolesprivileges/' + data.module.key + '/roles',
+            params: {
+                n: (data.n ? data.n : 50),
+                start: (data.start ? data.start : 0),
+                authorized: data.isAuthorized
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name getRolesForModuleByName
+     * @methodOf admin.service:Admin.ModulesService
+     *
+     * @description
+     * Performs retrieving roles for provided module paged
+     *
+     * @param {string} modulePrivilege privilege for which roles will be retrieved
+     *
+     * @returns {HttpPromise} Future info roles for module privilege
+     */
+    function getRolesForModuleByName(data) {
+        return $http({
+            method: 'GET',
+            cache: false,
+            url: 'api/latest/plugin/admin/rolesprivileges/' + data.module.key + '/roles',
+            params: {
+                n: (data.n ? data.n : 50),
+                authorized: data.isAuthorized,
+                fn: (data.filterWord ? data.filterWord : "")
+            }
         });
     }
 
@@ -127,11 +183,12 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
     function addRolesToModule(modulePrivilege, roles) {
         var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roles.join() + '/privileges/' + modulePrivilege;
         return $http({
-            method : 'PUT',
-            url : url,
-            data : {},
-            headers : {
-                'Content-Type' : 'application/json'
+            method: 'PUT',
+            url: url,
+            cache: false,
+            data: {},
+            headers: {
+                'Content-Type': 'application/json'
             }
         });
     }
@@ -152,8 +209,9 @@ angular.module('admin').service('Admin.ModulesService', [ "$http", "UtilService"
     function removeRolesFromModule(modulePrivilege, roles) {
         var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roles.join() + '/privileges/' + modulePrivilege;
         return $http({
-            method : 'DELETE',
-            url : url
+            method: 'DELETE',
+            cache: false,
+            url: url
         });
     }
 } ]);

@@ -1,6 +1,34 @@
 package com.armedia.acm.webdav;
 
-import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+/*-
+ * #%L
+ * ACM Service: WebDAV Integration Library
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+import com.armedia.acm.core.exceptions.AcmObjectLockException;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
 import org.springframework.security.core.Authentication;
 
@@ -29,25 +57,11 @@ import io.milton.resource.LockableResource;
 public class AcmFileSystemLockManager implements LockManager
 {
 
-    private static final class CurrentLock
-    {
-        final LockToken token;
-        final String lockedByUser;
-
-        public CurrentLock(LockToken token)
-        {
-            this.token = token;
-            this.lockedByUser = token.info.lockedByUser;
-        }
-
-    }
-
     // This should be changed with a distributed collection like ones from Hazelcast or Apache Ignite
     private final ConcurrentMap<String, CurrentLock> locks = new ConcurrentHashMap<>();
-
     private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    private AcmObjectLockService objectLockService;
+    private AcmObjectLockingManager objectLockingManager;
 
     @Override
     public LockResult lock(LockTimeout timeout, LockInfo lockInfo, LockableResource resource) throws NotAuthorizedException
@@ -107,8 +121,15 @@ public class AcmFileSystemLockManager implements LockManager
             Authentication authentication = fileResource.getResourceFactory().getSecurityManager()
                     .getAuthenticationForTicket(fileResource.getAcmTicket());
             // Create lock in Arkcase DB
-            getObjectLockService().createLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(), true,
-                    authentication);
+            try
+            {
+                getObjectLockingManager().acquireObjectLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(),
+                        null, false, authentication.getName());
+            }
+            catch (AcmObjectLockException e)
+            {
+                throw new NotAuthorizedException(fileResource, e);
+            }
         }
 
         return LockResult.success(token);
@@ -185,8 +206,18 @@ public class AcmFileSystemLockManager implements LockManager
             AcmFileResource fileResource = (AcmFileResource) resource;
             Authentication authentication = fileResource.getResourceFactory().getSecurityManager()
                     .getAuthenticationForTicket(fileResource.getAcmTicket());
+
             // Remove lock from Arkcase DB
-            getObjectLockService().removeLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(), authentication);
+            try
+            {
+                getObjectLockingManager().releaseObjectLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(),
+                        false, authentication.getName(), null);
+            }
+            catch (AcmObjectLockException e)
+            {
+                throw new NotAuthorizedException(fileResource, e);
+            }
+
             // Remove authentication from WebDav map
             fileResource.getResourceFactory().getSecurityManager().removeAuthenticationForTicket(fileResource.getAcmTicket());
         }
@@ -221,14 +252,27 @@ public class AcmFileSystemLockManager implements LockManager
         return token;
     }
 
-    public AcmObjectLockService getObjectLockService()
+    public AcmObjectLockingManager getObjectLockingManager()
     {
-        return objectLockService;
+        return objectLockingManager;
     }
 
-    public void setObjectLockService(AcmObjectLockService objectLockService)
+    public void setObjectLockingManager(AcmObjectLockingManager objectLockingManager)
     {
-        this.objectLockService = objectLockService;
+        this.objectLockingManager = objectLockingManager;
+    }
+
+    private static final class CurrentLock
+    {
+        final LockToken token;
+        final String lockedByUser;
+
+        public CurrentLock(LockToken token)
+        {
+            this.token = token;
+            this.lockedByUser = token.info.lockedByUser;
+        }
+
     }
 
 }

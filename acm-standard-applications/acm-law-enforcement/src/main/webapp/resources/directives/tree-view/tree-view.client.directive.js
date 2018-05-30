@@ -39,16 +39,16 @@
  */
 angular.module('directives').directive('treeView', [ '$q', function($q) {
     return {
-        restrict : 'E',
-        scope : {
-            treeData : '=',
-            onSelect : '&'
+        restrict: 'E',
+        scope: {
+            treeData: '=',
+            onSelect: '&'
         },
 
-        link : function(scope, element, attrs) {
+        link: function(scope, element, attrs) {
             var treeOptions = {
-                source : [],
-                click : function(event, data) {
+                source: [],
+                click: function(event, data) {
                     scope.onSelect()(data.node.data);
                 }
             };

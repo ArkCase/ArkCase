@@ -150,6 +150,34 @@
                                 admin.transcription.transcriptionConfigForm.validation.messages.requiredErrorMsg
                             </span>
                     </div>
+                    <div class="col-lg-3 form-group">
+                        <label translate>
+                            admin.transcription.transcriptionConfigForm.mediaDurationInSeconds.label
+                        </label>
+                        <input name="allowedMediaDuration" class="form-control" ng-model="transcribeConfigDataModel.allowedMediaDuration"
+                                type="number" min="1" required>
+                        <span ng-if="transcribeConfigurationForm.allowedMediaDuration.$error.required" class="text-danger" translate>
+                                admin.transcription.transcriptionConfigForm.validation.messages.requiredErrorMsg
+                            </span>
+                        <span ng-if="transcribeConfigurationForm.allowedMediaDuration.$error.min" class="text-danger" translate>
+                                admin.transcription.transcriptionConfigForm.validation.messages.minPositiveValueErrorMsg
+                            </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label translate>
+                            admin.transcription.transcriptionConfigForm.silenceBetweenWords.label
+                        </label>
+                        <input name="silentBetweenWords" class="form-control" ng-model="transcribeConfigDataModel.silentBetweenWords"
+                                type="number" step="any" min="0" required>
+                        <span ng-if="transcribeConfigurationForm.silentBetweenWords.$error.required" class="text-danger" translate>
+                                admin.transcription.transcriptionConfigForm.validation.messages.requiredErrorMsg
+                            </span>
+                        <span ng-if="transcribeConfigurationForm.silentBetweenWords.$error.min" class="text-danger" translate>
+                                admin.transcription.transcriptionConfigForm.validation.messages.minZeroValueErrorMsg
+                            </span>
+                    </div>
                 </div>
             </panel-view>
         </div>

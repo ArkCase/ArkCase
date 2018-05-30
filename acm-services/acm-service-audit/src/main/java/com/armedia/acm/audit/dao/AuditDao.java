@@ -1,5 +1,32 @@
 package com.armedia.acm.audit.dao;
 
+/*-
+ * #%L
+ * ACM Service: Audit Library
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.data.AcmAbstractDao;
 
@@ -11,6 +38,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -188,5 +218,21 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
     protected Class<AuditEvent> getPersistenceClass()
     {
         return AuditEvent.class;
+    }
+
+    public Long getCountAuditEventSince(String eventType, LocalDateTime since, LocalDateTime until)
+    {
+
+        String queryText = "SELECT COUNT(ae.fullEventType) " +
+                "FROM AuditEvent ae " +
+                "WHERE ae.fullEventType = :eventType AND ae.eventDate > :since  AND ae.eventDate < :until";
+
+        Query query = getEm().createQuery(queryText);
+        query.setParameter("eventType", eventType);
+        query.setParameter("since", Date.from(ZonedDateTime.of(since, ZoneId.systemDefault()).toInstant()));
+        query.setParameter("until", Date.from(ZonedDateTime.of(until, ZoneId.systemDefault()).toInstant()));
+
+        Long count = (Long) query.getSingleResult();
+        return count;
     }
 }

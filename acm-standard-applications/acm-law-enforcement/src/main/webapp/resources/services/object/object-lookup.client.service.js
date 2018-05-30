@@ -327,12 +327,13 @@ angular.module('services').factory(
                      */
                     Service.getParticipantTypes = function(objectType) {
                         switch (objectType) {
+                        case "DOC_REPO":
+                            return Service.getLookupByLookupName("documentParticipantTypes");
                         case "PERSON":
                         case "ORGANIZATION":
                             return Service.getLookupByLookupName("organizationalParticipantTypes");
                         case "COMPLAINT":
                         case "CASE_FILE":
-                        case "DOC_REPO":
                             return Service.getLookupByLookupName("entitiesParticipantTypes");
                         case "FILE":
                         case "FOLDER":

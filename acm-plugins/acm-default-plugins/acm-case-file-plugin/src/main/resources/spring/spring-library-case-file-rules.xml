@@ -7,8 +7,8 @@
     </bean>
 
     <bean id="saveCaseFileBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.SaveCaseFileBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        class="com.armedia.acm.plugins.casefile.service.SaveCaseFileBusinessRule"
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-case-file-rules.xlsx"/>
     </bean>
 

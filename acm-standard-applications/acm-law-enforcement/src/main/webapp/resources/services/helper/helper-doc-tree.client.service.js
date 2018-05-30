@@ -28,10 +28,10 @@ angular.module('services').factory('DocTreeService', [ 'UtilService', 'Object.Lo
          * @description
          * This method generates Frevvo plain form url.
          */
-        uploadFrevvoForm : function(type, folderId, onCloseForm, objectType, fileTypes, containerId) {
+        uploadFrevvoForm: function(type, folderId, onCloseForm, objectType, fileTypes, containerId) {
             if (objectType) {
                 var fileType = _.find(fileTypes, {
-                    key : type
+                    key: type
                 });
                 if (ObjectLookupService.validatePlainForm(fileType)) {
                     var data = "_data=(";
@@ -69,7 +69,7 @@ angular.module('services').factory('DocTreeService', [ 'UtilService', 'Object.Lo
             }
         },
 
-        silentReplace : function(value, replace, replacement) {
+        silentReplace: function(value, replace, replacement) {
             if (!Util.isEmpty(value) && value.replace) {
                 value = value.replace(replace, replacement);
             }

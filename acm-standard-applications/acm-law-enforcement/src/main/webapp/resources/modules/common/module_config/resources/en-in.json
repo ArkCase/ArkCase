@@ -55,7 +55,8 @@
             "defaultBodyLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
             "defaultBodyAttachments": "Please find attached the documents sent to you from ArkCase.",
             "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
-            "successMessage": "The email was sent successfully"
+            "successMessage": "The email was sent successfully",
+            "noEmailAddress": "There is no entered email for this "
         },
         "menu": {
             "noop": "(Select Item)",
@@ -110,10 +111,10 @@
             "btnCancel.text": "Cancel",
             "btnOk.text": "Send Email"
         },
-		"participantsDialog": {
+        "participantsDialog": {
             "titlePart": "Participants for ",
             "title": "Participants"
-		},	
+        },
         "recipientsDialog": {
             "title": "Choose Recipients",
             "search.placeholder": "Search Recipients",
@@ -177,12 +178,14 @@
         "rowCountLabel": "items per page",
         "pagerCountLabel": "{{pageCount}} of {{pageTotal}} items"
     },
-    "common.directive.objectAuthorizationRoles": {
+    "common.directive.objectAuthorization": {
         "choose": "Choose",
         "not_authorized": "Not Authorized",
+        "not_member": "Not Member",
         "tooltip.move_right": "Move Right",
         "tooltip.move_left": "Move Left",
-        "authorized": "Authorized"
+        "authorized": "Authorized",
+        "member": "Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "Error, 2 characters required."
@@ -194,9 +197,9 @@
         "btnCancel.text": "Cancel",
         "edtPlaceholder": "Type in to search",
         "noData.text": "No Results",
-		"pickUserLabel": "Pick Associated User",
+        "pickUserLabel": "Pick Associated User",
         "pickGroupLabel": "Pick Associated Group",
-		"selectedItemsGrid.label": "Selected entries"
+        "selectedItemsGrid.label": "Selected entries"
     },
     "common.directive.search": {
         "showMore.button.text": "Show More Values",
@@ -493,7 +496,7 @@
             "day.label": "Day",
             "week.label": "Week",
             "month.label": "Month",
-			"_1_": "'on.label' appears not in use. _TO_BE_REMOVED_",
+            "_1_": "'on.label' appears not in use. _TO_BE_REMOVED_",
             "_2_": "If needed it, rephrase message to avoid English centric grammar in message",
             "_on.label": "On",
             "day.placeholder": "Day",
@@ -611,7 +614,7 @@
             "error.noAccessCombo": "The combination of No Access and Assignee is not allowed.",
             "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
             "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system.",
-			"error.emptyParticipantLdapId": "Participant name cannot be empty",
+            "error.emptyParticipantLdapId": "Participant name cannot be empty",
             "error.emptyParticipantType": "Participant type cannot be empty",
             "error.ownerUnique": "Only one owner is allowed."
         }

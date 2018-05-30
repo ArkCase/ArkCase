@@ -1,5 +1,32 @@
 package com.armedia.acm.objectdataprocessing;
 
+/*-
+ * #%L
+ * ACM Object Data Processing API
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -16,32 +43,8 @@ import java.util.Set;
 public class PluggableDocumentConverter implements DocumentConverter
 {
 
-    /**
-     * Implementation used for throwing <code>UnconvertableSourceException</code> if there is no converter registered
-     * for the mime type of the source input stream.
-     *
-     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Nov 18, 2016
-     *
-     */
-    private static class NonConverter implements DocumentConverter
-    {
-
-        /*
-         * (non-Javadoc)
-         * @see com.armedia.acm.printdocumentse.PdfConverter#convertToPdf(java.io.InputStream, java.lang.String)
-         */
-        @Override
-        public InputStream convertStream(InputStream sourceInputStream, String mimeType) throws UnconvertableSourceException
-        {
-            throw new UnconvertableSourceException(String.format("No registered converter for mime type %s.", mimeType));
-        }
-
-    }
-
     private static final DocumentConverter NON_CONVERTER = new NonConverter();
-
     private String outputMimeType;
-
     /**
      * Converters registry. Converters are registered with a key that corresponds to the mime type they are capable of
      * converting to PDF.
@@ -109,6 +112,28 @@ public class PluggableDocumentConverter implements DocumentConverter
                 convertеrRegistry.put(mimeType, converter);
             }
         }
+    }
+
+    /**
+     * Implementation used for throwing <code>UnconvertableSourceException</code> if there is no converter registered
+     * for the mime type of the source input stream.
+     *
+     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Nov 18, 2016
+     *
+     */
+    private static class NonConverter implements DocumentConverter
+    {
+
+        /*
+         * (non-Javadoc)
+         * @see com.armedia.acm.printdocumentse.PdfConverter#convertToPdf(java.io.InputStream, java.lang.String)
+         */
+        @Override
+        public InputStream convertStream(InputStream sourceInputStream, String mimeType) throws UnconvertableSourceException
+        {
+            throw new UnconvertableSourceException(String.format("No registered converter for mime type %s.", mimeType));
+        }
+
     }
 
 }

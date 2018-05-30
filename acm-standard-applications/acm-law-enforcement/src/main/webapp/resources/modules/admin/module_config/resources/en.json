@@ -31,12 +31,14 @@
             "addNewDirectory": "Add New Directory",
             "editRecord": "Edit Record",
             "id": "ID",
+            "id.validationMessage": "The ID can only consist of letters, numbers or dots.",
             "directoryType": "Select directory server",
             "ldapUrl": "LDAP Url",
             "base": "Base",
             "directoryName": "Directory Name",
             "authUserDn": "Auth User Dn",
             "authUserPassword": "Auth User Password",
+            "confirmAuthUserPassword": "Confirm Auth User Password",
             "userSearchBase": "Users Search Base",
             "userSearchFilter": "User Search Filter",
             "allUsersFilter": "All Users Filter",
@@ -69,6 +71,7 @@
             "base": "Enter base domain component (e.g. dc=example,dc=com)",
             "authUserDn": "Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
             "authUserPassword": "Enter password for authentication user",
+            "confirmAuthUserPassword": "Confirm password for authentication user",
             "userSearchBase": "Enter users search base (e.g. ou=users)",
             "userSearchFilter": "Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
             "allUsersFilter": "Enter search filter for all users (e.g. (objectClass=person))",
@@ -647,6 +650,7 @@
             },
             "holiday": {
                 "title": "Holiday Schedule",
+                "label": "Include Weekends as Working Days",
                 "grid": {
                     "holidayName": "Name of Holiday",
                     "holidayDate": "Date of holiday"
@@ -865,52 +869,67 @@
                 "wordCount.label": "Word Count",
                 "costPerSecond.label": "Cost Per Second",
                 "confidenceThreshold.label": "Confidence Threshold",
+                "mediaDurationInSeconds.label": "Media duration threshold in seconds",
+                "silenceBetweenWords.label": "Silence between words in seconds",
                 "validation.messages": {
                     "requiredErrorMsg": "This field is required",
                     "maxErrorMsg": "Value must be less than or equal to 100",
                     "minZeroValueErrorMsg": "Value must be greater than or equal to 0",
-                    "minOneValueErrorMsg": "Value must be greater than or equal to 1"
+                    "minOneValueErrorMsg": "Value must be greater than or equal to 1",
+                    "minPositiveValueErrorMsg": "Value must be greater than 0"
                 }
             }
+        },
+        "stateOfArkcase": {
+            "title": "State of Arkcase",
+            "pickDate": "Pick Date",
+            "btn.download": "Download",
+            "datePicker": {
+                "clear": "clear",
+                "current": "Current day",
+                "close": "Close"
+            }
+        },
+        "comp": {
+            "securityLdapConfig": {
+                "title": "Security - Ldap config grid"
+            },
+            "correspondenceManagementMergeFields": {
+                "title": "Correspondence Management Merge Fields grid"
+            },
+            "correspondenceManagementMergeFieldsVersions": {
+                "title": "Correspondence Management Merge Fields version grid"
+            },
+            "correspondenceManagementTemplates": {
+                "title": "Correspondence Management Templates grid"
+            },
+            "correspondenceManagementTemplateVersions": {
+                "title": "Correspondance Management Template Versions grid"
+            },
+            "labelsConfig": {
+                "title": "Application - Labels Config grid"
+            },
+            "plainFormsConfig": {
+                "title": "Forms - Forms Config grid"
+            },
+            "workflowsConfig": {
+                "title": "Workflows - Workflows Config grid"
+            },
+            "workflowsHistoryDialogConfig": {
+                "title": "Workflows - Workflows Config history dialog grid"
+            },
+            "usersPicker": {
+                "title": "Select users"
+            },
+            "orgHierarchy": {
+                "title": "Organization Hierarchy"
+            },
+            "cmisConfiguration": {
+                "title": "CMIS Configuration Grid"
+            },
+            "emailTemplates": {
+                "title": "Email templates"
+            }
         }
-    },
-    "admin.comp.securityLdapConfig": {
-        "title": "Security - Ldap config grid"
-    },
-    "admin.comp.correspondenceManagementMergeFields": {
-        "title": "Correspondence Management Merge Fields grid"
-    },
-    "admin.comp.correspondenceManagementMergeFieldsVersions": {
-        "title": "Correspondence Management Merge Fields version grid"
-    },
-    "admin.comp.correspondenceManagementTemplates": {
-        "title": "Correspondence Management Templates grid"
-    },
-    "admin.comp.correspondenceManagementTemplateVersions": {
-        "title": "Correspondance Management Template Versions grid"
-    },
-    "admin.comp.labelsConfig": {
-        "title": "Application - Labels Config grid"
-    },
-    "admin.comp.plainFormsConfig": {
-        "title": "Forms - Forms Config grid"
-    },
-    "admin.comp.workflowsConfig": {
-        "title": "Workflows - Workflows Config grid"
-    },
-    "admin.comp.workflowsHistoryDialogConfig": {
-        "title": "Workflows - Workflows Config history dialog grid"
-    },
-    "admin.comp.usersPicker": {
-        "title": "Select users"
-    },
-    "admin.comp.orgHierarchy": {
-        "title": "Organization Hierarchy"
-    },
-    "admin.comp.cmisConfiguration": {
-        "title": "CMIS Configuration Grid"
-    },
-    "admin.comp.emailTemplates": {
-        "title": "Email templates"
     }
 }

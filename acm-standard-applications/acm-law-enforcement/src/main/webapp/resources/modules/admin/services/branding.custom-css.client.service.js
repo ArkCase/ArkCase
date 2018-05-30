@@ -16,8 +16,8 @@
  */
 angular.module('admin').service('Admin.BrandingCustomCssService', function($http) {
     return ({
-        getCustomCss : getCustomCss,
-        saveCustomCss : saveCustomCss
+        getCustomCss: getCustomCss,
+        saveCustomCss: saveCustomCss
     });
     /**
      * @ngdoc method
@@ -31,8 +31,8 @@ angular.module('admin').service('Admin.BrandingCustomCssService', function($http
      */
     function getCustomCss() {
         return $http({
-            method : "GET",
-            url : "branding/customcss"
+            method: "GET",
+            url: "branding/customcss"
         });
     }
     ;
@@ -51,11 +51,11 @@ angular.module('admin').service('Admin.BrandingCustomCssService', function($http
      */
     function saveCustomCss(data) {
         return $http({
-            method : "PUT",
-            url : "api/latest/plugin/admin/branding/customcss",
-            data : data,
-            headers : {
-                "Content-Type" : "application/json"
+            method: "PUT",
+            url: "api/latest/plugin/admin/branding/customcss",
+            data: data,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
     }

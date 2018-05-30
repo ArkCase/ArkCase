@@ -1,5 +1,32 @@
 package com.armedia.acm.data.converter;
 
+/*-
+ * #%L
+ * Tool Integrations: Spring Data Source
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
 
@@ -19,13 +46,40 @@ import java.util.Objects;
 @Converter
 public class StringEncryptionConverter implements AttributeConverter<String, byte[]>
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     private static AcmCryptoUtils acmCryptoUtils;
-
     private static Boolean encryptionEnabled;
     private static String encryptionPassphrase;
     private static Boolean databaseEncryptionSupported;
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    public static void setAcmDecryptionProperties(Boolean encryptionEnabled, AcmCryptoUtils acmCryptoUtils, String encryptionPassphrase,
+            Boolean databaseEncryptionSupported)
+    {
+        StringEncryptionConverter.acmCryptoUtils = acmCryptoUtils;
+        StringEncryptionConverter.encryptionPassphrase = encryptionPassphrase;
+        StringEncryptionConverter.encryptionEnabled = encryptionEnabled;
+        StringEncryptionConverter.databaseEncryptionSupported = databaseEncryptionSupported;
+    }
+
+    public static AcmCryptoUtils getAcmCryptoUtils()
+    {
+        return acmCryptoUtils;
+    }
+
+    public static Boolean getEncryptionEnabled()
+    {
+        return encryptionEnabled;
+    }
+
+    public static String getEncryptionPassphrase()
+    {
+        return encryptionPassphrase;
+    }
+
+    public static Boolean getDatabaseEncryptionSupported()
+    {
+        return databaseEncryptionSupported;
+    }
 
     @Override
     public byte[] convertToDatabaseColumn(String attribute)
@@ -72,34 +126,5 @@ public class StringEncryptionConverter implements AttributeConverter<String, byt
             log.error("Error decrypting data.", e);
         }
         return null;
-    }
-
-    public static void setAcmDecryptionProperties(Boolean encryptionEnabled, AcmCryptoUtils acmCryptoUtils, String encryptionPassphrase,
-            Boolean databaseEncryptionSupported)
-    {
-        StringEncryptionConverter.acmCryptoUtils = acmCryptoUtils;
-        StringEncryptionConverter.encryptionPassphrase = encryptionPassphrase;
-        StringEncryptionConverter.encryptionEnabled = encryptionEnabled;
-        StringEncryptionConverter.databaseEncryptionSupported = databaseEncryptionSupported;
-    }
-
-    public static AcmCryptoUtils getAcmCryptoUtils()
-    {
-        return acmCryptoUtils;
-    }
-
-    public static Boolean getEncryptionEnabled()
-    {
-        return encryptionEnabled;
-    }
-
-    public static String getEncryptionPassphrase()
-    {
-        return encryptionPassphrase;
-    }
-
-    public static Boolean getDatabaseEncryptionSupported()
-    {
-        return databaseEncryptionSupported;
     }
 }

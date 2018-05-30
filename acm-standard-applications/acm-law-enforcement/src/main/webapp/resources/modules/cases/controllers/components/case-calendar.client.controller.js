@@ -2,28 +2,19 @@
 
 angular.module('cases').controller(
         'Cases.CalendarController',
-        [
-                '$scope',
-                '$stateParams',
-                'Case.InfoService',
-                'Helper.ObjectBrowserService',
-                'ObjectService',
-                'Admin.CalendarConfigurationService',
-                'MessageService',
-                'Object.CalendarService',
-                function($scope, $stateParams, CaseInfoService, HelperObjectBrowserService, ObjectService, CalendarConfigurationService,
-                        MessageService, CalendarService) {
+        [ '$scope', '$stateParams', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ObjectService', 'Admin.CalendarConfigurationService', 'MessageService', 'Object.CalendarService',
+                function($scope, $stateParams, CaseInfoService, HelperObjectBrowserService, ObjectService, CalendarConfigurationService, MessageService, CalendarService) {
 
                     $scope.objectInfoRetrieved = false;
 
                     new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "cases",
-                        componentId : "calendar",
-                        retrieveObjectInfo : CaseInfoService.getCaseInfo,
-                        validateObjectInfo : CaseInfoService.validateCaseInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "cases",
+                        componentId: "calendar",
+                        retrieveObjectInfo: CaseInfoService.getCaseInfo,
+                        validateObjectInfo: CaseInfoService.validateCaseInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });

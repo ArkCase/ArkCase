@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.task.model;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Tasks
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.data.BuckslipFutureTask;
 
 import java.util.List;
@@ -14,19 +41,14 @@ public class BuckslipProcess
     private String objectType;
     private Long objectId;
 
-    public void setBusinessProcessId(String businessProcessId)
-    {
-        this.businessProcessId = businessProcessId;
-    }
-
     public String getBusinessProcessId()
     {
         return businessProcessId;
     }
 
-    public void setBusinessProcessName(String businessProcessName)
+    public void setBusinessProcessId(String businessProcessId)
     {
-        this.businessProcessName = businessProcessName;
+        this.businessProcessId = businessProcessId;
     }
 
     public String getBusinessProcessName()
@@ -34,9 +56,9 @@ public class BuckslipProcess
         return businessProcessName;
     }
 
-    public void setNonConcurEndsApprovals(Boolean nonConcurEndsApprovals)
+    public void setBusinessProcessName(String businessProcessName)
     {
-        this.nonConcurEndsApprovals = nonConcurEndsApprovals;
+        this.businessProcessName = businessProcessName;
     }
 
     public Boolean getNonConcurEndsApprovals()
@@ -44,9 +66,9 @@ public class BuckslipProcess
         return nonConcurEndsApprovals;
     }
 
-    public void setPastTasks(String pastTasks)
+    public void setNonConcurEndsApprovals(Boolean nonConcurEndsApprovals)
     {
-        this.pastTasks = pastTasks;
+        this.nonConcurEndsApprovals = nonConcurEndsApprovals;
     }
 
     public String getPastTasks()
@@ -54,9 +76,9 @@ public class BuckslipProcess
         return pastTasks;
     }
 
-    public void setFutureTasks(List<BuckslipFutureTask> futureTasks)
+    public void setPastTasks(String pastTasks)
     {
-        this.futureTasks = futureTasks;
+        this.pastTasks = pastTasks;
     }
 
     public List<BuckslipFutureTask> getFutureTasks()
@@ -64,9 +86,9 @@ public class BuckslipProcess
         return futureTasks;
     }
 
-    public void setObjectType(String objectType)
+    public void setFutureTasks(List<BuckslipFutureTask> futureTasks)
     {
-        this.objectType = objectType;
+        this.futureTasks = futureTasks;
     }
 
     public String getObjectType()
@@ -74,13 +96,18 @@ public class BuckslipProcess
         return objectType;
     }
 
-    public void setObjectId(Long objectId)
+    public void setObjectType(String objectType)
     {
-        this.objectId = objectId;
+        this.objectType = objectType;
     }
 
     public Long getObjectId()
     {
         return objectId;
+    }
+
+    public void setObjectId(Long objectId)
+    {
+        this.objectId = objectId;
     }
 }

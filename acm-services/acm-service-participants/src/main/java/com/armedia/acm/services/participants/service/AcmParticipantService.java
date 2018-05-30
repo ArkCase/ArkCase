@@ -1,5 +1,32 @@
 package com.armedia.acm.services.participants.service;
 
+/*-
+ * #%L
+ * ACM Service: Participants
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -24,10 +51,10 @@ import java.util.stream.Collectors;
 public class AcmParticipantService
 {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AcmParticipantDao participantDao;
     private ParticipantsBusinessRule participantsBusinessRule;
     private AcmParticipantEventPublisher acmParticipantEventPublisher;
-
     private Set<Class<?>> assignedObjectClasses;
 
     public void init()
@@ -37,8 +64,6 @@ public class AcmParticipantService
                 .filter(entityType -> AcmAssignedObject.class.isAssignableFrom(entityType.getJavaType()))
                 .map(entityType -> entityType.getJavaType()).collect(Collectors.toSet());
     }
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     public AcmParticipant saveParticipant(String userId, String participantType, Long objectId, String objectType)
             throws AcmAccessControlException

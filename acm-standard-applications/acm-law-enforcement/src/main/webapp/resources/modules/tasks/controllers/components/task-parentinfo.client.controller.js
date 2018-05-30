@@ -2,34 +2,17 @@
 
 angular.module('tasks').controller(
         'Tasks.ParentInfoController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                'UtilService',
-                'ConfigService',
-                'ObjectService',
-                'Case.InfoService',
-                'Complaint.InfoService',
-                'Task.InfoService',
-                'CostTracking.InfoService',
-                'TimeTracking.InfoService',
-                'Object.ModelService',
-                'LookupService',
-                'Helper.ObjectBrowserService',
-                'MessageService',
-                function($scope, $stateParams, $translate, Util, ConfigService, ObjectService, CaseInfoService, ComplaintInfoService,
-                        TaskInfoService, CostTrackingInfoService, TimeTrackingInfoService, ObjectModelService, LookupService,
-                        HelperObjectBrowserService, MessageService) {
+        [ '$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Object.ModelService', 'LookupService', 'Helper.ObjectBrowserService',
+                'MessageService', function($scope, $stateParams, $translate, Util, ConfigService, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService, CostTrackingInfoService, TimeTrackingInfoService, ObjectModelService, LookupService, HelperObjectBrowserService, MessageService) {
 
                     new HelperObjectBrowserService.Component({
-                        moduleId : "tasks",
-                        componentId : "parentinfo",
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        retrieveObjectInfo : TaskInfoService.getTaskInfo,
-                        validateObjectInfo : TaskInfoService.validateTaskInfo,
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        moduleId: "tasks",
+                        componentId: "parentinfo",
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        retrieveObjectInfo: TaskInfoService.getTaskInfo,
+                        validateObjectInfo: TaskInfoService.validateTaskInfo,
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -38,8 +21,8 @@ angular.module('tasks').controller(
                         var options = [];
                         _.each(users, function(user) {
                             options.push({
-                                object_id_s : user.object_id_s,
-                                name : user.name
+                                object_id_s: user.object_id_s,
+                                name: user.name
                             });
                         });
                         $scope.assignableUsers = options;

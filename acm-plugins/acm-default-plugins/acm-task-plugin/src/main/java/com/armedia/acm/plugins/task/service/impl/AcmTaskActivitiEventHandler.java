@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.task.service.impl;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Tasks
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.activiti.AcmTaskActivitiEvent;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -14,10 +41,12 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.SendDocumentsToSolr;
 
+import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +65,7 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
     private TaskToSolrTransformer taskToSolrTransformer;
     private List<String> eventList;
     private Logger log = LoggerFactory.getLogger(getClass());
+    private TaskService taskService;
 
     @Override
     public void onApplicationEvent(AcmTaskActivitiEvent event)
@@ -59,6 +89,18 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
                 {
                     log.error("Failed to create task container folder!", e.getMessage(), e);
                 }
+
+                Task task = (Task) event.getSource();
+
+                String user = SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null
+                        ? SecurityContextHolder.getContext().getAuthentication().getName()
+                        : "";
+
+                log.debug("Setting OWNER=[{}] for Task ID=[{}]", user, task.getId());
+
+                taskService.setOwner(task.getId(), user);
+                acmTask.setOwner(user);
+
             }
             // next if blocks make sure Solr gets the right task status
             else if ("delete".equals(event.getTaskEvent()))
@@ -171,4 +213,13 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
         this.eventList = eventList;
     }
 
+    public TaskService getTaskService()
+    {
+        return taskService;
+    }
+
+    public void setTaskService(TaskService taskService)
+    {
+        this.taskService = taskService;
+    }
 }

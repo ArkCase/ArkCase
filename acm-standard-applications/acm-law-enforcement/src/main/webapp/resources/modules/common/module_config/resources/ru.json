@@ -3,7 +3,7 @@
         "select.option.none": "(Выбрать один)",
         "value.unknown": "Неизвестно",
         "value.none": "Никто",
-		"_1_": "Пожалуйста, не используйте или не добавляйте собственные форматы даты, потому что это ошибка, склонная быть совместимой с i18n.",
+        "_1_": "Пожалуйста, не используйте или не добавляйте собственные форматы даты, потому что это ошибка, склонная быть совместимой с i18n.",
         "_2_": "Пожалуйста, используйте один из предопределенных форматов: ",
         "_3_": "'средний'      - эквивалентно 'MMM д, г ч:мм:сс a' для en_US locale (например, 3 сентября 2010 г. 12:05:08)",
         "_4_": "'короткая'     - эквивалентно 'M/д/гг ч:мм a' для en_US locale (например 9/3/10 12:05)",
@@ -55,7 +55,8 @@
             "defaultBodyLinks": "Следуйте приведенным ниже ссылкам, чтобы просмотреть документы (документы). Срок действия ссылок истекает через 3 дня.",
             "defaultBodyAttachments": "Приложите документы, отправленные вам от ArkCase.",
             "defaultFooter": "Работает на ArkCase, Enterprise Case Management, http://www.arkcase.com",
-            "successMessage": "Письмо было успешно отправлено"
+            "successMessage": "Письмо было успешно отправлено",
+            "noEmailAddress": "ru_There is no entered email for this "
         },
         "menu": {
             "noop": "(Выберите предмет)",
@@ -109,10 +110,10 @@
             "sendWithAttachmentsAndHyperlink.checkbox": "Отправить как вложение и гиперссылку",
             "btnCancel.text": "Отмена",
             "btnOk.text": "Отправить электронное письмо"
-		 },
+        },
         "participantsDialog": {
             "titlePart": "Участники для",
-            "title": "Участники"	
+            "title": "Участники"
         },
         "recipientsDialog": {
             "title": "Выберите Получателей",
@@ -177,12 +178,14 @@
         "rowCountLabel": "Пункты на странице",
         "pagerCountLabel": "{{количествоСтраниц}} из {{ВсегоСтраниц}} пунктов"
     },
-    "common.directive.objectAuthorizationRoles": {
+    "common.directive.objectAuthorization": {
         "choose": "Выберите",
         "not_authorized": "Не авторизовано",
+        "not_member": "ru_Not Member",
         "tooltip.move_right": "Двигаться вправо",
         "tooltip.move_left": "Двигай влево",
-        "authorized": "Уполномоченный"
+        "authorized": "Уполномоченный",
+        "member": "ru_Member"
     },
     "common.directive.objectAuthorizationRolesFilter": {
         "pattern.title": "Ошибка, требуется 2 символа."
@@ -194,9 +197,9 @@
         "btnCancel.text": "Отмена",
         "edtPlaceholder": "Введите поиск",
         "noData.text": "Нет результатов",
-		"pickUserLabel": "Выбрать ассоциированного пользователя",
+        "pickUserLabel": "Выбрать ассоциированного пользователя",
         "pickGroupLabel": "Выбрать ассоциированную группу",
-		"selectedItemsGrid.label": "Выбранные записи"
+        "selectedItemsGrid.label": "Выбранные записи"
     },
     "common.directive.search": {
         "showMore.button.text": "Показать больше значений",
@@ -611,7 +614,7 @@
             "error.noAccessCombo": "Сочетание No Access и Assignee не допускается.",
             "error.duplicateUserOrGroup": "Недействительный участник. Дублированные записи, найденные для участника.",
             "error.userOrGroupNotFound": "Недействительный участник. В системе отсутствует запись участника.",
-			"error.emptyParticipantLdapId": "Имя участника не может быть пустым",
+            "error.emptyParticipantLdapId": "Имя участника не может быть пустым",
             "error.emptyParticipantType": "Тип участника не может быть пустым",
             "error.ownerUnique": "Разрешен только один владелец."
         }

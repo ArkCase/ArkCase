@@ -35,7 +35,7 @@ angular.module('services').factory(
                          * @param {Object} DocTree  DocTree object defined in doc-tree directive
                          *
                          */
-                        getColumnRenderers : function(DocTree) {
+                        getColumnRenderers: function(DocTree) {
                             return [];
                         }
 
@@ -51,43 +51,38 @@ angular.module('services').factory(
                          *
                          */
                         ,
-                        getCommandHandlers : function(DocTree) {
+                        getCommandHandlers: function(DocTree) {
                             return [ {
-                                name : "editWithWebDAV",
-                                execute : function(nodes, args) {
+                                name: "editWithWebDAV",
+                                execute: function(nodes, args) {
                                     var node = nodes[0];
                                     var fileId = node.data.objectId;
                                     var promiseTicket = TicketService.getArkCaseTicket();
                                     promiseTicket.then(function(ticketData) {
                                         var acmTicket = ticketData.data;
-                                        LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                                ObjectService.LockTypes.WORD_EDIT_LOCK, false).then(
-                                                function(lockedFile) {
-                                                    var absUrl = $location.absUrl();
-                                                    var baseHref = $browser.baseHref();
-                                                    var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                                        LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, false)
+                                                .then(
+                                                        function(lockedFile) {
+                                                            var absUrl = $location.absUrl();
+                                                            var baseHref = $browser.baseHref();
+                                                            var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
 
-                                                    ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + acmTicket + "/"
-                                                            + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK
-                                                            + "/" + node.data.objectId + node.data.ext, appUrl + "webdav",
-                                                            protocolInstallMessage);
-                                                    function protocolInstallMessage(message) {
-                                                        var installerFilePath = appUrl + "assets/js/Plugins/"
-                                                                + ITHit.WebDAV.Client.DocManager.GetInstallFileName();
+                                                            ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + acmTicket + "/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WRITE + "/" + node.data.objectId + node.data.ext, appUrl + "webdav",
+                                                                    protocolInstallMessage);
+                                                            function protocolInstallMessage(message) {
+                                                                var installerFilePath = appUrl + "assets/js/Plugins/" + ITHit.WebDAV.Client.DocManager.GetInstallFileName();
 
-                                                        var protocolMessage = "You must install a helper program to edit this file.  "
-                                                                + "Select 'OK' to download the helper program installer; and then install "
-                                                                + "the helper program by running the downloaded installer.  After "
-                                                                + "installing the helper program, edit this file again.";
-                                                        if (confirm(protocolMessage)) {
-                                                            window.open(installerFilePath);
-                                                        }
-                                                    }
+                                                                var protocolMessage = "You must install a helper program to edit this file.  " + "Select 'OK' to download the helper program installer; and then install " + "the helper program by running the downloaded installer.  After "
+                                                                        + "installing the helper program, edit this file again.";
+                                                                if (confirm(protocolMessage)) {
+                                                                    window.open(installerFilePath);
+                                                                }
+                                                            }
 
-                                                    //refreshTree here won't work. It refreshes before the document is opened.
-                                                    //DocTree.refreshTree();
+                                                            //refreshTree here won't work. It refreshes before the document is opened.
+                                                            //DocTree.refreshTree();
 
-                                                })
+                                                        })
                                     });
                                 }
                             } ];
@@ -106,10 +101,10 @@ angular.module('services').factory(
                          *
                          */
                         ,
-                        handleEditWithWebDAV : function(treeControl, scope) {
+                        handleEditWithWebDAV: function(treeControl, scope) {
                             treeControl.addCommandHandler({
-                                name : "editWithWebDAV",
-                                onAllowCmd : function(nodes) {
+                                name: "editWithWebDAV",
+                                onAllowCmd: function(nodes) {
                                     var fileObject = nodes[0].data;
                                     var lock = fileObject.lock;
                                     if (lock) {
@@ -118,7 +113,7 @@ angular.module('services').factory(
                                         var df = $q.defer();
                                         //check permission for lock
                                         PermissionsService.getActionPermission('lock', fileObject, {
-                                            objectType : ObjectService.ObjectTypes.FILE
+                                            objectType: ObjectService.ObjectTypes.FILE
                                         }).then(function success(hasPermission) {
                                             if (hasPermission)
                                                 df.resolve("");

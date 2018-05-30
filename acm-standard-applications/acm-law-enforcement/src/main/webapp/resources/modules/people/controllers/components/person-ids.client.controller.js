@@ -2,23 +2,8 @@
 
 angular.module('people').controller(
         'People.IDsController',
-        [
-                '$scope',
-                '$q',
-                '$stateParams',
-                '$translate',
-                '$modal',
-                'UtilService',
-                'ObjectService',
-                'Person.InfoService',
-                'Authentication',
-                'Helper.UiGridService',
-                'Helper.ObjectBrowserService',
-                'PermissionsService',
-                'Object.LookupService',
-                'Object.ModelService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication,
-                        HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -26,22 +11,22 @@ angular.module('people').controller(
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
-                        scope : $scope,
-                        stateParams : $stateParams,
-                        moduleId : "people",
-                        componentId : "ids",
-                        retrieveObjectInfo : PersonInfoService.getPersonInfo,
-                        validateObjectInfo : PersonInfoService.validatePersonInfo,
-                        onConfigRetrieved : function(componentConfig) {
+                        scope: $scope,
+                        stateParams: $stateParams,
+                        moduleId: "people",
+                        componentId: "ids",
+                        retrieveObjectInfo: PersonInfoService.getPersonInfo,
+                        validateObjectInfo: PersonInfoService.validatePersonInfo,
+                        onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
                         },
-                        onObjectInfoRetrieved : function(objectInfo) {
+                        onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
                     var gridHelper = new HelperUiGridService.Grid({
-                        scope : $scope
+                        scope: $scope
                     });
 
                     var promiseUsers = gridHelper.getUsers();
@@ -49,7 +34,7 @@ angular.module('people').controller(
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {
-                            objectType : ObjectService.ObjectTypes.PERSON
+                            objectType: ObjectService.ObjectTypes.PERSON
                         }).then(function(result) {
                             if (result) {
                                 gridHelper.addButton(config, "edit");
@@ -79,11 +64,11 @@ angular.module('people').controller(
 
                         $scope.identification = identification;
                         var item = {
-                            identificationID : '',
-                            identificationType : '',
-                            identificationNumber : '',
-                            identificationIssuer : '',
-                            identificationYearIssued : ''
+                            identificationID: '',
+                            identificationType: '',
+                            identificationNumber: '',
+                            identificationIssuer: '',
+                            identificationYearIssued: ''
                         };
                         showModal(item, false);
                     };
@@ -91,10 +76,10 @@ angular.module('people').controller(
                     $scope.editRow = function(rowEntity) {
                         $scope.identification = rowEntity;
                         var item = {
-                            identificationID : rowEntity.identificationID,
-                            identificationType : rowEntity.identificationType,
-                            identificationNumber : rowEntity.identificationNumber,
-                            identificationIssuer : rowEntity.identificationIssuer
+                            identificationID: rowEntity.identificationID,
+                            identificationType: rowEntity.identificationType,
+                            identificationNumber: rowEntity.identificationNumber,
+                            identificationIssuer: rowEntity.identificationIssuer
                         };
 
                         if (Util.isEmpty(rowEntity.identificationYearIssued)) {
@@ -122,13 +107,13 @@ angular.module('people').controller(
                         params.isDefault = $scope.isDefault(identification);
 
                         var modalInstance = $modal.open({
-                            animation : true,
-                            templateUrl : 'modules/people/views/components/person-ids-modal.client.view.html',
-                            controller : 'People.IDsModalController',
-                            size : 'md',
-                            backdrop : 'static',
-                            resolve : {
-                                params : function() {
+                            animation: true,
+                            templateUrl: 'modules/people/views/components/person-ids-modal.client.view.html',
+                            controller: 'People.IDsModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
                                     return params;
                                 }
                             }
@@ -139,7 +124,7 @@ angular.module('people').controller(
                                 identification = $scope.identification;
                             else {
                                 identification = _.find($scope.objectInfo.identifications, {
-                                    identificationID : data.identification.identificationID
+                                    identificationID: data.identification.identificationID
                                 });
                             }
 
@@ -177,8 +162,10 @@ angular.module('people').controller(
 
                     $scope.isDefault = function(identification) {
                         var defaultIdentification = $scope.objectInfo.defaultIdentification;
-                        var comparisonProperties = [ "identificationID", "identificationType", "identificationNumber",
-                                "identificationIssuer" ];
+                        if (Util.isEmpty(defaultIdentification)) {
+                            return true;
+                        }
+                        var comparisonProperties = [ "identificationID", "identificationType", "identificationNumber", "identificationIssuer" ];
                         return Util.objectsComparisonByGivenProperties(defaultIdentification, identification, comparisonProperties);
                     }
 
