@@ -54,7 +54,9 @@ angular.module('cases').controller(
                     var retrieveGridData = function() {
                         var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
                         if (Util.goodPositive(currentObjectId, false)) {
-                            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId, Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodValue($scope.sort.by), Util.goodValue($scope.sort.dir)).then(function(data) {
+                            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId,
+                                    Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10),
+                                    Util.goodMapValue($scope.sort, "by"), Util.goodMapValue($scope.sort, "dir")).then(function(data) {
                                 var tasks = data.response.docs;
                                 angular.forEach(tasks, function(task) {
                                     //calculate to show alert icons if task is in overdue or deadline is approaching
