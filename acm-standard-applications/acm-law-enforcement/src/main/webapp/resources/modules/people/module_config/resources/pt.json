@@ -18,7 +18,9 @@
         "email.label": "Correio eletrônico",
         "status.label": "Estado",
         "organization.label": "Organização",
-        "identification.label": "Identificação"
+        "organization.type": "pt_Organization type",
+        "identification.label": "Identificação",
+        "identification.type": "pt_ID type"
     },
     "people.comp.actions": {
         "title": "Estoque",

@@ -107,6 +107,9 @@ angular.module('admin').controller('Admin.LdapConfigController',
             $scope.showModal = showModal;
 
             function showModal(dir, isEdit) {
+                $scope.passwordErrorMessages = {
+                    notSamePasswordsMessage: ''
+                };
                 var modalScope = $scope.$new();
                 modalScope.dir = dir || {};
                 modalScope.isEdit = isEdit || false;

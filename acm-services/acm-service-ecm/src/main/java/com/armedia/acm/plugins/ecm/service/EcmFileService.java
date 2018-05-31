@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.ecm.service;
 
+/*-
+ * #%L
+ * ACM Service: Enterprise Content Management
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -11,7 +38,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
@@ -174,22 +200,33 @@ public interface EcmFileService
             Authentication authentication) throws AcmCreateObjectFailedException;
 
     /**
+     * Returns the file with the given Id and acquires a WRITE lock.
+     * 
+     * @param id
+     *            the file id
+     * @return the file contents as String
+     * 
+     * @throws AcmUserActionFailedException
+     */
+    String checkout(Long id) throws AcmUserActionFailedException;
+
+    /**
      * @param id
      *            - id of EcmFile
      * @return
-     * @throws AcmObjectNotFoundException
+     * @throws AcmUserActionFailedException
      */
-    String download(Long id) throws MuleException;
+    String download(Long id) throws AcmUserActionFailedException;
 
     /**
      * @param id
      *            - id of EcmFile
      * @return InputStream from the CMIS payload
-     * @throws AcmObjectNotFoundException
+     * @throws AcmUserActionFailedException
      * @usage Needed to create attachments for Exchange Web Services (EWS)
      */
 
-    InputStream downloadAsInputStream(Long id) throws MuleException, AcmUserActionFailedException;
+    InputStream downloadAsInputStream(Long id) throws AcmUserActionFailedException;
 
     AcmContainer createContainerFolder(String objectType, Long objectId, String cmisRepositoryId) throws AcmCreateObjectFailedException;
 

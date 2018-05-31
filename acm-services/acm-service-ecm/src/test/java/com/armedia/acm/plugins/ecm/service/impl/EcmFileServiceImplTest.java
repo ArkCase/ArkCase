@@ -1,8 +1,36 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+/*-
+ * #%L
+ * ACM Service: Enterprise Content Management
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
@@ -12,6 +40,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
@@ -22,6 +51,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mule.api.MuleMessage;
 import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import javax.persistence.EntityManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,8 +75,11 @@ public class EcmFileServiceImplTest extends EasyMockSupport
     private CmisConfigUtils mockCmisConfigUtils;
     private Properties ecmFileServiceProperties;
     private EcmFileDao mockEcmFileDao;
+    private EntityManager mockEntityManager;
+    private ApplicationEventPublisher mockApplicationEventPublisher;
     private AcmContainerDao mockContainerDao;
     private EcmFileParticipantService mockFileParticipantService;
+    private Authentication mockAuthentication;
 
     @Before
     public void setUp() throws Exception
@@ -54,8 +91,11 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         mockCmisObject = createMock(CmisObject.class);
         mockCmisConfigUtils = createMock(CmisConfigUtils.class);
         mockEcmFileDao = createMock(EcmFileDao.class);
+        mockEntityManager = createMock(EntityManager.class);
+        mockApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
         mockContainerDao = createMock(AcmContainerDao.class);
         mockFileParticipantService = createMock(EcmFileParticipantService.class);
+        mockAuthentication = createMock(Authentication.class);
 
         ecmFileServiceProperties = new Properties();
         ecmFileServiceProperties.setProperty("ecm.defaultCmisId", defaultCmisId);
@@ -64,8 +104,10 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         unit.setCmisConfigUtils(mockCmisConfigUtils);
         unit.setEcmFileServiceProperties(ecmFileServiceProperties);
         unit.setEcmFileDao(mockEcmFileDao);
+        unit.setApplicationEventPublisher(mockApplicationEventPublisher);
         unit.setContainerFolderDao(mockContainerDao);
         unit.setFileParticipantService(mockFileParticipantService);
+        SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
     }
 
     @Test
@@ -158,9 +200,15 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         in.setContainer(acmContainer);
 
         Capture<EcmFile> saved = Capture.newInstance();
+        Capture<EcmFileUpdatedEvent> capturedEvent = Capture.newInstance();
 
         expect(mockEcmFileDao.find(in.getFileId())).andReturn(in);
+        expect(mockEcmFileDao.getEm()).andReturn(mockEntityManager);
+        mockEntityManager.detach(in);
         expect(mockEcmFileDao.save(capture(saved))).andReturn(in);
+        expect(mockAuthentication.getName()).andReturn("user").anyTimes();
+        expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
+        mockApplicationEventPublisher.publishEvent(capture(capturedEvent));
 
         replayAll();
 
@@ -170,6 +218,11 @@ public class EcmFileServiceImplTest extends EasyMockSupport
 
         assertEquals(in.getFileId(), saved.getValue().getFileId());
         assertEquals(in.getStatus(), saved.getValue().getStatus());
+
+        EcmFileUpdatedEvent event = capturedEvent.getValue();
+        assertEquals(in.getFileId(), event.getObjectId());
+        assertEquals("FILE", event.getObjectType());
+        assertTrue(event.isSucceeded());
     }
 
     @Test(expected = AcmObjectNotFoundException.class)

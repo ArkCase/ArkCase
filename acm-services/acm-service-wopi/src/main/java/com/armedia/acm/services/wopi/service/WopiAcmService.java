@@ -1,14 +1,42 @@
 package com.armedia.acm.services.wopi.service;
 
+/*-
+ * #%L
+ * ACM Service: Wopi service
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+import com.armedia.acm.plugins.ecm.service.lock.FileLockType;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
-import com.armedia.acm.service.objectlock.model.AcmObjectLockConstants;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.wopi.model.WopiFileInfo;
 
@@ -25,6 +53,7 @@ import java.util.Optional;
 public class WopiAcmService
 {
     private EcmFileService ecmFileService;
+    private AcmObjectLockingManager objectLockingManager;
     private AcmObjectLockService objectLockService;
     private EcmFileTransaction fileTransaction;
     private ArkPermissionEvaluator permissionEvaluator;
@@ -67,29 +96,23 @@ public class WopiAcmService
         fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, resource.getInputStream());
     }
 
-    public Long getLock(Long fileId)
+    public Long getSharedLock(Long fileId)
     {
         AcmObjectLock lock = objectLockService.findLock(fileId, "FILE");
-        return lock != null ? lock.getId() : null;
+        return lock != null && lock.getLockType().equals(FileLockType.SHARED_WRITE.name()) ? lock.getId() : null;
     }
 
     public Long lock(Long fileId, Authentication authentication)
     {
-        AcmObjectLock lock = objectLockService.createLock(fileId, "FILE",
-                AcmObjectLockConstants.SHARED_LOCK, authentication);
+        AcmObjectLock lock = objectLockingManager.acquireObjectLock(fileId, "FILE",
+                FileLockType.SHARED_WRITE.name(), null, false, authentication.getName());
         return lock.getId();
-    }
-
-    public Long refreshLock(Long lockKey)
-    {
-        AcmObjectLock lock = objectLockService.findLock(lockKey);
-        return lock != null ? lock.getId() : null;
     }
 
     public Long unlock(Long fileId, Long lockKey, Authentication authentication)
     {
         // should be able to remove lock even if the request did not come from the user who originally created the lock
-        objectLockService.removeLock(fileId, "FILE", AcmObjectLockConstants.SHARED_LOCK, authentication);
+        objectLockingManager.releaseObjectLock(fileId, "FILE", FileLockType.SHARED_WRITE.name(), false, authentication.getName(), lockKey);
         return 0L;
     }
 
@@ -109,9 +132,9 @@ public class WopiAcmService
         this.ecmFileService = ecmFileService;
     }
 
-    public void setObjectLockService(AcmObjectLockService objectLockService)
+    public void setObjectLockingManager(AcmObjectLockingManager objectLockingManager)
     {
-        this.objectLockService = objectLockService;
+        this.objectLockingManager = objectLockingManager;
     }
 
     public void setFileTransaction(EcmFileTransaction fileTransaction)
@@ -122,5 +145,15 @@ public class WopiAcmService
     public void setPermissionEvaluator(ArkPermissionEvaluator permissionEvaluator)
     {
         this.permissionEvaluator = permissionEvaluator;
+    }
+
+    public AcmObjectLockService getObjectLockService()
+    {
+        return objectLockService;
+    }
+
+    public void setObjectLockService(AcmObjectLockService objectLockService)
+    {
+        this.objectLockService = objectLockService;
     }
 }

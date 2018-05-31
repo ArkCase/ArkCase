@@ -347,7 +347,14 @@
             "approvers": {
                 "title": "утверждающих",
                 "description": "Отображает утверждающих",
-                "noDataMessage": "В настоящее время нет утверждающих для отображения"	
+                "noDataMessage": "В настоящее время нет утверждающих для отображения"
+            },
+            "savePromptModal": {
+                "title": "ru_Save dashboard",
+                "info": "ru_You are in edit mode. Do you want to save the changes?",
+                "save": "ru_Save",
+                "doNotSave": "ru_Do not save",
+                "cancel": "ru_Cancel"
             }
         }
     },

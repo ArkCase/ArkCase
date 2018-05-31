@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.documentrepository.web;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Document Repository
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -16,15 +43,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionException;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.Objects;
@@ -39,6 +62,7 @@ public class DocumentRepositoryAPIController
     private DocumentRepositoryEventPublisher documentRepositoryEventPublisher;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public DocumentRepository saveDocumentRepository(@RequestBody DocumentRepository in, Authentication auth)
             throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg
@@ -68,6 +92,7 @@ public class DocumentRepositoryAPIController
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @DecoratedAssignedObjectParticipants
+    @PreAuthorize("hasPermission(#id, 'DOC_REPO', 'getDocumentRepository')")
     @ResponseBody
     public DocumentRepository findById(@PathVariable(value = "id") Long id) throws AcmObjectNotFoundException
     {

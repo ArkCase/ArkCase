@@ -7,6 +7,7 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="fileTransaction" ref="ecmFileTransaction"/>
         <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
+        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
         <property name="objectLockService" ref="objectLockService"/>
     </bean>
 
