@@ -109,15 +109,6 @@ public class WopiFilesApiController
     }
 
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
-    @RequestMapping(value = "/{id}/lock/{lockId}", method = RequestMethod.PUT)
-    @ResponseBody
-    public ResponseEntity<Long> refreshLock(@PathVariable Long id, @PathVariable Long lockId, Authentication authentication)
-    {
-        log.info("Refresh lock for file [{}] per user [{}]", id, authentication.getName());
-        return new ResponseEntity<>(wopiService.refreshLock(lockId), HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{id}/lock/{lockId}", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity<Long> unlock(@PathVariable Long id, @PathVariable Long lockId, Authentication authentication)
