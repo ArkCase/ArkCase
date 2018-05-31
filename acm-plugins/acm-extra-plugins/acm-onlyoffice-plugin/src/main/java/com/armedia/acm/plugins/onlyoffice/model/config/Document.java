@@ -1,5 +1,8 @@
 package com.armedia.acm.plugins.onlyoffice.model.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Document
 {
     /**

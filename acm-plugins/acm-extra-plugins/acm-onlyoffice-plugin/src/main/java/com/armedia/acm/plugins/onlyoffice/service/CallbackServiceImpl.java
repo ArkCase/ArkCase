@@ -86,6 +86,7 @@ public class CallbackServiceImpl implements CallbackService
         try
         {
             URL url = new URL(callBackData.getUrl());
+
             java.net.HttpURLConnection connection = (java.net.HttpURLConnection) url.openConnection();
             if (connection.getResponseCode() == 200)
             {
@@ -93,7 +94,9 @@ public class CallbackServiceImpl implements CallbackService
                 String key = callBackData.getKey();
                 Long fileId = Long.parseLong(key.substring(0, key.indexOf("-")));
                 EcmFile ecmFile = ecmFileDao.find(fileId);
+
                 ecmFileService.update(ecmFile, stream, authentication);
+                stream.close();
                 logger.debug("Document with key [{}] successfully saved to Arkcase.", key);
                 // TODO release lock
             }
@@ -123,6 +126,11 @@ public class CallbackServiceImpl implements CallbackService
     {
         logger.error("Document with wrong id[{}] provided, editing is not possible.", callBackData.getKey());
         return new CallbackResponse(1);
+    }
+
+    private byte[] extractMd5Digest(String queryUrl)
+    {
+        return null;
     }
 
     public void setEcmFileDao(EcmFileDao ecmFileDao)
