@@ -1,5 +1,32 @@
 package com.armedia.acm.activiti.services;
 
+/*-
+ * #%L
+ * Tool Integrations: Activiti Configuration
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -220,17 +247,20 @@ public class AcmBpmnServiceIT
         filesToDelete.add(apd.getFileName());
         deploymentsIdToDelete.add(apd.getDeploymentId());
         log.info("AcmProcessDefinition deployed: " + apd);
+        List<AcmProcessDefinition> acmProcessDefinitionList = acmBpmnService.getVersionHistory(apd);
+        int countBefore = acmProcessDefinitionList.size();
+
         File f1 = new File(getClass().getResource("/activiti/TestActivitiSpringProcessChanged.bpmn20.xml").toURI());
         AcmProcessDefinition apd1 = acmBpmnService.deploy(f1, "", false, false);
         deploymentsIdToDelete.add(apd1.getDeploymentId());
         filesToDelete.add(apd1.getFileName());
         log.info("AcmProcessDefinition deployed: " + apd1);
 
-        List<AcmProcessDefinition> acmProcessDefinitionList = acmBpmnService.getVersionHistory(apd1);
+        acmProcessDefinitionList = acmBpmnService.getVersionHistory(apd1);
 
-        // getVersionHistory should return all OTHER versions, aside from the version of the one that we sent to it.
-        // so since we now have two versions, and we exclude one of them, the result should have only one entry.
-        assertEquals(1, acmProcessDefinitionList.size());
+        int countAfter = acmProcessDefinitionList.size();
+
+        assertEquals(1, countAfter - countBefore);
         assertNotEquals(apd1.getVersion(), acmProcessDefinitionList.get(0).getVersion());
 
         acmBpmnService.remove(apd, true);

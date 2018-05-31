@@ -166,6 +166,9 @@ angular.module('organizations').controller(
 
                     $scope.isDefault = function(dba) {
                         var defaultDBA = $scope.objectInfo.defaultDBA;
+                        if (Util.isEmpty(defaultDBA)) {
+                            return true;
+                        }
                         var comparisonProperties = [ "id", "type", "value", "description" ];
                         return Util.objectsComparisonByGivenProperties(defaultDBA, dba, comparisonProperties);
                     }

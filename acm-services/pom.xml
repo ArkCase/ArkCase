@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.2.10-SNAPSHOT</version>
+        <version>3.2.11-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -60,6 +60,9 @@
         <module>acm-service-ldap-syncer</module>
         <module>acm-service-alfresco-ldap-syncer</module>
         <module>acm-service-transcribe</module>
+        <module>acm-service-state-of-arkcase</module>
+        <module>acm-service-arkcase-identifier</module>
+        <module>acm-service-convert-folder</module>
     </modules>
 
 </project>

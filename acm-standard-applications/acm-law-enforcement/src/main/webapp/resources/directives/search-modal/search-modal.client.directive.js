@@ -33,7 +33,7 @@
  * If response contains only 1 item, then display it.
  **/
 
-angular.module('directives').directive('searchModal', [ '$q', '$translate', 'UtilService', 'SearchService', 'Search.QueryBuilderService', '$injector', function($q, $translate, Util, SearchService, SearchQueryBuilder, $injector) {
+angular.module('directives').directive('searchModal', [ '$q', '$translate', 'UtilService', 'SearchService', 'Search.QueryBuilderService', '$injector', 'Person.InfoService', function($q, $translate, Util, SearchService, SearchQueryBuilder, $injector, PersonInfoService) {
     return {
         restrict: 'E', //match only element name
         scope: {
@@ -63,7 +63,7 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
             secondGrid: '@',
             pickUserLabel: '@',
             pickGroupLabel: '@',
-            showSelectedItemsGrid: '@?'
+            showSelectedItemsGrid: '=?'
         },
 
         link: function(scope, el, attrs) {
@@ -146,7 +146,16 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
 
             function successSearchResult(data) {
                 updateFacets(data.facet_counts.facet_fields);
-                scope.gridOptionsMaster.data = data.response.docs;
+
+                var searchResults = data.response.docs;
+
+                //person has a different structure than user, in it 'email_lcs' property does not exists
+                //because this property is needed on more locations,
+                //here is a check if person is searched to add the email of the person in the 'email_lcs' property
+                checkForPersonInTheSearchResult(searchResults);
+
+                scope.gridOptionsMaster.data = searchResults;
+
                 if (scope.secondGrid) {
                     scope.gridOptionsDetail.data = [];
                     scope.gridOptionsDetail.totalItems = 0;
@@ -157,6 +166,39 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
                     scope.showNoDataResult = false;
                 }
                 scope.gridOptionsMaster.totalItems = data.response.numFound;
+            }
+
+            function checkForPersonInTheSearchResult(searchResults) {
+                var people = [];
+                var i;
+                for (i in searchResults) {
+                    if (searchResults[i].object_type_s.toUpperCase() == "PERSON") {
+                        people.push(searchResults[i]);
+                    }
+                }
+
+                if (!Util.isArrayEmpty(people)) {
+                    var promises = [];
+                    _.forEach(people, function(person) {
+                        promises.push(PersonInfoService.getPersonInfo(person.object_id_s).then(function(personInfo) {
+                            return personInfo;
+                        }));
+                    });
+
+                    $q.all(promises).then(function(personInfo) {
+                        for (var i = 0; i < people.length; i++) {
+                            var contactMethods = personInfo[i].contactMethods;
+                            if (!Util.isArrayEmpty(contactMethods)) {
+                                var j;
+                                for (j in contactMethods) {
+                                    if (contactMethods[j].type == "email") {
+                                        people[i].email_lcs = contactMethods[j].value;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
             }
 
             scope.setSecondGridData = function() {

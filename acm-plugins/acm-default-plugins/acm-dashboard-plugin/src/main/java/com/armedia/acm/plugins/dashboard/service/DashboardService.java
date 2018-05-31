@@ -1,9 +1,37 @@
 package com.armedia.acm.plugins.dashboard.service;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Dashboard
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
+import com.armedia.acm.plugins.dashboard.exception.AcmWidgetException;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
@@ -25,6 +53,7 @@ import org.springframework.security.core.Authentication;
 import javax.servlet.http.HttpSession;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -269,6 +298,63 @@ public class DashboardService
             stringBuffer.append(" ");
         }
         return stringBuffer.toString();
+    }
+
+    public List<WidgetRoleName> getRolesByWidgetPaged(String widgetName, String sortBy, String sortDirection, Integer startRow,
+            Integer maxRows,
+            Boolean authorized, List<RolesGroupByWidgetDto> rolesGroupsPerWidget) throws AcmWidgetException
+    {
+        return getRolesGroupsPaged(rolesGroupsPerWidget, widgetName, sortBy, sortDirection, startRow, maxRows, authorized, "");
+    }
+
+    public List<WidgetRoleName> getRolesByWidget(String widgetName, String sortBy, String sortDirection, Integer startRow,
+            Integer maxRows, String filterName, Boolean authorized, List<RolesGroupByWidgetDto> rolesGroupsPerWidget)
+            throws AcmWidgetException
+    {
+        return getRolesGroupsPaged(rolesGroupsPerWidget, widgetName, sortBy, sortDirection, startRow, maxRows, authorized, filterName);
+    }
+
+    public List<WidgetRoleName> getRolesGroupsPaged(List<RolesGroupByWidgetDto> rolesGroupsPerWidget, String widgetName,
+            String sortBy,
+            String sortDirection, Integer startRow, Integer maxRows, Boolean authorized, String filterName) throws AcmWidgetException
+    {
+        List<RolesGroupByWidgetDto> rolesGroupsByWidgetDto = addNotAuthorizedRolesPerWidget(rolesGroupsPerWidget);
+        RolesGroupByWidgetDto roleGroupByWidgetDto = rolesGroupsByWidgetDto.stream()
+                .filter(roleGroup -> roleGroup.getWidgetName().equalsIgnoreCase(widgetName)).findFirst()
+                .orElseThrow(() -> new AcmWidgetException("There are no roles/groups for the widget " + widgetName));
+
+        List<WidgetRoleName> result = null;
+
+        if (authorized)
+        {
+            result = new ArrayList<>(roleGroupByWidgetDto.getWidgetAuthorizedRoles());
+        }
+        else
+        {
+            result = new ArrayList<>(roleGroupByWidgetDto.getWidgetNotAuthorizedRoles());
+        }
+
+        if (sortDirection.contains("DESC"))
+        {
+            Collections.sort(result, Collections.reverseOrder());
+        }
+        else
+        {
+            Collections.sort(result);
+        }
+
+        if (startRow > result.size())
+        {
+            return result;
+        }
+        maxRows = maxRows > result.size() ? result.size() : maxRows;
+
+        if (!filterName.isEmpty())
+        {
+            result.removeIf(widgetRoleName -> !(widgetRoleName.getName().toLowerCase().contains(filterName.toLowerCase())));
+        }
+
+        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
     public AcmPlugin getDashboardPlugin()

@@ -6,6 +6,7 @@
         <property name="specificConfigFiles">
             <list>
                 <value>/flows/savePersonFlow.xml</value>
+                <value>/flows/personTestFlow.xml</value>
             </list>
         </property>
     </bean>
