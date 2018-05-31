@@ -5,7 +5,6 @@ import com.armedia.acm.plugins.onlyoffice.model.CallBackData;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
 import com.armedia.acm.plugins.onlyoffice.service.CallbackService;
 import com.armedia.acm.plugins.onlyoffice.service.ConfigService;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
@@ -27,7 +26,7 @@ public class OnlyOfficeController
     private ConfigService configService;
     private CallbackService callbackService;
 
-    @RequestMapping(value = "/editor")
+    @RequestMapping(value = "/editor", method = RequestMethod.GET)
     public ModelAndView editor(
             @RequestParam(name = "file") Long fileId,
             Authentication auth)
@@ -37,7 +36,7 @@ public class OnlyOfficeController
             ModelAndView mav = new ModelAndView("onlyoffice/editor");
             // FIXME use already defined bean object mappper instead of creating new
             ObjectMapper om = new ObjectMapper();
-            om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
             mav.addObject("config", om.writeValueAsString(configService.getConfig(fileId, auth)));
             mav.addObject("docserviceApiUrl", ConfigManager.getProperty("files.docservice.url.api"));
             return mav;

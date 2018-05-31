@@ -101,11 +101,14 @@ public class ConfigServiceImpl implements ConfigService
             editorConfig.setCustomization(new EditorCustomization());
         }
         EditorCustomization customization = editorConfig.getCustomization();
+        customization.setChat(true);
+        customization.setAutosave(true);
+        customization.setComments(true);
+        customization.setShowReviewChanges(true);
         GoBack goBack = new GoBack();
         goBack.setUrl(arkcaseBaseUrl);
         goBack.setBlank(true);
-        customization.setGoback(goBack);
-
+        // customization.setGoback(goBack);
     }
 
     public void setUserDao(UserDao userDao)

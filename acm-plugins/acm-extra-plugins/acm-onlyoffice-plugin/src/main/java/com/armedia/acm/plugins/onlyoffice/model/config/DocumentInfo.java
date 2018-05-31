@@ -1,11 +1,14 @@
 package com.armedia.acm.plugins.onlyoffice.model.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 
 /**
  * The document info section allows to change additional parameters for the document (document author, folder where the
  * document is stored, creation date, sharing settings).
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class DocumentInfo
 {
     /**

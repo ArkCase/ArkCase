@@ -1,8 +1,11 @@
 package com.armedia.acm.plugins.onlyoffice.model.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * Defines the presence or absence of the documents in the Open Recent...
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Recent
 {
     /**
