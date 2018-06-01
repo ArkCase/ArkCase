@@ -66,9 +66,7 @@ public class CreateComplaintAPIController
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @DecoratedAssignedObjectParticipants
     @ResponseBody
-    public Complaint createComplaint(
-            @RequestBody Complaint in,
-            Authentication auth) throws AcmCreateObjectFailedException
+    public Complaint createComplaint(@RequestBody Complaint in, Authentication auth) throws AcmCreateObjectFailedException
     {
         log.trace("Got a complaint: {}; complaint ID: '{}'", in, in.getComplaintId());
         log.trace("complaint type: {}", in.getComplaintType());
