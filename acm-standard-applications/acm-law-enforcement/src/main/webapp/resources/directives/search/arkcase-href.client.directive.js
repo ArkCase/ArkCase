@@ -96,7 +96,7 @@ angular.module('directives').directive('arkcaseHref', [ 'UtilService', 'ObjectSe
                             objectUrl = foundObjectType[objectUrlKey];
                             objectUrl = replacePathVariables(pathVariables, objectUrl);
                         }
-                        if (!Util.isEmpty(foundObjectType.target)) {
+                        if (!Util.isEmpty(foundObjectType) && !Util.isEmpty(foundObjectType.target)) {
                             element.attr('target', foundObjectType.target);
                         }
                         element.attr('href', objectUrl);
