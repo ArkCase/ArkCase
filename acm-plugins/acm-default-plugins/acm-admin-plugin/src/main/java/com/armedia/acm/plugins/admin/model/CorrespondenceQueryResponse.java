@@ -112,7 +112,7 @@ public class CorrespondenceQueryResponse
      * @param sqlQuery
      *            the sqlQuery to set
      */
-    public void seSqlQuery(String sqlQuery)
+    public void setSqlQuery(String sqlQuery)
     {
         this.sqlQuery = sqlQuery;
     }
