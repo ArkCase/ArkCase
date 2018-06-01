@@ -29,6 +29,7 @@ package com.armedia.acm.audit.service.systemlogger;
 
 import com.armedia.acm.core.AcmApplication;
 
+import org.apache.commons.io.Charsets;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -39,7 +40,6 @@ import org.apache.logging.log4j.core.config.DefaultConfiguration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.Rfc5424Layout;
 import org.apache.logging.log4j.core.net.Facility;
-import org.apache.logging.log4j.core.util.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
