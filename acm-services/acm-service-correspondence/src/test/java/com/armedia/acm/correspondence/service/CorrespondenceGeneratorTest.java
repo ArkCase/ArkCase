@@ -118,7 +118,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         String doctype = "doctype";
         String templateName = "templateName";
-        String jpaQuery = "jpaQuery";
+        String sqlQuery = "sqlQuery";
         String dateFormat = "MM/dd/YYYY";
         String numberFormat = "#,###";
 
@@ -141,7 +141,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         substitutionVars.put(key4, var4);
 
         correspondenceQuery = new CorrespondenceQuery();
-        correspondenceQuery.setJpaQuery(jpaQuery);
+        correspondenceQuery.setSqlQuery(sqlQuery);
         correspondenceQuery.setFieldNames(fieldNames);
         correspondenceQuery.setType(QueryType.CASE_FILE);
 
@@ -221,7 +221,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         expect(mockSpringContextHolder.getAllBeansOfType(CorrespondenceQuery.class)).andReturn(correspondenceQueryBeansMap);
         correspondenceQueryBeansMap.values().stream()
                 .filter(cQuery -> cQuery.getType().toString().equals(correspondenceTemplate.getObjectType())).findFirst().get();
-        expect(mockEntityManager.createQuery(correspondenceQuery.getJpaQuery())).andReturn(mockQuery);
+        expect(mockEntityManager.createNativeQuery(correspondenceQuery.getSqlQuery())).andReturn(mockQuery);
         expect(mockQuery.setParameter(1, queryArgs[0])).andReturn(mockQuery);
         expect(mockQuery.getResultList()).andReturn(results);
 

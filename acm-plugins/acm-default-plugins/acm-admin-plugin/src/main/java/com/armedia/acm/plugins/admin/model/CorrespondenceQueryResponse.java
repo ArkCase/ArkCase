@@ -47,7 +47,7 @@ public class CorrespondenceQueryResponse
 
     private QueryType queryType;
 
-    private String jpaQuery;
+    private String sqlQuery;
 
     private List<String> fieldNames;
 
@@ -62,7 +62,7 @@ public class CorrespondenceQueryResponse
     {
         this.beanId = beanId;
         queryType = queryBean.getType();
-        jpaQuery = queryBean.getJpaQuery();
+        sqlQuery = queryBean.getSqlQuery();
         fieldNames = queryBean.getFieldNames();
     }
 
@@ -101,20 +101,20 @@ public class CorrespondenceQueryResponse
     }
 
     /**
-     * @return the jpaQuery
+     * @return the sqlQuery
      */
-    public String getJpaQuery()
+    public String getSqlQuery()
     {
-        return jpaQuery;
+        return sqlQuery;
     }
 
     /**
-     * @param jpaQuery
-     *            the jpaQuery to set
+     * @param sqlQuery
+     *            the sqlQuery to set
      */
-    public void setJpaQuery(String jpaQuery)
+    public void seSqlQuery(String sqlQuery)
     {
-        this.jpaQuery = jpaQuery;
+        this.sqlQuery = sqlQuery;
     }
 
     /**
