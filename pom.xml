@@ -122,6 +122,8 @@
         <xmlgraphics.version>2.0.1</xmlgraphics.version>
         <xmlunit.version>2.5.1</xmlunit.version>
         <zt-exec.version>1.8</zt-exec.version>
+        <docx4j.core>3.3.7</docx4j.core>
+        <docx4j.export.fo>3.3.6</docx4j.export.fo>
     </properties>
 
     <organization>
@@ -1381,6 +1383,20 @@
                 <groupId>com.github.jai-imageio</groupId>
                 <artifactId>jai-imageio-core</artifactId>
                 <version>${jai-imageio-core.version}</version>
+            </dependency>
+
+            <!-- Transforming .docx files to PDF -->
+
+            <dependency>
+                <groupId>org.docx4j</groupId>
+                <artifactId>docx4j</artifactId>
+                <version>${docx4j.core}</version>
+            </dependency>
+    
+            <dependency>
+                <groupId>org.docx4j</groupId>
+                <artifactId>docx4j-export-fo</artifactId>
+                <version>${docx4j.export.fo}</version>
             </dependency>
 
             <!-- testing -->

@@ -30,6 +30,7 @@ package com.armedia.acm.services.dataupdate.executors;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertTrue;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.documentrepository.dao.DocumentRepositoryDao;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.services.dataupdate.service.DocumentRepositoryParticipantTypesUpdateExecutor;
@@ -42,19 +43,23 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMockSupport
 {
 
     DocumentRepositoryDao documentDao;
     DocumentRepositoryParticipantTypesUpdateExecutor executor;
+    AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Before
     public void setUp() throws Exception
     {
         executor = new DocumentRepositoryParticipantTypesUpdateExecutor();
         documentDao = createMock(DocumentRepositoryDao.class);
+        auditPropertyEntityAdapter = new AuditPropertyEntityAdapter();
         executor.setDocumentDao(documentDao);
+        executor.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
 
     }
 
@@ -99,7 +104,8 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
                     }
                     case "theCoOwner":
                     {
-                        assertTrue(participant.getParticipantType().equals("owner"));
+                        assertTrue(participant.getParticipantType().equals("owner")
+                                || participant.getParticipantType().equals("collaborator"));
                         break;
                     }
                     case "theAssignee":
@@ -110,12 +116,14 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
                         }
                         else
                         {
-                            assertTrue(participant.getParticipantType().equals("reader"));
+                            assertTrue(participant.getParticipantType().equals("collaborator"));
                         }
                         break;
                     }
                     }
                 }
+                assertTrue(list.get(0).getParticipants().stream().filter(p -> p.getParticipantType().equals("owner"))
+                        .collect(Collectors.toList()).size() <= 1);
                 return null;
             }
         });
@@ -190,6 +198,8 @@ public class DocumentRepositoryParticipantTypesUpdateExecutorTest extends EasyMo
         {
         case 1:
         {
+            list.add(getParticipant("theCreator", "assignee"));
+            list.add(getParticipant("theReader", "assignee"));
             list.add(getParticipant("theReader", "reader"));
             list.add(getParticipant("theReader", "assignee"));
             list.add(getParticipant("theCoOwner", "co-owner"));

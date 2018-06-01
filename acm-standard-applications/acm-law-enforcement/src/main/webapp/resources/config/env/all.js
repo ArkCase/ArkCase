@@ -32,7 +32,8 @@ module.exports = {
                     'lib/angular-dashboard-framework/dist/angular-dashboard-framework.min.css', 'lib/summernote/dist/summernote.css',
                     'lib/angular-notify/dist/angular-notify.css', 'lib/handsontable/dist/handsontable.full.css',
                     'lib/ng-tags-input/ng-tags-input.css', 'lib/fullcalendar/dist/fullcalendar.css',
-                    'lib/angular-chart.js/dist/angular-chart.css' ],
+                    'lib/angular-chart.js/dist/angular-chart.css',
+                    'lib/pdf.js-viewer/viewer.css'],
             customJs : [ 'https://project.armedia.com/jira/s/272b7e5d0b48558abb6f76f2cc38fb4c-T/en_US-f0xdna/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=2b76dcde' ],
             js : [ 'lib/jquery/dist/jquery.min.js', 'lib/jquery-ui/jquery-ui.min.js', 'lib/bootstrap/dist/js/bootstrap.min.js',
                     'lib/lodash/lodash.min.js', 'lib/moment/min/moment.min.js', 'lib/multi-download/browser.js',
@@ -63,7 +64,9 @@ module.exports = {
                     'lib/videogular-overlay-play/vg-overlay-play.js', 'lib/videogular-poster/vg-poster.js',
                     'lib/videogular-buffering/vg-buffering.js', 'lib/angular-utf8-base64/angular-utf8-base64.js',
                     'lib/ui-grid-draggable-rows/js/draggable-rows.js', 'lib/angular-cache/dist/angular-cache.min.js',
-                    'lib/angular-file-saver/dist/angular-file-saver.bundle.js' ]
+                    'lib/angular-file-saver/dist/angular-file-saver.bundle.js',
+                    'lib/pdf.js-viewer/pdf.js',
+                    'lib/angular-pdfjs-viewer/dist/angular-pdfjs-viewer.js']
         },
         css : [ 'assets/css/application.css', 'modules/**/css/*.css', 'custom_modules/**/css/*.css', 'assets/css/arkcase-extension.css',
                 'custom_assets/css/arkcase-extension.css' ],

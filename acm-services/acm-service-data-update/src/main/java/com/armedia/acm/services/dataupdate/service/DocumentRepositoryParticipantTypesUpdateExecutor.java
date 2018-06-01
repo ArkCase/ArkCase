@@ -27,19 +27,24 @@ package com.armedia.acm.services.dataupdate.service;
  * #L%
  */
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.documentrepository.dao.DocumentRepositoryDao;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.web.api.MDCConstants;
 
+import org.slf4j.MDC;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmDataUpdateExecutor
 {
     private DocumentRepositoryDao documentDao;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Override
     public String getUpdateId()
@@ -51,10 +56,18 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void execute()
     {
+
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, "DATA_UPDATE");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY, "localhost");
+        auditPropertyEntityAdapter.setUserId(AcmDataUpdateService.DATA_UPDATE_MODIFIER);
+
         List<DocumentRepository> documentRepositoryList = documentDao.findAll();
 
         for (DocumentRepository repository : documentRepositoryList)
         {
+            Boolean shouldUpdate = false;
             List<AcmParticipant> newParticipants = new ArrayList<>();
             List<AcmParticipant> participants = repository.getParticipants();
             for (AcmParticipant participant : participants)
@@ -64,19 +77,27 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
                 {
                 case "assignee":
                 {
-                    if (repository.getCreator().equals(participant.getParticipantLdapId()))
+                    if (repository.getCreator().equals(participant.getParticipantLdapId())
+                            && !newParticipants.stream().anyMatch(p -> p.getParticipantType().equals("owner")))
                     {
 
                         mapedParticipantType = "owner";
                     }
                     else
                     {
-                        mapedParticipantType = "reader";
+                        mapedParticipantType = "collaborator";
                     }
                     break;
                 }
                 case "co-owner":
-                    mapedParticipantType = "owner";
+                    if (newParticipants.stream().anyMatch(p -> p.getParticipantType().equals("owner")))
+                    {
+                        mapedParticipantType = "collaborator";
+                    }
+                    else
+                    {
+                        mapedParticipantType = "owner";
+                    }
                     break;
 
                 case "supervisor":
@@ -94,13 +115,14 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
                 if (!mapedParticipantType.equals(participant.getParticipantType()))
                 {
                     String finalMapedParticipantType = mapedParticipantType;
-                    boolean present = participants.stream().anyMatch(p -> p.getParticipantType().equals(finalMapedParticipantType)
+                    boolean present = newParticipants.stream().anyMatch(p -> p.getParticipantType().equals(finalMapedParticipantType)
                             && p.getParticipantLdapId().equals(participant.getParticipantLdapId()));
                     if (!present)
                     {
                         participant.setParticipantType(mapedParticipantType);
                         newParticipants.add(participant);
                     }
+                    shouldUpdate = true;
                 }
                 else
                 {
@@ -109,8 +131,11 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
 
             }
 
-            repository.setParticipants(newParticipants);
-            documentDao.save(repository);
+            if (shouldUpdate)
+            {
+                repository.setParticipants(newParticipants);
+                documentDao.save(repository);
+            }
         }
     }
 
@@ -122,5 +147,15 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
     public void setDocumentDao(DocumentRepositoryDao documentDao)
     {
         this.documentDao = documentDao;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }

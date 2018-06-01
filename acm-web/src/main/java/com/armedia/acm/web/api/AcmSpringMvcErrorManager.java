@@ -32,6 +32,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
+import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.core.exceptions.AcmParticipantsException;
@@ -158,6 +159,13 @@ public class AcmSpringMvcErrorManager
     {
         log.error("Invalid lookup: " + e.getMessage(), e);
         sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
+    }
+
+    @ExceptionHandler(AcmObjectLockException.class)
+    public void handleException(HttpServletResponse response, AcmObjectLockException e)
+    {
+        log.error("AcmObjectLockException occured: " + e.getMessage(), e);
+        sendResponse(HttpStatus.CONFLICT, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmAppErrorJsonMsg.class)
