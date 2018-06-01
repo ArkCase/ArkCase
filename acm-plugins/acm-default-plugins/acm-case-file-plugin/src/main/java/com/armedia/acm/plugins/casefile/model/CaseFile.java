@@ -44,7 +44,6 @@ import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
-import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -268,11 +267,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
 
     @Column(name = "cm_legacy_system_id")
     private String legacySystemId;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({ @JoinColumn(name = "cm_parent_object_id", referencedColumnName = "cm_case_id"),
-            @JoinColumn(name = "cm_parent_object_type", referencedColumnName = "cm_object_type") })
-    private List<Note> notes = new ArrayList<>();
 
     @PrePersist
     protected void beforeInsert()
@@ -869,24 +863,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
     {
         this.organizationAssociations = organizationAssociations;
-    }
-
-    /**
-     * @return the notes
-     */
-    @JsonIgnore
-    public List<Note> getNotes()
-    {
-        return notes;
-    }
-
-    /**
-     * @param notes
-     *            the notes to set
-     */
-    public void setNotes(List<Note> notes)
-    {
-        this.notes = notes;
     }
 
 }
