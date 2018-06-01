@@ -37,7 +37,7 @@ public class CorrespondenceQuery
 {
     private QueryType type;
 
-    private String jpaQuery;
+    private String sqlQuery;
 
     private List<String> fieldNames = new ArrayList<>();
 
@@ -58,14 +58,14 @@ public class CorrespondenceQuery
         this.type = type;
     }
 
-    public String getJpaQuery()
+    public String getSqlQuery()
     {
-        return jpaQuery;
+        return sqlQuery;
     }
 
-    public void setJpaQuery(String jpaQuery)
+    public void setSqlQuery(String sqlQuery)
     {
-        this.jpaQuery = jpaQuery;
+        this.sqlQuery = sqlQuery;
     }
 
     public List<String> getFieldNames()

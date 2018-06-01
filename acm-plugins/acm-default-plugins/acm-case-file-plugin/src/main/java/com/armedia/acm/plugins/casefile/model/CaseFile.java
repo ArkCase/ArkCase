@@ -864,5 +864,4 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     {
         this.organizationAssociations = organizationAssociations;
     }
-
 }
