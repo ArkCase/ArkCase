@@ -78,6 +78,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         ComplaintPersistenceEvent complaintPersistenceEvent = isNewComplaint ? new ComplaintCreatedEvent(updatedComplaint)
                 : new ComplaintUpdatedEvent(updatedComplaint);
         complaintPersistenceEvent.setSucceeded(succeeded);
+
         if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {
             complaintPersistenceEvent.setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
@@ -92,7 +93,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
             }
             catch (JsonProcessingException e)
             {
-                log.warn("can't process diff details for [{}].", complaintPersistenceEvent, e);
+                log.warn("can't process diff details for [{}].", updatedComplaint, e);
             }
         }
         eventPublisher.publishEvent(complaintPersistenceEvent);

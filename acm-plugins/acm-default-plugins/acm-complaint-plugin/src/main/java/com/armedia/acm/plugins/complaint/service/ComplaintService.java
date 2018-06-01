@@ -173,13 +173,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         boolean isNew = acmComplaint.getComplaintId() == null;
 
-        Complaint oldComplaint = null;
-        if (!isNew)
-        {
-            String old = getObjectConverter().getJsonMarshaller()
-                    .marshal(saveComplaintTransaction.getComplaint(complaint.getComplaintId()));
-            oldComplaint = getObjectConverter().getJsonUnmarshaller().unmarshall(old, Complaint.class);
-        }
+        Complaint oldComplaint = getOldComplaint(complaint, isNew);
 
         acmComplaint = getSaveComplaintTransaction().saveComplaint(acmComplaint, getAuthentication());
 
@@ -198,13 +192,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         boolean isNew = acmComplaint.getComplaintId() == null;
 
-        Complaint oldComplaint = null;
-        if (!isNew)
-        {
-            String old = getObjectConverter().getJsonMarshaller()
-                    .marshal(saveComplaintTransaction.getComplaint(complaint.getComplaintId()));
-            oldComplaint = getObjectConverter().getJsonUnmarshaller().unmarshall(old, Complaint.class);
-        }
+        Complaint oldComplaint = getOldComplaint(complaint, isNew);
 
         acmComplaint = getSaveComplaintTransaction().saveComplaint(acmComplaint, getAuthentication());
 
@@ -226,6 +214,18 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     public Object convertToFrevvoForm(Object obj, Object form)
     {
         return getComplaintFactory().asFrevvoComplaint((Complaint) obj, (ComplaintForm) form);
+    }
+
+    private Complaint getOldComplaint(ComplaintForm complaint, boolean isNew)
+    {
+        Complaint oldComplaint = null;
+        if (!isNew)
+        {
+            String old = getObjectConverter().getJsonMarshaller()
+                    .marshal(saveComplaintTransaction.getComplaint(complaint.getComplaintId()));
+            oldComplaint = getObjectConverter().getJsonUnmarshaller().unmarshall(old, Complaint.class);
+        }
+        return oldComplaint;
     }
 
     private JSONObject initFormData()
