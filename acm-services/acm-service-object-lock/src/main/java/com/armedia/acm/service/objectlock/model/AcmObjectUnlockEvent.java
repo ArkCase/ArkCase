@@ -32,9 +32,7 @@ package com.armedia.acm.service.objectlock.model;
  */
 public class AcmObjectUnlockEvent extends AcmObjectLockUnlockEvent
 {
-    private static final String EVENT_TYPE = "com.armedia.acm.objectlock.unlock";
-    private static final String CHECKIN_TYPE = "com.armedia.acm.objectlock.checkin";
-    private static final String CANCEL_TYPE = "com.armedia.acm.objectlock.cancel";
+    private static final String UNLOCK_EVENT_TYPE = "com.armedia.acm.objectlock.unlock";
 
     public AcmObjectUnlockEvent(AcmObjectLock source, String userId, Boolean success)
     {
@@ -44,19 +42,6 @@ public class AcmObjectUnlockEvent extends AcmObjectLockUnlockEvent
     @Override
     public String getEventType()
     {
-        String eventType;
-        switch (getObjectType())
-        {
-        case AcmObjectLockConstants.CHECKIN_LOCK:
-            eventType = CHECKIN_TYPE;
-            break;
-        case AcmObjectLockConstants.CANCEL_LOCK:
-            eventType = CANCEL_TYPE;
-            break;
-        default:
-            eventType = EVENT_TYPE;
-        }
-
-        return eventType;
+        return UNLOCK_EVENT_TYPE + "." + getObjectType().toLowerCase();
     }
 }

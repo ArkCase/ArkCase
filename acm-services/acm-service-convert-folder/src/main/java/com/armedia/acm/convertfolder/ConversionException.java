@@ -1,8 +1,8 @@
-package com.armedia.acm.service.objectlock.model;
+package com.armedia.acm.convertfolder;
 
 /*-
  * #%L
- * ACM Service: Object lock
+ * ACM Service: Folder Converting Service
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -28,21 +28,27 @@ package com.armedia.acm.service.objectlock.model;
  */
 
 /**
- * Created by dragan.simonovski on 04/25/2016.
+ * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 26, 2018
+ *
  */
-public interface AcmObjectLockConstants
+public class ConversionException extends Exception
 {
-    String WORD_EDIT_LOCK = "WORD_EDIT_LOCK";
-    String CHECKOUT_LOCK = "CHECKOUT_LOCK";
-    String CHECKIN_LOCK = "CHECKIN_LOCK";
-    String CANCEL_LOCK = "CANCEL_LOCK";
-    String OBJECT_LOCK = "OBJECT_LOCK";
-    /**
-     * this should be used when objects needs to be locked for long running tasks.
-     */
-    String LOCK_FOR_PROCESSING = "OBJECT_PROCESSING_LOCK";
 
-    String EXCLUSIVE_TREE_LOCK = "EXCLUSIVE_TREE_LOCK";
+    private static final long serialVersionUID = 7374431669313584823L;
 
-    String SHARED_LOCK = "SHARED_LOCK";
+    public ConversionException(String message)
+    {
+        super(message);
+    }
+
+    public ConversionException(Throwable t)
+    {
+        super(t);
+    }
+
+    public ConversionException(String message, Throwable t)
+    {
+        super(message, t);
+    }
+
 }

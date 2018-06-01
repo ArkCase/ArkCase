@@ -14,7 +14,8 @@
     },
     "timeTracking.comp.info": {
         "title": "Informações",
-        "lastModified.label": "Última modificação"
+        "lastModified.label": "Última modificação",
+		"state": "Estado"
     },
     "timeTracking.comp.actions": {
         "title": "Ações",
@@ -38,11 +39,13 @@
         }
     },
     "timeTracking.comp.summary": {
-        "title": "Horas",
+        "title": "Horas/Custo",
         "table.columns": {
             "code": "ID do pai",
             "type": "Tipo de pai",
+			"role": "Função de Cobrança",
             "value": "Total de horas",
+			"cost": "Custo total",
             "date": "Data cobrada",
             "modified": "Data modificada"
         }
@@ -72,13 +75,13 @@
         }
     },
     "timeTracking.comp.tasks": {
-        "title": "Pessoal de aprovação",
+        "title": "Tarefas",
         "table.columns": {
-            "title": "Title",
-            "assignee": "Assignee",
-            "created": "Created",
-            "priority": "Priority",
-            "due": "Due Date",
+            "title": "Título",
+            "assignee": "Responsável",
+            "created": "Criada",
+            "priority": "Prioridade",
+            "due": "Data de Vencimento",
             "status": "Status"
         }
     },
@@ -97,6 +100,16 @@
             "idDesc": "Ordenar ID de hora Desc",
             "nameDesc": "Classificar por nome",
             "noSort": "(Não classificar)"
+        }
+    },
+    "timeTracking.widgets.summary": {
+        "table": {
+            "columns": {
+                "date": "Encontro",
+                "objectTitle": "Título do Objeto",
+                "objectNumber": "Número do Objeto",
+                "hours": "Horas"
+            }
         }
     }
 }

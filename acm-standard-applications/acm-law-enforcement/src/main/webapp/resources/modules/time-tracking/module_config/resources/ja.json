@@ -14,7 +14,8 @@
     },
     "timeTracking.comp.info": {
         "title": "情報",
-        "lastModified.label": "最終更新日"
+        "lastModified.label": "最終更新日",
+		"state": "状態"
     },
     "timeTracking.comp.actions": {
         "title": "行動",
@@ -38,11 +39,13 @@
         }
     },
     "timeTracking.comp.summary": {
-        "title": "時間の要約",
+        "title": "時間/コスト",
         "table.columns": {
             "code": "親ID",
             "type": "親タイプ",
+			"role": "担当役割",
             "value": "合計時間",
+			"cost": "総費用",
             "date": "充電された日付",
             "modified": "変更日"
         }
@@ -72,14 +75,14 @@
         }
     },
     "timeTracking.comp.tasks": {
-        "title": "承認者",
+        "title": "タスク",
         "table.columns": {
-            "title": "Title",
-            "assignee": "Assignee",
-            "created": "Created",
-            "priority": "Priority",
-            "due": "Due Date",
-            "status": "Status"
+            "title": "タイトル",
+            "assignee": "譲受人",
+            "created": "作成した",
+            "priority": "優先",
+            "due": "期日",
+            "status": "状態"
         }
     },
     "timeTracking.tree": {
@@ -97,6 +100,16 @@
             "idDesc": "時間識別番号を昇順で並べ替え",
             "nameDesc": "名で並べ替え",
             "noSort": "(注文しません)"
+        }
+    },
+    "timeTracking.widgets.summary": {
+        "table": {
+            "columns": {
+                "date": "日付",
+                "objectTitle": "オブジェクトのタイトル",
+                "objectNumber": "オブジェクト番号",
+                "hours": "時間"
+            }
         }
     }
 }

@@ -129,6 +129,7 @@ angular.module('organizations').controller(
                             if (rowEntity) {
                                 //update current row
                                 rowEntity.type_lcs = response.associationType;
+                                rowEntity.modified_date_tdt = response.modified;
                             } else {
                                 //add row to the grid
                                 rowEntity = {
