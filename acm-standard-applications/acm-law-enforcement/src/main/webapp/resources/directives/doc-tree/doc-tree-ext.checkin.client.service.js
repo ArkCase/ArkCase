@@ -13,7 +13,7 @@
 angular.module('services').factory(
         'DocTreeExt.Checkin',
         [ '$q', '$modal', '$translate', 'UtilService', 'Authentication', 'ObjectService', 'PermissionsService', 'Object.LockingService', 'Helper.NoteService', 'Object.NoteService', 'Profile.UserInfoService', 'MessageService',
-                function($q, $modal, $translate, Util, Authentication, ObjectService, PermissionsService, LockingService, HelperNoteService, ObjectNoteService, UserInfoService, MessageService)) {
+                function($q, $modal, $translate, Util, Authentication, ObjectService, PermissionsService, LockingService, HelperNoteService, ObjectNoteService, UserInfoService, MessageService) {
                     var userId = "";
                     Authentication.queryUserInfo().then(function(userInfo) {
                         userId = userInfo.userId;
