@@ -18,7 +18,8 @@
         <div class="form-group" ng-hide="isEdit">
             <label>{{ 'admin.security.ldapConfig.data.id' | translate }}</label>
             <input class="form-control" type="text" ng-model="dir.id" ng-pattern="/^[a-zA-Z0-9.]*$/"
-                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.id' | translate }}" required>
+                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.id' | translate }}"
+                    title="{{'admin.security.ldapConfig.data.id.validationMessage' | translate}}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.ldapUrl' | translate }}</label>
@@ -35,10 +36,23 @@
             <input class="form-control" type="text" ng-model="dir.authUserDn"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.authUserDn' | translate }}" required>
         </div>
+        <div class="form-group" ng-class="{ 'has-error' : errorMessage}">
+            <label for="newPass">{{ 'admin.security.ldapConfig.data.authUserPassword' | translate }}</label>
+            <input id="newPass" class="form-control" type="password" ng-model="dir.authUserPassword" class="form-control"
+                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.authUserPassword' | translate }}" name="newPassword"
+                    required>
+            <p class="help-block" ng-bind-html="errorMessage"></p>
+        </div>
         <div class="form-group">
-            <label>{{ 'admin.security.ldapConfig.data.authUserPassword' | translate }}</label>
-            <input class="form-control" type="text" ng-model="dir.authUserPassword"
-                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.authUserPassword' | translate }}" required>
+            <label for="confirmNewPass">{{ 'admin.security.ldapConfig.data.confirmAuthUserPassword' | translate }}</label>
+            <input id="confirmNewPass" class="form-control" type="password" ng-model="confirmNewPassword"
+                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.confirmAuthUserPassword' | translate }}"
+                    name="confirmNewPassword" password-check new-password="dir.authUserPassword" confirm-new-password="confirmNewPassword"
+                    error-messages="passwordErrorMessages" new-password-validation="newPassword"
+                    confirm-new-password-validation="confirmNewPassword" required>
+            <p class="help-block" ng-show="ldapConfigForm.newPassword.$error.notSamePasswords">
+                <span class="text-danger" translate>{{passwordErrorMessages.notSamePasswordsMessage}}</span>
+            </p>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.userSearchBase' | translate }}</label>
@@ -92,11 +106,8 @@
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.userDomain' | translate }}</label>
-            <i>
-                <small><span translate>admin.security.ldapConfig.data.userDomainNote</span></small>
-            </i>
             <input class="form-control" type="text" ng-model="dir.userDomain"
-                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userDomain' | translate }}">
+                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userDomain' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.syncPageSize' | translate }}</label>

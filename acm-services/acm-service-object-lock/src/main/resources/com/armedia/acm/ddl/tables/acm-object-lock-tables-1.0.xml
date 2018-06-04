@@ -82,5 +82,13 @@
             <column name="cm_lock_type" type="varchar(1000)"></column>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="05-acm_object_lock_type" author="bojan.milenkoski">
+        <addColumn tableName="acm_object_lock">
+            <column name="cm_expiry" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

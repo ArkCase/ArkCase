@@ -27,15 +27,17 @@ package com.armedia.acm.plugins.objectlockplugin.web.api;
  * #L%
  */
 
-import com.armedia.acm.service.objectlock.exception.AcmObjectLockException;
+import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -45,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 import java.util.List;
@@ -59,6 +62,7 @@ public class AcmObjectLockAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private AcmObjectLockService objectLockService;
+    private AcmObjectLockingManager objectLockingManager;
 
     /**
      * This method locks object identified with objectId and objectType.
@@ -72,6 +76,7 @@ public class AcmObjectLockAPIController
      * @return AcmObjectLock lock details
      * @throws MuleException
      * @throws IOException
+     * @throws AcmObjectLockException
      */
     @PreAuthorize("hasPermission(#objectId, #objectType, 'lock')")
     @RequestMapping(value = { "/api/v1/plugin/{objectType}/{objectId}/lock",
@@ -80,10 +85,10 @@ public class AcmObjectLockAPIController
     public AcmObjectLock lockObject(@PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") Long objectId,
             @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType,
             @RequestParam(value = "lockInDB", required = false, defaultValue = "true") boolean lockInDB, Authentication authentication)
-            throws MuleException, IOException
+            throws MuleException, IOException, AcmObjectLockException
 
     {
-        return objectLockService.createLock(objectId, objectType, lockType, lockInDB, authentication);
+        return objectLockingManager.acquireObjectLock(objectId, objectType, lockType, null, true, authentication.getName());
     }
 
     /**
@@ -98,25 +103,18 @@ public class AcmObjectLockAPIController
      * @return solr response
      * @throws MuleException
      * @throws IOException
+     * @throws AcmObjectLockException
      */
     @PreAuthorize("hasPermission(#objectId, #objectType, 'unlock')")
     @RequestMapping(value = { "/api/v1/plugin/{objectType}/{objectId}/lock",
             "/api/latest/plugin/{objectType}/{objectId}/lock" }, method = RequestMethod.DELETE)
-    @ResponseBody
-    public String unlockObject(@PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") Long objectId,
-            @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType, Authentication auth)
-            throws MuleException, IOException
+    @ResponseStatus(value = HttpStatus.OK)
+    public void unlockObject(@PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") Long objectId,
+            @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType,
+            @RequestParam(value = "lockId", required = false) Long lockId, Authentication auth)
+            throws MuleException, IOException, AcmObjectLockException
     {
-        try
-        {
-            // FIXME not sure if anyone can remove object lock or just owner, for now anyone can remove the lock
-            objectLockService.removeLock(objectId, objectType, lockType, auth);
-        }
-        catch (AcmObjectLockException e)
-        {
-            return e.getMessage();
-        }
-        return "Successfully removed lock";
+        objectLockingManager.releaseObjectLock(objectId, objectType, lockType, true, auth.getName(), lockId);
     }
 
     /**
@@ -199,7 +197,6 @@ public class AcmObjectLockAPIController
             "/api/v1/plugin/locks/{objectType}/lock" }, method = RequestMethod.DELETE)
     @ResponseBody
     public String releaseMultipleLocks(@PathVariable(value = "objectType") String objectType,
-
             @RequestParam(value = "parentObjectIds") List<Long> objectIds,
             @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType, Authentication auth)
             throws MuleException
@@ -212,7 +209,7 @@ public class AcmObjectLockAPIController
             log.debug("Trying to remove the lock on object [{}] of type [{}]", objectId, objectType);
             try
             {
-                objectLockService.removeLock(objectId, objectType, lockType, auth);
+                objectLockingManager.releaseObjectLock(objectId, objectType, lockType, true, auth.getName(), null);
                 log.debug("Successfully removed the lock on object [{}] of type [{}]", objectId, objectType);
                 result.put("status", "Success");
             }
@@ -224,6 +221,16 @@ public class AcmObjectLockAPIController
             resultList.put(result);
         }
         return resultList.toString();
+    }
+
+    public void setObjectLockingManager(AcmObjectLockingManager objectLockingManager)
+    {
+        this.objectLockingManager = objectLockingManager;
+    }
+
+    public AcmObjectLockService getObjectLockService()
+    {
+        return objectLockService;
     }
 
     public void setObjectLockService(AcmObjectLockService objectLockService)

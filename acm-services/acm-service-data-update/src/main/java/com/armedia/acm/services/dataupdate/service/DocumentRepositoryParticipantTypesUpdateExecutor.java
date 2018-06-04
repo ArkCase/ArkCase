@@ -77,19 +77,27 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
                 {
                 case "assignee":
                 {
-                    if (repository.getCreator().equals(participant.getParticipantLdapId()))
+                    if (repository.getCreator().equals(participant.getParticipantLdapId())
+                            && !newParticipants.stream().anyMatch(p -> p.getParticipantType().equals("owner")))
                     {
 
                         mapedParticipantType = "owner";
                     }
                     else
                     {
-                        mapedParticipantType = "reader";
+                        mapedParticipantType = "collaborator";
                     }
                     break;
                 }
                 case "co-owner":
-                    mapedParticipantType = "owner";
+                    if (newParticipants.stream().anyMatch(p -> p.getParticipantType().equals("owner")))
+                    {
+                        mapedParticipantType = "collaborator";
+                    }
+                    else
+                    {
+                        mapedParticipantType = "owner";
+                    }
                     break;
 
                 case "supervisor":
@@ -107,7 +115,7 @@ public class DocumentRepositoryParticipantTypesUpdateExecutor implements AcmData
                 if (!mapedParticipantType.equals(participant.getParticipantType()))
                 {
                     String finalMapedParticipantType = mapedParticipantType;
-                    boolean present = participants.stream().anyMatch(p -> p.getParticipantType().equals(finalMapedParticipantType)
+                    boolean present = newParticipants.stream().anyMatch(p -> p.getParticipantType().equals(finalMapedParticipantType)
                             && p.getParticipantLdapId().equals(participant.getParticipantLdapId()));
                     if (!present)
                     {

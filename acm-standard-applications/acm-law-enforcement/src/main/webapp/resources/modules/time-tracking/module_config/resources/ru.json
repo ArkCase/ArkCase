@@ -14,7 +14,8 @@
     },
     "timeTracking.comp.info": {
         "title": "Информация",
-        "lastModified.label": "Последнее изменение"
+        "lastModified.label": "Последнее изменение",
+		"state": "Cостояние"
     },
     "timeTracking.comp.actions": {
         "title": "Действия",
@@ -38,11 +39,13 @@
         }
     },
     "timeTracking.comp.summary": {
-        "title": "Обзор часов",
+        "title": "Часы / Стоимость",
         "table.columns": {
             "code": "Идентификатор родителя",
             "type": "Родительский тип",
+			"role": "Роль зарядки",
             "value": "Общее количество часов",
+			"cost": "Общая стоимость",
             "date": "Дата зарядки",
             "modified": "Измененная дата"
         }
@@ -72,14 +75,14 @@
         }
     },
     "timeTracking.comp.tasks": {
-        "title": "Утверждающие",
+        "title": "Задания",
         "table.columns": {
-            "title": "Title",
-            "assignee": "Assignee",
-            "created": "Created",
-            "priority": "Priority",
-            "due": "Due Date",
-            "status": "Status"
+            "title": "Заглавие",
+            "assignee": "Правопреемник",
+            "created": "Cозданный",
+            "priority": "Приоритет",
+            "due": "В связи Дата",
+            "status": "Положение дел"
         }
     },
     "timeTracking.tree": {
@@ -97,6 +100,16 @@
             "idDesc": "Сортировка расходы Desc",
             "nameDesc": "Сортировать по имени",
             "noSort": "(Нет Сортировать)"
+        }
+    },
+    "timeTracking.widgets.summary": {
+        "table": {
+            "columns": {
+                "date": "Дата",
+                "objectTitle": "Название объекта",
+                "objectNumber": "Номер объекта",
+                "hours": "Часов"
+            }
         }
     }
 }
