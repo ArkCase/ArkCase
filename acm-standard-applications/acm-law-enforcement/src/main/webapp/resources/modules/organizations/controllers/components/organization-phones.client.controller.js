@@ -168,6 +168,9 @@ angular.module('organizations').controller(
 
                     $scope.isDefault = function(phone) {
                         var defaultPhone = $scope.objectInfo.defaultPhone;
+                        if (Util.isEmpty(defaultPhone)) {
+                            return true;
+                        }
                         var comparisonProperties = [ "description", "id", "subType", "type", "value" ];
                         return Util.objectsComparisonByGivenProperties(defaultPhone, phone, comparisonProperties);
                     }

@@ -178,7 +178,7 @@
         "rowCountLabel": "Пункты на странице",
         "pagerCountLabel": "{{количествоСтраниц}} из {{ВсегоСтраниц}} пунктов"
     },
-    "common.directive.objectAuthorizationRoles": {
+    "common.directive.objectAuthorization": {
         "choose": "Выберите",
         "not_authorized": "Не авторизовано",
         "not_member": "ru_Not Member",

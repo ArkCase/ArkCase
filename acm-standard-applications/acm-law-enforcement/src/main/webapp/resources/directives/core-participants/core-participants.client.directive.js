@@ -89,26 +89,12 @@ angular.module('directives').directive(
                                 if (!scope.participantsInit.participantsTitle)
                                     scope.participantsInit.participantsTitle = $translate.instant("common.directive.coreParticipants.title");
                                 scope.config = config;
-
-                                //first the filter is set, and after that everything else,
-                                //so that the data loads with the new filter applied
-                                gridHelper.setUserNameFilterToConfig(promiseUsers).then(function(updatedConfig) {
-                                    scope.config = updatedConfig;
-                                    if (scope.gridApi != undefined)
-                                        scope.gridApi.core.refresh();
-
-                                    gridHelper.addButton(updatedConfig, "edit", null, null, "isEditDisabled");
-                                    gridHelper.addButton(updatedConfig, "delete", null, null, "isDeleteDisabled");
-                                    gridHelper.setColumnDefs(updatedConfig);
-                                    gridHelper.setBasicOptions(updatedConfig);
-                                    gridHelper.disableGridScrolling(updatedConfig);
-                                });
-                            };
-
-                            var onObjectInfoRetrieved = function(objectInfo) {
-                                scope.objectInfo = objectInfo;
-                                scope.gridOptions = scope.gridOptions || {};
-                                scope.gridOptions.data = objectInfo.participants;
+                                gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
+                                gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
+                                gridHelper.setColumnDefs(config);
+                                gridHelper.setBasicOptions(config);
+                                gridHelper.disableGridScrolling(config);
+                                gridHelper.setUserNameFilterToConfig(promiseUsers);
                             };
 
                             var showModal = function(participant, isEdit, showReplaceChildrenParticipants) {
@@ -199,6 +185,12 @@ angular.module('directives').directive(
                                 });
                             };
 
+                            var onObjectInfoRetrieved = function(objectInfo) {
+                                scope.objectInfo = objectInfo;
+                                scope.gridOptions = scope.gridOptions || {};
+                                scope.gridOptions.data = objectInfo.participants;
+                            };
+
                             scope.addNew = function() {
                                 var participant = {};
 
@@ -237,19 +229,12 @@ angular.module('directives').directive(
                             };
 
                             scope.deleteRow = function(rowEntity) {
-
-                                if (rowEntity.participantType == typeOwningGroup) {
-                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupDelete"));
-                                } else if (rowEntity.participantType == typeAssignee) {
-                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.assigneeDelete"));
-                                } else {
-                                    gridHelper.deleteRow(rowEntity);
-                                    var id = Util.goodMapValue(rowEntity, "id", 0);
-                                    if (0 < id) { //do not need to call service when deleting a new row
-                                        saveObjectInfoAndRefresh();
-                                    }
+                                gridHelper.deleteRow(rowEntity);
+                                var id = Util.goodMapValue(rowEntity, "id", 0);
+                                if (0 < id) { //do not need to call service when deleting a new row
+                                    saveObjectInfoAndRefresh();
                                 }
-                            };
+                            }
 
                             scope.onClickReplaceChildrenParticipants = function() {
                                 var len = scope.objectInfo.participants.length;

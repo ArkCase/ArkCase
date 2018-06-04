@@ -46,6 +46,7 @@ angular.module('document-details').controller(
                         selectedIds: $stateParams['selectedIds']
                     };
                     $scope.showVideoPlayer = false;
+                    $scope.showPdfJs = false;
                     $scope.transcriptionTabActive = false;
 
                     var transcriptionConfigurationPromise = TranscriptionManagementService.getTranscribeConfiguration();
@@ -182,6 +183,9 @@ angular.module('document-details').controller(
                         $scope.ecmFileParticipants = data[6];
                         $scope.formsConfig = data[7];
                         $scope.transcriptionConfiguration = data[8];
+                        
+                        // default view == snowbound
+                        $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
 
                         $scope.transcribeEnabled = $scope.transcriptionConfiguration.data.enabled;
 
@@ -197,7 +201,10 @@ angular.module('document-details').controller(
                             $scope.fileType = $scope.ecmFile.fileType;
                         }
 
-                        $scope.mediaType = $scope.ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 ? "video" : ($scope.ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? "audio" : "other");
+                        $scope.mediaType = $scope.ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 ? "video" : 
+                            ($scope.ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? "audio" : 
+                                $scope.ecmFile.fileActiveVersionMimeType.indexOf("application/pdf") === 0 ? "pdf" :
+                                "other");
 
                         if ($scope.mediaType === "video" || $scope.mediaType === "audio") {
                             $scope.config = {
@@ -212,7 +219,15 @@ angular.module('document-details').controller(
                                 autoPlay: false
                             };
                             $scope.showVideoPlayer = true;
-                        } else {
+                            $scope.view = "modules/document-details/views/document-viewer-videogular.client.view.html";
+                        } else if ($scope.mediaType === "pdf" && "pdfjs" === $scope.ecmFileProperties['ecm.viewer.pdfViewer']) {
+                            $scope.config = {
+                                    src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId)
+                                };
+                            $scope.showPdfJs = true;
+                            $scope.view = "modules/document-details/views/document-viewer-pdfjs.client.view.html";
+                        }
+                        else {
                             // Opens the selected document in the snowbound viewer
                             $scope.openSnowboundViewer();
                         }
@@ -224,3 +239,20 @@ angular.module('document-details').controller(
                         $scope.videoAPI = API;
                     }
                 } ]);
+
+
+/**
+ * 2018-06-01 David Miller.  This block is needed to tell the PDF.js angular module, where the PDF.js 
+ * library is.  Without this, on minified systems the PDF.js viewer will not work.  I copied this from the 
+ * project web page, https://github.com/legalthings/angular-pdfjs-viewer#advanced-configuration.
+ * @param pdfjsViewerConfigProvider
+ * @returns
+ */
+angular.module('document-details').config(function(pdfjsViewerConfigProvider)   {
+    pdfjsViewerConfigProvider.setWorkerSrc("lib/pdf.js-viewer/pdf.worker.js");
+    pdfjsViewerConfigProvider.setCmapDir("lib/pdf.js-viewer/cmaps");
+    pdfjsViewerConfigProvider.setImageDir("lib/pdf.js-viewer/images");
+    
+    //pdfjsViewerConfigProvider.disableWorker();
+    pdfjsViewerConfigProvider.setVerbosity("infos");  // "errors", "warnings" or "infos"
+  });

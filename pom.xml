@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.2.10</version>
+    <version>3.2.11</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -80,7 +80,7 @@
         <junit.version>4.12</junit.version>
         <!-- do not update Liquibase past 3.1.1 until https://liquibase.jira.com/browse/CORE-1920 is closed -->
         <liquibase.version>3.1.1</liquibase.version>
-        <log4j.version>2.2</log4j.version>
+        <log4j.version>2.11.0</log4j.version>
         <magic.matcher.version>0.1.2</magic.matcher.version>
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
         <maven-jgitflow-plugin.version>1.0-m5.1</maven-jgitflow-plugin.version>
@@ -103,7 +103,7 @@
         <reactor.version>2.0.8.RELEASE</reactor.version>
         <reactor-spring.version>2.0.7.RELEASE</reactor-spring.version>
         <rome.version>1.0</rome.version>
-        <slf4j.version>1.7.7</slf4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <solr-solrj.version>6.6.0</solr-solrj.version>
         <sonar.version>2.6</sonar.version>
         <spring.integration.version>4.2.9.RELEASE</spring.integration.version>
@@ -121,6 +121,8 @@
         <xmlgraphics.version>2.0.1</xmlgraphics.version>
         <xmlunit.version>2.5.1</xmlunit.version>
         <zt-exec.version>1.8</zt-exec.version>
+        <docx4j.core>3.3.7</docx4j.core>
+        <docx4j.export.fo>3.3.6</docx4j.export.fo>
     </properties>
 
     <organization>
@@ -627,6 +629,11 @@
                 <version>${spring.integration.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework.integration</groupId>
+                <artifactId>spring-integration-http</artifactId>
+                <version>${spring.integration.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-websocket</artifactId>
                 <version>${spring.version}</version>
@@ -866,6 +873,26 @@
                     <exclusion>
                         <groupId>org.apache.logging.log4j</groupId>
                         <artifactId>log4j-slf4j-impl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.logging.log4j</groupId>
+                        <artifactId>log4j-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.logging.log4j</groupId>
+                        <artifactId>log4j-1.2-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.logging.log4j</groupId>
+                        <artifactId>log4j-jcl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.logging.log4j</groupId>
+                        <artifactId>log4j-jul</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>jcl-over-slf4j</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -1287,7 +1314,12 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
-                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jul-to-slf4j</artifactId>                
+                <version>${slf4j.version}</version>   
+                <scope>runtime</scope>        
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -1375,6 +1407,34 @@
                 <groupId>com.github.jai-imageio</groupId>
                 <artifactId>jai-imageio-core</artifactId>
                 <version>${jai-imageio-core.version}</version>
+            </dependency>
+
+            <!-- Transforming .docx files to PDF -->
+
+            <dependency>
+                <groupId>org.docx4j</groupId>
+                <artifactId>docx4j</artifactId>
+                <version>${docx4j.core}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>jcl-over-slf4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+    
+            <dependency>
+                <groupId>org.docx4j</groupId>
+                <artifactId>docx4j-export-fo</artifactId>
+                <version>${docx4j.export.fo}</version>
             </dependency>
 
             <!-- testing -->
@@ -1485,6 +1545,10 @@
                         <groupId>org.apache.httpcomponents</groupId>
                         <artifactId>httpcore</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>jul-to-slf4j</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
@@ -1493,6 +1557,12 @@
                 <artifactId>jmimemagic</artifactId>
                 <version>${magic.matcher.version}</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>

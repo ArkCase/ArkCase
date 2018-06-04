@@ -44,16 +44,8 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -77,6 +69,11 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
 
     private ObjectConverter objectConverter;
 
+    // Fallback parent expressions
+    private String getObjectExpression;
+    private String editObjectExpression;
+    private String insertObjectExpression;
+    private String deleteObjectExpression;
     /**
      * Logger instance.
      */
@@ -205,23 +202,23 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     private String getFallbackPermissionName(String permission)
     {
         String parentActionName = null;
-        if (permission.toLowerCase().matches("(get|list|read|download|view|subscribe).*"))
+        if (permission.toLowerCase().matches("(" + getObjectExpression + ").*"))
         {
             // read parent permission
             parentActionName = "getObject";
         }
         else if (permission.toLowerCase()
-                .matches("(save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename|write).*"))
+                .matches("(" + editObjectExpression + ").*"))
         {
             // write parent permission
             parentActionName = "editObject";
         }
-        else if (permission.toLowerCase().matches("(create).*"))
+        else if (permission.toLowerCase().matches("(" + insertObjectExpression + ").*"))
         {
             // insert parent permission
             parentActionName = "insertObject";
         }
-        else if (permission.toLowerCase().matches("(delete).*"))
+        else if (permission.toLowerCase().matches("(" + deleteObjectExpression + ").*"))
         {
             // delete parent permission
             parentActionName = "deleteObject";
@@ -520,5 +517,45 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public String getGetObjectExpression()
+    {
+        return getObjectExpression;
+    }
+
+    public void setGetObjectExpression(String getObjectExpression)
+    {
+        this.getObjectExpression = getObjectExpression;
+    }
+
+    public String getEditObjectExpression()
+    {
+        return editObjectExpression;
+    }
+
+    public void setEditObjectExpression(String editObjectExpression)
+    {
+        this.editObjectExpression = editObjectExpression;
+    }
+
+    public String getInsertObjectExpression()
+    {
+        return insertObjectExpression;
+    }
+
+    public void setInsertObjectExpression(String insertObjectExpression)
+    {
+        this.insertObjectExpression = insertObjectExpression;
+    }
+
+    public String getDeleteObjectExpression()
+    {
+        return deleteObjectExpression;
+    }
+
+    public void setDeleteObjectExpression(String deleteObjectExpression)
+    {
+        this.deleteObjectExpression = deleteObjectExpression;
     }
 }
