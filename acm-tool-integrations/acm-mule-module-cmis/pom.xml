@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-tool-integrations</artifactId>
-        <version>3.2.10</version>
+        <version>3.2.11</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -106,6 +106,10 @@
             <artifactId>common</artifactId>
             <version>3.3.0-v20070426</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
         </dependency>
     </dependencies>
 

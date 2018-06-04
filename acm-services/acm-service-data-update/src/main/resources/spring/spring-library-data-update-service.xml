@@ -28,6 +28,7 @@
                 <ref bean="outlookFolderCreatorPasswordMd5ToSha256UpdateExecutor"/>
                 <ref bean="triggerCostsheetSolrUpdateExecutor"/>
                 <ref bean="triggerTimesheetSolrUpdateExecutor"/>
+                <ref bean="documentRepositoryParticipantTypesUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -76,6 +77,12 @@
 
     <bean id="triggerCostsheetSolrUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TriggerCostsheetSolrUpdateExecutor">
         <property name="solrReindexService" ref="solrReindexService"/>
+    </bean>
+
+    <bean id="documentRepositoryParticipantTypesUpdateExecutor"
+        class="com.armedia.acm.services.dataupdate.service.DocumentRepositoryParticipantTypesUpdateExecutor">
+        <property name="documentDao" ref="documentRepositoryDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
 </beans>

@@ -23,7 +23,7 @@
 
 angular.module('directives').directive('passwordCheck', [ '$translate', function($translate) {
     return {
-        resctrict: 'A',
+        restrict: 'A',
         require: '^form', // access the FormController in a directive
         scope: {
             newPassword: '=',

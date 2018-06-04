@@ -31,12 +31,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +67,14 @@ import java.util.UUID;
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-library-object-converter.xml"
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-ecm-file-lock.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-drools-rule-monitor.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-ecm-tika.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-activiti-configuration.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class CaseFileDaoIT
@@ -74,7 +83,7 @@ public class CaseFileDaoIT
     private CaseFileDao caseFileDao;
 
     @Autowired
-    private AcmObjectLockService acmObjectLockService;
+    private AcmObjectLockingManager acmObjectLockingManager;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -128,7 +137,7 @@ public class CaseFileDaoIT
 
     @Test
     @Transactional
-    public void saveCaseFileWithLock()
+    public void saveCaseFileWithLock() throws AcmObjectLockException
     {
         assertNotNull(caseFileDao);
         assertNotNull(entityManager);
@@ -150,20 +159,17 @@ public class CaseFileDaoIT
         caseFile.setContainer(container);
 
         CaseFile saved = caseFileDao.save(caseFile);
-
-        acmObjectLockService.createLock(saved.getId(), saved.getObjectType(), "OBJECT_LOCK", true, authentication);
-
-        entityManager.flush();
-
-        saved = entityManager.find(CaseFile.class, saved.getId());
-        entityManager.refresh(saved);
-
-        assertNotNull(saved.getLock());
-        assertNotNull(saved.getLock().getId());
-        assertEquals(saved.getId(), saved.getLock().getObjectId());
-        assertEquals(saved.getObjectType(), saved.getLock().getObjectType());
-
         assertNotNull(saved.getId());
+
+        AcmObjectLock lock = acmObjectLockingManager.acquireObjectLock(saved.getId(), saved.getObjectType(), "OBJECT_LOCK", null, false,
+                authentication.getName());
+
+        assertNotNull(lock);
+
+        assertNotNull(lock.getId());
+        assertEquals(saved.getId(), lock.getObjectId());
+        assertEquals(saved.getObjectType(), lock.getObjectType());
+
     }
 
     @Test

@@ -28,7 +28,6 @@ package com.armedia.acm.service.objectlock.dao;
  */
 
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.service.objectlock.exception.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 
 import javax.persistence.NoResultException;
@@ -72,11 +71,6 @@ public class AcmObjectLockDao extends AcmAbstractDao<AcmObjectLock>
         {
             return null;
         }
-        catch (Throwable e)
-        {
-            throw new AcmObjectLockException("Error retrieving lock for [objectId, objectType] = [" + objectId + ", " + objectType + "]",
-                    e);
-        }
     }
 
     public void remove(AcmObjectLock ol)
@@ -84,4 +78,13 @@ public class AcmObjectLockDao extends AcmAbstractDao<AcmObjectLock>
         getEm().remove(ol);
     }
 
+    public List<AcmObjectLock> getExpiredLocks()
+    {
+        String queryText = "SELECT ol " +
+                "FROM AcmObjectLock ol " +
+                "WHERE " +
+                "     ol.expiry < CURRENT_DATE";
+
+        return getEm().createQuery(queryText).getResultList();
+    }
 }

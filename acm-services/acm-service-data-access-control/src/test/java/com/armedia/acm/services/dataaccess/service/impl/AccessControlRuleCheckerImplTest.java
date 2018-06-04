@@ -32,14 +32,9 @@ import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
-import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.easymock.EasyMock;
-import org.easymock.EasyMockRunner;
-import org.easymock.EasyMockSupport;
-import org.easymock.Mock;
-import org.easymock.TestSubject;
+import org.easymock.*;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,12 +48,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Petar Ilin <petar.ilin@armedia.com> on 06.11.2015.
@@ -70,7 +60,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
      * Access Control rule checker.
      */
     @TestSubject
-    private AccessControlRuleChecker accessControlRuleChecker = new AccessControlRuleCheckerImpl();
+    private AccessControlRuleCheckerImpl accessControlRuleChecker = new AccessControlRuleCheckerImpl();
 
     /**
      * Access Control rules mock.
@@ -106,6 +96,12 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         propertiesMapping = new HashMap<>();
         propertiesMapping.put("object_sub_type_s", "objectSubType");
         propertiesMapping.put("status_lcs", "status");
+
+        accessControlRuleChecker.setGetObjectExpression("get|list|read|download|view|subscribe");
+        accessControlRuleChecker
+                .setEditObjectExpression("save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename|write");
+        accessControlRuleChecker.setInsertObjectExpression("create");
+        accessControlRuleChecker.setDeleteObjectExpression("delete");
     }
 
     @Test

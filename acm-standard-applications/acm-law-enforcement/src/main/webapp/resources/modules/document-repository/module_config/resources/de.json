@@ -189,9 +189,9 @@
         "descriptionLabel": "Beschreibung",
         "description.placeholder": "Beschreibung eingeben",
         "searchUser": "Benutzer suchen",
-        "cancelBtn": "de_Cancel",
-        "okBtn": "de_OK",
-        "search-placeholder": "de_Search for user and group",
+        "cancelBtn": "Stornieren",
+        "okBtn": "OK",
+        "search-placeholder": "Suche nach Benutzer und Gruppe",
         "personalRepository": "Meine Dokumente"
     },
     "document-repository.dialogUserPicker": {

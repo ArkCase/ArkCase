@@ -178,7 +178,7 @@
         "rowCountLabel": "Artículos por página",
         "pagerCountLabel": "{{pageCount}} de {{pageTotal}} artículos"
     },
-    "common.directive.objectAuthorizationRoles": {
+    "common.directive.objectAuthorization": {
         "choose": "Elija",
         "not_authorized": "No autorizado",
         "not_member": "es_Not Member",

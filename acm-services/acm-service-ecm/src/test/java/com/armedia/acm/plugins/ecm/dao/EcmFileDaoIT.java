@@ -49,6 +49,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import java.time.LocalDateTime;
+
 /**
  * Created by armdev on 4/22/14.
  */
@@ -70,7 +72,8 @@ import javax.persistence.PersistenceContext;
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-object-lock.xml",
-        "/spring/spring-library-object-converter.xml" })
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-ecm-file-lock.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
 {
@@ -135,5 +138,12 @@ public class EcmFileDaoIT
 
         assertNotNull(file.getFileId());
 
+    }
+
+    @Test
+    public void getFilesCount()
+    {
+        assertNotNull(ecmFileDao);
+        assertNotNull(ecmFileDao.getFilesCount(LocalDateTime.now()));
     }
 }
