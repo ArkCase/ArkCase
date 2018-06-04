@@ -1,6 +1,7 @@
-package com.armedia.acm.plugins.onlyoffice.model;
+package com.armedia.acm.plugins.onlyoffice.model.callback;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -11,14 +12,14 @@ public class CallBackData
      * first case the type field value is 1, in the other case - 0. The userid field value is the identifier of the user
      * who connected to or disconnected from the document co-editing.
      */
-    @JsonProperty(value = "actions")
+    @JsonProperty("actions")
     private List<Action> actions;
     /**
      * Defines the array of objects with the document changes history. The object is present when the status value is
      * equal to 2 or 3 only. Must be sent as a property changes of the object sent as the argument to the refreshHistory
      * method. Deprecated since version 4.2, please use history instead.
      */
-    @JsonProperty(value = "changeshistory")
+    @JsonProperty("changeshistory")
     private List<ChangeHistory> changesHistory;
     /**
      * Defines the link to the file with the document editing data used to track and display the document changes
@@ -26,7 +27,7 @@ public class CallBackData
      * address must be sent as changesUrl parameter using the setHistoryData method to show the changes corresponding to
      * the specific document version.
      */
-    @JsonProperty(value = "changesurl")
+    @JsonProperty("changesurl")
     private String changesUrl;
     /**
      * Defines the type of initiator when the force saving request is performed. Can have the following values:
@@ -36,19 +37,19 @@ public class CallBackData
      * 2 - the force saving request is performed by timer with the settings from the server config.
      * The type is present when the status value is equal to 6 or 7 only.
      */
-    @JsonProperty(value = "forcesavetype")
+    @JsonProperty("forcesavetype")
     private Integer forceSaveType;
     /**
      * Defines the object with the document changes history. The object is present when the status value is equal to 2
      * or 3 only. It contains the object serverVersion and changes, which must be sent as properties serverVersion and
      * changes of the object sent as the argument to the refreshHistory method.
      */
-    @JsonProperty(value = "history")
+    @JsonProperty("history")
     private History history;
     /**
      * Defines the edited document identifier.
      */
-    @JsonProperty(value = "key")
+    @JsonProperty("key")
     private String key;
     /**
      * Defines the status of the document. Can have the following values:
@@ -60,13 +61,13 @@ public class CallBackData
      * 6 - document is being edited, but the current document state is saved,
      * 7 - error has occurred while force saving the document.
      */
-    @JsonProperty(value = "status")
+    @JsonProperty("status")
     private Integer status;
     /**
      * Defines the link to the edited document to be saved with the document storage service. The link is present when
      * the status value is equal to 2 or 3 only.
      */
-    @JsonProperty(value = "url")
+    @JsonProperty("url")
     private String url;
     /**
      * Defines the custom information sent to the command service in case it was present in the request.
@@ -78,7 +79,7 @@ public class CallBackData
      * changed the users will return the identifier of the user who was the last to edit the document (for status 2 and
      * status 6 replies).
      */
-    @JsonProperty(value = "users")
+    @JsonProperty("users")
     private List<String> users;
 
     public List<Action> getActions()
@@ -182,8 +183,7 @@ public class CallBackData
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "CallBackData{" +
                 "actions=" + actions +
                 ", changesHistory=" + changesHistory +

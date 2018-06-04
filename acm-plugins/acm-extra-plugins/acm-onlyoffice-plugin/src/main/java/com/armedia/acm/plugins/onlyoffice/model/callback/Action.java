@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.onlyoffice.model;
+package com.armedia.acm.plugins.onlyoffice.model.callback;
 
 public class Action
 {

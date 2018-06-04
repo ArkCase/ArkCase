@@ -7,4 +7,8 @@ import org.springframework.security.core.Authentication;
 public interface ConfigService
 {
     Config getConfig(Long fileId, Authentication auth);
+
+    String getDocumentServerUrlApi();
+
+    String getArkcaseBaseUrl();
 }

@@ -1,17 +1,12 @@
 package com.armedia.acm.plugins.onlyoffice.model;
 
-public class CallbackResponse
+public abstract class CallbackResponse
 {
     private int error;
 
     public CallbackResponse(int error)
     {
         this.error = error;
-    }
-
-    public CallbackResponse()
-    {
-        error = 0;
     }
 
     public int getError()
