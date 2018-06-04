@@ -156,7 +156,7 @@ public class ErrorsLogFileService
         StringBuilder fileName = new StringBuilder();
         filePatternProcessor.getNextTime(System.currentTimeMillis(), days, false);
         filePatternProcessor.updateTime();
-        filePatternProcessor.formatFileName(fileName, null);
+        filePatternProcessor.formatFileName(fileName, true, new Object[] {});
         return fileName.toString();
     }
 
@@ -175,7 +175,7 @@ public class ErrorsLogFileService
             throw new ErrorLogFileException("FileNameProcessor is not initialized. Reason: " + reason);
         }
         StringBuilder fileName = new StringBuilder();
-        fileNameProcessor.formatFileName(fileName, null);
+        fileNameProcessor.formatFileName(fileName, true, new Object[] {});
         return fileName.toString();
     }
 }
