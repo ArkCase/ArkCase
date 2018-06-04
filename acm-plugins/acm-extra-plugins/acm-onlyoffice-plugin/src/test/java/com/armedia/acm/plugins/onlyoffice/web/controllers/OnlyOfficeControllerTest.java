@@ -1,8 +1,37 @@
 package com.armedia.acm.plugins.onlyoffice.web.controllers;
 
-import static org.junit.Assert.*;
+/*-
+ * #%L
+ * ACM Extra Plugin: OnlyOffice Integration
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
+import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseError;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseSuccess;
 import com.armedia.acm.plugins.onlyoffice.model.callback.Action;
 import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
@@ -107,7 +136,7 @@ public class OnlyOfficeControllerTest extends EasyMockSupport
         Capture<CallBackData> callBackDataCapture = EasyMock.newCapture();
 
         EasyMock.expect(mockCallbackService.handleCallback(EasyMock.capture(callBackDataCapture), EasyMock.eq(mockAuthentication)))
-                .andReturn(new CallbackResponseSuccess());
+                .andReturn(new CallbackResponseError("You should have called Batman"));
         replayAll();
 
         MvcResult result = mockMvc.perform(
@@ -120,7 +149,7 @@ public class OnlyOfficeControllerTest extends EasyMockSupport
                 .andReturn();
         verifyAll();
         CallBackData callBackData = callBackDataCapture.getValue();
-        assertEquals("{\"error\":1}", result.getResponse().getContentAsString());
+        assertEquals("{\"error\":1,\"message\":\"You should have called Batman\"}", result.getResponse().getContentAsString());
     }
 
     private byte[] getFileAsBytes(String path) throws IOException

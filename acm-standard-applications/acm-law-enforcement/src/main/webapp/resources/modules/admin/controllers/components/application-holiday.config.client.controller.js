@@ -49,6 +49,13 @@ angular.module('admin').controller('Admin.Holiday',
                 });
             };
             $scope.loadPage();
+            var deleteHoliday = function(holidayConf) {
+                var holidayConfiguration = {
+                    "includeWeekends": $scope.holidaySchedule.includeWeekends,
+                    "holidays": holidayConf
+                };
+                saveConfig(holidayConfiguration);
+            };
 
             $scope.save = function() {
                 var holidayConfig = {
@@ -58,12 +65,7 @@ angular.module('admin').controller('Admin.Holiday',
                 saveConfig(holidayConfig);
 
             };
-            var saveConfig = function() {
-                var holidayConfiguration = {
-                    "includeWeekends": $scope.holidaySchedule.includeWeekends,
-                    "holidays": $scope.gridOptions.data
-
-                };
+            var saveConfig = function(holidayConfiguration) {
                 AdminHolidayService.saveHolidays(holidayConfiguration).then(function(data) {
                     MessageService.succsessAction();
                     reloadGrid(data.config.data);
@@ -102,7 +104,7 @@ angular.module('admin').controller('Admin.Holiday',
                     });
                     if (itemExist === undefined) {
                         holidayConfig.push(element);
-                        saveConfig(holidayConfig);
+                        $scope.save();
                     } else {
                         DialogService.alert($translate.instant('admin.application.holiday.message'));
                     }
@@ -122,8 +124,7 @@ angular.module('admin').controller('Admin.Holiday',
                     if (!itemExist) {
                         rowEntity.holidayName = data.holidayName;
                         rowEntity.holidayDate = data.holidayDate;
-                        var holidayConfig = $scope.gridOptions.data;
-                        saveConfig(holidayConfig);
+                        $scope.save();
                     } else {
                         DialogService.alert($translate.instant('admin.application.holiday.message'));
                     }
@@ -135,7 +136,7 @@ angular.module('admin').controller('Admin.Holiday',
                 _.remove(holidayConfig, function(item) {
                     return item.holidayDate === rowEntity.holidayDate;
                 });
-                saveConfig(holidayConfig);
+                deleteHoliday(holidayConfig);
             };
 
         } ]);

@@ -72,7 +72,8 @@ import java.time.LocalDateTime;
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-object-lock.xml",
-        "/spring/spring-library-object-converter.xml" })
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-ecm-file-lock.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
 {
