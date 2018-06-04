@@ -71,7 +71,8 @@ import java.util.UUID;
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-particpants.xml",
-        "/spring/spring-library-context-holder.xml"
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-ecm-file-lock.xml"
 })
 public class ContentFileToSolrFlowIT
 {
