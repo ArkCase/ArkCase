@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.onlyoffice.service;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.onlyoffice.model.DocumentTypeResolver;
 import com.armedia.acm.plugins.onlyoffice.model.config.*;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
@@ -20,25 +21,28 @@ public class ConfigServiceImpl implements ConfigService
     private EcmFileDao ecmFileDao;
     private UserDao userDao;
     private AuthenticationTokenService authenticationTokenService;
+    private ArkPermissionEvaluator arkPermissionEvaluator;
+    private DocumentTypeResolver documentTypeResolver;
 
     private String documentServerUrlApi;
     private String arkcaseBaseUrl;
-    private ArkPermissionEvaluator arkPermissionEvaluator;
 
     @Override
     public Config getConfig(Long fileId, Authentication auth)
     {
-        Config config = new Config();
-        config.setHeight("100%");
-        config.setWidth("100%");
-        config.setDocumentType("text");
-        config.setType("desktop");
         EcmFile ecmFile = ecmFileDao.find(fileId);
         String userId = auth.getName();
         AcmUser user = userDao.findByUserId(userId);
-
         String authTicket = authenticationTokenService.getTokenForAuthentication(auth);
+
+        Config config = new Config();
+        config.setHeight("100%");
+        config.setWidth("100%");
+        config.setType("desktop");
+        config.setDocumentType(documentTypeResolver.resolveDocumentType(ecmFile.getFileExtension().replace(".", "")));
+
         setDocumentConfig(config, ecmFile, user, authTicket);
+        setEditorConfig(config, user, authTicket);
 
         return config;
     }
@@ -69,14 +73,22 @@ public class ConfigServiceImpl implements ConfigService
         if (document.getPermissions() == null)
         {
             Authentication authentication = authenticationTokenService.getAuthenticationForToken(authTicket);
+            boolean reviewPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE", "review");
+            boolean writePermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE", "write");
+            boolean downloadPermission = false;
+            boolean printPermission = true;
             document.setPermissions(new DocumentPermissions(
-                    arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE", "review"),
-                    false,
-                    arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE", "write"),
-                    true,
-                    arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE", "review")));
+                    reviewPermission,
+                    downloadPermission,
+                    writePermission,
+                    printPermission,
+                    reviewPermission));
         }
 
+    }
+
+    private void setEditorConfig(Config config, AcmUser acmUser, String authTicket)
+    {
         // set editorConfig
         if (config.getEditorConfig() == null)
         {
@@ -143,5 +155,10 @@ public class ConfigServiceImpl implements ConfigService
     public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
     {
         this.arkPermissionEvaluator = arkPermissionEvaluator;
+    }
+
+    public void setDocumentTypeResolver(DocumentTypeResolver documentTypeResolver)
+    {
+        this.documentTypeResolver = documentTypeResolver;
     }
 }
