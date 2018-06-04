@@ -5,7 +5,7 @@
     <title>ONLYOFFICE</title>
 </head>
 <body>
-<h2>There was an error.</h2>
-<p>${errorMessage}</p>
+    <h2>There was an error.</h2>
+    <p>${errorMessage}</p>
 </body>
 </html>

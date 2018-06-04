@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.onlyoffice.service;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.onlyoffice.exceptions.UnsupportedExtension;
 import com.armedia.acm.plugins.onlyoffice.model.DocumentTypeResolver;
 import com.armedia.acm.plugins.onlyoffice.model.config.*;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -39,6 +40,10 @@ public class ConfigServiceImpl implements ConfigService
         config.setHeight("100%");
         config.setWidth("100%");
         config.setType("desktop");
+        if (ecmFile.getFileExtension() == null)
+        {
+            throw new UnsupportedExtension("Extension is not specified for document id[" + ecmFile.getId() + "].");
+        }
         config.setDocumentType(documentTypeResolver.resolveDocumentType(ecmFile.getFileExtension().replace(".", "")));
 
         setDocumentConfig(config, ecmFile, user, authTicket);
@@ -74,7 +79,8 @@ public class ConfigServiceImpl implements ConfigService
         {
             Authentication authentication = authenticationTokenService.getAuthenticationForToken(authTicket);
             boolean reviewPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE", "review");
-            boolean writePermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE", "write");
+            boolean writePermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
+                    "write|group-write");
             boolean downloadPermission = false;
             boolean printPermission = true;
             document.setPermissions(new DocumentPermissions(

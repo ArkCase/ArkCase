@@ -9,22 +9,22 @@ import java.util.*;
 public class DocumentTypeResolver
 {
     private List<String> textExt = Collections.unmodifiableList(Arrays.asList(
-            ".doc", ".docx", ".docm",
-            ".dot", ".dotx", ".dotm",
-            ".odt", ".fodt", ".rtf", ".txt",
-            ".html", ".htm", ".mht",
-            ".pdf", ".djvu", ".fb2", ".epub", ".xps"));
+            "doc", "docx", "docm",
+            "dot", "dotx", "dotm",
+            "odt", "fodt", "rtf", "txt",
+            "html", "htm", "mht",
+            "pdf", "djvu", "fb2", "epub", "xps"));
 
     private List<String> spreadsheetExt = Collections.unmodifiableList(Arrays.asList(
-            ".xls", ".xlsx", ".xlsm",
-            ".xlt", ".xltx", ".xltm",
-            ".ods", ".fods", ".csv"));
+            "xls", "xlsx", "xlsm",
+            "xlt", "xltx", "xltm",
+            "ods", "fods", "csv"));
 
     private List<String> presentationExt = Collections.unmodifiableList(Arrays.asList(
-            ".pps", ".ppsx", ".ppsm",
-            ".ppt", ".pptx", ".pptm",
-            ".pot", ".potx", ".potm",
-            ".odp", ".fodp"));
+            "pps", "ppsx", "ppsm",
+            "ppt", "pptx", "pptm",
+            "pot", "potx", "potm",
+            "odp", "fodp"));
 
     private Map<String, String> extensionDocumentTypeMap = new HashMap<>();
 
@@ -54,11 +54,12 @@ public class DocumentTypeResolver
      */
     public String resolveDocumentType(@NotNull String extension)
     {
-        if (!extensionDocumentTypeMap.containsKey(extension))
+        String toLowerCaseExtension = extension.toLowerCase();
+        if (!extensionDocumentTypeMap.containsKey(toLowerCaseExtension))
         {
-            throw new UnsupportedExtension("Extension " + extension + " is not supported.");
+            throw new UnsupportedExtension("Extension " + toLowerCaseExtension + " is not supported.");
         }
-        return extensionDocumentTypeMap.get(extension);
+        return extensionDocumentTypeMap.get(toLowerCaseExtension);
     }
 
     public List<String> getTextExt()
