@@ -74,7 +74,8 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundExcept
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.ContentStreamImpl;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mule.module.cmis.exception.CMISConnectorConnectionException;
 
 import java.io.ByteArrayInputStream;
@@ -94,7 +95,7 @@ import java.util.Map;
 public class ChemistryCMISFacade implements CMISFacade
 {
     private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
-    public static Logger log = Logger.getLogger(ChemistryCMISFacade.class);
+    public static Logger log = LogManager.getLogger(ChemistryCMISFacade.class);
     private Session session;
     private Map<String, String> connectionParameters;
     private String baseURL = null;

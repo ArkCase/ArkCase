@@ -65,6 +65,9 @@ public class AcmObjectLock implements Serializable, AcmEntity
     private Long objectId;
     @Column(name = "cm_object_type")
     private String objectType;
+    @Column(name = "cm_expiry", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expiry;
     @Column(name = "cm_object_lock_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
@@ -178,6 +181,16 @@ public class AcmObjectLock implements Serializable, AcmEntity
     public void setLockType(String lockType)
     {
         this.lockType = lockType;
+    }
+
+    public Date getExpiry()
+    {
+        return expiry;
+    }
+
+    public void setExpiry(Date expiry)
+    {
+        this.expiry = expiry;
     }
 
 }

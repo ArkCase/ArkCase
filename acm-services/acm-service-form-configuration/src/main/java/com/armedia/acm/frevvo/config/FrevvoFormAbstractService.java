@@ -369,7 +369,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                         // Creating Frevvo form from the existing XML
                         form = convertFromXMLToObject(cleanXML(existingXml), c);
                     }
-                    catch (MuleException e)
+                    catch (AcmUserActionFailedException e)
                     {
                         LOG.error("Cannot download file with id={}", ecmFile.getId());
                     }
