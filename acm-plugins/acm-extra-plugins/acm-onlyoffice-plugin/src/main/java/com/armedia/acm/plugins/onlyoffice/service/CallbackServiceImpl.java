@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.onlyoffice.exceptions.OnlyOfficeException;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseError;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseSuccess;
@@ -85,14 +86,22 @@ public class CallbackServiceImpl implements CallbackService
     private CallbackResponse handleReadyForSaving(CallBackData callBackData, Authentication authentication)
     {
         logger.debug("handleReadyForSaving.");
+
+        java.net.HttpURLConnection connection;
         try
         {
             URL url = new URL(callBackData.getUrl());
+            connection = (java.net.HttpURLConnection) url.openConnection();
+        }
+        catch (IOException e)
+        {
+            throw new OnlyOfficeException("Provided url [" + callBackData.getUrl() + "] is not accessible.", e);
+        }
 
-            java.net.HttpURLConnection connection = (java.net.HttpURLConnection) url.openConnection();
+        try (InputStream stream = connection.getInputStream())
+        {
             if (connection.getResponseCode() == 200)
             {
-                InputStream stream = connection.getInputStream();
                 String key = callBackData.getKey();
                 Long fileId = Long.parseLong(key.substring(0, key.indexOf("-")));
                 EcmFile ecmFile = ecmFileDao.find(fileId);
