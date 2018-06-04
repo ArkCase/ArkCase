@@ -4,9 +4,6 @@
 
     <bean id="onlyOfficeEditorController"
         class="com.armedia.acm.plugins.onlyoffice.web.controllers.OnlyOfficeController">
-        <property name="configService" ref="onlyOfficeConfigService"/>
-        <property name="callbackService" ref="onlyOfficeCallbackService"/>
-        <property name="objectMapper" ref="sourceObjectMapper"/>
     </bean>
-
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 </beans>

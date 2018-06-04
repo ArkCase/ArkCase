@@ -2,15 +2,9 @@ package com.armedia.acm.plugins.onlyoffice.service;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.onlyoffice.model.config.Config;
-import com.armedia.acm.plugins.onlyoffice.model.config.Document;
-import com.armedia.acm.plugins.onlyoffice.model.config.DocumentInfo;
-import com.armedia.acm.plugins.onlyoffice.model.config.DocumentPermissions;
-import com.armedia.acm.plugins.onlyoffice.model.config.EditorConfig;
-import com.armedia.acm.plugins.onlyoffice.model.config.EditorCustomization;
-import com.armedia.acm.plugins.onlyoffice.model.config.GoBack;
-import com.armedia.acm.plugins.onlyoffice.model.config.User;
+import com.armedia.acm.plugins.onlyoffice.model.config.*;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -25,8 +19,11 @@ public class ConfigServiceImpl implements ConfigService
     private Logger logger = LoggerFactory.getLogger(getClass());
     private EcmFileDao ecmFileDao;
     private UserDao userDao;
-    private String arkcaseBaseUrl;
     private AuthenticationTokenService authenticationTokenService;
+
+    private String documentServerUrlApi;
+    private String arkcaseBaseUrl;
+    private ArkPermissionEvaluator arkPermissionEvaluator;
 
     @Override
     public Config getConfig(Long fileId, Authentication auth)
@@ -71,15 +68,14 @@ public class ConfigServiceImpl implements ConfigService
         // set permissions
         if (document.getPermissions() == null)
         {
-            document.setPermissions(new DocumentPermissions());
+            Authentication authentication = authenticationTokenService.getAuthenticationForToken(authTicket);
+            document.setPermissions(new DocumentPermissions(
+                    arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE", "review"),
+                    false,
+                    arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE", "write"),
+                    true,
+                    arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE", "review")));
         }
-        DocumentPermissions permissions = document.getPermissions();
-        // TODO instead of hardcoding them, we need to evaluate them from the actual user
-        permissions.setEdit(true);
-        permissions.setComment(true);
-        permissions.setDownload(true);
-        permissions.setPrint(true);
-        permissions.setReview(true);
 
         // set editorConfig
         if (config.getEditorConfig() == null)
@@ -105,10 +101,6 @@ public class ConfigServiceImpl implements ConfigService
         customization.setAutosave(true);
         customization.setComments(true);
         customization.setShowReviewChanges(true);
-        GoBack goBack = new GoBack();
-        goBack.setUrl(arkcaseBaseUrl);
-        goBack.setBlank(true);
-        // customization.setGoback(goBack);
     }
 
     public void setUserDao(UserDao userDao)
@@ -129,5 +121,27 @@ public class ConfigServiceImpl implements ConfigService
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public void setDocumentServerUrlApi(String documentServerUrlApi)
+    {
+        this.documentServerUrlApi = documentServerUrlApi;
+    }
+
+    @Override
+    public String getDocumentServerUrlApi()
+    {
+        return documentServerUrlApi;
+    }
+
+    @Override
+    public String getArkcaseBaseUrl()
+    {
+        return arkcaseBaseUrl;
+    }
+
+    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
+    {
+        this.arkPermissionEvaluator = arkPermissionEvaluator;
     }
 }

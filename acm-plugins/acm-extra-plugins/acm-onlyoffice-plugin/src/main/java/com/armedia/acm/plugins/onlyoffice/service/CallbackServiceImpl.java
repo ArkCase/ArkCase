@@ -4,9 +4,11 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.plugins.onlyoffice.model.CallBackData;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
-import com.armedia.acm.plugins.onlyoffice.model.StatusConstants;
+import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseError;
+import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseSuccess;
+import com.armedia.acm.plugins.onlyoffice.model.StatusType;
+import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,21 +30,21 @@ public class CallbackServiceImpl implements CallbackService
     {
         Objects.nonNull(callBackData);
         logger.debug("handle callback data [{}]", callBackData);
-        switch (callBackData.getStatus())
+        switch (StatusType.from(callBackData.getStatus()))
         {
-        case StatusConstants.NO_DOCUMENT_WITH_ID_FOUND:
+        case NO_DOCUMENT_WITH_ID_FOUND:
             return handleNoDocumentWithIdFound(callBackData);
-        case StatusConstants.BEING_EDITED:
+        case BEING_EDITED:
             return handleBeingEdited(callBackData);
-        case StatusConstants.READY_FOR_SAVING:
+        case READY_FOR_SAVING:
             return handleReadyForSaving(callBackData, authentication);
-        case StatusConstants.SAVING_ERROR_OCCURED:
+        case SAVING_ERROR_OCCURED:
             return handleSavingErrorOccured(callBackData);
-        case StatusConstants.CLOSED_NO_CHANGES:
+        case CLOSED_NO_CHANGES:
             return handleClosedNoChanges(callBackData);
-        case StatusConstants.EDITED_BUT_ALREADY_SAVED:
+        case EDITED_BUT_ALREADY_SAVED:
             return handleEditedButAlreadySaved(callBackData);
-        case StatusConstants.ERROR_WHILE_SAVING:
+        case ERROR_WHILE_SAVING:
             return handleErrorWhileSaving(callBackData);
         default:
             return handleUnknownStatusProvided(callBackData);
@@ -52,32 +54,32 @@ public class CallbackServiceImpl implements CallbackService
     private CallbackResponse handleUnknownStatusProvided(CallBackData callBackData)
     {
         logger.debug("handleUnknownStatusProvided.");
-        return new CallbackResponse();
+        return new CallbackResponseError("Unknown status provided");
     }
 
     private CallbackResponse handleErrorWhileSaving(CallBackData callBackData)
     {
         logger.debug("handleErrorWhileSaving.");
-        return new CallbackResponse();
+        return new CallbackResponseSuccess();
     }
 
     private CallbackResponse handleEditedButAlreadySaved(CallBackData callBackData)
     {
         logger.debug("handleEditedButAlreadySaved.");
-        return new CallbackResponse();
+        return new CallbackResponseSuccess();
     }
 
     private CallbackResponse handleClosedNoChanges(CallBackData callBackData)
     {
         // TODO release lock
         logger.debug("handleClosedNoChanges.");
-        return new CallbackResponse();
+        return new CallbackResponseSuccess();
     }
 
     private CallbackResponse handleSavingErrorOccured(CallBackData callBackData)
     {
         logger.debug("handleSavingErrorOccured.");
-        return new CallbackResponse();
+        return new CallbackResponseSuccess();
     }
 
     private CallbackResponse handleReadyForSaving(CallBackData callBackData, Authentication authentication)
@@ -104,33 +106,31 @@ public class CallbackServiceImpl implements CallbackService
             {
                 // TODO release lock?
                 logger.error("File not saved. Got response status [{}]", connection.getResponseCode());
+                return new CallbackResponseError("File not saved. Got response status [" + connection.getResponseCode() + "]");
             }
         }
         catch (IOException | AcmCreateObjectFailedException e)
         {
             logger.error("Error saving document. Reason: [{}]", e.getMessage());
-            return new CallbackResponse(10);
+            return new CallbackResponseError(e.getMessage());
         }
-        return new CallbackResponse();
+        return new CallbackResponseSuccess();
     }
 
     private CallbackResponse handleBeingEdited(CallBackData callBackData)
     {
         // this method is being called when user opens document for editing
         // can't think of any other handling except for logging.
+        // TODO update lock information about users who are editing or update information about active documents and
+        // users
         logger.debug("handleBeingEdited.");
-        return new CallbackResponse();
+        return new CallbackResponseSuccess();
     }
 
     private CallbackResponse handleNoDocumentWithIdFound(CallBackData callBackData)
     {
         logger.error("Document with wrong id[{}] provided, editing is not possible.", callBackData.getKey());
-        return new CallbackResponse(1);
-    }
-
-    private byte[] extractMd5Digest(String queryUrl)
-    {
-        return null;
+        return new CallbackResponseSuccess();
     }
 
     public void setEcmFileDao(EcmFileDao ecmFileDao)

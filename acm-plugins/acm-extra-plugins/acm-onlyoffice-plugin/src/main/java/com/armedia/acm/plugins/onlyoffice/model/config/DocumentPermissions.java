@@ -35,6 +35,15 @@ public class DocumentPermissions
      */
     private boolean review;
 
+    public DocumentPermissions(boolean comment, boolean download, boolean edit, boolean print, boolean review)
+    {
+        this.comment = comment;
+        this.download = download;
+        this.edit = edit;
+        this.print = print;
+        this.review = review;
+    }
+
     public boolean isComment()
     {
         return comment;

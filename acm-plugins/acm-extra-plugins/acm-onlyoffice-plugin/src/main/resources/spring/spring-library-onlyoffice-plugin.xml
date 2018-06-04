@@ -2,17 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="onlyOfficeProperties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
-        <property name="location" value="file:${user.home}/.arkcase/acm/onlyoffice-plugin.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-    </bean>
-
     <bean id="onlyOfficeConfigService"
           class="com.armedia.acm.plugins.onlyoffice.service.ConfigServiceImpl">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
         <property name="arkcaseBaseUrl" value="${arkcase.baseurl}"/>
+        <property name="documentServerUrlApi" value="${files.docservice.url.api}"/>
     </bean>
 
     <bean id="onlyOfficeCallbackService"
