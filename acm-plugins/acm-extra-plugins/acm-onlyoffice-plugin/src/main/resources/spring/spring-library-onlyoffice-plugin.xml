@@ -15,10 +15,13 @@
 
     <bean id="onlyOfficeCallbackService"
         class="com.armedia.acm.plugins.onlyoffice.service.CallbackServiceImpl">
+        <property name="onlyOfficeEventPublisher" ref="onlyOfficeEventPublisher"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
-    <bean id="documentTypeResolver" class="com.armedia.acm.plugins.onlyoffice.model.DocumentTypeResolver"/>
+    <bean id="documentTypeResolver" class="com.armedia.acm.plugins.onlyoffice.util.DocumentTypeResolver"/>
+
+    <bean id="onlyOfficeEventPublisher" class="com.armedia.acm.plugins.onlyoffice.service.OnlyOfficeEventPublisher"/>
 
 </beans>
