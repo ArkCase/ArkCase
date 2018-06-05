@@ -36,6 +36,7 @@ import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseError;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseSuccess;
 import com.armedia.acm.plugins.onlyoffice.model.StatusType;
+import com.armedia.acm.plugins.onlyoffice.model.callback.Action;
 import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
 
 import org.slf4j.Logger;
@@ -45,6 +46,7 @@ import org.springframework.security.core.Authentication;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 
 public class CallbackServiceImpl implements CallbackService
@@ -52,6 +54,7 @@ public class CallbackServiceImpl implements CallbackService
     private Logger logger = LoggerFactory.getLogger(getClass());
     private EcmFileDao ecmFileDao;
     private EcmFileService ecmFileService;
+    private OnlyOfficeEventPublisher onlyOfficeEventPublisher;
 
     @Override
     public CallbackResponse handleCallback(CallBackData callBackData, Authentication authentication)
@@ -99,6 +102,12 @@ public class CallbackServiceImpl implements CallbackService
 
     private CallbackResponse handleClosedNoChanges(CallBackData callBackData)
     {
+        EcmFile ecmFile = ecmFileDao.find(parseFileId(callBackData.getKey()));
+        // handle actions
+        if (callBackData.getActions() != null)
+        {
+            handleActions(callBackData.getActions(), ecmFile);
+        }
         // TODO release lock
         logger.debug("handleClosedNoChanges.");
         return new CallbackResponseSuccess();
@@ -113,7 +122,6 @@ public class CallbackServiceImpl implements CallbackService
     private CallbackResponse handleReadyForSaving(CallBackData callBackData, Authentication authentication)
     {
         logger.debug("handleReadyForSaving.");
-
         java.net.HttpURLConnection connection;
         try
         {
@@ -130,12 +138,18 @@ public class CallbackServiceImpl implements CallbackService
             if (connection.getResponseCode() == 200)
             {
                 String key = callBackData.getKey();
-                Long fileId = Long.parseLong(key.substring(0, key.indexOf("-")));
+                Long fileId = parseFileId(key);
                 EcmFile ecmFile = ecmFileDao.find(fileId);
 
                 ecmFileService.update(ecmFile, stream, authentication);
                 stream.close();
                 logger.debug("Document with key [{}] successfully saved to Arkcase.", key);
+                // handle actions
+                if (callBackData.getActions() != null)
+                {
+                    handleActions(callBackData.getActions(), ecmFile);
+                }
+                onlyOfficeEventPublisher.publishDocumentCoEditSavedEvent(ecmFile, authentication.getName());
                 // TODO release lock
             }
             else
@@ -153,13 +167,25 @@ public class CallbackServiceImpl implements CallbackService
         return new CallbackResponseSuccess();
     }
 
+    private long parseFileId(String key)
+    {
+        return Long.parseLong(key.substring(0, key.indexOf("-")));
+    }
+
+    /**
+     * this method is being called when user opens/closes document for/from editing
+     * 
+     * @param callBackData
+     * @return CallbackResponseSuccess
+     */
     private CallbackResponse handleBeingEdited(CallBackData callBackData)
     {
-        // this method is being called when user opens document for editing
-        // can't think of any other handling except for logging.
-        // TODO update lock information about users who are editing or update information about active documents and
-        // users
-        logger.debug("handleBeingEdited.");
+        EcmFile ecmFile = ecmFileDao.find(parseFileId(callBackData.getKey()));
+        if (callBackData.getActions() != null)
+        {
+            handleActions(callBackData.getActions(), ecmFile);
+        }
+
         return new CallbackResponseSuccess();
     }
 
@@ -167,6 +193,23 @@ public class CallbackServiceImpl implements CallbackService
     {
         logger.error("Document with wrong id[{}] provided, editing is not possible.", callBackData.getKey());
         return new CallbackResponseSuccess();
+    }
+
+    private void handleActions(List<Action> actions, EcmFile ecmFile)
+    {
+        for (Action action : actions)
+        {
+            // if type is 1, user joins editing
+            if (Integer.valueOf(1).compareTo(action.getType()) == 0)
+            {
+                onlyOfficeEventPublisher.publishDocumentCoEditJoinedEvent(ecmFile, action.getUserid());
+            }
+            // if type is 0, user leave editing
+            if (Integer.valueOf(0).compareTo(action.getType()) == 0)
+            {
+                onlyOfficeEventPublisher.publishDocumentCoEditLeaveEvent(ecmFile, action.getUserid());
+            }
+        }
     }
 
     public void setEcmFileDao(EcmFileDao ecmFileDao)
@@ -177,5 +220,10 @@ public class CallbackServiceImpl implements CallbackService
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
+    }
+
+    public void setOnlyOfficeEventPublisher(OnlyOfficeEventPublisher onlyOfficeEventPublisher)
+    {
+        this.onlyOfficeEventPublisher = onlyOfficeEventPublisher;
     }
 }
