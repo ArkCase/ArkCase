@@ -37,6 +37,7 @@ import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
 import org.junit.Before;
@@ -66,7 +67,14 @@ import java.util.UUID;
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-library-object-converter.xml"
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-ecm-file-lock.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-drools-rule-monitor.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-ecm-tika.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-activiti-configuration.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class CaseFileDaoIT
@@ -151,21 +159,17 @@ public class CaseFileDaoIT
         caseFile.setContainer(container);
 
         CaseFile saved = caseFileDao.save(caseFile);
+        assertNotNull(saved.getId());
 
-        acmObjectLockingManager.acquireObjectLock(saved.getId(), saved.getObjectType(), "OBJECT_LOCK", null, false,
+        AcmObjectLock lock = acmObjectLockingManager.acquireObjectLock(saved.getId(), saved.getObjectType(), "OBJECT_LOCK", null, false,
                 authentication.getName());
 
-        entityManager.flush();
+        assertNotNull(lock);
 
-        saved = entityManager.find(CaseFile.class, saved.getId());
-        entityManager.refresh(saved);
+        assertNotNull(lock.getId());
+        assertEquals(saved.getId(), lock.getObjectId());
+        assertEquals(saved.getObjectType(), lock.getObjectType());
 
-        assertNotNull(saved.getLock());
-        assertNotNull(saved.getLock().getId());
-        assertEquals(saved.getId(), saved.getLock().getObjectId());
-        assertEquals(saved.getObjectType(), saved.getLock().getObjectType());
-
-        assertNotNull(saved.getId());
     }
 
     @Test

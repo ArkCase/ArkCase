@@ -27,7 +27,6 @@ package com.armedia.acm.plugins.person;
  * #L%
  */
 
-
 import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -74,7 +73,8 @@ import java.util.List;
         "/spring/spring-library-object-diff.xml",
         "/spring/spring-library-organization-rules.xml",
         "/spring/spring-library-object-association-plugin.xml",
-        "/spring/spring-library-object-converter.xml" })
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-ecm-file-lock.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonAssociationIT
 {
