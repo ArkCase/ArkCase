@@ -105,7 +105,8 @@ public class ConfigServiceImpl implements ConfigService
         if (document.getPermissions() == null)
         {
             Authentication authentication = authenticationTokenService.getAuthenticationForToken(authTicket);
-            boolean reviewPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE", "review");
+            boolean reviewPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
+                    "write|group-write");
             boolean writePermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
                     "write|group-write");
             boolean downloadPermission = false;
