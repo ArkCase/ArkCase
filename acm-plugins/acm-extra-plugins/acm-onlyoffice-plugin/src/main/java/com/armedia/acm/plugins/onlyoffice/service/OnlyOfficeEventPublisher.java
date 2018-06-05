@@ -57,7 +57,7 @@ public class OnlyOfficeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishDocumentCoEditJoinedEvent(EcmFile ecmFile, String userId)
     {
-        log.debug("Publishing a user joins co-edit document event.");
+        log.debug("Publishing a user [{}] joins co-edit document [{}] event.", userId, ecmFile.getFileId());
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         DocumentCoEditEvent event = new DocumentCoEditJoinedEvent(ecmFile, userId, ipAddress);
         event.setSucceeded(true);
@@ -66,7 +66,7 @@ public class OnlyOfficeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishDocumentCoEditLeaveEvent(EcmFile ecmFile, String userId)
     {
-        log.debug("Publishing a user leave co-edit document event.");
+        log.debug("Publishing a user [{}] leave co-edit document [{}] event.", userId, ecmFile.getFileId());
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         DocumentCoEditEvent event = new DocumentCoEditLeaveEvent(ecmFile, userId, ipAddress);
         event.setSucceeded(true);
@@ -75,7 +75,7 @@ public class OnlyOfficeEventPublisher implements ApplicationEventPublisherAware
 
     public void publishDocumentCoEditSavedEvent(EcmFile ecmFile, String userId)
     {
-        log.debug("Publishing a co-edit document saved event.");
+        log.debug("Publishing a co-edit document [{}] saved event.", ecmFile.getFileId());
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         DocumentCoEditEvent event = new DocumentCoEditSavedEvent(ecmFile, userId, ipAddress);
         event.setSucceeded(true);
