@@ -40,6 +40,17 @@
         <param-value>ldap</param-value>
     </context-param>
 
+    <filter>
+        <filter-name>requestdumper</filter-name>
+        <filter-class>
+            org.apache.catalina.filters.RequestDumperFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>requestdumper</filter-name>
+        <url-pattern>/onlyoffice/*</url-pattern>
+    </filter-mapping>
+
     <!-- Sets RequestId, User Id, Remote address in org.slfj.MDC variables -->
     <filter>
         <filter-name>RequestMDCFilter</filter-name>
