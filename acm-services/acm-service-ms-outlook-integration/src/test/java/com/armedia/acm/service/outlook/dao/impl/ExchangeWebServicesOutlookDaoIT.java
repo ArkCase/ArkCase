@@ -108,7 +108,8 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
         "/spring/spring-library-email.xml",
         "/spring/spring-library-calendar-config-service.xml",
         "/spring/spring-library-email-smtp.xml",
-        "/spring/spring-library-object-converter.xml"
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-ecm-file-lock.xml"
 })
 public class ExchangeWebServicesOutlookDaoIT
 {
