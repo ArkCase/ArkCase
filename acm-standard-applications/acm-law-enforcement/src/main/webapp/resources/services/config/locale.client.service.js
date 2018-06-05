@@ -171,7 +171,7 @@ angular.module('services').config(function($provide) {
             cache: false
         },
         _getLabelResources: {
-            url: "api/latest/plugin/admin/labelmanagement/resources?ns[]=:parts&lang=:lang",
+            url: "api/latest/plugin/admin/labelmanagement/resources?" + encodeURIComponent('ns[]') + "=:parts&lang=:lang",
             method: "GET",
             isArray: true,
             cache: false

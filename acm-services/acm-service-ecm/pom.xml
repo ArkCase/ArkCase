@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.2.11-SNAPSHOT</version>
+        <version>3.2.12-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -220,6 +220,11 @@
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-parsers</artifactId>
+        </dependency>
+        <!--  needed by tika, but Tika asks for 1.7.24, which we exclude in the top-level pom, so we can use 1.7.25 instead  -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>           
         </dependency>
 
         <!-- json -->
