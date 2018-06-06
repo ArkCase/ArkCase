@@ -368,5 +368,63 @@
             "nameAsc": "Trier par nom Asc",
             "noSort": "(Non Trier)"
         }
+    },
+    "changes": {
+        "object_replaced": {
+            "complaint": {
+                "defaultAddress": "Adresse par défaut modifiée"
+            }
+        },
+        "value_changed": {
+            "complaint": {
+                "details": "fr_Complaint - Détails modifiés",
+                "complaintTitle": "fr_Complaint - Titre changé",
+                "complaintType": "fr_Complaint - Type changé",
+                "priority": "fr_Complaint - Priority changé",
+                "status": "fr_Complaint - Statut changé",
+                "complaintNumber": "fr_Complaint - Number changé",
+                "dueDate": "fr_Complaint - Due Date changé",
+                "tag": "fr_Complaint - Tag changé",
+                "modifier": "fr_Complaint - Modifier changé",
+                "addresses.address": {
+                    "city": "Adresse - Ville modifiée",
+                    "zip": "Adresse - Code postal modifié",
+                    "streetAddress": "Adresse - Rue modifiée",
+                    "streetAddress2": "Adresse - Street2 modifié",
+                    "type": "Adresse - Type modifié",
+                    "country": "Adresse - Pays modifié",
+                    "state": "Adresse - État modifié"
+                },
+                "defaultAddress": {
+                    "city": "Adresse - Ville modifiée",
+                    "zip": "Adresse - Code postal modifié",
+                    "streetAddress": "Adresse - Rue modifiée",
+                    "streetAddress2": "Adresse - Street2 modifié",
+                    "type": "Adresse - Type modifié",
+                    "country": "Adresse - Pays modifié",
+                    "state": "Adresse - État modifié"
+                }
+            }
+        },
+        "collection_element_added": {
+            "complaint": {
+                "addresses.address": "Adresse ajoutée",
+                "personAssociations.personAssociation": "Personne ajoutée",
+                "organizationAssociations.organizationAssociation": "Organisation ajoutée",
+                "childObjects": "Association ajoutée",
+                "associationsToObjects": "Association ajoutée",
+                "associationsFromObjects": "Association ajoutée"
+            }
+        },
+        "collection_element_removed": {
+            "complaint": {
+                "addresses.address": "Adresse supprimée",
+                "personAssociations.personAssociation": "Personne supprimée",
+                "organizationAssociations.organizationAssociation": "Organisation supprimée",
+                "childObjects": "Association supprimée",
+                "associationsToObjects": "Association supprimée",
+                "associationsFromObjects": "Association supprimée"
+            }
+        }
     }
 }

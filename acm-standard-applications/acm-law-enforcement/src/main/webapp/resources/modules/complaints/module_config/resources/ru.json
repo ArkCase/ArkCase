@@ -368,5 +368,63 @@
             "nameAsc": "Сортировать по имени Asc",
             "noSort": "(нет Сортировать)"
         }
+    },
+    "changes": {
+        "object_replaced": {
+            "complaint": {
+                "defaultAddress": "Изменен адрес по умолчанию"
+            }
+        },
+        "value_changed": {
+            "complaint": {
+                "details": "ru_Complaint - Details Changed",
+                "complaintTitle": "ru_Complaint - Title Changed",
+                "complaintType": "ru_Complaint - Type Changed",
+                "priority": "ru_Complaint - Priority Changed",
+                "status": "ru_Complaint - Status Changed",
+                "complaintNumber": "ru_Complaint - Number Changed",
+                "dueDate": "ru_Complaint - Due Date Changed",
+                "tag": "ru_Complaint - Tag Changed",
+                "modifier": "ru_Complaint - Modifier Changed",
+                "addresses.address": {
+                    "city": "Адрес - город изменен",
+                    "zip": "Адрес - изменен почтовый индекс",
+                    "streetAddress": "Адрес - Изменена улица",
+                    "streetAddress2": "Адрес - Улица 2 изменена",
+                    "type": "Адрес - Тип изменен",
+                    "country": "Адрес - Страна изменена",
+                    "state": "Адрес - состояние изменено"
+                },
+                "defaultAddress": {
+                    "city": "Адрес - город изменен",
+                    "zip": "Адрес - изменен почтовый индекс",
+                    "streetAddress": "Адрес - Изменена улица",
+                    "streetAddress2": "Адрес - Улица 2 изменена",
+                    "type": "Адрес - Тип изменен",
+                    "country": "Адрес - Страна изменена",
+                    "state": "Адрес - состояние изменено"
+                }
+            }
+        },
+        "collection_element_added": {
+            "complaint": {
+                "addresses.address": "Добавлен адрес",
+                "personAssociations.personAssociation": "Добавлен Человек",
+                "organizationAssociations.organizationAssociation": "Добавлена ​​организация",
+                "childObjects": "Добавлена ​​ассоциация",
+                "associationsToObjects": "Добавлена ​​ассоциация",
+                "associationsFromObjects": "Добавлена ​​ассоциация"
+            }
+        },
+        "collection_element_removed": {
+            "complaint": {
+                "addresses.address": "Адрес удален",
+                "personAssociations.personAssociation": "Человек удален",
+                "organizationAssociations.organizationAssociation": "Организация удалена",
+                "childObjects": "Ассоциация удалена",
+                "associationsToObjects": "Ассоциация удалена",
+                "associationsFromObjects": "Ассоциация удалена"
+            }
+        }
     }
 }

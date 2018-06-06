@@ -368,5 +368,63 @@
             "nameAsc": "Classificar por nome Asc",
             "noSort": "(Não classificar)"
         }
+    },
+    "changes": {
+        "object_replaced": {
+            "complaint": {
+                "defaultAddress": "Endereço padrão alterado"
+            }
+        },
+        "value_changed": {
+            "complaint": {
+                "details": "pt_Complaint - Details Changed",
+                "complaintTitle": "pt_Complaint - Title Changed",
+                "complaintType": "pt_Complaint - Type Changed",
+                "priority": "pt_Complaint - Priority Changed",
+                "status": "pt_Complaint - Status Changed",
+                "complaintNumber": "pt_Complaint - Number Changed",
+                "dueDate": "pt_Complaint - Due Date Changed",
+                "tag": "pt_Complaint - Tag Changed",
+                "modifier": "pt_Complaint - Modifier Changed",
+                "addresses.address": {
+                    "city": "Endereço - Cidade alterada",
+                    "zip": "Endereço - Código postal alterado",
+                    "streetAddress": "Endereço - Street Changed",
+                    "streetAddress2": "Endereço - Street2 Changed",
+                    "type": "Endereço - Tipo alterado",
+                    "country": "Endereço - País alterado",
+                    "state": "Endereço - Estado alterado"
+                },
+                "defaultAddress": {
+                    "city": "Endereço - Cidade alterada",
+                    "zip": "Endereço - Código postal alterado",
+                    "streetAddress": "Endereço - Street Changed",
+                    "streetAddress2": "Endereço - Street2 Changed",
+                    "type": "Endereço - Tipo alterado",
+                    "country": "Endereço - País alterado",
+                    "state": "Endereço - Estado alterado"
+                }
+            }
+        },
+        "collection_element_added": {
+            "complaint": {
+                "addresses.address": "Endereço Adicionado",
+                "personAssociations.personAssociation": "Pessoa adicionada",
+                "organizationAssociations.organizationAssociation": "Organização adicionada",
+                "childObjects": "Associação Adicionado",
+                "associationsToObjects": "Associação Adicionado",
+                "associationsFromObjects": "Associação Adicionado"
+            }
+        },
+        "collection_element_removed": {
+            "complaint": {
+                "addresses.address": "Endereço removido",
+                "personAssociations.personAssociation": "Pessoa removida",
+                "organizationAssociations.organizationAssociation": "Organização removida",
+                "childObjects": "Associação Removida",
+                "associationsToObjects": "Associação Removida",
+                "associationsFromObjects": "Associação Removida"
+            }
+        }
     }
 }
