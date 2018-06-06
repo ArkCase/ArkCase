@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.complaint.web.api;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
@@ -60,13 +61,12 @@ public class CreateComplaintAPIController
     private SaveComplaintTransaction complaintTransaction;
     private ComplaintEventPublisher eventPublisher;
     private FrevvoFormService complaintService;
+    private ObjectConverter objectConverter;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @DecoratedAssignedObjectParticipants
     @ResponseBody
-    public Complaint createComplaint(
-            @RequestBody Complaint in,
-            Authentication auth) throws AcmCreateObjectFailedException
+    public Complaint createComplaint(@RequestBody Complaint in, Authentication auth) throws AcmCreateObjectFailedException
     {
         log.trace("Got a complaint: {}; complaint ID: '{}'", in, in.getComplaintId());
         log.trace("complaint type: {}", in.getComplaintType());
@@ -80,12 +80,19 @@ public class CreateComplaintAPIController
 
         try
         {
+            Complaint oldComplaint = null;
+            if (!isInsert)
+            {
+                String old = getObjectConverter().getJsonMarshaller().marshal(complaintTransaction.getComplaint(in.getComplaintId()));
+                oldComplaint = getObjectConverter().getJsonUnmarshaller().unmarshall(old, Complaint.class);
+            }
+
             Complaint saved = getComplaintTransaction().saveComplaint(in, auth);
 
             // Update Frevvo XML file
             getComplaintService().updateXML(saved, auth, ComplaintForm.class);
 
-            getEventPublisher().publishComplaintEvent(saved, auth, isInsert, true);
+            getEventPublisher().publishComplaintEvent(saved, oldComplaint, auth, isInsert, true);
 
             // since the approver list is not persisted to the database, we want to send them back to the caller...
             // the approver list is only here to send to the Activiti engine. After the workflow is started the
@@ -98,7 +105,7 @@ public class CreateComplaintAPIController
         catch (PipelineProcessException | TransactionException e)
         {
             log.error("Could not save complaint: {}", e.getMessage(), e);
-            getEventPublisher().publishComplaintEvent(in, auth, isInsert, false);
+            getEventPublisher().publishComplaintEvent(in, null, auth, isInsert, false);
 
             throw new AcmCreateObjectFailedException("complaint", e.getMessage(), e);
         }
@@ -134,4 +141,15 @@ public class CreateComplaintAPIController
     {
         this.complaintService = complaintService;
     }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
+    }
+
 }

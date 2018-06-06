@@ -142,7 +142,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         mockComplaintService.updateXML(capture(found), eq(mockAuthentication), eq(ComplaintForm.class));
         expectLastCall().anyTimes();
         expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication))).andReturn(saved);
-        mockEventPublisher.publishComplaintEvent(capture(found), eq(mockAuthentication), eq(false), eq(true));
+        mockEventPublisher.publishComplaintEvent(capture(found), eq(complaint), eq(mockAuthentication), eq(false), eq(true));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -237,7 +237,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication)))
                 .andThrow(new CannotCreateTransactionException("testException"));
-        mockEventPublisher.publishComplaintEvent(capture(found), eq(mockAuthentication), eq(false), eq(false));
+        mockEventPublisher.publishComplaintEvent(capture(found), eq(complaint), eq(mockAuthentication), eq(false), eq(false));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");

@@ -368,5 +368,63 @@
             "nameAsc": "Nach Name sortieren Auf",
             "noSort": "(Keine Sortierung)"
         }
+    },
+    "changes": {
+        "object_replaced": {
+            "complaint": {
+                "defaultAddress": "Standardadresse geändert"
+            }
+        },
+        "value_changed": {
+            "complaint": {
+                "details": "Complaint - Details geändert",
+                "complaintTitle": "Complaint - Titel geändert",
+                "complaintType": "de_Complaint - Type Changed",
+                "priority": "de_Complaint - Priority Changed",
+                "status": "Complaint - Status geändert",
+                "complaintNumber": "de_Complaint - Number Changed",
+                "dueDate": "de_Complaint - Due Date Changed",
+                "tag": "de_Complaint - Tag Changed",
+                "modifier": "de_Complaint - Modifier Changed",
+                "addresses.address": {
+                    "city": "Adresse - Stadt geändert",
+                    "zip": "Adresse - Postleitzahl geändert",
+                    "streetAddress": "Adresse - Straße geändert",
+                    "streetAddress2": "Adresse - Street2 geändert",
+                    "type": "Adresse - Typ geändert",
+                    "country": "Adresse - Land geändert",
+                    "state": "Adresse - Status geändert"
+                },
+                "defaultAddress": {
+                    "city": "Adresse - Stadt geändert",
+                    "zip": "Adresse - Postleitzahl geändert",
+                    "streetAddress": "Adresse - Straße geändert",
+                    "streetAddress2": "Adresse - Street2 geändert",
+                    "type": "Adresse - Typ geändert",
+                    "country": "Adresse - Land geändert",
+                    "state": "Adresse - Status geändert"
+                }
+            }
+        },
+        "collection_element_added": {
+            "complaint": {
+                "addresses.address": "Adresse hinzugefügt",
+                "personAssociations.personAssociation": "Person hinzugefügt",
+                "organizationAssociations.organizationAssociation": "Organisation hinzugefügt",
+                "childObjects": "Assoziation hinzugefügt",
+                "associationsToObjects": "Assoziation hinzugefügt",
+                "associationsFromObjects": "Assoziation hinzugefügt"
+            }
+        },
+        "collection_element_removed": {
+            "complaint": {
+                "addresses.address": "Adresse entfernt",
+                "personAssociations.personAssociation": "Person entfernt",
+                "organizationAssociations.organizationAssociation": "Organisation entfernt",
+                "childObjects": "Assoziation entfernt",
+                "associationsToObjects": "Assoziation entfernt",
+                "associationsFromObjects": "Assoziation entfernt"
+            }
+        }
     }
 }
