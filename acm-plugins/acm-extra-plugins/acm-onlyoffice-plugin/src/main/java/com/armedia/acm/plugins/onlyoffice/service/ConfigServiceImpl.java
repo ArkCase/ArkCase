@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.onlyoffice.service;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.onlyoffice.exceptions.UnsupportedExtension;
-import com.armedia.acm.plugins.onlyoffice.model.DocumentTypeResolver;
 import com.armedia.acm.plugins.onlyoffice.model.config.*;
+import com.armedia.acm.plugins.onlyoffice.util.DocumentTypeResolver;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -105,7 +105,8 @@ public class ConfigServiceImpl implements ConfigService
         if (document.getPermissions() == null)
         {
             Authentication authentication = authenticationTokenService.getAuthenticationForToken(authTicket);
-            boolean reviewPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE", "review");
+            boolean reviewPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
+                    "write|group-write");
             boolean writePermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
                     "write|group-write");
             boolean downloadPermission = false;
