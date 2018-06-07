@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.onlyoffice.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.lock.FileLockType;
 import com.armedia.acm.plugins.onlyoffice.exceptions.OnlyOfficeException;
@@ -111,7 +112,7 @@ public class CallbackServiceImpl implements CallbackService
         {
             handleActions(callBackData.getActions(), ecmFile);
         }
-        objectLockService.removeLock(ecmFile.getId(), "FILE", FileLockType.SHARED_WRITE.name(), authentication);
+        objectLockService.removeLock(ecmFile.getId(), EcmFileConstants.OBJECT_FILE_TYPE, FileLockType.SHARED_WRITE.name(), authentication);
         logger.debug("handleClosedNoChanges.");
         return new CallbackResponseSuccess();
     }
@@ -152,7 +153,7 @@ public class CallbackServiceImpl implements CallbackService
                 {
                     handleActions(callBackData.getActions(), ecmFile);
                 }
-                objectLockService.removeLock(fileId, "FILE", FileLockType.SHARED_WRITE.name(), authentication);
+                objectLockService.removeLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE, FileLockType.SHARED_WRITE.name(), authentication);
                 onlyOfficeEventPublisher.publishDocumentCoEditSavedEvent(ecmFile, authentication.getName());
             }
             else

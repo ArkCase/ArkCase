@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.onlyoffice.web.controllers;
  * #L%
  */
 
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.lock.FileLockType;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
 import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
@@ -64,7 +65,7 @@ public class OnlyOfficeController
         {
             ModelAndView mav = new ModelAndView("onlyoffice/editor");
             // lock file for onlyoffice processing
-            AcmObjectLock lock = objectLockingManager.acquireObjectLock(fileId, "FILE",
+            AcmObjectLock lock = objectLockingManager.acquireObjectLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE,
                     FileLockType.SHARED_WRITE.name(), null, false, auth.getName());
 
             mav.addObject("config", objectMapper.writeValueAsString(configService.getConfig(fileId, auth)));
