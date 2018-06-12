@@ -473,6 +473,13 @@
             "iHaveCreated": "我創建的所有",
             "noFilter": "（無限制）"
         },
+        "filters": {
+            "iHaveCreatedActive": "zh-tw_I've Created - Active",
+            "iHaveCreated": "我創建的所有",
+            "active": "zh-tw_Active",
+            "inActive": "zh-tw_In active",
+            "noFilter": "（無限制）"
+        },
         "sorters": {
             "createdDateAsc": "按創建日期排序",
             "createdDateDesc": "按創建日期降序",
