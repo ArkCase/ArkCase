@@ -479,7 +479,10 @@
             "history.label": "歷史"
         },
         "filters": {
+            "iHaveCreatedActive": "zh-tw_I've Created - Active",
             "iHaveCreated": "我創建的所有",
+            "active": "zh-tw_Active",
+            "inActive": "zh-tw_In active",
             "noFilter": "(無限制)"
         },
         "sorters": {

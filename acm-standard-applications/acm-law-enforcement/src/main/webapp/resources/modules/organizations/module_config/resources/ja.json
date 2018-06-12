@@ -470,7 +470,10 @@
             "history.label": "歴史"
         },
         "filters": {
+            "iHaveCreatedActive": "ja_I've Created - Active",
             "iHaveCreated": "私が作成しました",
+            "active": "ja_Active",
+            "inActive": "ja_In active",
             "noFilter": "(無制限)"
         },
         "sorters": {
