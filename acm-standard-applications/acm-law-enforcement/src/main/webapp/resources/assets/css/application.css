@@ -1649,3 +1649,11 @@ a.primary {
     background-color: #ea6764;
     color: #000000;
 }
+
+.pdfjs #thumbnailView {
+	width: initial; 
+}
+
+.thumbnailSelectionRing {
+	padding: 0px !important;
+}
