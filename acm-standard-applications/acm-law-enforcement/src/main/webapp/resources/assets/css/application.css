@@ -1649,3 +1649,11 @@ a.primary {
     background-color: #ea6764;
     color: #000000;
 }
+
+.pdfjs .toolbar {
+	z-index: 1048 !important;
+}
+
+.pdfjs .findbar, .pdfjs .secondaryToolbar {
+	z-index: 1049 !important;
+}
