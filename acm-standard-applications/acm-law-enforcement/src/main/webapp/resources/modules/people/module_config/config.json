@@ -43,7 +43,7 @@
                 "desc": "people.tree.filters.active",
                 "name": "active",
                 "value": "status_s:ACTIVE",
-				"default": true
+                "default": true
             },
             {
                 "desc": "people.tree.filters.inActive",
