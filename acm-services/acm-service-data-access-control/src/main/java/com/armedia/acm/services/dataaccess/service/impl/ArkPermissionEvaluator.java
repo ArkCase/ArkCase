@@ -148,7 +148,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
                 .getAllBeansOfType(AcmObjectToSolrDocTransformer.class);
         @SuppressWarnings("unchecked")
         AcmObjectToSolrDocTransformer<T> transformer = transformers.values().stream()
-                .filter(t -> entityClass.equals(t.getAcmObjectTypeSupported()))
+                .filter(t -> t.getAcmObjectTypeSupported().equals(entityClass))
                 .findFirst()
                 .orElse(null);
         return transformer;
@@ -177,41 +177,10 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
 
         if (solrDocument == null || !checkForReadAccess(solrDocument))
         {
-            // here we need to lookup the JPA entity from the database and convert to the expected Solr format,
-            // so we can then proceed with the access control checks... since the reason the document could not be
-            // found, may be that Solr just hasn't been updated yet.
-            AcmAbstractDao<?> dao = getAcmDataService().getDaoByObjectType(targetType);
-            if (dao != null)
+            solrDocument = lookupAndConvertObjectFromDatabase(targetType, id);
+            if (solrDocument == null)
             {
-                Object jpaEntity = dao.find(id);
-                if (jpaEntity != null)
-                {
-                    AcmObjectToSolrDocTransformer transformer = findTransformerForEntity(jpaEntity.getClass());
-                    if (transformer != null)
-                    {
-                        SolrAbstractDocument solrDoc = transformer.toSolrAdvancedSearch(jpaEntity);
-                        String jsonStr = getJsonMarshaller().marshal(solrDoc);
-
-                        // now we have the json doc, but we have to wrap it in the expected Solr structure
-                        jsonStr = "{\"response\":{\"numFound\":1,\"start\":0,\"docs\":[" + jsonStr + "] } }";
-                        solrDocument = jsonStr;
-                    }
-                    else
-                    {
-                        log.warn("No transformer found for entity of type: {}", jpaEntity.getClass().getName());
-                        return false;
-                    }
-                }
-                else
-                {
-                    // if we didn't find it from the database, it really doesn't exist so we can return false.
-                    return false;
-                }
-            }
-            else
-            {
-                // it seems weird that we couldn't even find a dao
-                log.warn("No DAO found for object of type {}", targetType);
+                // there really is no such object, or else no DAO or no transformer
                 return false;
             }
         }
@@ -223,6 +192,71 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         }
 
         return evaluateAccess(authentication, id, targetType, Arrays.asList(((String) permission).split("\\|")));
+    }
+
+    public String lookupAndConvertObjectFromDatabase(String targetType, Long id)
+    {
+        log.info("Attempting database lookup for [{}] with id [{}]", targetType, id);
+        // here we need to lookup the JPA entity from the database and convert to the expected Solr format,
+        // so we can then proceed with the access control checks... since the reason the document could not be
+        // found, may be that Solr just hasn't been updated yet.
+        AcmAbstractDao<?> dao = getAcmDataService().getDaoByObjectType(targetType);
+        if (dao != null)
+        {
+            log.debug("found DAO of type [{}]", dao.getClass().getName());
+            Object jpaEntity = dao.find(id);
+            if (jpaEntity != null)
+            {
+                AcmObjectToSolrDocTransformer transformer = findTransformerForEntity(jpaEntity.getClass());
+                if (transformer != null)
+                {
+                    log.debug("found transformer of type [{}]", transformer.getClass().getName());
+                    SolrAbstractDocument solrDoc = transformJpaEntity(jpaEntity, transformer);
+
+                    if (solrDoc != null)
+                    {
+                        String jsonStr = getJsonMarshaller().marshal(solrDoc);
+
+                        // now we have the json doc, but we have to wrap it in the expected Solr structure
+                        jsonStr = "{\"response\":{\"numFound\":1,\"start\":0,\"docs\":[" + jsonStr + "] } }";
+                        return jsonStr;
+                    }
+                }
+                else
+                {
+                    log.warn("No transformer found for entity of type: {}", jpaEntity.getClass().getName());
+                }
+            }
+        }
+        else
+        {
+            // it seems weird that we couldn't even find a dao
+            log.warn("No DAO found for object of type {}", targetType);
+        }
+
+        return null;
+    }
+
+    protected SolrAbstractDocument transformJpaEntity(Object jpaEntity, AcmObjectToSolrDocTransformer transformer)
+    {
+        // Every transformer implements one of these methods. This code mirrors the Solr
+        // lookup in this class, which first checks the advanced search core, and then quick search...
+        SolrAbstractDocument solrDoc = transformer.toContentFileIndex(jpaEntity);
+        if (solrDoc == null)
+        {
+            solrDoc = transformer.toSolrAdvancedSearch(jpaEntity);
+            if (solrDoc == null)
+            {
+                solrDoc = transformer.toSolrQuickSearch(jpaEntity);
+            }
+            if (solrDoc == null)
+            {
+                // ??? this is really weird.
+                log.warn("Transfomer of type [{}] did not transform object of type [{}}",
+                        transformer.getClass().getName(), jpaEntity.getClass().getName());
+            }
+        }
+        return solrDoc;
     }
 
     @Override
