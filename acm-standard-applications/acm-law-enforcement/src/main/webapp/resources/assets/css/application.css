@@ -1659,7 +1659,7 @@ a.primary {
 }
 
 .pdfjs #thumbnailView {
-	width: initial; 
+	width: inherit !important; 
 }
 
 .thumbnailSelectionRing {
