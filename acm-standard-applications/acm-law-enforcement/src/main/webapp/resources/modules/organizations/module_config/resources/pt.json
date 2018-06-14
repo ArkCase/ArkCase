@@ -470,7 +470,10 @@
             "history.label": "História"
         },
         "filters": {
+            "iHaveCreatedActive": "pt_I've Created - Active",
             "iHaveCreated": "Tudo o que eu criei",
+            "active": "pt_Active",
+            "inActive": "pt_In active",
             "noFilter": "(Sem filtro)"
         },
         "sorters": {
