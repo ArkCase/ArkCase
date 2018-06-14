@@ -252,7 +252,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             if (solrDoc == null)
             {
                 // ??? this is really weird.
-                log.warn("Transfomer of type [{}] did not transform object of type [{}}",
+                log.warn("Transformer of type [{}] did not transform object of type [{}}",
                         transformer.getClass().getName(), jpaEntity.getClass().getName());
             }
         }
