@@ -64,7 +64,8 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
         "/spring/spring-library-object-diff.xml",
         "/spring/spring-library-organization-rules.xml",
         "/spring/spring-library-object-association-plugin.xml",
-        "/spring/spring-library-object-converter.xml" })
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-ecm-file-lock.xml" })
 @TransactionConfiguration(defaultRollback = true)
 public class PersonServiceIT
 {

@@ -173,8 +173,9 @@
         </property>
     </bean>
 
-    <bean id="complaintEventPublisher" class="com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher"/>
-
+    <bean id="complaintEventPublisher" class="com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher">
+        <property name="acmDiffService" ref="acmDiffService"/>
+    </bean>
     <bean id="saveComplaintBusinessRule" class="com.armedia.acm.plugins.complaint.service.SaveComplaintBusinessRule"
         parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-complaint-number-rules.xlsx"/>

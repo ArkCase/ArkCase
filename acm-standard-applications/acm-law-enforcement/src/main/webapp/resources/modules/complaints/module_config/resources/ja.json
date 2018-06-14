@@ -368,5 +368,63 @@
             "nameAsc": "名で並べ替え",
             "noSort": "(注文しません)"
         }
+    },
+    "changes": {
+        "object_replaced": {
+            "complaint": {
+                "defaultAddress": "ja_Default Address Changed"
+            }
+        },
+        "value_changed": {
+            "complaint": {
+                "details": "ja_Complaint - Details Changed",
+                "complaintTitle": "ja_Complaint - Title Changed",
+                "complaintType": "ja_Complaint - Type Changed",
+                "priority": "ja_Complaint - Priority Changed",
+                "status": "ja_Complaint - Status Changed",
+                "complaintNumber": "ja_Complaint - Number Changed",
+                "dueDate": "ja_Complaint - Due Date Changed",
+                "tag": "ja_Complaint - Tag Changed",
+                "modifier": "ja_Complaint - Modifier Changed",
+                "addresses.address": {
+                    "city": "住所 - 都市変更",
+                    "zip": "住所 - 郵便番号の変更",
+                    "streetAddress": "住所 - 通りが変更されました",
+                    "streetAddress2": "住所 - Street2変更",
+                    "type": "住所 - タイプが変更されました",
+                    "country": "住所 - 国名の変更",
+                    "state": "住所 - 州が変更"
+                },
+                "defaultAddress": {
+                    "city": "住所 - 都市変更",
+                    "zip": "住所 - 郵便番号の変更",
+                    "streetAddress": "住所 - 通りが変更されました",
+                    "streetAddress2": "住所 - Street2変更",
+                    "type": "住所 - タイプが変更されました",
+                    "country": "住所 - 国名の変更",
+                    "state": "住所 - 州が変更"
+                }
+            }
+        },
+        "collection_element_added": {
+            "complaint": {
+                "addresses.address": "ja_Address Added",
+                "personAssociations.personAssociation": "ja_Person Added",
+                "organizationAssociations.organizationAssociation": "ja_Organization Added",
+                "childObjects": "ja_Association Added",
+                "associationsToObjects": "ja_Association Added",
+                "associationsFromObjects": "ja_Association Added"
+            }
+        },
+        "collection_element_removed": {
+            "complaint": {
+                "addresses.address": "Address Removed",
+                "personAssociations.personAssociation": "Person Removed",
+                "organizationAssociations.organizationAssociation": "Organization Removed",
+                "childObjects": "Association Removed",
+                "associationsToObjects": "Association Removed",
+                "associationsFromObjects": "Association Removed"
+            }
+        }
     }
 }
