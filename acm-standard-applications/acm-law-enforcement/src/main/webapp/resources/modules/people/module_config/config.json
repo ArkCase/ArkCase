@@ -37,18 +37,18 @@
             {
                 "desc": "people.tree.filters.iHaveCreatedActive",
                 "name": "my-created-active",
-                "value": "fq=author_s:${user} AND status_lcs:ACTIVE"
+                "value": "fq=author_s:${user} AND status_s:ACTIVE"
             },
             {
                 "desc": "people.tree.filters.active",
                 "name": "active",
-                "value": "status_lcs:ACTIVE",
+                "value": "status_s:ACTIVE",
 				"default": true
             },
             {
                 "desc": "people.tree.filters.inActive",
                 "name": "in-active",
-                "value": "status_lcs:INACTIVE"
+                "value": "status_s:INACTIVE"
             },
             {
                 "desc": "people.tree.filters.noFilter",

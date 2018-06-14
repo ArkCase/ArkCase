@@ -209,7 +209,6 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         orgDoc.setTitle_parseable(in.getOrganizationValue());
         orgDoc.setTitle_parseable_lcs(in.getOrganizationValue());
         orgDoc.setStatus_s(in.getStatus());
-        orgDoc.setAdditionalProperty("status_lcs", in.getStatus());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
