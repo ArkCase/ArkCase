@@ -45,7 +45,7 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu text-left text-sm treeFilter">
-                <li value="{{filter.name}}" ng-repeat="filter in filters">
+                <li value="{{filter.name}}" ng-repeat="filter in filters track by $index">
                     <a ng-click="onSelectFilter(filter.name)">
                         <span translate>{{filter.desc}}</span>
                     </a>
