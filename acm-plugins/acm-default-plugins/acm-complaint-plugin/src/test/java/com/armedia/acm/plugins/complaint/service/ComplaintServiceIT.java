@@ -27,7 +27,6 @@ package com.armedia.acm.plugins.complaint.service;
  * #L%
  */
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -105,7 +104,9 @@ import java.util.UUID;
         "/spring/spring-library-task.xml",
         "/spring/spring-library-user-login.xml",
         "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-object-converter.xml"
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-ecm-file-lock.xml",
+        "/spring/spring-library-audit-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintServiceIT

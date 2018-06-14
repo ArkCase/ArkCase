@@ -209,9 +209,8 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
 
         TikaConfig defaultConfig = TikaConfig.getDefaultConfig();
         Detector detector = defaultConfig.getDetector();
-        try (InputStream fileInputStream = new FileInputStream(file))
+        try (InputStream fileInputStream = new FileInputStream(file); TikaInputStream stream = TikaInputStream.get(fileInputStream))
         {
-            TikaInputStream stream = TikaInputStream.get(fileInputStream);
             MediaType mediaType = detector.detect(stream, metadata);
             MimeType mimeType = defaultConfig.getMimeRepository().forName(mediaType.toString());
             contentType = fixContentType(mediaType.toString());
