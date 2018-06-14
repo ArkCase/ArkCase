@@ -29,12 +29,13 @@ package com.armedia.acm.plugins.onlyoffice.model.events;
 
 import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 
 import java.util.Date;
 
 public abstract class DocumentCoEditEvent extends AcmEvent
 {
-    private static final String OBJECT_TYPE = "FILE";
+    private static final String OBJECT_TYPE = EcmFileConstants.OBJECT_FILE_TYPE;
 
     public DocumentCoEditEvent(EcmFile source, String userId)
     {
