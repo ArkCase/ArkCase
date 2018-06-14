@@ -24,14 +24,16 @@
   along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
   #L%
   --%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>ONLYOFFICE</title>
+    <title>Arkcase OnlyOffice Editor</title>
 </head>
 <body>
     <h2>There was an error.</h2>
-    <p>${errorMessage}</p>
+    <h3>${errorMessage}</h3>
 </body>
 </html>

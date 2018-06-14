@@ -27,10 +27,14 @@ package com.armedia.acm.plugins.onlyoffice.web.controllers;
  * #L%
  */
 
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.service.lock.FileLockType;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
 import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
 import com.armedia.acm.plugins.onlyoffice.service.CallbackService;
 import com.armedia.acm.plugins.onlyoffice.service.ConfigService;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
@@ -49,6 +53,7 @@ public class OnlyOfficeController
     private ConfigService configService;
     private CallbackService callbackService;
 
+    private AcmObjectLockingManager objectLockingManager;
     private ObjectMapper objectMapper;
 
     @RequestMapping(value = "/editor", method = RequestMethod.GET)
@@ -59,7 +64,9 @@ public class OnlyOfficeController
         try
         {
             ModelAndView mav = new ModelAndView("onlyoffice/editor");
-            // FIXME use already defined bean object mappper instead of creating new
+            // lock file for onlyoffice processing
+            AcmObjectLock lock = objectLockingManager.acquireObjectLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE,
+                    FileLockType.SHARED_WRITE.name(), null, false, auth.getName());
 
             mav.addObject("config", objectMapper.writeValueAsString(configService.getConfig(fileId, auth)));
             mav.addObject("docserviceApiUrl", configService.getDocumentServerUrlApi());
@@ -96,5 +103,10 @@ public class OnlyOfficeController
     public void setObjectMapper(ObjectMapper objectMapper)
     {
         this.objectMapper = objectMapper;
+    }
+
+    public void setObjectLockingManager(AcmObjectLockingManager objectLockingManager)
+    {
+        this.objectLockingManager = objectLockingManager;
     }
 }

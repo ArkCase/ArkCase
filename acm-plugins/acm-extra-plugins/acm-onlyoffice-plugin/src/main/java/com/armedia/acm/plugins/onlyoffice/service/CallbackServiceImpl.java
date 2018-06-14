@@ -30,7 +30,9 @@ package com.armedia.acm.plugins.onlyoffice.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.lock.FileLockType;
 import com.armedia.acm.plugins.onlyoffice.exceptions.OnlyOfficeException;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseError;
@@ -38,6 +40,7 @@ import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseSuccess;
 import com.armedia.acm.plugins.onlyoffice.model.StatusType;
 import com.armedia.acm.plugins.onlyoffice.model.callback.Action;
 import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,12 +57,13 @@ public class CallbackServiceImpl implements CallbackService
     private Logger logger = LoggerFactory.getLogger(getClass());
     private EcmFileDao ecmFileDao;
     private EcmFileService ecmFileService;
+    private AcmObjectLockService objectLockService;
     private OnlyOfficeEventPublisher onlyOfficeEventPublisher;
 
     @Override
     public CallbackResponse handleCallback(CallBackData callBackData, Authentication authentication)
     {
-        Objects.nonNull(callBackData);
+        Objects.requireNonNull(callBackData, "Callback data must not be null.");
         logger.debug("handle callback data [{}]", callBackData);
         switch (StatusType.from(callBackData.getStatus()))
         {
@@ -72,7 +76,7 @@ public class CallbackServiceImpl implements CallbackService
         case SAVING_ERROR_OCCURED:
             return handleSavingErrorOccured(callBackData);
         case CLOSED_NO_CHANGES:
-            return handleClosedNoChanges(callBackData);
+            return handleClosedNoChanges(callBackData, authentication);
         case EDITED_BUT_ALREADY_SAVED:
             return handleEditedButAlreadySaved(callBackData);
         case ERROR_WHILE_SAVING:
@@ -100,7 +104,7 @@ public class CallbackServiceImpl implements CallbackService
         return new CallbackResponseSuccess();
     }
 
-    private CallbackResponse handleClosedNoChanges(CallBackData callBackData)
+    private CallbackResponse handleClosedNoChanges(CallBackData callBackData, Authentication authentication)
     {
         EcmFile ecmFile = ecmFileDao.find(parseFileId(callBackData.getKey()));
         // handle actions
@@ -108,7 +112,7 @@ public class CallbackServiceImpl implements CallbackService
         {
             handleActions(callBackData.getActions(), ecmFile);
         }
-        // TODO release lock
+        objectLockService.removeLock(ecmFile.getId(), EcmFileConstants.OBJECT_FILE_TYPE, FileLockType.SHARED_WRITE.name(), authentication);
         logger.debug("handleClosedNoChanges.");
         return new CallbackResponseSuccess();
     }
@@ -149,8 +153,8 @@ public class CallbackServiceImpl implements CallbackService
                 {
                     handleActions(callBackData.getActions(), ecmFile);
                 }
+                objectLockService.removeLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE, FileLockType.SHARED_WRITE.name(), authentication);
                 onlyOfficeEventPublisher.publishDocumentCoEditSavedEvent(ecmFile, authentication.getName());
-                // TODO release lock
             }
             else
             {
@@ -225,5 +229,10 @@ public class CallbackServiceImpl implements CallbackService
     public void setOnlyOfficeEventPublisher(OnlyOfficeEventPublisher onlyOfficeEventPublisher)
     {
         this.onlyOfficeEventPublisher = onlyOfficeEventPublisher;
+    }
+
+    public void setObjectLockService(AcmObjectLockService objectLockService)
+    {
+        this.objectLockService = objectLockService;
     }
 }
