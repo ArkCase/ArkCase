@@ -1657,3 +1657,11 @@ a.primary {
 .pdfjs .findbar, .pdfjs .secondaryToolbar {
 	z-index: 1049 !important;
 }
+
+.pdfjs #thumbnailView {
+	width: initial; 
+}
+
+.thumbnailSelectionRing {
+	padding: 0px !important;
+}
