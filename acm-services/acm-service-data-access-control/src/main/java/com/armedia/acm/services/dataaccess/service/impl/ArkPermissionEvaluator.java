@@ -171,7 +171,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     protected boolean checkAccessForSingleObject(Authentication authentication, Long id, String targetType, Object permission)
     {
 
-        log.trace("Checking {} for {} on object of type [{}]", permission, authentication.getName(), targetType);
+        log.trace("Checking [{}] for [{}] on object of type [{}] with id [{}]", permission, authentication.getName(), targetType, id);
 
         String solrDocument = getSolrDocument(authentication, id, targetType);
 
@@ -241,10 +241,10 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     {
         // Every transformer implements one of these methods. This code mirrors the Solr
         // lookup in this class, which first checks the advanced search core, and then quick search...
-        SolrAbstractDocument solrDoc = transformer.toContentFileIndex(jpaEntity);
+        SolrAbstractDocument solrDoc = transformer.toSolrAdvancedSearch(jpaEntity);
         if (solrDoc == null)
         {
-            solrDoc = transformer.toSolrAdvancedSearch(jpaEntity);
+            solrDoc = transformer.toContentFileIndex(jpaEntity);
             if (solrDoc == null)
             {
                 solrDoc = transformer.toSolrQuickSearch(jpaEntity);
