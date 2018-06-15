@@ -108,7 +108,17 @@
                 "witnessInterview2%": "Witness Interview Request-2.0"
             }
         },
-        "newTask": "New Task"
+        "newTask": "New Task",
+        "correspondences": {
+            "modal": {
+                "title": "Correspondence Templates",
+                "select": "Select Correspondence Templates",
+                "buttons": {
+                    "ok": "Ok",
+                    "cancel": "Cancel"
+                }
+            }
+        }
     },
     "cases.comp.people": {
         "title": "People",

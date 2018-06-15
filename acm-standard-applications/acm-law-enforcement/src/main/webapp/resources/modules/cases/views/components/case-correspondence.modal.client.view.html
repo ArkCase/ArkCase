@@ -1,0 +1,28 @@
+<div class="modal-header">
+    <h3>
+        <span translate>cases.comp.documents.correspondences.modal.title</span>
+    </h3>
+
+</div>
+
+<div class="modal-body">
+    <label><span translate>cases.comp.documents.correspondences.modal.select</span></label>
+    <span ng-repeat="template in correspondenceTemplates" class="checkbox">
+        <label class="checkbox">
+            <input type="checkbox" value="{{template}}" ng-click="onTemplateSelected(template)"
+                   ng-checked="templateExist(template.templateId).found == true">
+        <span translate>
+            {{template.label}}
+        </span>
+        </label>
+    </span>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>cases.comp.documents.correspondences.modal.buttons.cancel</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()">
+        <span translate>cases.comp.documents.correspondences.modal.buttons.ok</span>
+    </button>
+</div>
