@@ -1,198 +1,223 @@
 <form name="complaintForm" ng-submit="save()">
     <div class="modal-header">
-        <h3><span translate>New Complaint</span></h3>
+        <h3><span translate>complaints.comp.newComplaint.title</span></h3>
     </div>
     <div class="modal-body">
         <div class="row well-sm">
             <div class="row">
-                <h3>Incident Information</h3>
-                <span>Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.</span>
+                <div class="col-sm-12 form-group">
+                    <h3><span translate>complaints.comp.newComplaint.info</span></h3>
+                    <span translate>complaints.comp.newComplaint.infoMessage</span>
+                </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 form-group">
-                    <label for="incidentCategory" translate>Incident Category</label>
-                    <select id="incidentCategory" ng-model="config.data.requestType"
-                            ng-options="requestType.id as requestType.name for requestType in requestTypes" class="form-control input-md"
-                            required="required">
-                    </select>
+                <div class="col-sm-12 form-group">
+                    <label for="complaintTitle" translate>complaints.comp.newComplaint.complaintTitle</label>
+                    <span class="required-asterisk">*</span>
+                    <input id="complaintTitle" type="text" ng-model="complaint.complaintTitle" class="input-md form-control"
+                            placeholder="{{ 'complaints.comp.newComplaint.complaintTitle.placeholder' | translate }}" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6 form-group">
-                    <label for="complaintTitle" translate>Complaint Title</label>
-                    <select id="complaintTitle" ng-model="config.data.requestType"
-                            ng-options="requestType.id as requestType.name for requestType in requestTypes" class="form-control input-md"
-                            required="required">
+                    <label for="incidentCategory" translate>complaints.comp.newComplaint.incidentCategory</label>
+                    <span class="required-asterisk">*</span>
+                    <select id="incidentCategory" ng-model="complaint.complaintType" class="form-control input-md" required>
+                        <option ng-repeat="option in incidentCategory" value="{{option.key}}">
+                            {{option.value | translate}}
+                        </option>
                     </select>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label for="initiator" translate>complaints.comp.newComplaint.initiator</label>
+                    <span class="required-asterisk">*</span>
+                    <input id="initiator" type="text" ng-model="complaint.initiator" ng-click="addPersonInitiator()"
+                            class="input-md form-control"
+                            placeholder="{{ 'complaints.comp.newComplaint.initiator.placeholder' | translate }}" readonly required>
                 </div>
             </div>
             <div class="row">
-                <label translate>Complaint Description</label>
-                <summernote id="complaintDesc" config="options" ng-model="person.details"></summernote>
+                <div class="col-sm-12 form-group">
+                    <label translate>complaints.comp.newComplaint.complaintDesc</label>
+                    <summernote id="complaintDesc" config="options" ng-model="complaint.details"></summernote>
+                </div>
             </div>
-            <div class="row">
+            <div class="row form-group">
                 <div class="col-sm-4">
-                    <label for="priority" translate>Priority</label>
-                    <select id="priority" ng-model="config.data.requestType"
-                            ng-options="requestType.id as requestType.name for requestType in requestTypes" class="form-control input-md">
+                    <label for="priority" translate>complaints.comp.newComplaint.priority</label>
+                    <select id="priority" ng-model="complaint.priority" class="form-control input-md">
+                        <option ng-repeat="option in priorities" value="{{option.key}}">
+                            {{option.value | translate}}
+                        </option>
                     </select>
                 </div>
                 <div class="col-sm-4">
-                    <label translate>Incident Date</label>
+                    <label translate>complaints.comp.newComplaint.incidentDate</label>
                     <p class="input-group">
-                        <input type="text" class="form-control" placeholder="{{'Select Incident Date' | translate}}"
+                        <input type="text" class="form-control"
+                                placeholder="{{'complaints.comp.newComplaint.incidentDate.placeholder' | translate}}"
                                 datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" datepicker-append-to-body="false"
-                                ng-model="person.defaultIdentification.identificationYearIssued" is-open="defaultOpened"
-                                close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
-                                close-text="{{'common.newPerson.identification.identificationYearIssued.close.button' | translate}}" />
+                                ng-model="complaint.incidentDate" is-open="defaultOpened" close-on-date-selection="true"
+                                show-button-bar="true" on-open-focus="false"
+                                close-text="{{'complaints.comp.newComplaint.incidentDate.close.button' | translate}}" />
                         <span class="input-group-btn">
-                             <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
-                                     <i class="fa fa-calendar"></i>
-                             </button>
-                        </span>
+                         <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
+                                 <i class="fa fa-calendar"></i>
+                         </button>
+                    </span>
                     </p>
                 </div>
                 <div class="col-sm-4">
-                    <label translate>Complaint Tag</label>
-                    <input>
+                    <label translate>complaints.comp.newComplaint.complaintTag</label>
+                    <input type="text" ng-model="complaint.tag" class="input-md form-control"
+                            placeholder="{{ 'complaints.comp.newComplaint.complaintTag.placeholder' | translate }}">
+                </div>
+                <div class="col-sm-12">
+                    <label translate>complaints.comp.newComplaint.frequency</label>
+                    <select ng-model="complaint.frequency" class="form-control input-md">
+                        <option ng-repeat="option in frequencies" value="{{option.key}}">
+                            {{option.value | translate}}
+                        </option>
+                    </select>
                 </div>
             </div>
-            <div class="row">
-                <label translate>Frequency</label>
-                <select ng-model="config.data.requestType" ng-options="requestType.id as requestType.name for requestType in requestTypes"
-                        class="form-control input-md">
-                </select>
-            </div>
-        </div>
-
-        <!--  ------------------------------          -->
-        <div id="accordion" class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseIdentification" translate>
-                            people.comp.editPerson.identification.title</a>
-                    </h4>
-                </div>
-                <div id="collapseIdentification" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-sm-4 form-group">
-                                <label translate>
-                                    people.comp.editPerson.identification.identificationNumber</label>
-                                <input type="text" ng-model="person.defaultIdentification.identificationNumber"
-                                        class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.identification.identificationNumber.placeholder' | translate }}">
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <label translate>people.comp.editPerson.identification.identificationType</label>
-                                <select class="form-control" ng-required="person.defaultIdentification.identificationNumber"
-                                        ng-disabled="!person.defaultIdentification.identificationNumber"
-                                        ng-model="person.defaultIdentification.identificationType">
-                                    <option ng-repeat="option in identificationTypes" value="{{option.key}}">
-                                        {{option.value | translate}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4 form-group">
-                                <label translate>
-                                    people.comp.editPerson.identification.identificationIssuer</label>
-                                <input type="text" ng-model="person.defaultIdentification.identificationIssuer"
-                                        class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.identification.identificationIssuer.placeholder' | translate }}">
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <label translate>
-                                    people.comp.editPerson.identification.identificationYearIssued</label>
-                                <p class="input-group">
-                                    <input type="text" class="input-md form-control"
-                                            placeholder="{{'people.comp.editPerson.identification.identificationYearIssued.placeholder' | translate}}"
-                                            datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                            datepicker-append-to-body="false"
-                                            ng-model="person.defaultIdentification.identificationYearIssued" is-open="defaultOpened"
-                                            close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
-                                            close-text="{{'people.comp.editPerson.identification.identificationYearIssued.close.button' | translate}}" />
-                                    <span class="input-group-btn">
-                                       <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
-                                               <i class="fa fa-calendar"></i>
-                                       </button>
-                                </span>
-                                </p>
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <div class="pull-left">
-                                    <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control" ng-click="addIdentification();"
-                                            ng-show="person.identifications.length < 1">
-                                        <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
-                                    </button>
+            <div id="accordion1" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion1" href="#collapseLocation" translate>complaints.comp.newComplaint.location</a>
+                        </h4>
+                    </div>
+                    <div id="collapseLocation" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div class="row form-group">
+                                <div class="col-sm-12">
+                                    <label translate>complaints.comp.newComplaint.addressType</label>
+                                    <select ng-model="complaint.defaultAddress.type" class="form-control input-md">
+                                        <option ng-repeat="option in addressTypes" value="{{option.key}}">
+                                            {{option.value | translate}}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-
-                        <div ng-repeat="identification in person.identifications">
-                            <div class="row">
-                                <div class="col-sm-4 form-group">
-                                    <label translate>
-                                        people.comp.editPerson.identification.identificationNumber</label>
-                                    <input type="text" ng-model="identification.identificationNumber" class="input-md form-control"
-                                            required="required"
-                                            placeholder="{{ 'people.comp.editPerson.identification.identificationNumber.placeholder' | translate }}">
+                            <div class="row form-group">
+                                <div class="col-sm-4">
+                                    <label translate>complaints.comp.newComplaint.streetAddress</label>
+                                    <input type="text" ng-model="complaint.defaultAddress.streetAddress" class="input-md form-control"
+                                            placeholder="{{ 'complaints.comp.newComplaint.streetAddress.placeholder' | translate }}">
                                 </div>
-                                <div class="col-sm-4 form-group">
-                                    <label translate>
-                                        people.comp.editPerson.identification.identificationType</label>
-                                    <select class="form-control" required="required" ng-disabled="!identification.identificationNumber"
-                                            ng-model="identification.identificationType">
-                                        <option ng-repeat="option in identificationTypes" value="{{option.key}}">
+                                <div class="col-sm-4">
+                                    <label translate>complaints.comp.newComplaint.city</label>
+                                    <input type="text" ng-model="complaint.defaultAddress.city" class="input-md form-control"
+                                            placeholder="{{ 'complaints.comp.newComplaint.city.placeholder' | translate }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label translate>complaints.comp.newComplaint.country</label>
+                                    <select ng-model="complaint.defaultAddress.country" class="form-control input-md">
+                                        <option ng-repeat="option in countries" value="{{option.key}}">
                                             {{option.value | translate}}
                                         </option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 form-group">
-                                    <label translate>
-                                        people.comp.editPerson.identification.identificationIssuer</label>
-                                    <input type="text" ng-model="identification.identificationIssuer" class="input-md form-control"
-                                            placeholder="{{ 'people.comp.editPerson.identification.identificationIssuer.placeholder' | translate }}">
+                                <div class="col-sm-4">
+                                    <label translate>complaints.comp.newComplaint.zip</label>
+                                    <input type="text" ng-model="complaint.defaultAddress.zip" class="input-md form-control"
+                                            placeholder="{{ 'complaints.comp.newComplaint.zip.placeholder' | translate }}">
                                 </div>
-                                <div class="col-sm-4 form-group">
-                                    <div>
-                                        <label translate>
-                                            people.comp.editPerson.identification.identificationYearIssued</label>
-                                        <p class="input-group">
-                                            <input type="text" class="input-md form-control"
-                                                    placeholder="{{'people.comp.editPerson.identification.identificationYearIssued.placeholder' | translate}}"
-                                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                                    datepicker-append-to-body="false" ng-model="identification.identificationYearIssued"
-                                                    is-open="identification.opened" close-on-date-selection="true" show-button-bar="true"
-                                                    on-open-focus="false"
-                                                    close-text="{{'people.comp.editPerson.identification.identificationYearIssued.close.button' | translate}}" />
-                                            <span class="input-group-btn">
-                                       <button type="button" class="btn btn-default"
-                                               ng-click="identification.opened = !identification.opened">
-                                               <i class="fa fa-calendar"></i>
-                                       </button>
+                                <div class="col-sm-4">
+                                    <label translate>complaints.comp.newComplaint.dateCreated</label>
+                                    <p class="input-group">
+                                        <input type="text" class="form-control" placeholder="{{'Select Incident Date' | translate}}"
+                                                datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                                datepicker-append-to-body="false" ng-model="complaint.defaultAddress.created"
+                                                is-open="defaultOpened" close-on-date-selection="true" show-button-bar="true"
+                                                on-open-focus="false"
+                                                close-text="{{'common.newPerson.identification.identificationYearIssued.close.button' | translate}}" />
+                                        <span class="input-group-btn">
+                                     <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
+                                             <i class="fa fa-calendar"></i>
+                                     </button>
                                 </span>
-                                        </p>
-                                    </div>
+                                    </p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label translate>complaints.comp.newComplaint.creator</label>
+                                    <input type="text" ng-model="complaint.defaultAddress.creator" class="input-md form-control"
+                                            placeholder="{{ 'Enter Creator' | translate }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div id="accordion2" class="panel-group">-->
+            <!--<div class="panel panel-default">-->
+            <!--<div class="panel-heading">-->
+            <!--<h4 class="panel-title">-->
+            <!--<a data-toggle="collapse" data-parent="#accordion2" href="#collapsePeople" translate>complaints.comp.newComplaint.people</a>-->
+            <!--</h4>-->
+            <!--</div>-->
+            <!--<div id="collapsePeople" class="panel-collapse collapse in">-->
+            <!--<div class="panel-body">-->
+
+            <!--&lt;!&ndash;<div ng-controller="Complaints.PeopleController">&ndash;&gt;-->
+            <!--<div>-->
+            <!--<div class="panel panel-success panel-grid">-->
+            <!--<div class="panel-heading">-->
+            <!--<div class="panel-title">-->
+            <!--<span translate>complaints.comp.people.title</span>-->
+            <!--<div class="pull-right">-->
+            <!--<button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)"-->
+            <!--ng-click="addPerson()"><i class="fa fa-lg fa-plus"></i></button>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="panel-body">-->
+            <!--&lt;!&ndash;<div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination&ndash;&gt;-->
+            <!--&lt;!&ndash;adjust-table-height="gridOptions.data.length" class="grid"></div>&ndash;&gt;-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion45" href="#collapsePeople" translate>complaints.comp.newComplaint.people</a>
+                    </h4>
+                </div>
+                <div id="collapsePeople" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div ng-repeat="personAssociation in complaint.personAssociations">
+                            <div class="row">
+                                <div class="col-sm-4 form-group">
+                                    <label for="searchExisting">&nbsp;</label>
+                                    <input id="searchExisting" type="text" ng-model="personAssociation.personFullName"
+                                            ng-click="searchPerson($index, true)" class="input-md form-control" readonly
+                                            placeholder="{{ 'Search existing Person' | translate }}">
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label translate>Person Type</label>
+                                    <input class="form-control" readonly ng-model="personAssociation.personType">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <div class="pull-left">
                                         <label class="control-label">&nbsp;</label>
-                                        <button type="button" class="btn btn-link form-control"
-                                                ng-click="removeIdentification(identification)">
-                                            <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.communicationAccounts.removeContactMethod</span>
+                                        <button type="button" class="btn btn-link form-control" ng-click="removePerson(personAssociation)"
+                                                ng-show="!$first">
+                                            <i class="fa fa-minus text-danger"></i><span translate>Remove</span>
                                         </button>
                                     </div>
                                     <div class="pull-left">
                                         <label class="control-label">&nbsp;</label>
-                                        <button type="button" class="btn btn-link form-control" ng-click="addIdentification();"
-                                                ng-show="$last">
-                                            <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
+                                        <button type="button" class="btn btn-link form-control" ng-click="addPerson();"
+                                                ng-disabled="!personAssociation.personFullName" ng-show="$last">
+                                            <i class="fa fa-plus text-success"></i><span translate>Add Another</span>
                                         </button>
                                     </div>
                                 </div>
@@ -201,330 +226,51 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapsePicture" translate>people.comp.editPerson.picture.title</a>
-                </h4>
-            </div>
-            <div id="collapsePicture" class="panel-collapse collapse">
-                <div class="panel-body" data-ng-repeat="picture in pictures">
-                    <div class="row">
-                        <div class="col-sm-4 form-group">
-                            <label translate>people.comp.pictures.dialog.title</label><br />
-                            <button ngf-select ng-model="userPictures[$index]" ng-hide="userPictures[$index].name" ngf-pattern="'image/*'"
-                                    ngf-accept="'image/*'" class="btn btn-sm btn-default"><span
-                                    translate>people.comp.pictures.dialog.browse</span></button>
-                            {{userPictures[$index].name}}
-                        </div>
-                        <div class="col-sm-4 form-group">
-                            <div class="pull-left" ng-show="userPictures[$index].name">
-                                <label class="control-label">&nbsp;</label>
-                                <button type="button" class="btn btn-link form-control" ng-click="removePicture($index)">
-                                    <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
-                                </button>
+            <div id="accordion3" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion3" href="#collapseAttachments" translate>complaints.comp.newComplaint.attachments</a>
+                        </h4>
+                    </div>
+                    <div id="collapseAttachments" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div>Please add any attachments that you find pertinent to your complaint. Examples could included, scanned
+                                documents, notes, photographs, videos, emails, etc.
                             </div>
-                            <div class="pull-left">
-                                <label class="control-label">&nbsp;</label>
-                                <button type="button" class="btn btn-link form-control" ng-click="addEmptyPicture();"
-                                        ng-show="$last && userPictures[$index].name">
-                                    <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
-                                </button>
-                            </div>
+                            <br />
+                            <button ngf-change="upload($files)" class="btn btn-default" ngf-multiple="false" accept=".docx">
+                                <i class="fa fa-upload"></i>
+                                <span translate>Add Files</span>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <div id="accordion4" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion4" href="#collapseParticipants" translate>complaints.comp.newComplaint.participants</a>
+                        </h4>
+                    </div>
+                    <div id="collapseParticipants" class="panel-collapse collapse in">
+                        <div class="panel-body">
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOrganizations" translate>people.comp.editPerson.organizations.title</a>
-                </h4>
-            </div>
-            <div id="collapseOrganizations" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <div ng-repeat="organizationAssociation in person.organizationAssociations">
-                        <div class="row">
-                            <div class="col-sm-4 form-group">
-                                <label>&nbsp;</label>
-                                <input type="text" ng-model="organizationAssociation.organization.organizationValue"
-                                        ng-click="searchOrganization($index)" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.organizations.searchExisting.placeholder' | translate }}">
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <label translate>
-                                    people.comp.editPerson.organizations.organizationType</label>
-                                <input class="form-control" ng-disabled="true"
-                                        ng-model="organizationAssociation.personToOrganizationAssociationType">
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <div class="pull-left">
-                                    <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control"
-                                            ng-click="removeOrganization(organizationAssociation)" ng-show="!$first">
-                                        <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
-                                    </button>
-                                </div>
-                                <div class="pull-left">
-                                    <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control" ng-click="addNewOrganization();"
-                                            ng-disabled="!organizationAssociation.organization.organizationValue" ng-show="$last">
-                                        <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseLocations" translate>people.comp.editPerson.locations.title</a>
-                </h4>
-            </div>
-            <div id="collapseLocations" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-4 form-group">
-                            <label translate> people.comp.editPerson.locations.country</label>
-                            <select class="form-control" ng-model="person.defaultAddress.country">
-                                <option ng-repeat="option in countries" value="{{option.key}}">
-                                    {{option.value | translate}}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4 form-group">
-                            <label translate> people.comp.editPerson.locations.type</label>
-                            <select class="form-control" ng-model="person.defaultAddress.type">
-                                <option ng-repeat="option in addressTypes" value="{{option.key}}">
-                                    {{option.value | translate}}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 form-group">
-                            <label translate>
-                                people.comp.editPerson.locations.streetAddress</label>
-                            <input type="text" ng-model="person.defaultAddress.streetAddress" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
-                        </div>
-                        <div class="col-sm-4 form-group">
-                            <label translate>
-                                people.comp.editPerson.locations.streetAddress2</label>
-                            <input type="text" ng-model="person.defaultAddress.streetAddress2" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.streetAddress2.placeholder' | translate }}">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 form-group">
-                            <label translate>
-                                people.comp.editPerson.locations.city</label>
-                            <input type="text" ng-model="person.defaultAddress.city" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
-                        </div>
-                        <div class="col-sm-3 form-group">
-                            <label translate>
-                                people.comp.editPerson.locations.state</label>
-                            <input type="text" ng-model="person.defaultAddress.state" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.state.placeholder' | translate }}">
-                        </div>
-                        <div class="col-sm-3 form-group">
-                            <label translate>
-                                people.comp.editPerson.locations.zip</label>
-                            <input type="text" ng-model="person.defaultAddress.zip" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
-                        </div>
-                        <div class="col-sm-2 form-group">
-                            <div class="pull-left">
-                                <label class="control-label">&nbsp;</label>
-                                <button type="button" class="btn btn-link form-control" ng-click="addAddress();"
-                                        ng-show="person.addresses.length < 1">
-                                    <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div ng-repeat="address in person.addresses">
-                        <div class="row">
-                            <div class="col-sm-4 form-group">
-                                <label translate> people.comp.editPerson.locations.country</label>
-                                <select class="form-control" ng-model="address.country">
-                                    <option ng-repeat="option in countries" value="{{option.key}}">
-                                        {{option.value | translate}}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <label translate> people.comp.editPerson.locations.type</label>
-                                <select class="form-control" ng-model="address.type">
-                                    <option ng-repeat="option in addressTypes" value="{{option.key}}">
-                                        {{option.value | translate}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4 form-group">
-                                <label translate>
-                                    people.comp.editPerson.locations.streetAddress</label>
-                                <input type="text" ng-model="address.streetAddress" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <label translate>
-                                    people.comp.editPerson.locations.streetAddress2</label>
-                                <input type="text" ng-model="address.streetAddress2" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.locations.streetAddress2.placeholder' | translate }}">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4 form-group">
-                                <label translate>
-                                    people.comp.editPerson.locations.city</label>
-                                <input type="text" ng-model="address.city" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
-                            </div>
-                            <div class="col-sm-3 form-group">
-                                <label translate>
-                                    people.comp.editPerson.locations.state</label>
-                                <input type="text" ng-model="address.state" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.locations.state.placeholder' | translate }}">
-                            </div>
-                            <div class="col-sm-3 form-group">
-                                <label translate>
-                                    people.comp.editPerson.locations.zip</label>
-                                <input type="text" ng-model="address.zip" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
-                            </div>
-                            <div class="col-sm-2 form-group">
-                                <div class="pull-left">
-                                    <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control" ng-click="removeAddress(address)">
-                                        <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
-                                    </button>
-                                </div>
-                                <div class="pull-left">
-                                    <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control" ng-click="addAddress();" ng-show="$last">
-                                        <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseCommunicationAccounts" translate>people.comp.editPerson.communicationAccounts.title</a>
-                </h4>
-            </div>
-            <div id="collapseCommunicationAccounts" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <div ng-repeat="caType in communicationAccountsTypes">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <label>
-                                    {{'people.comp.editPerson.communicationAccounts.' + caType |
-                                    translate}} </label>
-                                <input type="{{caType}}" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
-                                        class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.communicationAccounts.' + caType + '.placeholder' | translate }}">
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="defaultPhoneSubType" class="control-label">{{'people.comp.editPerson.communicationAccounts.'
-                                    + caType + 'Type' | translate}}</label>
-                                <select id="defaultPhoneSubType" class="form-control"
-                                        ng-required="person['default'+capitalizeFirstLetter(caType)].value"
-                                        ng-disabled="!person['default'+capitalizeFirstLetter(caType)].value"
-                                        ng-model="person['default'+capitalizeFirstLetter(caType)].subType">
-                                    <option ng-repeat="option in cmTypes[caType].subLookup" value="{{option.key}}">
-                                        {{option.value | translate}}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="pull-left">
-                                    <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control" ng-click="addContactMethod(caType);"
-                                            ng-show="showAddAnotherContactMethod(caType)">
-                                        <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div ng-repeat="contactMethod in person.contactMethods | filter: {type:caType}" class="row">
-                            <div class="col-sm-4">
-                                <label>
-                                    {{'people.comp.editPerson.communicationAccounts.' + caType |
-                                    translate}} {{contactMethod.input_type}} </label>
-                                <input type="text" ng-model="contactMethod.value" required="required" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.communicationAccounts.'+ caType +'.placeholder' | translate }}">
-                            </div>
-                            <div class="col-sm-4">
-                                <label class="control-label">{{'people.comp.editPerson.communicationAccounts.' +
-                                    caType + 'Type' | translate}}</label>
-                                <select ng-model="contactMethod.subType" required="required" ng-disabled="!contactMethod.value"
-                                        class="form-control">
-                                    <option ng-repeat="option in cmTypes[caType].subLookup" value="{{option.key}}">
-                                        {{option.value | translate}}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="pull-left">
-                                    <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control" ng-click="removeContactMethod(contactMethod)">
-                                        <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.communicationAccounts.removeContactMethod</span>
-                                    </button>
-                                </div>
-                                <div class="pull-left">
-                                    <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control" ng-click="addContactMethod(caType)"
-                                            ng-show="$last">
-                                        <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseDetails" translate>people.comp.details.title</a>
-                </h4>
-            </div>
-            <div id="collapseDetails" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <summernote config="options" id="details" ng-model="person.details"></summernote>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
-            <span translate> people.comp.editPerson.cancelButton</span>
+            <span translate>complaints.comp.newComplaint.cancelButton</span>
         </button>
-        <button type="submit" ng-disabled="personForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+        <button type="submit" ng-disabled="complaintForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="{{loadingIcon}}"></i>
-            <span translate> people.comp.editPerson.saveButton</span>
+            <span translate>complaints.comp.newComplaint.saveButton</span>
         </button>
     </div>
 </form>
