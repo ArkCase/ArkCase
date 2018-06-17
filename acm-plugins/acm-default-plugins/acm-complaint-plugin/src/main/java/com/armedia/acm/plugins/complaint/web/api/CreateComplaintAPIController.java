@@ -29,11 +29,8 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
-import com.armedia.acm.plugins.complaint.service.ComplaintService;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -59,14 +56,12 @@ public class CreateComplaintAPIController
 
     private SaveComplaintTransaction complaintTransaction;
     private ComplaintEventPublisher eventPublisher;
-    private FrevvoFormService complaintService;
+    // private FrevvoFormService complaintService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @DecoratedAssignedObjectParticipants
     @ResponseBody
-    public Complaint createComplaint(
-            @RequestBody Complaint in,
-            Authentication auth) throws AcmCreateObjectFailedException
+    public Complaint createComplaint(@RequestBody Complaint in, Authentication auth) throws AcmCreateObjectFailedException
     {
         log.trace("Got a complaint: {}; complaint ID: '{}'", in, in.getComplaintId());
         log.trace("complaint type: {}", in.getComplaintType());
@@ -83,7 +78,7 @@ public class CreateComplaintAPIController
             Complaint saved = getComplaintTransaction().saveComplaint(in, auth);
 
             // Update Frevvo XML file
-            getComplaintService().updateXML(saved, auth, ComplaintForm.class);
+            // getComplaintService().updateXML(saved, auth, ComplaintForm.class);
 
             getEventPublisher().publishComplaintEvent(saved, auth, isInsert, true);
 
@@ -125,13 +120,13 @@ public class CreateComplaintAPIController
         this.eventPublisher = eventPublisher;
     }
 
-    public FrevvoFormService getComplaintService()
-    {
-        return complaintService;
-    }
-
-    public void setComplaintService(ComplaintService complaintService)
-    {
-        this.complaintService = complaintService;
-    }
+    // public FrevvoFormService getComplaintService()
+    // {
+    // return complaintService;
+    // }
+    //
+    // public void setComplaintService(ComplaintService complaintService)
+    // {
+    // this.complaintService = complaintService;
+    // }
 }
