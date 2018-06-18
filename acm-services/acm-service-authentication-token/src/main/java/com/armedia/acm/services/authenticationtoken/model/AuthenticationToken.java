@@ -36,7 +36,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -87,13 +86,6 @@ public class AuthenticationToken implements Serializable, AcmEntity
 
     @Column(name = "cm_authentication_token_file_id", nullable = true, insertable = true, updatable = true)
     private Long fileId;
-
-    @PrePersist
-    public void beforeInsert()
-    {
-        Date today = new Date();
-        setCreated(today);
-    }
 
     public Long getId()
     {
@@ -182,26 +174,24 @@ public class AuthenticationToken implements Serializable, AcmEntity
     @Override
     public String getModifier()
     {
-        // Not used. Modifier not exist in the database
-        return null;
+        return modifier;
     }
 
     @Override
     public void setModifier(String modifier)
     {
-        // Not used. Modifier not exist in the database
+        this.modifier = modifier;
     }
 
     @Override
     public Date getModified()
     {
-        // Not used. Modified not exist in the database
-        return null;
+        return modified;
     }
 
     @Override
     public void setModified(Date modified)
     {
-        // Not used. Modified not exist in the database
+        this.modified = modified;
     }
 }

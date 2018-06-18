@@ -85,11 +85,6 @@ public class WopiFilesApiController
             log.error("Failed to retrieve contents for file with id [{}]", id, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        catch (MuleException e)
-        {
-            log.warn("File with id [{}] is not found", id, e.getMessage());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
