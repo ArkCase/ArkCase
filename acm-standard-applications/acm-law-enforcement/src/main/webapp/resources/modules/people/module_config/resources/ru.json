@@ -479,7 +479,10 @@
             "history.label": "История"
         },
         "filters": {
+            "iHaveCreatedActive": "ru_I've Created - Active",
             "iHaveCreated": "Все, что я создал",
+            "active": "ru_Active",
+            "inActive": "ru_In active",
             "noFilter": "(Нет фильтра)"
         },
         "sorters": {
