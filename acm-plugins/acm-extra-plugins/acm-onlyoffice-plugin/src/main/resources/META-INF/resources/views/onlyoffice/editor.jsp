@@ -46,7 +46,7 @@
                 console.log(message);
         };
 
-        var onReady = function () {
+        var onAppReady = function () {
             innerAlert("Document editorConfig ready");
         };
 
@@ -68,15 +68,64 @@
             location.reload(true);
         };
 
+        var onCollaborativeChanges = function (event) {
+            console.log("onCollaborativeChanges");
+            console.log(event);
+        };
+
+        var onDocumentReady = function (event) {
+            console.log("onDocumentReady");
+            console.log(event);
+        };
+
+        var onDownloadAs = function (event) {
+            console.log("onDownloadAs");
+            console.log(event);
+        };
+
+        var onRequestClose = function (event) {
+            console.log("onRequestClose");
+            console.log(event);
+        };
+
+        var onRequestHistory = function (event) {
+            console.log("onRequestHistory");
+            console.log(event);
+        };
+
+        var onRequestHistoryClose = function (event) {
+            console.log("onRequestHistoryClose");
+            console.log(event);
+        };
+
+        var onRequestHistoryData = function (event) {
+            console.log("onRequestHistoryData");
+            console.log(event);
+        };
+
+        var onWarning = function (event) {
+            console.log("onWarning");
+            console.log(event);
+        };
+
+
         var сonnectEditor = function () {
 
             var config = ${config};
             config.events = {
-                "onReady": onReady,
+                "onAppReady": onAppReady,
                 "onDocumentStateChange": onDocumentStateChange,
                 'onRequestEditRights': onRequestEditRights,
                 "onError": onError,
-                "onOutdatedVersion": onOutdatedVersion
+                "onOutdatedVersion": onOutdatedVersion,
+                "onCollaborativeChanges": onCollaborativeChanges,
+                "onDocumentReady": onDocumentReady,
+                "onDownloadAs": onDownloadAs,
+                "onRequestClose": onRequestClose,
+                "onRequestHistory": onRequestHistory,
+                "onRequestHistoryClose": onRequestHistoryClose,
+                "onRequestHistoryData": onRequestHistoryData,
+                "onWarning": onWarning
             };
             
             docEditor = new DocsAPI.DocEditor("iframeEditor", config);

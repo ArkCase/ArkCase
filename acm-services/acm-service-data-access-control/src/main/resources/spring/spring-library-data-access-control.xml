@@ -61,6 +61,9 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="accessControlRuleChecker" ref="accessControlRuleChecker"/>
         <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
+        <property name="acmDataService" ref="acmDataService"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="jsonMarshaller" ref="jsonMarshaller"/>
     </bean>
 
     <bean id="acmDataAccessBatchUpdater" class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchUpdater">
