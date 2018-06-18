@@ -40,13 +40,19 @@ import javax.xml.bind.JAXBException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.docx4j.dml.CTBlip;
+import org.docx4j.model.structure.SectionWrapper;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.Part;
 import org.docx4j.openpackaging.parts.PartName;
-import org.docx4j.openpackaging.parts.relationships.Namespaces;
+import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
+import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
 import org.docx4j.openpackaging.parts.relationships.RelationshipsPart;
 import org.docx4j.relationships.Relationship;
+import org.docx4j.wml.CTRel;
+import org.docx4j.wml.FooterReference;
+import org.docx4j.wml.HdrFtrRef;
+import org.docx4j.wml.HeaderReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -181,20 +187,65 @@ public class CorrespondenceService
     {
         WordprocessingMLPackage target = WordprocessingMLPackage.load(templateFiles.get(0));
 
-        //Remove the header and the footer from the target document
-        Relationship headerRel = target.getMainDocumentPart().getRelationshipsPart().getRelationshipByType(Namespaces.HEADER);
-        if(Objects.nonNull(headerRel))
+        //Remove header, footer from the target document
+        List<SectionWrapper> sectionWrappers = target.getDocumentModel().getSections();
+        HeaderPart headerPart;
+        FooterPart footerPart;
+
+        for (SectionWrapper sectionWrapper : sectionWrappers)
         {
-            Part headerPart =  target.getMainDocumentPart().getRelationshipsPart().getPart(headerRel);
-            target.getMainDocumentPart().getRelationshipsPart().removePart(headerPart.getPartName());
+            headerPart = sectionWrapper.getHeaderFooterPolicy().getDefaultHeader();
+            footerPart = sectionWrapper.getHeaderFooterPolicy().getDefaultFooter();
+
+            if(Objects.nonNull(headerPart))
+            {
+                target.getMainDocumentPart().getRelationshipsPart().removeRelationship(headerPart.getPartName());
+            }
+
+            if(Objects.nonNull(footerPart))
+            {
+                target.getMainDocumentPart().getRelationshipsPart().removeRelationship(footerPart.getPartName());
+            }
+
+            List<CTRel> rel = sectionWrapper.getSectPr().getEGHdrFtrReferences();
+            List<HeaderReference> headerReferencesToBeRemoved = new ArrayList<>();
+            List<FooterReference> footerReferencesToBeRemoved = new ArrayList<>();
+
+            for (CTRel ctRel : rel)
+            {
+                if (ctRel instanceof HeaderReference)
+                {
+                    HeaderReference hr = (HeaderReference) ctRel;
+                    if (hr.getType().equals(HdrFtrRef.DEFAULT))
+                    {
+                        headerReferencesToBeRemoved.add(hr);
+                    }
+                }
+                else if (ctRel instanceof FooterReference)
+                {
+                    FooterReference fr = (FooterReference) ctRel;
+                    if (fr.getType().equals(HdrFtrRef.DEFAULT))
+                    {
+                        footerReferencesToBeRemoved.add(fr);
+                    }
+                }
+            }
+            if(!headerReferencesToBeRemoved.isEmpty())
+            {
+                for(int i=0; i< headerReferencesToBeRemoved.size(); i++)
+                {
+                    sectionWrapper.getSectPr().getEGHdrFtrReferences().remove(headerReferencesToBeRemoved.get(i));
+                }
+            }
+            if(!footerReferencesToBeRemoved.isEmpty())
+            {
+                for(int i=0; i< footerReferencesToBeRemoved.size(); i++)
+                {
+                    sectionWrapper.getSectPr().getEGHdrFtrReferences().remove(footerReferencesToBeRemoved.get(i));
+                }
+            }
         }
-        Relationship footerRel = target.getMainDocumentPart().getRelationshipsPart().getRelationshipByType(Namespaces.FOOTER);
-        if(Objects.nonNull(footerRel))
-        {
-            Part footerPart =  target.getMainDocumentPart().getRelationshipsPart().getPart(footerRel);
-            target.getMainDocumentPart().getRelationshipsPart().removePart(footerPart.getPartName());
-        }
-        //
+        //Remove header, footer
 
         for(int i=1; i<templateFiles.size(); i++)
         {
