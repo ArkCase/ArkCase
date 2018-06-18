@@ -32,7 +32,6 @@
     </style>
 </head>
 <body>
-    <iframe id="office_frame"
-            src="https://wopi.arkcase.com/wopi/office/file2/view?access_token=user_1_token&domain=localhost&port=8066&resources_url=%2Fwopi%2Fmocks%2Fresources-location/file2"></iframe>
+    <iframe id="office_frame" src="${url}"></iframe>
 </body>
 </html>

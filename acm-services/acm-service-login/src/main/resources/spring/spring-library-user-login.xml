@@ -26,7 +26,6 @@
         <property name="authenticationDetailsSource" ref="acmAuthenticationDetailsFactory"/>
         <property name="loginSuccessEventListener" ref="acmLoginSuccessListener"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
-        <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         <property name="acmGrantedAuthoritiesMapper" ref="acmAuthoritiesMapper"/>
         <property name="groupService" ref="groupService"/>
     </bean>

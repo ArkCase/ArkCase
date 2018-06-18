@@ -28,7 +28,6 @@ package com.armedia.acm.auth;
  */
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
-import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -89,7 +88,6 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     private AcmLoginSuccessOperations loginSuccessOperations;
     private AcmLoginSuccessEventListener loginSuccessEventListener;
     private AuthenticationTokenService authenticationTokenService;
-    private AuthenticationTokenDao authenticationTokenDao;
     private MuleContextManager muleContextManager;
     private AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper;
     private GroupService groupService;
@@ -186,17 +184,15 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
      *
      * @param request
      *            HTTP servlet request
-     * @throws IOException
-     *             on error
      * @throws ServletException
      *             on error
      */
-    private void emailTokenAuthentication(HttpServletRequest request) throws IOException, ServletException
+    private void emailTokenAuthentication(HttpServletRequest request) throws ServletException
     {
         String emailToken = ServletRequestUtils.getStringParameter(request, "acm_email_ticket");
         if (emailToken != null)
         {
-            List<AuthenticationToken> authenticationTokens = getAuthenticationTokenDao().findAuthenticationTokenByKey(emailToken);
+            List<AuthenticationToken> authenticationTokens = authenticationTokenService.findByKey(emailToken);
             if (authenticationTokens != null)
             {
                 for (AuthenticationToken authenticationToken : authenticationTokens)
@@ -215,7 +211,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                                 authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
                                 authenticationToken.setModifier(authenticationToken.getCreator());
                                 authenticationToken.setModified(new Date());
-                                getAuthenticationTokenDao().save(authenticationToken);
+                                authenticationTokenService.saveAuthenticationToken(authenticationToken);
                                 log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", emailToken,
                                         authenticationToken.getCreator());
                                 return;
@@ -419,16 +415,6 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
     {
         this.authenticationTokenService = authenticationTokenService;
-    }
-
-    public AuthenticationTokenDao getAuthenticationTokenDao()
-    {
-        return authenticationTokenDao;
-    }
-
-    public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
-    {
-        this.authenticationTokenDao = authenticationTokenDao;
     }
 
     public MuleContextManager getMuleContextManager()

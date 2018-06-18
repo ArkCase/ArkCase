@@ -9,6 +9,17 @@
         <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
         <property name="objectLockingManager" ref="acmObjectLockingManager"/>
         <property name="objectLockService" ref="objectLockService"/>
+        <property name="wopiConfig" ref="wopiConfig"/>
     </bean>
 
+    <bean id="wopiConfig" class="com.armedia.acm.services.wopi.model.WopiConfig">
+        <property name="wopiHostUrl" value="${wopi.host.url}"/>
+        <property name="wopiTenantDomain" value="${wopi.tenant.domain}"/>
+        <property name="wopiTenantContext" value="${wopi.tenant.context}"/>
+        <property name="wopiTenantProtocol" value="${wopi.tenant.protocol}"/>
+        <property name="wopiTenantPort" value="${wopi.tenant.port}"/>
+        <property name="wopiTenantAccessTokenParamName" value="${wopi.tenant.accessTokenParamName}"/>
+        <property name="wopiTenantFileIdParamName" value="${wopi.tenant.fileIdParamName}"/>
+        <property name="wopiLockDuration" value="${wopi.lockDuration}"/>
+    </bean>
 </beans>
