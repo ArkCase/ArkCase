@@ -61,6 +61,7 @@
         "menu": {
             "noop": "(Select Item)",
             "editWithWebDAV": "Edit",
+            "coEdit": "Co-Edit",
             "cancelEditing": "Cancel Editing",
             "newFolder": "New Folder",
             "newDocument": "New Document",
@@ -653,6 +654,7 @@
         "NOTE": "Note",
         "PARTICIPANT-ASSOCIATION": "Participant-Association",
         "ASSIGNMENT": "Assignment",
+        "ASSOCIATE_TAG": "Tag",
         "TRANSCRIBE": "Transcription"
     },
     "frevvo.dialogUserPicker": {

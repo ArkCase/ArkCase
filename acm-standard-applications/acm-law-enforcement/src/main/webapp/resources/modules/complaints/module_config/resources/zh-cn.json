@@ -368,5 +368,63 @@
             "nameAsc": "按名称排序",
             "noSort": "(不排序)"
         }
+    },
+    "changes": {
+        "object_replaced": {
+            "complaint": {
+                "defaultAddress": "Default Address Changed"
+            }
+        },
+        "value_changed": {
+            "complaint": {
+                "details": "zh-cn_Complaint - Details Changed",
+                "complaintTitle": "zh-cn_Complaint - Title Changed",
+                "complaintType": "zh-cn_Complaint - Type Changed",
+                "priority": "zh-cn_Complaint - Priority Changed",
+                "status": "zh-cn_Complaint - Status Changed",
+                "complaintNumber": "zh-cn_Complaint - Number Changed",
+                "dueDate": "zh-cn_Complaint - Due Date Changed",
+                "tag": "zh-cn_Complaint - Tag Changed",
+                "modifier": "zh-cn_Complaint - Modifier Changed",
+                "addresses.address": {
+                    "city": "地址 - 城市已更改",
+                    "zip": "地址 - 邮政编码已更改",
+                    "streetAddress": "地址 - 街道已更改",
+                    "streetAddress2": "地址 - 街道2已更改",
+                    "type": "地址 - 类型已更改",
+                    "country": "地址 - 国家已更改",
+                    "state": "地址 - 州已更改"
+                },
+                "defaultAddress": {
+                    "city": "地址 - 城市已更改",
+                    "zip": "地址 - 邮政编码已更改",
+                    "streetAddress": "地址 - 街道已更改",
+                    "streetAddress2": "地址 - 街道2已更改",
+                    "type": "地址 - 类型已更改",
+                    "country": "地址 - 国家已更改",
+                    "state": "地址 - 州已更改"
+                }
+            }
+        },
+        "collection_element_added": {
+            "complaint": {
+                "addresses.address": "地址已添加",
+                "personAssociations.personAssociation": "zh-cn_Person Added",
+                "organizationAssociations.organizationAssociation": "组织已添加",
+                "childObjects": "关联已添加",
+                "associationsToObjects": "关联已添加",
+                "associationsFromObjects": "关联已添加"
+            }
+        },
+        "collection_element_removed": {
+            "complaint": {
+                "addresses.address": "地址已删除",
+                "personAssociations.personAssociation": "zh-cn_Person Removed",
+                "organizationAssociations.organizationAssociation": "组织已删除",
+                "childObjects": "关联已删除",
+                "associationsToObjects": "关联已删除",
+                "associationsFromObjects": "关联已删除"
+            }
+        }
     }
 }

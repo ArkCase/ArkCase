@@ -432,5 +432,65 @@
             "nameAsc": "Sort By Name Asc",
             "noSort": "(No Sort)"
         }
+    },
+    "changes": {
+        "object_replaced": {
+            "complaint": {
+                "defaultAddress": "Default Address Changed"
+            }
+        },
+        "value_changed": {
+            "complaint": {
+                "details": "Complaint - Details Changed",
+                "complaintTitle": "Complaint - Title Changed",
+                "complaintType": "Complaint - Type Changed",
+                "priority": "Complaint - Priority Changed",
+                "status": "Complaint - Status Changed",
+                "complaintNumber": "Complaint - Number Changed",
+                "dueDate": "Complaint - Due Date Changed",
+                "tag": "Complaint - Tag Changed",
+                "modifier": "Complaint - Modifier Changed",
+                "personAssociations.personAssociation.personType": "Person Association - Type Changed",
+                "organizationAssociations.organizationAssociation.associationType": "Organization Association - Type Changed",
+                "addresses.address": {
+                    "city": "Address - City Changed",
+                    "zip": "Address - Zip Code Changed",
+                    "streetAddress": "Address - Street Changed",
+                    "streetAddress2": "Address - Street2 Changed",
+                    "type": "Address - Type Changed",
+                    "country": "Address - Country Changed",
+                    "state": "Address - State Changed"
+                },
+                "defaultAddress": {
+                    "city": "Address - City Changed",
+                    "zip": "Address - Zip Code Changed",
+                    "streetAddress": "Address - Street Changed",
+                    "streetAddress2": "Address - Street2 Changed",
+                    "type": "Address - Type Changed",
+                    "country": "Address - Country Changed",
+                    "state": "Address - State Changed"
+                }
+            }
+        },
+        "collection_element_added": {
+            "complaint": {
+                "addresses.address": "Address Added",
+                "personAssociations.personAssociation": "Person Added",
+                "organizationAssociations.organizationAssociation": "Organization Added",
+                "childObjects": "Association Added",
+                "associationsToObjects": "Association Added",
+                "associationsFromObjects": "Association Added"
+            }
+        },
+        "collection_element_removed": {
+            "complaint": {
+                "addresses.address": "Address Removed",
+                "personAssociations.personAssociation": "Person Removed",
+                "organizationAssociations.organizationAssociation": "Organization Removed",
+                "childObjects": "Association Removed",
+                "associationsToObjects": "Association Removed",
+                "associationsFromObjects": "Association Removed"
+            }
+        }
     }
 }

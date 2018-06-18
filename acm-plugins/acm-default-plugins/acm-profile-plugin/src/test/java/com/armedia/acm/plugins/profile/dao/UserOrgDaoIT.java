@@ -73,7 +73,8 @@ import java.util.List;
         "/spring/spring-library-email-smtp.xml",
         "/spring/spring-library-calendar-config-service.xml",
         "/spring/spring-library-calendar-integration-exchange-service.xml",
-        "/spring/spring-library-object-converter.xml"
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-ecm-file-lock.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class UserOrgDaoIT extends EasyMockSupport
