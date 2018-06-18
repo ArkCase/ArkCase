@@ -368,5 +368,63 @@
             "nameAsc": "Ordenar por nombre Asc",
             "noSort": "(Sin Clasificar)"
         }
+    },
+    "changes": {
+        "object_replaced": {
+            "complaint": {
+                "defaultAddress": "Dirección predeterminada modificada"
+            }
+        },
+        "value_changed": {
+            "complaint": {
+                "details": "es_Complaint - detalles modificados",
+                "complaintTitle": "es_Complaint - Título cambiado",
+                "complaintType": "es_Complaint - Type Changed",
+                "priority": "es_Complaint - Priority Changed",
+                "status": "es_Complaint - Estado cambiado",
+                "complaintNumber": "es_Complaint - Number Changed",
+                "dueDate": "es_Complaint - Due Date Changed",
+                "tag": "es_Complaint - Tag Changed",
+                "modifier": "es_Complaint - Modifier Changed",
+                "addresses.address": {
+                    "city": "Dirección - Ciudad cambiada",
+                    "zip": "Dirección - Código postal cambiado",
+                    "streetAddress": "Dirección - calle cambiada",
+                    "streetAddress2": "Dirección - Street2 cambiado",
+                    "type": "Dirección - Tipo modificado",
+                    "country": "Dirección - País cambiado",
+                    "state": "Dirección - Estado cambiado"
+                },
+                "defaultAddress": {
+                    "city": "Dirección - Ciudad cambiada",
+                    "zip": "Dirección - Código postal cambiado",
+                    "streetAddress": "Dirección - calle cambiada",
+                    "streetAddress2": "Dirección - Street2 cambiado",
+                    "type": "Dirección - Tipo modificado",
+                    "country": "Dirección - País cambiado",
+                    "state": "Dirección - Estado cambiado"
+                }
+            }
+        },
+        "collection_element_added": {
+            "complaint": {
+                "addresses.address": "Dirección agregada",
+                "personAssociations.personAssociation": "Persona agregada",
+                "organizationAssociations.organizationAssociation": "Organización agregada",
+                "childObjects": "Asociación agregada",
+                "associationsToObjects": "Asociación agregada",
+                "associationsFromObjects": "Asociación agregada"
+            }
+        },
+        "collection_element_removed": {
+            "complaint": {
+                "addresses.address": "Dirección eliminada",
+                "personAssociations.personAssociation": "Persona eliminada",
+                "organizationAssociations.organizationAssociation": "Organización eliminada",
+                "childObjects": "Asociación eliminada",
+                "associationsToObjects": "Asociación eliminada",
+                "associationsFromObjects": "Asociación eliminada"
+            }
+        }
     }
 }
