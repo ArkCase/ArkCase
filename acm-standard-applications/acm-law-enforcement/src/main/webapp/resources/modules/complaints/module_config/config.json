@@ -636,7 +636,7 @@
                     "name": "streetAddress2",
                     "displayName": "complaints.comp.addresses.table.columns.streetAddress2",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a googlemaps-href is-primary-address='false' location-data='row.entity'>{{row.entity.streetAddress2}}</a>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents' is-primary-address='false' location-data='row.entity'>{{row.entity.streetAddress2}}</div>"
                 },
                 {
                     "name": "city",
