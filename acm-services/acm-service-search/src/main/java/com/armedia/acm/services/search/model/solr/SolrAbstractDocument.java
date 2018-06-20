@@ -1,5 +1,9 @@
 package com.armedia.acm.services.search.model.solr;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /*-
  * #%L
  * ACM Service: Search
@@ -39,15 +43,17 @@ public abstract class SolrAbstractDocument implements SolrBaseDocument
 {
     // extensibility section below
     @JsonUnwrapped
+    @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<>();
 
-    @Override
+
+    @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties()
     {
         return additionalProperties;
     }
 
-    @Override
+    @JsonAnySetter
     public void setAdditionalProperty(String key, Object value)
     {
         getAdditionalProperties().put(key, value);
