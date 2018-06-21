@@ -1,4 +1,4 @@
-    package com.armedia.acm.services.email.service;
+package com.armedia.acm.services.email.service;
 
 /*-
  * #%L
@@ -29,7 +29,6 @@
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
