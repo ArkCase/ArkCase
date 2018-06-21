@@ -40,8 +40,10 @@ import javax.xml.bind.JAXBException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.docx4j.dml.CTBlip;
+import org.docx4j.jaxb.XPathBinderAssociationIsPartialException;
 import org.docx4j.model.structure.SectionWrapper;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.Part;
 import org.docx4j.openpackaging.parts.PartName;
@@ -186,8 +188,55 @@ public class CorrespondenceService
     private void mergeTemplates(List<File> templateFiles, OutputStream dest) throws Docx4JException, JAXBException
     {
         WordprocessingMLPackage target = WordprocessingMLPackage.load(templateFiles.get(0));
+        removeHeaderAndFooter(target);
 
-        //Remove header, footer from the target document
+        for(int i=1; i<templateFiles.size(); i++)
+        {
+            WordprocessingMLPackage appendDocument = WordprocessingMLPackage.load(templateFiles.get(i));
+            mergeDocumentsBodies(target, appendDocument);
+            mergeDocumentsImages(target, appendDocument);
+        }
+        target.save(dest);
+    }
+
+    private void mergeDocumentsBodies(WordprocessingMLPackage target, WordprocessingMLPackage appendDocument) throws JAXBException, XPathBinderAssociationIsPartialException
+    {
+        List body = appendDocument.getMainDocumentPart().getJAXBNodesViaXPath("//w:body", false);
+        for(Object b : body)
+        {
+            List bodyContent = ((org.docx4j.wml.Body)b).getContent();
+            for(Object content : bodyContent)
+            {
+                target.getMainDocumentPart().addObject(content);
+            }
+        }
+    }
+
+    private void mergeDocumentsImages(WordprocessingMLPackage target, WordprocessingMLPackage appendDocument) throws JAXBException, XPathBinderAssociationIsPartialException, InvalidFormatException
+    {
+        List<Object> blips = appendDocument.getMainDocumentPart().getJAXBNodesViaXPath("//a:blip", false);
+        for(Object el : blips)
+        {
+            try
+            {
+                CTBlip blip = (CTBlip) el;
+                RelationshipsPart parts = appendDocument.getMainDocumentPart().getRelationshipsPart();
+                Relationship rel = parts.getRelationshipByID(blip.getEmbed());
+                Part part = parts.getPart(rel);
+
+                Relationship newRel = target.getMainDocumentPart().addTargetPart(part, RelationshipsPart.AddPartBehaviour.RENAME_IF_NAME_EXISTS);
+                blip.setEmbed(newRel.getId());
+                target.getMainDocumentPart().addTargetPart(appendDocument.getParts().getParts().get(new PartName("/word/"+rel.getTarget())));
+            }
+            catch (Exception ex)
+            {
+                log.error("Could not merge templates images: {}", ex.getMessage());
+                throw ex;
+            }
+        }
+    }
+
+    private void removeHeaderAndFooter(WordprocessingMLPackage target) {
         List<SectionWrapper> sectionWrappers = target.getDocumentModel().getSections();
         HeaderPart headerPart;
         FooterPart footerPart;
@@ -245,44 +294,6 @@ public class CorrespondenceService
                 }
             }
         }
-        //Remove header, footer
-
-        for(int i=1; i<templateFiles.size(); i++)
-        {
-            WordprocessingMLPackage appendDocument = WordprocessingMLPackage.load(templateFiles.get(i));
-
-            List body = appendDocument.getMainDocumentPart().getJAXBNodesViaXPath("//w:body", false);
-            for(Object b : body)
-            {
-                List bodyContent = ((org.docx4j.wml.Body)b).getContent();
-                for(Object content : bodyContent)
-                {
-                    target.getMainDocumentPart().addObject(content);
-                }
-            }
-
-            List<Object> blips = appendDocument.getMainDocumentPart().getJAXBNodesViaXPath("//a:blip", false);
-            for(Object el : blips)
-            {
-                try
-                {
-                    CTBlip blip = (CTBlip) el;
-                    RelationshipsPart parts = appendDocument.getMainDocumentPart().getRelationshipsPart();
-                    Relationship rel = parts.getRelationshipByID(blip.getEmbed());
-                    Part part = parts.getPart(rel);
-
-                    Relationship newRel = target.getMainDocumentPart().addTargetPart(part, RelationshipsPart.AddPartBehaviour.RENAME_IF_NAME_EXISTS);
-                    blip.setEmbed(newRel.getId());
-                    target.getMainDocumentPart().addTargetPart(appendDocument.getParts().getParts().get(new PartName("/word/"+rel.getTarget())));
-                }
-                catch (Exception ex)
-                {
-                    log.error("Could not merge template documents: {}", ex.getMessage());
-                    throw ex;
-                }
-            }
-        }
-        target.save(dest);
     }
 
     private CorrespondenceTemplate findTemplate(String templateName)
