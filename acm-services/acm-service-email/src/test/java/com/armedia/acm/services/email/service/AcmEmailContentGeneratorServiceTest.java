@@ -29,7 +29,6 @@ package com.armedia.acm.services.email.service;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
@@ -75,7 +74,7 @@ public class AcmEmailContentGeneratorServiceTest
     }
 
     @Test
-    public void generateEmailBody_test() throws Exception
+    public void generateEmailBody_test()
     {
         // given
         final String email = "user_email";
@@ -91,6 +90,7 @@ public class AcmEmailContentGeneratorServiceTest
         addresses.add(email);
         List<Long> fileIds = new ArrayList<>();
         fileIds.add(fileId);
+
         EmailWithEmbeddedLinksDTO inputDTO = new EmailWithEmbeddedLinksDTO();
         inputDTO.setTitle(title);
         inputDTO.setHeader(header);
@@ -99,14 +99,13 @@ public class AcmEmailContentGeneratorServiceTest
         inputDTO.setFileIds(fileIds);
         inputDTO.setFooter(footer);
 
-        when(mockAuthenticationTokenService.getUncachedTokenForAuthentication(mockAuthentication)).thenReturn(token);
+        when(mockAuthenticationTokenService.generateAndSaveAuthenticationToken(fileId, email, mockAuthentication))
+                .thenReturn(token);
         AuthenticationToken authenticationToken = new AuthenticationToken();
         authenticationToken.setKey(token);
         authenticationToken.setStatus(AuthenticationTokenConstants.ACTIVE);
         authenticationToken.setEmail(email);
         authenticationToken.setFileId(fileId);
-
-        when(mockAuthenticationTokenDao.save(any(AuthenticationToken.class))).thenReturn(authenticationToken);
 
         // when
 
