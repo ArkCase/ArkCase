@@ -78,7 +78,8 @@
             "replace": "Replace",
             "checkout": "Check Out",
             "checkin": "Check In",
-            "declareRecord": "Declare As Record(s)"
+            "declareRecord": "Declare As Record(s)",
+            "collaborate": "Collaborate"
         },
         "table.columns": {
             "title": "Title",

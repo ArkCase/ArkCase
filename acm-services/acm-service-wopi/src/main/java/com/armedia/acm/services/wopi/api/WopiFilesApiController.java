@@ -85,11 +85,6 @@ public class WopiFilesApiController
             log.error("Failed to retrieve contents for file with id [{}]", id, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        catch (MuleException e)
-        {
-            log.warn("File with id [{}] is not found", id, e.getMessage());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
@@ -133,15 +128,6 @@ public class WopiFilesApiController
     {
         log.info("Get lock for file [{}] per user [{}]", id, authentication.getName());
         return new ResponseEntity<>(wopiService.getSharedLock(id), HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
-    @RequestMapping(value = "/{id}/lock/{lockId}", method = RequestMethod.PUT)
-    @ResponseBody
-    public ResponseEntity<Long> refreshLock(@PathVariable Long id, @PathVariable Long lockId, Authentication authentication)
-    {
-        log.info("Refresh lock for file [{}] per user [{}]", id, authentication.getName());
-        return new ResponseEntity<>(wopiService.lock(lockId, authentication), HttpStatus.OK);
     }
 
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
