@@ -27,11 +27,16 @@ package com.armedia.acm.services.authenticationtoken.service;
  * #L%
  */
 
+import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
+
 import org.springframework.cache.Cache;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,6 +46,7 @@ import java.util.UUID;
 public class AuthenticationTokenService
 {
     private Cache authenticationTokenCache;
+    private AuthenticationTokenDao authenticationTokenDao;
 
     /**
      * Retrieve a token corresponding to the given Authentication. The token can be placed in service URLs
@@ -117,6 +123,33 @@ public class AuthenticationTokenService
         }
     }
 
+    public String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, Authentication authentication)
+    {
+        String token = getUncachedTokenForAuthentication(authentication);
+        AuthenticationToken authenticationToken = new AuthenticationToken();
+        authenticationToken.setKey(token);
+        authenticationToken.setStatus(AuthenticationTokenConstants.ACTIVE);
+        authenticationToken.setEmail(emailAddress);
+        authenticationToken.setFileId(fileId);
+        authenticationTokenDao.save(authenticationToken);
+        return token;
+    }
+
+    public List<AuthenticationToken> findByTokenEmailAndFileId(String email, Long fileId)
+    {
+        return authenticationTokenDao.findAuthenticationTokenByEmailAndFileId(email, fileId);
+    }
+
+    public List<AuthenticationToken> findByKey(String key)
+    {
+        return authenticationTokenDao.findAuthenticationTokenByKey(key);
+    }
+
+    public void saveAuthenticationToken(AuthenticationToken token)
+    {
+        authenticationTokenDao.save(token);
+    }
+
     public Cache getAuthenticationTokenCache()
     {
         return authenticationTokenCache;
@@ -125,5 +158,15 @@ public class AuthenticationTokenService
     public void setAuthenticationTokenCache(Cache authenticationTokenCache)
     {
         this.authenticationTokenCache = authenticationTokenCache;
+    }
+
+    public AuthenticationTokenDao getAuthenticationTokenDao()
+    {
+        return authenticationTokenDao;
+    }
+
+    public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
+    {
+        this.authenticationTokenDao = authenticationTokenDao;
     }
 }
