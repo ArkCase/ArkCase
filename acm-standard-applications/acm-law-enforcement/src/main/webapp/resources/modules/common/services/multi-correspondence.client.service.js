@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('services').factory('MultiCorrespondence.Service', ['$http', function($http) {
+angular.module('services').factory('MultiCorrespondence.Service', ['$http', 'UtilService', function($http, Util) {
 
     var generateMultiTemplateCorrespondence = function(templates, parentObjectType, parentObjectId, folderId) {
         return $http({
