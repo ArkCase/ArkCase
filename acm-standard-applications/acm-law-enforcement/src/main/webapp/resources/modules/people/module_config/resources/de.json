@@ -479,7 +479,10 @@
             "history.label": "Geschichte"
         },
         "filters": {
+            "iHaveCreatedActive": "de_I've Created - Active",
             "iHaveCreated": "Alles was ich erstellt habe",
+            "active": "de_Active",
+            "inActive": "de_In active",
             "noFilter": "(Kein Filter)"
         },
         "sorters": {

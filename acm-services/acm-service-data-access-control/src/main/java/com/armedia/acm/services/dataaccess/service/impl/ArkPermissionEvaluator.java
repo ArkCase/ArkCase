@@ -1,5 +1,9 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.service.AcmDataService;
+import com.armedia.acm.objectonverter.json.JSONMarshaller;
+
 /*-
  * #%L
  * ACM Service: Data Access Control
@@ -31,12 +35,15 @@ import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrAbstractDocument;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -47,6 +54,7 @@ import org.springframework.security.core.Authentication;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -59,7 +67,10 @@ import java.util.stream.Stream;
  * we only checked the participant privilege table to see if they have the access, they could also be in the
  * No Access list, hence the check to ensure they can read the object.
  * <p/>
- * For read access all we have to do is check Solr.
+ * For read access all we have to do is check Solr. If the Solr query doesn't return any results, then either
+ * the user has no access to the object; or else there is no such object; or perhaps the Solr index hasn't been
+ * updated yet (common right after new object creation). Because of the last condition (Solr index not updated
+ * yet), we will run a database query to see if the user has access.
  * <p/>
  * For other access types, we run queries against the acm_participant_privilege table. A user has access if:
  * <ul>
@@ -81,6 +92,9 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     private UserDao userDao;
     private AccessControlRuleChecker accessControlRuleChecker;
     private boolean enableDocumentACL;
+    private AcmDataService acmDataService;
+    private SpringContextHolder springContextHolder;
+    private JSONMarshaller jsonMarshaller;
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission)
@@ -127,6 +141,20 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         return true;
     }
 
+    protected <T> AcmObjectToSolrDocTransformer<T> findTransformerForEntity(Class<T> entityClass)
+    {
+        @SuppressWarnings("rawtypes")
+        Map<String, AcmObjectToSolrDocTransformer> transformers = getSpringContextHolder()
+                .getAllBeansOfType(AcmObjectToSolrDocTransformer.class);
+        @SuppressWarnings("unchecked")
+        AcmObjectToSolrDocTransformer<T> transformer = transformers.values().stream()
+                .filter(t -> t.getAcmObjectTypeSupported().equals(entityClass))
+                .findFirst()
+                .orElse(null);
+        return transformer;
+
+    }
+
     /**
      * Check user access for object with particular id.
      *
@@ -140,21 +168,21 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
      *            requested permission (actionName)
      * @return true if granted, false otherwise
      */
-    private boolean checkAccessForSingleObject(Authentication authentication, Long id, String targetType, Object permission)
+    protected boolean checkAccessForSingleObject(Authentication authentication, Long id, String targetType, Object permission)
     {
-        if (log.isTraceEnabled())
-        {
-            log.trace("Checking " + permission + " for " + authentication.getName() + " on object of type '" +
-                    targetType + "'");
-        }
+
+        log.trace("Checking [{}] for [{}] on object of type [{}] with id [{}]", permission, authentication.getName(), targetType, id);
 
         String solrDocument = getSolrDocument(authentication, id, targetType);
 
         if (solrDocument == null || !checkForReadAccess(solrDocument))
         {
-            // no access since they can't read it
-            log.warn("No read access, returning false");
-            return false;
+            solrDocument = lookupAndConvertObjectFromDatabase(targetType, id);
+            if (solrDocument == null)
+            {
+                // there really is no such object, or else no DAO or no transformer
+                return false;
+            }
         }
 
         // break here and return true if any of AC rules match (see SBI-956)
@@ -164,6 +192,71 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         }
 
         return evaluateAccess(authentication, id, targetType, Arrays.asList(((String) permission).split("\\|")));
+    }
+
+    public String lookupAndConvertObjectFromDatabase(String targetType, Long id)
+    {
+        log.info("Attempting database lookup for [{}] with id [{}]", targetType, id);
+        // here we need to lookup the JPA entity from the database and convert to the expected Solr format,
+        // so we can then proceed with the access control checks... since the reason the document could not be
+        // found, may be that Solr just hasn't been updated yet.
+        AcmAbstractDao<?> dao = getAcmDataService().getDaoByObjectType(targetType);
+        if (dao != null)
+        {
+            log.debug("found DAO of type [{}]", dao.getClass().getName());
+            Object jpaEntity = dao.find(id);
+            if (jpaEntity != null)
+            {
+                AcmObjectToSolrDocTransformer transformer = findTransformerForEntity(jpaEntity.getClass());
+                if (transformer != null)
+                {
+                    log.debug("found transformer of type [{}]", transformer.getClass().getName());
+                    SolrAbstractDocument solrDoc = transformJpaEntity(jpaEntity, transformer);
+
+                    if (solrDoc != null)
+                    {
+                        String jsonStr = getJsonMarshaller().marshal(solrDoc);
+
+                        // now we have the json doc, but we have to wrap it in the expected Solr structure
+                        jsonStr = "{\"response\":{\"numFound\":1,\"start\":0,\"docs\":[" + jsonStr + "] } }";
+                        return jsonStr;
+                    }
+                }
+                else
+                {
+                    log.warn("No transformer found for entity of type: {}", jpaEntity.getClass().getName());
+                }
+            }
+        }
+        else
+        {
+            // it seems weird that we couldn't even find a dao
+            log.warn("No DAO found for object of type {}", targetType);
+        }
+
+        return null;
+    }
+
+    protected SolrAbstractDocument transformJpaEntity(Object jpaEntity, AcmObjectToSolrDocTransformer transformer)
+    {
+        // Every transformer implements one of these methods. This code mirrors the Solr
+        // lookup in this class, which first checks the advanced search core, and then quick search...
+        SolrAbstractDocument solrDoc = transformer.toSolrAdvancedSearch(jpaEntity);
+        if (solrDoc == null)
+        {
+            solrDoc = transformer.toContentFileIndex(jpaEntity);
+            if (solrDoc == null)
+            {
+                solrDoc = transformer.toSolrQuickSearch(jpaEntity);
+            }
+            if (solrDoc == null)
+            {
+                // ??? this is really weird.
+                log.warn("Transformer of type [{}] did not transform object of type [{}}",
+                        transformer.getClass().getName(), jpaEntity.getClass().getName());
+            }
+        }
+        return solrDoc;
     }
 
     @Override
@@ -236,9 +329,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
 
         try
         {
-            // if the Solr search returns the object, the user has read access to it... eventually we will extend
-            // this evaluator to consider additional access levels, but for now we will grant any access so long as
-            // the user can read the object.
+            // if the Solr search returns the object, the user has read access to it.
             String result = getExecuteSolrQuery()
                     .getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1, "id asc", objectType);
             if (result.contains("numFound\":0"))
@@ -327,5 +418,35 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     public void setEnableDocumentACL(boolean enableDocumentACL)
     {
         this.enableDocumentACL = enableDocumentACL;
+    }
+
+    public AcmDataService getAcmDataService()
+    {
+        return acmDataService;
+    }
+
+    public void setAcmDataService(AcmDataService acmDataService)
+    {
+        this.acmDataService = acmDataService;
+    }
+
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
+    }
+
+    public JSONMarshaller getJsonMarshaller()
+    {
+        return jsonMarshaller;
+    }
+
+    public void setJsonMarshaller(JSONMarshaller jsonMarshaller)
+    {
+        this.jsonMarshaller = jsonMarshaller;
     }
 }

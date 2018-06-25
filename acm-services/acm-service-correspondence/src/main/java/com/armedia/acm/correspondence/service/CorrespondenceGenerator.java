@@ -140,7 +140,8 @@ public class CorrespondenceGenerator
         return template.getDocumentType() + " " + sdf.format(new Date()) + ".docx";
     }
 
-    protected Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult) throws IOException
+    protected Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult)
+            throws IOException
     {
         Map<String, String> retval = new HashMap<>();
 
@@ -262,7 +263,7 @@ public class CorrespondenceGenerator
         CorrespondenceQuery correspondenceQuery = correspondenceQueryBeansMap.values().stream()
                 .filter(cQuery -> cQuery.getType().toString().equals(template.getObjectType())).findFirst().get();
 
-        Query select = getEntityManager().createQuery(correspondenceQuery.getJpaQuery());
+        Query select = getEntityManager().createNativeQuery(correspondenceQuery.getSqlQuery());
 
         for (int a = 0; a < queryArguments.length; a++)
         {

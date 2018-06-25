@@ -8,6 +8,9 @@
             "leftnav.item": "Pesquisa"
         },
         "comp": {
+		    "facetedSearch": {
+                "title": "Facetas de pesquisa"
+            },
             "grid": {
                 "columns": {
                     "id": "ID",

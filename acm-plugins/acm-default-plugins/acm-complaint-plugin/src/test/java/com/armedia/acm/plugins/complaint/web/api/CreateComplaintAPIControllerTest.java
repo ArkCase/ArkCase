@@ -32,10 +32,13 @@ import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
@@ -101,6 +104,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         unit.setComplaintTransaction(mockSaveTransaction);
         unit.setEventPublisher(mockEventPublisher);
         unit.setComplaintService(mockComplaintService);
+        unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
     }
 
     @Test
@@ -137,12 +141,17 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         log.debug("Input JSON: " + in);
 
-        Capture<Complaint> found = new Capture<>();
+        Capture<Complaint> found = Capture.newInstance();
+        Capture<Complaint> foundOldComplaint = Capture.newInstance();
+
+        Complaint oldComplaint = new Complaint();
+        oldComplaint.setComplaintTitle("the old complaint title");
+        expect(mockSaveTransaction.getComplaint(complaint.getComplaintId())).andReturn(oldComplaint);
 
         mockComplaintService.updateXML(capture(found), eq(mockAuthentication), eq(ComplaintForm.class));
         expectLastCall().anyTimes();
         expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication))).andReturn(saved);
-        mockEventPublisher.publishComplaintEvent(capture(found), eq(mockAuthentication), eq(false), eq(true));
+        mockEventPublisher.publishComplaintEvent(capture(found), capture(foundOldComplaint), eq(mockAuthentication), eq(false), eq(true));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -171,6 +180,9 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         assertEquals(saved.getComplaintNumber(), mapped.getComplaintNumber());
 
         assertEquals(complaint.getApprovers(), saved.getApprovers());
+
+        assertNotNull(foundOldComplaint.getValue());
+        assertEquals(oldComplaint.getComplaintTitle(), foundOldComplaint.getValue().getComplaintTitle());
 
     }
 
@@ -233,11 +245,15 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         log.debug("Input JSON: " + in);
 
-        Capture<Complaint> found = new Capture<>();
+        Capture<Complaint> found = Capture.newInstance();
+        Capture<Complaint> foundOldComplaint = Capture.newInstance();
 
+        Complaint oldComplaint = new Complaint();
+        oldComplaint.setComplaintTitle("the old complaint title");
+        expect(mockSaveTransaction.getComplaint(complaint.getComplaintId())).andReturn(oldComplaint);
         expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication)))
                 .andThrow(new CannotCreateTransactionException("testException"));
-        mockEventPublisher.publishComplaintEvent(capture(found), eq(mockAuthentication), eq(false), eq(false));
+        mockEventPublisher.publishComplaintEvent(capture(found), capture(foundOldComplaint), eq(mockAuthentication), eq(false), eq(false));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -256,6 +272,10 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         verifyAll();
 
         assertEquals(complaint.getComplaintId(), found.getValue().getComplaintId());
+
+        // when an error is thrown, the event will not have the old complaint value, so we should get a null... not the
+        // old complaint.
+        assertNull(foundOldComplaint.getValue());
 
     }
 
