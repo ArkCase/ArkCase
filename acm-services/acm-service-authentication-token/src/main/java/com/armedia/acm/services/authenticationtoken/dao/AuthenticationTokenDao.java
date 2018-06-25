@@ -32,7 +32,7 @@ import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import java.util.List;
 
@@ -53,12 +53,25 @@ public class AuthenticationTokenDao extends AcmAbstractDao<AuthenticationToken>
 
     public List<AuthenticationToken> findAuthenticationTokenByKey(String key)
     {
-        Query authenticationToken = getEntityManager().createQuery(
+        TypedQuery<AuthenticationToken> authenticationToken = getEntityManager().createQuery(
                 "SELECT authenticationToken " + "FROM AuthenticationToken authenticationToken " +
-                        "WHERE authenticationToken.key = :key ");
+                        "WHERE authenticationToken.key = :key ",
+                AuthenticationToken.class);
 
         authenticationToken.setParameter("key", key);
         return authenticationToken.getResultList();
+    }
+
+    public List<AuthenticationToken> findAuthenticationTokenByEmailAndFileId(String email, Long fileId)
+    {
+        TypedQuery<AuthenticationToken> tokenByEmailQuery = getEntityManager().createQuery(
+                "SELECT authenticationToken FROM AuthenticationToken authenticationToken " +
+                        "WHERE authenticationToken.email = :email AND authenticationToken.fileId = :fileId",
+                AuthenticationToken.class);
+
+        tokenByEmailQuery.setParameter("email", email);
+        tokenByEmailQuery.setParameter("fileId", fileId);
+        return tokenByEmailQuery.getResultList();
     }
 
     public EntityManager getEntityManager()

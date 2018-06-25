@@ -29,25 +29,25 @@ package com.armedia.acm.services.wopi.model;
 
 public class WopiUserInfo
 {
-    private final String fullName;
-    private final String id;
+    private final String displayName;
+    private final String userId;
     private final String lang;
 
-    public WopiUserInfo(String fullName, String id, String lang)
+    public WopiUserInfo(String displayName, String id, String lang)
     {
-        this.fullName = fullName;
-        this.id = id;
+        this.displayName = displayName;
+        this.userId = id;
         this.lang = lang;
     }
 
-    public String getFullName()
+    public String getDisplayName()
     {
-        return fullName;
+        return displayName;
     }
 
-    public String getId()
+    public String getUserId()
     {
-        return id;
+        return userId;
     }
 
     public String getLang()

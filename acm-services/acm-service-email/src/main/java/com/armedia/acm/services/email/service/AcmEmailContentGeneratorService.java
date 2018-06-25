@@ -52,25 +52,12 @@ public class AcmEmailContentGeneratorService
         {
             for (Long fileId : emailDTO.getFileIds())
             {
-                String token = generateAndSaveAuthenticationToken(fileId, emailAddress, emailDTO, authentication);
+                String token = authenticationTokenService.generateAndSaveAuthenticationToken(fileId, emailAddress, authentication);
                 body.append(emailDTO.getBaseUrl()).append(fileId).append("&acm_email_ticket=").append(token).append("<br/>");
             }
         }
 
         return emailDTO.buildMessageBodyFromTemplate(body.toString());
-    }
-
-    private String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, EmailWithEmbeddedLinksDTO emailDTO,
-            Authentication authentication)
-    {
-        String token = getAuthenticationTokenService().getUncachedTokenForAuthentication(authentication);
-        AuthenticationToken authenticationToken = new AuthenticationToken();
-        authenticationToken.setKey(token);
-        authenticationToken.setStatus(AuthenticationTokenConstants.ACTIVE);
-        authenticationToken.setEmail(emailAddress);
-        authenticationToken.setFileId(fileId);
-        getAuthenticationTokenDao().save(authenticationToken);
-        return token;
     }
 
     public AuthenticationTokenService getAuthenticationTokenService()
