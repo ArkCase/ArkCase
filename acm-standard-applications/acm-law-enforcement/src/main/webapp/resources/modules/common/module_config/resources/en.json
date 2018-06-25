@@ -909,5 +909,15 @@
                 "details.btn.text": "View {{count}} Changes"
             }
         }
+    },
+    "common.multicorrespondence": {
+        "modal": {
+            "title": "Correspondence Templates",
+            "select": "Select Correspondence Templates",
+            "buttons": {
+                "ok": "Ok",
+                "cancel": "Cancel"
+            }
+        }
     }
 }
