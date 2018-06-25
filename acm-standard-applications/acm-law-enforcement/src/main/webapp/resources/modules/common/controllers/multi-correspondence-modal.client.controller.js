@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('Cases.MultiCorrespondenceModalController', [ '$scope', '$modalInstance', 'ObjectService', 'Admin.CMTemplatesService', function($scope, $modalInstance, ObjectService, CorrespondenceService) {
+angular.module('cases').controller('Common.MultiCorrespondenceModalController', [ '$scope', '$modalInstance', 'ObjectService', 'Admin.CMTemplatesService', function($scope, $modalInstance, ObjectService, CorrespondenceService) {
 
     $scope.correspondenceTemplates = [];
     $scope.selectedTemplates = [];

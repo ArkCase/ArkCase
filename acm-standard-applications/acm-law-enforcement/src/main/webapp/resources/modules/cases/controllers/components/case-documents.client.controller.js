@@ -26,9 +26,9 @@ angular.module('cases').controller(
                 'DocTreeExt.Email',
                 'ModalDialogService',
                 'Admin.EmailSenderConfigurationService',
-                'CaseCorrespondence.MultiTemplate',
+                'MultiCorrespondence.Service',
                 function($scope, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService, CorrespondenceMultiTemplate) {
+                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService, MultiCorrespondenceService) {
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
                         return userInfo;
@@ -236,45 +236,19 @@ angular.module('cases').controller(
                     });
 
                     $scope.$bus.subscribe('multi-correspondence-requested', function(payload) {
-
                         var requestData = payload;
                         var names = [ requestData.args.label ];
                         var template = requestData.args.templateType;
 
                         var modalInstance = $modal.open({
                             animation: false,
-                            templateUrl: 'modules/cases/views/components/case-correspondence.modal.client.view.html',
-                            controller: 'Cases.MultiCorrespondenceModalController',
+                            templateUrl: 'modules/common/views/multi-correspondence.modal.client.view.html',
+                            controller: 'Common.MultiCorrespondenceModalController',
                             size: 'lg'
                         });
 
                         modalInstance.result.then(function(selectedTemplates) {
-                            if(selectedTemplates.length > 0){
-                                requestData.docTree._addingFileNodes(requestData.nodes[0], names, names[0]).then(function(tmpFileNodes) {
-                                var fileNodes = tmpFileNodes;
-                                CorrespondenceMultiTemplate.generateMultiTemplateCorrespondence(selectedTemplates, requestData.docTree.getObjType(), requestData.docTree.getObjId(), requestData.nodes[0].data.objectId).then(function(tmpUploadedFile){
-                                    var cacheKey = requestData.docTree.getCacheKeyByNode(requestData.nodes[0]);
-                                    var uploadedFile = tmpUploadedFile.data;
-                                    var file = requestData.docTree.fileToSolrData(uploadedFile);
-                                    var folderList = requestData.docTree.cacheFolderList.get(cacheKey);
-
-                                    if (requestData.docTree.Validator.validateFolderList(folderList)) {
-                                        folderList.children.push(file);
-                                        folderList.totalChildren++;
-                                        requestData.docTree.cacheFolderList.put(cacheKey, folderList);
-                                        if (!Util.isEmpty(uploadedFile) && requestData.docTree.Validator.validateFancyTreeNodes(fileNodes)) {
-                                            var type = Util.goodValue(uploadedFile.fileType);
-                                            var fileNode = requestData.docTree._matchFileNode(type, type, fileNodes);
-                                            if (fileNode) {
-                                                requestData.docTree._fileDataToNodeData(file, fileNode);
-                                                fileNode.renderTitle();
-                                                fileNode.setStatus("ok");
-                                            }
-                                        }
-                                    }
-                                });
-                            });
-                            }
+                            MultiCorrespondenceService.createMultiTemplateCorrespondence(requestData, names, template, selectedTemplates);
                         });
                     });
 

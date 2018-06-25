@@ -1,12 +1,12 @@
 <div class="modal-header">
     <h3>
-        <span translate>complaints.comp.documents.correspondences.modal.title</span>
+        <span translate>common.multicorrespondence.modal.title</span>
     </h3>
 
 </div>
 
 <div class="modal-body">
-    <label><span translate>complaints.comp.documents.correspondences.modal.select</span></label>
+    <label><span translate>common.multicorrespondence.modal.select</span></label>
     <span ng-repeat="template in correspondenceTemplates" class="checkbox">
         <label class="checkbox">
             <input type="checkbox" value="{{template}}" ng-click="onTemplateSelected(template)"
@@ -20,9 +20,9 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" ng-click="onClickCancel()">
-        <span translate>complaints.comp.documents.correspondences.modal.buttons.cancel</span>
+        <span translate>common.multicorrespondence.modal.buttons.cancel</span>
     </button>
     <button class="btn btn-primary" ng-click="onClickOk()">
-        <span translate>complaints.comp.documents.correspondences.modal.buttons.ok</span>
+        <span translate>common.multicorrespondence.modal.buttons.ok</span>
     </button>
 </div>
