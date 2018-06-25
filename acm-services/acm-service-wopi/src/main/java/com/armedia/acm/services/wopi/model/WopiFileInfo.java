@@ -29,41 +29,38 @@ package com.armedia.acm.services.wopi.model;
 
 public class WopiFileInfo
 {
-    private Long id;
+    private Long fileId;
 
     private String name;
 
     private String extension;
 
-    private String ownerId;
+    private String owner;
 
     private String version;
 
     private Long size;
 
-    private String userId;
-
     private Boolean userCanWrite;
 
     private Boolean readOnly;
 
-    public WopiFileInfo(Long id, String name, String extension, String ownerId, String version, Long size,
-            String userId, Boolean userCanWrite, Boolean readOnly)
+    public WopiFileInfo(Long fileId, String name, String extension, String owner, String version, Long size,
+            Boolean userCanWrite, Boolean readOnly)
     {
-        this.id = id;
-        this.name = name;
+        this.fileId = fileId;
+        this.name = String.format("%s.%s", name, extension);
         this.extension = extension;
-        this.ownerId = ownerId;
+        this.owner = owner;
         this.version = version;
         this.size = size;
-        this.userId = userId;
         this.userCanWrite = userCanWrite;
         this.readOnly = readOnly;
     }
 
-    public Long getId()
+    public String getFileId()
     {
-        return id;
+        return fileId.toString();
     }
 
     public String getName()
@@ -76,9 +73,9 @@ public class WopiFileInfo
         return extension;
     }
 
-    public String getOwnerId()
+    public String getOwner()
     {
-        return ownerId;
+        return owner;
     }
 
     public String getVersion()
@@ -89,11 +86,6 @@ public class WopiFileInfo
     public Long getSize()
     {
         return size;
-    }
-
-    public String getUserId()
-    {
-        return userId;
     }
 
     public Boolean getUserCanWrite()

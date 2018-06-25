@@ -479,7 +479,10 @@
             "history.label": "इतिहास"
         },
         "filters": {
+            "iHaveCreatedActive": "hi_I've Created - Active",
             "iHaveCreated": "मैंने बनाया है सब",
+            "active": "hi_Active",
+            "inActive": "hi_In active",
             "noFilter": "(कोई फिल्टर नहीं)"
         },
         "sorters": {

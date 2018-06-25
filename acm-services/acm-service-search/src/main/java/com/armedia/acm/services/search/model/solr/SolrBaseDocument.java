@@ -27,11 +27,7 @@ package com.armedia.acm.services.search.model.solr;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by armdev on 10/23/14.
@@ -51,9 +47,4 @@ public interface SolrBaseDocument
 
     void setProtected_object_b(boolean protected_object_b);
 
-    @JsonAnyGetter
-    Map<String, Object> getAdditionalProperties();
-
-    @JsonAnySetter
-    void setAdditionalProperty(String key, Object value);
 }

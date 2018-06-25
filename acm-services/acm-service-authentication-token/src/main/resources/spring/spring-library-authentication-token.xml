@@ -15,10 +15,11 @@
         <constructor-arg value="authentication_token_cache"/>
     </bean>
 
+    <bean id="authenticationTokenDao" class="com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao"/>
+
     <bean id="authenticationTokenService" class="com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService">
         <property name="authenticationTokenCache" ref="authenticationTokenCache"/>
+        <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
     </bean>
-
-    <bean id="authenticationTokenDao" class="com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao"/>
 
 </beans>

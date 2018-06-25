@@ -38,6 +38,7 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
+import com.armedia.acm.services.wopi.model.WopiConfig;
 import com.armedia.acm.services.wopi.model.WopiFileInfo;
 
 import org.mule.api.MuleException;
@@ -52,6 +53,7 @@ import java.util.Optional;
 
 public class WopiAcmService
 {
+    private WopiConfig wopiConfig;
     private EcmFileService ecmFileService;
     private AcmObjectLockingManager objectLockingManager;
     private AcmObjectLockService objectLockService;
@@ -76,10 +78,10 @@ public class WopiAcmService
 
         return Optional.of(new WopiFileInfo(file.getFileId(), file.getFileName(),
                 file.getFileExtension(), file.getCreator(), file.getActiveVersionTag(),
-                fileSize, authentication.getName(), userCanWrite, !userCanWrite));
+                fileSize, userCanWrite, !userCanWrite));
     }
 
-    public InputStreamResource getFileContents(Long id) throws AcmUserActionFailedException, MuleException
+    public InputStreamResource getFileContents(Long id) throws AcmUserActionFailedException
     {
         InputStream fileContent = ecmFileService.downloadAsInputStream(id);
         return new InputStreamResource(fileContent);
@@ -105,14 +107,15 @@ public class WopiAcmService
     public Long lock(Long fileId, Authentication authentication)
     {
         AcmObjectLock lock = objectLockingManager.acquireObjectLock(fileId, "FILE",
-                FileLockType.SHARED_WRITE.name(), null, false, authentication.getName());
+                FileLockType.SHARED_WRITE.name(), wopiConfig.getWopiLockDuration(), false, authentication.getName());
         return lock.getId();
     }
 
     public Long unlock(Long fileId, Long lockKey, Authentication authentication)
     {
         // should be able to remove lock even if the request did not come from the user who originally created the lock
-        objectLockingManager.releaseObjectLock(fileId, "FILE", FileLockType.SHARED_WRITE.name(), false, authentication.getName(), lockKey);
+        objectLockingManager.releaseObjectLock(fileId, "FILE", FileLockType.SHARED_WRITE.name(),
+                false, authentication.getName(), lockKey);
         return 0L;
     }
 
@@ -125,6 +128,16 @@ public class WopiAcmService
     public void deleteFile(Long fileId) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         ecmFileService.deleteFile(fileId);
+    }
+
+    public WopiConfig getWopiConfig()
+    {
+        return wopiConfig;
+    }
+
+    public void setWopiConfig(WopiConfig wopiConfig)
+    {
+        this.wopiConfig = wopiConfig;
     }
 
     public void setEcmFileService(EcmFileService ecmFileService)
