@@ -49,9 +49,9 @@ public class WopiUserApiController
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public WopiUserInfo getUserInfo(@RequestParam("acm_ticket") String token, HttpSession session)
+    public WopiUserInfo getUserInfo(@RequestParam("acm_email_ticket") String token, HttpSession session)
     {
-        log.info("Getting user info per token [{}]", token);
+        log.info("Getting user info per email ticket [{}]", token);
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         return new WopiUserInfo(user.getFullName(), user.getUserId(), user.getLang());
     }

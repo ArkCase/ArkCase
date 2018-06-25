@@ -8,8 +8,9 @@
         <property name="wopiService" ref="wopiAcmService"/>
     </bean>
 
-    <bean id="wopiResourceApiController" class="com.armedia.acm.services.wopi.api.WopiResourceApiController">
-        <property name="resourceLocations" ref="wopiServiceProperties"/>
+    <bean id="wopiUIController" class="com.armedia.acm.services.wopi.web.WopiHostUIController">
+        <property name="tokenService" ref="authenticationTokenService"/>
+        <property name="wopiConfig" ref="wopiConfig"/>
     </bean>
 
 </beans>
