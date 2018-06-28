@@ -7,7 +7,6 @@ angular.module('cases').controller(
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
-                        stateParams: $stateParams,
                         moduleId: "cases",
                         componentId: "references",
                         retrieveObjectInfo: CaseInfoService.getCaseInfo,

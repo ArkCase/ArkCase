@@ -26,8 +26,10 @@ angular.module('complaints').controller(
                 'DocTreeExt.Email',
                 'ModalDialogService',
                 'Admin.EmailSenderConfigurationService',
+
                 function($scope, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService) {
+                         DocTreeExtCheckin, CorrespondenceService,
+                         DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -208,6 +210,48 @@ angular.module('complaints').controller(
                             searchFilter: $scope.searchFilter
                         });
                     };
+
+                    $scope.$on('onSearchDocumentsDocTree', function () {
+                        var params = {};
+                        params.header = $translate.instant("CHOOSE DOCUMENTS");
+                        params.filter = '"Object Type": FILE';
+                        params.config = Util.goodMapValue($scope.config, "dialogObjectPicker");
+
+                        var modalInstance = $modal.open({
+                            templateUrl: "modules/common/views/object-picker-modal.client.view.html",
+                            controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
+                                $scope.modalInstance = $modalInstance;
+                                $scope.header = params.header;
+                                $scope.filter = params.filter;
+                                $scope.config = params.config;
+
+                                $scope.modalInstance.result.then(function (result) {
+                                    console.log(result);
+                                    console.log("todo: try to upload doc");
+                                    // Util.serviceCall({
+                                    //     service: Ecm.copyFile,
+                                    //     param: {
+                                    //         objType: ObjectService.ObjectTypes.FILE,
+                                    //         objId: scope.selectedItem.object_id_s
+                                    //     },
+                                    //     data: {
+                                    //         id: parseInt(scope.selectedItem.id),
+                                    //         folderId: parseInt(scope.selectedItem.parent_id_s)
+                                    //     }
+                                    // })
+                                });
+
+                            }],
+                            animation: true,
+                            size: 'lg',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function () {
+                                    return params;
+                                }
+                            }
+                        });
+                    });
 
                     $scope.$bus.subscribe('removeSearchFilter', function() {
                         $scope.searchFilter = null;
