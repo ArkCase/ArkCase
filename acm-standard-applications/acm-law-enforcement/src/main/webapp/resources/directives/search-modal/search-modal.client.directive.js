@@ -33,7 +33,7 @@
  * If response contains only 1 item, then display it.
  **/
 
-angular.module('directives').directive('searchModal', [ '$q', '$translate', 'UtilService', 'SearchService', 'Search.QueryBuilderService', '$injector', 'Person.InfoService', function($q, $translate, Util, SearchService, SearchQueryBuilder, $injector, PersonInfoService) {
+angular.module('directives').directive('searchModal', ['$q', '$translate', 'UtilService', 'SearchService', 'Search.QueryBuilderService', '$injector', 'Person.InfoService', 'EcmService', 'ObjectService', function ($q, $translate, Util, SearchService, SearchQueryBuilder, $injector, PersonInfoService, Ecm, ObjectService) {
     return {
         restrict: 'E', //match only element name
         scope: {
@@ -63,7 +63,8 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
             secondGrid: '@',
             pickUserLabel: '@',
             pickGroupLabel: '@',
-            showSelectedItemsGrid: '=?'
+            showSelectedItemsGrid: '=?',
+            dataBindTmp: '@?'
         },
 
         link: function(scope, el, attrs) {
@@ -83,6 +84,7 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
             scope.showHeaderFooter = !Util.isEmpty(scope.modalInstance);
             scope.disableSearchControls = (scope.disableSearch === 'true') ? true : false;
             scope.findGroups = scope.findGroups === 'true';
+            scope.dataBindTmp = Util.isEmpty(scope.dataBindTmp);
             scope.secondGrid = scope.secondGrid === 'true';
             if (scope.searchQuery) {
                 scope.searchQuery = scope.searchQuery;
@@ -297,6 +299,20 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
                     }
                 }
             };
+
+            /*scope.onClickCopyDocument = function () {
+                Util.serviceCall({
+                    service: Ecm.copyFile,
+                    param: {
+                        objType: ObjectService.ObjectTypes.FILE,
+                        objId: scope.selectedItem.object_id_s
+                    },
+                    data: {
+                        id: parseInt(scope.selectedItem.id),
+                        folderId: parseInt(scope.selectedItem.parent_id_s)
+                    }
+                })
+            };*/
 
             scope.onClickCancel = function() {
                 scope.modalInstance.dismiss('cancel')

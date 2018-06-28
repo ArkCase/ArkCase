@@ -92,4 +92,8 @@
             ng-disabled="selectedItems.length < 1 || (secondGrid && selectedDetailItem == null)">
         {{ok}}
     </button>
+    <button class="btn btn-primary" ng-click="onClickCopyDocument()"
+            ng-disabled="selectedItems.length < 1 || (secondGrid && selectedDetailItem == null)">
+        {{ dataBindTmp ? 'ok' : 'Save Document' }}
+    </button>
 </div>

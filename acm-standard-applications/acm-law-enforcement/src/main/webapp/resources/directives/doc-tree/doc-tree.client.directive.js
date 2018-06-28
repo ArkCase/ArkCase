@@ -1590,47 +1590,39 @@ angular
 
                                     }
                                 }, {
-                                    name: "collaborate",
-                                    execute: function(nodes, args) {
-                                        var node = nodes[0];
-                                        var baseUrl = window.location.href.split('home.html#!')[0];
-                                        window.open(baseUrl + 'office/' + node.data.objectId);
-                                    }
-                                },
-                                {
-                                    name : "edit",
-                                    execute : function(nodes, args) {
+                                    name: "edit",
+                                    execute: function (nodes, args) {
                                     }
                                 }, {
-                                    name : "editForm",
-                                    execute : function(nodes, args) {
+                                    name: "editForm",
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
                                         DocTree.editForm(node);
                                     }
                                 }, {
-                                    name : "print",
-                                    execute : function(nodes, args) {
+                                    name: "print",
+                                    execute: function (nodes, args) {
                                     }
                                 }, {
-                                    name : "form/",
-                                    getArgs : function(data) {
+                                    name: "form/",
+                                    getArgs: function (data) {
                                         return {
-                                            fileType : data.cmd.substring(this.name.length)
+                                            fileType: data.cmd.substring(this.name.length)
                                         };
                                     },
-                                    execute : function(nodes, args) {
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
                                         DocTree.uploadForm(node, args.fileType);
                                     }
                                 }, {
-                                    name : "file/",
-                                    getArgs : function(data) {
+                                    name: "file/",
+                                    getArgs: function (data) {
                                         return {
-                                            fileType : data.cmd.split("/")[1],
-                                            fileLang : data.cmd.split("/")[2]
+                                            fileType: data.cmd.split("/")[1],
+                                            fileLang: data.cmd.split("/")[2]
                                         };
                                     },
-                                    execute : function(nodes, args) {
+                                    execute: function (nodes, args) {
                                         var selectFiles = DocTree.Command.findHandler("selectFiles/");
                                         selectFiles.execute(nodes, args);
 
@@ -1691,6 +1683,11 @@ angular
                                             DocTree.replaceFile();
                                         }
                                         return DocTree.uploadSetting.deferSelectFile.promise;
+                                    }
+                                }, {
+                                    name: "searchDocument",
+                                    execute: function () {
+                                        DocTree.scope.$emit('onSearchDocumentsDocTree');
                                     }
                                 }
 

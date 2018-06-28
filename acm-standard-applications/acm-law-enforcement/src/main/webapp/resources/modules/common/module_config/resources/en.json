@@ -79,7 +79,8 @@
             "checkout": "Check Out",
             "checkin": "Check In",
             "declareRecord": "Declare As Record(s)",
-            "collaborate": "Collaborate"
+            "collaborate": "Collaborate",
+            "searchDocument": "Search Document(s)"
         },
         "table.columns": {
             "title": "Title",
