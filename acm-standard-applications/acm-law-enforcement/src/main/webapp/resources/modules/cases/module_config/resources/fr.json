@@ -108,7 +108,8 @@
                 "witnessInterview2%": "Demande d'entrevue de témoin-2.0"
             }
         },
-        "newTask": "Nouvelle tâche"
+        "newTask": "Nouvelle tâche",
+        "addDocument": "Choisissez le document à ajouter."
     },
     "cases.comp.people": {
         "title": "Personnes",

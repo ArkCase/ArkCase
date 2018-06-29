@@ -108,7 +108,8 @@
                 "witnessInterview2%": "गवाह साक्षात्कार अनुरोध 2.0"
             }
         },
-        "newTask": "नया कार्य"
+        "newTask": "नया कार्य",
+        "addDocument": "जोड़ने के लिए दस्तावेज़ चुनें।"
     },
     "cases.comp.people": {
         "title": "लोग",
