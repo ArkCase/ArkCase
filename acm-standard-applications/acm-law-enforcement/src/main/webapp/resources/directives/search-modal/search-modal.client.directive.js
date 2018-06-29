@@ -67,7 +67,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
             dataBindTmp: '@?'
         },
 
-        link: function(scope, el, attrs) {
+        link: function (scope, el, attrs) {
 
             //dom operations
             if (scope.draggable) {
@@ -102,7 +102,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
             //}
             scope.multiSelect = Util.goodValue(scope.config().multiSelect, false);
             scope.searchControl = {
-                getSelectedItems: function() {
+                getSelectedItems: function () {
                     if (scope.multiSelect) {
                         return scope.selectedItems;
                     } else {
@@ -116,7 +116,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
             scope.selectedItem = null;
             scope.selectedItems = [];
             var filterInitialValue = scope.filter;
-            scope.queryExistingItems = function() {
+            scope.queryExistingItems = function () {
                 if (!Util.isEmpty(scope.searchQuery)) {
                     var query = '';
                     if (scope.extraFilter) {
@@ -181,13 +181,13 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
                 if (!Util.isArrayEmpty(people)) {
                     var promises = [];
-                    _.forEach(people, function(person) {
-                        promises.push(PersonInfoService.getPersonInfo(person.object_id_s).then(function(personInfo) {
+                    _.forEach(people, function (person) {
+                        promises.push(PersonInfoService.getPersonInfo(person.object_id_s).then(function (personInfo) {
                             return personInfo;
                         }));
                     });
 
-                    $q.all(promises).then(function(personInfo) {
+                    $q.all(promises).then(function (personInfo) {
                         for (var i = 0; i < people.length; i++) {
                             var contactMethods = personInfo[i].contactMethods;
                             if (!Util.isArrayEmpty(contactMethods)) {
@@ -203,7 +203,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 }
             }
 
-            scope.setSecondGridData = function() {
+            scope.setSecondGridData = function () {
                 if (scope.selectedItem.object_type_s === 'USER') { // Selected a user
                     scope.querySubItems('fq="object_type_s":GROUP%26fq="member_id_ss":' + scope.selectedItem.object_id_s);
                 } else if (scope.selectedItem.object_type_s === 'GROUP') { // Select group
@@ -211,7 +211,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 }
             };
 
-            scope.querySubItems = function(filters) {
+            scope.querySubItems = function (filters) {
                 if (!Util.isEmpty(filters)) {
                     var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted('*', filters, scope.pageSizeSecond, scope.startSecond, scope.sortSecond);
 
@@ -241,7 +241,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                     if (scope.facets.length) {
                         scope.facets.splice(0, scope.facets.length)
                     }
-                    _.forEach(facets, function(value, key) {
+                    _.forEach(facets, function (value, key) {
                         if (value) {
                             scope.facets.push({
                                 'name': key,
@@ -252,7 +252,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 }
             }
 
-            scope.selectFacet = function(checked, facet, field) {
+            scope.selectFacet = function (checked, facet, field) {
                 if (checked) {
                     if (scope.filters) {
                         scope.filters += '&fq="' + facet + '":' + field;
@@ -271,7 +271,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 }
             };
 
-            scope.keyUp = function(event) {
+            scope.keyUp = function (event) {
                 // Remove wildcard
                 scope.searchQuery = scope.searchQuery.replace('*', '');
                 if (event.keyCode == 13 && scope.searchQuery.length >= scope.minSearchLength) {
@@ -279,7 +279,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 }
             };
 
-            scope.onClickOk = function() {
+            scope.onClickOk = function () {
                 //when the modal is closed, the parent scope gets
                 //the selectedItem via the two-way binding
                 if (scope.showSelectedItemsGrid) {
@@ -300,21 +300,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 }
             };
 
-            /*scope.onClickCopyDocument = function () {
-                Util.serviceCall({
-                    service: Ecm.copyFile,
-                    param: {
-                        objType: ObjectService.ObjectTypes.FILE,
-                        objId: scope.selectedItem.object_id_s
-                    },
-                    data: {
-                        id: parseInt(scope.selectedItem.id),
-                        folderId: parseInt(scope.selectedItem.parent_id_s)
-                    }
-                })
-            };*/
-
-            scope.onClickCancel = function() {
+            scope.onClickCancel = function () {
                 scope.modalInstance.dismiss('cancel')
             };
 
@@ -333,8 +319,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                         paginationPageSizes: scope.config().paginationPageSizes,
                         paginationPageSize: scope.config().paginationPageSize,
                         columnDefs: scope.config().selectedItemsGrid.columnDefs,
-                        deleteRow: function(rowEntity) {
-                            var index = scope.gridSelectedItems.data.findIndex(function(el) {
+                        deleteRow: function (rowEntity) {
+                            var index = scope.gridSelectedItems.data.findIndex(function (el) {
                                 return el.object_id_s === rowEntity.object_id_s;
                             });
                             scope.gridSelectedItems.data.splice(index, 1);
@@ -355,13 +341,13 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                     paginationPageSizes: scope.config().paginationPageSizes,
                     paginationPageSize: scope.config().paginationPageSize,
                     columnDefs: scope.config().columnDefs,
-                    onRegisterApi: function(gridApi) {
+                    onRegisterApi: function (gridApi) {
                         scope.gridApi = gridApi;
-                        gridApi.selection.on.rowSelectionChanged(scope, function(row) {
+                        gridApi.selection.on.rowSelectionChanged(scope, function (row) {
                             scope.selectedItems = gridApi.selection.getSelectedRows();
                             scope.selectedItem = row.entity;
                             if (scope.onItemsSelected) {
-                                scope.onItemsSelected(scope.selectedItems, [ scope.selectedItem ], row.isSelected);
+                                scope.onItemsSelected(scope.selectedItems, [scope.selectedItem], row.isSelected);
                             }
                             if (scope.secondGrid) {
                                 scope.setSecondGridData();
@@ -372,7 +358,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                             }
                         });
 
-                        gridApi.selection.on.rowSelectionChangedBatch(scope, function(rows) {
+                        gridApi.selection.on.rowSelectionChangedBatch(scope, function (rows) {
                             scope.selectedItems = gridApi.selection.getSelectedRows();
                             if (scope.onItemsSelected) {
                                 scope.onItemsSelected(scope.selectedItems, scope.selectedItems, true);
@@ -383,10 +369,10 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                         });
 
                         // Get the sorting info from UI grid
-                        gridApi.core.on.sortChanged(scope, function(grid, sortColumns) {
+                        gridApi.core.on.sortChanged(scope, function (grid, sortColumns) {
                             if (sortColumns.length > 0) {
                                 var sortColArr = [];
-                                _.each(sortColumns, function(col) {
+                                _.each(sortColumns, function (col) {
                                     sortColArr.push((col.colDef.sortField || col.colDef.name) + " " + col.sort.direction);
                                 });
                                 scope.sort = sortColArr.join(',');
@@ -396,7 +382,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                             scope.queryExistingItems();
                         });
 
-                        gridApi.pagination.on.paginationChanged(scope, function(newPage, pageSize) {
+                        gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
                             scope.start = (newPage - 1) * pageSize; //newPage is 1-based index
                             scope.pageSize = pageSize;
                             scope.queryExistingItems();
@@ -419,10 +405,10 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                         paginationPageSizes: scope.config().paginationPageSizes,
                         paginationPageSize: scope.config().paginationPageSize,
                         columnDefs: scope.config().columnDefs,
-                        onRegisterApi: function(gridApi) {
+                        onRegisterApi: function (gridApi) {
                             scope.gridApi = gridApi;
 
-                            gridApi.selection.on.rowSelectionChanged(scope, function(row) {
+                            gridApi.selection.on.rowSelectionChanged(scope, function (row) {
                                 if (row.isSelected) {
                                     scope.selectedDetailItem = row.entity;
                                 } else {
@@ -430,16 +416,16 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                 }
                             });
 
-                            gridApi.selection.on.rowSelectionChangedBatch(scope, function(rows) {
+                            gridApi.selection.on.rowSelectionChangedBatch(scope, function (rows) {
                                 scope.selectedDetailItem = gridApi.selection.getSelectedRows();
 
                             });
 
                             // Get the sorting info from UI grid
-                            gridApi.core.on.sortChanged(scope, function(grid, sortColumns) {
+                            gridApi.core.on.sortChanged(scope, function (grid, sortColumns) {
                                 if (sortColumns.length > 0) {
                                     var sortColArr = [];
-                                    _.each(sortColumns, function(col) {
+                                    _.each(sortColumns, function (col) {
                                         sortColArr.push((col.colDef.sortField || col.colDef.name) + " " + col.sort.direction);
                                     });
                                     scope.sortSecond = sortColArr.join(',');
@@ -449,7 +435,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                 scope.querySubItems();
                             });
 
-                            gridApi.pagination.on.paginationChanged(scope, function(newPage, pageSize) {
+                            gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
                                 scope.startSecond = (newPage - 1) * pageSize; //newPage is 1-based index
                                 scope.pageSizeSecond = pageSize;
                                 scope.setSecondGridData();
@@ -489,7 +475,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                     scope.showNoData = true;
                     SearchService.queryFilteredSearch({
                         query: query
-                    }, function(data) {
+                    }, function (data) {
                         updateFacets(data.facet_counts.facet_fields);
                         scope.gridOptionsMaster.data = data.response.docs;
                         if (scope.gridOptionsMaster.data.length < 1) {
@@ -504,4 +490,4 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
         templateUrl: 'directives/search-modal/search-modal.client.view.html'
     };
-} ]);
+}]);

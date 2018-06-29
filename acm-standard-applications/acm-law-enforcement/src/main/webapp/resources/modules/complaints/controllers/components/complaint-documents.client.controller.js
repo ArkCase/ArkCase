@@ -26,10 +26,11 @@ angular.module('complaints').controller(
                 'DocTreeExt.Email',
                 'ModalDialogService',
                 'Admin.EmailSenderConfigurationService',
+                'EcmService',
 
                 function($scope, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
                          DocTreeExtCheckin, CorrespondenceService,
-                         DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService) {
+                         DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService, Ecm) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -213,7 +214,7 @@ angular.module('complaints').controller(
 
                     $scope.$on('onSearchDocumentsDocTree', function () {
                         var params = {};
-                        params.header = $translate.instant("CHOOSE DOCUMENTS");
+                        params.header = $translate.instant("complaints.comp.documents.addDocument");
                         params.filter = '"Object Type": FILE';
                         params.config = Util.goodMapValue($scope.config, "dialogObjectPicker");
 
@@ -226,19 +227,17 @@ angular.module('complaints').controller(
                                 $scope.config = params.config;
 
                                 $scope.modalInstance.result.then(function (result) {
-                                    console.log(result);
-                                    console.log("todo: try to upload doc");
-                                    // Util.serviceCall({
-                                    //     service: Ecm.copyFile,
-                                    //     param: {
-                                    //         objType: ObjectService.ObjectTypes.FILE,
-                                    //         objId: scope.selectedItem.object_id_s
-                                    //     },
-                                    //     data: {
-                                    //         id: parseInt(scope.selectedItem.id),
-                                    //         folderId: parseInt(scope.selectedItem.parent_id_s)
-                                    //     }
-                                    // })
+                                    Util.serviceCall({
+                                        service: Ecm.copyFile,
+                                        param: {
+                                            objType: result.object_type_s,
+                                            objId: result.object_id_s
+                                        },
+                                        data: {
+                                            id: parseInt(result.id),
+                                            folderId: parseInt(result.parent_id_s)
+                                        }
+                                    })
                                 });
 
                             }],
