@@ -50,6 +50,13 @@
             <version>${acm.version}</version>
         </dependency>
 
+        <!--Apache commons-->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${apache-commons-codec}</version>
+        </dependency>
+
         <!-- JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -77,6 +84,7 @@
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
         </dependency>
+
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
