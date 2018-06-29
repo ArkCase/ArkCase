@@ -29,6 +29,7 @@ package com.armedia.acm.service.identity.dao;
 
 import com.armedia.acm.service.identity.exceptions.AcmIdentityException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +72,7 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
                 throw new AcmIdentityException("Missing some of the properties.");
             }
             String identity = properties.getProperty(PROPERTY_IDENTITY);
-            byte[] digest = properties.getProperty(PROPERTY_DIGEST).getBytes();
+            byte[] digest = Base64.decodeBase64(properties.getProperty(PROPERTY_DIGEST));
             /*
              * FIXME using hash is not secure at all, anyone with some knowledge can change identity and change the
              * hash.
@@ -102,7 +103,7 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
         {
             properties.setProperty(PROPERTY_IDENTITY, identity);
             properties.setProperty(PROPERTY_DATE_CREATED, LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-            properties.setProperty(PROPERTY_DIGEST, new String(getIdentityDigest(identity)));
+            properties.setProperty(PROPERTY_DIGEST, Base64.encodeBase64String(getIdentityDigest(identity)));
             try (OutputStream out = Files.newOutputStream(identityFilePath))
             {
                 properties.store(out, null);
