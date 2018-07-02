@@ -62,4 +62,13 @@ public interface ComplaintConstants
 
     String OWNING_GROUP = "owning group";
     String ASSIGNEE = "assignee";
+
+    String MIME_TYPE_PDF = "application/pdf";
+    String NEW_FILE = "NEW_FILE";
+    String FILE_ID = "FILE_ID";
+
+    String NEW_COMPLAINT_TYPE = "New Complaint";
+    String COMPLAINT_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/pdf-stylesheets/complaint-document.xsl";
+    String COMPLAINT_DOCUMENT = "Complaint";
+    String COMPLAINT_FILENAMEFORMAT = "Complaint.pdf";
 }

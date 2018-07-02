@@ -340,6 +340,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getProjectParticipantTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of participant types
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getComplaintParticipantTypes = function() {
+        return Service.getLookupByLookupName("complaintParticipantTypes");
+    };
+
+    /**
+     * @ngdoc method
      * @name getPersonTitles
      * @methodOf services:Object.LookupService
      *
