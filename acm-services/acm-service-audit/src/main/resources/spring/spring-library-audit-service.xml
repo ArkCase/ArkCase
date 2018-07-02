@@ -5,14 +5,14 @@
 
     <bean id="expressionParser" class="org.springframework.expression.spel.standard.SpelExpressionParser"/>
 
-    <bean id="eventDescriptionProperties" class="java.io.File">
+    <bean id="eventDescriptionPropertiesFile" class="java.io.File">
         <constructor-arg value="${user.home}/.arkcase/acm/eventDescription.properties"/>
     </bean>
 
     <bean id="auditWriter" class="com.armedia.acm.audit.listeners.AuditWriter" init-method="loadConfiguration">
         <property name="auditService" ref="auditService"/>
         <property name="expressionParser" ref="expressionParser"/>
-        <property name="eventDescriptionPropertiesFile" ref="eventDescriptionProperties"/>
+        <property name="eventDescriptionPropertiesFile" ref="eventDescriptionPropertiesFile"/>
     </bean>
 
     <task:executor id="auditorExecutor" pool-size="5"/>
