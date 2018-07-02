@@ -542,7 +542,7 @@
                     "country": "Address - Country Changed",
                     "state": "Address - State Changed"
                 },
-                "contactMethods.identifications": {
+                "identifications.identification": {
                     "identificationType": "Identification - Type Changed",
                     "identificationNumber": "Identification - Number Changed",
                     "identificationIssuer": "Identification - Issuer Changed",
