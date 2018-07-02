@@ -159,7 +159,7 @@
         </property>
     </bean>
 
-    <bean id="pdfDocumentGenerator" class="com.armedia.acm.plugins.complaint.service.PDFDocumentGenerator">
+    <bean id="pdfDocumentGenerator" class="com.armedia.acm.plugins.complaint.service.PDFComplaintDocumentGenerator">
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="pdfService" ref="pdfService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>

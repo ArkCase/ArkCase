@@ -33,14 +33,12 @@ angular.module('frevvo').config([ '$stateProvider', function($stateProvider) {
             name: 'reinvestigate',
             mode: 'reinvestigate'
         }
-    })
-    //     .state('frevvo.new-complaint', {
-    //     url: '/new-complaint',
-    //     params: {
-    //         name: 'new-complaint'
-    //     }
-    // })
-    .state('frevvo.close-complaint', {
+    }).state('frevvo.new-complaint', {
+        url: '/new-complaint',
+        params: {
+            name: 'new-complaint'
+        }
+    }).state('frevvo.close-complaint', {
         url: '/close-complaint/:complaintId/:complaintNumber',
         params: {
             name: 'close-complaint',
