@@ -48,7 +48,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -197,9 +199,11 @@ public class AngularResourceCopier implements ServletContextAware
         Resource r = resolver.getResource(AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH + "/" + fileName);
         File target = new File(tmpDir, fileName);
 
-        FileCopyUtils.copy(r.getInputStream(), new FileOutputStream(target));
+        Files.copy(r.getInputStream(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        target.setLastModified(r.lastModified());
 
         return target.getCanonicalPath();
+
     }
 
     public void copyWebappFile(File sourceFolder, File targetFolder, String filenameToCopy) throws IOException
