@@ -31,24 +31,33 @@ import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
 import com.armedia.acm.core.model.AcmEvent;
+import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.web.api.AsyncApplicationListener;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.expression.EvaluationException;
+import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.ParseException;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
 @AsyncApplicationListener
-public class AuditWriter implements ApplicationListener<AcmEvent>
+public class AuditWriter implements ApplicationListener<ApplicationEvent>
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private AuditService auditService;
@@ -58,17 +67,82 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
     private ExpressionParser expressionParser;
 
     /**
-     * List of key-value pairs with SpEL expressions for different event types
+     * Event description configuration file
      */
-    private Properties eventDescriptionProperties;
+    private File eventDescriptionPropertiesFile;
+
+    /**
+     * (event name, parsed SpEL expression) pairs
+     */
+    private Map<String, Expression> expressionMap = new HashMap<>();
+
+    /**
+     * Bean init method, load coniguration
+     */
+    public void loadConfiguration()
+    {
+        if (eventDescriptionPropertiesFile != null && eventDescriptionPropertiesFile.exists())
+        {
+            log.debug("Loading Audit event descriptions from configuration file [{}]", eventDescriptionPropertiesFile.getPath());
+            Properties properties = new Properties();
+            try (InputStream propertyStream = new FileInputStream(eventDescriptionPropertiesFile))
+            {
+                // clear existing map
+                expressionMap.clear();
+                // load the properties
+                properties.load(propertyStream);
+                for (String eventType : properties.stringPropertyNames())
+                {
+                    // try to parse SpEL expressions
+                    String spelExpression = properties.getProperty(eventType);
+                    if (spelExpression != null && !spelExpression.isEmpty())
+                        try
+                        {
+                            Expression expression = expressionParser.parseExpression(spelExpression);
+                            expressionMap.put(eventType, expression);
+                            log.debug("SpEL expression [{}] for event type [{}] added ", spelExpression, eventType);
+                        }
+                        catch (ParseException e)
+                        {
+                            log.error("Unable to parse SpEL expression [{}]", spelExpression);
+                        }
+                }
+            }
+            catch (IOException e)
+            {
+                log.error("Unable to read configuration file [{}]", eventDescriptionPropertiesFile.getPath());
+            }
+        }
+    }
 
     @Override
-    public void onApplicationEvent(AcmEvent acmEvent)
+    public void onApplicationEvent(ApplicationEvent applicationEvent)
     {
-        if (log.isTraceEnabled() && acmEvent != null)
+        if (applicationEvent != null)
         {
-            log.trace(acmEvent.getUserId() + " at " + acmEvent.getEventDate() + " executed " + acmEvent.getEventType() + " "
-                    + (acmEvent.isSucceeded() ? "" : "un") + "successfully.");
+            if (applicationEvent instanceof AcmEvent)
+            {
+                handleAuditEvent((AcmEvent) applicationEvent);
+            }
+            else if (applicationEvent instanceof AbstractConfigurationFileEvent)
+            {
+                handleConfigurationFileEvent((AbstractConfigurationFileEvent) applicationEvent);
+            }
+        }
+    }
+
+    /**
+     * Handle audit events.
+     * 
+     * @param acmEvent
+     *            application event that triggers an audit event
+     */
+    private void handleAuditEvent(AcmEvent acmEvent)
+    {
+        if (acmEvent != null)
+        {
+            log.trace("[{}] at [{}] executed [{}] [{}]", acmEvent.getUserId(), acmEvent.getEventDate(), acmEvent.getEventType(),
+                    (acmEvent.isSucceeded() ? "" : "un") + "successfully.");
         }
 
         if (isAuditable(acmEvent))
@@ -101,14 +175,27 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
             auditEvent.setDiffDetailsAsJson(acmEvent.getDiffDetailsAsJson());
 
             auditService.audit(auditEvent);
-
         }
         else
         {
-            if (log.isErrorEnabled())
-                log.error("Event " + acmEvent.getEventType() + " is not auditable");
+            log.warn("Event [{}] is not auditable", acmEvent.getEventType());
         }
+    }
 
+    /**
+     * Handle configuration file events
+     * 
+     * @param abstractConfigurationFileEvent
+     *            configuration file related application event
+     */
+    private void handleConfigurationFileEvent(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
+    {
+        if (abstractConfigurationFileEvent != null && abstractConfigurationFileEvent.getConfigFile() != null
+                && abstractConfigurationFileEvent.getConfigFile().getPath()
+                        .equals(eventDescriptionPropertiesFile.getPath()))
+        {
+            loadConfiguration();
+        }
     }
 
     /**
@@ -121,18 +208,18 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
     private String evaluateEventDescription(AcmEvent acmEvent)
     {
         String description = null;
-        String expression = eventDescriptionProperties.getProperty(acmEvent.getEventType().toLowerCase());
+        Expression expression = expressionMap.get(acmEvent.getEventType().toLowerCase());
         if (expression != null)
         {
             StandardEvaluationContext context = new StandardEvaluationContext(acmEvent);
             try
             {
-                description = expressionParser.parseExpression(expression).getValue(context, String.class);
-                log.trace("[{}] evaluated against [{}] resulted in [{}]", expression, acmEvent, description);
+                description = expression.getValue(context, String.class);
+                log.trace("Audit event description [{}] generated for [{}]", description, acmEvent);
             }
-            catch (ParseException | EvaluationException e)
+            catch (EvaluationException e)
             {
-                log.error("Unable to evaluate [{}] against [{}]", expression, acmEvent, e);
+                log.error("Unable to generate Audit event description for [{}]", acmEvent, e);
             }
         }
         return description;
@@ -167,13 +254,13 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
         this.expressionParser = expressionParser;
     }
 
-    public Properties getEventDescriptionProperties()
+    public File getEventDescriptionPropertiesFile()
     {
-        return eventDescriptionProperties;
+        return eventDescriptionPropertiesFile;
     }
 
-    public void setEventDescriptionProperties(Properties eventDescriptionProperties)
+    public void setEventDescriptionPropertiesFile(File eventDescriptionPropertiesFile)
     {
-        this.eventDescriptionProperties = eventDescriptionProperties;
+        this.eventDescriptionPropertiesFile = eventDescriptionPropertiesFile;
     }
 }
