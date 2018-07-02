@@ -72,7 +72,8 @@ import java.util.UUID;
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-object-converter.xml",
-        "/spring/spring-library-ecm-file-lock.xml"
+        "/spring/spring-library-ecm-file-lock.xml",
+        "/spring/spring-library-service-data.xml"
 })
 public class CompleteRecordServiceIT
 {
