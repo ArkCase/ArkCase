@@ -38,8 +38,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationListener;
+import org.springframework.expression.EvaluationException;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.ParseException;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.util.Date;
+import java.util.Properties;
 import java.util.UUID;
 
 @AsyncApplicationListener
@@ -47,6 +52,15 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private AuditService auditService;
+    /**
+     * Spring expression parser instance.
+     */
+    private ExpressionParser expressionParser;
+
+    /**
+     * List of key-value pairs with SpEL expressions for different event types
+     */
+    private Properties eventDescriptionProperties;
 
     @Override
     public void onApplicationEvent(AcmEvent acmEvent)
@@ -67,7 +81,15 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
             auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null
                     : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
             auditEvent.setFullEventType(acmEvent.getEventType());
-            auditEvent.setEventDescription(acmEvent.getEventDescription());
+
+            if (acmEvent.getEventDescription() != null)
+            {
+                auditEvent.setEventDescription(acmEvent.getEventDescription());
+            }
+            else
+            {
+                auditEvent.setEventDescription(evaluateEventDescription(acmEvent));
+            }
             auditEvent.setTrackId(acmEvent.getUserId() + "|" + acmEvent.getEventType());
             auditEvent.setEventResult(acmEvent.isSucceeded() ? AuditConstants.EVENT_RESULT_SUCCESS : AuditConstants.EVENT_RESULT_FAILURE);
             auditEvent.setObjectId(acmEvent.getObjectId());
@@ -90,6 +112,33 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
     }
 
     /**
+     * Evaluate event description based on SpEL expression in properties
+     * 
+     * @param acmEvent
+     *            the event that triggered the audit entry
+     * @return evaluated event description, or null on failure
+     */
+    private String evaluateEventDescription(AcmEvent acmEvent)
+    {
+        String description = null;
+        String expression = eventDescriptionProperties.getProperty(acmEvent.getEventType().toLowerCase());
+        if (expression != null)
+        {
+            StandardEvaluationContext context = new StandardEvaluationContext(acmEvent);
+            try
+            {
+                description = expressionParser.parseExpression(expression).getValue(context, String.class);
+                log.trace("[{}] evaluated against [{}] resulted in [{}]", expression, acmEvent, description);
+            }
+            catch (ParseException | EvaluationException e)
+            {
+                log.error("Unable to evaluate [{}] against [{}]", expression, acmEvent, e);
+            }
+        }
+        return description;
+    }
+
+    /**
      * Ensure the non-nullable database fields are set.
      *
      * @param acmEvent
@@ -106,5 +155,25 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
     public void setAuditService(AuditService auditService)
     {
         this.auditService = auditService;
+    }
+
+    public ExpressionParser getExpressionParser()
+    {
+        return expressionParser;
+    }
+
+    public void setExpressionParser(ExpressionParser expressionParser)
+    {
+        this.expressionParser = expressionParser;
+    }
+
+    public Properties getEventDescriptionProperties()
+    {
+        return eventDescriptionProperties;
+    }
+
+    public void setEventDescriptionProperties(Properties eventDescriptionProperties)
+    {
+        this.eventDescriptionProperties = eventDescriptionProperties;
     }
 }
