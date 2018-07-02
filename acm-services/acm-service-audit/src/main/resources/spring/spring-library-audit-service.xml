@@ -5,18 +5,14 @@
 
     <bean id="expressionParser" class="org.springframework.expression.spel.standard.SpelExpressionParser"/>
 
-    <bean id="eventDescriptionProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/eventDescription.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
+    <bean id="eventDescriptionProperties" class="java.io.File">
+        <constructor-arg value="${user.home}/.arkcase/acm/eventDescription.properties"/>
     </bean>
 
-    <bean id="auditWriter" class="com.armedia.acm.audit.listeners.AuditWriter">
+    <bean id="auditWriter" class="com.armedia.acm.audit.listeners.AuditWriter" init-method="loadConfiguration">
         <property name="auditService" ref="auditService"/>
         <property name="expressionParser" ref="expressionParser"/>
-        <property name="eventDescriptionProperties" ref="eventDescriptionProperties"/>
+        <property name="eventDescriptionPropertiesFile" ref="eventDescriptionProperties"/>
     </bean>
 
     <task:executor id="auditorExecutor" pool-size="5"/>
