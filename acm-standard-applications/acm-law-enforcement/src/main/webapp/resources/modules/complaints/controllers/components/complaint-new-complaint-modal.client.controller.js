@@ -316,13 +316,6 @@ angular.module('complaints')
                                     }
                                 }
 
-                                // participant = {
-                                //     id: '',
-                                //     participantType: '',
-                                //     participantLdapId: '',
-                                //     participantTypes: $scope.complaintParticipantTypes,
-                                //     config: $scope.complaintParticipantConfig
-                                // };
                                 participant.participantTypes = $scope.complaintParticipantTypes;
                                 participant.replaceChildrenParticipant = true;
 

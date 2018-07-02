@@ -68,7 +68,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class PDFDocumentGenerator<D extends AcmAbstractDao, T extends Complaint>
+public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends Complaint>
 {
     private final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

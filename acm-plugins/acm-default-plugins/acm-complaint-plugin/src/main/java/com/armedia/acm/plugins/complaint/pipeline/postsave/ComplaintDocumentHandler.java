@@ -38,7 +38,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
-import com.armedia.acm.plugins.complaint.service.PDFDocumentGenerator;
+import com.armedia.acm.plugins.complaint.service.PDFComplaintDocumentGenerator;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
@@ -51,7 +51,7 @@ import javax.xml.parsers.ParserConfigurationException;
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 18, 2016
  */
-public class ComplaintDocumentHandler extends PDFDocumentGenerator<ComplaintDao, Complaint>
+public class ComplaintDocumentHandler extends PDFComplaintDocumentGenerator<ComplaintDao, Complaint>
         implements PipelineHandler<Complaint, ComplaintPipelineContext>
 {
 
