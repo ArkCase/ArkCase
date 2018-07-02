@@ -152,6 +152,51 @@ public class PdfServiceImpl implements PdfService
      * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
      * responsible for deleting the file afterwards (not to leave mess behind)
      *
+     * @param xslFile
+     *            XSL-FO stylesheet
+     * @param source
+     *            XML data source required for XML transformation
+     * @return path to the newly generated PDF file (random filename stored in temp folder)
+     * @throws PdfServiceException
+     *             on PDF creation error
+     */
+    @Override
+    public String generatePdf(File xslFile, Source source) throws PdfServiceException
+    {
+        // create a temporary file name
+        String filename = String.format("%s/acm-%020d.pdf", System.getProperty("java.io.tmpdir"), Math.abs(random.nextLong()));
+        log.debug("PDF creation: using [{}] as temporary file name", filename);
+        try
+        {
+            // Base URI is where the FOP engine will be resolving URIs against
+            URI baseURI = xslFile.getParentFile().toURI();
+            log.debug("Using [{}] as FOP base URI", baseURI);
+            FopFactory fopFactory = FopFactory.newInstance(baseURI);
+            FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
+
+            try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
+            {
+                Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, os);
+                Result result = new SAXResult(fop.getDefaultHandler());
+                transformer.transform(source, result);
+            }
+
+        }
+        catch (FOPException | TransformerException | IOException e)
+        {
+            log.error("Unable to generate PDF document", e);
+            throw new PdfServiceException(e);
+        }
+        return filename;
+    }
+
+    /**
+     * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
+     * responsible for deleting the file afterwards (not to leave mess behind)
+     *
      * @param xslFilename
      *            path to XSL-FO stylesheet
      * @param source

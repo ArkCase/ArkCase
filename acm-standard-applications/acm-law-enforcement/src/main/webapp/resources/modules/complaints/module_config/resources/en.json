@@ -363,22 +363,36 @@
         "complaintTag": "Complaint Tag",
         "complaintTag.placeholder": "Enter Complaint Tag",
         "frequency": "Frequency",
-        "location": "Location",
-        "addressType": "Type",
-        "streetAddress": "Address",
-        "streetAddress.placeholder": "Enter Street Address",
-        "city": "City",
-        "city.placeholder": "Enter City",
-        "country": "Country",
-        "zip": "Zip Code",
-        "zip.placeholder": "Enter Zip Code",
-        "dateCreated": "Date added",
-        "creator": "Added By",
-        "people": "People",
-        "attachments": "Attachments",
-        "participants": "Participants",
+        "location": {
+            "title": "Location",
+            "addressType": "Type",
+            "streetAddress": "Address",
+            "streetAddress.placeholder": "Enter Street Address",
+            "city": "City",
+            "city.placeholder": "Enter City",
+            "state": "State",
+            "state.placeholder": "Enter State",
+            "country": "Country",
+            "zip": "Zip Code",
+            "zip.placeholder": "Enter Zip Code",
+            "dateCreated": "Date added",
+            "creator": "Added By",
+            "creator.placeholder": "Enter Creator"
+        },
+        "people": {
+            "title": "People",
+            "selectPerson.placeholder": "Search existing Person",
+            "personType": "Person Type"
+        },
+        "participants": {
+            "title": "Participants",
+            "selectParticipant.placeholder": "Select Participant",
+            "participantType": "Participant Type"
+        },
         "cancelButton": "Cancel",
-        "saveButton": "Save Complaint"
+        "saveButton": "Save Complaint",
+        "removeButton": "Remove",
+        "addButton": "Add Another"
     },
     "complaints.userOrGroupSearch": {
         "id": "userSearch",
