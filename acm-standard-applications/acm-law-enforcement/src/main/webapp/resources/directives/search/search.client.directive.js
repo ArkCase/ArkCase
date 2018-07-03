@@ -84,10 +84,6 @@ angular.module('directives').directive(
                             scope.emptySearch = true;
                             scope.exportUrl = "";
 
-                            if (typeof scope.config.emptySearch !== 'undefined') {
-                                scope.emptySearch = scope.config.emptySearch;
-                            }
-
                             scope.facetLimit = 10; //default value for facetLimit
                             if (typeof scope.config.facetLimit !== 'undefined') {
                                 scope.facetLimit = scope.config.facetLimit;
