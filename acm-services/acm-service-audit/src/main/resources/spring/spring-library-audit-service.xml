@@ -3,8 +3,16 @@
        xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
-    <bean id="auditWriter" class="com.armedia.acm.audit.listeners.AuditWriter">
+    <bean id="expressionParser" class="org.springframework.expression.spel.standard.SpelExpressionParser"/>
+
+    <bean id="eventDescriptionPropertiesFile" class="java.io.File">
+        <constructor-arg value="${user.home}/.arkcase/acm/eventDescription.properties"/>
+    </bean>
+
+    <bean id="auditWriter" class="com.armedia.acm.audit.listeners.AuditWriter" init-method="loadConfiguration">
         <property name="auditService" ref="auditService"/>
+        <property name="expressionParser" ref="expressionParser"/>
+        <property name="eventDescriptionPropertiesFile" ref="eventDescriptionPropertiesFile"/>
     </bean>
 
     <task:executor id="auditorExecutor" pool-size="5"/>
