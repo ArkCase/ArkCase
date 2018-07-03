@@ -62,6 +62,7 @@
         <module>acm-service-state-of-arkcase</module>
         <module>acm-service-arkcase-identifier</module>
         <module>acm-service-convert-folder</module>
-    </modules>
+        <module>acm-service-billing</module>
+  </modules>
 
 </project>
