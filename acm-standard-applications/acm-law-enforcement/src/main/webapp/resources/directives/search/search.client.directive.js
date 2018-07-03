@@ -84,6 +84,10 @@ angular.module('directives').directive(
                             scope.emptySearch = true;
                             scope.exportUrl = "";
 
+                            if (typeof scope.config.emptySearch !== 'undefined') {
+                                scope.emptySearch = scope.config.emptySearch;
+                            }
+
                             scope.facetLimit = 10; //default value for facetLimit
                             if (typeof scope.config.facetLimit !== 'undefined') {
                                 scope.facetLimit = scope.config.facetLimit;
@@ -95,10 +99,6 @@ angular.module('directives').directive(
                             } catch (e) {
                                 searchObject.searchQuery = scope.searchQuery;
                                 searchObject.isSelected = false;
-                            }
-
-                            if (Util.isEmpty(searchObject.searchQuery)) {
-                                scope.emptySearch = false;
                             }
 
                             var isSelected = searchObject.isSelected;
