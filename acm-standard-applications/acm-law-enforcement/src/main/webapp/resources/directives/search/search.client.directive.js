@@ -507,8 +507,13 @@ angular.module('directives').directive(
                                             scope.isAutoSuggestActive = config.isAutoSuggestActive;
 
                                         }
+                                        if (typeof scope.config.emptySearch !== 'undefined') {
+                                            scope.emptySearch = scope.config.emptySearch;
+                                        }
 
-                                        scope.queryExistingItems(scope.start);
+                                        if (scope.emptySearch) {
+                                            scope.queryExistingItems(scope.start);
+                                        }
 
                                     }
                                 }, true);
