@@ -30,6 +30,7 @@ package com.armedia.acm.services.wopi.api;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.wopi.model.WopiFileInfo;
+import com.armedia.acm.services.wopi.model.WopiLockInfo;
 import com.armedia.acm.services.wopi.service.WopiAcmService;
 
 import org.mule.api.MuleException;
@@ -115,7 +116,7 @@ public class WopiFilesApiController
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{id}/lock", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity<Long> lockFile(@PathVariable Long id, Authentication authentication)
+    public ResponseEntity<WopiLockInfo> lockFile(@PathVariable Long id, Authentication authentication)
     {
         log.info("Lock file [{}] per user [{}]", id, authentication.getName());
         return new ResponseEntity<>(wopiService.lock(id, authentication), HttpStatus.OK);
@@ -124,7 +125,7 @@ public class WopiFilesApiController
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{id}/lock", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Long> getLock(@PathVariable Long id, Authentication authentication)
+    public ResponseEntity<WopiLockInfo> getLock(@PathVariable Long id, Authentication authentication)
     {
         log.info("Get lock for file [{}] per user [{}]", id, authentication.getName());
         return new ResponseEntity<>(wopiService.getSharedLock(id), HttpStatus.OK);
@@ -133,7 +134,7 @@ public class WopiFilesApiController
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{id}/lock/{lockId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity<Long> unlock(@PathVariable Long id, @PathVariable Long lockId, Authentication authentication)
+    public ResponseEntity<WopiLockInfo> unlock(@PathVariable Long id, @PathVariable Long lockId, Authentication authentication)
     {
         log.info("Unlock file [{}] per user [{}]", id, authentication.getName());
         return new ResponseEntity<>(wopiService.unlock(id, lockId, authentication), HttpStatus.OK);
