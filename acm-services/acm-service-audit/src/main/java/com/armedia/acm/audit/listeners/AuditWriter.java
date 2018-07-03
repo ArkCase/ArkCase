@@ -77,7 +77,7 @@ public class AuditWriter implements ApplicationListener<ApplicationEvent>
     private Map<String, Expression> expressionMap = new HashMap<>();
 
     /**
-     * Bean init method, load coniguration
+     * Load configuration from file and build SpEL expression map (bean init method)
      */
     public void loadConfiguration()
     {
@@ -87,8 +87,9 @@ public class AuditWriter implements ApplicationListener<ApplicationEvent>
             Properties properties = new Properties();
             try (InputStream propertyStream = new FileInputStream(eventDescriptionPropertiesFile))
             {
-                // clear existing map
-                expressionMap.clear();
+                // use temporary map to avoid race conditions where new configuration is loaded
+                // while audit event descriptions are evaluated at the same time
+                Map<String, Expression> tempExpressionMap = new HashMap<>();
                 // load the properties
                 properties.load(propertyStream);
                 for (String eventType : properties.stringPropertyNames())
@@ -99,7 +100,7 @@ public class AuditWriter implements ApplicationListener<ApplicationEvent>
                         try
                         {
                             Expression expression = expressionParser.parseExpression(spelExpression);
-                            expressionMap.put(eventType, expression);
+                            tempExpressionMap.put(eventType, expression);
                             log.debug("SpEL expression [{}] for event type [{}] added ", spelExpression, eventType);
                         }
                         catch (ParseException e)
@@ -107,11 +108,18 @@ public class AuditWriter implements ApplicationListener<ApplicationEvent>
                             log.error("Unable to parse SpEL expression [{}]", spelExpression);
                         }
                 }
+                // replace existing map
+                expressionMap = tempExpressionMap;
             }
             catch (IOException e)
             {
                 log.error("Unable to read configuration file [{}]", eventDescriptionPropertiesFile.getPath());
             }
+        }
+        else
+        {
+            // configuration file deleted, we're assuming that SpEL expression evaluation is no longer needed
+            expressionMap.clear();
         }
     }
 
