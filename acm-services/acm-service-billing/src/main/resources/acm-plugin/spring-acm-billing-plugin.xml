@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="acmAddBillingItemPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Add Billing Item Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmAddBillingItemPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmAddBillingItemUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/billing"/>
+                    <property name="requiredPrivilege" ref="acmAddBillingItemPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmListBillingItemsPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="List Billing Items Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmListBillingItemsPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmListBillingItemsUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/billing/items/{parentType}/{parentId}"/>
+                    <property name="requiredPrivilege" ref="acmListBillingItemsPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>

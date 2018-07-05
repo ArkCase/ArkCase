@@ -14,12 +14,6 @@
     <name>ACM Service: Billing</name>
 
     <dependencies>
-        <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <scope>runtime</scope>
-        </dependency>
 
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
@@ -71,23 +65,11 @@
             <version>${acm.version}</version>
         </dependency>
 
-        <!-- bean validation -->
+        <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>${javax-validation.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate-validator.version}</version>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>javax.el-api</artifactId>
-            <version>${javax-el.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- logging -->
@@ -96,32 +78,7 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <!-- json -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>${org.json.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${fasterxml-jackson-core.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${fasterxml-jackson-core.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
-        </dependency>
-
-        <!-- servlet -->
+         <!-- servlet -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>

@@ -6,6 +6,10 @@
 
     <bean id="billingItemEventPublisher" class="com.armedia.acm.services.billing.model.BillingItemEventPublisher"/>
 
+    <bean id="billingService" class="com.armedia.acm.services.billing.service.BillingServiceImpl">
+        <property name="billingDao" ref="billingDao"/>
+    </bean>
+
     <bean id="billingItemToSolrTransformer" class="com.armedia.acm.services.billing.service.BillingItemToSolrTransformer">
         <property name="billingDao" ref="billingDao"/>
         <property name="userDao" ref="userJpaDao"/>
