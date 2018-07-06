@@ -7,11 +7,14 @@ import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -56,11 +59,12 @@ public class ListBillingItemsAPIController
     @RequestMapping(value = "/items", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<BillingItem> getBillingItemsByObjectTypeAndId(
-            @RequestParam(value = "objectType", required = true) String objectType,
-            @RequestParam(value = "objectId", required = true) Long objectId)
+            @RequestParam(value = "parentObjectType", required = true) String parentObjectType,
+            @RequestParam(value = "parentObjectId", required = true) Long parentObjectId,
+            Authentication authentication, HttpSession httpSession)
             throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmListObjectsFailedException
     {
-        return getBillingService().getBillingItemsByObjectTypeAndId(objectType, objectId);
+        return getBillingService().getBillingItemsByParentObjectTypeAndId(parentObjectType, parentObjectId);
     }
 
     /**

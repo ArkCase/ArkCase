@@ -50,14 +50,13 @@ public class AddBillingItemAPIController
 {
     BillingService billingService;
 
-    // @PreAuthorize("hasPermission(#billingItem.parentId, #billingItem.parentType, 'addBillingItem')")
+    // @PreAuthorize("hasPermission(#billingItem.parentObjectId, #billingItem.parentObjectType, 'addBillingItem')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public BillingItem addBillingItem(
             @RequestBody BillingItem billingItem, Authentication authentication, HttpSession httpSession)
             throws AcmUserActionFailedException
     {
-        billingItem.setCreator(authentication.getName());
         return getBillingService().addBillingItem(billingItem);
     }
 

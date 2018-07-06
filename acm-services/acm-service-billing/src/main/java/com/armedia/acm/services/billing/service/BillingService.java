@@ -37,7 +37,8 @@ import java.util.List;
  */
 public interface BillingService
 {
-    List<BillingItem> getBillingItemsByObjectTypeAndId(String objectType, Long objectId) throws AcmListObjectsFailedException;
+    List<BillingItem> getBillingItemsByParentObjectTypeAndId(String parentObjectType, Long parentObjectId)
+            throws AcmListObjectsFailedException;
 
     BillingItem addBillingItem(BillingItem billingItem);
 }

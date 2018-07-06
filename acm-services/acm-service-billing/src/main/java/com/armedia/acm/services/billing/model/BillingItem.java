@@ -28,6 +28,7 @@ package com.armedia.acm.services.billing.model;
  */
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
+import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -65,7 +66,7 @@ import java.util.Date;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.services.billing.model.BillingItem")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class BillingItem implements Serializable, AcmObject, AcmParentObjectInfo
+public class BillingItem implements Serializable, AcmObject, AcmEntity, AcmParentObjectInfo
 {
 
     private static final long serialVersionUID = -9106468953012529578L;
@@ -100,6 +101,9 @@ public class BillingItem implements Serializable, AcmObject, AcmParentObjectInfo
 
     @Transient
     private Date modified;
+
+    @Transient
+    private String modifier;
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
@@ -219,6 +223,7 @@ public class BillingItem implements Serializable, AcmObject, AcmParentObjectInfo
     /**
      * @return the creator
      */
+    @Override
     public String getCreator()
     {
         return creator;
@@ -228,6 +233,7 @@ public class BillingItem implements Serializable, AcmObject, AcmParentObjectInfo
      * @param creator
      *            the creator to set
      */
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
@@ -236,6 +242,7 @@ public class BillingItem implements Serializable, AcmObject, AcmParentObjectInfo
     /**
      * @return the created
      */
+    @Override
     public Date getCreated()
     {
         return created;
@@ -245,6 +252,7 @@ public class BillingItem implements Serializable, AcmObject, AcmParentObjectInfo
      * @param created
      *            the created to set
      */
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
@@ -253,6 +261,7 @@ public class BillingItem implements Serializable, AcmObject, AcmParentObjectInfo
     /**
      * @return the modified
      */
+    @Override
     public Date getModified()
     {
         return getCreated();
@@ -262,16 +271,36 @@ public class BillingItem implements Serializable, AcmObject, AcmParentObjectInfo
      * @param modified
      *            the modified to set
      */
+    @Override
     public void setModified(Date modified)
     {
         this.modified = modified;
+    }
+
+    /**
+     * @return the modifier
+     */
+    @Override
+    public String getModifier()
+    {
+        return creator;
+    }
+
+    /**
+     * @param modifier
+     *            the modifier to set
+     */
+    @Override
+    public void setModifier(String modifier)
+    {
+        this.modifier = modifier;
     }
 
     @Override
     @JsonIgnore
     public String getObjectType()
     {
-        return BillingConstants.OBJECT_TYPE;
+        return BillingItemConstants.OBJECT_TYPE;
     }
 
     /**

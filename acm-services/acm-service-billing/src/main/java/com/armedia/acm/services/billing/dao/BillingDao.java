@@ -58,19 +58,19 @@ public class BillingDao extends AcmAbstractDao<BillingItem>
         return BillingItem.class;
     }
 
-    public List<BillingItem> listBillingItems(String objectType, Long objectId)
+    public List<BillingItem> listBillingItems(String parentObjectType, Long parentObjectId)
     {
 
         TypedQuery<BillingItem> billingItem = getEntityManager().createQuery(
                 "SELECT billingItem " +
                         "FROM BillingItem billingItem " +
-                        "WHERE billingItem.parentObjectType = :objectType AND " +
-                        "billingItem.parentObjectId = :objectId " +
+                        "WHERE billingItem.parentObjectType = :parentObjectType AND " +
+                        "billingItem.parentObjectId = :parentObjectId " +
                         "ORDER BY billingItem.itemNumber",
                 BillingItem.class);
 
-        billingItem.setParameter("objectType", objectType.toUpperCase());
-        billingItem.setParameter("objectId", objectId);
+        billingItem.setParameter("parentObjectType", parentObjectType.toUpperCase());
+        billingItem.setParameter("parentObjectId", parentObjectId);
 
         List<BillingItem> billingItems = billingItem.getResultList();
         if (null == billingItems)
@@ -88,12 +88,12 @@ public class BillingDao extends AcmAbstractDao<BillingItem>
         return saved;
     }
 
-    private int getNextItemNumber(String objectType, Long objectId)
+    private int getNextItemNumber(String parentObjectType, Long parentObjectId)
     {
-        String queryText = "SELECT MAX(billingItem.itemNumber) FROM BillingItem billingItem WHERE billingItem.parentObjectType = :objectType AND billingItem.parentObjectId = :objectId";
+        String queryText = "SELECT MAX(billingItem.itemNumber) FROM BillingItem billingItem WHERE billingItem.parentObjectType = :parentObjectType AND billingItem.parentObjectId = :parentObjectId";
         Query query = getEm().createQuery(queryText);
-        query.setParameter("objectType", objectType.toUpperCase());
-        query.setParameter("objectId", objectId);
+        query.setParameter("parentObjectType", parentObjectType.toUpperCase());
+        query.setParameter("parentObjectId", parentObjectId);
         Integer currentItemNumber = (Integer) query.getSingleResult();
         return currentItemNumber != null ? currentItemNumber + 1 : 1;
     }

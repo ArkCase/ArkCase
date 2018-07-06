@@ -42,10 +42,10 @@ public class BillingItemEvent extends AcmEvent
         setObjectId(source.getId());
         setEventDate(source.getCreated());
         setUserId(source.getCreator());
-        setEventType(String.format("%s.%s", BillingConstants.EVENT_TYPE, billingItemEvent));
+        setEventType(String.format("%s.%s", BillingItemConstants.EVENT_TYPE, billingItemEvent));
         setSucceeded(succeeded);
         setIpAddress(ipAddress);
-        setObjectType(BillingConstants.OBJECT_TYPE);
+        setObjectType(BillingItemConstants.OBJECT_TYPE);
         setParentObjectId(source.getParentObjectId());
         setParentObjectType(source.getParentObjectType());
     }

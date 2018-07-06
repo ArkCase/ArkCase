@@ -30,9 +30,9 @@ package com.armedia.acm.services.billing.model;
  * @author sasko.tanaskoski
  *
  */
-public interface BillingConstants
+public interface BillingItemConstants
 {
     String OBJECT_TYPE = "BILLING_ITEM";
-    String EVENT_TYPE = "com.armedia.acm.app.billing";
+    String EVENT_TYPE = "com.armedia.acm.app.billing.item";
     String BILLING_ITEM_ADDED = "added";
 }
