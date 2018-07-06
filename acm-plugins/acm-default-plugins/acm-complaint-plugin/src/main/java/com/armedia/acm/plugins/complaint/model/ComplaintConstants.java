@@ -66,6 +66,7 @@ public interface ComplaintConstants
     String MIME_TYPE_PDF = "application/pdf";
     String NEW_FILE = "NEW_FILE";
     String FILE_ID = "FILE_ID";
+    String FILE_VERSION = "FILE_VERSION";
 
     String NEW_COMPLAINT_TYPE = "New Complaint";
     String COMPLAINT_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/pdf-stylesheets/complaint-document.xsl";

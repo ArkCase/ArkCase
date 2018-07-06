@@ -110,18 +110,6 @@ angular.module('complaints').config([ '$stateProvider', function($stateProvider)
         url: '/:type/:id/approvals',
         templateUrl: 'modules/complaints/views/components/complaint-approval-routing.client.view.html'
     })
-
-    .state('newComplaint', {
-        url: '/newComplaint',
-        templateUrl: 'modules/complaints/views/components/complaint-new-complaint-modal.client.view.html',
-        resolve: {
-            translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
-                $translatePartialLoader.addPart('common');
-                $translatePartialLoader.addPart('complaints');
-                return $translate.refresh();
-            } ]
-        }
-    })
 }
 
 ]).run([ 'Helper.DashboardService', function(DashboardHelper) {

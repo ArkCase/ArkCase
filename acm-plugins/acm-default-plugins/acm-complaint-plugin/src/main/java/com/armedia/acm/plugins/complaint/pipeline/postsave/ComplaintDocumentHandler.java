@@ -39,7 +39,6 @@ import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
 import com.armedia.acm.plugins.complaint.service.PDFComplaintDocumentGenerator;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
@@ -63,7 +62,7 @@ public class ComplaintDocumentHandler extends PDFComplaintDocumentGenerator<Comp
     @Override
     public void execute(Complaint complaint, ComplaintPipelineContext ctx) throws PipelineProcessException
     {
-        log.debug("Entering pipeline handler for object: [{}]", complaint);
+        log.debug("Entering pipeline handler for complaint with id [{}] and title [{}]", complaint.getId(), complaint.getTitle());
 
         // ensure the SQL of all prior handlers is visible to this handler
         getDao().getEm().flush();
@@ -74,7 +73,8 @@ public class ComplaintDocumentHandler extends PDFComplaintDocumentGenerator<Comp
         }
         catch (ParserConfigurationException e)
         {
-            log.debug("Unable to generate pdf.");
+            log.warn("Unable to generate pdf document for the complaint with id [{}] and title [{}]", complaint.getId(),
+                    complaint.getTitle());
             throw new PipelineProcessException(e);
         }
 
@@ -98,17 +98,12 @@ public class ComplaintDocumentHandler extends PDFComplaintDocumentGenerator<Comp
                     }
                     catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
                     {
-                        log.warn("Unable to delete ecm file with id [{}]", fileId);
+                        log.warn("Unable to delete ecm file with id [{}] for the complaint with id [{}] and title [{}]", fileId,
+                                complaint.getId(),
+                                complaint.getTitle());
                         throw new PipelineProcessException(e);
                     }
                 }
-            }
-            else
-            {
-                Long fileId = (Long) ctx.getPropertyValue(FILE_ID);
-                EcmFile ecmFile = getEcmFileService().findById(fileId);
-                Long currentFileVersion = Long.parseLong(ecmFile.getActiveVersionTag());
-                log.warn("Trying to delete [{}] version of EcmFile with id [{}].", currentFileVersion, fileId);
             }
         }
     }

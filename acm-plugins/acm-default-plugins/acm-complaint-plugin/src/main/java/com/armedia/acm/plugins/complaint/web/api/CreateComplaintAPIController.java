@@ -32,7 +32,6 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
-import com.armedia.acm.plugins.complaint.service.ComplaintFrevvolessService;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -62,7 +61,6 @@ public class CreateComplaintAPIController
 
     // private FrevvoFormService complaintService;
     private ObjectConverter objectConverter;
-    private ComplaintFrevvolessService complaintFrevvolessService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @DecoratedAssignedObjectParticipants
@@ -88,11 +86,7 @@ public class CreateComplaintAPIController
                 oldComplaint = getObjectConverter().getJsonUnmarshaller().unmarshall(old, Complaint.class);
             }
 
-            in = complaintFrevvolessService.setMissingProperties(in);
             Complaint saved = getComplaintTransaction().saveComplaint(in, auth);
-
-            // Update Frevvo XML file
-            // getComplaintService().updateXML(saved, auth, ComplaintForm.class);
 
             getEventPublisher().publishComplaintEvent(saved, oldComplaint, auth, isInsert, true);
 
@@ -143,16 +137,6 @@ public class CreateComplaintAPIController
     // {
     // this.complaintService = complaintService;
     // }
-
-    public ComplaintFrevvolessService getComplaintFrevvolessService()
-    {
-        return complaintFrevvolessService;
-    }
-
-    public void setComplaintFrevvolessService(ComplaintFrevvolessService complaintFrevvolessService)
-    {
-        this.complaintFrevvolessService = complaintFrevvolessService;
-    }
 
     public ObjectConverter getObjectConverter()
     {

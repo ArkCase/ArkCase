@@ -76,7 +76,7 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
      */
     Service.resetComplaintInfo = function(complaintInfo) {
         if (complaintInfo && complaintInfo.complaintId) {
-            complaintInfo.remove(complaintGetUrl + complaintInfo.complaintId);
+            complaintCache.remove(complaintGetUrl + complaintInfo.complaintId);
         }
     };
 
