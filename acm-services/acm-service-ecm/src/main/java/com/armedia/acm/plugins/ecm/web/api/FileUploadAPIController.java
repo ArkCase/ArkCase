@@ -31,17 +31,14 @@ import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -50,22 +47,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 @RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
 public class FileUploadAPIController
@@ -76,16 +66,17 @@ public class FileUploadAPIController
     private AcmFolderService acmFolderService;
     private ObjectConverter objectConverter;
     private ArkPermissionEvaluator arkPermissionEvaluator;
+    private FolderAndFilesUtils folderAndFilesUtils;
 
     // #parentObjectType == 'USER_ORG' applies to uploading profile picture
     @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile') or #parentObjectType == 'USER_ORG'")
     @RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<EcmFile> uploadFile(@RequestParam("parentObjectType") String parentObjectType,
-            @RequestParam("parentObjectId") Long parentObjectId, @RequestParam(value = "folderId", required = false) Long folderId,
-            @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
-            @RequestParam(value = "fileLang", required = false) String fileLang, MultipartHttpServletRequest request,
-            Authentication authentication, HttpSession session)
+                                    @RequestParam("parentObjectId") Long parentObjectId, @RequestParam(value = "folderId", required = false) Long folderId,
+                                    @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
+                                    @RequestParam(value = "fileLang", required = false) String fileLang, MultipartHttpServletRequest request,
+                                    Authentication authentication, HttpSession session)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException, AcmAccessControlException
     {
         AcmFolder folder = getParentFolder(parentObjectType, parentObjectId, folderId);
@@ -229,6 +220,92 @@ public class FileUploadAPIController
         return folder;
     }
 
+
+    @RequestMapping(value = "/uploadChunks", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    @ResponseBody
+    public String uploadFileChunks(HttpServletRequest request, Authentication authentication) throws Exception {
+        log.debug("Starting a file upload by user {}", authentication.getName());
+
+        String dirPath = System.getProperty("java.io.tmpdir");
+        String fileName = "";
+        try {
+            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+            MultiValueMap<String, MultipartFile> attachments = multipartHttpServletRequest.getMultiFileMap();
+            if (attachments != null) {
+                for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet()) {
+
+                    final List<MultipartFile> attachmentsList = entry.getValue();
+
+                    if (attachmentsList != null && !attachmentsList.isEmpty()) {
+
+                        for (final MultipartFile attachment : attachmentsList) {
+                            fileName = attachment.getOriginalFilename();
+                            File dir = new File(dirPath);
+                            if (dir.exists()) {
+                                File file = new File(dirPath + "/" + fileName);
+                                attachment.transferTo(file);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Log error
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        //todo map with unique key
+        jsonObject.put("name", fileName);
+        jsonObject.put("uuid", request.getParameter("uuid"));
+        return jsonObject.toString();
+    }
+
+    @RequestMapping(value = "/mergeChunks", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    @ResponseBody
+    public String merge(@RequestBody FileDetails fileDetails, Authentication authentication) throws Exception {
+        //todo create a HashMap structure and loop over that so we can support multiple files
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success", false);
+        if (fileDetails != null && fileDetails.getParts() != null && !fileDetails.getParts().isEmpty()) {
+            String dirPath = System.getProperty("java.io.tmpdir");
+            try (SequenceInputStream seq = new SequenceInputStream(getInputStreams(fileDetails.getParts()))) {
+                File merged = new File(dirPath + "/" + fileDetails.getName());
+                FileUtils.copyInputStreamToFile(seq, merged);
+                deleteQuietly(fileDetails.getParts());
+                InputStream is = new FileInputStream(merged);
+                String uniqueFileName = folderAndFilesUtils.createUniqueIdentificator(fileDetails.getName());
+                AcmFolder folder = getParentFolder(fileDetails.getObjectType(), fileDetails.getObjectId(), fileDetails.getFolderId());
+                //getEcmFileService().upload(uniqueFileName, fileDetails.getFileType(), "Document", seq, fileDetails.getMimeType(), uniqueFileName, authentication, folder.getCmisFolderId(), fileDetails.getObjectType(), fileDetails.getObjectId());
+                getEcmFileService().upload(uniqueFileName, fileDetails.getFileType(), "Document", is, fileDetails.getMimeType(), uniqueFileName, authentication, folder.getCmisFolderId(), fileDetails.getObjectType(), fileDetails.getObjectId());
+                //getEcmFileService().upload(uniqueFileName, fileDetails.getFileType(), (MultipartFile) merged, authentication, folder.getCmisFolderId(), fileDetails.getObjectType(),fileDetails.getObjectId());
+
+                jsonObject.put("success", true);
+
+                return jsonObject.toString();
+            }
+        }
+
+        return jsonObject.toString();
+    }
+
+    private Enumeration<InputStream> getInputStreams(List<String> parts) throws IOException {
+        String dirPath = System.getProperty("java.io.tmpdir");
+        Vector<InputStream> inputStream = new Vector<>();
+        for (String part : parts) {
+            InputStream stream = FileUtils.openInputStream(new File(dirPath + "/" + part));
+            inputStream.addElement(stream);
+        }
+        return inputStream.elements();
+    }
+
+    private void deleteQuietly(List<String> parts) {
+        String dirPath = System.getProperty("java.io.tmpdir");
+        for (String part : parts) {
+            FileUtils.deleteQuietly(new File(dirPath + "/" + part));
+        }
+    }
+
     public AcmFolderService getAcmFolderService()
     {
         return acmFolderService;
@@ -267,5 +344,13 @@ public class FileUploadAPIController
     public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
     {
         this.arkPermissionEvaluator = arkPermissionEvaluator;
+    }
+
+    public FolderAndFilesUtils getFolderAndFilesUtils() {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }
