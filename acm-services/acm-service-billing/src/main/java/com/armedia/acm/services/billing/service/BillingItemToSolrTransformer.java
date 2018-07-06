@@ -27,7 +27,7 @@ package com.armedia.acm.services.billing.service;
  * #L%
  */
 import com.armedia.acm.services.billing.dao.BillingDao;
-import com.armedia.acm.services.billing.model.BillingConstants;
+import com.armedia.acm.services.billing.model.BillingItemConstants;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
@@ -55,13 +55,13 @@ public class BillingItemToSolrTransformer implements AcmObjectToSolrDocTransform
     {
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
-        solr.setId(String.format("%d-%s", in.getId(), BillingConstants.OBJECT_TYPE));
+        solr.setId(String.format("%d-%s", in.getId(), BillingItemConstants.OBJECT_TYPE));
 
         solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(BillingConstants.OBJECT_TYPE);
+        solr.setObject_type_s(BillingItemConstants.OBJECT_TYPE);
 
         solr.setDescription_parseable(in.getItemDescription());
-        solr.setName(String.format("%s_%d", BillingConstants.OBJECT_TYPE, in.getId()));
+        solr.setName(String.format("%s_%d", BillingItemConstants.OBJECT_TYPE, in.getId()));
 
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
@@ -88,9 +88,9 @@ public class BillingItemToSolrTransformer implements AcmObjectToSolrDocTransform
     public SolrDocument toSolrQuickSearch(BillingItem in)
     {
         SolrDocument solrDoc = new SolrDocument();
-        solrDoc.setId(String.format("%d-%s", in.getId(), BillingConstants.OBJECT_TYPE));
-        solrDoc.setObject_type_s(BillingConstants.OBJECT_TYPE);
-        solrDoc.setName(String.format("%s_%d", BillingConstants.OBJECT_TYPE, in.getId()));
+        solrDoc.setId(String.format("%d-%s", in.getId(), BillingItemConstants.OBJECT_TYPE));
+        solrDoc.setObject_type_s(BillingItemConstants.OBJECT_TYPE);
+        solrDoc.setName(String.format("%s_%d", BillingItemConstants.OBJECT_TYPE, in.getId()));
         solrDoc.setObject_id_s(in.getId() + "");
         solrDoc.setCreate_tdt(in.getCreated());
         solrDoc.setAdditionalProperty("parent_object_type_s", in.getParentObjectType());

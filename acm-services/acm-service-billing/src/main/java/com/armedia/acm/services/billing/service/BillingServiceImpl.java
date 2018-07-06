@@ -2,7 +2,7 @@ package com.armedia.acm.services.billing.service;
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.services.billing.dao.BillingDao;
-import com.armedia.acm.services.billing.model.BillingConstants;
+import com.armedia.acm.services.billing.model.BillingItemConstants;
 import com.armedia.acm.services.billing.model.BillingItem;
 
 import org.slf4j.Logger;
@@ -51,27 +51,29 @@ public class BillingServiceImpl implements BillingService
 
     /*
      * (non-Javadoc)
-     * @see com.armedia.acm.services.billing.service.BillingService#getBillingItemsByObjectTypeAndId(java.lang.String,
+     * @see
+     * com.armedia.acm.services.billing.service.BillingService#getBillingItemsByParentObjectTypeAndId(java.lang.String,
      * java.lang.Long)
      */
     @Override
-    public List<BillingItem> getBillingItemsByObjectTypeAndId(String objectType, Long objectId) throws AcmListObjectsFailedException
+    public List<BillingItem> getBillingItemsByParentObjectTypeAndId(String parentObjectType, Long parentObjectId)
+            throws AcmListObjectsFailedException
     {
         log.info("Finding Billing Items");
-        if (objectId != null && objectType != null)
+        if (parentObjectId != null && parentObjectType != null)
         {
             try
             {
-                List<BillingItem> billingItems = getBillingDao().listBillingItems(objectType, objectId);
+                List<BillingItem> billingItems = getBillingDao().listBillingItems(parentObjectType, parentObjectId);
                 log.debug("Billing Item size:{}", billingItems.size());
                 return billingItems;
             }
             catch (PersistenceException e)
             {
-                throw new AcmListObjectsFailedException(BillingConstants.OBJECT_TYPE, e.getMessage(), e);
+                throw new AcmListObjectsFailedException(BillingItemConstants.OBJECT_TYPE, e.getMessage(), e);
             }
         }
-        throw new AcmListObjectsFailedException(BillingConstants.OBJECT_TYPE, "wrong input", null);
+        throw new AcmListObjectsFailedException(BillingItemConstants.OBJECT_TYPE, "wrong input", null);
     }
 
     /*
