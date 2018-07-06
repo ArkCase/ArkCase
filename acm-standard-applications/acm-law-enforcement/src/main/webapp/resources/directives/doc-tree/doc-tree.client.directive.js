@@ -103,8 +103,10 @@ angular
             'Admin.EmailSenderConfigurationService',
             'Helper.LocaleService',
             '$timeout',
+            'Upload',
+            '$http',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                     UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout) {
+                     UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout, Upload, $http) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -1354,6 +1356,22 @@ angular
                         }
 
                         ,
+                        executeSubmitChunksOfFile: function (nodes, args) {
+                            if (!DocTree.uploadSetting) {
+                                $log.warn("Warning: No files are selected");
+                                return;
+                            }
+
+                            var files = args.files;
+                            var fileLang = args.fileLang;
+                            var heavyPromiseUploadChunksFile = DocTree.doSubmitFormUploadChunksOfFile(files, fileLang);
+                            $q.when(heavyPromiseUploadChunksFile).then(function (data) {
+                                args.data = data;
+                                DocTree.uploadSetting = null;
+                            });
+                            return heavyPromiseUploadChunksFile;
+                        }
+                        ,
                         getCoreHandlers : function() {
                             return [
                                 {
@@ -2395,6 +2413,8 @@ angular
                             }
                             return dfd.promise();
                         },
+
+                        //THIS IS THE OLD FUNCTION THAT UPLOAD FILES
                         uploadFiles : function(formData, folderNode, names, fileType, fileLang) {
                             var dfd = $.Deferred();
                             if (!DocTree.isFolderNode(folderNode)) {
@@ -2454,8 +2474,104 @@ angular
                                     DocTree.refreshTree();
                                     dfd.reject();
                                 });
+
+
                             }
                             return dfd.promise();
+                        },
+                        uploadChunkFile: function (files, folderId, fileType) {
+                            //todo local var to prepare object
+                            //map of files
+
+                            DocTree.scope.startUpload = function (uuid) {
+                                DocTree.scope.uploadPart(uuid);
+                            };
+
+                            DocTree.scope.uploadPart = function (uuid) {
+                                var file = DocTree.scope.getPartFile(uuid);
+                                DocTree.scope.uploadPartFile(file, uuid);
+                            };
+
+                            DocTree.scope.getPartFile = function (uuid) {
+                                var file = null;
+
+                                DocTree.scope.hashMap[uuid].part++;
+                                DocTree.scope.hashMap[uuid].startByte = DocTree.scope.hashMap[uuid].endByte;
+                                DocTree.scope.hashMap[uuid].endByte = DocTree.scope.hashMap[uuid].endByte + DocTree.scope.hashMap[uuid].partBytes;
+
+                                if (DocTree.scope.hashMap[uuid].endByte >= DocTree.scope.hashMap[uuid].file.size) {
+                                    DocTree.scope.hashMap[uuid].endByte = DocTree.scope.hashMap[uuid].file.size;
+                                }
+                                file = DocTree.scope.hashMap[uuid].file.slice(DocTree.scope.hashMap[uuid].startByte, DocTree.scope.hashMap[uuid].endByte);
+                                file.name = DocTree.scope.hashMap[uuid].file.name + "_" + DocTree.scope.hashMap[uuid].part + "_" + Date.now();
+
+                                return file;
+                            };
+
+                            DocTree.scope.uploadPartFile = function (file, uuid) {
+                                Upload.upload({
+                                    url: 'api/latest/service/ecm/uploadChunks',
+                                    file: file,
+                                    params: {
+                                        uuid: uuid
+                                    }
+                                }).then(function (result) {
+                                    var _uuid = result.data.uuid;
+                                    DocTree.scope.hashMap[_uuid].parts.push(result.data.name);
+                                    if (DocTree.scope.hashMap[_uuid].endByte < DocTree.scope.hashMap[_uuid].file.size) {
+                                        DocTree.scope.hashMap[_uuid].progress = DocTree.scope.hashMap[_uuid].progress + DocTree.scope.hashMap[_uuid].partProgress;
+                                        DocTree.scope.uploadPart(_uuid);
+                                    } else {
+                                        var data = {};
+                                        data.name = DocTree.scope.hashMap[_uuid].file.name;
+                                        data.mimeType = DocTree.scope.hashMap[_uuid].file.type;
+                                        data.objectId = DocTree.getObjId(); // Take <OBJECT_ID> from somewhere. <OBJECT_ID> is the ID of the object where file should be uploaded
+                                        data.objectType = DocTree.getObjType(); // Take <OBJECT_TYPE> from somewhere. <OBJECT_TYPE> is the type of the object where file should be uploaded (CASE_FILE, COMPLAINT, DOC_REPO, etc ...)
+                                        data.folderId = folderId; // Take <CMIS_FOLDER_ID> from somewhere. <CMIS_FOLDER_ID> is Alfresco folder ID. For example "workspace://SpacesStore/028102a9-55e8-41a7-aff7-d63e2dc662d4"
+                                        data.parts = DocTree.scope.hashMap[_uuid].parts;
+                                        data.fileType = fileType;
+                                        data.uuid = _uuid;
+                                        $http({
+                                            method: "POST",
+                                            url: 'api/latest/service/ecm/mergeChunks',
+                                            data: data
+                                        }).then(function (mergeResult) {
+                                            // Do something when merging is finished
+                                        });
+                                    }
+                                }, function (error) {
+                                    // Do something when error is shown
+                                }, function (progress) {
+                                    DocTree.scope.hashMap[uuid].partProgress = progress.loaded;
+
+                                    var totalProgressPercentage = parseInt(100.0 * ((DocTree.scope.hashMap[uuid].progress + DocTree.scope.hashMap[uuid].partProgress) / DocTree.scope.hashMap[uuid].file.size));
+                                    console.log('Total Progress [' + uuid + ']: ' + totalProgressPercentage + '%'); // Show totalProgressPercentage on UI
+
+                                    var partProgressPercentage = parseInt(100.0 * (DocTree.scope.hashMap[uuid].partProgress / progress.total));
+                                    console.log('Part ' + DocTree.scope.hashMap[uuid].part + ' Progress [' + uuid + ']: ' + partProgressPercentage + '%');
+                                });
+                            };
+
+                            DocTree.scope.hashMap = {};
+
+                            for (var i = 0; i < files.length; i++) {
+                                //check what is going on at 0 index
+                                var details = {};
+                                details.parts = [];
+                                details.part = 0;
+                                details.partBytes = 52428800; // 50MB
+                                details.progress = 0;
+                                details.partProgress = 0;
+                                details.startByte = 0;
+                                details.endByte = 0;
+                                details.file = files[i];
+
+                                var uuid = Date.now();
+                                DocTree.scope.hashMap[uuid] = details;
+
+                                DocTree.scope.startUpload(uuid);
+                            }
+
                         },
                         replaceFile : function(formData, fileNode, name) {
                             var dfd = $.Deferred();
@@ -3628,6 +3744,13 @@ angular
                     }
                     //, doSubmitFormUploadFile: function (files, doRefresh) {
                     ,
+
+                    doSubmitFormUploadChunksOfFile: function () {
+                        //so deffered i promis da povikam REST do /uploadChunks i da zalepam se sho treba na formata i da go vratam promisot
+
+
+                    }
+                    ,
                     doSubmitFormUploadFile : function(files, fileLang) {
                         if (!DocTree.uploadSetting) {
                             return Util.errorPromise("upload file error");
@@ -3657,14 +3780,16 @@ angular
 
                         var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                         if (DocTree.uploadSetting.uploadFileNew) {
-                            DocTree.Op.uploadFiles(fd, folderNode, names, fileType, fileLang).then(function(data) {
-                                _.each(data.nodes, function(node) {
-                                    DocTree.markNodeOk(node)
-                                });
-                                dfd.resolve(data);
-                            }, function(error) {
-                                dfd.reject(error);
-                            });
+                            /*         DocTree.Op.uploadFiles(fd, folderNode, names, fileType, fileLang).then(function(data) {
+                                         _.each(data.nodes, function(node) {
+                                             DocTree.markNodeOk(node)
+                                         });
+                                         dfd.resolve(data);
+                                     }, function(error) {
+                                         dfd.reject(error);
+                                     });*/
+                            DocTree.Op.uploadChunkFile(files, folderNode.data.objectId, fileType);
+
                         } else {
                             var replaceNode = DocTree.uploadSetting.replaceFileNode;
                             DocTree.Op.replaceFile(fd, replaceNode, names[0]).then(function(data) {
@@ -4876,6 +5001,86 @@ angular
                                 }, 0);
                             }
                         });
+
+                        /*$scope.upload = function (file) {
+                            if (Util.isEmpty(file)) {
+                                return false;
+                            }
+                            $scope.details = {};
+                            $scope.details.parts = [];
+                            $scope.details.part = 0;
+                            $scope.details.partBytes = 52428800; // 50MB
+                            $scope.details.progress = 0;
+                            $scope.details.partProgress = 0;
+                            $scope.details.startByte
+                            $scope.details.endByte = 0;
+                            $scope.details.file = file;
+                            $scope.startUpload();
+
+                        },
+
+                            $scope.startUpload = function () {
+                                $scope.uploadPart();
+                            },
+
+                            $scope.uploadPart = function () {
+                                var file = $scope.getPartFile();
+                                $scope.uploadPartFile(file);
+                            },
+
+                            $scope.getPartFile = function () {
+                                var file = null;
+
+                                $scope.details.part++;
+                                $scope.details.startByte = $scope.details.endByte;
+                                $scope.details.endByte = $scope.details.endByte + $scope.details.partBytes;
+
+                                if ($scope.details.endByte >= $scope.details.file.size) {
+                                    $scope.details.endByte = $scope.details.file.size;
+                                }
+                                file = $scope.details.file.slice($scope.details.startByte, $scope.details.endByte);
+                                file.name = $scope.details.file.name + "_" + $scope.details.part + "_" + Date.now();
+
+                                return file;
+                            },
+
+                            $scope.uploadPartFile = function (file) {
+                                Upload.upload({
+                                    url: '/uploadChunks',
+                                    file: file
+                                }).then(function (result) {
+                                    $scope.details.parts.push(result.data.name);
+                                    if ($scope.details.endByte < $scope.details.file.size) {
+                                        $scope.details.progress = $scope.details.progress + $scope.details.partProgress;
+                                        $scope.uploadPart();
+                                    } else {
+                                        var data = {};
+                                        data.name = $scope.details.file.name;
+                                        data.mimeType = $scope.details.file.type;
+                                        data.objectId = objectID; // Take <OBJECT_ID> from somewhere. <OBJECT_ID> is the ID of the object where file should be uploaded
+                                        data.objectType = objectType; // Take <OBJECT_TYPE> from somewhere. <OBJECT_TYPE> is the type of the object where file should be uploaded (CASE_FILE, COMPLAINT, DOC_REPO, etc ...)
+                                        data.cmisFolderId = cmisFolderId; // Take <CMIS_FOLDER_ID> from somewhere. <CMIS_FOLDER_ID> is Alfresco folder ID. For example "workspace://SpacesStore/028102a9-55e8-41a7-aff7-d63e2dc662d4"
+                                        data.parts = $scope.details.parts;
+                                        $http({
+                                            method: "POST",
+                                            url: 'mergeChunks',
+                                            data: data
+                                        }).then(function (mergeResult) {
+                                            // Do something when merging is finished
+                                        });
+                                    }
+                                }, function (error) {
+                                    // Do something when error is shown
+                                }, function (progress) {
+                                    $scope.details.partProgress = progress.loaded;
+
+                                    var totalProgressPercentage = parseInt(100.0 * (($scope.details.progress + $scope.details.partProgress) / $scope.details.file.size));
+                                    console.log('Total Progress: ' + totalProgressPercentage + '%'); // Show totalProgressPercentage on UI
+
+                                    var partProgressPercentage = parseInt(100.0 * ($scope.details.partProgress / progress.total));
+                                    console.log('Part ' + $scope.details.part + ' Progress: ' + partProgressPercentage + '%');
+                                });
+                            }*/
                     }
                 };
             } ]);
