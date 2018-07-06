@@ -27,9 +27,7 @@ package com.armedia.acm.plugins.complaint.service;
  * #L%
  */
 
-import static com.armedia.acm.plugins.complaint.model.ComplaintConstants.FILE_ID;
-import static com.armedia.acm.plugins.complaint.model.ComplaintConstants.MIME_TYPE_PDF;
-import static com.armedia.acm.plugins.complaint.model.ComplaintConstants.NEW_FILE;
+import static com.armedia.acm.plugins.complaint.model.ComplaintConstants.*;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -50,7 +48,6 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -63,8 +60,8 @@ import javax.xml.transform.dom.DOMSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.io.InputStream;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -117,9 +114,9 @@ public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends C
                             ? businessObject.getContainer().getFolder().getCmisFolderId()
                             : businessObject.getContainer().getAttachmentFolder().getCmisFolderId();
 
-                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                    Authentication authentication = ctx.getAuthentication();
 
-                    try (FileInputStream fis = new FileInputStream(filename))
+                    try (InputStream fis = new FileInputStream(filename))
                     {
                         if (existing == null)
                         {
@@ -140,6 +137,7 @@ public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends C
                             {
                                 ctx.addProperty(NEW_FILE, false);
                                 ctx.addProperty(FILE_ID, ecmFile.getId());
+                                ctx.addProperty(FILE_VERSION, ecmFile.getActiveVersionTag());
                             }
                         }
                     }
@@ -171,8 +169,9 @@ public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends C
 
         Complaint complaint = (Complaint) businessObject;
 
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        addElement(document, rootElem, "incidentDate", format.format(complaint.getIncidentDate()), true);
+        addElement(document, rootElem, "incidentDate",
+                complaint.getIncidentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString(),
+                true);
         addElement(document, rootElem, "initiator", complaint.getOriginator().getPerson().getFullName(), true);
 
         addElement(document, rootElem, "complaintType", complaint.getComplaintType(), true);
