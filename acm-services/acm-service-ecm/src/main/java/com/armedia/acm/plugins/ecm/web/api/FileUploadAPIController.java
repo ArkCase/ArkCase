@@ -54,7 +54,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.util.*;
 
 @RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
@@ -263,26 +266,20 @@ public class FileUploadAPIController
     @RequestMapping(value = "/mergeChunks", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
     public String merge(@RequestBody FileDetails fileDetails, Authentication authentication) throws Exception {
-        //todo create a HashMap structure and loop over that so we can support multiple files
-
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", false);
         if (fileDetails != null && fileDetails.getParts() != null && !fileDetails.getParts().isEmpty()) {
-            String dirPath = System.getProperty("java.io.tmpdir");
             try (SequenceInputStream seq = new SequenceInputStream(getInputStreams(fileDetails.getParts()))) {
-                File merged = new File(dirPath + "/" + fileDetails.getName());
-                FileUtils.copyInputStreamToFile(seq, merged);
-                deleteQuietly(fileDetails.getParts());
-                InputStream is = new FileInputStream(merged);
+
                 String uniqueFileName = folderAndFilesUtils.createUniqueIdentificator(fileDetails.getName());
                 AcmFolder folder = getParentFolder(fileDetails.getObjectType(), fileDetails.getObjectId(), fileDetails.getFolderId());
-                //getEcmFileService().upload(uniqueFileName, fileDetails.getFileType(), "Document", seq, fileDetails.getMimeType(), uniqueFileName, authentication, folder.getCmisFolderId(), fileDetails.getObjectType(), fileDetails.getObjectId());
-                getEcmFileService().upload(uniqueFileName, fileDetails.getFileType(), "Document", is, fileDetails.getMimeType(), uniqueFileName, authentication, folder.getCmisFolderId(), fileDetails.getObjectType(), fileDetails.getObjectId());
-                //getEcmFileService().upload(uniqueFileName, fileDetails.getFileType(), (MultipartFile) merged, authentication, folder.getCmisFolderId(), fileDetails.getObjectType(),fileDetails.getObjectId());
+                getEcmFileService().upload(uniqueFileName, fileDetails.getFileType(), "Document", seq, fileDetails.getMimeType(), uniqueFileName, authentication, folder.getCmisFolderId(), fileDetails.getObjectType(), fileDetails.getObjectId());
 
                 jsonObject.put("success", true);
 
                 return jsonObject.toString();
+            } finally {
+                deleteQuietly(fileDetails.getParts());
             }
         }
 
