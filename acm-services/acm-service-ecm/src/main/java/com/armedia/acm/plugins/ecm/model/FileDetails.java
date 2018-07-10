@@ -38,6 +38,7 @@ public class FileDetails {
     private List<String> parts;
     private String fileType;
     private String uuid;
+    private Long existingFileId;
 
 
     public String getName() {
@@ -102,5 +103,13 @@ public class FileDetails {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public Long getExistingFileId() {
+        return existingFileId;
+    }
+
+    public void setExistingFileId(Long existingFileId) {
+        this.existingFileId = existingFileId;
     }
 }
