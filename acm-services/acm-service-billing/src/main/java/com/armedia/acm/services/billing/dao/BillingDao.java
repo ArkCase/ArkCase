@@ -61,13 +61,13 @@ public class BillingDao extends AcmAbstractDao<BillingItem>
     public List<BillingItem> listBillingItems(String parentObjectType, Long parentObjectId)
     {
 
-        TypedQuery<BillingItem> billingItem = getEntityManager().createQuery(
-                "SELECT billingItem " +
-                        "FROM BillingItem billingItem " +
-                        "WHERE billingItem.parentObjectType = :parentObjectType AND " +
-                        "billingItem.parentObjectId = :parentObjectId " +
-                        "ORDER BY billingItem.itemNumber",
-                BillingItem.class);
+        String queryText = "SELECT billingItem " +
+                "FROM BillingItem billingItem " +
+                "WHERE billingItem.parentObjectType = :parentObjectType " +
+                "AND billingItem.parentObjectId = :parentObjectId " +
+                "ORDER BY billingItem.itemNumber";
+
+        TypedQuery<BillingItem> billingItem = getEntityManager().createQuery(queryText, BillingItem.class);
 
         billingItem.setParameter("parentObjectType", parentObjectType.toUpperCase());
         billingItem.setParameter("parentObjectId", parentObjectId);
@@ -90,7 +90,11 @@ public class BillingDao extends AcmAbstractDao<BillingItem>
 
     private int getNextItemNumber(String parentObjectType, Long parentObjectId)
     {
-        String queryText = "SELECT MAX(billingItem.itemNumber) FROM BillingItem billingItem WHERE billingItem.parentObjectType = :parentObjectType AND billingItem.parentObjectId = :parentObjectId";
+        String queryText = "SELECT MAX(billingItem.itemNumber) " +
+                "FROM BillingItem billingItem " +
+                "WHERE billingItem.parentObjectType = :parentObjectType " +
+                "AND billingItem.parentObjectId = :parentObjectId";
+
         Query query = getEm().createQuery(queryText);
         query.setParameter("parentObjectType", parentObjectType.toUpperCase());
         query.setParameter("parentObjectId", parentObjectId);
