@@ -1,9 +1,10 @@
 package com.armedia.acm.services.billing.service;
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.billing.dao.BillingDao;
-import com.armedia.acm.services.billing.model.BillingItemConstants;
 import com.armedia.acm.services.billing.model.BillingItem;
+import com.armedia.acm.services.billing.model.BillingItemConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +74,9 @@ public class BillingServiceImpl implements BillingService
                 throw new AcmListObjectsFailedException(BillingItemConstants.OBJECT_TYPE, e.getMessage(), e);
             }
         }
-        throw new AcmListObjectsFailedException(BillingItemConstants.OBJECT_TYPE, "wrong input", null);
+        throw new AcmListObjectsFailedException(BillingItemConstants.OBJECT_TYPE,
+                "Could not get Billing Items, missing parentObjectType or parentObjectId",
+                null);
     }
 
     /*
@@ -83,9 +86,19 @@ public class BillingServiceImpl implements BillingService
      * BillingItem)
      */
     @Override
-    public BillingItem addBillingItem(BillingItem billingItem)
+    public BillingItem addBillingItem(BillingItem billingItem) throws AcmUserActionFailedException
     {
-        return billingDao.addBilligItem(billingItem);
+        log.info("Adding Billing Item");
+        try
+        {
+            return billingDao.addBilligItem(billingItem);
+        }
+        catch (PersistenceException e)
+        {
+            throw new AcmUserActionFailedException("Unable to add Billing Item for ", billingItem.getParentObjectType(),
+                    billingItem.getParentObjectId(), e.getMessage(), e);
+        }
+
     }
 
     /**

@@ -35,6 +35,8 @@ import com.armedia.acm.core.model.AcmEvent;
 public class BillingItemEvent extends AcmEvent
 {
 
+    private static final long serialVersionUID = -4238560422705135161L;
+
     public BillingItemEvent(BillingItem source, String billingItemEvent, boolean succeeded, String ipAddress)
     {
         super(source);
