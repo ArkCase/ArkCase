@@ -168,7 +168,7 @@ public class CostForm extends FrevvoForm
         this.objectNumber = objectNumber;
     }
 
-    @XmlElement(name = "objectTitle")
+    @XmlElement(name = "objectNumber")
     public String getObjectTitle()
     {
         return objectTitle;
