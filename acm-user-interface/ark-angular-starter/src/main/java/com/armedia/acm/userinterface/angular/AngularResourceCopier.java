@@ -30,11 +30,13 @@ package com.armedia.acm.userinterface.angular;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 import org.zeroturnaround.exec.stream.slf4j.Slf4jDebugOutputStream;
@@ -46,21 +48,27 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Copy all angular resources from the base ArkCase WAR file and also from any ArkCase extension jars, run the
- * Angular front-end build tools, and copy the assembled application into the deployment folder. Before copying any
- * files to a deployment folder, remove current contents of that folder.
+ * Angular front-end build tools, and copy the assembled application into the deployment folder.
  * <p>
  * The ArkCase WAR file should configure the deployment folder in a Tomcat context resources element, such that
  * files in this deployment folder are treated as if they were in the root folder of the war file itself.
  * <p>
- * Node.js and npm (the Node.js Package Manager) must be installed on the deployment host, and npm must be in the
+ * Yarn and npm (the Node.js Package Manager) must be installed on the deployment host, and npm must be in the
  * system path.
  * <p>
- * The resources to be copied from the war file and extension jars; the front-end commands to be run (e.g. npm,
- * bower, grunt); and the resources to be copied to the deployment folder are configured in Spring. All resources to
+ * The resources to be copied from the war file and extension jars; the front-end commands to be run (e.g. yarn,
+ * grunt); and the resources to be copied to the deployment folder are configured in Spring. All resources to
  * be copied from the war file and extension jars must be within a top-level resources folder.
  */
 public class AngularResourceCopier implements ServletContextAware
@@ -74,7 +82,6 @@ public class AngularResourceCopier implements ServletContextAware
     private List<String> filesToCopyFromArchive;
     private List<String> assembledFilesToCopyToDeployment;
     private List<String> frontEndCommandsToBeExecuted;
-    private List<String> oldDeployFoldersToBeRemovedBeforeBuild;
 
     @Override
     public void setServletContext(ServletContext servletContext)
@@ -91,34 +98,50 @@ public class AngularResourceCopier implements ServletContextAware
             ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(servletContext);
 
             Resource modulesRoot = resolver.getResource(AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH);
-            log.debug("modulesRoot: {}", modulesRoot);
+            log.debug("modulesRoot: [{}]", modulesRoot);
             String rootPath = modulesRoot.getFile().getCanonicalPath();
 
-            for (String oldDeployFolder : getOldDeployFoldersToBeRemovedBeforeBuild())
-            {
-                File oldFolder = new File(tmpDir.getCanonicalPath() + oldDeployFolder);
-                log.debug("Old folder path: {}", oldFolder.getCanonicalPath());
-                if (oldFolder.exists())
-                {
-                    log.debug("Removing old folder {}", oldFolder.getCanonicalPath());
-                    FileSystemUtils.deleteRecursively(oldFolder);
-                }
-            }
+            List<String> copiedFiles = new ArrayList<>();
+
             for (String resourceFolder : getResourceFoldersToCopyFromArchive())
             {
-                copyResources(resolver, rootPath, tmpDir, resourceFolder);
+                List<String> copied = copyResources(resolver, rootPath, tmpDir, resourceFolder);
+                copiedFiles.addAll(copied);
             }
+
             for (String resourceFile : getFilesToCopyFromArchive())
             {
-                copyFile(resolver, tmpDir, resourceFile);
+                String copied = copyFile(resolver, tmpDir, resourceFile);
+                copiedFiles.add(copied);
             }
 
             // custom_modules is copied specially since we have to squash it into modules folder
-            copyResources(resolver, rootPath, tmpDir, "custom_modules", "modules");
-            copyResources(resolver, rootPath, tmpDir, "custom_assets", "assets");
-            copyResources(resolver, rootPath, tmpDir, "custom_config", "config");
-            copyResources(resolver, rootPath, tmpDir, "custom_directives", "directives");
-            copyResources(resolver, rootPath, tmpDir, "custom_services", "services");
+            copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, "custom_modules", "modules"));
+            copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, "custom_assets", "assets"));
+            copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, "custom_config", "config"));
+            copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, "custom_directives", "directives"));
+            copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, "custom_services", "services"));
+
+            // delete all files that exist in the tmp dir, but we didn't copy them there; such files must have been
+            // removed from the project. Exceptions are files managed by yarn and grunt: lib folder, node_modules
+            // folder, bower_components folder, yarn.lock
+            String libFolderPath = tmpDir.getCanonicalPath() + File.separator + "lib";
+
+            log.info("lib folder path: {}", libFolderPath);
+
+            List<String> tmpFilesFound = findAllFilesInFolder(tmpDir);
+            log.debug("Found {} files in tmp folder", tmpFilesFound.size());
+
+            List<File> oldFilesInTmpFolder = tmpFilesFound.stream()
+                    .filter(p -> p.indexOf("node_modules") < 0)
+                    .filter(p -> p.indexOf("bower_components") < 0)
+                    .filter(p -> !p.endsWith("yarn.lock"))
+                    .filter(p -> !p.startsWith(libFolderPath))
+                    .filter(p -> !copiedFiles.contains(p))
+                    .map(File::new)
+                    .collect(Collectors.toList());
+            log.debug("Found {} files to be removed from tmp folder", oldFilesInTmpFolder.size());
+            oldFilesInTmpFolder.stream().peek(f -> log.debug("Removing tmp file [{}]", f.toPath())).forEach(File::delete);
 
             for (String frontEndCommand : getFrontEndCommandsToBeExecuted())
             {
@@ -147,11 +170,21 @@ public class AngularResourceCopier implements ServletContextAware
         }
     }
 
+    private List<String> findAllFilesInFolder(File folder)
+    {
+        return FileUtils.listFiles(folder, FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter())
+                .stream()
+                .filter(File::isFile)
+                .map(File::toPath)
+                .map(Path::toString)
+                .collect(Collectors.toList());
+    }
+
     public void createFolderStructure(File folder) throws IOException
     {
-        log.debug("Creating folder {}", folder.getCanonicalPath());
         if (!folder.exists())
         {
+            log.debug("Creating folder [{}]", folder.getCanonicalPath());
             boolean foldersCreated = folder.mkdirs();
             if (!foldersCreated)
             {
@@ -160,13 +193,17 @@ public class AngularResourceCopier implements ServletContextAware
         }
     }
 
-    private void copyFile(ServletContextResourcePatternResolver resolver, File tmpDir, String fileName)
+    private String copyFile(ServletContextResourcePatternResolver resolver, File tmpDir, String fileName)
             throws IOException
     {
         Resource r = resolver.getResource(AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH + "/" + fileName);
         File target = new File(tmpDir, fileName);
 
-        FileCopyUtils.copy(r.getInputStream(), new FileOutputStream(target));
+        Files.copy(r.getInputStream(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        target.setLastModified(r.lastModified());
+
+        return target.getCanonicalPath();
+
     }
 
     public void copyWebappFile(File sourceFolder, File targetFolder, String filenameToCopy) throws IOException
@@ -179,17 +216,70 @@ public class AngularResourceCopier implements ServletContextAware
         File toFolder = new File(deployFolder, folderName);
         File fromFolder = new File(tmpDir, folderName);
 
-        log.debug("Removing current contents of folder {}", folderName);
-        FileSystemUtils.deleteRecursively(toFolder);
+        Collection<File> sourceFiles = FileUtils.listFiles(fromFolder, FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
+        List<String> filesToKeep = new ArrayList<>(sourceFiles.size());
 
-        log.debug("Copying folder {} to webapp folder", folderName);
-        FileSystemUtils.copyRecursively(fromFolder, toFolder);
-        log.debug("Done copying folder {} to webapp folder", folderName);
+        copyFilesAsNeeded(fromFolder, toFolder, sourceFiles, filesToKeep);
+
+        deleteOldFilesFromFolder(toFolder, filesToKeep);
+    }
+
+    private void deleteOldFilesFromFolder(File folder, List<String> filesToKeep) throws IOException
+    {
+        List<String> targetFilesFound = findAllFilesInFolder(folder);
+        log.debug("Found {} files in target folder [{}]", targetFilesFound.size(), folder.getCanonicalPath());
+
+        List<File> oldFilesInTargetFolder = targetFilesFound.stream()
+                .filter(p -> !filesToKeep.contains(p))
+                .map(File::new)
+                .collect(Collectors.toList());
+        log.debug("Found {} files to be removed from target folder [{}]", oldFilesInTargetFolder.size(), folder.getCanonicalPath());
+        oldFilesInTargetFolder.stream().peek(f -> log.debug("Removing custom file [{}]", f.toPath())).forEach(File::delete);
+    }
+
+    private void copyFilesAsNeeded(File fromFolder, File toFolder, Collection<File> sourceFiles, List<String> filesToKeep)
+            throws IOException
+    {
+        for (File f : sourceFiles)
+        {
+            log.trace("Considering [{}]", f.getCanonicalPath());
+
+            long sourceModified = f.lastModified();
+            String relativeName = f.getCanonicalPath().replace(fromFolder.getCanonicalPath(), "");
+            File targetFile = new File(toFolder, relativeName);
+
+            filesToKeep.add(targetFile.getCanonicalPath());
+
+            log.trace("\tTarget file: [{}]", targetFile.getCanonicalPath());
+
+            if (f.isDirectory())
+            {
+                createFolderStructure(f);
+            }
+            else if (targetFile.exists())
+            {
+                long targetModified = targetFile.lastModified();
+
+                log.trace("\tTarget file exists; modified time is different? {}", targetModified != sourceModified);
+                if (targetModified != sourceModified)
+                {
+                    log.debug("Copying [{}] to [{}]", f.getCanonicalPath(), targetFile.toPath());
+                    FileCopyUtils.copy(f, targetFile);
+                    targetFile.setLastModified(sourceModified);
+                }
+            }
+            else
+            {
+                createFolderStructure(targetFile.getParentFile());
+                FileCopyUtils.copy(f, targetFile);
+                targetFile.setLastModified(sourceModified);
+            }
+        }
     }
 
     public void runFrontEndBuildCommand(File tmpDir, String commandLine) throws IOException
     {
-        log.debug("About to run {}", commandLine);
+        log.debug("About to run [{}]", commandLine);
         CommandLine command = CommandLine.parse(commandLine);
         DefaultExecutor executor = new DefaultExecutor();
         executor.setWorkingDirectory(tmpDir);
@@ -197,43 +287,32 @@ public class AngularResourceCopier implements ServletContextAware
         // Slf4jDebugOutputStream is an OutputStream we can send to the DefaultExecutor; the DefaultExecutor will
         // pipe its STDIN and STDOUT to this output stream, which will log such output at DEBUG level to our
         // SLF4j logger.
-        Slf4jDebugOutputStream debugOutputStream = null;
-        try
+        try (Slf4jDebugOutputStream debugOutputStream = new Slf4jDebugOutputStream(log))
         {
-            debugOutputStream = new Slf4jDebugOutputStream(log);
+
             executor.setStreamHandler(new PumpStreamHandler(debugOutputStream));
             int exitCode = executor.execute(command);
-            log.debug("done with {}: exit code {}", commandLine, exitCode);
-        }
-        finally
-        {
-            if (debugOutputStream != null)
-            {
-                debugOutputStream.close();
-            }
+            log.debug("done with [{}]: exit code {}", commandLine, exitCode);
         }
     }
 
     public File cleanAndCreateResourceTempFolder() throws IOException
     {
         File tmpDir = new File(getTempFolderPath());
-
-        // probably safer to start fresh every time, but npm takes minutes to run :-(
-        // FileSystemUtils.deleteRecursively(tmpDir);
         createFolderStructure(tmpDir);
         return tmpDir;
     }
 
-    public void copyResources(
+    public List<String> copyResources(
             ServletContextResourcePatternResolver resolver,
             String rootPath,
             File tmpDir,
             String moduleRoot) throws IOException
     {
-        copyResources(resolver, rootPath, tmpDir, moduleRoot, moduleRoot);
+        return copyResources(resolver, rootPath, tmpDir, moduleRoot, moduleRoot);
     }
 
-    public void copyResources(
+    public List<String> copyResources(
             ServletContextResourcePatternResolver resolver,
             String rootPath,
             File tmpDir,
@@ -247,32 +326,56 @@ public class AngularResourceCopier implements ServletContextAware
         }
         catch (FileNotFoundException fe)
         {
-            log.debug("Not copying resources under {}, since no such resources exist.",
+            log.debug("Not copying resources under [{}], since no such resources exist.",
                     AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH + "/" + moduleRoot);
-            return;
+            return Collections.emptyList();
         }
 
-        copyFilesFromWebapp(rootPath, tmpDir, resources, moduleRoot, targetRoot);
+        return copyFilesFromWebapp(rootPath, tmpDir, resources, moduleRoot, targetRoot);
     }
 
-    public void copyFilesFromWebapp(String rootPath, File tmpDir, Resource[] resources, String moduleRoot, String targetRoot)
+    public List<String> copyFilesFromWebapp(String rootPath, File tmpDir, Resource[] resources, String moduleRoot, String targetRoot)
             throws IOException
     {
         File targetFile;
+        List<String> filepaths = new ArrayList<>(resources.length);
 
         for (Resource r : resources)
         {
 
             targetFile = fileFromResource(rootPath, tmpDir, moduleRoot, targetRoot, r);
+            long resourceLastModified = r.lastModified();
 
             if (targetFile != null)
             {
-                log.trace("Copying file {}", targetFile.getCanonicalPath());
-                createFolderStructure(targetFile.getParentFile());
-                FileCopyUtils.copy(r.getInputStream(), new FileOutputStream(targetFile));
-            }
+                String canonicalPath = targetFile.getCanonicalPath();
+                log.trace("Copying file [{}]", canonicalPath);
 
+                filepaths.add(canonicalPath);
+                createFolderStructure(targetFile.getParentFile());
+
+                if (targetFile.exists())
+                {
+                    Resource targetResource = new FileSystemResource(targetFile);
+                    long targetResourceLastModified = targetResource.lastModified();
+
+                    log.trace("[{}] last modified is different from target? {}", canonicalPath,
+                            (resourceLastModified != targetResourceLastModified));
+                    if (resourceLastModified != targetResourceLastModified)
+                    {
+                        log.debug("[{}] has been modified - copying it", canonicalPath);
+                        FileCopyUtils.copy(r.getInputStream(), new FileOutputStream(targetFile));
+                        targetFile.setLastModified(resourceLastModified);
+                    }
+                }
+                else
+                {
+                    FileCopyUtils.copy(r.getInputStream(), new FileOutputStream(targetFile));
+                    targetFile.setLastModified(resourceLastModified);
+                }
+            }
         }
+        return filepaths;
     }
 
     public File fileFromResource(String rootPath, File tmpDir, String moduleRoot, String targetRoot, Resource r) throws IOException
@@ -306,7 +409,7 @@ public class AngularResourceCopier implements ServletContextAware
         int metaInfPortionLength = AngularResourceConstants.JAR_PATH_META_INF_PORTION.length();
 
         String webappPath = path.substring(path.indexOf(AngularResourceConstants.JAR_PATH_META_INF_PORTION) + metaInfPortionLength + 1);
-        log.trace("webapp path for URL {} is {}: ", url, webappPath);
+        log.trace("webapp path for URL [{}] is [{}]: ", url, webappPath);
         return webappPath;
     }
 
@@ -315,11 +418,11 @@ public class AngularResourceCopier implements ServletContextAware
         String resourceFullPath = r.getFile().getCanonicalPath();
         String relativePath = resourceFullPath.replace(rootPath, "");
 
-        log.trace("relative path: {}", relativePath);
+        log.trace("relative path: [{}]", relativePath);
 
         relativePath = relativePath.replaceFirst(moduleRoot, targetRoot);
 
-        log.trace("new relative path: {}", relativePath);
+        log.trace("new relative path: [{}]", relativePath);
 
         return new File(tmpDir, relativePath);
     }
@@ -394,13 +497,4 @@ public class AngularResourceCopier implements ServletContextAware
         this.frontEndCommandsToBeExecuted = frontEndCommandsToBeExecuted;
     }
 
-    public List<String> getOldDeployFoldersToBeRemovedBeforeBuild()
-    {
-        return oldDeployFoldersToBeRemovedBeforeBuild;
-    }
-
-    public void setOldDeployFoldersToBeRemovedBeforeBuild(List<String> oldDeployFoldersToBeRemovedBeforeBuild)
-    {
-        this.oldDeployFoldersToBeRemovedBeforeBuild = oldDeployFoldersToBeRemovedBeforeBuild;
-    }
 }
