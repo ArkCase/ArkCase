@@ -61,8 +61,8 @@ angular.module('services').factory(
                             // Forces the viewer iframe to be reloaded with the latest version of the document
                             var randomUrlArgToCauseIframeRefresh = (new Date()).getTime();
                             var parameters = "ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId + "&documentName=" + file.name + "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds;
-                            if (ecmFileProperties['ecm.viewer.snowbound'].indexOf("tabHeader") > -1) {
-                                parameters += "&" + ecmFileProperties['ecm.viewer.snowbound'].substring(ecmFileProperties['ecm.viewer.snowbound'].indexOf("tabHeader"));
+                            if (ecmFileProperties['ecm.viewer.snowbound.tabHeader']) {
+                                parameters += "&tabHeader=" + ecmFileProperties['ecm.viewer.snowbound.tabHeader'];
                             }
                             return viewerBaseUrl
                                     + "?documentId="

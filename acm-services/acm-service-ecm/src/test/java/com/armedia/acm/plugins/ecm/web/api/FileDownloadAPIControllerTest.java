@@ -129,6 +129,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String cmisId = "cmisId";
         String mimeType = "mimeType";
         String fileName = "fileName";
+        String fileType = "fileType";
         String fileNameExtension = ".extension";
 
         Resource log4j = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
@@ -141,6 +142,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         fromDb.setFileActiveVersionNameExtension(fileNameExtension);
         fromDb.setCmisRepositoryId("cmisRepositoryId");
         fromDb.setFileActiveVersionMimeType(mimeType);
+        fromDb.setFileType(fileType);
 
         AcmContainer acmContainer = new AcmContainer();
         acmContainer.setContainerObjectId(1L);
@@ -282,6 +284,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String cmisId = "cmisId";
         String mimeType = "mimeType";
         String fileName = "fileName";
+        String fileType = "fileType";
         String fileNameExtension = ".extension";
         String tikaMimeType = "application/pdf";
 
@@ -295,6 +298,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         fromDb.setFileActiveVersionNameExtension(fileNameExtension);
         fromDb.setCmisRepositoryId("cmisRepositoryId");
         fromDb.setFileActiveVersionMimeType(tikaMimeType);
+        fromDb.setFileType(fileType);
 
         AcmContainer acmContainer = new AcmContainer();
         acmContainer.setContainerObjectId(1L);
