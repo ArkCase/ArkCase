@@ -198,6 +198,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String cmisId = "cmisId";
         String mimeType = "mimeType";
         String fileName = "fileName";
+        String fileType = "fileType";
         String fileNameExtension = ".extension";
         String version = "2.0";
 
@@ -207,6 +208,8 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         EcmFile fromDb = new EcmFile();
         fromDb.setFileId(ecmFileId);
+        fromDb.setFileName(fileName);
+        fromDb.setFileType(fileType);
         fromDb.setVersionSeriesId(cmisId);
         fromDb.setFileActiveVersionNameExtension(fileNameExtension);
         fromDb.setCmisRepositoryId("cmisRepositoryId");
@@ -267,10 +270,8 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         // assert file metadata header
         JSONObject fileMetadata = new JSONObject(result.getResponse().getHeader("X-ArkCase-File-Metadata"));
-        assertEquals(ecmFileId.longValue(), fileMetadata.getLong("fileId"));
-        assertEquals(cmisId, fileMetadata.getString("versionSeriesId"));
-        assertEquals(mimeType, fileMetadata.getString("fileActiveVersionMimeType"));
-        assertEquals(fileNameExtension, fileMetadata.getString("fileActiveVersionNameExtension"));
+        assertEquals(fileName, fileMetadata.getString("fileName"));
+        assertEquals(fileType, fileMetadata.getString("fileType"));
     }
 
     @Test
