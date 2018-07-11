@@ -31,30 +31,126 @@ import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
 import com.armedia.acm.core.model.AcmEvent;
+import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.web.api.AsyncApplicationListener;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.expression.EvaluationException;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.ParseException;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 
 @AsyncApplicationListener
-public class AuditWriter implements ApplicationListener<AcmEvent>
+public class AuditWriter implements ApplicationListener<ApplicationEvent>
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private AuditService auditService;
+    /**
+     * Spring expression parser instance.
+     */
+    private ExpressionParser expressionParser;
+
+    /**
+     * Event description configuration file
+     */
+    private File eventDescriptionPropertiesFile;
+
+    /**
+     * (event name, parsed SpEL expression) pairs
+     */
+    private Map<String, Expression> expressionMap = new HashMap<>();
+
+    /**
+     * Load configuration from file and build SpEL expression map (bean init method)
+     */
+    public void loadConfiguration()
+    {
+        if (eventDescriptionPropertiesFile != null && eventDescriptionPropertiesFile.exists())
+        {
+            log.debug("Loading Audit event descriptions from configuration file [{}]", eventDescriptionPropertiesFile.getPath());
+            Properties properties = new Properties();
+            try (InputStream propertyStream = new FileInputStream(eventDescriptionPropertiesFile))
+            {
+                // use temporary map to avoid race conditions where new configuration is loaded
+                // while audit event descriptions are evaluated at the same time
+                Map<String, Expression> tempExpressionMap = new HashMap<>();
+                // load the properties
+                properties.load(propertyStream);
+                for (String eventType : properties.stringPropertyNames())
+                {
+                    // try to parse SpEL expressions
+                    String spelExpression = properties.getProperty(eventType);
+                    if (spelExpression != null && !spelExpression.isEmpty())
+                        try
+                        {
+                            Expression expression = expressionParser.parseExpression(spelExpression);
+                            tempExpressionMap.put(eventType, expression);
+                            log.debug("SpEL expression [{}] for event type [{}] added ", spelExpression, eventType);
+                        }
+                        catch (ParseException e)
+                        {
+                            log.error("Unable to parse SpEL expression [{}]", spelExpression);
+                        }
+                }
+                // replace existing map
+                expressionMap = tempExpressionMap;
+            }
+            catch (IOException e)
+            {
+                log.error("Unable to read configuration file [{}]", eventDescriptionPropertiesFile.getPath());
+            }
+        }
+        else
+        {
+            // configuration file deleted, we're assuming that SpEL expression evaluation is no longer needed
+            expressionMap.clear();
+        }
+    }
 
     @Override
-    public void onApplicationEvent(AcmEvent acmEvent)
+    public void onApplicationEvent(ApplicationEvent applicationEvent)
     {
-        if (log.isTraceEnabled() && acmEvent != null)
+        if (applicationEvent != null)
         {
-            log.trace(acmEvent.getUserId() + " at " + acmEvent.getEventDate() + " executed " + acmEvent.getEventType() + " "
-                    + (acmEvent.isSucceeded() ? "" : "un") + "successfully.");
+            if (applicationEvent instanceof AcmEvent)
+            {
+                handleAuditEvent((AcmEvent) applicationEvent);
+            }
+            else if (applicationEvent instanceof AbstractConfigurationFileEvent)
+            {
+                handleConfigurationFileEvent((AbstractConfigurationFileEvent) applicationEvent);
+            }
+        }
+    }
+
+    /**
+     * Handle audit events.
+     * 
+     * @param acmEvent
+     *            application event that triggers an audit event
+     */
+    private void handleAuditEvent(AcmEvent acmEvent)
+    {
+        if (acmEvent != null)
+        {
+            log.trace("[{}] at [{}] executed [{}] [{}]", acmEvent.getUserId(), acmEvent.getEventDate(), acmEvent.getEventType(),
+                    (acmEvent.isSucceeded() ? "" : "un") + "successfully.");
         }
 
         if (isAuditable(acmEvent))
@@ -67,7 +163,15 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
             auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null
                     : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
             auditEvent.setFullEventType(acmEvent.getEventType());
-            auditEvent.setEventDescription(acmEvent.getEventDescription());
+
+            if (acmEvent.getEventDescription() != null)
+            {
+                auditEvent.setEventDescription(acmEvent.getEventDescription());
+            }
+            else
+            {
+                auditEvent.setEventDescription(evaluateEventDescription(acmEvent));
+            }
             auditEvent.setTrackId(acmEvent.getUserId() + "|" + acmEvent.getEventType());
             auditEvent.setEventResult(acmEvent.isSucceeded() ? AuditConstants.EVENT_RESULT_SUCCESS : AuditConstants.EVENT_RESULT_FAILURE);
             auditEvent.setObjectId(acmEvent.getObjectId());
@@ -79,14 +183,54 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
             auditEvent.setDiffDetailsAsJson(acmEvent.getDiffDetailsAsJson());
 
             auditService.audit(auditEvent);
-
         }
         else
         {
-            if (log.isErrorEnabled())
-                log.error("Event " + acmEvent.getEventType() + " is not auditable");
+            log.warn("Event [{}] is not auditable", acmEvent.getEventType());
         }
+    }
 
+    /**
+     * Handle configuration file events
+     * 
+     * @param abstractConfigurationFileEvent
+     *            configuration file related application event
+     */
+    private void handleConfigurationFileEvent(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
+    {
+        if (abstractConfigurationFileEvent != null && abstractConfigurationFileEvent.getConfigFile() != null
+                && abstractConfigurationFileEvent.getConfigFile().getPath()
+                        .equals(eventDescriptionPropertiesFile.getPath()))
+        {
+            loadConfiguration();
+        }
+    }
+
+    /**
+     * Evaluate event description based on SpEL expression in properties
+     * 
+     * @param acmEvent
+     *            the event that triggered the audit entry
+     * @return evaluated event description, or null on failure
+     */
+    private String evaluateEventDescription(AcmEvent acmEvent)
+    {
+        String description = null;
+        Expression expression = expressionMap.get(acmEvent.getEventType().toLowerCase());
+        if (expression != null)
+        {
+            StandardEvaluationContext context = new StandardEvaluationContext(acmEvent);
+            try
+            {
+                description = expression.getValue(context, String.class);
+                log.trace("Audit event description [{}] generated for [{}]", description, acmEvent);
+            }
+            catch (EvaluationException e)
+            {
+                log.error("Unable to generate Audit event description for [{}]", acmEvent, e);
+            }
+        }
+        return description;
     }
 
     /**
@@ -106,5 +250,25 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
     public void setAuditService(AuditService auditService)
     {
         this.auditService = auditService;
+    }
+
+    public ExpressionParser getExpressionParser()
+    {
+        return expressionParser;
+    }
+
+    public void setExpressionParser(ExpressionParser expressionParser)
+    {
+        this.expressionParser = expressionParser;
+    }
+
+    public File getEventDescriptionPropertiesFile()
+    {
+        return eventDescriptionPropertiesFile;
+    }
+
+    public void setEventDescriptionPropertiesFile(File eventDescriptionPropertiesFile)
+    {
+        this.eventDescriptionPropertiesFile = eventDescriptionPropertiesFile;
     }
 }
