@@ -29,13 +29,17 @@ package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.FileDetails;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.UploadService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.web.api.MDCConstants;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,12 +50,14 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 public class UploadServiceImpl implements UploadService {
 
     private FolderAndFilesUtils folderAndFilesUtils;
     private EcmFileService ecmFileService;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Override
     @Async
@@ -59,6 +65,9 @@ public class UploadServiceImpl implements UploadService {
     public void mergeAndUploadFiles(FileDetails fileDetails, AcmFolder folder, Document existingFile, Authentication authentication) throws AcmUserActionFailedException, AcmCreateObjectFailedException {
         if (fileDetails != null && fileDetails.getParts() != null && !fileDetails.getParts().isEmpty()) {
             try (SequenceInputStream seq = new SequenceInputStream(getInputStreams(fileDetails.getParts()))) {
+
+                getAuditPropertyEntityAdapter().setUserId(authentication.getName());
+                setRepositoryRequestUserAndId(authentication);
 
                 String uniqueFileName = folderAndFilesUtils.createUniqueIdentificator(fileDetails.getName());
 
@@ -77,6 +86,17 @@ public class UploadServiceImpl implements UploadService {
                 deleteFilesQuietly(fileDetails.getParts());
             }
         }
+    }
+
+    private void setRepositoryRequestUserAndId(Authentication authentication) {
+        String alfrescoUser = "admin";
+
+        if (authentication != null && authentication.getName() != null) {
+            alfrescoUser = StringUtils.substringBeforeLast(authentication.getName(), "@");
+        }
+
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUser);
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
     }
 
     private void deleteFilesQuietly(List<String> parts) {
@@ -110,5 +130,13 @@ public class UploadServiceImpl implements UploadService {
 
     public void setEcmFileService(EcmFileService ecmFileService) {
         this.ecmFileService = ecmFileService;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }
