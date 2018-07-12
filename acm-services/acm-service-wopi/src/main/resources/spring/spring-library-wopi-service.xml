@@ -10,6 +10,7 @@
         <property name="objectLockingManager" ref="acmObjectLockingManager"/>
         <property name="objectLockService" ref="objectLockService"/>
         <property name="wopiConfig" ref="wopiConfig"/>
+        <property name="tokenService" ref="authenticationTokenService"/>
     </bean>
 
     <bean id="wopiConfig" class="com.armedia.acm.services.wopi.model.WopiConfig">
