@@ -206,7 +206,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                             log.trace("Starting token authentication for email links using acm_email_ticket [{}]", emailToken);
                             int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
                             // token expires after 3 days
-                            if (days > 3)
+                            if (days > AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS)
                             {
                                 authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
                                 authenticationToken.setModifier(authenticationToken.getCreator());
