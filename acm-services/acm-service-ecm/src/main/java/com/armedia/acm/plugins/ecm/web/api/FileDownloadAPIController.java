@@ -186,6 +186,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                 JSONObject fileMetadata = new JSONObject();
                 fileMetadata.put("fileName", ecmFile.getFileName());
                 fileMetadata.put("fileType", ecmFile.getFileType());
+                fileMetadata.put("fileTypeCapitalized",
+                        ecmFile.getFileType().substring(0, 1).toUpperCase() + ecmFile.getFileType().substring(1));
                 response.setHeader("X-ArkCase-File-Metadata", fileMetadata.toString());
             }
             response.setContentType(mimeType);
