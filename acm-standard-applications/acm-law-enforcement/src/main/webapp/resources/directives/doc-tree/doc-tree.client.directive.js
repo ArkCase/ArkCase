@@ -103,63 +103,63 @@ angular
             'Admin.EmailSenderConfigurationService',
             'Helper.LocaleService',
             '$timeout',
-            function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                     UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout) {
+            function ($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
+                      UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
                 var DocTree = {
-                    CLIPBOARD : null
+                    CLIPBOARD: null
 
                     ,
-                    NODE_TYPE_PREV : "prev",
-                    NODE_TYPE_NEXT : "next",
-                    NODE_TYPE_FILE : "file",
-                    NODE_TYPE_FOLDER : "folder"
+                    NODE_TYPE_PREV: "prev",
+                    NODE_TYPE_NEXT: "next",
+                    NODE_TYPE_FILE: "file",
+                    NODE_TYPE_FOLDER: "folder"
 
                     ,
-                    jqTree : null,
-                    tree : null
+                    jqTree: null,
+                    tree: null
 
                     ,
-                    cacheTree : cacheTree,
-                    cacheFolderList : cacheFolderList
+                    cacheTree: cacheTree,
+                    cacheFolderList: cacheFolderList
 
                     ,
-                    _objType : null,
-                    getObjType : function() {
+                    _objType: null,
+                    getObjType: function () {
                         return this._objType;
                     },
-                    setObjType : function(objType) {
+                    setObjType: function (objType) {
                         this._objType = objType;
                     },
-                    _objId : null,
-                    getObjId : function() {
+                    _objId: null,
+                    getObjId: function () {
                         return this._objId;
                     },
-                    setObjId : function(objId) {
+                    setObjId: function (objId) {
                         this._objId = objId;
                     }
 
                     ,
-                    _getDefaultTreeArgs : function() {
+                    _getDefaultTreeArgs: function () {
                         return {
-                            extensions : [ "table", "gridnav", "edit", "dnd", "filter" ],
-                            checkbox : true,
-                            selectMode : 2
+                            extensions: ["table", "gridnav", "edit", "dnd", "filter"],
+                            checkbox: true,
+                            selectMode: 2
 
                             ,
-                            table : {
-                                indentation : 10, // indent 20px per node level
-                                nodeColumnIdx : 2, // render the node title into the 3rd column
-                                checkboxColumnIdx : 0
+                            table: {
+                                indentation: 10, // indent 20px per node level
+                                nodeColumnIdx: 2, // render the node title into the 3rd column
+                                checkboxColumnIdx: 0
                                 // render the checkboxes into the 1st column
                             },
-                            gridnav : {
-                                autofocusInput : false,
-                                handleCursorKeys : true
+                            gridnav: {
+                                autofocusInput: false,
+                                handleCursorKeys: true
                             },
-                            renderColumns : function(event, data) {
+                            renderColumns: function (event, data) {
                                 var node = data.node;
                                 var $tdList = $(node.tr).find(">td");
                                 // (index #0 is rendered by fancytree by adding the checkbox)
@@ -187,7 +187,7 @@ angular
                             }
 
                             ,
-                            renderNode : function(event, data) {
+                            renderNode: function (event, data) {
                                 var node = data.node;
                                 var acmIcon = null;
                                 var nodeType = Util.goodValue(node.data.objectType);
@@ -203,14 +203,14 @@ angular
                                     $spanIcon.html(acmIcon);
                                 }
                             },
-                            click : DocTree.onClick,
-                            dblclick : DocTree.onDblClick,
-                            keydown : DocTree.Command.onKeyDown,
-                            source : DocTree.Source.source(),
-                            lazyLoad : DocTree.Source.lazyLoad,
-                            edit : {
-                                triggerStart : [ "f2", "shift+click", "mac+enter" ],
-                                beforeEdit : function(event, data) {
+                            click: DocTree.onClick,
+                            dblclick: DocTree.onDblClick,
+                            keydown: DocTree.Command.onKeyDown,
+                            source: DocTree.Source.source(),
+                            lazyLoad: DocTree.Source.lazyLoad,
+                            edit: {
+                                triggerStart: ["f2", "shift+click", "mac+enter"],
+                                beforeEdit: function (event, data) {
                                     // Return false to prevent edit mode
                                     if (DocTree.readOnly) {
                                         return false;
@@ -223,13 +223,13 @@ angular
                                     }
                                     DocTree.editSetting.isEditing = true;
                                 },
-                                edit : function(event, data) {
+                                edit: function (event, data) {
                                     data.input.select();
                                 },
-                                beforeClose : function(event, data) {
+                                beforeClose: function (event, data) {
                                     // Return false to prevent cancel/save (data.input is available)
                                 },
-                                save : function(event, data) {
+                                save: function (event, data) {
                                     var parent = data.node.getParent();
                                     if (parent) {
                                         var name = data.input.val();
@@ -261,7 +261,7 @@ angular
 
                                     return true; // We return true, so ext-edit will set the current user input as title
                                 },
-                                close : function(event, data) {
+                                close: function (event, data) {
                                     // Editor was removed
                                     if (data.save) {
                                         var fileName = data.node.title;
@@ -270,13 +270,13 @@ angular
                                     DocTree.editSetting.isEditing = false;
                                 }
                             },
-                            dnd : {
+                            dnd: {
                                 //autoExpandMS: 400,
-                                autoExpandMS : 1600000,
-                                focusOnClick : true,
-                                preventVoidMoves : true, // Prevent dropping nodes 'before self', etc.
-                                preventRecursiveMoves : true, // Prevent dropping nodes on own descendants
-                                dragStart : function(node, data) {
+                                autoExpandMS: 1600000,
+                                focusOnClick: true,
+                                preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+                                preventRecursiveMoves: true, // Prevent dropping nodes on own descendants
+                                dragStart: function (node, data) {
                                     if (DocTree.readOnly) {
                                         return false;
                                     }
@@ -288,34 +288,34 @@ angular
                                     }
                                     return true;
                                 },
-                                dragEnter : function(node, data) {
+                                dragEnter: function (node, data) {
                                     if (node == data.otherNode) {
-                                        return [ "before", "after" ]; //Cannot drop to oneself
+                                        return ["before", "after"]; //Cannot drop to oneself
                                     } else if (DocTree.isTopNode(data.node)) {
                                         if (node == data.otherNode.parent) {
                                             return false;
                                         } else {
-                                            return [ "over" ];
+                                            return ["over"];
                                         }
                                     } else if (node == data.otherNode.parent) {
-                                        return [ "before", "after" ]; //Drop over ones own parent doesn't make sense
+                                        return ["before", "after"]; //Drop over ones own parent doesn't make sense
                                     } else if (DocTree.NODE_TYPE_PREV == data.node.data.objectType) {
-                                        return [ "after" ];
+                                        return ["after"];
                                     } else if (DocTree.NODE_TYPE_NEXT == data.node.data.objectType) {
-                                        return [ "before" ];
+                                        return ["before"];
                                     } else if (DocTree.isFolderNode(data.node)) {
                                         return true;
                                     } else {
-                                        return [ "before", "after" ]; // Don't allow dropping *over* a document node (would create a child)
+                                        return ["before", "after"]; // Don't allow dropping *over* a document node (would create a child)
                                     }
                                 },
-                                dragDrop : function(node, data) {
+                                dragDrop: function (node, data) {
                                     if (DocTree.readOnly) {
                                         return;
                                     }
 
                                     if (("before" != data.hitMode && "after" != data.hitMode) && DocTree.isFolderNode(node)) {
-                                        DocTree.expandNode(node).done(function() {
+                                        DocTree.expandNode(node).done(function () {
                                             if (DocTree.isFolderNode(data.otherNode)) {
                                                 DocTree.Op.moveFolder(data.otherNode, node, data.hitMode);
                                             } else if (DocTree.isFileNode(data.otherNode)) {
@@ -337,19 +337,19 @@ angular
 
                     //, create: function (treeArgs) {
                     ,
-                    create : function(jqTree) {
+                    create: function (jqTree) {
                         var treeArgsToUse = this._getDefaultTreeArgs();
                         //_.merge(treeArgsToUse, treeArgs);
 
                         jqTree.fancytree(treeArgsToUse).on("command", DocTree.Command.onCommand).on("mouseenter",
-                            ".fancytree-node", function(event) {
+                            ".fancytree-node", function (event) {
                                 var node = $.ui.fancytree.getNode(event);
                                 if (node) {
                                     if (DocTree.isSpecialNode(node)) {
                                         DocTree.Paging.alertPaging(node);
                                     }
                                 }
-                            }).on("mouseleave", ".fancytree-node", function(event) {
+                            }).on("mouseleave", ".fancytree-node", function (event) {
                             var node = $.ui.fancytree.getNode(event);
                             if (node) {
                                 if (DocTree.isSpecialNode(node)) {
@@ -367,22 +367,22 @@ angular
                         jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
 
                         var jqTreeHead = jqTree.find("thead");
-                        jqTreeHead.find("input:checkbox").on("click", function(e) {
+                        jqTreeHead.find("input:checkbox").on("click", function (e) {
                             DocTree.onClickBtnChkAllDocument(e, this);
                         });
-                        jqTreeHead.find("label").on("click", function(e) {
+                        jqTreeHead.find("label").on("click", function (e) {
                             DocTree.onClickBtnSort(e, this);
                         });
 
                         return tree;
                     },
-                    refreshDocTree : function() {
+                    refreshDocTree: function () {
                         var jqTreeBody = DocTree.jqTree.find("tbody");
                         DocTree.Menu.useContextMenu(jqTreeBody);
                     }
 
                     ,
-                    isTopNode : function(node) {
+                    isTopNode: function (node) {
                         if (node) {
                             if (node.data.root) { //not fancy tree root node, which is the invisible parent of the top node
                                 return true;
@@ -390,7 +390,7 @@ angular
                         }
                         return false;
                     },
-                    isFolderNode : function(node) {
+                    isFolderNode: function (node) {
                         if (node) {
                             if (node.folder) {
                                 return true;
@@ -398,7 +398,7 @@ angular
                         }
                         return false;
                     },
-                    isFileNode : function(node) {
+                    isFileNode: function (node) {
                         if (node) {
                             if (node.data) {
                                 if (DocTree.NODE_TYPE_FILE == Util.goodValue(node.data.objectType)) { //if (!node.isFolder()) {
@@ -408,7 +408,7 @@ angular
                         }
                         return false;
                     },
-                    isSpecialNode : function(node) {
+                    isSpecialNode: function (node) {
                         if (node) {
                             if (node.data) {
                                 if (DocTree.NODE_TYPE_FILE != Util.goodValue(node.data.objectType) && !node.folder) {
@@ -418,13 +418,13 @@ angular
                         }
                         return false;
                     },
-                    getCacheKeyByNode : function(folderNode) {
+                    getCacheKeyByNode: function (folderNode) {
                         var pageId = Util.goodValue(folderNode.data.startRow, 0);
                         var folderId = folderNode.data.objectId;
                         var cacheKey = DocTree.getCacheKey(DocTree.isTopNode(folderNode) ? 0 : folderId, pageId);
                         return cacheKey;
                     },
-                    getCacheKey : function(folderId, pageId) {
+                    getCacheKey: function (folderId, pageId) {
                         var setting = DocTree.Config.getSetting();
                         var key = this.getObjType() + "." + this.getObjId();
                         key += "." + Util.goodValue(folderId, 0); //for root folder, folderId is 0 or undefined
@@ -436,7 +436,7 @@ angular
                     }
 
                     ,
-                    getTopNode : function() {
+                    getTopNode: function () {
                         var topNode = null;
                         if (DocTree.tree) {
                             var rootNode = DocTree.tree.getRootNode();
@@ -446,12 +446,12 @@ angular
                         }
                         return topNode;
                     },
-                    expandNodesByNames : function(names, src) {
+                    expandNodesByNames: function (names, src) {
                         var dfdAll = $.Deferred();
                         DocTree._expandFirstNodeByName(DocTree.getTopNode(), names, dfdAll, src);
                         return dfdAll.promise();
                     },
-                    _expandFirstNodeByName : function(node, names, dfdAll, src) {
+                    _expandFirstNodeByName: function (node, names, dfdAll, src) {
                         var dfd = $.Deferred();
 
                         if (Util.isEmpty(node) || Util.isArrayEmpty(names)) {
@@ -459,7 +459,7 @@ angular
 
                         } else {
                             if (node.title == names[0]) {
-                                DocTree.expandNode(node).done(function() {
+                                DocTree.expandNode(node).done(function () {
                                     names.shift();
                                     if (Util.isArrayEmpty(names)) {
                                         node = null;
@@ -475,10 +475,10 @@ angular
 
                         return dfd.promise;
                     },
-                    expandNode : function(node) {
+                    expandNode: function (node) {
                         var dfd = $.Deferred();
                         if (node.lazy && !node.children) {
-                            node.setExpanded(true).always(function() {
+                            node.setExpanded(true).always(function () {
                                 dfd.resolve(node);
                             });
                         } else {
@@ -486,7 +486,7 @@ angular
                         }
                         return dfd.promise();
                     },
-                    expandTopNode : function() {
+                    expandTopNode: function () {
                         var $promise = $.when();
                         var node = DocTree.jqTree.fancytree("getRootNode");
                         if (node) {
@@ -509,7 +509,7 @@ angular
                      * @param nodesStatusBeforeRefresh The array in which the nodes status will be saved
                      */
                     ,
-                    saveNodesStatus : function(node, nodesStatusBeforeRefresh) {
+                    saveNodesStatus: function (node, nodesStatusBeforeRefresh) {
                         if (node != null && node.children) {
                             for (var i = 0; i < node.children.length; i++) {
                                 if (DocTree.isFolderNode(node.children[i])) {
@@ -538,10 +538,10 @@ angular
                      * children are replicated
                      */
                     ,
-                    expandAfterRefresh : function(children, nodesStatusBeforeRefresh) {
-                        nodesStatusBeforeRefresh.forEach(function(item, index) {
+                    expandAfterRefresh: function (children, nodesStatusBeforeRefresh) {
+                        nodesStatusBeforeRefresh.forEach(function (item, index) {
                             if (angular.isArray(item) && angular.isDefined(children[index])) {
-                                DocTree.expandNode(children[index]).then(function(data) {
+                                DocTree.expandNode(children[index]).then(function (data) {
                                     DocTree.expandAfterRefresh(data.children, nodesStatusBeforeRefresh[index]);
                                 });
                             }
@@ -551,7 +551,7 @@ angular
                      * @description Refresh tree and try to keep current open branches
                      */
                     ,
-                    refreshTree : function(nodeToExpand) {
+                    refreshTree: function (nodeToExpand) {
                         var objType = DocTree.getObjType();
                         var objId = DocTree.getObjId();
                         if (!Util.isEmpty(objType) && !Util.isEmpty(objId)) {
@@ -559,7 +559,7 @@ angular
                             DocTree.cacheTree.remove(objType + "." + objId);
                             //remove individual folder cache for current obj
                             var keys = DocTree.cacheFolderList.keys();
-                            _.each(keys, function(key) {
+                            _.each(keys, function (key) {
                                 // cache key has following format :
                                 // ojType.objId.folderId. (...)
                                 if (!Util.isEmpty(key)) {
@@ -595,27 +595,27 @@ angular
 
                         var setting = DocTree.Config.getSetting();
                         if (setting.search.enabled) {
-                            DocTree.tree.reload(DocTree.Source.source()).then(function() {
-                                DocTree.expandTopNode().then(function() {
+                            DocTree.tree.reload(DocTree.Source.source()).then(function () {
+                                DocTree.expandTopNode().then(function () {
                                     var rootNode = DocTree.getTopNode();
                                     DocTree.expandAfterRefresh(rootNode.children, []);
                                 });
                             });
                         } else if (nodeToExpand) {
                             DocTree.tree.reload(DocTree.Source.source()).then(
-                                function() {
+                                function () {
                                     DocTree.expandTopNode().then(
-                                        function() {
+                                        function () {
                                             var rootNode = DocTree.getTopNode();
                                             var theChild;
-                                            _.forEach(rootNode.children, function(child) {
+                                            _.forEach(rootNode.children, function (child) {
                                                 if (child.data.objectId == nodeToExpand.data.objectId
                                                     && child.data.objectType == nodeToExpand.data.objectType) {
                                                     theChild = child;
                                                 }
                                             });
                                             if (theChild) {
-                                                theChild.load(true).done(function() {
+                                                theChild.load(true).done(function () {
                                                     theChild.setExpanded();
                                                 });
                                             }
@@ -626,9 +626,9 @@ angular
                             var nodesStatusBeforeRefresh = [];// Array in which the tree structure will be replicated before the reload is started
                             var rootNode = DocTree.getTopNode();// We want the iteration to start from the root node of the tree
                             DocTree.saveNodesStatus(rootNode, nodesStatusBeforeRefresh);
-                            DocTree.tree.reload(DocTree.Source.source()).then(function() {
+                            DocTree.tree.reload(DocTree.Source.source()).then(function () {
                                 if (rootNode.expanded) {
-                                    DocTree.expandTopNode().then(function() {
+                                    DocTree.expandTopNode().then(function () {
                                         var rootNode = DocTree.getTopNode();
                                         DocTree.expandAfterRefresh(rootNode.children, nodesStatusBeforeRefresh);
                                     });
@@ -642,7 +642,7 @@ angular
                      * @param node (Optional)Tree node to refresh. If not specified, current active node is refreshed
                      */
                     ,
-                    refreshNode : function(node) {
+                    refreshNode: function (node) {
                         node = node || DocTree.tree.getActiveNode();
                         if (node) {
                             node.render(true);
@@ -659,7 +659,7 @@ angular
                      */
                     //, updateNodeData: function (node, value, field, fieldModel) {
                     ,
-                    updateNodeData : function(node, value, field) {
+                    updateNodeData: function (node, value, field) {
                         if (Validator.validateNode(node)) {
                             node.data[field] = value;
 
@@ -667,7 +667,7 @@ angular
                             var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                             var folderList = DocTree.cacheFolderList.get(cacheKey);
                             if (Validator.validateFolderList(folderList)) {
-                                var found = _.find(folderList.children, function(child) {
+                                var found = _.find(folderList.children, function (child) {
                                     return (child.objectId == node.data.objectId);
                                 });
                                 if (found) {
@@ -679,7 +679,7 @@ angular
                     }
 
                     ,
-                    switchObject : function(activeObjType, activeObjId) {
+                    switchObject: function (activeObjType, activeObjId) {
                         if (!DocTree.tree) {
                             return;
                         }
@@ -713,7 +713,7 @@ angular
                         }
                         Util.deferred(DocTree.Controller.viewChangedTree);
                     },
-                    markNodePending : function(node, fileName) {
+                    markNodePending: function (node, fileName) {
                         if (Validator.validateFancyTreeNode(node)) {
                             $(node.span).addClass("pending");
                             if (!node.folder) {
@@ -727,7 +727,7 @@ angular
                             node.setStatus("loading");
                         }
                     },
-                    markNodeOk : function(node) {
+                    markNodeOk: function (node) {
                         if (Validator.validateFancyTreeNode(node)) {
                             $(node.span).removeClass("pending");
                             if (!node.folder) {
@@ -738,7 +738,7 @@ angular
                             node.setStatus("ok");
                         }
                     },
-                    markNodeError : function(node, errMsg) {
+                    markNodeError: function (node, errMsg) {
                         if (Validator.validateFancyTreeNode(node)) {
                             $(node.span).addClass("pending");
                             node.title = errMsg ? errMsg : $translate.instant("common.directive.docTree.error.nodeTitle");
@@ -749,7 +749,7 @@ angular
                     }
 
                     ,
-                    getNodePathNames : function(node) {
+                    getNodePathNames: function (node) {
                         var names = [];
                         if (Validator.validateNode(node)) {
                             var n = node;
@@ -761,7 +761,7 @@ angular
                         }
                         return names;
                     },
-                    findChildNodeByName : function(parentNode, name) {
+                    findChildNodeByName: function (parentNode, name) {
                         var found = null;
                         if (Validator.validateFancyTreeNode(parentNode)) {
                             if (!Util.isArrayEmpty(parentNode.children)) {
@@ -775,7 +775,7 @@ angular
                         }
                         return found;
                     },
-                    findSiblingNodeByName : function(node, name) {
+                    findSiblingNodeByName: function (node, name) {
                         var found = null;
                         var parentNode = node.getParent();
                         if (Validator.validateFancyTreeNode(parentNode)) {
@@ -792,7 +792,7 @@ angular
                         }
                         return found;
                     },
-                    findChildNodeById : function(parentNode, id) {
+                    findChildNodeById: function (parentNode, id) {
                         var found = null;
                         for (var j = parentNode.children.length - 1; 0 <= j; j--) {
                             if (parentNode.children[j].data.objectId == id) {
@@ -802,7 +802,7 @@ angular
                         }
                         return found;
                     },
-                    findNodeByPathNames : function(names) {
+                    findNodeByPathNames: function (names) {
                         var found = null;
                         if (!Util.isArrayEmpty(names)) {
                             var node = DocTree.tree.getRootNode();
@@ -819,12 +819,12 @@ angular
                     }
 
                     ,
-                    _doDownload : function(node) {
+                    _doDownload: function (node) {
                         var url = "api/latest/plugin/ecm/download?ecmFileId=" + node.data.objectId;
                         DocTree.jqFormDownloadDoc.attr("action", url);
                         this.$input = $('<input>').attr({
-                            id : 'fileId',
-                            name : 'ecmFileId'
+                            id: 'fileId',
+                            name: 'ecmFileId'
                         });
                         this.$input.val(node.data.objectId).appendTo(this.jqFormDownloadDoc);
                         DocTree.jqFormDownloadDoc.submit();
@@ -835,7 +835,7 @@ angular
                     // Find oldest parent in the array(not include top node).
                     // In inNodes array, Parent nodes need to be before child nodes.
                     ,
-                    _findOldestParent : function(node, inNodes) {
+                    _findOldestParent: function (node, inNodes) {
                         var found = null;
                         if (Validator.validateNode(node) && Validator.validateNodes(inNodes)) {
                             for (var i = 0; i < inNodes.length; i++) {
@@ -855,7 +855,7 @@ angular
                     }
                     // ignore children
                     ,
-                    getTopMostNodes : function(nodes) {
+                    getTopMostNodes: function (nodes) {
                         var topMostNodes = [];
                         for (var i = 0; i < nodes.length; i++) {
                             if (!DocTree.isTopNode(nodes[i])) {
@@ -869,7 +869,7 @@ angular
                     }
 
                     ,
-                    onDblClick : function(event, data) {
+                    onDblClick: function (event, data) {
                         if (DocTree.readOnly) {
                             return;
                         }
@@ -883,13 +883,13 @@ angular
                         if (!DocTree.editSetting.isEditing) {
                             if (DocTree.isFileNode(node)) {
                                 $(this).trigger("command", {
-                                    cmd : "open"
+                                    cmd: "open"
                                 });
                             }
                         }
                         //return false;
                     },
-                    onClick : function(event, data) {
+                    onClick: function (event, data) {
 
                         // publish event that a node in the DocTree has been checked
                         if (data.targetType === 'checkbox') {
@@ -927,19 +927,19 @@ angular
                         }
                         return true;
                     },
-                    onFilter : function(filterText) {
+                    onFilter: function (filterText) {
                         var tree = DocTree.tree, filterFunc = tree.filterBranches, match = filterText;
                         var opts = {
-                            autoApply : true, // Re-apply last filter if lazy data is loaded
-                            autoExpand : true, // Expand all branches that contain matches while filtered
-                            counter : true, // Show a badge with number of matching child nodes near parent icons
-                            fuzzy : false, // Match single characters in order, e.g. 'fb' will match 'FooBar'
-                            hideExpandedCounter : true, // Hide counter badge if parent is expanded
-                            hideExpanders : false, // Hide expanders if all child nodes are hidden by filter
-                            highlight : true, // Highlight matches by wrapping inside <mark> tags
-                            leavesOnly : false, // Match end nodes only
-                            nodata : true, // Display a 'no data' status node if result is empty
-                            mode : "dimm" // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+                            autoApply: true, // Re-apply last filter if lazy data is loaded
+                            autoExpand: true, // Expand all branches that contain matches while filtered
+                            counter: true, // Show a badge with number of matching child nodes near parent icons
+                            fuzzy: false, // Match single characters in order, e.g. 'fb' will match 'FooBar'
+                            hideExpandedCounter: true, // Hide counter badge if parent is expanded
+                            hideExpanders: false, // Hide expanders if all child nodes are hidden by filter
+                            highlight: true, // Highlight matches by wrapping inside <mark> tags
+                            leavesOnly: false, // Match end nodes only
+                            nodata: true, // Display a 'no data' status node if result is empty
+                            mode: "dimm" // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
                         };
                         if ($.trim(match) === "") {
                             tree.clearFilter();
@@ -947,7 +947,7 @@ angular
                         }
                         filterFunc.call(tree, match, opts);
                     },
-                    onSearch : function(searchFilter) {
+                    onSearch: function (searchFilter) {
                         var setting = DocTree.Config.getSetting();
                         if (searchFilter) {
                             setting.search.enabled = true;
@@ -958,34 +958,34 @@ angular
                         }
                         DocTree.refreshTree();
                     },
-                    Source : {
-                        source : function() {
+                    Source: {
+                        source: function () {
                             var src = [];
 
                             var containerObjectType = DocTree.getObjType();
                             var containerObjectId = DocTree.getObjId();
                             if (!Util.isEmpty(containerObjectType) && !Util.isEmpty(containerObjectId)) {
                                 src = Util.FancyTreeBuilder.reset().addBranchLast({
-                                    key : containerObjectType + "." + containerObjectId,
-                                    title : "/",
-                                    tooltip : "root",
-                                    expanded : false,
-                                    folder : true,
-                                    lazy : true,
-                                    cache : false,
-                                    objectId : 0,
-                                    root : true,
-                                    startRow : 0,
-                                    containerObjectType : containerObjectType,
-                                    containerObjectId : containerObjectId,
-                                    totalChildren : -1
+                                    key: containerObjectType + "." + containerObjectId,
+                                    title: "/",
+                                    tooltip: "root",
+                                    expanded: false,
+                                    folder: true,
+                                    lazy: true,
+                                    cache: false,
+                                    objectId: 0,
+                                    root: true,
+                                    startRow: 0,
+                                    containerObjectType: containerObjectType,
+                                    containerObjectId: containerObjectId,
+                                    totalChildren: -1
                                 }).getTree();
                             }
                             return src;
                         }
 
                         ,
-                        _makeChildNodes : function(folderList) {
+                        _makeChildNodes: function (folderList) {
                             var builder = Util.FancyTreeBuilder.reset();
                             if (Validator.validateFolderList(folderList)) {
                                 var startRow = Util.goodValue(folderList.startRow, 0);
@@ -995,12 +995,12 @@ angular
 
                                 if (0 < startRow) {
                                     builder.addLeaf({
-                                        key : folderId + ".prev",
-                                        title : startRow + $translate.instant("common.directive.docTree.prevItems"),
-                                        tooltip : $translate.instant("common.directive.docTree.prevItemsTooltip"),
-                                        expanded : false,
-                                        folder : false,
-                                        objectType : DocTree.NODE_TYPE_PREV
+                                        key: folderId + ".prev",
+                                        title: startRow + $translate.instant("common.directive.docTree.prevItems"),
+                                        tooltip: $translate.instant("common.directive.docTree.prevItemsTooltip"),
+                                        expanded: false,
+                                        folder: false,
+                                        objectType: DocTree.NODE_TYPE_PREV
                                     });
                                 }
 
@@ -1026,18 +1026,18 @@ angular
                                         : (totalChildren - startRow - maxRows)
                                         + $translate.instant("common.directive.docTree.moreItems");
                                     builder.addLeafLast({
-                                        key : Util.goodValue(folderId, 0) + ".next",
-                                        title : title,
-                                        tooltip : $translate.instant("common.directive.docTree.moreItemsTooltip"),
-                                        expanded : false,
-                                        folder : false,
-                                        objectType : DocTree.NODE_TYPE_NEXT
+                                        key: Util.goodValue(folderId, 0) + ".next",
+                                        title: title,
+                                        tooltip: $translate.instant("common.directive.docTree.moreItemsTooltip"),
+                                        expanded: false,
+                                        folder: false,
+                                        objectType: DocTree.NODE_TYPE_NEXT
                                     });
                                 }
                             }
                             return builder.getTree();
                         },
-                        getDefaultFolderNode : function() {
+                        getDefaultFolderNode: function () {
                             var nodeData = {};
                             nodeData.expanded = false;
                             nodeData.folder = true;
@@ -1047,7 +1047,7 @@ angular
                             nodeData.children = [];
                             return nodeData;
                         },
-                        lazyLoad : function(event, data) {
+                        lazyLoad: function (event, data) {
                             var folderNode = data.node;
                             var folderId = Util.goodValue(folderNode.data.objectId, 0);
                             if (0 >= folderId && !DocTree.isTopNode(folderNode)) {
@@ -1061,7 +1061,7 @@ angular
                                 data.result = DocTree.Source._makeChildNodes(folderList);
 
                             } else {
-                                data.result = DocTree.Op.retrieveFolderList(folderNode, function(folderList) {
+                                data.result = DocTree.Op.retrieveFolderList(folderNode, function (folderList) {
                                     folderNode.data.startRow = Util.goodValue(folderList.startRow, 0);
                                     folderNode.data.totalChildren = Util.goodValue(folderList.totalChildren, -1);
                                     var rc = DocTree.Source._makeChildNodes(folderList);
@@ -1072,25 +1072,25 @@ angular
                     } //end Source
 
                     ,
-                    CustomData : {
-                        _items : []
+                    CustomData: {
+                        _items: []
 
                         ,
-                        getItems : function() {
+                        getItems: function () {
                             return this._items;
                         },
-                        setItems : function(items) {
+                        setItems: function (items) {
                             this._items = items;
                         },
-                        addItem : function(item) {
-                            var find = _.find(this._items, function(anItem) {
+                        addItem: function (item) {
+                            var find = _.find(this._items, function (anItem) {
                                 return anItem == item;
                             });
                             if (!find) {
                                 this._items.push(item);
                             }
                         },
-                        addData : function(data) {
+                        addData: function (data) {
                             var arr = [];
 
                             if (Util.isEmpty(data)) {
@@ -1098,11 +1098,11 @@ angular
                             } else if (Util.isArray(data)) {
                                 arr = data;
                             } else if ("string" == typeof data) {
-                                arr = [ data ];
+                                arr = [data];
                             }
 
                             var that = this;
-                            _.each(arr, function(item) {
+                            _.each(arr, function (item) {
                                 that.addItem(item);
                             });
                         }
@@ -1110,54 +1110,54 @@ angular
                     }
 
                     ,
-                    Column : {
-                        _renderers : []
+                    Column: {
+                        _renderers: []
 
                         ,
-                        getRenderers : function() {
+                        getRenderers: function () {
                             return this._renderers;
                         },
-                        setRenderers : function(renderers) {
+                        setRenderers: function (renderers) {
                             this._renderers = renderers;
                         }
 
                         ,
-                        addRenderers : function(renderers) {
+                        addRenderers: function (renderers) {
                             for (var i = 0; i < renderers.length; i++) {
                                 DocTree.CustomData.addData(renderers[i].model);
                                 DocTree.Column.addRenderer(renderers[i].name, renderers[i].renderer);
                             }
                         },
-                        addRenderer : function(name, renderer) {
+                        addRenderer: function (name, renderer) {
                             if (Util.isEmpty(renderer)) {
                                 this.removeRenderer(name);
                                 return;
                             }
 
                             var find = _.find(this._renderers, {
-                                name : name
+                                name: name
                             });
                             if (find) {
                                 find.renderer = renderer;
                             } else {
                                 this._renderers.push({
-                                    name : name,
-                                    renderer : renderer
+                                    name: name,
+                                    renderer: renderer
                                 });
                             }
                         }
 
                         ,
-                        removeRenderer : function(name) {
+                        removeRenderer: function (name) {
                             var i = this._findRendererIdx(name);
                             this._removeRendererByIdx(i);
                         },
-                        _removeRendererByIdx : function(i) {
+                        _removeRendererByIdx: function (i) {
                             if (0 <= i) {
                                 this._renderers.splice(i, 1);
                             }
                         },
-                        _findRendererIdx : function(name) {
+                        _findRendererIdx: function (name) {
                             for (var i = 0; i < this._renderers.length; i++) {
                                 var item = this._renderers[i];
                                 if (item.name == name) {
@@ -1166,10 +1166,10 @@ angular
                             }
                             return -1;
                         },
-                        findRenderer : function(name) {
+                        findRenderer: function (name) {
                             var renderer = null;
                             var find = _.find(this._renderers, {
-                                name : name
+                                name: name
                             });
                             if (find) {
                                 renderer = find.renderer;
@@ -1178,62 +1178,62 @@ angular
                         }
 
                         ,
-                        getCoreRenderers : function() {
+                        getCoreRenderers: function () {
                             return [
                                 {
-                                    name : "checkbox",
-                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                    name: "checkbox",
+                                    renderer: function (element, node, columnDef, isReadOnly) {
                                         ;
                                     }
                                 },
                                 {
-                                    name : "title",
-                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                    name: "title",
+                                    renderer: function (element, node, columnDef, isReadOnly) {
                                         ;
                                     }
                                 },
                                 {
-                                    name : "ext",
-                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                    name: "ext",
+                                    renderer: function (element, node, columnDef, isReadOnly) {
                                         $(element).text(node.data.ext);
                                     }
                                 },
                                 {
-                                    name : "type",
-                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                    name: "type",
+                                    renderer: function (element, node, columnDef, isReadOnly) {
                                         var value = DocTree.getDocumentTypeDisplayLabel(node.data.type);
                                         $(element).text(value); // document type is mapped (afdp-1249)
                                     }
                                 },
                                 {
-                                    name : "created",
-                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                    name: "created",
+                                    renderer: function (element, node, columnDef, isReadOnly) {
                                         var createDate = $filter("date")(node.data.created, "shortDate");
                                         $(element).text(createDate);
                                     }
                                 },
                                 {
-                                    name : "modified",
-                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                    name: "modified",
+                                    renderer: function (element, node, columnDef, isReadOnly) {
                                         var modifiedDate = $filter("date")(node.data.modified, "shortDate");
                                         $(element).text(modifiedDate);
                                     }
                                 },
                                 {
-                                    name : "modifier",
-                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                    name: "modifier",
+                                    renderer: function (element, node, columnDef, isReadOnly) {
                                         var versionUser = Util.goodValue(node.data.modifier);
                                         if (versionUser) {
                                             //UserInfoService.getUserInfoByIdQuietly(versionUser).then(function (userInfo) {
-                                            UserInfoService.getUserInfoById(versionUser).then(function(userInfo) {
+                                            UserInfoService.getUserInfoById(versionUser).then(function (userInfo) {
                                                 $(element).text(Util.goodMapValue(userInfo, "fullName"));
                                             })
                                         }
                                     }
                                 },
                                 {
-                                    name : "version",
-                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                    name: "version",
+                                    renderer: function (element, node, columnDef, isReadOnly) {
                                         if (isReadOnly) {
                                             $(element).text(node.data.version);
 
@@ -1260,35 +1260,35 @@ angular
                                         }
                                     }
                                 }, {
-                                    name : "status",
-                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                    name: "status",
+                                    renderer: function (element, node, columnDef, isReadOnly) {
                                         $(element).text(node.data.status);
                                     }
-                                } ];
+                                }];
                         }
                     }
 
                     ,
-                    Command : {
-                        _handlers : []
+                    Command: {
+                        _handlers: []
 
                         ,
-                        getHandlers : function() {
+                        getHandlers: function () {
                             return this._handlers;
                         },
-                        setHandlers : function(handlers) {
+                        setHandlers: function (handlers) {
                             this._handlers = handlers;
                         }
 
                         ,
-                        addHandlers : function(handlers) {
+                        addHandlers: function (handlers) {
                             for (var i = 0; i < handlers.length; i++) {
                                 this.addHandler(handlers[i]);
                             }
                         }
 
                         ,
-                        addHandler : function(handler) {
+                        addHandler: function (handler) {
                             var name = handler.name;
                             if (null === handler.execute) {
                                 this.removeHandler(name);
@@ -1296,11 +1296,11 @@ angular
                             }
 
                             var find = _.find(this._handlers, {
-                                name : name
+                                name: name
                             });
                             if (find) {
                                 find.prevHandler = _.clone(find);
-                                _.each(handler, function(value, key) {
+                                _.each(handler, function (value, key) {
                                     if (!Util.isEmpty(handler[key])) {
                                         find[key] = handler[key];
                                     }
@@ -1312,16 +1312,16 @@ angular
                         }
 
                         ,
-                        removeHandler : function(name) {
+                        removeHandler: function (name) {
                             var i = this._findHandlerIdx(name);
                             this._removeHandlerByIdx(i);
                         },
-                        _removeHandlerByIdx : function(i) {
+                        _removeHandlerByIdx: function (i) {
                             if (0 <= i) {
                                 this._handlers.splice(i, 1);
                             }
                         },
-                        _findHandlerIdx : function(name) {
+                        _findHandlerIdx: function (name) {
                             for (var i = 0; i < this._handlers.length; i++) {
                                 var handler = this._handlers[i];
                                 if (handler.name == name) {
@@ -1330,14 +1330,14 @@ angular
                             }
                             return -1;
                         },
-                        findHandler : function(name) {
+                        findHandler: function (name) {
                             return _.find(this._handlers, {
-                                name : name
+                                name: name
                             });
                         }
 
                         ,
-                        executeSubmitFiles : function(nodes, args) {
+                        executeSubmitFiles: function (nodes, args) {
                             if (!DocTree.uploadSetting) {
                                 $log.warn("Warning: No files are selected");
                                 return;
@@ -1346,7 +1346,7 @@ angular
                             var files = args.files;
                             var fileLang = args.fileLang;
                             var promiseUploadFile = DocTree.doSubmitFormUploadFile(files, fileLang);
-                            $q.when(promiseUploadFile).then(function(data) {
+                            $q.when(promiseUploadFile).then(function (data) {
                                 args.data = data;
                                 DocTree.uploadSetting = null;
                             });
@@ -1354,11 +1354,11 @@ angular
                         }
 
                         ,
-                        getCoreHandlers : function() {
+                        getCoreHandlers: function () {
                             return [
                                 {
-                                    name : "moveUp",
-                                    execute : function(nodes, args) {
+                                    name: "moveUp",
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
                                         if (node) {
                                             var refNode = node.getPrevSibling();
@@ -1370,8 +1370,8 @@ angular
                                     }
                                 },
                                 {
-                                    name : "moveDown",
-                                    execute : function(nodes, args) {
+                                    name: "moveDown",
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
                                         if (node) {
                                             var refNode = node.getNextSibling();
@@ -1383,8 +1383,8 @@ angular
                                     }
                                 },
                                 {
-                                    name : "indent",
-                                    execute : function(nodes, args) {
+                                    name: "indent",
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
                                         if (node) {
                                             var refNode = node.getPrevSibling();
@@ -1397,8 +1397,8 @@ angular
                                     }
                                 },
                                 {
-                                    name : "outdent",
-                                    execute : function(nodes, args) {
+                                    name: "outdent",
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
                                         if (!node.isTopLevel()) {
                                             node.moveTo(node.getParent(), "after");
@@ -1407,37 +1407,37 @@ angular
                                     }
                                 },
                                 {
-                                    name : "rename",
-                                    execute : function(nodes, args) {
+                                    name: "rename",
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
                                         node.editStart();
                                     }
                                 },
                                 {
-                                    name : "remove",
-                                    execute : function(nodes, args) {
+                                    name: "remove",
+                                    execute: function (nodes, args) {
                                         DocTree.Op.batchRemove(nodes);
                                     }
                                 },
                                 {
-                                    name : "addChild",
-                                    execute : function(nodes, args) {
+                                    name: "addChild",
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
                                         node.editCreateNode("child", "");
                                     }
                                 },
                                 {
-                                    name : "addSibling",
-                                    handler : {
-                                        execute : function(nodes, args) {
+                                    name: "addSibling",
+                                    handler: {
+                                        execute: function (nodes, args) {
                                             var node = nodes[0];
                                             node.editCreateNode("after", "");
                                         }
                                     }
                                 },
                                 {
-                                    name : "newFolder",
-                                    execute : function(nodes, args) {
+                                    name: "newFolder",
+                                    execute: function (nodes, args) {
                                         if (!DocTree.editSetting.isEditing) {
                                             var node = nodes[0];
                                             var nodeData = DocTree.Source.getDefaultFolderNode();
@@ -1450,69 +1450,69 @@ angular
                                     }
                                 },
                                 {
-                                    name : "newDocument",
-                                    execute : function(nodes, args) {
+                                    name: "newDocument",
+                                    execute: function (nodes, args) {
                                         if (!DocTree.editSetting.isEditing) {
                                             var node = nodes[0];
                                             DocTree.uploadSetting = {
-                                                uploadToFolderNode : node
+                                                uploadToFolderNode: node
                                                 //, uploadFileType: fileType
                                                 ,
-                                                uploadFileNew : true,
-                                                deferUploadFile : $q.defer()
+                                                uploadFileNew: true,
+                                                deferUploadFile: $q.defer()
                                             };
                                             DocTree.uploadFile();
                                         }
                                     }
                                 },
                                 {
-                                    name : "cut",
-                                    execute : function(nodes, args) {
+                                    name: "cut",
+                                    execute: function (nodes, args) {
                                         var batch = 1 < nodes.length;
                                         if (batch) {
                                             DocTree.checkNodes(nodes, false);
                                         }
                                         DocTree.CLIPBOARD = {
-                                            mode : "cut",
-                                            batch : batch,
-                                            data : nodes
+                                            mode: "cut",
+                                            batch: batch,
+                                            data: nodes
                                         };
                                     }
                                 },
                                 {
-                                    name : "copy",
-                                    execute : function(nodes, args) {
+                                    name: "copy",
+                                    execute: function (nodes, args) {
                                         var batch = 1 < nodes.length;
                                         if (batch) {
                                             DocTree.checkNodes(nodes, false);
                                         }
                                         var clones = [];
                                         for (var i = 0; i < nodes.length; i++) {
-                                            var clone = nodes[i].toDict(false, function(n) {
+                                            var clone = nodes[i].toDict(false, function (n) {
                                                 delete n.key;
                                             });
                                             clones.push(clone);
                                         }
                                         DocTree.CLIPBOARD = {
-                                            mode : "copy",
-                                            batch : batch,
-                                            data : clones,
-                                            src : nodes
+                                            mode: "copy",
+                                            batch: batch,
+                                            data: clones,
+                                            src: nodes
                                         };
                                     }
                                 },
                                 {
-                                    name : "clear",
-                                    execute : function(nodes, args) {
+                                    name: "clear",
+                                    execute: function (nodes, args) {
                                         DocTree.CLIPBOARD = null;
                                     }
                                 },
                                 {
-                                    name : "paste",
-                                    execute : function(nodes, args) {
+                                    name: "paste",
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
                                         DocTree.expandNode(node).done(
-                                            function() {
+                                            function () {
                                                 var mode = DocTree.isFolderNode(node) ? "child" : "after";
                                                 if (DocTree.CLIPBOARD.mode === "cut") {
                                                     DocTree.Op.batchMove(DocTree.CLIPBOARD.data, node, mode);
@@ -1524,19 +1524,19 @@ angular
                                     }
                                 },
                                 {
-                                    name : "download",
-                                    execute : function(nodes, args) {
+                                    name: "download",
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
                                         DocTree._doDownload(node);
                                     }
                                 },
                                 {
-                                    name : "replace",
-                                    execute : function(nodes, args) {
+                                    name: "replace",
+                                    execute: function (nodes, args) {
                                         var selectFiles = DocTree.Command.findHandler("selectReplacement/");
                                         selectFiles.execute(nodes, args);
 
-                                        $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function(files) {
+                                        $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function (files) {
                                             args = args || {};
                                             args.files = files;
                                             var replaceFiles = DocTree.Command.findHandler("replaceFiles/");
@@ -1545,14 +1545,14 @@ angular
                                     }
                                 },
                                 {
-                                    name : "open",
-                                    execute : function(nodes, args) {
+                                    name: "open",
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
 
                                         // Any documents which are checked in doctree will be opened in the viewer simultaneously
                                         // in addition to the document which is directly opened (double-clicked)
                                         var selectedIdsList = "";
-                                        _.forEach(nodes, function(value) {
+                                        _.forEach(nodes, function (value) {
                                             if (value.data && value.data.objectId && value.data.objectType) {
                                                 if (value.data.objectType.toLowerCase() != "folder") {
                                                     selectedIdsList += value.data.objectId + ",";
@@ -1582,14 +1582,22 @@ angular
                                         window.open(baseUrl + '!/viewer/' + urlArgs);
                                     }
                                 }, {
-                                    name : "co-edit",
-                                    execute : function(nodes, args) {
+                                    name: "co-edit",
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
                                         var baseUrl = window.location.href.split('home.html#!')[0];
                                         window.open(baseUrl + 'onlyoffice/editor?file=' + node.data.objectId);
 
                                     }
                                 }, {
+                                    name: "collaborate",
+                                    execute: function (nodes, args) {
+                                        var node = nodes[0];
+                                        var baseUrl = window.location.href.split('home.html#!')[0];
+                                        window.open(baseUrl + 'office/' + node.data.objectId);
+                                    }
+                                },
+                                {
                                     name: "edit",
                                     execute: function (nodes, args) {
                                     }
@@ -1626,7 +1634,7 @@ angular
                                         var selectFiles = DocTree.Command.findHandler("selectFiles/");
                                         selectFiles.execute(nodes, args);
 
-                                        $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function(files) {
+                                        $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function (files) {
                                             args = args || {};
                                             args.files = files;
                                             var submitFiles = DocTree.Command.findHandler("submitFiles/");
@@ -1634,28 +1642,28 @@ angular
                                         });
                                     }
                                 }, {
-                                    name : "submitFiles/",
-                                    execute : function(nodes, args) {
+                                    name: "submitFiles/",
+                                    execute: function (nodes, args) {
                                         return DocTree.Command.executeSubmitFiles(nodes, args);
                                     }
                                 }, {
-                                    name : "replaceFiles/",
-                                    execute : function(nodes, args) {
+                                    name: "replaceFiles/",
+                                    execute: function (nodes, args) {
                                         return DocTree.Command.executeSubmitFiles(nodes, args);
                                     }
                                 }, {
-                                    name : "selectFiles/",
-                                    execute : function(nodes, args) {
+                                    name: "selectFiles/",
+                                    execute: function (nodes, args) {
                                         if (DocTree.uploadSetting) {
                                             $log.warn("Warning: Trying to upload file before previous upload");
                                         }
                                         var node = nodes[0];
                                         DocTree.uploadSetting = {
-                                            uploadToFolderNode : node,
-                                            uploadFileType : args.fileType,
-                                            uploadFileNew : true,
-                                            deferUploadFile : $q.defer(),
-                                            deferSelectFile : $q.defer()
+                                            uploadToFolderNode: node,
+                                            uploadFileType: args.fileType,
+                                            uploadFileNew: true,
+                                            deferUploadFile: $q.defer(),
+                                            deferSelectFile: $q.defer()
                                         };
 
                                         DocTree.uploadFile();
@@ -1663,8 +1671,8 @@ angular
                                         return DocTree.uploadSetting.deferSelectFile.promise;
                                     }
                                 }, {
-                                    name : "selectReplacement/",
-                                    execute : function(nodes, args) {
+                                    name: "selectReplacement/",
+                                    execute: function (nodes, args) {
                                         if (DocTree.uploadSetting) {
                                             $log.warn("Warning: Trying to upload file before previous upload");
                                         }
@@ -1672,12 +1680,12 @@ angular
                                         var fileType = Util.goodValue(node.data.type);
                                         if (!Util.isEmpty(fileType)) {
                                             DocTree.uploadSetting = {
-                                                replaceFileNode : node,
-                                                uploadToFolderNode : node.parent,
-                                                uploadFileType : fileType,
-                                                uploadFileNew : false,
-                                                deferUploadFile : $q.defer(),
-                                                deferSelectFile : $q.defer()
+                                                replaceFileNode: node,
+                                                uploadToFolderNode: node.parent,
+                                                uploadFileType: fileType,
+                                                uploadFileNew: false,
+                                                deferUploadFile: $q.defer(),
+                                                deferSelectFile: $q.defer()
                                             };
 
                                             DocTree.replaceFile();
@@ -1695,14 +1703,14 @@ angular
                         }
 
                         ,
-                        onCommand : function(event, data) {
+                        onCommand: function (event, data) {
                             var tree = DocTree.tree;
                             var selNodes = tree.getSelectedNodes();
                             var node = tree.getActiveNode();
                             var nodes = selNodes;
                             var config = DocTree.treeConfig;
                             if (Util.isArrayEmpty(selNodes)) {
-                                nodes = [ node ];
+                                nodes = [node];
                             }
 
                             var tokens = data.cmd.split("/");
@@ -1731,7 +1739,7 @@ angular
                         // continue when onPreCmd returns "true", "undefined" or anything else
                         //
                         ,
-                        handleCommand : function(handler, nodes, args, config) {
+                        handleCommand: function (handler, nodes, args, config) {
                             var rcPre = true;
                             var rcExe = true;
 
@@ -1739,12 +1747,12 @@ angular
                                 rcPre = handler.onPreCmd(nodes, args);
                             }
                             if (false !== rcPre) {
-                                $q.all([ rcPre ]).then(function(preCmdData) {
+                                $q.all([rcPre]).then(function (preCmdData) {
                                     if (false !== preCmdData[0]) {
                                         if (handler.execute) {
                                             rcExe = handler.execute(nodes, args, config);
                                         }
-                                        $q.all([ rcExe ]).then(function() {
+                                        $q.all([rcExe]).then(function () {
                                             if (handler.onPostCmd) {
                                                 handler.onPostCmd(nodes, args);
                                             }
@@ -1755,7 +1763,7 @@ angular
                         }
 
                         ,
-                        onKeyDown : function(event, data) {
+                        onKeyDown: function (event, data) {
                             var cmd = null;
                             switch ($.ui.fancytree.eventToString(event)) {
                                 case "ctrl+shift+n":
@@ -1805,33 +1813,35 @@ angular
                             }
                             if (cmd) {
                                 $(this).trigger("command", {
-                                    cmd : cmd
+                                    cmd: cmd
                                 });
                                 // event.preventDefault();
                                 // event.stopPropagation();
                                 return false;
                             }
-                        },
-                        getCommandObject : function(cmd) {
+                        }
+                        ,
+                        getCommandObject: function (cmd) {
                             return {
-                                cmd : cmd
+                                cmd: cmd
                             };
-                        },
-                        trigger : function(cmd) {
+                        }
+                        ,
+                        trigger: function (cmd) {
                             DocTree.jqTree.trigger("command", {
-                                cmd : cmd
+                                cmd: cmd
                             });
                         }
                     } //end Command
 
                     ,
-                    Menu : {
-                        useContextMenu : function($s) {
+                    Menu: {
+                        useContextMenu: function ($s) {
                             $s.contextmenu({
-                                menu : [],
-                                delegate : "tr",
-                                addClass : "docTreeMenu",
-                                beforeOpen : function(event, ui) {
+                                menu: [],
+                                delegate: "tr",
+                                addClass: "docTreeMenu",
+                                beforeOpen: function (event, ui) {
                                     var dfd = new $.Deferred();
                                     var node = $.ui.fancytree.getNode(ui.target);
                                     if (DocTree.isSpecialNode(node)) {
@@ -1841,7 +1851,7 @@ angular
                                     var menuResource = null;
                                     var selNodes = DocTree.getSelectedNodes();
                                     var batchMode = !Util.isArrayEmpty(selNodes);
-                                    var nodes = (batchMode) ? selNodes : [ node ];
+                                    var nodes = (batchMode) ? selNodes : [node];
                                     if (batchMode) {
                                         menuResource = DocTree.Menu.getBatchResource(nodes);
                                     } else if ("RECORD" == Util.goodValue(node.data.status)) {
@@ -1851,7 +1861,7 @@ angular
                                     }
                                     var menu = DocTree.Menu.makeContextMenu(menuResource, nodes);
 
-                                    $q.when(menu).then(function(menuResult) {
+                                    $q.when(menu).then(function (menuResult) {
                                         $s.contextmenu("replaceMenu", menuResult);
 
                                         if (!batchMode) {
@@ -1865,20 +1875,20 @@ angular
                                     // Return a promise to delay opening until an async response becomes available
                                     ui.result = dfd.promise();
                                 },
-                                select : function(event, ui) {
+                                select: function (event, ui) {
                                     var uploadFile = Util.goodMapValue(ui.item.data(), "uploadFile", false);
                                     var uploadFileLabel = Util.goodMapValue(ui.item.data(), "label", "");
                                     $(this).trigger("command", {
-                                        cmd : ui.cmd,
-                                        uploadFile : uploadFile,
-                                        label : uploadFileLabel
+                                        cmd: ui.cmd,
+                                        uploadFile: uploadFile,
+                                        label: uploadFileLabel
                                     });
                                 }
                             });
                         }
 
                         ,
-                        getBatchResource : function(nodes) {
+                        getBatchResource: function (nodes) {
                             var menuResource = null;
                             if (Validator.validateNodes(nodes)) {
                                 var countFolder = 0;
@@ -1908,7 +1918,7 @@ angular
 
                             return menuResource;
                         },
-                        getRecordResource : function(node) {
+                        getRecordResource: function (node) {
                             var menuResource = null;
                             if (node) {
                                 if (DocTree.isTopNode(node)) {
@@ -1921,7 +1931,7 @@ angular
                             }
                             return menuResource;
                         },
-                        getBasicResource : function(node) {
+                        getBasicResource: function (node) {
                             var menuResource = null;
                             if (node) {
                                 if (DocTree.isTopNode(node)) {
@@ -1934,7 +1944,7 @@ angular
                             }
                             return menuResource;
                         },
-                        makeContextMenu : function(menuResource, nodes) {
+                        makeContextMenu: function (menuResource, nodes) {
                             var emptyArray = [];
                             var promiseArray = [];
                             var menuDeferred = $q.defer();
@@ -1946,13 +1956,13 @@ angular
                                 }
                                 menu = _.clone(menu);
                                 var menuFileTypes = _.find(menu, {
-                                    "cmd" : "subMenuFileTypes"
+                                    "cmd": "subMenuFileTypes"
                                 });
                                 if (menuFileTypes) {
                                     menuFileTypes.children = this.makeSubMenu(DocTree.fileTypes);
                                 }
                                 var menuCorrespondenceForms = _.find(menu, {
-                                    cmd : "subMenuCorrespondenceForms"
+                                    cmd: "subMenuCorrespondenceForms"
                                 });
                                 if (_.isEmpty(DocTree.correspondenceForms) && menuCorrespondenceForms) {
                                     menuCorrespondenceForms.invisible = true;
@@ -1961,10 +1971,10 @@ angular
                                 }
                                 // On active search disable Cut & Copy
                                 var cutMenu = _.find(menu, {
-                                    cmd : "cut"
+                                    cmd: "cut"
                                 });
                                 var copyMenu = _.find(menu, {
-                                    cmd : "copy"
+                                    cmd: "copy"
                                 });
                                 var disabled = DocTree.Config.getSetting().search.enabled;
                                 if (cutMenu && copyMenu) {
@@ -1972,10 +1982,10 @@ angular
                                     copyMenu.disabledExpression = disabled;
                                 }
                                 var newFolderMenu = _.find(menu, {
-                                    cmd : "newFolder"
+                                    cmd: "newFolder"
                                 });
                                 var newFileMenu = _.find(menu, {
-                                    cmd : "subMenuFileTypes"
+                                    cmd: "subMenuFileTypes"
                                 });
                                 if (newFolderMenu && newFileMenu) {
                                     newFolderMenu.disabledExpression = disabled || DocTree.readOnly;
@@ -1998,7 +2008,7 @@ angular
                                 allowGlobal = onAllowCmdGlobal(nodes);
                             }
 
-                            _.each(menu, function(item) {
+                            _.each(menu, function (item) {
                                 item.title = $translate.instant(Util.goodValue(item.titleKey, item.title));
 
                                 var allow = true;
@@ -2023,7 +2033,7 @@ angular
                                 }
 
                                 promiseArray.push(allow);
-                                $q.when(allow).then(function(allowResult) {
+                                $q.when(allow).then(function (allowResult) {
                                     if ("invisible" === allowResult) {
                                         item.invisible = true;
                                     } else if ("disable" === allowResult) {
@@ -2038,14 +2048,14 @@ angular
                                 });
                             });
 
-                            $q.all(promiseArray).then(function() {
-                                menu = _.filter(menu, function(item) {
+                            $q.all(promiseArray).then(function () {
+                                menu = _.filter(menu, function (item) {
                                     return !item.invisible;
                                 });
 
                                 //Under readOnly mode, disable all non-readOnly cmd
                                 if (DocTree.readOnly) {
-                                    _.each(menu, function(item) {
+                                    _.each(menu, function (item) {
                                         var readOnly = Util.goodMapValue(item.data, "readOnly", false);
                                         if (readOnly) {
                                             item.disabled = false;
@@ -2073,7 +2083,7 @@ angular
                         //            ,{title: "Other", cmd: "file/other"}
                         //        ];
                         ,
-                        makeSubMenu : function(subTypes) {
+                        makeSubMenu: function (subTypes) {
                             var formsCategory = Util.goodMapValue(DocTree.treeConfig, "menu.subMenuForms", null);
                             var correspondenceCategory = Util.goodMapValue(DocTree.treeConfig, "menu.subMenuCorrespondences",
                                 null);
@@ -2082,7 +2092,7 @@ angular
                                 if (Util.isArray(subTypes)) {
                                     for (var i = 0; i < subTypes.length; i++) {
                                         item = {
-                                            data : {}
+                                            data: {}
                                         };
                                         if (!Util.isEmpty(subTypes[i].templateFilename)) {
                                             if (Util.isEmpty(correspondenceCategory)) {
@@ -2117,19 +2127,19 @@ angular
                     }
 
                     ,
-                    Paging : {
-                        _triggerNode : null,
-                        alertPaging : function(node) {
+                    Paging: {
+                        _triggerNode: null,
+                        alertPaging: function (node) {
                             DocTree.Paging._triggerNode = node;
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 var node = DocTree.Paging._triggerNode;
                                 DocTree.Paging.doPaging(node);
                             }, 2500);
                         },
-                        relievePaging : function() {
+                        relievePaging: function () {
                             DocTree.Paging._triggerNode = null;
                         },
-                        doPaging : function(node) {
+                        doPaging: function (node) {
                             if (!node) {
                                 return;
                             }
@@ -2167,47 +2177,47 @@ angular
                     }
 
                     ,
-                    Dnd : {} //end Dnd
+                    Dnd: {} //end Dnd
 
                     ,
-                    ExternalDnd : {
-                        startExternalDnd : function($treeBody) {
+                    ExternalDnd: {
+                        startExternalDnd: function ($treeBody) {
                             $treeBody.on("dragenter", "tr", this.onDragEnter);
                             $treeBody.on("dragleave", "tr", this.onDragLeave);
                             $treeBody.on("dragover", "tr", this.onDragOver);
                             $treeBody.on("drop", "tr", this.onDragDrop);
 
-                            $(document).on('dragenter', function(e) {
+                            $(document).on('dragenter', function (e) {
                                 e.stopPropagation();
                                 e.preventDefault();
                             });
-                            $(document).on('dragover', function(e) {
+                            $(document).on('dragover', function (e) {
                                 e.stopPropagation();
                                 e.preventDefault();
                             });
-                            $(document).on('drop', function(e) {
+                            $(document).on('drop', function (e) {
                                 e.stopPropagation();
                                 e.preventDefault();
                             });
                         }
 
                         ,
-                        onDragEnter : function(e) {
+                        onDragEnter: function (e) {
                             e.stopPropagation();
                             e.preventDefault();
                             $(this).addClass("dragover");
                         },
-                        onDragOver : function(e) {
+                        onDragOver: function (e) {
                             e.stopPropagation();
                             e.preventDefault();
                             $(this).addClass("dragover");
                         },
-                        onDragLeave : function(e) {
+                        onDragLeave: function (e) {
                             e.stopPropagation();
                             e.preventDefault();
                             $(this).removeClass("dragover");
                         },
-                        onDragDrop : function(e) {
+                        onDragDrop: function (e) {
                             //e.stopPropagation();
                             e.preventDefault();
                             $(this).removeClass("dragover");
@@ -2220,44 +2230,44 @@ angular
                             var files = e.originalEvent.dataTransfer.files;
                             if (files instanceof FileList) {
                                 if (DocTree.isFolderNode(node)) {
-                                    DialogDnd.openModal("folder", _.filter(DocTree.fileTypes, function(fileType) {
+                                    DialogDnd.openModal("folder", _.filter(DocTree.fileTypes, function (fileType) {
                                         return Util.isEmpty(fileType.form);
-                                    }), function(result) {
+                                    }), function (result) {
                                         var op = result.op;
                                         var fileType = result.fileType;
                                         if (DialogDnd.OpTypes.OP_UPLOAD_TO_FOLDER == op && !Util.isEmpty(fileType)) {
                                             DocTree.uploadSetting = {
-                                                uploadToFolderNode : node,
-                                                uploadFileType : fileType,
-                                                uploadFileNew : true,
-                                                deferUploadFile : $q.defer()
+                                                uploadToFolderNode: node,
+                                                uploadFileType: fileType,
+                                                uploadFileNew: true,
+                                                deferUploadFile: $q.defer()
                                             };
                                             var args = {
-                                                files : files
+                                                files: files
                                             };
                                             var submitFiles = DocTree.Command.findHandler("submitFiles/");
-                                            DocTree.Command.handleCommand(submitFiles, [ node ], args);
+                                            DocTree.Command.handleCommand(submitFiles, [node], args);
                                         }
                                     });
 
                                 } else if (DocTree.isFileNode(node)) {
-                                    DialogDnd.openModal("file", _.filter(DocTree.fileTypes, function(fileType) {
+                                    DialogDnd.openModal("file", _.filter(DocTree.fileTypes, function (fileType) {
                                         return Util.isEmpty(fileType.form);
-                                    }), function(result) {
+                                    }), function (result) {
                                         var op = result.op;
                                         var fileType = result.fileType;
                                         if (DialogDnd.OpTypes.OP_UPLOAD_TO_PARENT == op && !Util.isEmpty(fileType)) {
                                             DocTree.uploadSetting = {
-                                                uploadToFolderNode : node.parent,
-                                                uploadFileType : fileType,
-                                                uploadFileNew : true,
-                                                deferUploadFile : $q.defer()
+                                                uploadToFolderNode: node.parent,
+                                                uploadFileType: fileType,
+                                                uploadFileNew: true,
+                                                deferUploadFile: $q.defer()
                                             };
                                             var args = {
-                                                files : files
+                                                files: files
                                             };
                                             var submitFiles = DocTree.Command.findHandler("submitFiles/");
-                                            DocTree.Command.handleCommand(submitFiles, [ node ], args);
+                                            DocTree.Command.handleCommand(submitFiles, [node], args);
                                         }
                                     });
                                 }
@@ -2267,8 +2277,8 @@ angular
                     } //end ExternalDnd
 
                     ,
-                    Op : {
-                        retrieveFolderList : function(folderNode, callbackSuccess) {
+                    Op: {
+                        retrieveFolderList: function (folderNode, callbackSuccess) {
                             var dfd = $.Deferred();
                             var fetchData = Ecm.retrieveFolderList;
                             if (!DocTree.isFolderNode(folderNode)) {
@@ -2304,9 +2314,9 @@ angular
                                 }
 
                                 Util.serviceCall({
-                                    service : fetchData,
-                                    param : param,
-                                    onSuccess : function(data) {
+                                    service: fetchData,
+                                    param: param,
+                                    onSuccess: function (data) {
                                         if (Validator.validateFolderList(data)) {
                                             var folderList = data;
                                             var setting = DocTree.Config.getSetting();
@@ -2319,7 +2329,7 @@ angular
                                             return folderList;
                                         }
                                     }
-                                }).then(function(folderList) {
+                                }).then(function (folderList) {
                                     if (folderList) {
                                         folderNode.data.objectId = Util.goodValue(folderList.folderId, 0);
                                         folderNode.data.totalChildren = Util.goodValue(folderList.totalChildren, 0);
@@ -2331,7 +2341,7 @@ angular
                                         DocTree.markNodeError(folderNode);
                                         dfd.reject();
                                     }
-                                }, function(errorData) {
+                                }, function (errorData) {
                                     DocTree.markNodeError(folderNode);
                                     dfd.reject();
                                 });
@@ -2339,7 +2349,7 @@ angular
 
                             return dfd.promise();
                         },
-                        createFolder : function(newNode, folderName) {
+                        createFolder: function (newNode, folderName) {
                             var dfd = $.Deferred();
                             var parent = newNode.getParent();
                             if (!DocTree.isFolderNode(parent)) {
@@ -2357,13 +2367,13 @@ angular
                                 var cacheKey = DocTree.getCacheKeyByNode(parent);
                                 var parentId = parent.data.objectId;
                                 Util.serviceCall({
-                                    service : Ecm.createFolder,
-                                    param : {
-                                        parentId : parentId,
-                                        folderName : folderName
+                                    service: Ecm.createFolder,
+                                    param: {
+                                        parentId: parentId,
+                                        folderName: folderName
                                     },
-                                    data : {},
-                                    onSuccess : function(data) {
+                                    data: {},
+                                    onSuccess: function (data) {
                                         if (Validator.validateCreateInfo(data)) {
                                             if (data.parentFolder.id == parentId) {
                                                 var createInfo = data;
@@ -2380,11 +2390,11 @@ angular
                                             }
                                         }
                                     }
-                                }).then(function(newNode) {
+                                }).then(function (newNode) {
                                     DocTree.markNodeOk(newNode);
                                     newNode.renderTitle();
                                     dfd.resolve(newNode);
-                                }, function(errorData) {
+                                }, function (errorData) {
                                     var errMsg = $translate.instant("common.directive.docTree.error.folderNodeTitle");
                                     DocTree.markNodeError(newNode, errMsg);
                                     dfd.reject();
@@ -2392,7 +2402,7 @@ angular
                             }
                             return dfd.promise();
                         },
-                        uploadFiles : function(formData, folderNode, names, fileType, fileLang) {
+                        uploadFiles: function (formData, folderNode, names, fileType, fileLang) {
                             var dfd = $.Deferred();
                             if (!DocTree.isFolderNode(folderNode)) {
                                 dfd.reject();
@@ -2401,12 +2411,12 @@ angular
                                 var promiseAddNodes = DocTree._addingFileNodes(folderNode, names, fileType);
                                 var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                                 var promiseUploadFiles = Util.serviceCall({
-                                    service : Ecm.uploadFiles,
-                                    data : formData,
-                                    param : {
-                                        fileLang : fileLang
+                                    service: Ecm.uploadFiles,
+                                    data: formData,
+                                    param: {
+                                        fileLang: fileLang
                                     },
-                                    onSuccess : function(data) {
+                                    onSuccess: function (data) {
                                         if (Validator.validateUploadInfo(data)) {
                                             var uploadInfo = data;
 
@@ -2427,7 +2437,7 @@ angular
                                     }
                                 });
 
-                                $q.all([ promiseUploadFiles, promiseAddNodes ]).then(function(successData) {
+                                $q.all([promiseUploadFiles, promiseAddNodes]).then(function (successData) {
                                     var uploadedFiles = successData[0];
                                     var fileNodes = successData[1];
                                     if (!Util.isArrayEmpty(uploadedFiles) && Validator.validateFancyTreeNodes(fileNodes)) {
@@ -2443,18 +2453,18 @@ angular
                                             }
                                         } //end for
                                         dfd.resolve({
-                                            files : uploadedFiles,
-                                            nodes : fileNodes
+                                            files: uploadedFiles,
+                                            nodes: fileNodes
                                         });
                                     }
-                                }, function(errorData) {
+                                }, function (errorData) {
                                     DocTree.refreshTree();
                                     dfd.reject();
                                 });
                             }
                             return dfd.promise();
                         },
-                        replaceFile : function(formData, fileNode, name) {
+                        replaceFile: function (formData, fileNode, name) {
                             var dfd = $.Deferred();
                             if (!DocTree.isFileNode(fileNode)) {
                                 dfd.reject();
@@ -2468,12 +2478,12 @@ angular
                                 Util
                                     .serviceCall(
                                         {
-                                            service : Ecm.replaceFile,
-                                            param : {
-                                                fileId : fileId
+                                            service: Ecm.replaceFile,
+                                            param: {
+                                                fileId: fileId
                                             },
-                                            data : formData,
-                                            onSuccess : function(data) {
+                                            data: formData,
+                                            onSuccess: function (data) {
                                                 if (Validator.validateReplaceInfo(data)) {
                                                     var replaceInfo = data;
 
@@ -2516,7 +2526,7 @@ angular
                                                     }
                                                 }
                                             }
-                                        }).then(function(replacedFile) {
+                                        }).then(function (replacedFile) {
                                     if (replacedFile && fileNode) {
                                         fileNode.data.ext = replacedFile.ext;
                                         fileNode.data.mimeType = replacedFile.mimeType;
@@ -2528,10 +2538,10 @@ angular
                                         fileNode.setStatus("ok");
                                     }
                                     dfd.resolve({
-                                        files : [ replacedFile ],
-                                        nodes : [ fileNode ]
+                                        files: [replacedFile],
+                                        nodes: [fileNode]
                                     });
-                                }, function(errorData) {
+                                }, function (errorData) {
                                     var errMsg = $translate.instant("common.directive.docTree.error.fileNodeTitle");
                                     DocTree.markNodeError(fileNode, errMsg);
                                     dfd.reject(errorData);
@@ -2539,7 +2549,7 @@ angular
                             }
                             return dfd.promise();
                         },
-                        copyFolder : function(srcNode, frNode, toNode, mode) {
+                        copyFolder: function (srcNode, frNode, toNode, mode) {
                             var dfd = $.Deferred();
 
                             //var toFolderNode = DocTree.isFolderNode(toNode)? toNode : toNode.parent;
@@ -2578,15 +2588,15 @@ angular
 
                                 Util.serviceCall(
                                     {
-                                        service : Ecm.copyFolder,
-                                        param : {
-                                            subFolderId : subFolderId,
-                                            folderId : toFolderId,
-                                            objType : DocTree.getObjType(),
-                                            objId : DocTree.getObjId()
+                                        service: Ecm.copyFolder,
+                                        param: {
+                                            subFolderId: subFolderId,
+                                            folderId: toFolderId,
+                                            objType: DocTree.getObjType(),
+                                            objId: DocTree.getObjId()
                                         },
-                                        data : {},
-                                        onSuccess : function(data) {
+                                        data: {},
+                                        onSuccess: function (data) {
                                             if (Validator.validateCopyFolderInfo(data)) {
                                                 var copyFolderInfo = data;
                                                 if (copyFolderInfo.originalFolderId == subFolderId
@@ -2614,14 +2624,14 @@ angular
                                                 }
                                             }
                                         }
-                                    }).then(function(copyFolderInfo) {
+                                    }).then(function (copyFolderInfo) {
                                     DocTree._folderDataToNodeData(copyFolderInfo, newNode);
                                     DocTree.markNodeOk(newNode);
                                     newNode.setExpanded(false);
                                     newNode.resetLazy();
                                     newNode.renderTitle();
                                     dfd.resolve(copyFolderInfo);
-                                }, function(errorData) {
+                                }, function (errorData) {
                                     DocTree.markNodeError(newNode);
                                     dfd.reject();
                                 });
@@ -2629,7 +2639,7 @@ angular
                             return dfd.promise();
 
                         },
-                        copyFile : function(srcNode, frNode, toNode, mode) {
+                        copyFile: function (srcNode, frNode, toNode, mode) {
                             var dfd = $.Deferred();
 
                             //var toFolderNode = DocTree.isFolderNode(toNode)? toNode : toNode.parent;
@@ -2668,16 +2678,16 @@ angular
 
                                 Util.serviceCall(
                                     {
-                                        service : Ecm.copyFile,
-                                        param : {
-                                            objType : DocTree.getObjType(),
-                                            objId : DocTree.getObjId()
+                                        service: Ecm.copyFile,
+                                        param: {
+                                            objType: DocTree.getObjType(),
+                                            objId: DocTree.getObjId()
                                         },
-                                        data : {
-                                            id : fileId,
-                                            folderId : toFolderId
+                                        data: {
+                                            id: fileId,
+                                            folderId: toFolderId
                                         },
-                                        onSuccess : function(data) {
+                                        onSuccess: function (data) {
                                             if (Validator.validateCopyFileInfo(data)) {
                                                 var copyFileInfo = data;
                                                 if (copyFileInfo.originalId == fileId
@@ -2693,19 +2703,19 @@ angular
                                                 }
                                             }
                                         }
-                                    }).then(function(copyFileInfo) {
+                                    }).then(function (copyFileInfo) {
                                     DocTree._fileDataToNodeData(copyFileInfo, newNode);
                                     DocTree.markNodeOk(newNode);
                                     newNode.renderTitle();
                                     dfd.resolve(copyFileInfo);
-                                }, function(errorData) {
+                                }, function (errorData) {
                                     DocTree.markNodeError(newNode);
                                     dfd.reject();
                                 });
                             }
                             return dfd.promise();
                         },
-                        _findNodesById : function(id, inNodes) {
+                        _findNodesById: function (id, inNodes) {
                             var find = null;
                             for (var i = 0; i < inNodes.length; i++) {
                                 if (inNodes[i].data.objectId == id) {
@@ -2715,7 +2725,7 @@ angular
                             }
                             return find;
                         },
-                        batchCopy : function(srcNodes, frNodes, toNode, mode) {
+                        batchCopy: function (srcNodes, frNodes, toNode, mode) {
                             var dfd = $.Deferred();
                             if (Util.isArrayEmpty(srcNodes) || Util.isArrayEmpty(frNodes)) {
                                 dfd.resolve();
@@ -2737,18 +2747,18 @@ angular
                                     }
                                 }
 
-                                $q.all(requests).then(function(data) {
+                                $q.all(requests).then(function (data) {
                                     if (DocTree.CLIPBOARD && DocTree.CLIPBOARD.src && DocTree.CLIPBOARD.batch) {
                                         DocTree.checkNodes(DocTree.CLIPBOARD.src, true);
                                     }
                                     dfd.resolve();
-                                }, function(data) {
+                                }, function (data) {
                                     dfd.reject();
                                 });
                             }
                             return dfd.promise();
                         },
-                        moveFolder : function(frNode, toNode, mode) {
+                        moveFolder: function (frNode, toNode, mode) {
                             var dfd = $.Deferred();
                             var toFolderNode = toNode;
                             if (DocTree.isFileNode(toNode) || "after" == mode || "before" == mode) {
@@ -2785,13 +2795,13 @@ angular
 
                                 Util.serviceCall(
                                     {
-                                        service : Ecm.moveFolder,
-                                        param : {
-                                            subFolderId : subFolderId,
-                                            folderId : toFolderId
+                                        service: Ecm.moveFolder,
+                                        param: {
+                                            subFolderId: subFolderId,
+                                            folderId: toFolderId
                                         },
-                                        data : {},
-                                        onSuccess : function(data) {
+                                        data: {},
+                                        onSuccess: function (data) {
                                             if (Validator.validateMoveFolderInfo(data)) {
                                                 if (data.id == subFolderId) {
                                                     var moveFolderInfo = data;
@@ -2815,17 +2825,17 @@ angular
                                                 }
                                             }
                                         }
-                                    }).then(function(moveFolderInfo) {
+                                    }).then(function (moveFolderInfo) {
                                     DocTree.markNodeOk(frNode);
                                     dfd.resolve(moveFolderInfo);
-                                }, function(errorData) {
+                                }, function (errorData) {
                                     DocTree.markNodeError(frNode);
                                     dfd.reject();
                                 });
                             }
                             return dfd.promise();
                         },
-                        moveFile : function(frNode, toNode, mode) {
+                        moveFile: function (frNode, toNode, mode) {
                             var dfd = $.Deferred();
                             var toFolderNode = toNode;
                             if (DocTree.isFileNode(toNode) || "after" == mode || "before" == mode) {
@@ -2859,16 +2869,16 @@ angular
 
                                 Util.serviceCall(
                                     {
-                                        service : Ecm.moveFile,
-                                        param : {
-                                            objType : DocTree.getObjType(),
-                                            objId : DocTree.getObjId()
+                                        service: Ecm.moveFile,
+                                        param: {
+                                            objType: DocTree.getObjType(),
+                                            objId: DocTree.getObjId()
                                         },
-                                        data : {
-                                            "id" : fileId,
-                                            "folderId" : toFolderId
+                                        data: {
+                                            "id": fileId,
+                                            "folderId": toFolderId
                                         },
-                                        onSuccess : function(data) {
+                                        onSuccess: function (data) {
                                             if (Validator.validateMoveFileInfo(data)) {
                                                 if (data.fileId == fileId) {
                                                     var moveFileInfo = data;
@@ -2892,10 +2902,10 @@ angular
                                                 }
                                             }
                                         }
-                                    }).then(function(moveFileInfo) {
+                                    }).then(function (moveFileInfo) {
                                     DocTree.markNodeOk(frNode);
                                     dfd.resolve(moveFileInfo);
-                                }, function(errorData) {
+                                }, function (errorData) {
                                     DocTree.markNodeError(frNode);
                                     dfd.reject();
                                 });
@@ -2903,7 +2913,7 @@ angular
 
                             return dfd.promise();
                         },
-                        batchMove : function(frNodes, toNode, mode) {
+                        batchMove: function (frNodes, toNode, mode) {
                             var dfd = $.Deferred();
                             if (Util.isArrayEmpty(frNodes)) {
                                 dfd.resolve();
@@ -2919,18 +2929,18 @@ angular
                                     }
                                 }
 
-                                $q.all(requests).then(function() {
+                                $q.all(requests).then(function () {
                                     if (DocTree.CLIPBOARD && DocTree.CLIPBOARD.data && DocTree.CLIPBOARD.batch) {
                                         DocTree.checkNodes(DocTree.CLIPBOARD.data, true);
                                     }
                                     dfd.resolve();
-                                }, function() {
+                                }, function () {
                                     dfd.reject();
                                 });
                             }
                             return dfd.promise();
                         },
-                        deleteFolder : function(node) {
+                        deleteFolder: function (node) {
                             var dfd = $.Deferred();
                             if (!DocTree.isFolderNode(node)) {
                                 dfd.reject();
@@ -2944,21 +2954,21 @@ angular
                                     var cacheKey = DocTree.getCacheKeyByNode(parent);
                                     var folderId = node.data.objectId;
                                     Util.serviceCall({
-                                        service : Ecm.getDeleteFolderInfo,
-                                        param : {
-                                            folderId : folderId
+                                        service: Ecm.getDeleteFolderInfo,
+                                        param: {
+                                            folderId: folderId
                                         },
-                                        data : {},
-                                        onSuccess : function(response) {
-                                            DocTree.Op.openDeleteConfirmationModal(response, function() {
+                                        data: {},
+                                        onSuccess: function (response) {
+                                            DocTree.Op.openDeleteConfirmationModal(response, function () {
                                                 Util.serviceCall(
                                                     {
-                                                        service : Ecm.deleteFolder,
-                                                        param : {
-                                                            folderId : folderId
+                                                        service: Ecm.deleteFolder,
+                                                        param: {
+                                                            folderId: folderId
                                                         },
-                                                        data : {},
-                                                        onSuccess : function(data) {
+                                                        data: {},
+                                                        onSuccess: function (data) {
                                                             if (Validator.validateDeletedFolder(data)) {
                                                                 if (data.deletedFolderId == folderId) {
                                                                     var refNode = node.getNextSibling()
@@ -2982,9 +2992,9 @@ angular
                                                                 }
                                                             }
                                                         }
-                                                    }).then(function(deletedFolderId) {
+                                                    }).then(function (deletedFolderId) {
                                                     dfd.resolve(deletedFolderId);
-                                                }, function(errorData) {
+                                                }, function (errorData) {
                                                     DocTree.markNodeError(node);
                                                     dfd.reject();
                                                 });
@@ -2996,30 +3006,30 @@ angular
                             }
                             return dfd.promise();
                         },
-                        openDeleteConfirmationModal : function(data, onClickOk) {
+                        openDeleteConfirmationModal: function (data, onClickOk) {
                             var modalInstance = $modal.open({
-                                templateUrl : "directives/doc-tree/doc-tree.delete.confirmation.dialog.html",
-                                controller : [ '$scope', '$modalInstance', 'data', function($scope, $modalInstance) {
+                                templateUrl: "directives/doc-tree/doc-tree.delete.confirmation.dialog.html",
+                                controller: ['$scope', '$modalInstance', 'data', function ($scope, $modalInstance) {
                                     $scope.modalInstance = $modalInstance;
                                     $scope.subFoldersNum = data.foldersToDeleteNum;
                                     $scope.filesNum = data.filesToDeleteNum;
-                                    $scope.onClickOk = function() {
+                                    $scope.onClickOk = function () {
                                         $modalInstance.close($scope.result);
                                     };
 
-                                } ],
-                                animation : true,
-                                size : 'sm',
-                                resolve : {
-                                    data : data
+                                }],
+                                animation: true,
+                                size: 'sm',
+                                resolve: {
+                                    data: data
                                 }
                             });
 
-                            modalInstance.result.then(function() {
+                            modalInstance.result.then(function () {
                                 onClickOk();
                             });
                         },
-                        deleteFile : function(node) {
+                        deleteFile: function (node) {
                             var dfd = $.Deferred();
                             if (!DocTree.isFileNode(node)) {
                                 dfd.reject();
@@ -3039,12 +3049,12 @@ angular
 
                                     var fileId = node.data.objectId;
                                     Util.serviceCall({
-                                        service : Ecm.deleteFile,
-                                        param : {
-                                            fileId : fileId
+                                        service: Ecm.deleteFile,
+                                        param: {
+                                            fileId: fileId
                                         },
-                                        data : {},
-                                        onSuccess : function(data) {
+                                        data: {},
+                                        onSuccess: function (data) {
                                             if (Validator.validateDeletedFile(data)) {
                                                 if (data.deletedFileId == fileId) {
                                                     var folderList = DocTree.cacheFolderList.get(cacheKey);
@@ -3060,9 +3070,9 @@ angular
                                                 }
                                             }
                                         }
-                                    }).then(function(deletedFileId) {
+                                    }).then(function (deletedFileId) {
                                         dfd.resolve(deletedFileId);
-                                    }, function(errorData) {
+                                    }, function (errorData) {
                                         DocTree.markNodeError(node);
                                         dfd.reject();
                                     });
@@ -3070,7 +3080,7 @@ angular
                             }
                             return dfd.promise();
                         },
-                        batchRemove : function(nodes) {
+                        batchRemove: function (nodes) {
                             var dfd = $.Deferred();
                             if (Util.isArrayEmpty(nodes)) {
                                 dfd.resolve();
@@ -3086,15 +3096,15 @@ angular
                                     }
                                 }
 
-                                $q.all(requests).then(function() {
+                                $q.all(requests).then(function () {
                                     dfd.resolve();
-                                }, function() {
+                                }, function () {
                                     dfd.reject();
                                 });
                             }
                             return dfd.promise();
                         },
-                        renameFolder : function(node, folderName) {
+                        renameFolder: function (node, folderName) {
                             var dfd = $.Deferred();
                             if (!DocTree.isFolderNode(node)) {
                                 dfd.reject();
@@ -3108,13 +3118,13 @@ angular
                                     var folderId = node.data.objectId;
                                     var cacheKey = DocTree.getCacheKeyByNode(parent);
                                     Util.serviceCall({
-                                        service : Ecm.renameFolder,
-                                        param : {
-                                            folderId : folderId,
-                                            folderName : folderName
+                                        service: Ecm.renameFolder,
+                                        param: {
+                                            folderId: folderId,
+                                            folderName: folderName
                                         },
-                                        data : {},
-                                        onSuccess : function(data) {
+                                        data: {},
+                                        onSuccess: function (data) {
                                             if (Validator.validateRenamedFolder(data)) {
                                                 if (data.id == folderId) {
                                                     var renamedInfo = data;
@@ -3128,10 +3138,10 @@ angular
                                                 }
                                             }
                                         }
-                                    }).then(function(renamedInfo) {
+                                    }).then(function (renamedInfo) {
                                         DocTree.markNodeOk(node);
                                         dfd.resolve(renamedInfo);
-                                    }, function(errorData) {
+                                    }, function (errorData) {
                                         DocTree.markNodeError(node);
                                         dfd.reject();
                                     });
@@ -3139,7 +3149,7 @@ angular
                             }
                             return dfd.promise();
                         },
-                        renameFile : function(node, fileName) {
+                        renameFile: function (node, fileName) {
                             var dfd = $.Deferred();
                             if (!DocTree.isFileNode(node)) {
                                 dfd.reject();
@@ -3154,13 +3164,13 @@ angular
                                     var fileId = node.data.objectId;
 
                                     Util.serviceCall({
-                                        service : Ecm.renameFile,
-                                        param : {
-                                            fileId : fileId,
-                                            name : fileName
+                                        service: Ecm.renameFile,
+                                        param: {
+                                            fileId: fileId,
+                                            name: fileName
                                         },
-                                        data : {},
-                                        onSuccess : function(data) {
+                                        data: {},
+                                        onSuccess: function (data) {
                                             if (Validator.validateRenamedFile(data)) {
                                                 if (data.fileId == fileId) {
                                                     var renamedInfo = data;
@@ -3174,14 +3184,14 @@ angular
                                                 }
                                             }
                                         }
-                                    }).then(function(renamedInfo) {
+                                    }).then(function (renamedInfo) {
                                         node.title = renamedInfo.fileName;
                                         node.tooltip = node.title;
                                         node.data.modifier = renamedInfo.modifier;
                                         node.data.modified = renamedInfo.modified;
                                         DocTree.markNodeOk(node);
                                         dfd.resolve(renamedInfo);
-                                    }, function(errorData) {
+                                    }, function (errorData) {
                                         DocTree.markNodeError(node);
                                         dfd.reject();
                                     });
@@ -3189,7 +3199,7 @@ angular
                             }
                             return dfd.promise();
                         },
-                        setActiveVersion : function(fileNode, version) {
+                        setActiveVersion: function (fileNode, version) {
                             var dfd = $.Deferred();
                             if (!DocTree.isFileNode(fileNode)) {
                                 dfd.reject();
@@ -3207,13 +3217,13 @@ angular
                                     Util
                                         .serviceCall(
                                             {
-                                                service : Ecm.setActiveVersion,
-                                                param : {
-                                                    fileId : fileId,
-                                                    version : version
+                                                service: Ecm.setActiveVersion,
+                                                param: {
+                                                    fileId: fileId,
+                                                    version: version
                                                 },
-                                                data : {},
-                                                onSuccess : function(data) {
+                                                data: {},
+                                                onSuccess: function (data) {
                                                     if (Validator.validateActiveVersion(data)) {
                                                         if (data.fileId == fileId) {
                                                             var activeVersion = data;
@@ -3235,7 +3245,7 @@ angular
                                                     }
                                                 }
                                             }).then(
-                                        function(activeVersion) {
+                                        function (activeVersion) {
                                             fileNode.data.activeVertionTag = Util.goodValue(activeVersion);
                                             fileNode.data.version = Util.goodValue(activeVersion.activeVersionTag);
                                             fileNode.data.ext = Util
@@ -3247,7 +3257,7 @@ angular
                                             DocTree.markNodeOk(fileNode);
                                             fileNode.renderTitle();
                                             dfd.resolve();
-                                        }, function(errorData) {
+                                        }, function (errorData) {
                                             DocTree.markNodeError(fileNode);
                                             dfd.reject();
                                         });
@@ -3255,15 +3265,15 @@ angular
                             }
                             return dfd.promise();
                         },
-                        addFolderActionBtns : function() {
+                        addFolderActionBtns: function () {
                             DocTree.scope.$bus.publish('showFolderActionBtns', {
-                                command : DocTree.Command
+                                command: DocTree.Command
                             });
                         },
-                        removeFolderActionBtns : function() {
+                        removeFolderActionBtns: function () {
                             DocTree.scope.$bus.publish('hideFolderActionBtns');
                         },
-                        removeSearchFilter : function() {
+                        removeSearchFilter: function () {
                             var setting = DocTree.Config.getSetting();
                             setting.search.enabled = false;
                             setting.search.searchFilter = "";
@@ -3301,7 +3311,7 @@ angular
                     //+ '</tbody>'
                     //+ '</table>'
                     ,
-                    makeTable : function(element, columnDefs) {
+                    makeTable: function (element, columnDefs) {
                         var jqTable = $("<table/>").addClass("table table-striped th-sortable table-hover")
                             .appendTo($(element));
                         var jqThead = $("<thead/>").appendTo(jqTable);
@@ -3310,7 +3320,7 @@ angular
                         var jqTrBody = $("<tr/>").appendTo(jqTbody);
 
                         var jqTh, jqTd;
-                        _.each(columnDefs, function(columnDef) {
+                        _.each(columnDefs, function (columnDef) {
                             var name = columnDef.name;
                             var field = Util.goodValue(columnDef.field, name);
                             var cellTemplate = columnDef.cellTemplate;
@@ -3340,7 +3350,7 @@ angular
 
                         return jqTable;
                     },
-                    renderHeader : function(element, columnDefs) {
+                    renderHeader: function (element, columnDefs) {
                         var jqThs = $(element).find("table th");
                         for (var i = 0; i < columnDefs.length; i++) {
                             var columnDef = columnDefs[i];
@@ -3351,30 +3361,30 @@ angular
                             }
                         }
                     },
-                    makeUploadDocForm : function(jqTree) {
+                    makeUploadDocForm: function (jqTree) {
                         this.jqFormUploadDoc = $("<form/>").attr("id", "formUploadDoc").attr("style", "display:none;")
                             .appendTo(jqTree);
                         this.jqFileInput = $("<input/>").attr("type", "file").attr("id", "file").attr("name", "files[]").attr(
                             "multiple", "").appendTo(this.jqFormUploadDoc);
 
-                        this.jqFileInput.on("change", function(e) {
+                        this.jqFileInput.on("change", function (e) {
                             DocTree.jqFormUploadDoc.submit();
                         });
-                        this.jqFormUploadDoc.submit(function(e) {
+                        this.jqFormUploadDoc.submit(function (e) {
                             DocTree.onSubmitFormUploadFile(e, this);
                         });
                     },
-                    makeDownloadDocForm : function(jqTree) {
+                    makeDownloadDocForm: function (jqTree) {
                         this.jqFormDownloadDoc = $("<form/>").attr("id", "formDownloadDoc").attr("action", "#").attr("style",
                             "display:none;").appendTo(jqTree);
                     }
 
                     ,
-                    uploadForm : function(node, formType) {
+                    uploadForm: function (node, formType) {
                         DocTree.uploadSetting = {
-                            uploadToFolderNode : node,
-                            uploadFileType : formType,
-                            deferUploadFile : $q.defer()
+                            uploadToFolderNode: node,
+                            uploadFileType: formType,
+                            deferUploadFile: $q.defer()
                         };
 
                         var url = DocTree.doUploadForm(formType, node.data.objectId);
@@ -3382,11 +3392,11 @@ angular
                             Ui.dlgOpenWindow(url, "", 1060, $(window).height() - 30, DocTree.onLoadingFrevvoForm);
                         }
                     },
-                    editForm : function(node) {
+                    editForm: function (node) {
                         DocTree.uploadSetting = {
-                            uploadToFolderNode : node,
-                            uploadFileType : node.data.type,
-                            deferUploadFile : $q.defer()
+                            uploadToFolderNode: node,
+                            uploadFileType: node.data.type,
+                            deferUploadFile: $q.defer()
                         };
 
                         var url = DocTree.doUploadForm(node.data.type, node.parent.data.objectId, '', true);
@@ -3394,30 +3404,30 @@ angular
                             Ui.dlgOpenWindow(url, "", 1060, $(window).height() - 30, DocTree.onLoadingFrevvoForm);
                         }
                     },
-                    uploadFile : function() {
+                    uploadFile: function () {
                         DocTree.jqFileInput.attr("multiple", '');
                         DocTree.jqFileInput.click();
                     },
-                    replaceFile : function() {
+                    replaceFile: function () {
                         DocTree.jqFileInput.removeAttr("multiple");
                         DocTree.jqFileInput.click();
                     }
 
                     ,
-                    _addFileNode : function(folderNode, name, type) {
+                    _addFileNode: function (folderNode, name, type) {
                         var fileNode = folderNode.addChildren({
-                            "title" : name,
-                            "name" : name,
-                            "ext" : "",
-                            "mimeType" : "",
-                            "type" : type
+                            "title": name,
+                            "name": name,
+                            "ext": "",
+                            "mimeType": "",
+                            "type": type
                         });
                         DocTree.markNodePending(fileNode);
                         return fileNode;
                     },
-                    _addingFileNodes : function(folderNode, names, type) {
+                    _addingFileNodes: function (folderNode, names, type) {
                         var deferred = $.Deferred();
-                        DocTree.expandNode(folderNode).done(function() {
+                        DocTree.expandNode(folderNode).done(function () {
                             var fileNodes = [];
                             for (var i = 0; i < names.length; i++) {
                                 var fileNode = DocTree._addFileNode(folderNode, names[i], type);
@@ -3429,21 +3439,21 @@ angular
                     }
 
                     ,
-                    onFailedAddingFileNode : function() {
+                    onFailedAddingFileNode: function () {
                         var z = 1;
                     },
-                    onLoadingFrevvoForm : function() {
+                    onLoadingFrevvoForm: function () {
                         if (!DocTree.uploadSetting) {
                             return;
                         }
 
                         var folderNode = DocTree.uploadSetting.uploadToFolderNode;
                         var fileType = DocTree.uploadSetting.uploadFileType;
-                        var names = [ fileType + " form" ];
+                        var names = [fileType + " form"];
                         var promiseAddNode = DocTree._addingFileNodes(folderNode, names, fileType);
 
-                        setTimeout(function() {
-                            var promiseRetrieveLatest = DocTree.Op.retrieveFolderList(folderNode, function(folderListLatest) {
+                        setTimeout(function () {
+                            var promiseRetrieveLatest = DocTree.Op.retrieveFolderList(folderNode, function (folderListLatest) {
                                 //jwu: simulate frevvo data for testing, please keep
                                 //var mock = {};
                                 //var i = folderListLatest.children.length - 1;
@@ -3507,7 +3517,7 @@ angular
                                 return uploadedFiles;
                             });
 
-                            $.when(promiseRetrieveLatest, promiseAddNode).done(function(uploadedFiles, fileNodes) {
+                            $.when(promiseRetrieveLatest, promiseAddNode).done(function (uploadedFiles, fileNodes) {
                                 if (!Util.isArrayEmpty(uploadedFiles) && Validator.validateFancyTreeNodes(fileNodes)) {
                                     for (var i = 0; i < uploadedFiles.length; i++) {
                                         var uploadedFile = uploadedFiles[i];
@@ -3523,7 +3533,7 @@ angular
 
                                         if (!emptyNode) {
                                             var fileNode = folderNode.addChildren({
-                                                "title" : Util.goodValue(uploadedFile.name)
+                                                "title": Util.goodValue(uploadedFile.name)
                                             });
                                             DocTree._fileDataToNodeData(uploadedFile, fileNode);
                                             fileNode.renderTitle();
@@ -3538,7 +3548,7 @@ angular
                         }, 5000);
 
                     },
-                    _folderDataToNodeData : function(folderData, nodeData) {
+                    _folderDataToNodeData: function (folderData, nodeData) {
                         if (folderData && nodeData) {
                             if (!nodeData.data) {
                                 nodeData.data = {};
@@ -3557,7 +3567,7 @@ angular
                         }
                         return nodeData;
                     },
-                    _fileDataToNodeData : function(fileData, nodeData) {
+                    _fileDataToNodeData: function (fileData, nodeData) {
                         if (fileData && nodeData) {
                             if (!nodeData.data) {
                                 nodeData.data = {};
@@ -3597,13 +3607,13 @@ angular
                                 }
                             }
 
-                            _.each(DocTree.CustomData.getItems(), function(item) {
+                            _.each(DocTree.CustomData.getItems(), function (item) {
                                 nodeData.data[item] = Util.goodValue(fileData[item]);
                             });
                         }
                         return nodeData;
                     },
-                    _findEmptyNode : function(folderNode, fileType) {
+                    _findEmptyNode: function (folderNode, fileType) {
                         var node = null;
                         for (var i = folderNode.children.length - 1; 0 <= i; i--) {
                             if (fileType == folderNode.children[i].data.type) {
@@ -3615,7 +3625,7 @@ angular
                         }
                         return node;
                     },
-                    onSubmitFormUploadFile : function(event, ctrl) {
+                    onSubmitFormUploadFile: function (event, ctrl) {
                         event.preventDefault();
 
                         if (DocTree.uploadSetting) {
@@ -3625,7 +3635,7 @@ angular
                     }
                     //, doSubmitFormUploadFile: function (files, doRefresh) {
                     ,
-                    doSubmitFormUploadFile : function(files, fileLang) {
+                    doSubmitFormUploadFile: function (files, fileLang) {
                         if (!DocTree.uploadSetting) {
                             return Util.errorPromise("upload file error");
                         }
@@ -3654,28 +3664,28 @@ angular
 
                         var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                         if (DocTree.uploadSetting.uploadFileNew) {
-                            DocTree.Op.uploadFiles(fd, folderNode, names, fileType, fileLang).then(function(data) {
-                                _.each(data.nodes, function(node) {
+                            DocTree.Op.uploadFiles(fd, folderNode, names, fileType, fileLang).then(function (data) {
+                                _.each(data.nodes, function (node) {
                                     DocTree.markNodeOk(node)
                                 });
                                 dfd.resolve(data);
-                            }, function(error) {
+                            }, function (error) {
                                 dfd.reject(error);
                             });
                         } else {
                             var replaceNode = DocTree.uploadSetting.replaceFileNode;
-                            DocTree.Op.replaceFile(fd, replaceNode, names[0]).then(function(data) {
-                                _.each(data.nodes, function(node) {
+                            DocTree.Op.replaceFile(fd, replaceNode, names[0]).then(function (data) {
+                                _.each(data.nodes, function (node) {
                                     DocTree.markNodeOk(node)
                                 });
                                 dfd.resolve(data);
-                            }, function(error) {
+                            }, function (error) {
                                 dfd.reject(error);
                             });
                         }
                         return dfd.promise();
                     },
-                    _matchFileNode : function(type, name, fileNodes) {
+                    _matchFileNode: function (type, name, fileNodes) {
                         var fileNode = null;
                         for (var i = 0; i < fileNodes.length; i++) {
                             var nameNode = fileNodes[i].data.name;
@@ -3686,7 +3696,7 @@ angular
                         }
                         return fileNode;
                     },
-                    checkNodes : function(nodes, check) {
+                    checkNodes: function (nodes, check) {
                         if (!Util.isArrayEmpty(nodes)) {
                             for (var i = 0; i < nodes.length; i++) {
                                 nodes[i].setSelected(check);
@@ -3695,31 +3705,31 @@ angular
                     }
 
                     ,
-                    getSelectedNodes : function() {
+                    getSelectedNodes: function () {
                         var nodes = null;
                         if (DocTree.tree) {
                             nodes = DocTree.tree.getSelectedNodes();
                         }
                         return nodes;
                     },
-                    getEffectiveNodes : function() {
+                    getEffectiveNodes: function () {
                         var nodes = null;
                         if (this.tree) {
                             var selNodes = this.tree.getSelectedNodes();
                             var node = this.tree.getActiveNode();
-                            nodes = (!Util.isArrayEmpty(selNodes)) ? selNodes : ((!Util.isEmpty(node)) ? [ node ] : []);
+                            nodes = (!Util.isArrayEmpty(selNodes)) ? selNodes : ((!Util.isEmpty(node)) ? [node] : []);
                         }
                         return nodes;
                     }
 
                     ,
-                    editSetting : {
-                        isEditing : false
+                    editSetting: {
+                        isEditing: false
                         //node enters into editing mode
                     }
 
                     ,
-                    getDocumentTypeDisplayLabel : function(documentType) { // looks up the display label for the given document type (afdp-1249)
+                    getDocumentTypeDisplayLabel: function (documentType) { // looks up the display label for the given document type (afdp-1249)
                         var labelMappings = DocTree.fileTypes;
                         if (documentType && Util.isArray(labelMappings)) {
                             documentType = documentType.trim().toLowerCase();
@@ -3736,12 +3746,12 @@ angular
                     }
 
                     ,
-                    onViewChangedParent : function(objType, objId) {
+                    onViewChangedParent: function (objType, objId) {
                         DocTree.switchObject(objType, objId);
                     }
 
                     ,
-                    onChangeVersion : function(event) {
+                    onChangeVersion: function (event) {
                         var node = DocTree.tree.getActiveNode();
                         if (node) {
                             var parent = node.parent;
@@ -3752,8 +3762,7 @@ angular
                                 var verCurrent = Util.goodValue(node.data.version, "0");
                                 if (verSelected != verCurrent) {
                                     if (verSelected < verCurrent) {
-                                        Ui.dlgConfirm($translate.instant("common.directive.docTree.confirmVersion"), function(
-                                            result) {
+                                        Ui.dlgConfirm($translate.instant("common.directive.docTree.confirmVersion"), function (result) {
                                             if (result) {
                                                 DocTree.Op.setActiveVersion(node, verSelected);
                                             } else {
@@ -3772,28 +3781,28 @@ angular
                     // This prevent going to detail page when user checking version drop down too fast
                     //
                     ,
-                    onDblClickVersion : function(event, data) {
+                    onDblClickVersion: function (event, data) {
                         event.stopPropagation();
                     }
 
                     ,
-                    onClickBtnChkAllDocument : function(event, ctrl) {
+                    onClickBtnChkAllDocument: function (event, ctrl) {
                         var checked = $(ctrl).is(":checked");
                         var selectedNodes = [];
 
-                        DocTree.tree.visit(function(node) {
+                        DocTree.tree.visit(function (node) {
                             node.setSelected(checked);
                             if (checked) {
                                 selectedNodes.push(node);
                             }
                         });
-                        $q.all(selectedNodes).then(function(selectedNodesPromises) {
+                        $q.all(selectedNodes).then(function (selectedNodesPromises) {
                             DocTree.scope.$bus.publish('toggleAllNodesChecked', selectedNodesPromises);
                         });
                     }
 
                     ,
-                    onClickBtnSort : function(event, ctrl) {
+                    onClickBtnSort: function (event, ctrl) {
                         var headers = $('.doc-tree-header');
                         var icon = $(ctrl).find('i');
                         var sortBy = $(icon).data('sort');
@@ -3811,7 +3820,7 @@ angular
                             $(icon).toggleClass('fa-sort-desc');
                         }
 
-                        _.forEach(headers, function(label) {
+                        _.forEach(headers, function (label) {
                             if ($(label).attr('id') != $(ctrl).attr('id')) {
                                 var icon = $(label).find('i');
                                 icon.removeClass('fa-sort-desc');
@@ -3821,7 +3830,7 @@ angular
                         });
 
                         if (!sortDir) {
-                            var title = _.find(headers, function(it) {
+                            var title = _.find(headers, function (it) {
                                 return $(it).attr('id') === 'title';
                             });
                             var titleIcon = $(title).find('i');
@@ -3836,17 +3845,17 @@ angular
                     }
 
                     ,
-                    Key : {
-                        KEY_SEPARATOR : "/",
-                        TYPE_ID_SEPARATOR : ".",
-                        NODE_TYPE_PART_PREV_PAGE : "prevPage",
-                        NODE_TYPE_PART_NEXT_PAGE : "nextPage",
-                        NODE_TYPE_PART_PAGE : "p"
+                    Key: {
+                        KEY_SEPARATOR: "/",
+                        TYPE_ID_SEPARATOR: ".",
+                        NODE_TYPE_PART_PREV_PAGE: "prevPage",
+                        NODE_TYPE_PART_NEXT_PAGE: "nextPage",
+                        NODE_TYPE_PART_PAGE: "p"
 
                         //keyParts format: [{type: "t", id: "123"}, ....]
                         //Integer ID works as well: [{type: "t", id: 123}, ....]
                         ,
-                        makeKey : function(keyParts) {
+                        makeKey: function (keyParts) {
                             var key = "";
                             if (Util.isArray(keyParts)) {
                                 for (var i = 0; i < keyParts.length; i++) {
@@ -3868,35 +3877,35 @@ angular
                     }
 
                     ,
-                    Config : {
-                        DEFAULT_MAX_ROWS : 1000,
-                        DEFAULT_SORT_BY : "name",
-                        DEFAULT_SORT_DIRECTION : "ASC",
-                        _setting : {
-                            maxRows : 16,
-                            sortBy : null,
-                            sortDirection : null,
-                            search : {
-                                enabled : false,
-                                searchFilter : null
+                    Config: {
+                        DEFAULT_MAX_ROWS: 1000,
+                        DEFAULT_SORT_BY: "name",
+                        DEFAULT_SORT_DIRECTION: "ASC",
+                        _setting: {
+                            maxRows: 16,
+                            sortBy: null,
+                            sortDirection: null,
+                            search: {
+                                enabled: false,
+                                searchFilter: null
                             }
                         },
-                        getSetting : function() {
+                        getSetting: function () {
                             return this._setting;
                         },
-                        getMaxRows : function() {
+                        getMaxRows: function () {
                             return Util.goodValue(this._setting.maxRows, this.DEFAULT_MAX_ROWS);
                         },
-                        getSortBy : function() {
+                        getSortBy: function () {
                             return Util.goodValue(this._setting.sortBy, this.DEFAULT_SORT_BY);
                         },
-                        getSortDirection : function() {
+                        getSortDirection: function () {
                             return Util.goodValue(this._setting.sortDirection, this.DEFAULT_SORT_DIRECTION);
                         }
                     }
 
                     ,
-                    findFolderItemIdx : function(objectId, folderList) {
+                    findFolderItemIdx: function (objectId, folderList) {
                         var found = -1;
                         if (Validator.validateFolderList(folderList)) {
                             for (var i = 0; i < folderList.children.length; i++) {
@@ -3910,7 +3919,7 @@ angular
                     }
 
                     ,
-                    fileToSolrData : function(fileData) {
+                    fileToSolrData: function (fileData) {
                         var solrData = {};
                         solrData.objectType = "file";
                         if (!Util.isEmpty(fileData.fileId, 0)) {
@@ -3980,7 +3989,7 @@ angular
                         }
                         return solrData;
                     },
-                    folderToSolrData : function(folderData) {
+                    folderToSolrData: function (folderData) {
                         var solrData = {};
                         solrData.objectType = "folder";
                         if (!Util.isEmpty(folderData.id, 0)) {
@@ -4005,7 +4014,7 @@ angular
                     }
 
                     ,
-                    onFileTypesChanged : function(fileTypes) {
+                    onFileTypesChanged: function (fileTypes) {
                         DocTree.fileTypes = fileTypes;
                         var jqTreeBody = DocTree.jqTree.find("tbody");
                         DocTree.Menu.useContextMenu(jqTreeBody, false);
@@ -4013,32 +4022,32 @@ angular
                 }; //end DocTree
 
                 var DialogDnd = {
-                    OpTypes : {
-                        OP_NOOP : "",
-                        OP_UPLOAD_TO_PARENT : "UploadToParent",
-                        OP_UPLOAD_TO_FOLDER : "UploadToFolder"
+                    OpTypes: {
+                        OP_NOOP: "",
+                        OP_UPLOAD_TO_PARENT: "UploadToParent",
+                        OP_UPLOAD_TO_FOLDER: "UploadToFolder"
                     }
 
                     ,
-                    openModal : function(nodeType, fileTypes, onClickOk) {
+                    openModal: function (nodeType, fileTypes, onClickOk) {
                         var params = {
-                            nodeType : nodeType,
-                            fileTypes : fileTypes
+                            nodeType: nodeType,
+                            fileTypes: fileTypes
                         };
 
                         var modalInstance = $modal.open({
-                            templateUrl : "directives/doc-tree/doc-tree.dnd.dialog.html",
-                            controller : 'directives.DocTreeDndDialogController',
-                            resolve : {
-                                OpTypes : function() {
+                            templateUrl: "directives/doc-tree/doc-tree.dnd.dialog.html",
+                            controller: 'directives.DocTreeDndDialogController',
+                            resolve: {
+                                OpTypes: function () {
                                     return DialogDnd.OpTypes
                                 },
-                                params : function() {
+                                params: function () {
                                     return params;
                                 }
                             }
                         });
-                        modalInstance.result.then(function(result) {
+                        modalInstance.result.then(function (result) {
                             if (result) {
                                 onClickOk(result);
                             }
@@ -4047,29 +4056,29 @@ angular
                 };
 
                 var Ui = {
-                    dlgModal : function($s, onClickBtnPrimary, onClickBtnDefault) {
+                    dlgModal: function ($s, onClickBtnPrimary, onClickBtnDefault) {
                         var a = $s.html();
 
                         if (onClickBtnPrimary) {
-                            $s.find("button.btn-primary").unbind("click").on("click", function(e) {
+                            $s.find("button.btn-primary").unbind("click").on("click", function (e) {
                                 onClickBtnPrimary(e, this);
                                 $s.modal("hide");
                             });
                         }
                         if (onClickBtnDefault) {
-                            $s.find("button.btn-default").unbind("click").on("click", function(e) {
+                            $s.find("button.btn-default").unbind("click").on("click", function (e) {
                                 onClickBtnDefault(e, this);
                             });
                         }
 
                         $s.modal("show");
                     },
-                    dlgConfirm : function(msg, callback) {
+                    dlgConfirm: function (msg, callback) {
                         bootbox.confirm(msg, callback);
                     }
 
                     ,
-                    dlgOpenWindow : function(url, title, w, h, onDone) {
+                    dlgOpenWindow: function (url, title, w, h, onDone) {
                         var params = {};
                         params.frevvoFormUrl = url;
                         params.title = title;
@@ -4079,20 +4088,20 @@ angular
 
                         var modalInstance = $modal
                             .open({
-                                templateUrl : "directives/doc-tree/doc-tree.frevvo.dialog.html",
-                                controller : [
+                                templateUrl: "directives/doc-tree/doc-tree.frevvo.dialog.html",
+                                controller: [
                                     '$rootScope',
                                     '$scope',
                                     '$interval',
                                     'params',
-                                    function($rootScope, $scope, $interval, params) {
+                                    function ($rootScope, $scope, $interval, params) {
                                         $scope.title = params.title;
                                         $scope.height = (params.h + 200) + "px";
                                         $scope.width = (params.w + 200) + "px";
                                         $scope.widthDialogBox = (params.w + 20) + "px";
                                         $scope.frevvoFormUrl = params.frevvoFormUrl;
 
-                                        $scope.iframeLoaded = function() {
+                                        $scope.iframeLoaded = function () {
                                             document.getElementsByClassName("modal-" + (params.h + 200) + "px")[0].style.width = $scope.width;
                                             startCheckFrevvoSubmission();
                                             startInitFrevvoMessaging();
@@ -4177,24 +4186,24 @@ angular
 
                                             var modalInstanceUserPicker = $modal
                                                 .open({
-                                                    templateUrl : "modules/frevvo/views/frevvo-participants-picker-modal.client.view.html",
-                                                    controller : [ '$scope', '$modalInstance', 'params',
-                                                        function($scope, $modalInstance, params) {
+                                                    templateUrl: "modules/frevvo/views/frevvo-participants-picker-modal.client.view.html",
+                                                    controller: ['$scope', '$modalInstance', 'params',
+                                                        function ($scope, $modalInstance, params) {
                                                             $scope.modalInstance = $modalInstance;
                                                             $scope.header = params.header;
                                                             $scope.filter = params.filter;
                                                             $scope.config = params.config;
-                                                        } ],
-                                                    animation : true,
-                                                    size : 'lg',
-                                                    backdrop : 'static',
-                                                    resolve : {
-                                                        params : function() {
+                                                        }],
+                                                    animation: true,
+                                                    size: 'lg',
+                                                    backdrop: 'static',
+                                                    resolve: {
+                                                        params: function () {
                                                             return params;
                                                         }
                                                     }
                                                 });
-                                            modalInstanceUserPicker.result.then(function(selected) {
+                                            modalInstanceUserPicker.result.then(function (selected) {
                                                 if (!Util.isEmpty(selected)) {
                                                     var message = {};
                                                     message.source = "arkcase";
@@ -4218,7 +4227,7 @@ angular
                                             $interval.cancel(promise);
                                         }
 
-                                        $scope.close = function(callback) {
+                                        $scope.close = function (callback) {
                                             stopCheckFrevvoSubmission();
                                             modalInstance.close(false);
                                             if (callback) {
@@ -4247,12 +4256,12 @@ angular
                                                 $scope.close(params.onDone);
                                             }
                                         }
-                                    } ],
-                                animation : true,
-                                size : (params.h + 200) + "px",
-                                backdrop : 'static',
-                                resolve : {
-                                    params : function() {
+                                    }],
+                                animation: true,
+                                size: (params.h + 200) + "px",
+                                backdrop: 'static',
+                                resolve: {
+                                    params: function () {
                                         return params;
                                     }
                                 }
@@ -4260,19 +4269,19 @@ angular
                     }
 
                     ,
-                    getValue : function($s) {
+                    getValue: function ($s) {
                         return $s.val();
                     },
-                    setValue : function($s, value) {
+                    setValue: function ($s, value) {
                         if (null == value) {
                             value = "";
                         }
                         $s.val(value);
                     },
-                    getText : function($s) {
+                    getText: function ($s) {
                         return $s.text();
                     },
-                    setText : function($s, value) {
+                    setText: function ($s, value) {
                         if (null == value) {
                             value = "";
                         }
@@ -4285,8 +4294,8 @@ angular
                     //i = -1          -- return last text node
                     //
                     ,
-                    getTextNodeText : function($s, i) {
-                        var textNodes = $s.contents().filter(function() {
+                    getTextNodeText: function ($s, i) {
+                        var textNodes = $s.contents().filter(function () {
                             return this.nodeType == 3;
                         });
 
@@ -4300,12 +4309,12 @@ angular
 
                         return textNodes[i].nodeValue;
                     },
-                    setTextNodeText : function($s, value, i) {
+                    setTextNodeText: function ($s, value, i) {
                         if (null == value) {
                             value = "";
                         }
 
-                        var textNodes = $s.contents().filter(function() {
+                        var textNodes = $s.contents().filter(function () {
                             return this.nodeType == 3;
                         });
 
@@ -4319,79 +4328,79 @@ angular
 
                         textNodes[i].nodeValue = value;
                     },
-                    getSelectValue : function($s) {
+                    getSelectValue: function ($s) {
                         var v = $s.find("option:selected").val();
                         if ("placeholder" == v) {
                             v = "";
                         }
                         return v;
                     },
-                    getSelectedText : function($s) {
+                    getSelectedText: function ($s) {
                         var v = $s.find("option:selected").text();
                         if ("placeholder" == v) {
                             v = "";
                         }
                         return v;
                     },
-                    setSelectValue : function($s, value) {
-                        $s.find("option").filter(function() {
+                    setSelectValue: function ($s, value) {
+                        $s.find("option").filter(function () {
                             return jQuery(this).val() == value;
                             //}).prop('selected', true); //for jQuery v1.6+
                         }).attr('selected', true);
                     },
-                    appendSelect : function($s, key, val) {
+                    appendSelect: function ($s, key, val) {
                         $s.append($("<option></option>").attr("value", key).text(val));
                     }
 
                     //ignore first option, which is instruction
                     ,
-                    getSelectValueIgnoreFirst : function($s) {
+                    getSelectValueIgnoreFirst: function ($s) {
                         var selected = Ui.getSelectValue($s);
                         var firstOpt = $s.find("option:first").val();
                         return (selected == firstOpt) ? null : selected;
                     },
-                    getSelectTextIgnoreFirst : function($s) {
+                    getSelectTextIgnoreFirst: function ($s) {
                         var selected = Ui.getSelectedText($s);
                         var firstOpt = $s.find("option:first").val();
                         return (selected == firstOpt) ? null : selected;
                     },
-                    getSelectValues : function($s) {
+                    getSelectValues: function ($s) {
                         var mv = [];
-                        $s.find("option:selected").each(function(i, selected) {
+                        $s.find("option:selected").each(function (i, selected) {
                             mv[i] = $(selected).val();
                         });
                         return mv;
                     },
-                    getSelectValuesAsString : function($s, sep) {
-                        return $s.find("option:selected").map(function() {
+                    getSelectValuesAsString: function ($s, sep) {
+                        return $s.find("option:selected").map(function () {
                             return this.value;
                         }).get().join(sep);
                     }
 
                     ,
-                    getPlaceHolderInput : function($s) {
+                    getPlaceHolderInput: function ($s) {
                         var v;
                         v = $s.val();
                         v = ($s.attr('placeholder') !== v) ? v : "";
                         return v;
                     },
-                    setPlaceHolderInput : function($s, val) {
+                    setPlaceHolderInput: function ($s, val) {
                         //$s.val(Util.goodValue(val, ""));
                         $s.trigger('focus').val(Util.goodValue(val, "")).trigger('blur');
                     }
 
                     ,
-                    changePlaceHolderSelect : function($s) {
+                    changePlaceHolderSelect: function ($s) {
                         if ($s.val() == "placeholder") {
                             $s.addClass("placeholder");
                         } else {
                             $s.removeClass("placeholder");
                         }
                     },
-                    isChecked : function($s) {
+                    isChecked: function ($s) {
                         return $s.is(":checked");
                     },
-                    setChecked : function($s, value) {
+                    setChecked: function ($s, value) {
                         if ("true" == value || true == value) {
                             $s.attr("checked", "checked");
                             //$s.prop("checked", true); //for v1.6+
@@ -4400,24 +4409,24 @@ angular
                             //$s.prop("checked", false); //for v1.6+
                         }
                     },
-                    getHtml : function($s) {
+                    getHtml: function ($s) {
                         return $s.html();
                     },
-                    setHtml : function($s, value) {
+                    setHtml: function ($s, value) {
                         $s.html(value);
                     }
 
                     // Setting value directly to a date picker causes date picker popup initially visible.
                     // Use setValueDatePicker() to solve the problem.
                     ,
-                    setValueDatePicker : function($s, val) {
+                    setValueDatePicker: function ($s, val) {
                         $s.attr("style", "display:none");
                         Ui.setPlaceHolderInput($s, val);
                         Ui.show($s, true);
                     }
 
                     ,
-                    setEnable : function($s, value) {
+                    setEnable: function ($s, value) {
                         if (value == "true" || value == true) {
                             $s.removeAttr("disabled");
                             //$s.prop("disabled", false); //for v1.6+
@@ -4426,23 +4435,23 @@ angular
                             //$s.prop("disabled", true); //for v1.6+
                         }
                     },
-                    isEnable : function($s) {
+                    isEnable: function ($s) {
                         var d = $s.attr("disabled");
                         return !d;
                     },
-                    removeClick : function($s) {
-                        $s.unbind("click").click(function(event) {
+                    removeClick: function ($s) {
+                        $s.unbind("click").click(function (event) {
                             return event.preventDefault();
                         });
                     },
-                    show : function($s, show) {
+                    show: function ($s, show) {
                         if (show == "true" || show == true) {
                             $s.show();
                         } else {
                             $s.hide();
                         }
                     },
-                    showParent : function($s, show) {
+                    showParent: function ($s, show) {
                         var p = $s.parent();
                         if (p)
                             if ("true" == show || true == show) {
@@ -4454,9 +4463,9 @@ angular
 
                     //work around for hiding options in select list in IE
                     ,
-                    showOption : function($s, show) {
+                    showOption: function ($s, show) {
                         if (show) {
-                            $s.each(function(index, val) {
+                            $s.each(function (index, val) {
                                 if (navigator.appName == 'Microsoft Internet Explorer') {
                                     if (this.nodeName.toUpperCase() === 'OPTION') {
                                         var span = $(this).parent();
@@ -4472,7 +4481,7 @@ angular
                             });
                         } else {
                             $s
-                                .each(function(index, val) {
+                                .each(function (index, val) {
                                     if ($(this).is('option') && (!$(this).parent().is('span')))
                                         $(this)
                                             .wrap(
@@ -4481,16 +4490,16 @@ angular
                                 });
                         }
                     },
-                    isVisible : function($s) {
+                    isVisible: function ($s) {
                         return $s.is(":visible");
                     },
-                    empty : function($s) {
+                    empty: function ($s) {
                         $s.empty();
                     }
                 }; //end Ui
 
                 var Validator = {
-                    validateNodes : function(data) {
+                    validateNodes: function (data) {
                         if (!Util.isArray(data)) {
                             return false;
                         }
@@ -4501,7 +4510,7 @@ angular
                         }
                         return true;
                     },
-                    validateNode : function(data) {
+                    validateNode: function (data) {
                         if (!this.validateFancyTreeNode(data)) {
                             return false;
                         }
@@ -4510,7 +4519,7 @@ angular
                         }
                         return true;
                     },
-                    validateFancyTreeNodes : function(data) {
+                    validateFancyTreeNodes: function (data) {
                         if (!Util.isArray(data)) {
                             return false;
                         }
@@ -4521,7 +4530,7 @@ angular
                         }
                         return true;
                     },
-                    validateFancyTreeNode : function(data) {
+                    validateFancyTreeNode: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4538,7 +4547,7 @@ angular
                     }
 
                     ,
-                    validateFolderList : function(data) {
+                    validateFolderList: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4547,7 +4556,7 @@ angular
                         }
                         return true;
                     },
-                    validateCreateInfo : function(data) {
+                    validateCreateInfo: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4562,7 +4571,7 @@ angular
                         }
                         return true;
                     },
-                    validateDeletedFolder : function(data) {
+                    validateDeletedFolder: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4571,7 +4580,7 @@ angular
                         }
                         return true;
                     },
-                    validateDeletedFile : function(data) {
+                    validateDeletedFile: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4580,7 +4589,7 @@ angular
                         }
                         return true;
                     },
-                    validateRenamedFolder : function(data) {
+                    validateRenamedFolder: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4592,7 +4601,7 @@ angular
                         }
                         return true;
                     },
-                    validateRenamedFile : function(data) {
+                    validateRenamedFile: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4604,7 +4613,7 @@ angular
                         }
                         return true;
                     },
-                    validateMoveFileInfo : function(data) {
+                    validateMoveFileInfo: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4619,7 +4628,7 @@ angular
                         }
                         return true;
                     },
-                    validateCopyFileInfo : function(data) {
+                    validateCopyFileInfo: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4640,7 +4649,7 @@ angular
                         }
                         return true;
                     },
-                    validateMoveFolderInfo : function(data) {
+                    validateMoveFolderInfo: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4649,7 +4658,7 @@ angular
                         }
                         return true;
                     },
-                    validateCopyFolderInfo : function(data) {
+                    validateCopyFolderInfo: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4667,7 +4676,7 @@ angular
                         }
                         return true;
                     },
-                    validateUploadInfo : function(data) {
+                    validateUploadInfo: function (data) {
                         if (Util.isArrayEmpty(data)) {
                             return false;
                         }
@@ -4678,7 +4687,7 @@ angular
                         }
                         return true;
                     },
-                    validateReplaceInfo : function(data) {
+                    validateReplaceInfo: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4687,7 +4696,7 @@ angular
                         }
                         return true;
                     },
-                    validateUploadInfoItem : function(data) {
+                    validateUploadInfoItem: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4705,7 +4714,7 @@ angular
                         }
                         return true;
                     },
-                    validateActiveVersion : function(data) {
+                    validateActiveVersion: function (data) {
                         if (Util.isEmpty(data)) {
                             return false;
                         }
@@ -4727,25 +4736,25 @@ angular
                 DocTree.Validator = Validator;
 
                 return {
-                    restrict : 'E',
-                    template : '',
-                    scope : {
-                        treeConfig : '=',
-                        objectInfo : '=',
-                        treeControl : '=',
-                        objectType : '=',
-                        objectId : '='
+                    restrict: 'E',
+                    template: '',
+                    scope: {
+                        treeConfig: '=',
+                        objectInfo: '=',
+                        treeControl: '=',
+                        objectType: '=',
+                        objectId: '='
                         //, fileTypes: '='
                         //, correspondenceForms: '='
                         ,
-                        uploadForm : '&',
-                        onInitTree : '&',
-                        readOnly : '@',
-                        topNodeExpanded : '='
+                        uploadForm: '&',
+                        onInitTree: '&',
+                        readOnly: '@',
+                        topNodeExpanded: '='
                     }
 
                     ,
-                    link : function(scope, element, attrs) {
+                    link: function (scope, element, attrs) {
                         Ui.scope = scope;
 
                         DocTree.scope = scope;
@@ -4755,23 +4764,23 @@ angular
                         DocTree.treeConfig = {};
                         DocTree.objectInfo = null;
                         DocTree.topNodeExpanded = scope.topNodeExpanded ? scope.topNodeExpanded : false;
-                        DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function() {
+                        DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function () {
                         }); //if not defined, do nothing
                         DocTree.readOnly = ("true" === attrs.readOnly);
 
                         scope.treeControl = {
-                            getSelectedNodes : DocTree.getSelectedNodes,
-                            refreshTree : DocTree.refreshTree,
-                            refreshNode : DocTree.refreshNode,
-                            updateNodeData : DocTree.updateNodeData,
-                            addCommandHandler : function(args) {
+                            getSelectedNodes: DocTree.getSelectedNodes,
+                            refreshTree: DocTree.refreshTree,
+                            refreshNode: DocTree.refreshNode,
+                            updateNodeData: DocTree.updateNodeData,
+                            addCommandHandler: function (args) {
                                 DocTree.Command.addHandler(args);
                             },
-                            addColumnRenderer : function(args) {
+                            addColumnRenderer: function (args) {
                                 DocTree.CustomData.addData(args.model);
                                 DocTree.Column.addRenderer(args.name, args.renderer);
                             },
-                            getDocTreeObject : function() {
+                            getDocTreeObject: function () {
                                 return DocTree;
                             }
                         };
@@ -4787,7 +4796,7 @@ angular
                         }
 
                         var promiseCommon = ConfigService.getModuleConfig("common").then(
-                            function(moduleConfig) {
+                            function (moduleConfig) {
                                 var treeConfig = Util.goodMapValue(moduleConfig, "docTree", {});
                                 DocTree.treeConfig = _.merge(treeConfig, DocTree.treeConfig);
 
@@ -4807,10 +4816,10 @@ angular
                                 return moduleConfig;
                             });
 
-                        scope.$watchGroup([ 'treeConfig', 'objectInfo', 'treeConfig.fileTypes', 'treeConfig.fileLanguages' ],
-                            function(newValues, oldValues, scope) {
+                        scope.$watchGroup(['treeConfig', 'objectInfo', 'treeConfig.fileTypes', 'treeConfig.fileLanguages'],
+                            function (newValues, oldValues, scope) {
 
-                                promiseCommon.then(function() {
+                                promiseCommon.then(function () {
 
                                     DocTree.objectInfo = newValues[1];
 
@@ -4850,22 +4859,22 @@ angular
                                 });
                             });
                         /*Get send email configuration*/
-                        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(res) {
+                        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function (res) {
                             DocTree.treeConfig.emailSendConfiguration = res.data;
                         });
 
-                        DocTree.scope.$bus.subscribe('onFilterDocTree', function(data) {
+                        DocTree.scope.$bus.subscribe('onFilterDocTree', function (data) {
                             DocTree.onFilter(data.filter);
                         });
 
-                        DocTree.scope.$bus.subscribe('onSearchDocTree', function(data) {
+                        DocTree.scope.$bus.subscribe('onSearchDocTree', function (data) {
                             DocTree.onSearch(data.searchFilter);
                         });
 
                         new LocaleHelper.Locale({
-                            scope : scope,
-                            onTranslateChangeSuccess : function(data) {
-                                $timeout(function() {
+                            scope: scope,
+                            onTranslateChangeSuccess: function (data) {
+                                $timeout(function () {
                                     if (DocTree.tree) {
                                         DocTree.renderHeader(element, DocTree.treeConfig.columnDefs);
                                         DocTree.tree.render(true, true);
@@ -4878,11 +4887,11 @@ angular
             } ]);
 
 angular.module('directives').controller('directives.DocTreeDndDialogController',
-    [ '$scope', '$modalInstance', 'UtilService', 'OpTypes', 'params', function($scope, $modalInstance, Util, OpTypes, params) {
+    ['$scope', '$modalInstance', 'UtilService', 'OpTypes', 'params', function ($scope, $modalInstance, Util, OpTypes, params) {
 
         $scope.result = {
-            op : OpTypes.OP_NOOP,
-            fileType : null
+            op: OpTypes.OP_NOOP,
+            fileType: null
         };
 
         $scope.fileTypes = params.fileTypes;
@@ -4894,7 +4903,7 @@ angular.module('directives').controller('directives.DocTreeDndDialogController',
             $scope.result.op = OpTypes.OP_UPLOAD_TO_PARENT;
         }
 
-        $scope.disableOk = function() {
+        $scope.disableOk = function () {
             if (OpTypes.OP_UPLOAD_TO_FOLDER == $scope.result.op || OpTypes.OP_UPLOAD_TO_PARENT == $scope.result.op) {
                 return Util.isEmpty($scope.result.fileType);
             } else {
@@ -4902,11 +4911,11 @@ angular.module('directives').controller('directives.DocTreeDndDialogController',
             }
         };
 
-        $scope.onClickCancel = function() {
+        $scope.onClickCancel = function () {
             $modalInstance.close(false);
         };
-        $scope.onClickOk = function() {
+        $scope.onClickOk = function () {
             $modalInstance.close($scope.result);
         };
 
-    } ]);
+    }]);
