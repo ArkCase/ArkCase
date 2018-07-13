@@ -32,12 +32,14 @@ public class WopiUserInfo
     private final String displayName;
     private final String userId;
     private final String lang;
+    private final Long accessTokenTtl;
 
-    public WopiUserInfo(String displayName, String id, String lang)
+    public WopiUserInfo(String displayName, String id, String lang, Long accessTokenTtl)
     {
         this.displayName = displayName;
         this.userId = id;
         this.lang = lang;
+        this.accessTokenTtl = accessTokenTtl;
     }
 
     public String getDisplayName()
@@ -53,5 +55,10 @@ public class WopiUserInfo
     public String getLang()
     {
         return lang;
+    }
+
+    public Long getAccessTokenTtl()
+    {
+        return accessTokenTtl;
     }
 }
