@@ -44,6 +44,7 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,7 @@ public class CostsheetServiceImpl implements CostsheetService
     }
 
     @Override
+    @Transactional
     public AcmCostsheet save(AcmCostsheet costsheet) throws PipelineProcessException
     {
         CostsheetPipelineContext pipelineContext = new CostsheetPipelineContext();
@@ -85,6 +87,7 @@ public class CostsheetServiceImpl implements CostsheetService
     }
 
     @Override
+    @Transactional
     public AcmCostsheet save(AcmCostsheet costsheet, String submissionName) throws PipelineProcessException
     {
         CostsheetPipelineContext pipelineContext = new CostsheetPipelineContext();
