@@ -4,6 +4,7 @@ angular.module('cases').controller('Common.MultiCorrespondenceModalController', 
 
     $scope.correspondenceTemplates = [];
     $scope.selectedTemplates = [];
+    $scope.modalResult = {};
 
     CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.CASE_FILE).then(function (result){
         $scope.correspondenceTemplates = result.data;
@@ -42,7 +43,10 @@ angular.module('cases').controller('Common.MultiCorrespondenceModalController', 
     };
 
     $scope.onClickOk = function() {
-        $modalInstance.close($scope.selectedTemplates);
+        $scope.modalResult.selectedTemplates = $scope.selectedTemplates;
+        $scope.modalResult.multiCorrespondenceDocumentName = $scope.multiCorrespondenceDocumentName;
+
+        $modalInstance.close($scope.modalResult);
     };
 
     $scope.onClickCancel = function() {
