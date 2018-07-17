@@ -1,10 +1,11 @@
-package com.armedia.acm.services.billing.service;
+package com.armedia.acm.services.billing.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.billing.dao.BillingDao;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.model.BillingItemConstants;
+import com.armedia.acm.services.billing.service.BillingService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
