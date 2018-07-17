@@ -39,6 +39,7 @@ import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -182,7 +183,12 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             {
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
                 // add file metadata so it can be displayed in Snowbound
-                response.setHeader("X-ArkCase-File-Metadata", getObjectConverter().getJsonMarshaller().marshal(ecmFile));
+                JSONObject fileMetadata = new JSONObject();
+                fileMetadata.put("fileName", ecmFile.getFileName());
+                fileMetadata.put("fileType", ecmFile.getFileType());
+                fileMetadata.put("fileTypeCapitalized",
+                        ecmFile.getFileType().substring(0, 1).toUpperCase() + ecmFile.getFileType().substring(1));
+                response.setHeader("X-ArkCase-File-Metadata", fileMetadata.toString());
             }
             response.setContentType(mimeType);
             byte[] buffer = new byte[1024];
