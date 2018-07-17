@@ -2,7 +2,7 @@
 
 angular.module('services').factory('MultiCorrespondence.Service', ['$http', 'UtilService', function($http, Util) {
 
-    var generateMultiTemplateCorrespondence = function(templates, parentObjectType, parentObjectId, folderId) {
+    var generateMultiTemplateCorrespondence = function(templates, parentObjectType, parentObjectId, folderId, multiCorrespondenceDocumentName) {
         return $http({
             method: "POST",
             url: "api/latest/service/correspondence/multitemplate",
@@ -10,7 +10,8 @@ angular.module('services').factory('MultiCorrespondence.Service', ['$http', 'Uti
             params: {
                 parentObjectType: parentObjectType,
                 parentObjectId: parentObjectId,
-                folderId: folderId
+                folderId: folderId,
+                documentName: multiCorrespondenceDocumentName
             },
             headers: {
                 "Content-Type": "application/json"
@@ -18,11 +19,11 @@ angular.module('services').factory('MultiCorrespondence.Service', ['$http', 'Uti
         });
     };
 
-    var _createMultiTemplateCorrespondence = function(requestData, names, template, selectedTemplates) {
+    var _createMultiTemplateCorrespondence = function(requestData, names, template, selectedTemplates, documentName) {
         if(selectedTemplates.length > 0){
             requestData.docTree._addingFileNodes(requestData.nodes[0], names, names[0]).then(function(tmpFileNodes) {
             var fileNodes = tmpFileNodes;
-            generateMultiTemplateCorrespondence(selectedTemplates, requestData.docTree.getObjType(), requestData.docTree.getObjId(), requestData.nodes[0].data.objectId).then(function(tmpUploadedFile){
+            generateMultiTemplateCorrespondence(selectedTemplates, requestData.docTree.getObjType(), requestData.docTree.getObjId(), requestData.nodes[0].data.objectId, documentName).then(function(tmpUploadedFile){
                 var cacheKey = requestData.docTree.getCacheKeyByNode(requestData.nodes[0]);
                 var uploadedFile = tmpUploadedFile.data;
                 var file = requestData.docTree.fileToSolrData(uploadedFile);
