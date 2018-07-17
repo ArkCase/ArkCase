@@ -50,6 +50,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.security.core.Authentication;
 
+import javax.annotation.Nullable;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
@@ -97,7 +100,7 @@ public class WopiAcmService
         return new InputStreamResource(fileContent);
     }
 
-    public void putFile(Long id, InputStreamResource resource, Authentication authentication)
+    public void putFile(Long id, @Nullable InputStreamResource resource, Authentication authentication)
             throws AcmObjectNotFoundException, IOException, MuleException
     {
         EcmFile fileToBeReplaced = ecmFileService.findById(id);
@@ -105,7 +108,14 @@ public class WopiAcmService
         {
             throw new AcmObjectNotFoundException("FILE", id, "File not found");
         }
-        fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, resource.getInputStream());
+        if (resource == null)
+        {
+            fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, new ByteArrayInputStream(new byte[0]));
+        }
+        else
+        {
+            fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, resource.getInputStream());
+        }
     }
 
     public WopiLockInfo getSharedLock(Long fileId)
