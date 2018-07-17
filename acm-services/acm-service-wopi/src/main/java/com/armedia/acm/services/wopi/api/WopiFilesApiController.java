@@ -92,7 +92,7 @@ public class WopiFilesApiController
     @RequestMapping(value = "/{id}/contents", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity putFile(@PathVariable Long id,
-            @RequestBody InputStreamResource resource,
+            @RequestBody(required = false) InputStreamResource resource,
             Authentication authentication)
     {
         log.info("Put file [{}] per user [{}]", id, authentication.getName());
