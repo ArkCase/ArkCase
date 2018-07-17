@@ -64,6 +64,16 @@
             <artifactId>acm-web</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-timesheet</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-costsheet</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>

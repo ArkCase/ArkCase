@@ -6,13 +6,19 @@
 
     <bean id="billingItemEventPublisher" class="com.armedia.acm.services.billing.model.BillingItemEventPublisher"/>
 
-    <bean id="billingService" class="com.armedia.acm.services.billing.service.BillingServiceImpl">
+    <bean id="billingService" class="com.armedia.acm.services.billing.service.impl.BillingServiceImpl">
         <property name="billingDao" ref="billingDao"/>
     </bean>
 
     <bean id="billingItemToSolrTransformer" class="com.armedia.acm.services.billing.service.BillingItemToSolrTransformer">
         <property name="billingDao" ref="billingDao"/>
         <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="billingAcmTaskActivitiEventHandler" class="com.armedia.acm.services.billing.service.BillingAcmTaskActivitiEventHandler">
+        <property name="billingService" ref="billingService"/>
+        <property name="acmTimesheetDao" ref="acmTimesheetDao"/>
+        <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
     </bean>
 
 </beans>
