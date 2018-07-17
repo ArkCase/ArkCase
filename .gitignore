@@ -30,3 +30,8 @@ rebel.xml
 **/rebel.xml
 .rebel.xml.bak
 /.derived
+
+# VS Code
+.factorypath
+launch.test.json
+*.code-workspace
