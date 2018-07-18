@@ -1,10 +1,9 @@
 package com.armedia.acm.services.billing.service.impl;
 
-import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.billing.dao.BillingDao;
+import com.armedia.acm.services.billing.exception.AddBillingItemException;
+import com.armedia.acm.services.billing.exception.GetBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
-import com.armedia.acm.services.billing.model.BillingItemConstants;
 import com.armedia.acm.services.billing.service.BillingService;
 
 import org.slf4j.Logger;
@@ -59,7 +58,7 @@ public class BillingServiceImpl implements BillingService
      */
     @Override
     public List<BillingItem> getBillingItemsByParentObjectTypeAndId(String parentObjectType, Long parentObjectId)
-            throws AcmListObjectsFailedException
+            throws GetBillingItemException
     {
         log.info("Finding Billing Items");
         if (parentObjectId != null && parentObjectType != null)
@@ -72,12 +71,10 @@ public class BillingServiceImpl implements BillingService
             }
             catch (PersistenceException e)
             {
-                throw new AcmListObjectsFailedException(BillingItemConstants.OBJECT_TYPE, e.getMessage(), e);
+                throw new GetBillingItemException("Error getting Billing Items", e);
             }
         }
-        throw new AcmListObjectsFailedException(BillingItemConstants.OBJECT_TYPE,
-                "Could not get Billing Items, missing parentObjectType or parentObjectId",
-                null);
+        throw new GetBillingItemException("Could not get Billing Items, missing parentObjectType or parentObjectId");
     }
 
     /*
@@ -87,7 +84,7 @@ public class BillingServiceImpl implements BillingService
      * BillingItem)
      */
     @Override
-    public BillingItem addBillingItem(BillingItem billingItem) throws AcmUserActionFailedException
+    public BillingItem addBillingItem(BillingItem billingItem) throws AddBillingItemException
     {
         log.info("Adding Billing Item");
         try
@@ -96,8 +93,8 @@ public class BillingServiceImpl implements BillingService
         }
         catch (PersistenceException e)
         {
-            throw new AcmUserActionFailedException("Unable to add Billing Item for ", billingItem.getParentObjectType(),
-                    billingItem.getParentObjectId(), e.getMessage(), e);
+            throw new AddBillingItemException(String.format("Unable to add Billing Item for [%s] [%d]", billingItem.getParentObjectType(),
+                    billingItem.getParentObjectId()), e);
         }
 
     }
