@@ -63,6 +63,20 @@ public class WopiHostUIController
         return model;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/testapp/{fileId}")
+    public ModelAndView getWopiValidationAppPage(Authentication authentication, @PathVariable Long fileId, HttpSession session)
+    {
+        log.info("Opening wopi validation app for file with id [{}] per user [{}]", fileId, authentication.getName());
+
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+        String accessToken = wopiService.getWopiAccessToken(fileId, user.getMail(), authentication);
+
+        ModelAndView model = new ModelAndView();
+        model.setViewName("wopi-host");
+        model.addObject("url", wopiConfig.getWopiHostValidationUrl(fileId, accessToken));
+        return model;
+    }
+
     public void setWopiConfig(WopiConfig wopiConfig)
     {
         this.wopiConfig = wopiConfig;
