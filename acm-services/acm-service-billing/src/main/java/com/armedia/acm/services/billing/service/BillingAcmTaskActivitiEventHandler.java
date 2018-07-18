@@ -1,7 +1,7 @@
 package com.armedia.acm.services.billing.service;
 
 import com.armedia.acm.activiti.AcmTaskActivitiEvent;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.billing.exception.AddBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCost;
@@ -15,6 +15,10 @@ import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.scheduling.annotation.Async;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author sasko.tanaskoski
@@ -29,6 +33,7 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
+    @Async
     public void onApplicationEvent(AcmTaskActivitiEvent event)
     {
 
@@ -37,36 +42,35 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
             if (event.getParentObjectType().equals(TimesheetConstants.OBJECT_TYPE))
             {
                 AcmTimesheet timesheet = getAcmTimesheetDao().find(event.getParentObjectId());
+                Map<String, AcmTime> timesheetRowPerTypeAndChangeCode = new HashMap<>();
                 for (AcmTime acmTime : timesheet.getTimes())
                 {
-                    if (acmTime.getTotalCost() > 0)
-                    {
-                        BillingItem billingItem = new BillingItem();
-                        billingItem.setCreator(event.getUserId());
-                        billingItem.setParentObjectId(acmTime.getObjectId());
-                        billingItem.setParentObjectType(acmTime.getType());
-                        billingItem.setItemDescription(timesheet.getTitle());
-                        billingItem.setItemAmount(acmTime.getTotalCost());
-                        try
+                    if (acmTime.getType().equals("CASE_FILE") || acmTime.getType().equals("COMPLAINT"))
+                        if (timesheetRowPerTypeAndChangeCode.containsKey(acmTime.getType() + acmTime.getObjectId()))
                         {
-                            getBillingService().addBillingItem(billingItem);
+                            AcmTime rowPerDay = timesheetRowPerTypeAndChangeCode.get(acmTime.getType() + acmTime.getObjectId());
+                            rowPerDay.setTotalCost(rowPerDay.getTotalCost() + acmTime.getTotalCost());
                         }
-                        catch (AcmUserActionFailedException e)
+                        else
                         {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            timesheetRowPerTypeAndChangeCode.put(acmTime.getType() + acmTime.getObjectId(), acmTime);
                         }
-                    }
                 }
+                timesheetRowPerTypeAndChangeCode.values().stream().forEach(row -> {
+                    try
+                    {
+                        getBillingService().addBillingItem(populateBillingItem(event.getUserId(), timesheet.getTitle(), row.getObjectId(),
+                                row.getType(), row.getTotalCost()));
+                    }
+                    catch (AddBillingItemException e)
+                    {
+                        log.error("Can not add Billing Item for [{}]", timesheet.getTitle());
+                    }
+                });
             }
             else if (event.getParentObjectType().equals(CostsheetConstants.OBJECT_TYPE))
             {
                 AcmCostsheet costsheet = getAcmCostsheetDao().find(event.getParentObjectId());
-                BillingItem billingItem = new BillingItem();
-                billingItem.setCreator(event.getUserId());
-                billingItem.setParentObjectId(new Long(costsheet.getParentId()));
-                billingItem.setParentObjectType(costsheet.getParentType());
-                billingItem.setItemDescription(costsheet.getTitle());
                 double balance = 0.0;
                 for (AcmCost acmCost : costsheet.getCosts())
                 {
@@ -75,19 +79,30 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
                         balance += acmCost.getValue();
                     }
                 }
-                billingItem.setItemAmount(balance);
                 try
                 {
-                    getBillingService().addBillingItem(billingItem);
+                    getBillingService().addBillingItem(populateBillingItem(event.getUserId(), costsheet.getTitle(), costsheet.getParentId(),
+                            costsheet.getParentType(), balance));
                 }
-                catch (AcmUserActionFailedException e)
+                catch (AddBillingItemException e)
                 {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.error("Can not add Billing Item for [{}]", costsheet.getTitle());
                 }
             }
         }
 
+    }
+
+    private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType,
+            Double itemAmount)
+    {
+        BillingItem billingItem = new BillingItem();
+        billingItem.setCreator(creator);
+        billingItem.setItemDescription(itemDescription);
+        billingItem.setParentObjectId(parentObjectId);
+        billingItem.setParentObjectType(parentObjectType);
+        billingItem.setItemAmount(itemAmount);
+        return billingItem;
     }
 
     /**

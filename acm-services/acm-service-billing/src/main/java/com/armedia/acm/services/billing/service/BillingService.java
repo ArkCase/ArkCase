@@ -1,7 +1,7 @@
 package com.armedia.acm.services.billing.service;
 
-import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.billing.exception.AddBillingItemException;
+import com.armedia.acm.services.billing.exception.GetBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
 
 import java.util.List;
@@ -39,7 +39,7 @@ import java.util.List;
 public interface BillingService
 {
     List<BillingItem> getBillingItemsByParentObjectTypeAndId(String parentObjectType, Long parentObjectId)
-            throws AcmListObjectsFailedException;
+            throws GetBillingItemException;
 
-    BillingItem addBillingItem(BillingItem billingItem) throws AcmUserActionFailedException;
+    BillingItem addBillingItem(BillingItem billingItem) throws AddBillingItemException;
 }

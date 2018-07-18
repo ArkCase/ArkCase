@@ -26,7 +26,7 @@ angular.module('cost-tracking').controller('CostTracking.ActionsController',
             };
 
             $scope.isVisible = function() {
-                return $scope.objectInfo.status === 'DRAFT' ? true : false;
+                return !Util.isEmpty($scope.objectInfo) && $scope.objectInfo.status === 'DRAFT';
             };
 
         } ]);

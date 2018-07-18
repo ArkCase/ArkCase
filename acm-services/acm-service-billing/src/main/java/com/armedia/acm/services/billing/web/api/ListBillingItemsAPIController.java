@@ -1,8 +1,6 @@
 package com.armedia.acm.services.billing.web.api;
 
-import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.billing.exception.GetBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 
@@ -62,7 +60,7 @@ public class ListBillingItemsAPIController
             @RequestParam(value = "parentObjectType", required = true) String parentObjectType,
             @RequestParam(value = "parentObjectId", required = true) Long parentObjectId,
             Authentication authentication, HttpSession httpSession)
-            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmListObjectsFailedException
+            throws GetBillingItemException
     {
         return getBillingService().getBillingItemsByParentObjectTypeAndId(parentObjectType, parentObjectId);
     }

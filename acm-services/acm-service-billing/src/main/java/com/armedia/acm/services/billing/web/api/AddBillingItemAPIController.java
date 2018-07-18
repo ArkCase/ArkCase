@@ -1,6 +1,6 @@
 package com.armedia.acm.services.billing.web.api;
 
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.billing.exception.AddBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 
@@ -55,7 +55,7 @@ public class AddBillingItemAPIController
     @ResponseBody
     public BillingItem addBillingItem(
             @RequestBody BillingItem billingItem, Authentication authentication, HttpSession httpSession)
-            throws AcmUserActionFailedException
+            throws AddBillingItemException
     {
         return getBillingService().addBillingItem(billingItem);
     }
