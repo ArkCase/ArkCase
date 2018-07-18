@@ -27,6 +27,7 @@ package com.armedia.acm.auth;
  * #L%
  */
 
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
 import org.springframework.security.core.Authentication;
@@ -39,6 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class AcmConcurrentSessionControlAuthenticationStrategy extends ConcurrentSessionControlAuthenticationStrategy
 {
@@ -79,22 +82,41 @@ public class AcmConcurrentSessionControlAuthenticationStrategy extends Concurren
             return;
         }
 
-        String token = request.getParameter("acm_ticket");
-        if (token != null)
+        String principal = authentication.getName();
+
+        String acmTicket = request.getParameter("acm_ticket");
+        if (acmTicket != null)
         {
             // if token is found, check if it is associated with the authenticated user
-            Authentication tokenAuthentication = authenticationTokenService.getAuthenticationForToken(token);
+            Authentication tokenAuthentication = authenticationTokenService.getAuthenticationForToken(acmTicket);
 
             if (tokenAuthentication != null)
             {
                 String tokenAuthenticationPrincipal = tokenAuthentication.getName();
-                String principal = authentication.getName();
 
-                if (tokenAuthenticationPrincipal.equals(principal))
+                if (principal.equals(tokenAuthenticationPrincipal))
                 {
                     // This is the same user with external request and new session
                     return;
                 }
+            }
+        }
+
+        String emailTicket = request.getParameter("acm_email_ticket");
+        if (emailTicket != null)
+        {
+            List<AuthenticationToken> tokens = authenticationTokenService.findByKey(emailTicket);
+            List<AuthenticationToken> activeTokens = tokens.stream()
+                    .filter(it -> it.getStatus().equals("ACTIVE"))
+                    .collect(Collectors.toList());
+
+            Optional<AuthenticationToken> principalToken = activeTokens.stream()
+                    .filter(token -> token.getCreator().equals(principal))
+                    .findAny();
+            if (principalToken.isPresent())
+            {
+                // This is the same user with external request and new session
+                return;
             }
         }
 

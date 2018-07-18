@@ -27,38 +27,25 @@ package com.armedia.acm.services.wopi.model;
  * #L%
  */
 
-public class WopiUserInfo
+public class WopiLockInfo
 {
-    private final String displayName;
-    private final String userId;
-    private final String lang;
-    private final Long accessTokenTtl;
+    private Long lockId;
 
-    public WopiUserInfo(String displayName, String id, String lang, Long accessTokenTtl)
+    private Long expiryEpochSeconds;
+
+    public WopiLockInfo(Long lockId, Long expiryEpochSeconds)
     {
-        this.displayName = displayName;
-        this.userId = id;
-        this.lang = lang;
-        this.accessTokenTtl = accessTokenTtl;
+        this.lockId = lockId;
+        this.expiryEpochSeconds = expiryEpochSeconds;
     }
 
-    public String getDisplayName()
+    public Long getLockId()
     {
-        return displayName;
+        return lockId;
     }
 
-    public String getUserId()
+    public Long getExpiryEpochSeconds()
     {
-        return userId;
-    }
-
-    public String getLang()
-    {
-        return lang;
-    }
-
-    public Long getAccessTokenTtl()
-    {
-        return accessTokenTtl;
+        return expiryEpochSeconds;
     }
 }

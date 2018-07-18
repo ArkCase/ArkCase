@@ -27,6 +27,26 @@ package com.armedia.acm.correspondence.service;
  * #L%
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.security.core.Authentication;
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
@@ -36,30 +56,6 @@ import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.spring.SpringContextHolder;
-
-import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.security.core.Authentication;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.DecimalFormat;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by armdev on 12/15/14.
@@ -134,13 +130,30 @@ public class CorrespondenceGenerator
         return retval;
     }
 
+    public OutputStream generateCorrespondenceOutputStream(CorrespondenceTemplate template, Object[] queryArguments, OutputStream correspondenceOutputStream) throws IOException {
+
+        Map<String, Object> queryResult = query(template, queryArguments);
+        if (queryResult == null || queryResult.isEmpty())
+        {
+            throw new IllegalStateException("Database query returned no results");
+        }
+
+        Map<String, String> substitutions = prepareSubstitutionMap(template, queryResult);
+        Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
+
+        log.debug("Generating correspondence from template '{}'", templateFile.getFile().getAbsolutePath());
+        getWordGenerator().generate(templateFile, correspondenceOutputStream, substitutions);
+
+        return correspondenceOutputStream;
+    }
+
     private String generateUniqueFilename(CorrespondenceTemplate template)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMdd-HHmmss-SSS");
         return template.getDocumentType() + " " + sdf.format(new Date()) + ".docx";
     }
 
-    protected Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult)
+    private Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult)
             throws IOException
     {
         Map<String, String> retval = new HashMap<>();
@@ -257,7 +270,7 @@ public class CorrespondenceGenerator
         return 0;
     }
 
-    protected Map<String, Object> query(CorrespondenceTemplate template, Object[] queryArguments)
+    private Map<String, Object> query(CorrespondenceTemplate template, Object[] queryArguments)
     {
         Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
         CorrespondenceQuery correspondenceQuery = correspondenceQueryBeansMap.values().stream()
