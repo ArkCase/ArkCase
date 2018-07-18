@@ -26,8 +26,9 @@ angular.module('complaints').controller(
                 'DocTreeExt.Email',
                 'ModalDialogService',
                 'Admin.EmailSenderConfigurationService',
+                'MultiCorrespondence.Service',
                 function($scope, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService) {
+                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService, MultiCorrespondenceService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -212,4 +213,22 @@ angular.module('complaints').controller(
                     $scope.$bus.subscribe('removeSearchFilter', function() {
                         $scope.searchFilter = null;
                     });
-                } ]);
+
+                    $scope.$bus.subscribe('multi-correspondence-requested', function(payload) {
+                        var requestData = payload;
+                        var names = [ requestData.args.label ];
+                        var template = requestData.args.templateType;
+
+                        var modalInstance = $modal.open({
+                            animation: false,
+                            templateUrl: 'modules/common/views/multi-correspondence.modal.client.view.html',
+                            controller: 'Common.MultiCorrespondenceModalController',
+                            size: 'lg'
+                        });
+
+                        modalInstance.result.then(function(modalResult) {
+                            MultiCorrespondenceService.createMultiTemplateCorrespondence(requestData, names, template, modalResult.selectedTemplates, modalResult.multiCorrespondenceDocumentName);
+                        });
+                    });
+
+                }]);

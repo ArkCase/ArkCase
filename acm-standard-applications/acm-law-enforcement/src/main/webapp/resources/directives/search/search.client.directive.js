@@ -97,10 +97,6 @@ angular.module('directives').directive(
                                 searchObject.isSelected = false;
                             }
 
-                            if (Util.isEmpty(searchObject.searchQuery)) {
-                                scope.emptySearch = false;
-                            }
-
                             var isSelected = searchObject.isSelected;
                             scope.searchQuery = searchObject.searchQuery;
                             scope.onSelect = function($item, $model, $label) {
@@ -507,8 +503,13 @@ angular.module('directives').directive(
                                             scope.isAutoSuggestActive = config.isAutoSuggestActive;
 
                                         }
+                                        if (typeof scope.config.emptySearch !== 'undefined') {
+                                            scope.emptySearch = scope.config.emptySearch;
+                                        }
 
-                                        scope.queryExistingItems(scope.start);
+                                        if (scope.emptySearch) {
+                                            scope.queryExistingItems(scope.start);
+                                        }
 
                                     }
                                 }, true);
