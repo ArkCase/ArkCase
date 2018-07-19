@@ -1,4 +1,4 @@
-package com.armedia.acm.services.billing.model;
+package com.armedia.acm.services.billing.exception;
 
 /*-
  * #%L
@@ -30,9 +30,28 @@ package com.armedia.acm.services.billing.model;
  * @author sasko.tanaskoski
  *
  */
-public interface BillingItemConstants
+public class CreateBillingInvoiceException extends BillingException
 {
-    String OBJECT_TYPE = "BILLING_ITEM";
-    String EVENT_TYPE = "com.armedia.acm.app.billing.item";
-    String BILLING_ITEM_ADDED = "added";
+
+    private static final long serialVersionUID = -5647646110332815221L;
+
+    public CreateBillingInvoiceException(String message)
+    {
+        super(message);
+    }
+
+    public CreateBillingInvoiceException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
+
+    public CreateBillingInvoiceException(Throwable cause)
+    {
+        super(cause);
+    }
+
+    public CreateBillingInvoiceException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
+    {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

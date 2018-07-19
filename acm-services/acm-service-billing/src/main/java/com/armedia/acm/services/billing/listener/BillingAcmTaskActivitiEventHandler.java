@@ -1,8 +1,9 @@
-package com.armedia.acm.services.billing.service;
+package com.armedia.acm.services.billing.listener;
 
 import com.armedia.acm.activiti.AcmTaskActivitiEvent;
-import com.armedia.acm.services.billing.exception.AddBillingItemException;
+import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
+import com.armedia.acm.services.billing.service.BillingService;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCost;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
@@ -59,10 +60,10 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
                 timesheetRowPerTypeAndChangeCode.values().stream().forEach(row -> {
                     try
                     {
-                        getBillingService().addBillingItem(populateBillingItem(event.getUserId(), timesheet.getTitle(), row.getObjectId(),
+                        getBillingService().createBillingItem(populateBillingItem(event.getUserId(), timesheet.getTitle(), row.getObjectId(),
                                 row.getType(), row.getTotalCost()));
                     }
-                    catch (AddBillingItemException e)
+                    catch (CreateBillingItemException e)
                     {
                         log.error("Can not add Billing Item for [{}]", timesheet.getTitle());
                     }
@@ -81,10 +82,10 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
                 }
                 try
                 {
-                    getBillingService().addBillingItem(populateBillingItem(event.getUserId(), costsheet.getTitle(), costsheet.getParentId(),
+                    getBillingService().createBillingItem(populateBillingItem(event.getUserId(), costsheet.getTitle(), costsheet.getParentId(),
                             costsheet.getParentType(), balance));
                 }
-                catch (AddBillingItemException e)
+                catch (CreateBillingItemException e)
                 {
                     log.error("Can not add Billing Item for [{}]", costsheet.getTitle());
                 }

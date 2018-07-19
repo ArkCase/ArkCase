@@ -1,7 +1,10 @@
 package com.armedia.acm.services.billing.service;
 
-import com.armedia.acm.services.billing.exception.AddBillingItemException;
+import com.armedia.acm.services.billing.exception.CreateBillingInvoiceException;
+import com.armedia.acm.services.billing.exception.CreateBillingItemException;
+import com.armedia.acm.services.billing.exception.GetBillingInvoiceException;
 import com.armedia.acm.services.billing.exception.GetBillingItemException;
+import com.armedia.acm.services.billing.model.BillingInvoice;
 import com.armedia.acm.services.billing.model.BillingItem;
 
 import java.util.List;
@@ -41,5 +44,11 @@ public interface BillingService
     List<BillingItem> getBillingItemsByParentObjectTypeAndId(String parentObjectType, Long parentObjectId)
             throws GetBillingItemException;
 
-    BillingItem addBillingItem(BillingItem billingItem) throws AddBillingItemException;
+    BillingItem createBillingItem(BillingItem billingItem) throws CreateBillingItemException;
+
+    List<BillingInvoice> getBillingInvoicesByParentObjectTypeAndId(String parentObjectType, Long parentObjectId)
+            throws GetBillingInvoiceException;
+
+    BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId, List<BillingItem> billingItem)
+            throws CreateBillingInvoiceException;
 }

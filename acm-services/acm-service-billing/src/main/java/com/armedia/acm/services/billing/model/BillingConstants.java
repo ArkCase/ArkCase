@@ -26,30 +26,13 @@ package com.armedia.acm.services.billing.model;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-import com.armedia.acm.core.model.AcmEvent;
-
-import java.util.Date;
-
 /**
  * @author sasko.tanaskoski
  *
  */
-public class BillingItemEvent extends AcmEvent
+public interface BillingConstants
 {
-
-    private static final long serialVersionUID = -4238560422705135161L;
-
-    public BillingItemEvent(BillingItem source)
-    {
-        super(source);
-        setEventDate(new Date());
-        setObjectId(source.getId());
-        setObjectType(source.getObjectType());
-    }
-
-    @Override
-    public BillingItem getSource()
-    {
-        return (BillingItem) super.getSource();
-    }
+    String OBJECT_TYPE_ITEM = "BILLING_ITEM";
+    String OBJECT_TYPE_INVOICE = "BILLING_INVOICE";
+    String BILLING_ITEM_CREATED_EVENT = "com.armedia.acm.billing.item.created";
 }

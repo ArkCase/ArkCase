@@ -55,5 +55,5 @@
             <column name="cm_seq_name" value="acm_billing_item"></column>
         </insert>
     </changeSet>
-
+    
 </databaseChangeLog>

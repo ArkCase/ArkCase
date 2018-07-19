@@ -45,7 +45,7 @@ import java.util.List;
  * @author sasko.tanaskoski
  *
  */
-public class BillingDao extends AcmAbstractDao<BillingItem>
+public class BillingItemDao extends AcmAbstractDao<BillingItem>
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -81,7 +81,7 @@ public class BillingDao extends AcmAbstractDao<BillingItem>
     }
 
     @Transactional
-    public BillingItem addBilligItem(BillingItem billingItem)
+    public BillingItem createBillingItem(BillingItem billingItem)
     {
         billingItem.setItemNumber(getNextItemNumber(billingItem.getParentObjectType(), billingItem.getParentObjectId()));
         BillingItem saved = save(billingItem);

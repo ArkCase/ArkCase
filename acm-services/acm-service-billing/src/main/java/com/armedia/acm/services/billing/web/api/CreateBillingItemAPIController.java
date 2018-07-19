@@ -1,6 +1,6 @@
 package com.armedia.acm.services.billing.web.api;
 
-import com.armedia.acm.services.billing.exception.AddBillingItemException;
+import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 
@@ -46,7 +46,7 @@ import javax.servlet.http.HttpSession;
  */
 @Controller
 @RequestMapping({ "/api/v1/plugin/billing", "/api/latest/plugin/billing" })
-public class AddBillingItemAPIController
+public class CreateBillingItemAPIController
 {
     BillingService billingService;
 
@@ -55,9 +55,9 @@ public class AddBillingItemAPIController
     @ResponseBody
     public BillingItem addBillingItem(
             @RequestBody BillingItem billingItem, Authentication authentication, HttpSession httpSession)
-            throws AddBillingItemException
+            throws CreateBillingItemException
     {
-        return getBillingService().addBillingItem(billingItem);
+        return getBillingService().createBillingItem(billingItem);
     }
 
     /**

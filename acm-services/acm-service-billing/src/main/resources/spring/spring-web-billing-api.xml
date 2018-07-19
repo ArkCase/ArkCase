@@ -6,7 +6,7 @@
         <property name="billingService" ref="billingService"/>
     </bean>
 
-    <bean id="addBillingItem" class="com.armedia.acm.services.billing.web.api.AddBillingItemAPIController">
+    <bean id="createBillingItem" class="com.armedia.acm.services.billing.web.api.CreateBillingItemAPIController">
         <property name="billingService" ref="billingService"/>
     </bean>
 </beans>
