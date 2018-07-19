@@ -64,7 +64,7 @@ public class LoginController
         else
         {
             loginWarningMessageService.buildModel(model);
-            return "/login";
+            return "login";
         }
     }
 
