@@ -9,4 +9,12 @@
     <bean id="createBillingItem" class="com.armedia.acm.services.billing.web.api.CreateBillingItemAPIController">
         <property name="billingService" ref="billingService"/>
     </bean>
+
+    <bean id="listBillingInvoices" class="com.armedia.acm.services.billing.web.api.ListBillingInvoicesAPIController">
+        <property name="billingService" ref="billingService"/>
+    </bean>
+
+    <bean id="createBillingInvoice" class="com.armedia.acm.services.billing.web.api.CreateBillingInvoiceAPIController">
+        <property name="billingService" ref="billingService"/>
+    </bean>
 </beans>

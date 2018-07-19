@@ -49,6 +49,6 @@ public interface BillingService
     List<BillingInvoice> getBillingInvoicesByParentObjectTypeAndId(String parentObjectType, Long parentObjectId)
             throws GetBillingInvoiceException;
 
-    BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId, List<BillingItem> billingItem)
+    BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId)
             throws CreateBillingInvoiceException;
 }

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.PersistenceException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*-
@@ -86,13 +87,13 @@ public class BillingServiceImpl implements BillingService
     /*
      * (non-Javadoc)
      * @see
-     * com.armedia.acm.services.billing.service.BillingService#addBillingItem(com.armedia.acm.services.billing.model.
+     * com.armedia.acm.services.billing.service.BillingService#createBillingItem(com.armedia.acm.services.billing.model.
      * BillingItem)
      */
     @Override
     public BillingItem createBillingItem(BillingItem billingItem) throws CreateBillingItemException
     {
-        log.info("Adding Billing Item");
+        log.info("Creating Billing Item");
         try
         {
             return getBillingItemDao().createBillingItem(billingItem);
@@ -100,7 +101,7 @@ public class BillingServiceImpl implements BillingService
         catch (PersistenceException e)
         {
             throw new CreateBillingItemException(
-                    String.format("Unable to add Billing Item for [%s] [%d]", billingItem.getParentObjectType(),
+                    String.format("Unable to create Billing Item for [%s] [%d]", billingItem.getParentObjectType(),
                             billingItem.getParentObjectId()),
                     e);
         }
@@ -116,21 +117,28 @@ public class BillingServiceImpl implements BillingService
     public List<BillingInvoice> getBillingInvoicesByParentObjectTypeAndId(String parentObjectType, Long parentObjectId)
             throws GetBillingInvoiceException
     {
-        // TODO Auto-generated method stub
-        return null;
+        return getBillingInvoiceDao().listBillingInvoices(parentObjectType, parentObjectId);
     }
 
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.services.billing.service.BillingService#createBillingInvoice(java.lang.String,
-     * java.lang.Long, java.util.List)
+     * java.lang.Long)
      */
     @Override
-    public BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId, List<BillingItem> billingItem)
+    public BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId)
             throws CreateBillingInvoiceException
     {
-        // TODO Auto-generated method stub
-        return null;
+        List<BillingItem> billingItems = new ArrayList<>();
+        try
+        {
+            billingItems = getBillingItemsByParentObjectTypeAndId(parentObjectType, parentObjectId);
+        }
+        catch (GetBillingItemException e)
+        {
+            log.error(e.getMessage());
+        }
+        return getBillingInvoiceDao().createBillingInvoice(parentObjectType, parentObjectId, billingItems);
     }
 
     /**
