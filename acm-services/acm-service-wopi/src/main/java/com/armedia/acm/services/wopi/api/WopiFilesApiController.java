@@ -32,7 +32,6 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.wopi.model.WopiFileInfo;
 import com.armedia.acm.services.wopi.model.WopiLockInfo;
 import com.armedia.acm.services.wopi.service.WopiAcmService;
-
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,11 +42,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -143,13 +142,13 @@ public class WopiFilesApiController
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{id}/rename", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity renameFile(@PathVariable Long id, @RequestParam String name,
+    public ResponseEntity renameFile(@PathVariable Long id, @RequestBody MultiValueMap<String, String> body,
             Authentication authentication)
     {
         log.info("Rename file [{}] per user [{}]", id, authentication.getName());
         try
         {
-            wopiService.renameFile(id, name);
+            wopiService.renameFile(id, body.getFirst("name"));
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (AcmObjectNotFoundException e)

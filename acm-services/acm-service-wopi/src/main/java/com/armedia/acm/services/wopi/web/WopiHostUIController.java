@@ -33,6 +33,7 @@ import com.armedia.acm.services.wopi.service.WopiAcmService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +50,7 @@ public class WopiHostUIController
     private WopiConfig wopiConfig;
     private WopiAcmService wopiService;
 
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(method = RequestMethod.GET, value = "/{fileId}")
     public ModelAndView getWopiHostPage(Authentication authentication, @PathVariable Long fileId, HttpSession session)
     {
@@ -63,6 +65,7 @@ public class WopiHostUIController
         return model;
     }
 
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(method = RequestMethod.GET, value = "/testapp/{fileId}")
     public ModelAndView getWopiValidationAppPage(Authentication authentication, @PathVariable Long fileId, HttpSession session)
     {
