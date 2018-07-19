@@ -1,9 +1,10 @@
 package com.armedia.acm.services.billing.web.api;
 
-import com.armedia.acm.services.billing.exception.CreateBillingItemException;
-import com.armedia.acm.services.billing.model.BillingItem;
+import com.armedia.acm.services.billing.exception.CreateBillingInvoiceException;
+import com.armedia.acm.services.billing.model.BillingInvoice;
 import com.armedia.acm.services.billing.service.BillingService;
 
+import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -46,18 +47,22 @@ import javax.servlet.http.HttpSession;
  */
 @Controller
 @RequestMapping({ "/api/v1/plugin/billing", "/api/latest/plugin/billing" })
-public class CreateBillingItemAPIController
+public class CreateBillingInvoiceAPIController
 {
     BillingService billingService;
 
-    // @PreAuthorize("hasPermission(#billingItem.parentObjectId, #billingItem.parentObjectType, 'createBillingItem')")
-    @RequestMapping(value = "/items", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    // @PreAuthorize("hasPermission(#billingItem.parentObjectId, #billingItem.parentObjectType,
+    // 'createBillingInvoice')")
+    @RequestMapping(value = "/invoices", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public BillingItem createBillingItem(
-            @RequestBody BillingItem billingItem, Authentication authentication, HttpSession httpSession)
-            throws CreateBillingItemException
+    public BillingInvoice createBillingInvoice(
+            @RequestBody String jsonObject, Authentication authentication, HttpSession httpSession)
+            throws CreateBillingInvoiceException
     {
-        return getBillingService().createBillingItem(billingItem);
+        JSONObject parentObject = new JSONObject(jsonObject);
+        String parentObjectType = parentObject.get("parentObjectType").toString();
+        Long parentObjectId = Long.parseLong(parentObject.get("parentObjectId").toString());
+        return getBillingService().createBillingInvoice(parentObjectType, parentObjectId);
     }
 
     /**

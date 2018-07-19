@@ -1,18 +1,20 @@
 package com.armedia.acm.services.billing.web.api;
 
-import com.armedia.acm.services.billing.exception.CreateBillingItemException;
-import com.armedia.acm.services.billing.model.BillingItem;
+import com.armedia.acm.services.billing.exception.GetBillingInvoiceException;
+import com.armedia.acm.services.billing.model.BillingInvoice;
 import com.armedia.acm.services.billing.service.BillingService;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
+import java.util.List;
 
 /*-
  * #%L
@@ -44,20 +46,23 @@ import javax.servlet.http.HttpSession;
  * @author sasko.tanaskoski
  *
  */
+
 @Controller
 @RequestMapping({ "/api/v1/plugin/billing", "/api/latest/plugin/billing" })
-public class CreateBillingItemAPIController
+public class ListBillingInvoicesAPIController
 {
+
     BillingService billingService;
 
-    // @PreAuthorize("hasPermission(#billingItem.parentObjectId, #billingItem.parentObjectType, 'createBillingItem')")
-    @RequestMapping(value = "/items", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/invoices", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public BillingItem createBillingItem(
-            @RequestBody BillingItem billingItem, Authentication authentication, HttpSession httpSession)
-            throws CreateBillingItemException
+    public List<BillingInvoice> getBillingInvoicesByObjectTypeAndId(
+            @RequestParam(value = "parentObjectType", required = true) String parentObjectType,
+            @RequestParam(value = "parentObjectId", required = true) Long parentObjectId,
+            Authentication authentication, HttpSession httpSession)
+            throws GetBillingInvoiceException
     {
-        return getBillingService().createBillingItem(billingItem);
+        return getBillingService().getBillingInvoicesByParentObjectTypeAndId(parentObjectType, parentObjectId);
     }
 
     /**
@@ -76,4 +81,5 @@ public class CreateBillingItemAPIController
     {
         this.billingService = billingService;
     }
+
 }

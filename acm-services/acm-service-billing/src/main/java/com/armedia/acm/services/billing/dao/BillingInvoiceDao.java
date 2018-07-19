@@ -85,6 +85,8 @@ public class BillingInvoiceDao extends AcmAbstractDao<BillingInvoice>
     public BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId, List<BillingItem> billingItems)
     {
         BillingInvoice billingInvoice = new BillingInvoice();
+        billingInvoice.setParentObjectType(parentObjectType);
+        billingInvoice.setParentObjectId(parentObjectId);
         billingInvoice.setBillingItems(billingItems);
         billingInvoice.setInvoiceNumber(getNextInvoiceNumber(parentObjectType, parentObjectId));
         BillingInvoice saved = save(billingInvoice);
@@ -102,8 +104,8 @@ public class BillingInvoiceDao extends AcmAbstractDao<BillingInvoice>
         query.setParameter("parentObjectType", parentObjectType.toUpperCase());
         query.setParameter("parentObjectId", parentObjectId);
         String invoicePrefix = new String(parentObjectId + "_");
-        Integer invoiceCount = (Integer) query.getSingleResult();
-        return invoiceCount != null ? invoicePrefix + (invoiceCount + 1) : invoicePrefix + "1";
+        Long invoiceCount = (Long) query.getSingleResult();
+        return invoicePrefix + (invoiceCount + 1);
     }
 
     public EntityManager getEntityManager()
