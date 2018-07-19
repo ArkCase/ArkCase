@@ -30,27 +30,27 @@ package com.armedia.acm.services.billing.exception;
  * @author sasko.tanaskoski
  *
  */
-public class AddBillingItemException extends BillingException
+public class CreateBillingItemException extends BillingException
 {
 
     private static final long serialVersionUID = -9179701501043677767L;
 
-    public AddBillingItemException(String message)
+    public CreateBillingItemException(String message)
     {
         super(message);
     }
 
-    public AddBillingItemException(String message, Throwable cause)
+    public CreateBillingItemException(String message, Throwable cause)
     {
         super(message, cause);
     }
 
-    public AddBillingItemException(Throwable cause)
+    public CreateBillingItemException(Throwable cause)
     {
         super(cause);
     }
 
-    public AddBillingItemException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
+    public CreateBillingItemException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
     {
         super(message, cause, enableSuppression, writableStackTrace);
     }

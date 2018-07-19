@@ -1,4 +1,4 @@
-package com.armedia.acm.services.billing.service;
+package com.armedia.acm.services.billing.transformer;
 
 /*-
  * #%L
@@ -26,8 +26,9 @@ package com.armedia.acm.services.billing.service;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-import com.armedia.acm.services.billing.dao.BillingDao;
-import com.armedia.acm.services.billing.model.BillingItemConstants;
+
+import com.armedia.acm.services.billing.dao.BillingItemDao;
+import com.armedia.acm.services.billing.model.BillingConstants;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
@@ -38,16 +39,20 @@ import com.armedia.acm.services.users.model.AcmUser;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author sasko.tanaskoski
+ *
+ */
 public class BillingItemToSolrTransformer implements AcmObjectToSolrDocTransformer<BillingItem>
 {
 
     private UserDao userDao;
-    private BillingDao billingDao;
+    private BillingItemDao billingItemDao;
 
     @Override
     public List<BillingItem> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
     {
-        return getBillingDao().findModifiedSince(lastModified, start, pageSize);
+        return getBillingItemDao().findModifiedSince(lastModified, start, pageSize);
     }
 
     @Override
@@ -55,13 +60,13 @@ public class BillingItemToSolrTransformer implements AcmObjectToSolrDocTransform
     {
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
-        solr.setId(String.format("%d-%s", in.getId(), BillingItemConstants.OBJECT_TYPE));
+        solr.setId(String.format("%d-%s", in.getId(), BillingConstants.OBJECT_TYPE_ITEM));
 
         solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(BillingItemConstants.OBJECT_TYPE);
+        solr.setObject_type_s(BillingConstants.OBJECT_TYPE_ITEM);
 
         solr.setDescription_parseable(in.getItemDescription());
-        solr.setName(String.format("%s_%d", BillingItemConstants.OBJECT_TYPE, in.getId()));
+        solr.setName(String.format("%s_%d", BillingConstants.OBJECT_TYPE_ITEM, in.getId()));
 
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
@@ -88,9 +93,9 @@ public class BillingItemToSolrTransformer implements AcmObjectToSolrDocTransform
     public SolrDocument toSolrQuickSearch(BillingItem in)
     {
         SolrDocument solrDoc = new SolrDocument();
-        solrDoc.setId(String.format("%d-%s", in.getId(), BillingItemConstants.OBJECT_TYPE));
-        solrDoc.setObject_type_s(BillingItemConstants.OBJECT_TYPE);
-        solrDoc.setName(String.format("%s_%d", BillingItemConstants.OBJECT_TYPE, in.getId()));
+        solrDoc.setId(String.format("%d-%s", in.getId(), BillingConstants.OBJECT_TYPE_ITEM));
+        solrDoc.setObject_type_s(BillingConstants.OBJECT_TYPE_ITEM);
+        solrDoc.setName(String.format("%s_%d", BillingConstants.OBJECT_TYPE_ITEM, in.getId()));
         solrDoc.setObject_id_s(in.getId() + "");
         solrDoc.setCreate_tdt(in.getCreated());
         solrDoc.setAdditionalProperty("parent_object_type_s", in.getParentObjectType());
@@ -121,14 +126,14 @@ public class BillingItemToSolrTransformer implements AcmObjectToSolrDocTransform
         this.userDao = userDao;
     }
 
-    public BillingDao getBillingDao()
+    public BillingItemDao getBillingItemDao()
     {
-        return billingDao;
+        return billingItemDao;
     }
 
-    public void setBillingDao(BillingDao billingDao)
+    public void setBillingItemDao(BillingItemDao billingItemDao)
     {
-        this.billingDao = billingDao;
+        this.billingItemDao = billingItemDao;
     }
 
     @Override

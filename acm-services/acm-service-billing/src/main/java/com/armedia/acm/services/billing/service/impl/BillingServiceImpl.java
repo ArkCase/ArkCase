@@ -1,8 +1,12 @@
 package com.armedia.acm.services.billing.service.impl;
 
-import com.armedia.acm.services.billing.dao.BillingDao;
-import com.armedia.acm.services.billing.exception.AddBillingItemException;
+import com.armedia.acm.services.billing.dao.BillingInvoiceDao;
+import com.armedia.acm.services.billing.dao.BillingItemDao;
+import com.armedia.acm.services.billing.exception.CreateBillingInvoiceException;
+import com.armedia.acm.services.billing.exception.CreateBillingItemException;
+import com.armedia.acm.services.billing.exception.GetBillingInvoiceException;
 import com.armedia.acm.services.billing.exception.GetBillingItemException;
+import com.armedia.acm.services.billing.model.BillingInvoice;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 
@@ -48,7 +52,9 @@ public class BillingServiceImpl implements BillingService
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private BillingDao billingDao;
+    private BillingItemDao billingItemDao;
+
+    private BillingInvoiceDao billingInvoiceDao;
 
     /*
      * (non-Javadoc)
@@ -65,7 +71,7 @@ public class BillingServiceImpl implements BillingService
         {
             try
             {
-                List<BillingItem> billingItems = getBillingDao().listBillingItems(parentObjectType, parentObjectId);
+                List<BillingItem> billingItems = getBillingItemDao().listBillingItems(parentObjectType, parentObjectId);
                 log.debug("Billing Item size:{}", billingItems.size());
                 return billingItems;
             }
@@ -84,36 +90,81 @@ public class BillingServiceImpl implements BillingService
      * BillingItem)
      */
     @Override
-    public BillingItem addBillingItem(BillingItem billingItem) throws AddBillingItemException
+    public BillingItem createBillingItem(BillingItem billingItem) throws CreateBillingItemException
     {
         log.info("Adding Billing Item");
         try
         {
-            return billingDao.addBilligItem(billingItem);
+            return getBillingItemDao().createBillingItem(billingItem);
         }
         catch (PersistenceException e)
         {
-            throw new AddBillingItemException(String.format("Unable to add Billing Item for [%s] [%d]", billingItem.getParentObjectType(),
-                    billingItem.getParentObjectId()), e);
+            throw new CreateBillingItemException(
+                    String.format("Unable to add Billing Item for [%s] [%d]", billingItem.getParentObjectType(),
+                            billingItem.getParentObjectId()),
+                    e);
         }
 
     }
 
-    /**
-     * @return the billingDao
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.services.billing.service.BillingService#getBillingInvoicesByParentObjectTypeAndId(java.lang.
+     * String, java.lang.Long)
      */
-    public BillingDao getBillingDao()
+    @Override
+    public List<BillingInvoice> getBillingInvoicesByParentObjectTypeAndId(String parentObjectType, Long parentObjectId)
+            throws GetBillingInvoiceException
     {
-        return billingDao;
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.services.billing.service.BillingService#createBillingInvoice(java.lang.String,
+     * java.lang.Long, java.util.List)
+     */
+    @Override
+    public BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId, List<BillingItem> billingItem)
+            throws CreateBillingInvoiceException
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
-     * @param billingDao
-     *            the billingDao to set
+     * @return the billingItemDao
      */
-    public void setBillingDao(BillingDao billingDao)
+    public BillingItemDao getBillingItemDao()
     {
-        this.billingDao = billingDao;
+        return billingItemDao;
+    }
+
+    /**
+     * @param billingItemDao
+     *            the billingItemDao to set
+     */
+    public void setBillingItemDao(BillingItemDao billingItemDao)
+    {
+        this.billingItemDao = billingItemDao;
+    }
+
+    /**
+     * @return the billingInvoiceDao
+     */
+    public BillingInvoiceDao getBillingInvoiceDao()
+    {
+        return billingInvoiceDao;
+    }
+
+    /**
+     * @param billingInvoiceDao
+     *            the billingInvoiceDao to set
+     */
+    public void setBillingInvoiceDao(BillingInvoiceDao billingInvoiceDao)
+    {
+        this.billingInvoiceDao = billingInvoiceDao;
     }
 
 }
