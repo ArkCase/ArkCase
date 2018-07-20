@@ -20,6 +20,19 @@
             "moduleId": "case",
             "iconClass": "fa fa-folder",
             "position": 20
+        },
+        {
+            "menuId": "topbar",
+            "menuItemURL": "newCase",
+            "menuItemTitle": "cases.menus.topbar.item",
+            "moduleId": "case",
+            "modalDialog": {
+                "moduleName": "cases",
+                "templateUrl": "modules/cases/views/components/case-new-case-modal.client.view.html",
+                "controllerName": "Cases.NewCaseController"
+            },
+            "iconClass": "fa fa-folder",
+            "position": 25
         }
     ],
     "tree": {
