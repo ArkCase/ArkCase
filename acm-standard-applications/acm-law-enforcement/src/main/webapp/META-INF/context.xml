@@ -10,7 +10,7 @@
   Setting this value to false resolves both these issues, and still seems to work OK in non-SSO environments.
 -->
 <Context sessionCookiePathUsesTrailingSlash="false">
-    <Resources className="org.apache.catalina.webresources.StandardRoot" cachingAllowed="true" cacheMaxSize="20480">
+    <Resources className="org.apache.catalina.webresources.StandardRoot" cachingAllowed="true" cacheMaxSize="40960">
         <!-- main log4j configuration, extensions can customize it -->
         <PreResources className="org.apache.catalina.webresources.FileResourceSet" base="${user.home}/.arkcase/acm/log4j2.xml"
             internalPath="/" webAppMount="/WEB-INF/classes/log4j2.xml"/>

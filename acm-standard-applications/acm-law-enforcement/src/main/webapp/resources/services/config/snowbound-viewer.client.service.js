@@ -60,10 +60,13 @@ angular.module('services').factory(
                             var encryptionPassphrase = ecmFileProperties['ecm.viewer.snowbound.encryptionKey'];
                             // Forces the viewer iframe to be reloaded with the latest version of the document
                             var randomUrlArgToCauseIframeRefresh = (new Date()).getTime();
+                            var parameters = "ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId + "&documentName=" + file.name + "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds;
+                            if (ecmFileProperties['ecm.viewer.snowbound.tabHeader']) {
+                                parameters += "&tabHeader=" + ecmFileProperties['ecm.viewer.snowbound.tabHeader'];
+                            }
                             return viewerBaseUrl
                                     + "?documentId="
-                                    + Util.encryptString("ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId + "&documentName=" + file.name + "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds,
-                                            encryptionPassphrase) + "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh;
+                                    + Util.encryptString(parameters, encryptionPassphrase) + "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh;
                         }
                     }
                 } ]);
