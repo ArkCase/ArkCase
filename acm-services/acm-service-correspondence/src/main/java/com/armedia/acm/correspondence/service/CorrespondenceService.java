@@ -27,9 +27,6 @@ package com.armedia.acm.correspondence.service;
  * #L%
  */
 
-import static com.armedia.acm.correspondence.service.CorrespondenceGenerator.CORRESPONDENCE_CATEGORY;
-import static com.armedia.acm.correspondence.service.CorrespondenceGenerator.WORD_MIME_TYPE;
-
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
@@ -39,7 +36,6 @@ import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.QueryType;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.docx4j.dml.CTBlip;
@@ -64,7 +60,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.xml.bind.JAXBException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -80,6 +75,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.armedia.acm.correspondence.service.CorrespondenceGenerator.CORRESPONDENCE_CATEGORY;
+import static com.armedia.acm.correspondence.service.CorrespondenceGenerator.WORD_MIME_TYPE;
 
 public class CorrespondenceService
 {
@@ -139,7 +137,7 @@ public class CorrespondenceService
 
     public EcmFile generateMultiTemplate(Authentication authentication, List<CorrespondenceTemplate> templates, String parentObjectType,
             Long parentObjectId,
-            String targetCmisFolderId) throws Exception
+            String targetCmisFolderId, String documentName) throws Exception
     {
 
         EcmFile retval = null;
@@ -188,8 +186,8 @@ public class CorrespondenceService
                 }
 
                 String currDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMdd-HHmmss-SSS"));
-                String fileName = MULTITEMPLATE_DOC_TYPE + " " + currDateTime + ".docx";
-                retval = getCorrespondenceGenerator().getEcmFileService().upload(MULTITEMPLATE_DOC_TYPE + ".docx", MULTITEMPLATE_DOC_TYPE,
+                String fileName = documentName + " " + currDateTime + ".docx";
+                retval = getCorrespondenceGenerator().getEcmFileService().upload(documentName + ".docx", MULTITEMPLATE_DOC_TYPE,
                         CORRESPONDENCE_CATEGORY,
                         multiTemplateCorrespondenceInputStream, WORD_MIME_TYPE, fileName, authentication, targetCmisFolderId,
                         parentObjectType, parentObjectId);

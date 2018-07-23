@@ -247,8 +247,8 @@ angular.module('cases').controller(
                             size: 'lg'
                         });
 
-                        modalInstance.result.then(function(selectedTemplates) {
-                            MultiCorrespondenceService.createMultiTemplateCorrespondence(requestData, names, template, selectedTemplates);
+                        modalInstance.result.then(function(modalResult) {
+                            MultiCorrespondenceService.createMultiTemplateCorrespondence(requestData, names, template, modalResult.selectedTemplates, modalResult.multiCorrespondenceDocumentName);
                         });
                     });
 
