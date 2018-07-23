@@ -30,6 +30,7 @@ package com.armedia.acm.services.wopi.model;
 public class WopiConfig
 {
     private String wopiHostUrl;
+    private String wopiHostValidationUrl;
     private String wopiTenantDomain;
     private String wopiTenantProtocol;
     private Long wopiTenantPort;
@@ -47,6 +48,17 @@ public class WopiConfig
     public void setWopiHostUrl(String wopiHostUrl)
     {
         this.wopiHostUrl = wopiHostUrl;
+    }
+
+    public String getWopiHostValidationUrl(Long fileId, String accessToken)
+    {
+        return String.format(wopiHostValidationUrl, fileId, accessToken, wopiTenantProtocol, wopiTenantDomain, wopiTenantPort,
+                wopiTenantContext, wopiTenantAccessTokenParamName, wopiTenantFileIdParamName);
+    }
+
+    public void setWopiHostValidationUrl(String wopiHostValidationUrl)
+    {
+        this.wopiHostValidationUrl = wopiHostValidationUrl;
     }
 
     public String getWopiTenantDomain()
