@@ -52,9 +52,7 @@ public class BillingServiceImpl implements BillingService
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private BillingItemDao billingItemDao;
-
     private BillingInvoiceDao billingInvoiceDao;
 
     /*
@@ -129,6 +127,18 @@ public class BillingServiceImpl implements BillingService
     public BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId)
             throws CreateBillingInvoiceException
     {
+        return createBillingInvoice(parentObjectType, parentObjectId, null);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.services.billing.service.BillingService#createBillingInvoice(java.lang.String,
+     * java.lang.Long, java.lang.String)
+     */
+    @Override
+    public BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId, String parentObjectNumber)
+            throws CreateBillingInvoiceException
+    {
         List<BillingItem> billingItems = new ArrayList<>();
         try
         {
@@ -136,9 +146,9 @@ public class BillingServiceImpl implements BillingService
         }
         catch (GetBillingItemException e)
         {
-            log.error(e.getMessage());
+            throw new CreateBillingInvoiceException(e.getMessage());
         }
-        return getBillingInvoiceDao().createBillingInvoice(parentObjectType, parentObjectId, billingItems);
+        return getBillingInvoiceDao().createBillingInvoice(parentObjectType, parentObjectId, parentObjectNumber, billingItems);
     }
 
     /**

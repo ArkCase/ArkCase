@@ -56,13 +56,14 @@ public class CreateBillingInvoiceAPIController
     @RequestMapping(value = "/invoices", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public BillingInvoice createBillingInvoice(
-            @RequestBody String jsonObject, Authentication authentication, HttpSession httpSession)
+            @RequestBody String parentObjectData, Authentication authentication, HttpSession httpSession)
             throws CreateBillingInvoiceException
     {
-        JSONObject parentObject = new JSONObject(jsonObject);
+        JSONObject parentObject = new JSONObject(parentObjectData);
         String parentObjectType = parentObject.get("parentObjectType").toString();
         Long parentObjectId = Long.parseLong(parentObject.get("parentObjectId").toString());
-        return getBillingService().createBillingInvoice(parentObjectType, parentObjectId);
+        String parentObjectNumber = parentObject.get("parentObjectNumber").toString();
+        return getBillingService().createBillingInvoice(parentObjectType, parentObjectId, parentObjectNumber);
     }
 
     /**

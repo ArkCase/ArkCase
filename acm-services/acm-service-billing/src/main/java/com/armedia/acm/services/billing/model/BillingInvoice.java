@@ -59,6 +59,9 @@ public class BillingInvoice implements Serializable, AcmObject, AcmEntity, AcmPa
     @Column(name = "cm_billing_invoice_number")
     private String invoiceNumber;
 
+    @Column(name = "cm_billing_invoice_paid_flag")
+    private Boolean invoicePaidFlag;
+
     @Column(name = "cm_parent_object_id")
     private Long parentObjectId;
 
@@ -128,6 +131,23 @@ public class BillingInvoice implements Serializable, AcmObject, AcmEntity, AcmPa
     public void setInvoiceNumber(String invoiceNumber)
     {
         this.invoiceNumber = invoiceNumber;
+    }
+
+    /**
+     * @return the invoicePaidFlag
+     */
+    public Boolean getInvoicePaidFlag()
+    {
+        return invoicePaidFlag;
+    }
+
+    /**
+     * @param invoicePaidFlag
+     *            the invoicePaidFlag to set
+     */
+    public void setInvoicePaidFlag(Boolean invoicePaidFlag)
+    {
+        this.invoicePaidFlag = invoicePaidFlag;
     }
 
     /**
