@@ -37,7 +37,19 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="02-create-billing-invoice-id-table" author="sasko.tanaskoski">
+    <changeSet id="02-acm-billing-invoice-paid-flag" author="sasko.tanaskoski" dbms="oracle,mssql,postgres">
+        <addColumn tableName="acm_billing_invoice">
+            <column name="cm_billing_invoice_paid_flag" type="VARCHAR(10)" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="02-acm-billing-invoice-paid-flag" author="sasko.tanaskoski" dbms="mysql">
+        <addColumn tableName="acm_billing_invoice">
+            <column name="cm_billing_invoice_paid_flag" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="03-create-billing-invoice-id-table" author="sasko.tanaskoski">
         <createTable tableName="acm_billing_invoice_id">
             <column name="cm_seq_num" type="${idType}"/>
             <column name="cm_seq_name" type="VARCHAR(255)"/>
@@ -48,7 +60,7 @@
         </insert>
     </changeSet>
     
-    <changeSet id="03-create-billing-invoice-item-table" author="sasko.tanaskoski">
+    <changeSet id="04-create-billing-invoice-item-table" author="sasko.tanaskoski">
         <createTable tableName="acm_billing_invoice_item">
             <column name="cm_billing_invoice_id" type="${fkIdType}">
                 <constraints nullable="false"/>

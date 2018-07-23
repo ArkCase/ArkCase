@@ -82,18 +82,19 @@ public class BillingInvoiceDao extends AcmAbstractDao<BillingInvoice>
     }
 
     @Transactional
-    public BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId, List<BillingItem> billingItems)
+    public BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId, String parentObjectNumber,
+            List<BillingItem> billingItems)
     {
         BillingInvoice billingInvoice = new BillingInvoice();
         billingInvoice.setParentObjectType(parentObjectType);
         billingInvoice.setParentObjectId(parentObjectId);
         billingInvoice.setBillingItems(billingItems);
-        billingInvoice.setInvoiceNumber(getNextInvoiceNumber(parentObjectType, parentObjectId));
+        billingInvoice.setInvoiceNumber(getNextInvoiceNumber(parentObjectType, parentObjectId, parentObjectNumber));
         BillingInvoice saved = save(billingInvoice);
         return saved;
     }
 
-    private String getNextInvoiceNumber(String parentObjectType, Long parentObjectId)
+    private String getNextInvoiceNumber(String parentObjectType, Long parentObjectId, String parentObjectNumber)
     {
         String queryText = "SELECT COUNT(billingInvoice.invoiceNumber) " +
                 "FROM BillingInvoice billingInvoice " +
@@ -103,7 +104,7 @@ public class BillingInvoiceDao extends AcmAbstractDao<BillingInvoice>
         Query query = getEm().createQuery(queryText);
         query.setParameter("parentObjectType", parentObjectType.toUpperCase());
         query.setParameter("parentObjectId", parentObjectId);
-        String invoicePrefix = new String(parentObjectId + "_");
+        String invoicePrefix = parentObjectNumber != null ? parentObjectNumber + "_" : "";
         Long invoiceCount = (Long) query.getSingleResult();
         return invoicePrefix + (invoiceCount + 1);
     }

@@ -51,4 +51,7 @@ public interface BillingService
 
     BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId)
             throws CreateBillingInvoiceException;
+
+    BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId, String parentObjectNumber)
+            throws CreateBillingInvoiceException;
 }
