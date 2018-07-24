@@ -316,6 +316,54 @@
             "approverDecision": "Decisión de aprobación"
         }
     },
+    "complaints.comp.newComplaint": {
+        "title": "es_New Complaint",
+        "info": "es_Incident Information",
+        "infoMessage": "es_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "es_Complaint Title",
+        "complaintTitle.placeholder": "es_Enter Complaint Title",
+        "incidentCategory": "es_Incident Category",
+        "initiator": "es_Initiator",
+        "initiator.placeholder": "es_Select Initiator",
+        "complaintDesc": "es_Complaint Description",
+        "priority": "es_Priority",
+        "incidentDate": "es_Incident Date",
+        "incidentDate.placeholder": "es_Select Incident Date",
+        "incidentDate.close.button": "es_Close",
+        "complaintTag": "es_Complaint Tag",
+        "complaintTag.placeholder": "es_Enter Complaint Tag",
+        "frequency": "es_Frequency",
+        "location": {
+            "title": "es_Location",
+            "addressType": "es_Type",
+            "streetAddress": "es_Address",
+            "streetAddress.placeholder": "es_Enter Street Address",
+            "city": "es_City",
+            "city.placeholder": "es_Enter City",
+            "state": "es_State",
+            "state.placeholder": "es_Enter State",
+            "country": "es_Country",
+            "zip": "es_Zip Code",
+            "zip.placeholder": "es_Enter Zip Code",
+            "dateCreated": "es_Date added",
+            "creator": "es_Added By",
+            "creator.placeholder": "es_Enter Creator"
+        },
+        "people": {
+            "title": "es_People",
+            "selectPerson.placeholder": "es_Search existing Person",
+            "personType": "es_Person Type"
+        },
+        "participants": {
+            "title": "es_Participants",
+            "selectParticipant.placeholder": "es_Select Participant",
+            "participantType": "es_Participant Type"
+        },
+        "cancelButton": "es_Cancel",
+        "saveButton": "es_Save Complaint",
+        "removeButton": "es_Remove",
+        "addButton": "es_Add Another"
+    },
     "complaints.userOrGroupSearch": {
         "id": "Búsqueda de usuario",
         "title": "Búsqueda de usuario / grupo",

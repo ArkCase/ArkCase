@@ -123,6 +123,7 @@ var CustomEventHandlers = {
                                 var pickedObject = e.data.data;
                                 // update charge code element
                                 updateElementValue(pickedObject.name, 'input', e.data.elementId, null);
+                                updateElement(element, 'objectTitle', e.data.title_parseable);
                             }
                         }
                         if (e.data.action == "fill-person-picker-data") {
@@ -472,7 +473,6 @@ function getCssClassDivided(element) {
     var cssClass = getCssClass(element);
     if (cssClass != null) {
         var cssClassArray = cssClass.split('_');
-
         if (cssClassArray && cssClassArray.length === 3) {
             return cssClassArray[0] + '_' + cssClassArray[1];
         }

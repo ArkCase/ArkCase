@@ -14,9 +14,14 @@
         },
         {
             "menuId": "topbar",
-            "menuItemURL": "frevvo.new-complaint",
+            "menuItemURL": "newComplaint",
             "menuItemTitle": "complaints.menus.topbar.item",
             "moduleId": "complaint",
+            "modalDialog": {
+                "moduleName": "complaints",
+                "templateUrl": "modules/complaints/views/components/complaint-new-complaint-modal.client.view.html",
+                "controllerName": "Complaints.NewComplaintController"
+            },
             "iconClass": "fa fa-exclamation-triangle",
             "position": 10
         }

@@ -316,6 +316,54 @@
             "approverDecision": "承認決定"
         }
     },
+    "complaints.comp.newComplaint": {
+        "title": "ja_New Complaint",
+        "info": "ja_Incident Information",
+        "infoMessage": "ja_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "ja_Complaint Title",
+        "complaintTitle.placeholder": "ja_Enter Complaint Title",
+        "incidentCategory": "ja_Incident Category",
+        "initiator": "ja_Initiator",
+        "initiator.placeholder": "ja_Select Initiator",
+        "complaintDesc": "ja_Complaint Description",
+        "priority": "ja_Priority",
+        "incidentDate": "ja_Incident Date",
+        "incidentDate.placeholder": "ja_Select Incident Date",
+        "incidentDate.close.button": "ja_Close",
+        "complaintTag": "ja_Complaint Tag",
+        "complaintTag.placeholder": "ja_Enter Complaint Tag",
+        "frequency": "ja_Frequency",
+        "location": {
+            "title": "ja_Location",
+            "addressType": "ja_Type",
+            "streetAddress": "ja_Address",
+            "streetAddress.placeholder": "ja_Enter Street Address",
+            "city": "ja_City",
+            "city.placeholder": "ja_Enter City",
+            "state": "ja_State",
+            "state.placeholder": "ja_Enter State",
+            "country": "ja_Country",
+            "zip": "ja_Zip Code",
+            "zip.placeholder": "ja_Enter Zip Code",
+            "dateCreated": "ja_Date added",
+            "creator": "ja_Added By",
+            "creator.placeholder": "ja_Enter Creator"
+        },
+        "people": {
+            "title": "ja_People",
+            "selectPerson.placeholder": "ja_Search existing Person",
+            "personType": "ja_Person Type"
+        },
+        "participants": {
+            "title": "ja_Participants",
+            "selectParticipant.placeholder": "Sja_elect Participant",
+            "participantType": "ja_Participant Type"
+        },
+        "cancelButton": "ja_Cancel",
+        "saveButton": "ja_Save Complaint",
+        "removeButton": "ja_Remove",
+        "addButton": "ja_Add Another"
+    },
     "complaints.userOrGroupSearch": {
         "id": "ユーザー検索",
         "title": "ユーザー/グループの検索",

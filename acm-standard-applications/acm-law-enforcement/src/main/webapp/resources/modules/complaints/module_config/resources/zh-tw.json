@@ -316,6 +316,54 @@
             "approverDecision": "審批決定"
         }
     },
+    "complaints.comp.newComplaint": {
+        "title": "zh-tw_New Complaint",
+        "info": "zh-tw_Incident Information",
+        "infoMessage": "zh-tw_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "zh-tw_Complaint Title",
+        "complaintTitle.placeholder": "zh-tw_Enter Complaint Title",
+        "incidentCategory": "zh-tw_Incident Category",
+        "initiator": "zh-tw_Initiator",
+        "initiator.placeholder": "zh-tw_Select Initiator",
+        "complaintDesc": "zh-tw_Complaint Description",
+        "priority": "zh-tw_Priority",
+        "incidentDate": "zh-tw_Incident Date",
+        "incidentDate.placeholder": "zh-tw_Select Incident Date",
+        "incidentDate.close.button": "zh-tw_Close",
+        "complaintTag": "zh-tw_Complaint Tag",
+        "complaintTag.placeholder": "zh-tw_Enter Complaint Tag",
+        "frequency": "zh-tw_Frequency",
+        "location": {
+            "title": "zh-tw_Location",
+            "addressType": "zh-tw_Type",
+            "streetAddress": "zh-tw_Address",
+            "streetAddress.placeholder": "zh-tw_Enter Street Address",
+            "city": "zh-tw_City",
+            "city.placeholder": "zh-tw_Enter City",
+            "state": "zh-tw_State",
+            "state.placeholder": "zh-tw_Enter State",
+            "country": "zh-tw_Country",
+            "zip": "zh-tw_Zip Code",
+            "zip.placeholder": "zh-tw_Enter Zip Code",
+            "dateCreated": "zh-tw_Date added",
+            "creator": "zh-tw_Added By",
+            "creator.placeholder": "zh-tw_Enter Creator"
+        },
+        "people": {
+            "title": "zh-tw_People",
+            "selectPerson.placeholder": "zh-tw_Search existing Person",
+            "personType": "zh-tw_Person Type"
+        },
+        "participants": {
+            "title": "zh-tw_Participants",
+            "selectParticipant.placeholder": "zh-tw_Select Participant",
+            "participantType": "zh-tw_Participant Type"
+        },
+        "cancelButton": "zh-tw_Cancel",
+        "saveButton": "zh-tw_Save Complaint",
+        "removeButton": "zh-tw_Remove",
+        "addButton": "zh-tw_Add Another"
+    },
     "complaints.userOrGroupSearch": {
         "id": "用戶搜索",
         "title": "用戶/群組搜索",

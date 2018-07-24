@@ -103,7 +103,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         unit.setComplaintTransaction(mockSaveTransaction);
         unit.setEventPublisher(mockEventPublisher);
-        unit.setComplaintService(mockComplaintService);
+        // unit.setComplaintService(mockComplaintService);
         unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
     }
 

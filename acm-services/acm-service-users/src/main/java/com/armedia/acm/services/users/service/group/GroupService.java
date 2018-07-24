@@ -48,6 +48,8 @@ public interface GroupService
 {
     AcmGroup findByName(String name);
 
+    void removeGroupIfExist(String groupName);
+
     AcmGroup save(AcmGroup group);
 
     AcmGroup saveAndFlush(AcmGroup group);

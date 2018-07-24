@@ -64,6 +64,28 @@ public class LdapGroupService
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    /*
+     * @Transactional(propagation = Propagation.REQUIRES_NEW)
+     * public void removeGroupIfExist(String groupName, String directoryName)
+     * {
+     * // AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
+     * // .get(String.format("%s_sync", directoryName));
+     * //
+     * // String groupName = MapperUtils.buildGroupName(group.getName(), Optional.of(ldapSyncConfig.getUserDomain()));
+     * AcmGroup existingGroup = groupService.findByName(groupName);
+     * if (existingGroup != null && existingGroup.getStatus() == AcmGroupStatus.ACTIVE)
+     * {
+     * log.debug("Group with name: [{}] already exists!", group.getName());
+     * throw new NameAlreadyBoundException(null);
+     * }
+     * if (existingGroup != null)
+     * {
+     * log.debug("Removing Group [{}]", existingGroup.getName());
+     * groupService.removeGroupIfExist(existingGroup.getName());
+     * }
+     * }
+     */
+
     @Transactional(rollbackFor = Exception.class)
     public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException
     {
@@ -95,6 +117,7 @@ public class LdapGroupService
         }
         else
         {
+            groupService.removeGroupIfExist(groupName);
             existingGroup.setType(AcmGroupType.LDAP_GROUP);
             existingGroup.setDisplayName(groupName);
             existingGroup.setDescription(group.getDescription());
