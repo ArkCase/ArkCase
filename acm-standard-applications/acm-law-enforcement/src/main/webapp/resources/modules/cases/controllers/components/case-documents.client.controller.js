@@ -250,13 +250,12 @@ angular.module('cases').controller(
                             Util.serviceCall({
                                 service: Ecm.copyFile,
                                 param: {
-                                    objType: result.parent_ref_s.replace(/[^a-zA-Z]/g, ''),
-                                    objId: 'seeTODO'
-                                    //TODO: we need to find a way to extract the containerId from somewhere, we need that in order to have a destination folder(container)
+                                    objType: ObjectService.ObjectTypes.CASE_FILE,
+                                    objId: componentHelper.currentObjectId
                                 },
                                 data: {
                                     id: parseInt(result.id),
-                                    folderId: result.parent_ref_s.replace(/\D/g, '')
+                                    folderId: result.parent_folder_id_i
                                 }
                             })
                         });
@@ -289,9 +288,9 @@ angular.module('cases').controller(
                     size: 'lg'
                 });
 
-                        modalInstance.result.then(function(modalResult) {
-                            MultiCorrespondenceService.createMultiTemplateCorrespondence(requestData, names, template, modalResult.selectedTemplates, modalResult.multiCorrespondenceDocumentName);
-                        });
-                    });
+                modalInstance.result.then(function (modalResult) {
+                    MultiCorrespondenceService.createMultiTemplateCorrespondence(requestData, names, template, modalResult.selectedTemplates, modalResult.multiCorrespondenceDocumentName);
+                });
+            });
 
         }]);
