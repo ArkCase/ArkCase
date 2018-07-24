@@ -70,6 +70,7 @@ angular.module('complaints').controller(
                             return data;
                         });
                     };
+
                     $scope.unsubscribe = function(complaintInfo) {
                         ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.COMPLAINT, complaintInfo.complaintId).then(function(data) {
                             $scope.showBtnSubscribe = true;
@@ -121,6 +122,27 @@ angular.module('complaints').controller(
                             animation: true,
                             templateUrl: 'modules/complaints/views/components/complaint-close-complaint-modal.client.view.html',
                             controller: 'Complaints.CloseComplaintController',
+                            size: 'lg',
+                            resolve: {
+                                modalParams: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(data) {
+                            console.log(data);
+                        }, function() {
+                            console.log("error");
+                        });
+                    };
+
+                    $scope.newComplaint = function() {
+                        var params = {};
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/complaints/views/components/complaint-new-complaint-modal.client.view.html',
+                            controller: 'Complaints.NewComplaintController',
                             size: 'lg',
                             resolve: {
                                 modalParams: function() {

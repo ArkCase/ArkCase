@@ -48,6 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -66,6 +67,17 @@ public class GroupServiceImpl implements GroupService
     public AcmGroup findByName(String name)
     {
         return groupDao.findByName(name);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void removeGroupIfExist(String groupName)
+    {
+        AcmGroup existingGroup = findByName(groupName);
+        if (existingGroup != null)
+        {
+            groupDao.remove(existingGroup);
+        }
     }
 
     @Override
@@ -92,6 +104,7 @@ public class GroupServiceImpl implements GroupService
         }
         else
         {
+            removeGroupIfExist(groupName);
             acmGroup.setType(AcmGroupType.ADHOC_GROUP);
             acmGroup.setStatus(AcmGroupStatus.ACTIVE);
             acmGroup.setDescription(group.getDescription());

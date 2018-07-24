@@ -17,7 +17,7 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
         deleteOnExpire: 'aggressive', // Items will be deleted from this cache when they expire
         capacity: 1
     });
-    var complaintGetByIdUrl = 'api/latest/plugin/complaint/byId/';
+    var complaintGetUrl = 'api/latest/plugin/complaint/byId/';
 
     var Service = $resource('api/latest/plugin', {}, {
 
@@ -41,8 +41,6 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
             url: 'api/latest/plugin/complaint',
             cache: false
         },
-
-                
         /**
          * @ngdoc method
          * @name get
@@ -60,7 +58,7 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
          */
         get: {
             method: 'GET',
-            url: complaintGetByIdUrl + ':id',
+            url: complaintGetUrl + ':id',
             cache: complaintCache,
             isArray: false
         }
@@ -78,7 +76,7 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
      */
     Service.resetComplaintInfo = function(complaintInfo) {
         if (complaintInfo && complaintInfo.complaintId) {
-            complaintInfo.remove(complaintGetByIdUrl + complaintInfo.complaintId);
+            complaintCache.remove(complaintGetUrl + complaintInfo.complaintId);
         }
     };
 
@@ -149,7 +147,39 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
             data: JSOG.encode(complaintInfo),
             onSuccess: function(data) {
                 if (Service.validateComplaintInfo(data)) {
-                    complaintCache.put(complaintGetByIdUrl + data.complaintId, data);
+                    complaintCache.put(complaintGetUrl + data.complaintId, data);
+                    return complaintInfo;
+                }
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name saveComplaintInfoNewComplaint
+     * @methodOf services:Complaint.InfoService
+     *
+     * @description
+     * Save complaint data
+     *
+     * @param {Object} complaintInfo  Complaint data
+     *
+     * @returns {Object} Promise
+     */
+    Service.saveComplaintInfoNewComplaint = function(complaintInfo) {
+        if (!Service.validateComplaintInfoNewComplaint(complaintInfo)) {
+            return Util.errorPromise($translate.instant("common.service.error.invalidData"));
+        }
+        //we need to make one of the fields is changed in order to be sure that update will be executed
+        //if we change modified won't make any differences since is updated before update to database
+        //but update will be trigger
+        complaintInfo.modified = null;
+        return Util.serviceCall({
+            service: Service.save,
+            data: JSOG.encode(complaintInfo),
+            onSuccess: function(data) {
+                if (Service.validateComplaintInfo(data)) {
+                    complaintCache.put(complaintGetUrl + data.complaintId, data);
                     return complaintInfo;
                 }
             }
@@ -182,6 +212,34 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
             return false;
         }
         if (!Util.isArray(data.participants)) {
+            return false;
+        }
+        if (!Util.isArray(data.personAssociations)) {
+            return false;
+        }
+        return true;
+    };
+
+    /**
+     * @ngdoc method
+     * @name validateComplaintInfoNewComplaint
+     * @methodOf services:Complaint.InfoService
+     *
+     * @description
+     * Validate complaint data
+     *
+     * @param {Object} data  Data to be validated
+     *
+     * @returns {Boolean} Return true if data is valid
+     */
+    Service.validateComplaintInfoNewComplaint = function(data) {
+        if (Util.isEmpty(data)) {
+            return false;
+        }
+        if (data.complaintId) {
+            return false;
+        }
+        if (data.participants && !Util.isArray(data.participants)) {
             return false;
         }
         if (!Util.isArray(data.personAssociations)) {
