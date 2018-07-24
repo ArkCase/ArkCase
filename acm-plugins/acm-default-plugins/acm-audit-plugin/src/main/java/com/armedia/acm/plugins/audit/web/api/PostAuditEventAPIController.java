@@ -155,6 +155,8 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
         event.setObjectId(fileId);
         event.setObjectType("FILE");
         event.setSucceeded(true);
+        event.setParentObjectType(sourceFile.getContainer().getContainerObjectType());
+        event.setParentObjectId(sourceFile.getContainer().getContainerObjectId());
 
         Map<String, Object> eventProperties = new HashMap<>();
         eventProperties.put("documentViewed", documentViewed);
@@ -177,6 +179,8 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
         event.setObjectId(fileId);
         event.setObjectType("FILE");
         event.setSucceeded(true);
+        event.setParentObjectType(sourceFile.getContainer().getContainerObjectType());
+        event.setParentObjectId(sourceFile.getContainer().getContainerObjectId());
 
         Map<String, Object> eventProperties = new HashMap<>();
         eventProperties.put("pageReorderOperation", pageReorderOperation);
@@ -199,6 +203,8 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
         event.setObjectId(fileId);
         event.setObjectType("FILE");
         event.setSucceeded(true);
+        event.setParentObjectType(sourceFile.getContainer().getContainerObjectType());
+        event.setParentObjectId(sourceFile.getContainer().getContainerObjectId());
 
         Map<String, Object> eventProperties = new HashMap<>();
         eventProperties.put("deletedPages", pages);

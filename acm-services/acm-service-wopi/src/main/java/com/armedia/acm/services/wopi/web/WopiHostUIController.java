@@ -27,10 +27,9 @@ package com.armedia.acm.services.wopi.web;
  * #L%
  */
 
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
-import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.wopi.model.WopiConfig;
+import com.armedia.acm.services.wopi.service.WopiAcmService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,16 +41,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RequestMapping("/office")
 public class WopiHostUIController
 {
     private static final Logger log = LoggerFactory.getLogger(WopiHostUIController.class);
 
-    private AuthenticationTokenService tokenService;
     private WopiConfig wopiConfig;
+    private WopiAcmService wopiService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{fileId}")
     public ModelAndView getWopiHostPage(Authentication authentication, @PathVariable Long fileId, HttpSession session)
@@ -59,33 +55,35 @@ public class WopiHostUIController
         log.info("Opening file with id [{}] per user [{}]", fileId, authentication.getName());
 
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        List<AuthenticationToken> tokens = tokenService.findByTokenEmailAndFileId(user.getMail(), fileId);
-        List<AuthenticationToken> activeTokens = tokens.stream()
-                .filter(token -> token.getStatus().equals("ACTIVE"))
-                .collect(Collectors.toList());
-        String authenticationToken;
-        if (activeTokens.isEmpty())
-        {
-            authenticationToken = tokenService.generateAndSaveAuthenticationToken(fileId, user.getMail(), authentication);
-        }
-        else
-        {
-            authenticationToken = activeTokens.get(0).getKey();
-        }
+        String accessToken = wopiService.getWopiAccessToken(fileId, user.getMail(), authentication);
 
         ModelAndView model = new ModelAndView();
         model.setViewName("wopi-host");
-        model.addObject("url", wopiConfig.getWopiHostUrl(fileId, authenticationToken));
+        model.addObject("url", wopiConfig.getWopiHostUrl(fileId, accessToken));
         return model;
     }
 
-    public void setTokenService(AuthenticationTokenService tokenService)
+    @RequestMapping(method = RequestMethod.GET, value = "/testapp/{fileId}")
+    public ModelAndView getWopiValidationAppPage(Authentication authentication, @PathVariable Long fileId, HttpSession session)
     {
-        this.tokenService = tokenService;
+        log.info("Opening wopi validation app for file with id [{}] per user [{}]", fileId, authentication.getName());
+
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+        String accessToken = wopiService.getWopiAccessToken(fileId, user.getMail(), authentication);
+
+        ModelAndView model = new ModelAndView();
+        model.setViewName("wopi-host");
+        model.addObject("url", wopiConfig.getWopiHostValidationUrl(fileId, accessToken));
+        return model;
     }
 
     public void setWopiConfig(WopiConfig wopiConfig)
     {
         this.wopiConfig = wopiConfig;
+    }
+
+    public void setWopiService(WopiAcmService wopiService)
+    {
+        this.wopiService = wopiService;
     }
 }

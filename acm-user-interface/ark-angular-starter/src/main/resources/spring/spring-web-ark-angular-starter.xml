@@ -25,16 +25,6 @@
     <bean id="angularResourceCopier" class="com.armedia.acm.userinterface.angular.AngularResourceCopier">
         <property name="tempFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/tmp"/>
         <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/custom"/>
-        <property name="oldDeployFoldersToBeRemovedBeforeBuild">
-            <list>
-                <value>/modules_config/config</value>
-                <value>/directives</value>
-                <value>/modules</value>
-                <value>/services</value>
-                <value>/templates</value>
-                <value>/filters</value>
-            </list>
-        </property>
         <property name="frontEndCommandsToBeExecuted">
             <list>
                 <value>${frontEndCommandPrefix}yarn --no-progress --non-interactive install

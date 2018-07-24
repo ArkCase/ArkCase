@@ -27,6 +27,8 @@ package com.armedia.acm.services.wopi.api;
  * #L%
  */
 
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.wopi.model.WopiUserInfo;
 
@@ -41,11 +43,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
+import java.time.Period;
+import java.util.List;
+
 @Controller
 @RequestMapping(value = "/api/latest/wopi/users")
 public class WopiUserApiController
 {
     private static final Logger log = LoggerFactory.getLogger(WopiUserApiController.class);
+    private AuthenticationTokenService tokenService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -53,6 +59,17 @@ public class WopiUserApiController
     {
         log.info("Getting user info per email ticket [{}]", token);
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        return new WopiUserInfo(user.getFullName(), user.getUserId(), user.getLang());
+        List<AuthenticationToken> tokens = tokenService.findByKey(token);
+        Long tokenTtl = tokens.stream()
+                .filter(it -> it.getStatus().equals("ACTIVE"))
+                .findFirst().map(it -> it.getCreated().toInstant()
+                        .plus(Period.ofDays(AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS)).toEpochMilli())
+                .orElse(0L);
+        return new WopiUserInfo(user.getFullName(), user.getUserId(), user.getLang(), tokenTtl);
+    }
+
+    public void setTokenService(AuthenticationTokenService tokenService)
+    {
+        this.tokenService = tokenService;
     }
 }

@@ -10,12 +10,13 @@
 
     <bean id="timesheetPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
-            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler"/>
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="timesheetContainerHandler"/>
+            </list>
         </property>
         <property name="postSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="timesheetRuleHandler"/>
-                <ref bean="timesheetContainerHandler"/>
             </list>
         </property>
     </bean>
