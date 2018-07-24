@@ -910,5 +910,17 @@
                 "details.btn.text": "View {{count}} Changes"
             }
         }
+    },
+    "common.multicorrespondence": {
+        "modal": {
+            "title": "Correspondence Templates",
+            "select": "Select Correspondence Templates",
+            "documentName.label": "Enter Multi Correspondence Template Name",
+            "documentName.placeholder": "Document Name",
+            "buttons": {
+                "ok": "Create",
+                "cancel": "Cancel"
+            }
+        }
     }
 }

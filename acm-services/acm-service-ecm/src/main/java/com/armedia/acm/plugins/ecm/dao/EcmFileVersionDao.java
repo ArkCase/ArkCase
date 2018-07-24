@@ -53,7 +53,9 @@ public class EcmFileVersionDao extends AcmAbstractDao<EcmFileVersion>
         String queryText = "SELECT SUM(fileVersion.fileSizeBytes) FROM EcmFileVersion fileVersion WHERE fileVersion.created <= :until";
         Query query = getEm().createQuery(queryText);
         query.setParameter("until", Date.from(ZonedDateTime.of(until, ZoneId.systemDefault()).toInstant()));
-        return (Long) query.getSingleResult();
+        // if no files were added to ArkCase yet, this query may return NULL
+        Long totalSize = (Long) query.getSingleResult();
+        return totalSize == null ? 0L : totalSize;
 
     }
 }

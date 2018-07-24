@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h3>
+        <span translate>common.multicorrespondence.modal.title</span>
+    </h3>
+
+</div>
+
+<div class="modal-body">
+    <form name="multiCorrespondenceForm">
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="multiCorrespondenceDocumentName">
+                    <span translate>common.multicorrespondence.modal.documentName.label</span>
+                    <span class="required-asterisk">*</span>
+                </label>
+                <input type="text" id="multiCorrespondenceDocumentName" ng-model="multiCorrespondenceDocumentName"
+                        class="input-md form-control" required="required"
+                        placeholder="{{ 'common.multicorrespondence.modal.documentName.placeholder' | translate }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label>
+                    <span translate>common.multicorrespondence.modal.select</span>
+                </label>
+                <span ng-repeat="template in correspondenceTemplates" class="checkbox">
+                    <label class="checkbox">
+                        <input type="checkbox" value="{{template}}" ng-click="onTemplateSelected(template)"
+                                ng-checked="templateExist(template.templateId).found == true">
+                        <span translate>
+                            {{template.label}}
+                        </span>
+                    </label>
+                </span>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>common.multicorrespondence.modal.buttons.cancel</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="multiCorrespondenceForm.$invalid">
+        <span translate>common.multicorrespondence.modal.buttons.ok</span>
+    </button>
+</div>

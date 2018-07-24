@@ -125,8 +125,7 @@ angular.module('services').factory('DocTreeExt.Email',
                                 }
                             }
                         });
-                    });
-                    if (modalInstance != undefined) {
+
                         modalInstance.result.then(function(res) {
                             var emailData = {};
                             if (res.action === 'SEND_ATTACHMENTS') {
@@ -143,7 +142,7 @@ angular.module('services').factory('DocTreeExt.Email',
                                 EcmEmailService.sendEmail(emailData, DocTree.getObjType());
                             }
                         });
-                    }
+                    });
                 }
 
                 ,

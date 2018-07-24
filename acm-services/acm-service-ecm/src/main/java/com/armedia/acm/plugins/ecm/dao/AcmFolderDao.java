@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.ecm.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -112,5 +113,11 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
         TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
 
         return query.getResultList();
+    }
+
+    @Override
+    public String getSupportedObjectType() 
+    {
+        return AcmFolderConstants.OBJECT_FOLDER_TYPE;
     }
 }

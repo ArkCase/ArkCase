@@ -44,11 +44,11 @@ import org.kie.internal.io.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by armdev on 4/17/14.
@@ -132,24 +132,25 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     {
         SpreadsheetCompiler sc = new SpreadsheetCompiler();
 
-        Resource xls = new FileSystemResource(configFile);
-
         try
         {
-            String drl = sc.compile(xls.getInputStream(), InputType.XLS);
 
             KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
             DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
             dtconf.setInputType(DecisionTableInputType.XLS);
-            kbuilder.add(ResourceFactory.newInputStreamResource(xls.getInputStream()), ResourceType.DTABLE, dtconf);
+            kbuilder.add(ResourceFactory.newFileResource(configFile), ResourceType.DTABLE, dtconf);
 
             if (kbuilder.hasErrors())
             {
-                log.error("DRL with errors: {}", drl);
-
-                for (KnowledgeBuilderError error : kbuilder.getErrors())
+                try (InputStream drlStream = new FileInputStream(configFile))
                 {
-                    log.error("Error building rules: {}", error);
+                    String drl = sc.compile(drlStream, InputType.XLS);
+                    log.error("DRL with errors: {}", drl);
+
+                    for (KnowledgeBuilderError error : kbuilder.getErrors())
+                    {
+                        log.error("Error building rules: {}", error);
+                    }
                 }
 
                 throw new RuntimeException(String.format("Could not build rules from %s", configFile.getAbsolutePath()));
