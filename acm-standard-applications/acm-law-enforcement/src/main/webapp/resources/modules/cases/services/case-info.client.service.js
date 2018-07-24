@@ -19,6 +19,7 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
         capacity: 1
     });
     var caseGetUrl = 'api/latest/plugin/casefile/byId/';
+    var complaintGetByNumberUrl = 'api/latest/plugin/casefile/bynumber';
 
     var Service = $resource('api/latest/plugin', {}, {
         /**
@@ -59,6 +60,13 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
             method: 'GET',
             url: caseGetUrl + ':id',
             cache: caseCache,
+            isArray: false
+        },
+
+        getByNumber: {
+            method: 'GET',
+            url: complaintGetByNumberUrl,
+            cache: false,
             isArray: false
         }
     });
@@ -112,6 +120,32 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
             service: Service.get,
             param: {
                 id: id
+            },
+            onSuccess: function(data) {
+                if (Service.validateCaseInfo(data)) {
+                    return data;
+                }
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name getComplaintInfo
+     * @methodOf services:Complaint.InfoService
+     *
+     * @description
+     * Query complaint data
+     *
+     * @param {Number} id  Complaint ID
+     *
+     * @returns {Object} Promise
+     */
+    Service.getCaseInfoByNumber = function(caseNumber) {
+        return Util.serviceCall({
+            service: Service.getByNumber,
+            param: {
+                caseNumber: caseNumber
             },
             onSuccess: function(data) {
                 if (Service.validateCaseInfo(data)) {

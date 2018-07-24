@@ -1320,6 +1320,10 @@
                 "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
                 "userOrGroupFacetExtraFilter": "&fq=\"name\": "
             },
+            "userSearch": {
+                "userFacetFilter": "fq=\"object_type_s\":USER",
+                "userFacetExtraFilter": "&fq=\"name\":"
+            },
             "groupSearch": {
                 "groupFacetFilter": "fq=\"object_type_s\":GROUP&fq=\"member_id_ss\":",
                 "groupFacetExtraFilter": "&fq=\"status_lcs\":ACTIVE"

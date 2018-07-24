@@ -17,7 +17,7 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
         deleteOnExpire: 'aggressive', // Items will be deleted from this cache when they expire
         capacity: 1
     });
-    var complaintGetUrl = 'api/latest/plugin/complaint/byId/';
+    var complaintGetByIdUrl = 'api/latest/plugin/complaint/byId/';
 
     var Service = $resource('api/latest/plugin', {}, {
 
@@ -41,6 +41,8 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
             url: 'api/latest/plugin/complaint',
             cache: false
         },
+
+                
         /**
          * @ngdoc method
          * @name get
@@ -58,7 +60,7 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
          */
         get: {
             method: 'GET',
-            url: complaintGetUrl + ':id',
+            url: complaintGetByIdUrl + ':id',
             cache: complaintCache,
             isArray: false
         }
@@ -76,7 +78,7 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
      */
     Service.resetComplaintInfo = function(complaintInfo) {
         if (complaintInfo && complaintInfo.complaintId) {
-            complaintInfo.remove(complaintGetUrl + complaintInfo.complaintId);
+            complaintInfo.remove(complaintGetByIdUrl + complaintInfo.complaintId);
         }
     };
 
@@ -147,7 +149,7 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
             data: JSOG.encode(complaintInfo),
             onSuccess: function(data) {
                 if (Service.validateComplaintInfo(data)) {
-                    complaintCache.put(complaintGetUrl + data.complaintId, data);
+                    complaintCache.put(complaintGetByIdUrl + data.complaintId, data);
                     return complaintInfo;
                 }
             }

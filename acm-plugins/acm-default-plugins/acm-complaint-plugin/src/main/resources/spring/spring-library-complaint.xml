@@ -221,6 +221,13 @@
         <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
 
+    <bean id="closeComplaint" class="com.armedia.acm.plugins.complaint.service.CloseComplaintService">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
+        <property name="userActionExecutor" ref="userActionExecutor"/>
+        <property name="applicationEventPublisher" ref="frevvoApplicationEventPublisher"/>
+    </bean>
+
     <bean id="complaintCaptureFileEventListener" class="com.armedia.acm.plugins.complaint.service.ComplaintCaptureFileEventListener">
         <property name="watchFolder" ref="captureFolder"/>
         <property name="workingFolder" ref="workingFolder"/>
@@ -233,4 +240,16 @@
         <property name="OXMFilePath" value="${user.home}/.arkcase/acm${capture.oxm.file.path}"/>
     </bean>
 
+    <bean id="closeComplaintTaskName" class="java.lang.String">
+        <constructor-arg>
+            <value>Request to Close Complaint '%s'</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="complaintCloseWorkflowListener"
+        class="com.armedia.acm.plugins.complaint.service.CloseComplaintWorkflowListener">
+        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="closeComplaintTaskName" ref="closeComplaintTaskName"/>
+    </bean>
 </beans>

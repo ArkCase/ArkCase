@@ -3,7 +3,8 @@
 angular.module('complaints').controller(
         'Complaints.ActionsController',
         [ '$scope', '$state', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Complaint.LookupService', 'Object.SubscriptionService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService',
-                'Profile.UserInfoService', function($scope, $state, $stateParams, $q, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService, ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService) {
+                'Profile.UserInfoService', '$modal',
+                function($scope, $state, $stateParams, $q, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService, ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, $modal) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -111,4 +112,28 @@ angular.module('complaints').controller(
                         $scope.availableChildOutcomes = outcomes;
                         $scope.showBtnChildOutcomes = true;
                     });
+
+                    $scope.closeComplaint = function(complaintInfo) {
+                        var params = {
+                            "info": complaintInfo
+                        };
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/complaints/views/components/complaint-close-complaint-modal.client.view.html',
+                            controller: 'Complaints.CloseComplaintController',
+                            size: 'lg',
+                            resolve: {
+                                modalParams: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(data) {
+                            console.log(data);
+                        }, function() {
+                            console.log("error");
+                        });
+                    };
+
                 } ]);
