@@ -346,6 +346,48 @@
             "approverDecision": "Approver Decision"
         }
     },
+    "complaints.comp.closeComplaint": {
+        "title": "Close Complaint",
+        "info": "Incident Information",
+        "infoMessage": "Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "Complaint Title",
+        "information": {
+            "title": "Close Complaint Information",
+            "close.date": "Complaint Close Date",
+            "complaint.number": "Complaint Number",
+            "complaint.disposition": "Complaint Disposition"
+        },
+        "add.existing.case": {
+            "title": "Add Existing Case",
+            "search": "Search",
+            "case": {
+                "number": "Enter Case Number",
+                "title": "Case Title",
+                "date": "Case Creation Date",
+                "priority": "Case Priority"
+            }
+        },
+        "refer.external": {
+            "title": "Refer External",
+            "name": "Name of Agency",
+            "date": "Referral Date",
+            "contact": {
+                "title": "Contact",
+                "name": "Contact Name",
+                "type": "Type",
+                "value": "Value"
+            }
+        },
+        "approver": {
+            "placeholder": "Select Approver",
+            "label": "Select Approver",
+            "addAnother": "Add another",
+            "remove": "Remove Approver",
+            "pickerModal.header": "Choose Approver"
+        },
+        "cancelButton": "Cancel",
+        "saveButton": "Save Complaint"
+    },
     "complaints.userOrGroupSearch": {
         "id": "userSearch",
         "title": "User/Group Search",
