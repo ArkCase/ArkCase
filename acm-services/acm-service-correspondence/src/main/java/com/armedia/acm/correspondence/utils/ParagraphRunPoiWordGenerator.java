@@ -100,14 +100,15 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
                     newRun.addCarriageReturn();
                     newRun = paragraph.insertNewRun(runNum + i);
                     /*
-                     * We should copy all style attributes
-                     * to the newRun from run
+                     * We should copy all style attributes to the newRun from run
                      * also from background color, ...
                      * Here we duplicate only the simple attributes...
                      */
                     newRun.setText(texts[i]);
                     newRun.setBold(run.isBold());
                     newRun.setCapitalized(run.isCapitalized());
+                    // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
+                    // this will be fixed.
                     // newRun.setCharacterSpacing(run.getCharacterSpacing());
                     newRun.setColor(run.getColor());
                     newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
