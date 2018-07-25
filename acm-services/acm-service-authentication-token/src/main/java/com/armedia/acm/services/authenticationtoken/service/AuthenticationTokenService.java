@@ -48,6 +48,8 @@ public class AuthenticationTokenService
     private Cache authenticationTokenCache;
     private AuthenticationTokenDao authenticationTokenDao;
 
+    public static final int EMAIL_TICKET_EXPIRATION_DAYS = 3;
+
     /**
      * Retrieve a token corresponding to the given Authentication. The token can be placed in service URLs
      * like so: http://$acm_host/$acm_servlet_context/api/v1/$api_service?acm_ticket=$token.
