@@ -1,5 +1,31 @@
 package com.armedia.acm.services.billing.transformer;
 
+/*-
+ * #%L
+ * ACM Service: Billing
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
 import com.armedia.acm.services.billing.dao.BillingInvoiceDao;
 import com.armedia.acm.services.billing.model.BillingConstants;
 import com.armedia.acm.services.billing.model.BillingInvoice;
@@ -44,12 +70,19 @@ public class BillingInvoiceToSolrTransformer implements AcmObjectToSolrDocTransf
 
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
+        solr.setModified_date_tdt(in.getModified());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
             solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
         solr.setAdditionalProperty("invoice_number_lcs", in.getInvoiceNumber());
@@ -67,9 +100,9 @@ public class BillingInvoiceToSolrTransformer implements AcmObjectToSolrDocTransf
     public SolrDocument toSolrQuickSearch(BillingInvoice in)
     {
         SolrDocument solrDoc = new SolrDocument();
-        solrDoc.setId(String.format("%d-%s", in.getId(), BillingConstants.OBJECT_TYPE_ITEM));
-        solrDoc.setObject_type_s(BillingConstants.OBJECT_TYPE_ITEM);
-        solrDoc.setName(String.format("%s_%d", BillingConstants.OBJECT_TYPE_ITEM, in.getId()));
+        solrDoc.setId(String.format("%d-%s", in.getId(), BillingConstants.OBJECT_TYPE_INVOICE));
+        solrDoc.setObject_type_s(BillingConstants.OBJECT_TYPE_INVOICE);
+        solrDoc.setName(String.format("%s_%d", BillingConstants.OBJECT_TYPE_INVOICE, in.getId()));
         solrDoc.setObject_id_s(in.getId() + "");
         solrDoc.setCreate_tdt(in.getCreated());
         solrDoc.setAdditionalProperty("parent_object_type_s", in.getParentObjectType());

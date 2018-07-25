@@ -49,7 +49,6 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -99,10 +98,11 @@ public class BillingItem implements Serializable, AcmObject, AcmEntity, AcmParen
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @Transient
+    @Column(name = "cm_billing_item_modified", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @Transient
+    @Column(name = "cm_billing_item_modifier", nullable = false)
     private String modifier;
 
     @Column(name = "cm_class_name")
@@ -264,7 +264,7 @@ public class BillingItem implements Serializable, AcmObject, AcmEntity, AcmParen
     @Override
     public Date getModified()
     {
-        return getCreated();
+        return modified;
     }
 
     /**
@@ -283,7 +283,7 @@ public class BillingItem implements Serializable, AcmObject, AcmEntity, AcmParen
     @Override
     public String getModifier()
     {
-        return creator;
+        return modifier;
     }
 
     /**

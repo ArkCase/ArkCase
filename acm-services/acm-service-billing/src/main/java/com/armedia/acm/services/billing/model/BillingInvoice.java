@@ -1,8 +1,36 @@
 package com.armedia.acm.services.billing.model;
 
+/*-
+ * #%L
+ * ACM Service: Billing
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -10,6 +38,7 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
@@ -27,7 +56,6 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -60,6 +88,7 @@ public class BillingInvoice implements Serializable, AcmObject, AcmEntity, AcmPa
     private String invoiceNumber;
 
     @Column(name = "cm_billing_invoice_paid_flag")
+    @Convert(converter = BooleanToStringConverter.class)
     private Boolean invoicePaidFlag;
 
     @Column(name = "cm_parent_object_id")
@@ -75,10 +104,11 @@ public class BillingInvoice implements Serializable, AcmObject, AcmEntity, AcmPa
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @Transient
+    @Column(name = "cm_billing_invoice_modified", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @Transient
+    @Column(name = "cm_billing_invoice_modifier", nullable = false)
     private String modifier;
 
     @Column(name = "cm_class_name")
@@ -230,7 +260,7 @@ public class BillingInvoice implements Serializable, AcmObject, AcmEntity, AcmPa
     @Override
     public Date getModified()
     {
-        return getCreated();
+        return modified;
     }
 
     /**
@@ -249,7 +279,7 @@ public class BillingInvoice implements Serializable, AcmObject, AcmEntity, AcmPa
     @Override
     public String getModifier()
     {
-        return creator;
+        return modifier;
     }
 
     /**

@@ -11,10 +11,21 @@
     <bean id="billingService" class="com.armedia.acm.services.billing.service.impl.BillingServiceImpl">
         <property name="billingItemDao" ref="billingItemDao"/>
         <property name="billingInvoiceDao" ref="billingInvoiceDao"/>
+        <property name="billingInvoiceBusinessRule" ref="billingInvoiceBusinessRule"/>
+    </bean>
+
+    <bean id="billingInvoiceBusinessRule" class="com.armedia.acm.services.billing.rules.BillingInvoiceBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
+        <property name="ruleSpreadsheetFilename" value="drools-billing-invoice-rules.xlsx"/>
     </bean>
 
     <bean id="billingItemToSolrTransformer" class="com.armedia.acm.services.billing.transformer.BillingItemToSolrTransformer">
         <property name="billingItemDao" ref="billingItemDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="billingInvoiceToSolrTransformer" class="com.armedia.acm.services.billing.transformer.BillingInvoiceToSolrTransformer">
+        <property name="billingInvoiceDao" ref="billingInvoiceDao"/>
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 

@@ -28,7 +28,6 @@ package com.armedia.acm.services.billing.dao;
  */
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.billing.model.BillingInvoice;
-import com.armedia.acm.services.billing.model.BillingItem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import java.util.ArrayList;
@@ -82,31 +80,9 @@ public class BillingInvoiceDao extends AcmAbstractDao<BillingInvoice>
     }
 
     @Transactional
-    public BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId, String parentObjectNumber,
-            List<BillingItem> billingItems)
+    public BillingInvoice saveBillingInvoice(BillingInvoice billingInvoice)
     {
-        BillingInvoice billingInvoice = new BillingInvoice();
-        billingInvoice.setParentObjectType(parentObjectType);
-        billingInvoice.setParentObjectId(parentObjectId);
-        billingInvoice.setBillingItems(billingItems);
-        billingInvoice.setInvoiceNumber(getNextInvoiceNumber(parentObjectType, parentObjectId, parentObjectNumber));
-        BillingInvoice saved = save(billingInvoice);
-        return saved;
-    }
-
-    private String getNextInvoiceNumber(String parentObjectType, Long parentObjectId, String parentObjectNumber)
-    {
-        String queryText = "SELECT COUNT(billingInvoice.invoiceNumber) " +
-                "FROM BillingInvoice billingInvoice " +
-                "WHERE billingInvoice.parentObjectType = :parentObjectType " +
-                "AND billingInvoice.parentObjectId = :parentObjectId";
-
-        Query query = getEm().createQuery(queryText);
-        query.setParameter("parentObjectType", parentObjectType.toUpperCase());
-        query.setParameter("parentObjectId", parentObjectId);
-        String invoicePrefix = parentObjectNumber != null ? parentObjectNumber + "_" : "";
-        Long invoiceCount = (Long) query.getSingleResult();
-        return invoicePrefix + (invoiceCount + 1);
+        return save(billingInvoice);
     }
 
     public EntityManager getEntityManager()

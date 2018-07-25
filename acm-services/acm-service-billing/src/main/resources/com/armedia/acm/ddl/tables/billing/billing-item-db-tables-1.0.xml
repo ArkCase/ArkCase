@@ -55,5 +55,16 @@
             <column name="cm_seq_name" value="acm_billing_item"></column>
         </insert>
     </changeSet>
-    
+
+    <changeSet id="03-add-billing-item-modified-and-modifier" author="sasko.tanaskoski">
+        <addColumn tableName="acm_billing_item">
+            <column name="cm_billing_item_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_billing_item_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
