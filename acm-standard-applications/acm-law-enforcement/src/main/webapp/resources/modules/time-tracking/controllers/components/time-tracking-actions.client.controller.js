@@ -29,7 +29,7 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController',
             };
 
             $scope.isVisible = function() {
-                return $scope.objectInfo.status === 'DRAFT' ? true : false;
+                return !Util.isEmpty($scope.objectInfo) && $scope.objectInfo.status === 'DRAFT';
             };
 
         } ]);

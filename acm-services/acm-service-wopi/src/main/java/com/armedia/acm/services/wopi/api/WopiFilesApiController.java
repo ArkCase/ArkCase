@@ -30,8 +30,8 @@ package com.armedia.acm.services.wopi.api;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.wopi.model.WopiFileInfo;
+import com.armedia.acm.services.wopi.model.WopiLockInfo;
 import com.armedia.acm.services.wopi.service.WopiAcmService;
-
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,11 +42,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -91,7 +91,7 @@ public class WopiFilesApiController
     @RequestMapping(value = "/{id}/contents", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity putFile(@PathVariable Long id,
-            @RequestBody InputStreamResource resource,
+            @RequestBody(required = false) InputStreamResource resource,
             Authentication authentication)
     {
         log.info("Put file [{}] per user [{}]", id, authentication.getName());
@@ -115,7 +115,7 @@ public class WopiFilesApiController
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{id}/lock", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity<Long> lockFile(@PathVariable Long id, Authentication authentication)
+    public ResponseEntity<WopiLockInfo> lockFile(@PathVariable Long id, Authentication authentication)
     {
         log.info("Lock file [{}] per user [{}]", id, authentication.getName());
         return new ResponseEntity<>(wopiService.lock(id, authentication), HttpStatus.OK);
@@ -124,7 +124,7 @@ public class WopiFilesApiController
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{id}/lock", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Long> getLock(@PathVariable Long id, Authentication authentication)
+    public ResponseEntity<WopiLockInfo> getLock(@PathVariable Long id, Authentication authentication)
     {
         log.info("Get lock for file [{}] per user [{}]", id, authentication.getName());
         return new ResponseEntity<>(wopiService.getSharedLock(id), HttpStatus.OK);
@@ -133,7 +133,7 @@ public class WopiFilesApiController
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{id}/lock/{lockId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity<Long> unlock(@PathVariable Long id, @PathVariable Long lockId, Authentication authentication)
+    public ResponseEntity<WopiLockInfo> unlock(@PathVariable Long id, @PathVariable Long lockId, Authentication authentication)
     {
         log.info("Unlock file [{}] per user [{}]", id, authentication.getName());
         return new ResponseEntity<>(wopiService.unlock(id, lockId, authentication), HttpStatus.OK);
@@ -142,13 +142,13 @@ public class WopiFilesApiController
     @PreAuthorize("hasPermission(#id, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{id}/rename", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity renameFile(@PathVariable Long id, @RequestParam String name,
+    public ResponseEntity renameFile(@PathVariable Long id, @RequestBody MultiValueMap<String, String> body,
             Authentication authentication)
     {
         log.info("Rename file [{}] per user [{}]", id, authentication.getName());
         try
         {
-            wopiService.renameFile(id, name);
+            wopiService.renameFile(id, body.getFirst("name"));
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (AcmObjectNotFoundException e)

@@ -12,7 +12,6 @@ angular.module('search').controller('SearchController', [ '$scope', 'ConfigServi
     var searchQuery = new Object();
     searchQuery.searchQuery = $scope.searchQuery;
     searchQuery.isSelected = isSelected;
-    $scope.searchQuery = searchQuery;
     $scope.$broadcast('search-query', $scope.searchQuery);
 
 } ]);

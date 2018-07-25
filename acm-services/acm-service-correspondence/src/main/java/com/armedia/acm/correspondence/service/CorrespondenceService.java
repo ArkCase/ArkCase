@@ -36,27 +36,55 @@ import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.QueryType;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.docx4j.dml.CTBlip;
+import org.docx4j.jaxb.XPathBinderAssociationIsPartialException;
+import org.docx4j.model.structure.SectionWrapper;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.exceptions.InvalidFormatException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.Part;
+import org.docx4j.openpackaging.parts.PartName;
+import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
+import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
+import org.docx4j.openpackaging.parts.relationships.RelationshipsPart;
+import org.docx4j.relationships.Relationship;
+import org.docx4j.wml.CTRel;
+import org.docx4j.wml.FooterReference;
+import org.docx4j.wml.HdrFtrRef;
+import org.docx4j.wml.HeaderReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.armedia.acm.correspondence.service.CorrespondenceGenerator.CORRESPONDENCE_CATEGORY;
+import static com.armedia.acm.correspondence.service.CorrespondenceGenerator.WORD_MIME_TYPE;
+
 public class CorrespondenceService
 {
-    protected static final String TEMP_FILE_PREFIX = "template-";
-    protected static final String TEMP_FILE_SUFFIX = ".docx";
+    private static final String TEMP_FILE_PREFIX = "template-";
+    private static final String TEMP_FILE_SUFFIX = ".docx";
+    private static final String MULTITEMPLATE_DOC_TYPE = "Multi Correspondence";
+
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private SpringContextHolder springContextHolder;
     private CorrespondenceGenerator correspondenceGenerator;
@@ -107,7 +135,194 @@ public class CorrespondenceService
 
     }
 
-    protected CorrespondenceTemplate findTemplate(String templateName)
+    public EcmFile generateMultiTemplate(Authentication authentication, List<CorrespondenceTemplate> templates, String parentObjectType,
+            Long parentObjectId,
+            String targetCmisFolderId, String documentName) throws Exception
+    {
+
+        EcmFile retval = null;
+
+        List<String> templateNames = templates
+                .stream()
+                .map(correspondenceTemplate -> correspondenceTemplate.getTemplateFilename())
+                .collect(Collectors.toList());
+
+        List<File> templateFiles = new ArrayList<>();
+
+        File multiTemplateCorrespondence = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+        try (InputStream multiTemplateCorrespondenceInputStream = new FileInputStream(multiTemplateCorrespondence);
+                OutputStream multiTemplateCorrespondenceOutputStream = new FileOutputStream(multiTemplateCorrespondence))
+        {
+
+            // GENERATE TEMP TEMPLATE DOCUMENTS AND ADD THEM TO A LIST
+            for (String templateName : templateNames)
+            {
+                CorrespondenceTemplate template = findTemplate(templateName);
+                File currentCorrespondenceTemplateFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+
+                try (FileOutputStream currentCorrespondenceTemplateFileOutputStream = new FileOutputStream(
+                        currentCorrespondenceTemplateFile))
+                {
+                    log.debug("Writing correspondence to file: " + currentCorrespondenceTemplateFile.getCanonicalPath());
+                    getCorrespondenceGenerator().generateCorrespondenceOutputStream(template, new Object[] { parentObjectId },
+                            currentCorrespondenceTemplateFileOutputStream);
+                    templateFiles.add(currentCorrespondenceTemplateFile);
+                }
+            }
+
+            // MERGE TEMP TEMPLATE DOCUMENTS INTO ONE FINAL DOCUMENT AND UPLOAD IT
+            if (!templateFiles.isEmpty())
+            {
+                if (templateFiles.size() > 1)
+                {
+                    mergeTemplates(templateFiles, multiTemplateCorrespondenceOutputStream);
+                }
+                else if (templateFiles.size() == 1)
+                {
+                    try (InputStream correspondenceTemplateIS = new FileInputStream(templateFiles.get(0)))
+                    {
+                        IOUtils.copy(correspondenceTemplateIS, multiTemplateCorrespondenceOutputStream);
+                    }
+                }
+
+                String currDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMdd-HHmmss-SSS"));
+                String fileName = documentName + " " + currDateTime + ".docx";
+                retval = getCorrespondenceGenerator().getEcmFileService().upload(documentName + ".docx", MULTITEMPLATE_DOC_TYPE,
+                        CORRESPONDENCE_CATEGORY,
+                        multiTemplateCorrespondenceInputStream, WORD_MIME_TYPE, fileName, authentication, targetCmisFolderId,
+                        parentObjectType, parentObjectId);
+
+                getEventPublisher().publishCorrespondenceAdded(retval, authentication, true);
+
+                // CLEANUP
+                for (File tempFile : templateFiles)
+                {
+                    FileUtils.deleteQuietly(tempFile);
+                }
+            }
+            // CLEANUP
+            FileUtils.deleteQuietly(multiTemplateCorrespondence);
+        }
+        return retval;
+    }
+
+    private void mergeTemplates(List<File> templateFiles, OutputStream dest) throws Docx4JException, JAXBException
+    {
+        WordprocessingMLPackage target = WordprocessingMLPackage.load(templateFiles.get(0));
+        removeHeaderAndFooter(target);
+
+        for (int i = 1; i < templateFiles.size(); i++)
+        {
+            WordprocessingMLPackage appendDocument = WordprocessingMLPackage.load(templateFiles.get(i));
+            mergeDocumentsBodies(target, appendDocument);
+            mergeDocumentsImages(target, appendDocument);
+        }
+        target.save(dest);
+    }
+
+    private void mergeDocumentsBodies(WordprocessingMLPackage target, WordprocessingMLPackage appendDocument)
+            throws JAXBException, XPathBinderAssociationIsPartialException
+    {
+        List body = appendDocument.getMainDocumentPart().getJAXBNodesViaXPath("//w:body", false);
+        for (Object b : body)
+        {
+            List bodyContent = ((org.docx4j.wml.Body) b).getContent();
+            for (Object content : bodyContent)
+            {
+                target.getMainDocumentPart().addObject(content);
+            }
+        }
+    }
+
+    private void mergeDocumentsImages(WordprocessingMLPackage target, WordprocessingMLPackage appendDocument)
+            throws JAXBException, XPathBinderAssociationIsPartialException, InvalidFormatException
+    {
+        List<Object> blips = appendDocument.getMainDocumentPart().getJAXBNodesViaXPath("//a:blip", false);
+        for (Object el : blips)
+        {
+            try
+            {
+                CTBlip blip = (CTBlip) el;
+                RelationshipsPart parts = appendDocument.getMainDocumentPart().getRelationshipsPart();
+                Relationship rel = parts.getRelationshipByID(blip.getEmbed());
+                Part part = parts.getPart(rel);
+
+                Relationship newRel = target.getMainDocumentPart().addTargetPart(part,
+                        RelationshipsPart.AddPartBehaviour.RENAME_IF_NAME_EXISTS);
+                blip.setEmbed(newRel.getId());
+                target.getMainDocumentPart()
+                        .addTargetPart(appendDocument.getParts().getParts().get(new PartName("/word/" + rel.getTarget())));
+            }
+            catch (Exception ex)
+            {
+                log.error("Could not merge templates images: {}", ex.getMessage());
+                throw ex;
+            }
+        }
+    }
+
+    private void removeHeaderAndFooter(WordprocessingMLPackage target)
+    {
+        List<SectionWrapper> sectionWrappers = target.getDocumentModel().getSections();
+        HeaderPart headerPart;
+        FooterPart footerPart;
+
+        for (SectionWrapper sectionWrapper : sectionWrappers)
+        {
+            headerPart = sectionWrapper.getHeaderFooterPolicy().getDefaultHeader();
+            footerPart = sectionWrapper.getHeaderFooterPolicy().getDefaultFooter();
+
+            if (Objects.nonNull(headerPart))
+            {
+                target.getMainDocumentPart().getRelationshipsPart().removeRelationship(headerPart.getPartName());
+            }
+
+            if (Objects.nonNull(footerPart))
+            {
+                target.getMainDocumentPart().getRelationshipsPart().removeRelationship(footerPart.getPartName());
+            }
+
+            List<CTRel> rel = sectionWrapper.getSectPr().getEGHdrFtrReferences();
+            List<HeaderReference> headerReferencesToBeRemoved = new ArrayList<>();
+            List<FooterReference> footerReferencesToBeRemoved = new ArrayList<>();
+
+            for (CTRel ctRel : rel)
+            {
+                if (ctRel instanceof HeaderReference)
+                {
+                    HeaderReference hr = (HeaderReference) ctRel;
+                    if (hr.getType().equals(HdrFtrRef.DEFAULT))
+                    {
+                        headerReferencesToBeRemoved.add(hr);
+                    }
+                }
+                else if (ctRel instanceof FooterReference)
+                {
+                    FooterReference fr = (FooterReference) ctRel;
+                    if (fr.getType().equals(HdrFtrRef.DEFAULT))
+                    {
+                        footerReferencesToBeRemoved.add(fr);
+                    }
+                }
+            }
+            if (!headerReferencesToBeRemoved.isEmpty())
+            {
+                for (int i = 0; i < headerReferencesToBeRemoved.size(); i++)
+                {
+                    sectionWrapper.getSectPr().getEGHdrFtrReferences().remove(headerReferencesToBeRemoved.get(i));
+                }
+            }
+            if (!footerReferencesToBeRemoved.isEmpty())
+            {
+                for (int i = 0; i < footerReferencesToBeRemoved.size(); i++)
+                {
+                    sectionWrapper.getSectPr().getEGHdrFtrReferences().remove(footerReferencesToBeRemoved.get(i));
+                }
+            }
+        }
+    }
+
+    private CorrespondenceTemplate findTemplate(String templateName)
     {
         Collection<CorrespondenceTemplate> templates = templateManager.getActiveVersionTemplates();
         for (CorrespondenceTemplate template : templates)

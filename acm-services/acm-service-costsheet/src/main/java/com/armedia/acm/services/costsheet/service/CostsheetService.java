@@ -34,6 +34,7 @@ import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Properties;
@@ -46,8 +47,10 @@ public interface CostsheetService
 
     public Properties getProperties();
 
+    @Transactional
     public AcmCostsheet save(AcmCostsheet costsheet) throws PipelineProcessException;
 
+    @Transactional
     public AcmCostsheet save(AcmCostsheet costsheet, String submissionName) throws PipelineProcessException;
 
     public AcmCostsheet get(Long id);
