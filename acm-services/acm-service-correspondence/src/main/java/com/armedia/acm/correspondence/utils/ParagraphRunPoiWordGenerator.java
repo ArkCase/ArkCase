@@ -1,33 +1,5 @@
 package com.armedia.acm.correspondence.utils;
 
-/*-
- * #%L
- * ACM Service: Correspondence Library
- * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
- * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
- * provided under the following open source license terms:
- * 
- * ArkCase is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *  
- * ArkCase is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
- * #L%
- */
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -40,6 +12,7 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,83 +32,130 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
     @Override
     public void generate(Resource wordTemplate, OutputStream targetStream, Map<String, String> substitutions) throws IOException
     {
-        XWPFDocument template = new XWPFDocument(wordTemplate.getInputStream());
+        Map<String, String> substitutionsWithPrefixSufix = new HashMap<>();
+        substitutions.forEach((k, v) -> substitutionsWithPrefixSufix.putIfAbsent(substitutionPrefix + k + substitutionSuffix, v));
 
-        List<XWPFParagraph> graphs = template.getParagraphs();
-        List<XWPFTable> tables = template.getTables();
-
-        // Update all plain text in the word document who is outside any tables
-        updateGraphs(graphs, substitutions);
-
-        // Update all text in the word document who is inside tables/rows/cells
-        updateTables(tables, substitutions);
-
-        log.debug("writing correspondence to stream: " + targetStream);
-
-        try
+        try (XWPFDocument template = new XWPFDocument(wordTemplate.getInputStream()))
         {
-            template.write(targetStream);
-            targetStream.flush();
-        }
-        finally
-        {
+            List<XWPFParagraph> graphs = template.getParagraphs();
+            List<XWPFTable> tables = template.getTables();
+
+            // Update all plain text in the word document who is outside any tables
+            updateGraphs(graphs, substitutionsWithPrefixSufix);
+
+            // Update all text in the word document who is inside tables/rows/cells
+            updateTables(tables, substitutionsWithPrefixSufix);
+
+            log.debug("writing correspondence to stream: " + targetStream);
+
             try
             {
-                targetStream.close();
+                template.write(targetStream);
+                targetStream.flush();
             }
-            catch (IOException e)
+            finally
             {
-                // could not close the file, not the end of the world
+                try
+                {
+                    targetStream.close();
+                }
+                catch (IOException e)
+                {
+                    // could not close the file, not the end of the world
+                }
             }
         }
-
     }
 
     private List<XWPFParagraph> updateGraphs(List<XWPFParagraph> graphs, Map<String, String> substitutions)
     {
         for (XWPFParagraph graph : graphs)
         {
-            String graphText = graph.getText();
-            String newText = graphText;
-
-            if (newText != null)
-            {
-                boolean replaced = false;
-
-                for (Map.Entry<String, String> sub : substitutions.entrySet())
-                {
-                    String placeholder = substitutionPrefix + sub.getKey() + substitutionSuffix;
-                    if (newText.contains(placeholder))
-                    {
-                        String value = StringUtils.isNotEmpty(sub.getValue()) ? sub.getValue() : "";
-                        log.debug("replacing '" + placeholder + "' with '" + value + "'");
-                        newText = newText.replace(placeholder, value);
-                        replaced = true;
-                    }
-                }
-
-                if (replaced)
-                {
-                    // the paragraph is made up of runs. The text to be replaced may be split across contiguous runs.
-                    // So we need to remove all the runs, then add one new run with the replacement text. This will
-                    // lose formatting.
-                    int origCount = graph.getRuns().size();
-                    for (int a = 0; a < origCount; a++)
-                    {
-                        // each time we remove a run, the graph is updated, and now has one less run. So we remove the
-                        // run at index 0 until they are all gone.
-                        graph.removeRun(0);
-                    }
-
-                    XWPFRun replacement = graph.createRun();
-                    replacement.setText(newText);
-
-                    graph.addRun(replacement);
-                }
-            }
+            replace(graph, substitutions);
         }
 
         return graphs;
+    }
+
+    private <V> void replace(XWPFParagraph paragraph, String searchText, V replacement)
+    {
+        boolean found = true;
+        while (found)
+        {
+            found = false;
+            int pos = paragraph.getText().indexOf(searchText);
+            if (pos >= 0)
+            {
+                found = true;
+                Map<Integer, XWPFRun> posToRuns = getPosToRuns(paragraph);
+                XWPFRun run = posToRuns.get(pos);
+                XWPFRun lastRun = posToRuns.get(pos + searchText.length() - 1);
+                int runNum = paragraph.getRuns().indexOf(run);
+                int lastRunNum = paragraph.getRuns().indexOf(lastRun);
+                String texts[] = replacement.toString().split("\n");
+                run.setText(texts[0], 0);
+                XWPFRun newRun = run;
+                for (int i = 1; i < texts.length; i++)
+                {
+                    newRun.addCarriageReturn();
+                    newRun = paragraph.insertNewRun(runNum + i);
+                    /*
+                     * We should copy all style attributes
+                     * to the newRun from run
+                     * also from background color, ...
+                     * Here we duplicate only the simple attributes...
+                     */
+                    newRun.setText(texts[i]);
+                    newRun.setBold(run.isBold());
+                    newRun.setCapitalized(run.isCapitalized());
+                    // newRun.setCharacterSpacing(run.getCharacterSpacing());
+                    newRun.setColor(run.getColor());
+                    newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
+                    newRun.setEmbossed(run.isEmbossed());
+                    newRun.setFontFamily(run.getFontFamily());
+                    newRun.setFontSize(run.getFontSize());
+                    newRun.setImprinted(run.isImprinted());
+                    newRun.setItalic(run.isItalic());
+                    newRun.setKerning(run.getKerning());
+                    newRun.setShadow(run.isShadowed());
+                    newRun.setSmallCaps(run.isSmallCaps());
+                    newRun.setStrikeThrough(run.isStrikeThrough());
+                    newRun.setSubscript(run.getSubscript());
+                    newRun.setUnderline(run.getUnderline());
+                }
+                for (int i = lastRunNum + texts.length - 1; i > runNum + texts.length - 1; i--)
+                {
+                    paragraph.removeRun(i);
+                }
+            }
+        }
+    }
+
+    private Map<Integer, XWPFRun> getPosToRuns(XWPFParagraph paragraph)
+    {
+        int pos = 0;
+        Map<Integer, XWPFRun> map = new HashMap<Integer, XWPFRun>(10);
+        for (XWPFRun run : paragraph.getRuns())
+        {
+            String runText = run.text();
+            if (runText != null)
+            {
+                for (int i = 0; i < runText.length(); i++)
+                {
+                    map.put(pos + i, run);
+                }
+                pos += runText.length();
+            }
+        }
+        return (map);
+    }
+
+    private <V> void replace(XWPFParagraph paragraph, Map<String, V> map)
+    {
+        for (Map.Entry<String, V> entry : map.entrySet())
+        {
+            replace(paragraph, entry.getKey(), entry.getValue());
+        }
     }
 
     private List<XWPFTable> updateTables(List<XWPFTable> tables, Map<String, String> substitutions)
