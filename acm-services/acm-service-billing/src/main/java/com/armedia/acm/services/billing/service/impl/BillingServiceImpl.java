@@ -7,7 +7,9 @@ import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.exception.GetBillingInvoiceException;
 import com.armedia.acm.services.billing.exception.GetBillingItemException;
 import com.armedia.acm.services.billing.model.BillingInvoice;
+import com.armedia.acm.services.billing.model.BillingInvoiceRequest;
 import com.armedia.acm.services.billing.model.BillingItem;
+import com.armedia.acm.services.billing.rules.BillingInvoiceBusinessRule;
 import com.armedia.acm.services.billing.service.BillingService;
 
 import org.slf4j.Logger;
@@ -54,6 +56,7 @@ public class BillingServiceImpl implements BillingService
     private Logger log = LoggerFactory.getLogger(getClass());
     private BillingItemDao billingItemDao;
     private BillingInvoiceDao billingInvoiceDao;
+    private BillingInvoiceBusinessRule billingInvoiceBusinessRule;
 
     /*
      * (non-Javadoc)
@@ -124,31 +127,27 @@ public class BillingServiceImpl implements BillingService
      * java.lang.Long)
      */
     @Override
-    public BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId)
-            throws CreateBillingInvoiceException
-    {
-        return createBillingInvoice(parentObjectType, parentObjectId, null);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.armedia.acm.services.billing.service.BillingService#createBillingInvoice(java.lang.String,
-     * java.lang.Long, java.lang.String)
-     */
-    @Override
-    public BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId, String parentObjectNumber)
+    public BillingInvoice createBillingInvoice(BillingInvoiceRequest billingInvoiceRequest)
             throws CreateBillingInvoiceException
     {
         List<BillingItem> billingItems = new ArrayList<>();
         try
         {
-            billingItems = getBillingItemsByParentObjectTypeAndId(parentObjectType, parentObjectId);
+            billingItems = getBillingItemsByParentObjectTypeAndId(billingInvoiceRequest.getParentObjectType(),
+                    billingInvoiceRequest.getParentObjectId());
         }
         catch (GetBillingItemException e)
         {
             throw new CreateBillingInvoiceException(e.getMessage());
         }
-        return getBillingInvoiceDao().createBillingInvoice(parentObjectType, parentObjectId, parentObjectNumber, billingItems);
+        BillingInvoice billingInvoice = new BillingInvoice();
+        billingInvoice.setParentObjectType(billingInvoiceRequest.getParentObjectType());
+        billingInvoice.setParentObjectId(billingInvoiceRequest.getParentObjectId());
+        billingInvoice.setBillingItems(billingItems);
+        billingInvoice.setInvoiceNumber("");
+        BillingInvoice saved = getBillingInvoiceDao().saveBillingInvoice(billingInvoice);
+        getBillingInvoiceBusinessRule().applyRules(saved);
+        return getBillingInvoiceDao().saveBillingInvoice(saved);
     }
 
     /**
@@ -183,6 +182,23 @@ public class BillingServiceImpl implements BillingService
     public void setBillingInvoiceDao(BillingInvoiceDao billingInvoiceDao)
     {
         this.billingInvoiceDao = billingInvoiceDao;
+    }
+
+    /**
+     * @return the billingInvoiceBusinessRule
+     */
+    public BillingInvoiceBusinessRule getBillingInvoiceBusinessRule()
+    {
+        return billingInvoiceBusinessRule;
+    }
+
+    /**
+     * @param billingInvoiceBusinessRule
+     *            the billingInvoiceBusinessRule to set
+     */
+    public void setBillingInvoiceBusinessRule(BillingInvoiceBusinessRule billingInvoiceBusinessRule)
+    {
+        this.billingInvoiceBusinessRule = billingInvoiceBusinessRule;
     }
 
 }

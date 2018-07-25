@@ -5,6 +5,7 @@ import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.exception.GetBillingInvoiceException;
 import com.armedia.acm.services.billing.exception.GetBillingItemException;
 import com.armedia.acm.services.billing.model.BillingInvoice;
+import com.armedia.acm.services.billing.model.BillingInvoiceRequest;
 import com.armedia.acm.services.billing.model.BillingItem;
 
 import java.util.List;
@@ -49,9 +50,6 @@ public interface BillingService
     List<BillingInvoice> getBillingInvoicesByParentObjectTypeAndId(String parentObjectType, Long parentObjectId)
             throws GetBillingInvoiceException;
 
-    BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId)
-            throws CreateBillingInvoiceException;
-
-    BillingInvoice createBillingInvoice(String parentObjectType, Long parentObjectId, String parentObjectNumber)
+    BillingInvoice createBillingInvoice(BillingInvoiceRequest billingInvoiceRequest)
             throws CreateBillingInvoiceException;
 }

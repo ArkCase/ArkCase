@@ -71,5 +71,16 @@
         </createTable>
         <addUniqueConstraint tableName="acm_billing_invoice_item" columnNames="cm_billing_invoice_id, cm_billing_item_id"/>
     </changeSet>
-    
+
+    <changeSet id="05-add-billing-invoice-modified-and-modifier" author="sasko.tanaskoski">
+        <addColumn tableName="acm_billing_invoice">
+            <column name="cm_billing_invoice_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_billing_invoice_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
