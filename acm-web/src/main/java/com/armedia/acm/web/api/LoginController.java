@@ -29,12 +29,16 @@ package com.armedia.acm.web.api;
 
 import com.armedia.acm.web.api.service.LoginWarningMessageService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
 
 import java.util.Map;
 
@@ -46,13 +50,22 @@ public class LoginController
 {
     private LoginWarningMessageService loginWarningMessageService;
 
+    private Logger log = LoggerFactory.getLogger(getClass());
+
     @RequestMapping(value = { "/login", "/login.html" }, method = RequestMethod.GET)
-    public String getLogin(Model model)
+    public String getLogin(Model model, HttpSession httpSession)
     {
-
-        loginWarningMessageService.buildModel(model);
-
-        return "login";
+        Object loggedUser = httpSession.getAttribute("acm_username");
+        if (loggedUser != null)
+        {
+            log.info("User [{}] is already logged in.", loggedUser);
+            return "redirect:/#!/welcome";
+        }
+        else
+        {
+            loginWarningMessageService.buildModel(model);
+            return "login";
+        }
     }
 
     /**
