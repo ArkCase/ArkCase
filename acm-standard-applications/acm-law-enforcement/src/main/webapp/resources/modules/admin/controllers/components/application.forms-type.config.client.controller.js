@@ -12,7 +12,7 @@ angular.module('admin').controller('Admin.FormsTypeConfigController', [ '$scope'
             ApplicationSettingsService.setProperty(ApplicationSettingsService.PROPERTIES.FORMS_TYPE, $scope.nameProperty);
             var modalInstance = $modal.open({
                 templateUrl: 'modules/admin/views/components/application-user-name.config.modal-info.client.view.html',
-                controller: 'AdminUserInfoModalController',
+                controller: 'AdminFormsTypeModalController',
                 backdrop: false,
                 size: 'sm'
             });
@@ -27,7 +27,7 @@ angular.module('admin').controller('Admin.FormsTypeConfigController', [ '$scope'
     }
 } ]);
 
-angular.module('admin').controller('AdminUserInfoModalController', [ '$scope', '$modalInstance', '$modal', function($scope, $modalInstance, $modal) {
+angular.module('admin').controller('AdminFormsTypeModalController', [ '$scope', '$modalInstance', '$modal', function($scope, $modalInstance, $modal) {
     $scope.close = function() {
         $modalInstance.dismiss('cancel');
     };
