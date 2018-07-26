@@ -93,8 +93,14 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
                 int runNum = paragraph.getRuns().indexOf(run);
                 int lastRunNum = paragraph.getRuns().indexOf(lastRun);
                 String texts[] = replacement.toString().split("\n");
+
+                // set the run text to the first line of the replacement; this existing run maintains its formatting so
+                // no formatting code is needed.
                 run.setText(texts[0], 0);
                 XWPFRun newRun = run;
+
+                // for each subsequent line of the replacement text, add a new run with the new line; since we are
+                // adding a new run, we need to set the formatting.
                 for (int i = 1; i < texts.length; i++)
                 {
                     newRun.addCarriageReturn();
