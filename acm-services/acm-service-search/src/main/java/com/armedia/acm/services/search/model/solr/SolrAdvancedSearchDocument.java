@@ -882,16 +882,19 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         this.title_parseable_lcs = title_parseable_lcs;
     }
 
-    public Long getParent_folder_id_i() {
+    public Long getParent_folder_id_i()
+    {
         return parent_folder_id_i;
     }
 
-    public void setParent_folder_id_i(Long parent_folder_id_i) {
+    public void setParent_folder_id_i(Long parent_folder_id_i)
+    {
         this.parent_folder_id_i = parent_folder_id_i;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "SolrAdvancedSearchDocument{" +
                 "id='" + id + '\'' +
                 ", object_id_s='" + object_id_s + '\'' +
@@ -966,6 +969,5 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
                 ", parent_folder_id_i=" + parent_folder_id_i +
                 '}';
     }
-
 
 }
