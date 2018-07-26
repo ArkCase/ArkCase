@@ -569,6 +569,15 @@
                 "modal.info": "Les paramètres prendront effet après l'actualisation",
                 "modal.ok": "D'accord"
             },
+            "formsType.config": {
+                "title": "fr_Forms Type Configuration",
+                "angular.label": "fr_Use Angular Forms",
+                "frevvo.label": "fr_Use Frevvo Forms",
+                "apply": "fr_Apply",
+                "modal.title": "fr_Information",
+                "modal.info": "fr_Settings will take effect after refresh",
+                "modal.ok": "fr_OK"
+            },
             "login.config": {
                 "title": "Configuration de connexion",
                 "idleLimit.label": "Limite d'inactivité de connexion (en millisecondes)",
