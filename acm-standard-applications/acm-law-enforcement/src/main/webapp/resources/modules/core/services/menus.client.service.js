@@ -11,7 +11,7 @@ angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.Mod
 
     var appModulesPromise = ModuleService.getAppModules();
     var userRolesPromise = Authentication.queryUserInfo();
-    var appSettingsPromise = ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.FORMS_TYPE).then(function(response) {
+    var formsTypePromise = ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.FORMS_TYPE).then(function(response) {
         return response;
     });
 
@@ -111,7 +111,7 @@ angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.Mod
     this.addMenuItems = function(menuObjects) {
         var context = this;
 
-        $q.all([ appModulesPromise, userRolesPromise, appSettingsPromise ]).then(function(data) {
+        $q.all([ appModulesPromise, userRolesPromise, formsTypePromise ]).then(function(data) {
             var appModules = data[0].data;
             var userRoles = data[1].authorities;
             var formsType = data[2].data[ApplicationSettingsService.PROPERTIES.FORMS_TYPE];
