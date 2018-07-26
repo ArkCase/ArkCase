@@ -16,6 +16,8 @@ angular.module('admin').controller('Admin.LabelsConfigController', [ '$scope', '
         columnDefs: [],
         totalItems: 0,
         data: [],
+        paginationPageSize: 20,
+        paginationPageSizes: [ 20, 50, 100, 250, 1000 ],
         onRegisterApi: function(gridApi) {
             $scope.gridApi = gridApi;
         }
@@ -59,12 +61,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', [ '$scope', '
             }, function(data) {
                 //success
                 $scope.gridOptions.data = data;
-
-                // Ideally, the flag should be set when ui-grid data is completed. Since this event is not
-                // given, estimated 5 second timeout for grid data to load is the best we can think of for now
-                $timeout(function() {
-                    $scope.disabledInputs = false;
-                }, 5000);
+                $scope.disabledInputs = false;
             }, function() {
                 //error
                 $scope.disabledInputs = false;

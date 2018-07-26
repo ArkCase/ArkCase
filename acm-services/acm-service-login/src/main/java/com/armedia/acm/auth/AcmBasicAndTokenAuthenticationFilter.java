@@ -69,6 +69,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Lookup cached authentications for token requests (token requests are requests that include an acm_ticket in the
@@ -201,7 +202,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                     {
                         String fileId = ServletRequestUtils.getStringParameter(request, "ecmFileId");
                         if (emailToken.equals(authenticationToken.getKey())
-                                && fileId.equals(authenticationToken.getFileId().toString()))
+                                && Objects.equals(fileId, authenticationToken.getFileId().toString()))
                         {
                             log.trace("Starting token authentication for email links using acm_email_ticket [{}]", emailToken);
                             int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
