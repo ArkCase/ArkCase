@@ -35,6 +35,7 @@ import org.springframework.cache.Cache;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.time.temporal.TemporalAmount;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -137,14 +138,27 @@ public class AuthenticationTokenService
         return token;
     }
 
-    public List<AuthenticationToken> findByTokenEmailAndFileId(String email, Long fileId)
+    public List<AuthenticationToken> findByTokenCreatorAndFileId(String creator, Long fileId)
     {
-        return authenticationTokenDao.findAuthenticationTokenByEmailAndFileId(email, fileId);
+        return authenticationTokenDao.findAuthenticationTokenByCreatorAndFileId(creator, fileId);
     }
 
-    public List<AuthenticationToken> findByKey(String key)
+    public AuthenticationToken findByKey(String key)
     {
         return authenticationTokenDao.findAuthenticationTokenByKey(key);
+    }
+
+    /**
+     * Calculates when an access token expires, by adding temporalValidityAmount to the creation time.
+     * @param token
+     * @param temporalValidityAmount
+     * @return number of milliseconds since January 1, 1970 UTC (the date epoch in JavaScript)
+     */
+    public Long calculateTokenTimeToLive(AuthenticationToken token, TemporalAmount temporalValidityAmount)
+    {
+        return token.getCreated().toInstant()
+                .plus(temporalValidityAmount)
+                .toEpochMilli();
     }
 
     public void saveAuthenticationToken(AuthenticationToken token)
