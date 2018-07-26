@@ -17,17 +17,10 @@ angular.module('services').service('FormsType.Service', [ 'Admin.ApplicationSett
     });
 
     function isAngularFormType() {
-        var isAngularFormType = true;
-        ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.FORMS_TYPE).then(function(response) {
+        return ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.FORMS_TYPE).then(function(response) {
             var formsType = response.data[ApplicationSettingsService.PROPERTIES.FORMS_TYPE];
-            if (formsType == "angular") {
-                isAngularFormType = true;
-            } else {
-                isAngularFormType = false;
-            }
+            return formsType == "angular";
         });
-
-        return isAngularFormType;
     }
 
 } ]);
