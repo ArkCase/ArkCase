@@ -2,28 +2,8 @@
 
 angular.module('cases').controller(
         'Cases.NewCaseController',
-        [
-                '$scope',
-                '$stateParams',
-                '$translate',
-                '$modalInstance',
-                'Complaint.InfoService',
-                '$state',
-                'Object.LookupService',
-                'MessageService',
-                '$timeout',
-                'UtilService',
-                '$modal',
-                'ConfigService',
-                'Organization.InfoService',
-                'ObjectService',
-                'modalParams',
-                'Person.InfoService',
-                'Profile.UserInfoService',
-                'Object.ModelService',
-                'Object.ParticipantService',
-                function($scope, $stateParams, $translate, $modalInstance, ComplaintInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, PersonInfoService, UserInfoService, ObjectModelService,
-                        ObjectParticipantService) {
+        [ '$scope', '$stateParams', '$translate', '$modalInstance', 'Case.InfoService', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'ObjectService', 'modalParams', 'Person.InfoService', 'Object.ModelService', 'Object.ParticipantService',
+                function($scope, $stateParams, $translate, $modalInstance, CaseInfoService, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -70,8 +50,8 @@ angular.module('cases').controller(
                         return personTypes;
                     });
 
-                    ObjectLookupService.getComplaintParticipantTypes().then(function(complaintParticipantTypes) {
-                        $scope.complaintParticipantTypes = complaintParticipantTypes;
+                    ObjectLookupService.getCaseFileParticipantTypes().then(function(caseFileParticipantTypes) {
+                        $scope.caseFileParticipantTypes = caseFileParticipantTypes;
                     });
 
                     // ---------------------------            initiator         --------------------------------------
@@ -267,19 +247,19 @@ angular.module('cases').controller(
                         //only one assignee, if there is already one added, no option to add another one
                         for ( var i in $scope.casefile.participants) {
                             if ($scope.casefile.participants[i].participantType == typeAssignee) {
-                                for ( var j in $scope.complaintParticipantTypes) {
-                                    if ($scope.complaintParticipantTypes[j].key == typeAssignee) {
-                                        $scope.complaintParticipantTypes.splice(j, 1);
+                                for ( var j in $scope.caseFileParticipantTypes) {
+                                    if ($scope.caseFileParticipantTypes[j].key == typeAssignee) {
+                                        $scope.caseFileParticipantTypes.splice(j, 1);
                                     }
                                 }
                             } else {
-                                ObjectLookupService.getComplaintParticipantTypes().then(function(complaintParticipantTypes) {
-                                    $scope.complaintParticipantTypes = complaintParticipantTypes;
+                                ObjectLookupService.getCaseFileParticipantTypes().then(function(caseFileParticipantTypes) {
+                                    $scope.caseFileParticipantTypes = caseFileParticipantTypes;
                                 });
                             }
                         }
 
-                        participant.participantTypes = $scope.complaintParticipantTypes;
+                        participant.participantTypes = $scope.caseFileParticipantTypes;
                         participant.replaceChildrenParticipant = true;
 
                         var modalScope = $scope.$new();
@@ -345,7 +325,7 @@ angular.module('cases').controller(
                     $scope.save = function() {
                         $scope.loading = true;
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                        ComplaintInfoService.saveComplaintInfoNewComplaint(clearNotFilledElements(_.cloneDeep($scope.casefile))).then(function(objectInfo) {
+                        CaseInfoService.saveCaseInfoNewCase(clearNotFilledElements(_.cloneDeep($scope.casefile))).then(function(objectInfo) {
                             var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.CASE_FILE);
                             var caseCreatedMessage = $translate.instant('{{objectType}} {{caseTitle}} was created.', {
                                 objectType: objectTypeString,
