@@ -3,7 +3,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="wopiUsersApiController" class="com.armedia.acm.services.wopi.api.WopiUserApiController">
-        <property name="tokenService" ref="authenticationTokenService"/>
+        <property name="wopiService" ref="wopiAcmService"/>
     </bean>
 
     <bean id="wopiFilesApiController" class="com.armedia.acm.services.wopi.api.WopiFilesApiController">

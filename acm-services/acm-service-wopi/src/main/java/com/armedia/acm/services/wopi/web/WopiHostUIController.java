@@ -57,7 +57,7 @@ public class WopiHostUIController
         log.info("Opening file with id [{}] per user [{}]", fileId, authentication.getName());
 
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        String accessToken = wopiService.getWopiAccessToken(fileId, user.getMail(), authentication);
+        String accessToken = wopiService.getWopiAccessToken(fileId, user.getUserId(), authentication);
 
         ModelAndView model = new ModelAndView();
         model.setViewName("wopi-host");

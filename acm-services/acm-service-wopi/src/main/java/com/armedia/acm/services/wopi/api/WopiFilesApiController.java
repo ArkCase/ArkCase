@@ -64,7 +64,7 @@ public class WopiFilesApiController
     public ResponseEntity<WopiFileInfo> getFileInfo(@PathVariable Long id, Authentication authentication)
     {
         log.info("Getting file info for id [{}] per user [{}]", id, authentication.getName());
-        return wopiService.getFileInfo(id, authentication)
+        return wopiService.getFileInfo(id)
                 .map(it -> new ResponseEntity<>(it, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
