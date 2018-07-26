@@ -3,8 +3,8 @@
 angular.module('cases').controller(
         'Cases.ActionsController',
         [ '$scope', '$state', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService', 'Helper.ObjectBrowserService',
-                'Profile.UserInfoService', '$timeout',
-                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, $timeout) {
+                'Profile.UserInfoService', '$timeout', 'FormsType.Service',
+                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, $timeout, FormsTypeService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -71,6 +71,28 @@ angular.module('cases').controller(
                             caseNumber: objectInfo.caseNumber,
                             status: objectInfo.status
                         };
+                    };
+
+                    $scope.isAngularFormType = FormsTypeService.isAngularFormType();
+                    $scope.newCaseFile = function() {
+                        var params = {};
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/cases/views/components/case-new-case-modal.client.view.html',
+                            controller: 'Cases.NewCaseController',
+                            size: 'lg',
+                            resolve: {
+                                modalParams: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(data) {
+                            console.log(data);
+                        }, function() {
+                            console.log("error");
+                        });
                     };
 
                     $scope.onClickRestrict = function($event) {

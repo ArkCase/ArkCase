@@ -19,7 +19,8 @@
             "menuItemTitle": "cases.menus.topbar.item",
             "moduleId": "case",
             "iconClass": "fa fa-folder",
-            "position": 20
+            "position": 20,
+            "formsType": "frevvo"
         },
         {
             "menuId": "topbar",
@@ -32,7 +33,8 @@
                 "controllerName": "Cases.NewCaseController"
             },
             "iconClass": "fa fa-folder",
-            "position": 25
+            "position": 20,
+            "formsType": "angular"
         }
     ],
     "tree": {
