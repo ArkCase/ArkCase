@@ -6,6 +6,7 @@ import com.armedia.acm.services.billing.exception.CreateBillingInvoiceException;
 import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.exception.GetBillingInvoiceException;
 import com.armedia.acm.services.billing.exception.GetBillingItemException;
+import com.armedia.acm.services.billing.model.BillingEventPublisher;
 import com.armedia.acm.services.billing.model.BillingInvoice;
 import com.armedia.acm.services.billing.model.BillingInvoiceRequest;
 import com.armedia.acm.services.billing.model.BillingItem;
@@ -57,6 +58,24 @@ public class BillingServiceImpl implements BillingService
     private BillingItemDao billingItemDao;
     private BillingInvoiceDao billingInvoiceDao;
     private BillingInvoiceBusinessRule billingInvoiceBusinessRule;
+    private BillingEventPublisher billingEventPublisher;
+
+    /**
+     * @return the billingEventPublisher
+     */
+    public BillingEventPublisher getBillingEventPublisher()
+    {
+        return billingEventPublisher;
+    }
+
+    /**
+     * @param billingEventPublisher
+     *            the billingEventPublisher to set
+     */
+    public void setBillingEventPublisher(BillingEventPublisher billingEventPublisher)
+    {
+        this.billingEventPublisher = billingEventPublisher;
+    }
 
     /*
      * (non-Javadoc)
@@ -119,6 +138,36 @@ public class BillingServiceImpl implements BillingService
             throws GetBillingInvoiceException
     {
         return getBillingInvoiceDao().listBillingInvoices(parentObjectType, parentObjectId);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.services.billing.service.BillingService#getAllLatestBillingInvoices()
+     */
+    @Override
+    public List<BillingInvoice> getAllLatestBillingInvoices() throws GetBillingInvoiceException
+    {
+        return getBillingInvoiceDao().getAllLatestBillingInvoices();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.services.billing.service.BillingService#getLastBillingInvoice(java.lang.String,
+     * java.lang.Long)
+     */
+    @Override
+    public BillingInvoice getLatestBillingInvoice(String parentObjectType, Long parentObjectId) throws GetBillingInvoiceException
+    {
+        log.info("Getting Latest Billing Invoice");
+        try
+        {
+            return getBillingInvoiceDao().getLatestBillingInvoice(parentObjectType, parentObjectId);
+        }
+        catch (Exception e)
+        {
+            throw new GetBillingInvoiceException(
+                    String.format("Unable to get latest Billing Invoice for [%s] [%d]", parentObjectType, parentObjectId), e);
+        }
     }
 
     /*

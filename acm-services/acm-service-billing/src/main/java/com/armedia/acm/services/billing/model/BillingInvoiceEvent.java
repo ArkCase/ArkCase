@@ -26,50 +26,30 @@ package com.armedia.acm.services.billing.model;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+import com.armedia.acm.core.model.AcmEvent;
+
+import java.util.Date;
 
 /**
  * @author sasko.tanaskoski
  *
  */
-public class BillingInvoiceRequest
+public class BillingInvoiceEvent extends AcmEvent
 {
 
-    private String parentObjectType;
+    private static final long serialVersionUID = -4238560422705135161L;
 
-    private Long parentObjectId;
-
-    /**
-     * @return the parentObjectType
-     */
-    public String getParentObjectType()
+    public BillingInvoiceEvent(BillingInvoice source)
     {
-        return parentObjectType;
+        super(source);
+        setEventDate(new Date());
+        setObjectId(source.getId());
+        setObjectType(source.getObjectType());
     }
 
-    /**
-     * @param parentObjectType
-     *            the parentObjectType to set
-     */
-    public void setParentObjectType(String parentObjectType)
+    @Override
+    public BillingInvoice getSource()
     {
-        this.parentObjectType = parentObjectType;
+        return (BillingInvoice) super.getSource();
     }
-
-    /**
-     * @return the parentObjectId
-     */
-    public Long getParentObjectId()
-    {
-        return parentObjectId;
-    }
-
-    /**
-     * @param parentObjectId
-     *            the parentObjectId to set
-     */
-    public void setParentObjectId(Long parentObjectId)
-    {
-        this.parentObjectId = parentObjectId;
-    }
-
 }

@@ -34,5 +34,14 @@ public interface BillingConstants
 {
     String OBJECT_TYPE_ITEM = "BILLING_ITEM";
     String OBJECT_TYPE_INVOICE = "BILLING_INVOICE";
+
     String BILLING_ITEM_CREATED_EVENT = "com.armedia.acm.billing.item.created";
+    String BILLING_INVOICE_CREATED_EVENT = "com.armedia.acm.billing.invoice.created";
+
+    String INVOICE_DOCUMENT_STYLESHEET = System.getProperty("user.home")
+            + "/.arkcase/acm/pdf-stylesheets/billing-invoice-document.xsl";
+    String INVOICE_DOCUMENT_TYPE = "billing_invoice_document";
+    String INVOICE_DOCUMENT_MIME_TYPE_PDF = "application/pdf";
+
+    String BILLING_SYSTEM_USER = "BILLING_SERVICE";
 }

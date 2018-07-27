@@ -26,34 +26,23 @@ package com.armedia.acm.services.billing.model;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 
 /**
  * @author sasko.tanaskoski
  *
  */
-public class BillingItemEventPublisher implements ApplicationEventPublisherAware
+public class BillingInvoiceCreatedEvent extends BillingInvoiceEvent
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-    private ApplicationEventPublisher applicationEventPublisher;
+    private static final long serialVersionUID = -3739707385279393604L;
 
-    public void publishNoteEvent(BillingItemEvent event)
+    public BillingInvoiceCreatedEvent(BillingInvoice source)
     {
-        getApplicationEventPublisher().publishEvent(event);
-    }
-
-    public ApplicationEventPublisher getApplicationEventPublisher()
-    {
-        return applicationEventPublisher;
+        super(source);
     }
 
     @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    public String getEventType()
     {
-        this.applicationEventPublisher = applicationEventPublisher;
+        return BillingConstants.BILLING_INVOICE_CREATED_EVENT;
     }
-
 }

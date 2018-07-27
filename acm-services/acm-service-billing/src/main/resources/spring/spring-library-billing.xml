@@ -6,11 +6,12 @@
     
     <bean id="billingInvoiceDao" class="com.armedia.acm.services.billing.dao.BillingInvoiceDao"/>
 
-    <bean id="billingItemEventPublisher" class="com.armedia.acm.services.billing.model.BillingItemEventPublisher"/>
+    <bean id="billingEventPublisher" class="com.armedia.acm.services.billing.model.BillingEventPublisher"/>
 
     <bean id="billingService" class="com.armedia.acm.services.billing.service.impl.BillingServiceImpl">
         <property name="billingItemDao" ref="billingItemDao"/>
         <property name="billingInvoiceDao" ref="billingInvoiceDao"/>
+        <property name="billingEventPublisher" ref="billingEventPublisher"/>
         <property name="billingInvoiceBusinessRule" ref="billingInvoiceBusinessRule"/>
     </bean>
 
