@@ -64,19 +64,58 @@ public class BillingInvoiceDao extends AcmAbstractDao<BillingInvoice>
                 "FROM BillingInvoice billingInvoice " +
                 "WHERE billingInvoice.parentObjectType = :parentObjectType " +
                 "AND billingInvoice.parentObjectId = :parentObjectId " +
-                "ORDER BY billingInvoice.invoiceNumber";
+                "ORDER BY billingInvoice.id DESC";
 
-        TypedQuery<BillingInvoice> billingInvoice = getEntityManager().createQuery(queryText, BillingInvoice.class);
+        TypedQuery<BillingInvoice> query = getEntityManager().createQuery(queryText, BillingInvoice.class);
 
-        billingInvoice.setParameter("parentObjectType", parentObjectType.toUpperCase());
-        billingInvoice.setParameter("parentObjectId", parentObjectId);
+        query.setParameter("parentObjectType", parentObjectType.toUpperCase());
+        query.setParameter("parentObjectId", parentObjectId);
 
-        List<BillingInvoice> billingInvoices = billingInvoice.getResultList();
+        List<BillingInvoice> billingInvoices = query.getResultList();
         if (null == billingInvoices)
         {
             billingInvoices = new ArrayList<BillingInvoice>();
         }
         return billingInvoices;
+    }
+
+    public List<BillingInvoice> getAllLatestBillingInvoices()
+    {
+
+        String queryText = "SELECT caseFile.caseNumber, billingInvoice.id, billingInvoice.invoiceNumber, billingInvoice.invoicePaidFlag, billingInvoice.created, SUM(billingItem.itemAmount) "
+                +
+                "FROM CaseFile caseFile JOIN BillingInvoice billingInvoice JOIN billingInvoice.billingItems billingItem " +
+                "WHERE billingInvoice.parentObjectType = caseFile.objectType " +
+                "AND billingInvoice.parentObjectId = caseFile.id " +
+                "AND billingInvoice.id IN (SELECT MAX(billingInvoice.id) FROM BillingInvoice billingInvoice GROUP BY billingInvoice.parentObjectType, billingInvoice.parentObjectId) "
+                +
+                "GROUP BY caseFile.caseNumber ORDER BY caseFile.caseNumber";
+
+        TypedQuery<BillingInvoice> query = getEntityManager().createQuery(queryText, BillingInvoice.class);
+
+        List<BillingInvoice> billingInvoices = query.getResultList();
+        if (null == billingInvoices)
+        {
+            billingInvoices = new ArrayList<BillingInvoice>();
+        }
+        return billingInvoices;
+    }
+
+    public BillingInvoice getLatestBillingInvoice(String parentObjectType, Long parentObjectId)
+    {
+
+        String queryText = "SELECT billingInvoice " +
+                "FROM BillingInvoice billingInvoice " +
+                "WHERE billingInvoice.parentObjectType = :parentObjectType " +
+                "AND billingInvoice.parentObjectId = :parentObjectId " +
+                "AND billingInvoice.id = (SELECT MAX(billingInvoice.id) FROM BillingInvoice billingInvoice)";
+
+        TypedQuery<BillingInvoice> query = getEntityManager().createQuery(queryText, BillingInvoice.class);
+
+        query.setParameter("parentObjectType", parentObjectType.toUpperCase());
+        query.setParameter("parentObjectId", parentObjectId);
+
+        return query.getSingleResult();
     }
 
     @Transactional
