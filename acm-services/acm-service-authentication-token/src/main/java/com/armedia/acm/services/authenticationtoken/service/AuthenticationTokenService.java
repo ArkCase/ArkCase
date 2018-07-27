@@ -30,14 +30,12 @@ package com.armedia.acm.services.authenticationtoken.service;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
-
 import org.springframework.cache.Cache;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import java.time.temporal.TemporalAmount;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -136,11 +134,6 @@ public class AuthenticationTokenService
         authenticationToken.setFileId(fileId);
         authenticationTokenDao.save(authenticationToken);
         return token;
-    }
-
-    public List<AuthenticationToken> findByTokenCreatorAndFileId(String creator, Long fileId)
-    {
-        return authenticationTokenDao.findAuthenticationTokenByCreatorAndFileId(creator, fileId);
     }
 
     public AuthenticationToken findByKey(String key)

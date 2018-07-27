@@ -58,13 +58,9 @@ import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Instant;
 import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class WopiAcmService
 {
@@ -172,33 +168,6 @@ public class WopiAcmService
     public void deleteFile(Long fileId) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         ecmFileService.deleteFile(fileId);
-    }
-
-    public String getWopiAccessToken(Long fileId, String userId, Authentication authentication)
-    {
-        List<AuthenticationToken> tokens = tokenService.findByTokenCreatorAndFileId(userId, fileId);
-        List<AuthenticationToken> activeTokens = tokens.stream()
-                .filter(token -> token.getStatus().equals("ACTIVE"))
-                .collect(Collectors.toList());
-        String authenticationTokenKey;
-        if (activeTokens.isEmpty())
-        {
-            authenticationTokenKey = tokenService.generateAndSaveAuthenticationToken(fileId, userId, authentication);
-        }
-        else
-        {
-            authenticationTokenKey = activeTokens.stream()
-                    .filter(authenticationToken -> {
-                        Instant tokenCreated = authenticationToken.getCreated().toInstant();
-                        Instant tokenExpiration = tokenCreated.plus(Period.ofDays(AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS));
-                        // 10min before expiration, Office Online client will expect renewed token
-                        return ChronoUnit.MINUTES.between(Instant.now(), tokenExpiration) > 11;
-                    })
-                    .map(AuthenticationToken::getKey)
-                    .findFirst()
-                    .orElseGet(() -> tokenService.generateAndSaveAuthenticationToken(fileId, userId, authentication));
-        }
-        return authenticationTokenKey;
     }
 
     public WopiConfig getWopiConfig()

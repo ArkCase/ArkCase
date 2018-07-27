@@ -8,11 +8,12 @@
 
     <bean id="wopiFilesApiController" class="com.armedia.acm.services.wopi.api.WopiFilesApiController">
         <property name="wopiService" ref="wopiAcmService"/>
+        <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
 
     <bean id="wopiUIController" class="com.armedia.acm.services.wopi.web.WopiHostUIController">
         <property name="wopiConfig" ref="wopiConfig"/>
-        <property name="wopiService" ref="wopiAcmService"/>
+        <property name="tokenService" ref="authenticationTokenService"/>
     </bean>
 
 </beans>
