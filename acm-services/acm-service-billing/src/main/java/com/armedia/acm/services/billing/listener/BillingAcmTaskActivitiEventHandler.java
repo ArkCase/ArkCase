@@ -87,8 +87,9 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
                 timesheetRowPerTypeAndChangeCode.values().stream().forEach(row -> {
                     try
                     {
-                        getBillingService().createBillingItem(populateBillingItem(event.getUserId(), timesheet.getTitle(), row.getObjectId(),
-                                row.getType(), row.getTotalCost()));
+                        getBillingService()
+                                .createBillingItem(populateBillingItem(event.getUserId(), timesheet.getTitle(), row.getObjectId(),
+                                        row.getType(), row.getTotalCost()));
                     }
                     catch (CreateBillingItemException e)
                     {
@@ -109,8 +110,9 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
                 }
                 try
                 {
-                    getBillingService().createBillingItem(populateBillingItem(event.getUserId(), costsheet.getTitle(), costsheet.getParentId(),
-                            costsheet.getParentType(), balance));
+                    getBillingService()
+                            .createBillingItem(populateBillingItem(event.getUserId(), costsheet.getTitle(), costsheet.getParentId(),
+                                    costsheet.getParentType(), balance));
                 }
                 catch (CreateBillingItemException e)
                 {
@@ -126,6 +128,7 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator(creator);
+        billingItem.setModifier(creator);
         billingItem.setItemDescription(itemDescription);
         billingItem.setParentObjectId(parentObjectId);
         billingItem.setParentObjectType(parentObjectType);
