@@ -116,9 +116,11 @@ public class BillingServiceImpl implements BillingService
         log.info("Creating Billing Item");
         try
         {
-            return getBillingItemDao().createBillingItem(billingItem);
+            BillingItem saved = getBillingItemDao().createBillingItem(billingItem);
+            getBillingEventPublisher().publishBillingItemCreatedEvent(saved);
+            return saved;
         }
-        catch (PersistenceException e)
+        catch (Exception e)
         {
             throw new CreateBillingItemException(
                     String.format("Unable to create Billing Item for [%s] [%d]", billingItem.getParentObjectType(),
@@ -196,7 +198,10 @@ public class BillingServiceImpl implements BillingService
         billingInvoice.setInvoiceNumber("");
         BillingInvoice saved = getBillingInvoiceDao().saveBillingInvoice(billingInvoice);
         getBillingInvoiceBusinessRule().applyRules(saved);
-        return getBillingInvoiceDao().saveBillingInvoice(saved);
+        // for some reason saved is not managed, so have to merge changes again
+        BillingInvoice updated = getBillingInvoiceDao().saveBillingInvoice(saved);
+        getBillingEventPublisher().publishBillingInvoiceCreatedEvent(updated);
+        return updated;
     }
 
     /**
