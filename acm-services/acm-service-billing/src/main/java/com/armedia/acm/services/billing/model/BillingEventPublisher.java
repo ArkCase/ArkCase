@@ -1,5 +1,7 @@
 package com.armedia.acm.services.billing.model;
 
+import com.armedia.acm.auth.AuthenticationUtils;
+
 /*-
  * #%L
  * ACM Service: Billing
@@ -30,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.security.core.Authentication;
 
 /**
  * @author sasko.tanaskoski
@@ -41,32 +42,25 @@ public class BillingEventPublisher implements ApplicationEventPublisherAware
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public void publishBillingItemCreatedEvent(BillingItem source, Authentication authentication, String ipAddress, boolean succeeded)
+    public void publishBillingItemCreatedEvent(BillingItem source)
     {
-        String user = authentication != null && authentication.getName() != null ? authentication.getName()
-                : BillingConstants.BILLING_SYSTEM_USER;
-
         BillingItemCreatedEvent billingItemCreatedEvent = new BillingItemCreatedEvent(source);
-        billingItemCreatedEvent.setUserId(user);
-        billingItemCreatedEvent.setIpAddress(ipAddress);
+        billingItemCreatedEvent.setUserId(AuthenticationUtils.getUsername());
+        billingItemCreatedEvent.setIpAddress(AuthenticationUtils.getUserIpAddress());
         billingItemCreatedEvent.setParentObjectId(source.getParentObjectId());
         billingItemCreatedEvent.setParentObjectType(source.getParentObjectType());
-        billingItemCreatedEvent.setSucceeded(succeeded);
-
+        billingItemCreatedEvent.setSucceeded(true);
         getApplicationEventPublisher().publishEvent(billingItemCreatedEvent);
     }
 
-    public void publishBillingInvoiceCreatedEvent(BillingInvoice source, Authentication authentication, String ipAddress, boolean succeeded)
+    public void publishBillingInvoiceCreatedEvent(BillingInvoice source)
     {
-        String user = authentication != null && authentication.getName() != null ? authentication.getName()
-                : BillingConstants.BILLING_SYSTEM_USER;
-
         BillingInvoiceCreatedEvent billingInvoiceCreatedEvent = new BillingInvoiceCreatedEvent(source);
-        billingInvoiceCreatedEvent.setUserId(user);
-        billingInvoiceCreatedEvent.setIpAddress(ipAddress);
+        billingInvoiceCreatedEvent.setUserId(AuthenticationUtils.getUsername());
+        billingInvoiceCreatedEvent.setIpAddress(AuthenticationUtils.getUserIpAddress());
         billingInvoiceCreatedEvent.setParentObjectId(source.getParentObjectId());
         billingInvoiceCreatedEvent.setParentObjectType(source.getParentObjectType());
-        billingInvoiceCreatedEvent.setSucceeded(succeeded);
+        billingInvoiceCreatedEvent.setSucceeded(true);
 
         getApplicationEventPublisher().publishEvent(billingInvoiceCreatedEvent);
     }
