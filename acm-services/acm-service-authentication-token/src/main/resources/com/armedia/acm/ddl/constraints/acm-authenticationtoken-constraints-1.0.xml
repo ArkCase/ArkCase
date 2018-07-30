@@ -1,5 +1,5 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
+                   xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-acm_authentication_token-id" author="mnj11">
@@ -20,8 +20,17 @@
             </and>
         </preConditions>
         <addForeignKeyConstraint baseTableName="acm_authentication_token" baseColumnNames="cm_authentication_token_file_id"
-            constraintName="fk_authentication_token_file_id" referencedTableName="acm_file" referencedColumnNames="cm_file_id"
-            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+                                 constraintName="fk_authentication_token_file_id" referencedTableName="acm_file"
+                                 referencedColumnNames="cm_file_id"
+                                 deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="03-create-auth-token-index" author="ncuculova"
+               logicalFilePath="/com/armedia/acm/ddl/tables/authenticationtoken-database-tables.xml">
+        <createIndex tableName="acm_authentication_token" indexName="idx_auth_token_key">
+            <column name="cm_authentication_token_key"/>
+        </createIndex>
+        <addUniqueConstraint tableName="acm_authentication_token" columnNames="cm_authentication_token_key"/>
     </changeSet>
 
 </databaseChangeLog>
