@@ -569,6 +569,15 @@
                 "modal.info": "设置将在刷新后生效",
                 "modal.ok": "确定"
             },
+            "formsType.config": {
+                "title": "zh-cn_Forms Type Configuration",
+                "angular.label": "zh-cn_Use Angular Forms",
+                "frevvo.label": "zh-cn_Use Frevvo Forms",
+                "apply": "zh-cn_Apply",
+                "modal.title": "zh-cn_Information",
+                "modal.info": "zh-cn_Settings will take effect after refresh",
+                "modal.ok": "zh-cn_OK"
+            },
             "login.config": {
                 "title": "登录配置",
                 "idleLimit.label": "登录空闲限制（以毫秒为单位）",
