@@ -13,13 +13,21 @@
 angular.module('services').service('FormsType.Service', [ 'Admin.ApplicationSettingsService', function(ApplicationSettingsService) {
 
     return ({
-        isAngularFormType: isAngularFormType
+        isAngularFormType: isAngularFormType,
+        isFrevvoFormType: isFrevvoFormType
     });
 
     function isAngularFormType() {
         return ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.FORMS_TYPE).then(function(response) {
             var formsType = response.data[ApplicationSettingsService.PROPERTIES.FORMS_TYPE];
             return formsType == "angular";
+        });
+    }
+
+    function isFrevvoFormType() {
+        return ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.FORMS_TYPE).then(function(response) {
+            var formsType = response.data[ApplicationSettingsService.PROPERTIES.FORMS_TYPE];
+            return formsType == "frevvo";
         });
     }
 
