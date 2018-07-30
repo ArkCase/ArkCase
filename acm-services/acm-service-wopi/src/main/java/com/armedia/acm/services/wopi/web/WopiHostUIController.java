@@ -27,9 +27,9 @@ package com.armedia.acm.services.wopi.web;
  * #L%
  */
 
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.wopi.model.WopiConfig;
-import com.armedia.acm.services.wopi.service.WopiAcmService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,16 +48,16 @@ public class WopiHostUIController
     private static final Logger log = LoggerFactory.getLogger(WopiHostUIController.class);
 
     private WopiConfig wopiConfig;
-    private WopiAcmService wopiService;
+    private AuthenticationTokenService tokenService;
 
-    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write')")
     @RequestMapping(method = RequestMethod.GET, value = "/{fileId}")
     public ModelAndView getWopiHostPage(Authentication authentication, @PathVariable Long fileId, HttpSession session)
     {
         log.info("Opening file with id [{}] per user [{}]", fileId, authentication.getName());
 
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        String accessToken = wopiService.getWopiAccessToken(fileId, user.getMail(), authentication);
+        String accessToken = tokenService.generateAndSaveAuthenticationToken(fileId, user.getMail(), authentication);
 
         ModelAndView model = new ModelAndView();
         model.setViewName("wopi-host");
@@ -65,14 +65,14 @@ public class WopiHostUIController
         return model;
     }
 
-    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write')")
     @RequestMapping(method = RequestMethod.GET, value = "/testapp/{fileId}")
     public ModelAndView getWopiValidationAppPage(Authentication authentication, @PathVariable Long fileId, HttpSession session)
     {
         log.info("Opening wopi validation app for file with id [{}] per user [{}]", fileId, authentication.getName());
 
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        String accessToken = wopiService.getWopiAccessToken(fileId, user.getMail(), authentication);
+        String accessToken = tokenService.generateAndSaveAuthenticationToken(fileId, user.getMail(), authentication);
 
         ModelAndView model = new ModelAndView();
         model.setViewName("wopi-host");
@@ -85,8 +85,8 @@ public class WopiHostUIController
         this.wopiConfig = wopiConfig;
     }
 
-    public void setWopiService(WopiAcmService wopiService)
+    public void setTokenService(AuthenticationTokenService tokenService)
     {
-        this.wopiService = wopiService;
+        this.tokenService = tokenService;
     }
 }
