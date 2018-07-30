@@ -34,8 +34,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import java.util.List;
-
 /**
  * Created by manoj.dhungana on 7/30/15.
  */
@@ -51,7 +49,7 @@ public class AuthenticationTokenDao extends AcmAbstractDao<AuthenticationToken>
         return AuthenticationToken.class;
     }
 
-    public List<AuthenticationToken> findAuthenticationTokenByKey(String key)
+    public AuthenticationToken findAuthenticationTokenByKey(String key)
     {
         TypedQuery<AuthenticationToken> authenticationToken = getEntityManager().createQuery(
                 "SELECT authenticationToken " + "FROM AuthenticationToken authenticationToken " +
@@ -59,19 +57,7 @@ public class AuthenticationTokenDao extends AcmAbstractDao<AuthenticationToken>
                 AuthenticationToken.class);
 
         authenticationToken.setParameter("key", key);
-        return authenticationToken.getResultList();
-    }
-
-    public List<AuthenticationToken> findAuthenticationTokenByEmailAndFileId(String email, Long fileId)
-    {
-        TypedQuery<AuthenticationToken> tokenByEmailQuery = getEntityManager().createQuery(
-                "SELECT authenticationToken FROM AuthenticationToken authenticationToken " +
-                        "WHERE authenticationToken.email = :email AND authenticationToken.fileId = :fileId",
-                AuthenticationToken.class);
-
-        tokenByEmailQuery.setParameter("email", email);
-        tokenByEmailQuery.setParameter("fileId", fileId);
-        return tokenByEmailQuery.getResultList();
+        return authenticationToken.getSingleResult();
     }
 
     public EntityManager getEntityManager()
