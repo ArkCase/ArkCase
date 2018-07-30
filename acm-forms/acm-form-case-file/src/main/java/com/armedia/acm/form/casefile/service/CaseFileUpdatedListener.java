@@ -57,48 +57,48 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
     @Override
     public void onApplicationEvent(CaseEvent event)
     {
-        String formsType = "";
-        try
-        {
-            formsType = jsonPropertiesManagementService.getProperty("formsType").toString();
-        }
-        catch (Exception e)
-        {
-            String msg = "Can't retrieve application property";
-            LOG.error(msg, e);
-            // throw new AcmPropertiesManagementException(msg, e);
-        }
+        // String formsType = "";
+        // try
+        // {
+        // formsType = jsonPropertiesManagementService.getProperty("formsType").toString();
+        // }
+        // catch (Exception e)
+        // {
+        // String msg = "Can't retrieve application property";
+        // LOG.error(msg, e);
+        // // throw new AcmPropertiesManagementException(msg, e);
+        // }
 
-        if (formsType.equals("frevvo"))
+        // if (formsType.equals("frevvo"))
+        // {
+        if ("com.armedia.acm.casefile.created".equals(event.getEventType().toLowerCase())
+                || "com.armedia.acm.casefile.updated".equals(event.getEventType().toLowerCase()))
         {
-            if ("com.armedia.acm.casefile.created".equals(event.getEventType().toLowerCase())
-                    || "com.armedia.acm.casefile.updated".equals(event.getEventType().toLowerCase()))
+            LOG.debug("Updating Frevvo XML file ...");
+
+            if (getProperties() != null)
             {
-                LOG.debug("Updating Frevvo XML file ...");
 
-                if (getProperties() != null)
+                if (getProperties().containsKey(CaseFileConstants.ACTIVE_CASE_FORM_KEY))
                 {
+                    String activeFormName = (String) getProperties().get(CaseFileConstants.ACTIVE_CASE_FORM_KEY);
 
-                    if (getProperties().containsKey(CaseFileConstants.ACTIVE_CASE_FORM_KEY))
+                    try
                     {
-                        String activeFormName = (String) getProperties().get(CaseFileConstants.ACTIVE_CASE_FORM_KEY);
-
-                        try
+                        if (FrevvoFormName.CASE_FILE.equals(activeFormName))
                         {
-                            if (FrevvoFormName.CASE_FILE.equals(activeFormName))
-                            {
-                                getCaseFileService().updateXML(event.getCaseFile(), event.getEventUser(),
-                                        getCaseFileService().getFormClass());
-                            }
+                            getCaseFileService().updateXML(event.getCaseFile(), event.getEventUser(),
+                                    getCaseFileService().getFormClass());
                         }
-                        catch (Exception e)
-                        {
-                            LOG.error(String.format("Could not update Frevvo form XML: [%s]", e.getMessage()), e);
-                        }
+                    }
+                    catch (Exception e)
+                    {
+                        LOG.error(String.format("Could not update Frevvo form XML: [%s]", e.getMessage()), e);
                     }
                 }
             }
         }
+        // }
     }
 
     public void setJsonPropertiesManagementService(JsonPropertiesManagementService jsonPropertiesManagementService)
