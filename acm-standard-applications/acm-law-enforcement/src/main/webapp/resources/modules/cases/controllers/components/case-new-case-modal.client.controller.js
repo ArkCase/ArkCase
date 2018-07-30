@@ -24,17 +24,36 @@ angular.module('cases').controller(
                         return moduleConfig;
                     });
 
-                    //new casefile with predefined values
-                    $scope.casefile = {
-                        className: 'com.armedia.acm.plugins.casefile.model.CaseFile',
-                        caseType: '',
-                        title: '',
-                        details: '',
-                        initiator: '',
-                        personAssociations: [ {} ],
-                        participants: [ {} ]
-                    };
+                    if ($scope.modalParams.isEdit) {
 
+                        // CaseInfoService.getCaseInfo($scope.modalParams.caseId).then(function(caseInfo) {
+                        //     $scope.caseInfo = caseInfo;
+                        // });
+
+                        $scope.objectInfo = $scope.modalParams.casefile;
+
+                        $scope.casefile = {
+                            caseType: $scope.modalParams.caseType,
+                            title: $scope.modalParams.caseTitle,
+                            details: $scope.modalParams.details,
+                            initiator: $scope.modalParams.initiator,
+                            personAssociations: $scope.modalParams.personAssociations,
+                            participants: $scope.modalParams.participants
+                        };
+
+                    } else {
+
+                        //new casefile with predefined values
+                        $scope.casefile = {
+                            className: 'com.armedia.acm.plugins.casefile.model.CaseFile',
+                            caseType: '',
+                            title: '',
+                            details: '',
+                            initiator: '',
+                            personAssociations: [ {} ],
+                            participants: [ {} ]
+                        };
+                    }
                     var initiatorType = 'Initiator';
 
                     ObjectLookupService.getCaseFileTypes().then(function(caseTypes) {
@@ -323,29 +342,65 @@ angular.module('cases').controller(
                     //-----------------------------------------------------------------------------------------------
 
                     $scope.save = function() {
-                        $scope.loading = true;
-                        $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                        CaseInfoService.saveCaseInfoNewCase(clearNotFilledElements(_.cloneDeep($scope.casefile))).then(function(objectInfo) {
-                            var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.CASE_FILE);
-                            var caseCreatedMessage = $translate.instant('{{objectType}} {{caseTitle}} was created.', {
-                                objectType: objectTypeString,
-                                caseTitle: objectInfo.title
+
+                        if (!$scope.modalParams.isEdit) {
+                            $scope.loading = true;
+                            $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
+                            CaseInfoService.saveCaseInfoNewCase(clearNotFilledElements(_.cloneDeep($scope.casefile))).then(function(objectInfo) {
+                                var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.CASE_FILE);
+                                var caseCreatedMessage = $translate.instant('{{objectType}} {{caseTitle}} was created.', {
+                                    objectType: objectTypeString,
+                                    caseTitle: objectInfo.title
+                                });
+                                MessageService.info(caseCreatedMessage);
+                                ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, objectInfo.id);
+                                $modalInstance.dismiss();
+                                $scope.loading = false;
+                                $scope.loadingIcon = "fa fa-floppy-o";
+                            }, function(error) {
+                                $scope.loading = false;
+                                $scope.loadingIcon = "fa fa-floppy-o";
+                                if (error.data && error.data.message) {
+                                    $scope.error = error.data.message;
+                                } else {
+                                    MessageService.error(error);
+                                }
                             });
-                            MessageService.info(caseCreatedMessage);
-                            ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, objectInfo.id);
-                            $modalInstance.dismiss();
-                            $scope.loading = false;
-                            $scope.loadingIcon = "fa fa-floppy-o";
-                        }, function(error) {
-                            $scope.loading = false;
-                            $scope.loadingIcon = "fa fa-floppy-o";
-                            if (error.data && error.data.message) {
-                                $scope.error = error.data.message;
-                            } else {
-                                MessageService.error(error);
+                        } else {
+                            // Updates the ArkCase database when the user changes a case attribute
+                            // in a case top bar menu item and clicks the save check button
+                            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+                            checkForChanges($scope.objectInfo);
+                            if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
+                                var objectInfo = Util.omitNg($scope.objectInfo);
+                                promiseSaveInfo = CaseInfoService.saveCaseInfo(objectInfo);
+                                promiseSaveInfo.then(function(caseInfo) {
+                                    $scope.$emit("report-object-updated", caseInfo);
+                                    return caseInfo;
+                                }, function(error) {
+                                    $scope.$emit("report-object-update-failed", error);
+                                    return error;
+                                });
                             }
-                        });
+                            return promiseSaveInfo;
+                        }
                     };
+
+                    function checkForChanges(objectInfo) {
+                        if (objectInfo.title != $scope.casefile.title) {
+                            objectInfo.title = $scope.casefile.title
+                        }
+                        if (objectInfo.caseType != $scope.casefile.caseType) {
+                            objectInfo.caseType = $scope.casefile.caseType
+                        }
+                        if (objectInfo.initiator != $scope.casefile.initiator) {
+                            objectInfo.initiator = $scope.casefile.initiator
+                        }
+                        if (objectInfo.details != $scope.casefile.details) {
+                            objectInfo.details = $scope.casefile.details
+                        }
+                        return objectInfo;
+                    }
 
                     function clearNotFilledElements(casefile) {
 

@@ -30,6 +30,10 @@ angular.module('cases').controller(
                         });
                     });
 
+                    FormsTypeService.isAngularFormType().then(function(isAngularFormType) {
+                        $scope.isAngularFormType = isAngularFormType;
+                    });
+
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.restricted = objectInfo.restricted;
                         $scope.showBtnChildOutcomes = false;
@@ -71,11 +75,35 @@ angular.module('cases').controller(
                             caseNumber: objectInfo.caseNumber,
                             status: objectInfo.status
                         };
+
+                        $scope.editCaseParams = {
+                            isEdit: true,
+                            casefile: objectInfo,
+                            caseId: objectInfo.id,
+                            caseTitle: objectInfo.title,
+                            caseType: objectInfo.caseType,
+                            initiator: objectInfo.originator.person.givenName + " " + objectInfo.originator.person.familyName,
+                            details: objectInfo.details,
+                            personAssociations: objectInfo.personAssociations,
+                            participants: objectInfo.participants,
+                            caseNumber: objectInfo.caseNumber,
+                            containerId: objectInfo.container.id,
+                            folderId: objectInfo.container.folder.id
+                        };
                     };
 
-                    $scope.isAngularFormType = FormsTypeService.isAngularFormType();
                     $scope.newCaseFile = function() {
-                        var params = {};
+                        var params = {
+                            isEdit: false
+                        };
+                        showModal(params);
+                    };
+
+                    $scope.editCaseFile = function() {
+                        showModal($scope.editCaseParams, true);
+                    };
+
+                    function showModal(params) {
                         var modalInstance = $modal.open({
                             animation: true,
                             templateUrl: 'modules/cases/views/components/case-new-case-modal.client.view.html',
@@ -93,7 +121,7 @@ angular.module('cases').controller(
                         }, function() {
                             console.log("error");
                         });
-                    };
+                    }
 
                     $scope.onClickRestrict = function($event) {
                         if ($scope.restricted != $scope.objectInfo.restricted) {
