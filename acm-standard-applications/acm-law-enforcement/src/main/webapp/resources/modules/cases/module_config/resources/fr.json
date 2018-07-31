@@ -361,6 +361,31 @@
             "approverDecision": "Décision d'approbation"
         }
     },
+    "cases.comp.newCase": {
+        "title": "fr_New Case File",
+        "editCase.title": "fr_Edit Case File",
+        "caseTitle": "fr_Case Title",
+        "caseTitle.placeholder": "fr_Enter Case File Title",
+        "caseType": "fr_Case Type",
+        "initiator": "fr_Initiator",
+        "initiator.placeholder": "fr_Select Initiator",
+        "description": "fr_Description",
+        "people": {
+            "title": "fr_People",
+            "selectPerson.placeholder": "fr_Search existing Person",
+            "personType": "fr_Person Type"
+        },
+        "participants": {
+            "title": "fr_Participants",
+            "selectParticipant.placeholder": "fr_Select Participant",
+            "participantType": "fr_Participant Type"
+        },
+        "cancelButton": "fr_Cancel",
+        "saveButton": "fr_Save Case File",
+        "updateButton": "fr_Update Case File",
+        "removeButton": "fr_Remove",
+        "addButton": "fr_Add Another"
+    },
     "cases.userOrGroupSearch": {
         "id": "Recherched'utilisateur",
         "title": "Recherche d'utilisateur / groupe",

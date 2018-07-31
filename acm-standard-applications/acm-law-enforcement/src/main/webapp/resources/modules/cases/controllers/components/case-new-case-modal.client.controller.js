@@ -3,13 +3,15 @@
 angular.module('cases').controller(
         'Cases.NewCaseController',
         [ '$scope', '$stateParams', '$translate', '$modalInstance', 'Case.InfoService', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'ObjectService', 'modalParams', 'Person.InfoService', 'Object.ModelService', 'Object.ParticipantService',
-                function($scope, $stateParams, $translate, $modalInstance, CaseInfoService, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService) {
+                'Profile.UserInfoService',
+                function($scope, $stateParams, $translate, $modalInstance, CaseInfoService, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService, UserInfoService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.selectedFiles = [];
                     $scope.userSearchConfig = null;
+                    $scope.isEdit = $scope.modalParams.isEdit;
 
                     ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
                         $scope.config = moduleConfig;
@@ -24,21 +26,38 @@ angular.module('cases').controller(
                         return moduleConfig;
                     });
 
-                    if ($scope.modalParams.isEdit) {
-
-                        // CaseInfoService.getCaseInfo($scope.modalParams.caseId).then(function(caseInfo) {
-                        //     $scope.caseInfo = caseInfo;
-                        // });
+                    if ($scope.isEdit) {
 
                         $scope.objectInfo = $scope.modalParams.casefile;
+                        var tmpCasefile = $scope.modalParams.casefile;
+
+                        if (tmpCasefile.personAssociations != undefined) {
+                            _.forEach(tmpCasefile.personAssociations, function(personAssociation) {
+                                personAssociation.personFullName = personAssociation.person.givenName + " " + personAssociation.person.familyName;
+                            });
+                        }
+
+                        if (tmpCasefile.participants != undefined) {
+                            _.forEach(tmpCasefile.participants, function(participant) {
+                                if (participant.participantType == "*" || participant.participantType == "owning group") {
+                                    participant.participantFullName = participant.participantLdapId;
+                                } else {
+                                    UserInfoService.getUserInfoById(participant.participantLdapId).then(function(userInfo) {
+                                        participant.participantFullName = userInfo.fullName;
+                                    }, function(err) {
+                                        participant.participantFullName = participant.participantLdapId;
+                                    })
+                                }
+                            });
+                        }
 
                         $scope.casefile = {
-                            caseType: $scope.modalParams.caseType,
-                            title: $scope.modalParams.caseTitle,
-                            details: $scope.modalParams.details,
+                            caseType: $scope.objectInfo.caseType,
+                            title: $scope.objectInfo.title,
+                            details: $scope.objectInfo.details,
                             initiator: $scope.modalParams.initiator,
-                            personAssociations: $scope.modalParams.personAssociations,
-                            participants: $scope.modalParams.participants
+                            personAssociations: tmpCasefile.personAssociations,
+                            participants: tmpCasefile.participants
                         };
 
                     } else {
@@ -263,7 +282,7 @@ angular.module('cases').controller(
                         var typeAssignee = "assignee";
                         var typeOwner = "owner";
 
-                        //only one assignee, if there is already one added, no option to add another one
+                        //only one assignee(owner), if there is already one added, no option to add another one
                         for ( var i in $scope.casefile.participants) {
                             if ($scope.casefile.participants[i].participantType == typeAssignee) {
                                 for ( var j in $scope.caseFileParticipantTypes) {
@@ -343,7 +362,7 @@ angular.module('cases').controller(
 
                     $scope.save = function() {
 
-                        if (!$scope.modalParams.isEdit) {
+                        if (!$scope.isEdit) {
                             $scope.loading = true;
                             $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                             CaseInfoService.saveCaseInfoNewCase(clearNotFilledElements(_.cloneDeep($scope.casefile))).then(function(objectInfo) {
@@ -368,7 +387,9 @@ angular.module('cases').controller(
                             });
                         } else {
                             // Updates the ArkCase database when the user changes a case attribute
-                            // in a case top bar menu item and clicks the save check button
+                            // from the form accessed by clicking 'Edit' and then 'update case file' button
+                            $scope.loading = true;
+                            $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
                             checkForChanges($scope.objectInfo);
                             if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
@@ -376,10 +397,24 @@ angular.module('cases').controller(
                                 promiseSaveInfo = CaseInfoService.saveCaseInfo(objectInfo);
                                 promiseSaveInfo.then(function(caseInfo) {
                                     $scope.$emit("report-object-updated", caseInfo);
-                                    return caseInfo;
+                                    var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.CASE_FILE);
+                                    var caseUpdatedMessage = $translate.instant('{{objectType}} {{caseTitle}} was updated.', {
+                                        objectType: objectTypeString,
+                                        caseTitle: objectInfo.title
+                                    });
+                                    MessageService.info(caseUpdatedMessage);
+                                    $modalInstance.dismiss();
+                                    $scope.loading = false;
+                                    $scope.loadingIcon = "fa fa-floppy-o";
                                 }, function(error) {
                                     $scope.$emit("report-object-update-failed", error);
-                                    return error;
+                                    $scope.loading = false;
+                                    $scope.loadingIcon = "fa fa-floppy-o";
+                                    if (error.data && error.data.message) {
+                                        $scope.error = error.data.message;
+                                    } else {
+                                        MessageService.error(error);
+                                    }
                                 });
                             }
                             return promiseSaveInfo;
@@ -393,8 +428,8 @@ angular.module('cases').controller(
                         if (objectInfo.caseType != $scope.casefile.caseType) {
                             objectInfo.caseType = $scope.casefile.caseType
                         }
-                        if (objectInfo.initiator != $scope.casefile.initiator) {
-                            objectInfo.initiator = $scope.casefile.initiator
+                        if ($scope.casefile.originator != undefined && objectInfo.originator.person != $scope.casefile.originator.person) {
+                            objectInfo.originator.person = $scope.casefile.originator.person
                         }
                         if (objectInfo.details != $scope.casefile.details) {
                             objectInfo.details = $scope.casefile.details

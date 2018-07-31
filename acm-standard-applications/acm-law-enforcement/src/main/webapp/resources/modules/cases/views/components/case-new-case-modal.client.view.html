@@ -1,6 +1,7 @@
 <form name="caseForm" ng-submit="save()">
     <div class="modal-header">
-        <h3><span translate>cases.comp.newCase.title</span></h3>
+        <h3 ng-show="!isEdit"><span translate>cases.comp.newCase.title</span></h3>
+        <h3 ng-show="isEdit"><span translate>cases.comp.newCase.editCase.title</span></h3>
     </div>
     <div class="modal-body">
         <div style="margin-right: 6px; margin-left: 6px;">
@@ -141,7 +142,8 @@
         <button type="submit" ng-disabled="caseForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="{{loadingIcon}}"></i>
-            <span translate>cases.comp.newCase.saveButton</span>
+            <span ng-show="!isEdit" translate>cases.comp.newCase.saveButton</span>
+            <span ng-show="isEdit" translate>cases.comp.newCase.updateButton</span>
         </button>
     </div>
 </form>

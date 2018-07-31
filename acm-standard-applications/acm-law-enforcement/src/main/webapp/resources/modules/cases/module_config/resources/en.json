@@ -364,6 +364,7 @@
     },
     "cases.comp.newCase": {
         "title": "New Case File",
+        "editCase.title": "Edit Case File",
         "caseTitle": "Case Title",
         "caseTitle.placeholder": "Enter Case File Title",
         "caseType": "Case Type",
@@ -382,6 +383,7 @@
         },
         "cancelButton": "Cancel",
         "saveButton": "Save Case File",
+        "updateButton": "Update Case File",
         "removeButton": "Remove",
         "addButton": "Add Another"
     },
