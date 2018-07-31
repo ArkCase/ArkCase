@@ -36,6 +36,7 @@ import javax.xml.transform.Source;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -104,6 +105,23 @@ public interface PdfService
      *             on PDF creation error
      */
     String generatePdf(String xslFilename, Map<String, String> parameters) throws PdfServiceException;
+
+    /**
+     * Generate PDF file based on XSL-FO stylesheet and replacement parameters (no XML data source) to the given
+     * targetStream.
+     * 
+     * @param xslFile
+     *            XSL-FO stylesheet
+     * @param source
+     *            XML data source required for XML transformation
+     * @param targetStream
+     *            the stream to write the generated file
+     * @param parameters
+     *            a key-value map of parameters to be replaced in the stylesheet
+     * @throws PdfServiceException
+     *             on PDF creation error
+     */
+    void generatePdf(File xslFile, Source source, OutputStream targetStream, Map<String, String> parameters) throws PdfServiceException;
 
     /**
      * Append one PDF file to another (incremental merge)
