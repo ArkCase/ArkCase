@@ -164,7 +164,9 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         Date column1 = new Date();
         String column2 = "Subject Name";
         Number column3 = 123456L;
-        Date column4 = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 30);
+        Date column4 = calendar.getTime();
 
         Object[] row = { column1, column2, column3, column4 };
         results.add(row);
@@ -173,14 +175,10 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         SimpleDateFormat sdf = new SimpleDateFormat(correspondenceTemplate.getDateFormatString());
         String expectedDate = sdf.format(column1);
+        String expectedDate2 = sdf.format(column4);
 
         NumberFormat nf = new DecimalFormat(correspondenceTemplate.getNumberFormatString());
         String expectedNumber = nf.format(column3);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(column4);
-        calendar.add(Calendar.DATE, 30);
-        String expectedDate2 = sdf.format(calendar.getTime());
 
         Map<String, String> substitutions = new HashMap<>();
         substitutions.put(var1, expectedDate);

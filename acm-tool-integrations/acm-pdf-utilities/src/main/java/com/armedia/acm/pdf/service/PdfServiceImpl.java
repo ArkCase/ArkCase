@@ -165,28 +165,11 @@ public class PdfServiceImpl implements PdfService
         // create a temporary file name
         String filename = String.format("%s/acm-%020d.pdf", System.getProperty("java.io.tmpdir"), Math.abs(random.nextLong()));
         log.debug("PDF creation: using [{}] as temporary file name", filename);
-        try
+        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
         {
-            // Base URI is where the FOP engine will be resolving URIs against
-            URI baseURI = xslFile.getParentFile().toURI();
-            log.debug("Using [{}] as FOP base URI", baseURI);
-            FopFactory fopFactory = FopFactory.newInstance(baseURI);
-            FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
-
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
-
-            parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));
-
-            try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
-            {
-                Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, os);
-                Result result = new SAXResult(fop.getDefaultHandler());
-                transformer.transform(source, result);
-            }
-
+            generatePdf(xslFile, source, os, parameters);
         }
-        catch (FOPException | TransformerException | IOException e)
+        catch (IOException e)
         {
             log.error("Unable to generate PDF document", e);
             throw new PdfServiceException(e);
@@ -251,6 +234,35 @@ public class PdfServiceImpl implements PdfService
     {
         Source source = new DOMSource();
         return generatePdf(xslFilename, source, parameters);
+    }
+
+    @Override
+    public void generatePdf(File xslFile, Source source, OutputStream targetStream, Map<String, String> parameters)
+            throws PdfServiceException
+    {
+        try
+        {
+            // Base URI is where the FOP engine will be resolving URIs against
+            URI baseURI = xslFile.getParentFile().toURI();
+            log.debug("Using [{}] as FOP base URI", baseURI);
+            FopFactory fopFactory = FopFactory.newInstance(baseURI);
+            FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
+
+            parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));
+
+            Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, targetStream);
+            Result result = new SAXResult(fop.getDefaultHandler());
+            transformer.transform(new DOMSource(), result);
+        }
+        catch (FOPException | TransformerException e)
+        {
+            log.error("Unable to generate PDF document", e);
+            throw new PdfServiceException(e);
+        }
+
     }
 
     /**
