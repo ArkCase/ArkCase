@@ -41,9 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -345,16 +342,7 @@ public class ExecuteSolrQuery
             throws MuleException
     {
         Map<String, Object> headers = new HashMap<>();
-        try
-        {
-            solrQuery = URLEncoder.encode(solrQuery, SearchConstants.FACETED_SEARCH_ENCODING);
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            log.error("Encoding problem occurred while building the SOLR query", e);
-        }
         headers.put("query", solrQuery);
-
         headers.put("firstRow", firstRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
