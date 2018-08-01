@@ -315,7 +315,7 @@ angular.module('cases').controller(
                             scope: modalScope,
                             animation: true,
                             templateUrl: "directives/core-participants/core-participants-modal.client.view.html",
-                            controller: "Directives.NewComplaintCoreParticipantsModalController",
+                            controller: "Directives.NewComplaintCaseCoreParticipantsModalController",
                             size: 'lg',
                             backdrop: 'static',
                             resolve: {
