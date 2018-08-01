@@ -1,5 +1,32 @@
 package com.armedia.acm.correspondence.utils;
 
+/*-
+ * #%L
+ * ACM Service: Correspondence Library
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -92,10 +119,14 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
                 XWPFRun lastRun = posToRuns.get(pos + searchText.length() - 1);
                 int runNum = paragraph.getRuns().indexOf(run);
                 int lastRunNum = paragraph.getRuns().indexOf(lastRun);
-                String texts[] = replacement.toString().split("\n");
+                String texts[] = { "" };
+                if (replacement != null)
+                {
+                    texts = replacement.toString().split("\n");
+                }
 
-                // set the run text to the first line of the replacement; this existing run maintains its formatting so
-                // no formatting code is needed.
+                // set the run text to the first line of the replacement; this existing run maintains its formatting
+                // so no formatting code is needed.
                 run.setText(texts[0], 0);
                 XWPFRun newRun = run;
 

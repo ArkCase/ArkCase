@@ -1214,13 +1214,6 @@
                 ]
             },
             {
-                "type": "p/application/module",
-                "label": "admin.application.module.config.title",
-                "components": [
-                    "application.module.config"
-                ]
-            },
-            {
                 "type": "p/application/user",
                 "label": "admin.application.userName.config.title",
                 "components": [
@@ -1337,3 +1330,4 @@
         ]
     }
 }
+

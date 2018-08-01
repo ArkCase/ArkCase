@@ -30,13 +30,12 @@ package com.armedia.acm.services.authenticationtoken.service;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
-
 import org.springframework.cache.Cache;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.time.temporal.TemporalAmount;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -137,14 +136,22 @@ public class AuthenticationTokenService
         return token;
     }
 
-    public List<AuthenticationToken> findByTokenEmailAndFileId(String email, Long fileId)
-    {
-        return authenticationTokenDao.findAuthenticationTokenByEmailAndFileId(email, fileId);
-    }
-
-    public List<AuthenticationToken> findByKey(String key)
+    public AuthenticationToken findByKey(String key)
     {
         return authenticationTokenDao.findAuthenticationTokenByKey(key);
+    }
+
+    /**
+     * Calculates when an access token expires, by adding temporalValidityAmount to the creation time.
+     * @param token
+     * @param temporalValidityAmount
+     * @return number of milliseconds since January 1, 1970 UTC (the date epoch in JavaScript)
+     */
+    public Long calculateTokenTimeToLive(AuthenticationToken token, TemporalAmount temporalValidityAmount)
+    {
+        return token.getCreated().toInstant()
+                .plus(temporalValidityAmount)
+                .toEpochMilli();
     }
 
     public void saveAuthenticationToken(AuthenticationToken token)
