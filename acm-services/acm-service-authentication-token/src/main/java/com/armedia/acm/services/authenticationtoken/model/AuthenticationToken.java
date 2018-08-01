@@ -29,6 +29,7 @@ package com.armedia.acm.services.authenticationtoken.model;
 
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.Column;
@@ -193,5 +194,11 @@ public class AuthenticationToken implements Serializable, AcmEntity
     public void setModified(Date modified)
     {
         this.modified = modified;
+    }
+
+    @JsonIgnore
+    public boolean isActive()
+    {
+        return status.equals("ACTIVE");
     }
 }

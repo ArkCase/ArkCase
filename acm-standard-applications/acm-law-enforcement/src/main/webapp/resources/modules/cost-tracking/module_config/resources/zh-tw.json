@@ -76,12 +76,32 @@
             }
         }
     },
-    "costTracking.comp.approvers": {
-        "title": "審批",
+    "costTracking.comp.tasks": {
+        "title": "任務",
         "table.columns": {
-            "fullName": "全名",
-            "userId": "用戶名"
+            "title": "標題",
+            "assignee": "代理人",
+            "due": "應有",
+            "status": "狀態",
+            "priority": "優先",
+            "created": "創建"
         }
+    },
+    "costTracking.comp.expenses": {
+        "title": "花費",
+        "table.columns": {
+            "date": "日期",
+            "title": "標題",
+            "description": "描述",
+            "amount": "量"
+        }
+    },
+    "costTracking.comp.documents": {
+        "title": "文件",
+        "filterInputPlaceholder": "過濾",
+        "searchInputPlaceholder": "搜索",
+        "newTask": "新任務",
+        "sendEmail": "發電子郵件"
     },
     "costTracking.tree": {
         "nodeTypes": {
@@ -89,7 +109,8 @@
             "person.label": "成員",
             "summary.label": "費用",
             "tags.label": "標籤",
-            "approvers.label": "審批人"
+            "tasks.label": "任務",
+            "documents.label": "文件"
         },
         "sorters": {
             "dateAsc": "按日期排序",
