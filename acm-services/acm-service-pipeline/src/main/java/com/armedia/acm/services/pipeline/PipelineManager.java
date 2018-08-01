@@ -33,6 +33,8 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import java.util.List;
 import java.util.ListIterator;
 
@@ -207,7 +209,14 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
         {
             PipelineHandler<T, S> handler = it.next();
             log.debug(debugMessage, handler.getClass().getName());
-            handler.execute(entity, pipelineContext);
+            try
+            {
+                handler.execute(entity, pipelineContext);
+            }
+            catch (ParserConfigurationException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -34,6 +34,9 @@ import java.util.List;
 
 /**
  * Created by armdev on 11/4/14.
+ *
+ * OVA CLASS TREBA da se preimenuva so cel da mozi da se koristi od poke mesta
+ *
  */
 public class FrevvoUploadedFiles
 {

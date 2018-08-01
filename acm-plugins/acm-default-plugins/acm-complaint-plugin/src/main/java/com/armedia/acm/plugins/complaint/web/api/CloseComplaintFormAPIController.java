@@ -27,8 +27,9 @@ package com.armedia.acm.plugins.complaint.web.api;
  * #L%
  */
 
-import com.armedia.acm.plugins.complaint.model.closeModal.CloseComplaintForm;
+import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.service.CloseComplaintService;
+import com.armedia.acm.plugins.complaint.service.CloseComplaintServiceImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,13 +51,14 @@ public class CloseComplaintFormAPIController
     @RequestMapping(value = "/close", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Boolean completeTask(
-            @RequestParam(value = "mode", required = true) String mode, @RequestBody CloseComplaintForm form, Authentication auth,
+            @RequestParam(value = "mode", required = true) String mode, @RequestBody CloseComplaintRequest form, Authentication auth,
             HttpServletRequest request, HttpSession session)
     {
-        log.info("Closing complaint with id {}...", form.getInformation().getId());
+        log.info("Closing complaint with id {}...", form.getComplaintId());
 
         try
         {
+            // Tuka CloseCompliantRequest treba da go zemam od UI
             closeComplaintService.save(form, auth, mode);
         }
         catch (Exception e)
@@ -71,7 +73,7 @@ public class CloseComplaintFormAPIController
         return closeComplaintService;
     }
 
-    public void setCloseComplaintService(CloseComplaintService closeComplaintService)
+    public void setCloseComplaintService(CloseComplaintServiceImpl closeComplaintService)
     {
         this.closeComplaintService = closeComplaintService;
     }
