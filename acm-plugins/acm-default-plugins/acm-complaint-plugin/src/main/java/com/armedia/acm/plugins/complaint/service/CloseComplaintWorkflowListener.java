@@ -22,6 +22,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private RuntimeService activitiRuntimeService;
     private String closeComplaintTaskName;
+    private PDFCloseComplaintDocumentGenerator pdfCloseComplaintDocumentGenerator;
 
     @Override
     public void onApplicationEvent(CloseComplaintEvent closeComplaintEvent)
@@ -34,8 +35,9 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
     private void handleNewCloseComplaintRequest(CloseComplaintEvent closeComplaintEvent)
     {
-
+        // pdfCloseComplaintDocumentGenerator.generatePdf();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
+        configuration.setEcmFile(closeComplaintEvent.getFrevvoUploadedFiles().getPdfRendition());
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
         if (configuration.isBuckslipProcess())
         {
@@ -71,12 +73,17 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         pvars.put("reviewers", reviewers);
         pvars.put("taskName", taskName);
         pvars.put("documentAuthor", author);
-        // pvars.put("pdfRenditionId", closeComplaintEvent.getFrevvoUploadedFiles().getPdfRendition().getFileId());
-        // pvars.put("formXmlId", closeComplaintEvent.getFrevvoUploadedFiles().getFormXml().getFileId());
+        pvars.put("pdfRenditionId", closeComplaintEvent.getFrevvoUploadedFiles().getPdfRendition().getFileId());
+        Long formXmlId = null;
+        if (closeComplaintEvent.getFrevvoUploadedFiles().getFormXml() != null)
+        {
+            formXmlId = closeComplaintEvent.getFrevvoUploadedFiles().getFormXml().getFileId();
+        }
+        pvars.put("formXmlId", formXmlId);
 
         pvars.put("OBJECT_TYPE", "FILE");
-        // pvars.put("OBJECT_ID", closeComplaintEvent.getFrevvoUploadedFiles().getPdfRendition().getFileId());
-        // pvars.put("OBJECT_NAME", closeComplaintEvent.getFrevvoUploadedFiles().getPdfRendition().getFileName());
+        pvars.put("OBJECT_ID", closeComplaintEvent.getFrevvoUploadedFiles().getPdfRendition().getFileId());
+        pvars.put("OBJECT_NAME", closeComplaintEvent.getFrevvoUploadedFiles().getPdfRendition().getFileName());
         pvars.put("PARENT_OBJECT_TYPE", "COMPLAINT");
         pvars.put("PARENT_OBJECT_ID", closeComplaintEvent.getComplaintId());
         pvars.put("COMPLAINT", closeComplaintEvent.getComplaintId());
@@ -132,5 +139,15 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
     public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule)
     {
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
+    }
+
+    public PDFCloseComplaintDocumentGenerator getPdfCloseComplaintDocumentGenerator()
+    {
+        return pdfCloseComplaintDocumentGenerator;
+    }
+
+    public void setPdfCloseComplaintDocumentGenerator(PDFCloseComplaintDocumentGenerator pdfCloseComplaintDocumentGenerator)
+    {
+        this.pdfCloseComplaintDocumentGenerator = pdfCloseComplaintDocumentGenerator;
     }
 }

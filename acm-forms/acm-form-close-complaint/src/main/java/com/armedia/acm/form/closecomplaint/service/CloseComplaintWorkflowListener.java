@@ -107,7 +107,10 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         pvars.put("taskName", taskName);
         pvars.put("documentAuthor", author);
         pvars.put("pdfRenditionId", closeComplaintFormEvent.getFrevvoUploadedFiles().getPdfRendition().getFileId());
-        pvars.put("formXmlId", closeComplaintFormEvent.getFrevvoUploadedFiles().getFormXml().getFileId());
+        Long id = closeComplaintFormEvent.getFrevvoUploadedFiles().getFormXml() != null
+                ? closeComplaintFormEvent.getFrevvoUploadedFiles().getFormXml().getFileId()
+                : null;
+        pvars.put("formXmlId", id);
 
         pvars.put("OBJECT_TYPE", "FILE");
         pvars.put("OBJECT_ID", closeComplaintFormEvent.getFrevvoUploadedFiles().getPdfRendition().getFileId());

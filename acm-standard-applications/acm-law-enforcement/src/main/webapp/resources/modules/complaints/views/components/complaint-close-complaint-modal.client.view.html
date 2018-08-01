@@ -16,7 +16,7 @@
                         <div class="col-sm-6">
                             <label translate>complaints.comp.closeComplaint.information.close.date</label>
                             <p class="input-group">
-                                <input type="text" class="form-control" ng-model="complaint.information.date"
+                                <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.closeDate"
                                         datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
                                         datepicker-append-to-body="false" is-open="defaultOpened" close-on-date-selection="true"
                                         show-button-bar="true" on-open-focus="false"
@@ -30,16 +30,16 @@
                         </div>
                         <div class="col-sm-6">
                             <label translate>complaints.comp.closeComplaint.information.complaint.number</label>
-                            <input type="text" ng-model="complaint.information.number" class="input-md form-control" disabled>
+                            <input type="text" ng-model="modalParams.info.complaintNumber" class="input-md form-control" disabled>
                         </div>
                     </div>
                     <div class="row form-group">
                         <div class="col-sm-6">
                             <label translate>complaints.comp.closeComplaint.information.complaint.disposition</label>
                             <p class="input-group">
-                                <select ng-model="complaint.information.option" ng-change="dispositionTypeChanged()"
+                                <select ng-model="closeComplaintRequest.disposition.dispositionType" ng-change="dispositionTypeChanged()"
                                         class="form-control input-md" required>
-                                    <option ng-repeat="option in complaintDispositions  " ng-value="option.value">
+                                    <option ng-repeat="option in complaintDispositions" ng-value="option.key">
                                         {{option.value}}
                                     </option>
                                 </select>
@@ -78,12 +78,12 @@
                     <div class="row form-group">
                         <div class="col-sm-6">
                             <label translate>complaints.comp.closeComplaint.add.existing.case.case.title</label>
-                            <input type="text" class="form-control" ng-model="complaint.existingCase.caseTitle" disabled />
+                            <input type="text" class="form-control" ng-model="existingCase.caseTitle" disabled />
                         </div>
                         <div class="col-sm-3">
                             <label translate>complaints.comp.closeComplaint.add.existing.case.case.date</label>
                             <p class="input-group">
-                                <input type="text" class="form-control" ng-model="complaint.existingCase.caseCreationDate" disabled />
+                                <input type="text" class="form-control" ng-model="existingCase.caseCreationDate" disabled />
                                 <span class="input-group-btn">
                                      <button type="button" class="btn btn-default" disabled>
                                              <i class="fa fa-calendar"></i>
@@ -93,7 +93,7 @@
                         </div>
                         <div class="col-sm-3">
                             <label translate>complaints.comp.closeComplaint.add.existing.case.case.priority</label>
-                            <input type="text" class="form-control" ng-model="complaint.existingCase.casePriority" disabled />
+                            <input type="text" class="form-control" ng-model="existingCase.casePriority" disabled />
                         </div>
                     </div>
                 </div>
@@ -112,7 +112,7 @@
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.name <span
                                     class="required-asterisk">*</span></label>
-                            <input type="text" class="form-control" ng-model="complaint.referExternal.agency" required />
+                            <input type="text" class="form-control" ng-model="closeComplaintRequest.referExternal.agency" required />
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.date</label>
@@ -131,7 +131,7 @@
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.contact.name <span
                                     class="required-asterisk">*</span></label>
-                            <input type="text" class="form-control" ng-model="complaint.referExternal.contact" required />
+                            <input type="text" class="form-control" ng-model="closeComplaintRequest.referExternal.contact" required />
                         </div>
                     </div>
 
@@ -147,8 +147,9 @@
                                     <div class="col-sm-6">
                                         <label translate>complaints.comp.closeComplaint.refer.external.contact.type <span
                                                 class="required-asterisk">*</span></label>
-                                        <select ng-model="complaint.referExternal.contact.type" class="form-control input-md" required>
-                                            <option ng-repeat="option in contactTypes  " ng-value="option.value">
+                                        <select ng-model="closeComplaintRequest.referExternal.contact.type" class="form-control input-md"
+                                                required>
+                                            <option ng-repeat="option in contactTypes" ng-value="option.value">
                                                 {{option.value}}
                                             </option>
                                         </select>
@@ -156,7 +157,8 @@
                                     <div class="col-sm-6">
                                         <label translate>complaints.comp.closeComplaint.refer.external.contact.value <span
                                                 class="required-asterisk">*</span></label>
-                                        <input type="text" class="form-control" ng-model="complaint.referExternal.contact.value" required />
+                                        <input type="text" class="form-control" ng-model="closeComplaintRequest.referExternal.contact.value"
+                                                required />
                                     </div>
                                 </div>
                             </div>
@@ -169,26 +171,28 @@
         <div class="well-sm">
             <div class="row">
                 <div class="col-sm-5">
-                    <label for="approver">{{'complaints.comp.closeComplaint.approver.label' | translate}} <span
+                    <label for="participant">{{'complaints.comp.closeComplaint.approver.label' | translate}} <span
                             class="required-asterisk">*</span></label>
                 </div>
             </div>
-            <div class="" ng-repeat="approver in complaint.approvers">
+            <div class="" ng-repeat="participant in closeComplaintRequest.participants">
                 <div class="row">
                     <div class="col-sm-4 form-group">
-                        <input type="text" id="approver" ng-model="approver.approverName" class="input-md form-control user-picker-input"
+                        <input type="text" id="participant" ng-model="participant.participantLdapId"
+                                class="input-md form-control user-picker-input"
                                 placeholder="{{ 'complaints.comp.closeComplaint.approver.placeholder' | translate }}"
                                 ng-click="addApprover($index)" readonly required>
                     </div>
                     <div class="col-sm-4 pull-left form-group">
                         <div class="pull-left">
-                            <button type="button" class="btn btn-link form-control" ng-click="removeApprover(approver)" ng-show="!$first">
+                            <button type="button" class="btn btn-link form-control" ng-click="removeApprover(participant)"
+                                    ng-show="!$first">
                                 <i class="fa fa-minus text-danger"></i><span translate>complaints.comp.closeComplaint.approver.remove</span>
                             </button>
                         </div>
                         <div class="pull-left">
                             <button type="button" class="btn btn-link form-control" ng-click="addNewApprover()"
-                                    ng-disabled="!approver.approverName" ng-show="$last">
+                                    ng-disabled="!participant.participantName" ng-show="$last">
                                 <i class="fa fa-plus text-success"></i><span
                                     translate>complaints.comp.closeComplaint.approver.addAnother</span>
                             </button>
@@ -201,7 +205,7 @@
         <div class="well-sm">
             <div class="row">
                 <div class="col-sm-12 form-group">
-                    <summernote id="complaintDesc" config="options" ng-model="complaint.description"></summernote>
+                    <summernote id="complaintDesc" config="options" ng-model=""></summernote>
                 </div>
             </div>
         </div>
@@ -210,6 +214,11 @@
         <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
             <span translate>complaints.comp.closeComplaint.cancelButton</span>
         </button>
+        <!--<button type="submit" ng-disabled="complaintForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+                id="saveButton" data-title="Save">
+            <i class="{{loadingIcon}}"></i>
+            <span translate>complaints.comp.closeComplaint.saveButton</span>
+        </button>-->
         <button type="submit" ng-disabled="complaintForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="{{loadingIcon}}"></i>

@@ -36,22 +36,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -104,6 +89,10 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
 
     @Column(name = "cm_close_complaint_modifier")
     private String modifier;
+
+    // ddl
+    // @Column(name = "cm_close_complaint_description")
+    // private String description;
 
     @PrePersist
     public void beforeInsert()
@@ -244,4 +233,14 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     {
         return ComplaintConstants.OBJECT_TYPE;
     }
+
+    // public String getDescription()
+    // {
+    // return description;
+    // }
+    //
+    // public void setDescription(String description)
+    // {
+    // this.description = description;
+    // }
 }

@@ -15,7 +15,39 @@ angular.module('complaints').controller(
                     $scope.save = save;
                     $scope.cancelModal = cancelModal;
                     //Objects
-                    $scope.complaint = {
+                    $scope.closeComplaintRequest = {
+                        // "id": null,
+                        complaintId: modalParams.info.complaintId, //Id na complaint
+                        disposition: {
+                            closeDate: new Date(),
+                            dispositionType: "",
+                            referExternalOrganizationName: null,
+                            referExternalContactPersonName: null,
+                            referExternalContactMethod: null,
+                            existingCaseNumber: null,
+                            created: null,
+                            creator: null,
+                            modified: null,
+                            modifier: null,
+                            className: "com.armedia.acm.plugins.casefile.model.Disposition"
+                        },
+                        status: "IN APPROVAL",
+                        objectType: "CLOSE_COMPLAINT_REQUEST",
+                        participants: [ {} ],
+                        created: null,
+                        creator: null,
+                        modified: null,
+                        modifier: null
+                    // "description": ""
+                    };
+                    /*$scope.complaint = {
+                        "complaintId": null,
+                        "status": "DRAFT",
+                        "participants": [ {} ],
+                        "created": "",
+                        "creator": "",
+                        "modified": "",
+                        "modifier": "",
                         "information": {
                             "id": modalParams.info.complaintId,
                             "number": modalParams.info.complaintNumber,
@@ -29,10 +61,9 @@ angular.module('complaints').controller(
                             "caseTitle": null,
                             "caseCreationDate": null,//Tuka datata od selectiraniot case
                             "casePriority": null
-                        },
-                        "approvers": [ {} ],
-                        "description": ""
-                    };
+                        }
+                    // "description": ""
+                    };*/
                     $scope.complaintDispositions = [];
                     $scope.contactTypes = [];
                     $scope.loading = false;
@@ -75,13 +106,13 @@ angular.module('complaints').controller(
                         });
                     });
 
-                    function dispositionTypeChanged() {
+                    function dispositionTypeChanged(temp) {
                         //TUKA VIDI DRUG NACIN! PRERABOTI
-                        if ($scope.complaint.information.option == 'Add to Existing Case') {
+                        if ($scope.closeComplaintRequest.disposition.dispositionType == 'add_existing_case') {
                             $scope.existingCase = {};
                             $scope.showReferExternal = false;
                             $scope.showExistingCase = true;
-                        } else if ($scope.complaint.information.option == 'Refer External') {
+                        } else if ($scope.closeComplaintRequest.disposition.dispositionType == 'refer_external') {
                             $scope.referExternal = {
                                 "date": new Date()
                             };
@@ -98,7 +129,7 @@ angular.module('complaints').controller(
                     }
 
                     function removeApprover(approver) {
-                        _.remove($scope.complaint.approvers, function(object) {
+                        _.remove($scope.closeComplaintRequest.participants, function(object) {
                             return object === approver;
                         });
                     }
@@ -127,14 +158,25 @@ angular.module('complaints').controller(
                         modalInstance.result.then(function(data) {
                             if (data) {
                                 var approver = {
-                                    "approverName": data.name,
-                                    "id": null, //proveri id dali treba da e null??????????????
-                                    "value": data.object_id_s
+                                    className: "com.armedia.acm.services.participants.model.AcmParticipant",
+                                    objectType: null,
+                                    objectId: null,
+                                    participantType: "approver",
+                                    participantLdapId: data.email_lcs,
+                                    created: null,
+                                    creator: null,
+                                    modified: null,
+                                    modifier: null,
+                                    privileges: [],
+                                    replaceChildrenParticipant: false,
+                                    isEditableUser: true,
+                                    isEditableType: true,
+                                    isDeletable: true
                                 };
                                 if (index > -1) {
-                                    $scope.complaint.approvers[index] = approver;
+                                    $scope.closeComplaintRequest.participants[index] = approver;
                                 } else {
-                                    $scope.complaint.approvers.push(approver);
+                                    $scope.closeComplaintRequest.participants.push(approver);
                                 }
                             }
                         }, function() {
@@ -145,18 +187,20 @@ angular.module('complaints').controller(
                     function searchCase(caseNumber) {
                         CaseInfoService.getCaseInfoByNumber(caseNumber).then(function(caseInfo) {
                             $scope.objectId = caseInfo.id;
-                            $scope.complaint.existingCase.caseNumber = caseInfo.caseNumber;
-                            $scope.complaint.existingCase.caseTitle = caseInfo.title;
-                            $scope.complaint.existingCase.caseCreationDate = caseInfo.created; //Tuka so date vidi!!!
-                            $scope.complaint.existingCase.casePriority = caseInfo.priority;
+                            $scope.existingCase.caseNumber = caseInfo.caseNumber;
+                            $scope.closeComplaintRequest.disposition.existingCaseNumber = caseInfo.caseNumber;
+                            $scope.existingCase.caseTitle = caseInfo.title;
+                            $scope.existingCase.caseCreationDate = caseInfo.created; //Tuka so date vidi!!!
+                            $scope.existingCase.casePriority = caseInfo.priority;
                         });
                     }
 
                     function save() {
                         $scope.loading = true;
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                        $http.post('https://acm-arkcase/arkcase/api/latest/plugin/complaint/close?mode=123', $scope.complaint).then(function(data) {
+                        $http.post('https://acm-arkcase/arkcase/api/latest/plugin/complaint/close?mode=create', $scope.closeComplaintRequest).then(function(data) {
                             console.log(data);
+                            $modalInstance.dismiss();
                         });
                     }
 
