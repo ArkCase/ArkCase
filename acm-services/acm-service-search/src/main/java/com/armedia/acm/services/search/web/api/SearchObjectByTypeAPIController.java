@@ -415,6 +415,10 @@ public class SearchObjectByTypeAPIController
                 {
                     query += "\"" + searchQuery + "\"";
                 }
+                else
+                {
+                    query += searchQuery;
+                }
                 return query;
             }).collect(Collectors.joining(" " + SearchConstants.OPERATOR_OR + " ", "fq=", ""));
 
