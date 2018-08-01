@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('directives').controller('Directives.NewComplaintCoreParticipantsModalController', [ '$scope', '$modal', '$modalInstance', '$translate', 'UtilService', 'params', function($scope, $modal, $modalInstance, $translate, Util, paramsOwn) {
+angular.module('directives').controller('Directives.NewComplaintCaseCoreParticipantsModalController', [ '$scope', '$modal', '$modalInstance', '$translate', 'UtilService', 'params', function($scope, $modal, $modalInstance, $translate, Util, paramsOwn) {
 
     $scope.onClickOk = function() {
         $modalInstance.close({
