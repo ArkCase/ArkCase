@@ -53,6 +53,7 @@
     </bean>
     <bean id="casefileDocumentHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CasefileDocumentHandler"
         parent="pdfDocumentGenerator">
+        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
         <property name="dao" ref="caseFileDao"/>
     </bean>
 

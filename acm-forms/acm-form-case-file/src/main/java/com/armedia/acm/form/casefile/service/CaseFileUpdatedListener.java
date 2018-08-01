@@ -60,13 +60,12 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
         String formsType = "";
         try
         {
-            formsType = jsonPropertiesManagementService.getProperty("formsType").toString();
+            formsType = jsonPropertiesManagementService.getProperty("formsType").get("formsType").toString();
         }
         catch (Exception e)
         {
             String msg = "Can't retrieve application property";
             LOG.error(msg, e);
-            // throw new AcmPropertiesManagementException(msg, e);
         }
 
         if (formsType.equals("frevvo"))
