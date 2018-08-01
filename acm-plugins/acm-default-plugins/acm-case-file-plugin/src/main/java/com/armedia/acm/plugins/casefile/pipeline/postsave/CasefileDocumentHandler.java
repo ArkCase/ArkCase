@@ -31,6 +31,7 @@ import static com.armedia.acm.plugins.casefile.model.CaseFileConstants.NEW_FILE;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
@@ -50,28 +51,43 @@ public class CasefileDocumentHandler extends PDFCasefileDocumentGenerator<CaseFi
     /**
      * Logger instance.
      */
+    private JsonPropertiesManagementService jsonPropertiesManagementService;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(CaseFile casefile, CaseFilePipelineContext ctx) throws PipelineProcessException
     {
-        log.debug("Entering pipeline handler for complaint with id [{}] and title [{}]", casefile.getId(), casefile.getTitle());
-
-        // ensure the SQL of all prior handlers is visible to this handler
-        getDao().getEm().flush();
-
+        String formsType = "";
         try
         {
-            generatePdf(casefile.getObjectType(), casefile.getId(), ctx);
+            formsType = jsonPropertiesManagementService.getProperty("formsType").get("formsType").toString();
         }
-        catch (ParserConfigurationException e)
+        catch (Exception e)
         {
-            log.warn("Unable to generate pdf document for the complaint with id [{}] and title [{}]", casefile.getId(),
-                    casefile.getTitle());
-            throw new PipelineProcessException(e);
+            String msg = "Can't retrieve application property";
+            log.error(msg, e);
         }
 
-        log.debug("Exiting pipeline handler for object: [{}]", casefile);
+        if (!formsType.equals("frevvo"))
+        {
+            log.debug("Entering pipeline handler for complaint with id [{}] and title [{}]", casefile.getId(), casefile.getTitle());
+
+            // ensure the SQL of all prior handlers is visible to this handler
+            getDao().getEm().flush();
+
+            try
+            {
+                generatePdf(casefile.getObjectType(), casefile.getId(), ctx);
+            }
+            catch (ParserConfigurationException e)
+            {
+                log.warn("Unable to generate pdf document for the complaint with id [{}] and title [{}]", casefile.getId(),
+                        casefile.getTitle());
+                throw new PipelineProcessException(e);
+            }
+
+            log.debug("Exiting pipeline handler for object: [{}]", casefile);
+        }
     }
 
     @Override
@@ -99,6 +115,11 @@ public class CasefileDocumentHandler extends PDFCasefileDocumentGenerator<CaseFi
                 }
             }
         }
+    }
+
+    public void setJsonPropertiesManagementService(JsonPropertiesManagementService jsonPropertiesManagementService)
+    {
+        this.jsonPropertiesManagementService = jsonPropertiesManagementService;
     }
 
 }

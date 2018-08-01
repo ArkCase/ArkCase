@@ -75,6 +75,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * PDF document generator built upon XSL-FO library (Apache FOP). Created by Petar Ilin <petar.ilin@armedia.com> on
@@ -131,6 +132,51 @@ public class PdfServiceImpl implements PdfService
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
 
             parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));
+
+            try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
+            {
+                Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, os);
+                Result result = new SAXResult(fop.getDefaultHandler());
+                transformer.transform(source, result);
+            }
+
+        }
+        catch (FOPException | TransformerException | IOException e)
+        {
+            log.error("Unable to generate PDF document", e);
+            throw new PdfServiceException(e);
+        }
+        return filename;
+    }
+
+    /**
+     * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
+     * responsible for deleting the file afterwards (not to leave mess behind)
+     *
+     * @param xslFile
+     *            XSL-FO stylesheet
+     * @param source
+     *            XML data source required for XML transformation
+     * @return path to the newly generated PDF file (random filename stored in temp folder)
+     * @throws PdfServiceException
+     *             on PDF creation error
+     */
+    @Override
+    public String generatePdf(File xslFile, Source source) throws PdfServiceException
+    {
+        // create a temporary file name
+        String filename = String.format("%s/acm-%s.pdf", System.getProperty("java.io.tmpdir"), UUID.randomUUID());
+        log.debug("PDF creation: using [{}] as temporary file name", filename);
+        try
+        {
+            // Base URI is where the FOP engine will be resolving URIs against
+            URI baseURI = xslFile.getParentFile().toURI();
+            log.debug("Using [{}] as FOP base URI", baseURI);
+            FopFactory fopFactory = FopFactory.newInstance(baseURI);
+            FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
 
             try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
             {
