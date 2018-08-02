@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.casefile.pipeline.postsave;
 /*-
 * #%L
-* ACM Default Plugin: Complaints
+* ACM Default Plugin: Case File
 * %%
 * Copyright (C) 2014 - 2018 ArkCase LLC
 * %%
@@ -70,7 +70,7 @@ public class CasefileDocumentHandler extends PDFCasefileDocumentGenerator<CaseFi
 
         if (!formsType.equals("frevvo"))
         {
-            log.debug("Entering pipeline handler for complaint with id [{}] and title [{}]", casefile.getId(), casefile.getTitle());
+            log.debug("Entering pipeline handler for case file with id [{}] and title [{}]", casefile.getId(), casefile.getTitle());
 
             // ensure the SQL of all prior handlers is visible to this handler
             getDao().getEm().flush();
@@ -81,7 +81,7 @@ public class CasefileDocumentHandler extends PDFCasefileDocumentGenerator<CaseFi
             }
             catch (ParserConfigurationException e)
             {
-                log.warn("Unable to generate pdf document for the complaint with id [{}] and title [{}]", casefile.getId(),
+                log.warn("Unable to generate pdf document for the case file with id [{}] and title [{}]", casefile.getId(),
                         casefile.getTitle());
                 throw new PipelineProcessException(e);
             }
@@ -107,7 +107,7 @@ public class CasefileDocumentHandler extends PDFCasefileDocumentGenerator<CaseFi
                     }
                     catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
                     {
-                        log.warn("Unable to delete ecm file with id [{}] for the complaint with id [{}] and title [{}]", fileId,
+                        log.warn("Unable to delete ecm file with id [{}] for the case file with id [{}] and title [{}]", fileId,
                                 casefile.getId(),
                                 casefile.getTitle());
                         throw new PipelineProcessException(e);

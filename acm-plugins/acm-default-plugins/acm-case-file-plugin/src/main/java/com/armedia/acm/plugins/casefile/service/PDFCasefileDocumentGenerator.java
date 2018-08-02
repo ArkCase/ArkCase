@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.casefile.service;
 /*-
  * #%L
- * ACM Default Plugin: Complaints
+ * ACM Default Plugin: Case File
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -81,17 +81,17 @@ public class PDFCasefileDocumentGenerator<D extends AcmAbstractDao, T extends Ca
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public void generatePdf(String objectType, Long complaintId) throws ParserConfigurationException
+    public void generatePdf(String objectType, Long caseFileId) throws ParserConfigurationException
     {
-        generatePdf(objectType, complaintId, null);
+        generatePdf(objectType, caseFileId, null);
     }
 
-    public void generatePdf(String objectType, Long complaintId, CaseFilePipelineContext ctx) throws ParserConfigurationException
+    public void generatePdf(String objectType, Long caseFileId, CaseFilePipelineContext ctx) throws ParserConfigurationException
     {
         if (getDao().getSupportedObjectType().equals(objectType))
         {
 
-            T businessObject = (T) getDao().find(complaintId);
+            T businessObject = (T) getDao().find(caseFileId);
 
             if (businessObject != null)
             {
