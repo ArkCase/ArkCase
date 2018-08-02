@@ -71,11 +71,16 @@ public class CaseFileFactory extends FrevvoFormFactory
     private PersonAssociationDao personAssociationDao;
     private EcmFileService ecmFileService;
 
+    public CaseFile makeCaseFile()
+    {
+        return new CaseFile();
+    }
+
     public CaseFile asAcmCaseFile(CaseFileForm form, CaseFile caseFile)
     {
         if (caseFile == null)
         {
-            caseFile = new CaseFile();
+            caseFile = makeCaseFile();
         }
 
         buildGeneralInformation(form, caseFile);
