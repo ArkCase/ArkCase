@@ -361,6 +361,31 @@
             "approverDecision": "Принятие решения"
         }
     },
+    "cases.comp.newCase": {
+        "title": "ru_New Case File",
+        "editCase.title": "ru_Edit Case File",
+        "caseTitle": "ru_Case Title",
+        "caseTitle.placeholder": "ru_Enter Case File Title",
+        "caseType": "ru_Case Type",
+        "initiator": "ru_Initiator",
+        "initiator.placeholder": "ru_Select Initiator",
+        "description": "ru_Description",
+        "people": {
+            "title": "ru_People",
+            "selectPerson.placeholder": "ru_Search existing Person",
+            "personType": "ru_Person Type"
+        },
+        "participants": {
+            "title": "ru_Participants",
+            "selectParticipant.placeholder": "ru_Select Participant",
+            "participantType": "ru_Participant Type"
+        },
+        "cancelButton": "ru_Cancel",
+        "saveButton": "ru_Save Case File",
+        "updateButton": "ru_Update Case File",
+        "removeButton": "ru_Remove",
+        "addButton": "ru_Add Another"
+    },
     "cases.userOrGroupSearch": {
         "id": "ПоискольПзователей",
         "title": "Поиск пользователей / групп",
