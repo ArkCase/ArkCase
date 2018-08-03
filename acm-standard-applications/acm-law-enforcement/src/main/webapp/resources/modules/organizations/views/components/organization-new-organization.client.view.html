@@ -221,15 +221,6 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-4 form-group">
-                            <label for="country" translate>
-                                organizations.comp.newOrganization.locations.country</label>
-                            <select id="country" class="form-control" ng-model="organization.defaultAddress.country">
-                                <option ng-repeat="option in countries" value="{{option.key}}">
-                                    {{option.value | translate}}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4 form-group">
                             <label for="loctype" translate>
                                 organizations.comp.newOrganization.locations.type</label>
                             <select id="loctype" class="form-control" ng-model="organization.defaultAddress.type">
@@ -238,8 +229,6 @@
                                 </option>
                             </select>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-4 form-group">
                             <label for="" translate>
                                 organizations.comp.newOrganization.locations.streetAddress</label>
@@ -247,31 +236,42 @@
                                     class="input-md form-control"
                                     placeholder="{{ 'organizations.comp.newOrganization.locations.streetAddress.placeholder' | translate }}">
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-4 form-group">
                             <label for="streetAddress" translate>
                                 organizations.comp.newOrganization.locations.streetAddress2</label>
                             <input id="" type="text" ng-model="organization.defaultAddress.streetAddress2" class="input-md form-control"
                                     placeholder="{{ 'organizations.comp.newOrganization.locations.streetAddress2.placeholder' | translate }}">
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-4 form-group">
                             <label for="city" translate>
                                 organizations.comp.newOrganization.locations.city</label>
                             <input id="city" for="" type="text" ng-model="organization.defaultAddress.city" class="input-md form-control"
                                     placeholder="{{ 'organizations.comp.newOrganization.locations.city.placeholder' | translate }}">
                         </div>
-                        <div class="col-sm-3 form-group">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 form-group">
                             <label for="state" translate>
                                 organizations.comp.newOrganization.locations.state</label>
                             <input id="state" type="text" ng-model="organization.defaultAddress.state" class="input-md form-control"
                                     placeholder="{{ 'organizations.comp.newOrganization.locations.state.placeholder' | translate }}">
                         </div>
-                        <div class="col-sm-3 form-group">
+                        <div class="col-sm-2 form-group">
                             <label for="zip" translate>
                                 organizations.comp.newOrganization.locations.zip</label>
                             <input id="zip" type="text" ng-model="organization.defaultAddress.zip" class="input-md form-control"
                                     placeholder="{{ 'organizations.comp.newOrganization.locations.zip.placeholder' | translate }}">
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label for="country" translate>
+                                organizations.comp.newOrganization.locations.country</label>
+                            <select id="country" class="form-control" ng-model="organization.defaultAddress.country">
+                                <option ng-repeat="option in countries" value="{{option.key}}">
+                                    {{option.value | translate}}
+                                </option>
+                            </select>
                         </div>
                         <div class="col-sm-2 form-group">
                             <div class="pull-left">
