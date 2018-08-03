@@ -20,11 +20,7 @@ public class CloseComplaintHandler
     public void execute(CloseComplaintRequest entity, CloseComplaintPipelineContext pipelineContext)
     {
         String mode = (String) pipelineContext.getPropertyValue("mode");
-        Complaint complaintTest = (Complaint) pipelineContext.getPropertyValue("complaint");
-        Complaint complaintTest1 = pipelineContext.getComplaint();
         Complaint complaint = complaintDao.find(entity.getComplaintId());
-        // Preku context get/set
-        // Update Status to "IN APPROVAL"
         if (!complaint.getStatus().equals("IN APPROVAL") && !"edit".equals(mode))
         {
             complaint.setStatus("IN APPROVAL");

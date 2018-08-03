@@ -18,6 +18,7 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
         capacity: 1
     });
     var complaintGetUrl = 'api/latest/plugin/complaint/byId/';
+    var complaintUrl = 'api/latest/plugin/complaint/';
 
     var Service = $resource('api/latest/plugin', {}, {
 
@@ -61,6 +62,12 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
             url: complaintGetUrl + ':id',
             cache: complaintCache,
             isArray: false
+        },
+
+        close: {
+            method: 'POST',
+            url: complaintUrl + "close/" + ':mode',
+            cache: false
         }
     });
 
@@ -118,6 +125,19 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
                 if (Service.validateComplaintInfo(data)) {
                     return data;
                 }
+            }
+        });
+    };
+
+    Service.closeComplaint = function(mode, data) {
+        return Util.serviceCall({
+            service: Service.close,
+            param: {
+                mode: mode
+            },
+            data: data,
+            onSuccess: function(data) {
+                return data;
             }
         });
     };

@@ -48,17 +48,16 @@ public class CloseComplaintFormAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
     private CloseComplaintService closeComplaintService;
 
-    @RequestMapping(value = "/close", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/close/{mode}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Boolean completeTask(
-            @RequestParam(value = "mode", required = true) String mode, @RequestBody CloseComplaintRequest form, Authentication auth,
+            @PathVariable String mode, @RequestBody CloseComplaintRequest form, Authentication auth,
             HttpServletRequest request, HttpSession session)
     {
         log.info("Closing complaint with id {}...", form.getComplaintId());
 
         try
         {
-            // Tuka CloseCompliantRequest treba da go zemam od UI
             closeComplaintService.save(form, auth, mode);
         }
         catch (Exception e)

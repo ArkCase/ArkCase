@@ -316,6 +316,48 @@
             "approverDecision": "承認決定"
         }
     },
+    "complaints.comp.closeComplaint": {
+        "title": "ja_Close Complaint",
+        "info": "ja_Incident Information",
+        "infoMessage": "ja_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "ja_Complaint Title",
+        "information": {
+            "title": "ja_Close Complaint Information",
+            "close.date": "ja_Complaint Close Date",
+            "complaint.number": "ja_Complaint Number",
+            "complaint.disposition": "ja_Complaint Disposition"
+        },
+        "add.existing.case": {
+            "title": "ja_Add Existing Case",
+            "search": "ja_Search",
+            "case": {
+                "number": "ja_Enter Case Number",
+                "title": "ja_Case Title",
+                "date": "ja_Case Creation Date",
+                "priority": "ja_Case Priority"
+            }
+        },
+        "refer.external": {
+            "title": "ja_Refer External",
+            "name": "ja_Name of Agency",
+            "date": "ja_Referral Date",
+            "contact": {
+                "title": "ja_Contact",
+                "name": "ja_Contact Name",
+                "type": "ja_Type",
+                "value": "ja_Value"
+            }
+        },
+        "approver": {
+            "placeholder": "ja_Select Approver",
+            "label": "ja_Select Approver",
+            "addAnother": "ja_Add another",
+            "remove": "ja_Remove Approver",
+            "pickerModal.header": "ja_Choose Approver"
+        },
+        "cancelButton": "ja_Cancel",
+        "saveButton": "ja_Save Complaint"
+    },
     "complaints.comp.newComplaint": {
         "title": "ja_New Complaint",
         "info": "ja_Incident Information",

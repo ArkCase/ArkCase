@@ -29,7 +29,7 @@ public class CloseComplaintPipelineContext extends AbstractPipelineContext
     private Complaint complaint;
 
     /**
-     * Close Complaint.
+     * Close Complaint Request.
      */
     private CloseComplaintRequest closeComplaintRequest;
 

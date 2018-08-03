@@ -281,8 +281,8 @@
         <property name="closeComplaintTaskName" ref="closeComplaintTaskName"/>
     </bean>
 
-    <bean id="checkCloseComplaintHandler"
-        class="com.armedia.acm.plugins.complaint.pipeline.presave.CheckCloseComplaintHandler">
+    <bean id="checkCloseComplaintRequest"
+        class="com.armedia.acm.plugins.complaint.pipeline.presave.CheckCloseComplaintRequest">
         <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="userActionExecutor" ref="userActionExecutor"/>
         <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
@@ -300,7 +300,7 @@
     <bean id="closeComplaintPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
-                <ref bean="checkCloseComplaintHandler"/>
+                <ref bean="checkCloseComplaintRequest"/>
             </list>
         </property>
         <property name="postSaveHandlers">

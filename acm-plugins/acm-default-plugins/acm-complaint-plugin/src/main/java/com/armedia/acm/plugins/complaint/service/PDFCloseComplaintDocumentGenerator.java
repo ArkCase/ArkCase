@@ -8,13 +8,13 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.CloseComplaintPipelineContext;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.mule.util.FileUtils;
 import org.slf4j.Logger;
@@ -34,6 +34,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T extends Complaint>
 {
@@ -134,83 +135,66 @@ public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T exte
 
     }
 
-    // buildXmlFile
     public Document buildXmlFile(T businessObject, CloseComplaintPipelineContext ctx) throws ParserConfigurationException
     {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
         Document document = docBuilder.newDocument();
 
-        // create <complaint>, the root of the document
         Element rootElem = document.createElement("closeComplaint");
         document.appendChild(rootElem);
 
         CloseComplaintRequest closeComplaintRequest = ctx.getCloseComplaintRequest();
-        Complaint complaint = (Complaint) businessObject;
+        Complaint complaint = businessObject;
 
-        if (complaint.getDisposition().getExistingCaseNumber() != null)
-        {
-            CaseFile existingCase = caseFileDao.findByCaseNumber(complaint.getDisposition().getExistingCaseNumber());
-            addElement(document, rootElem, "existingCaseNumber", complaint.getDisposition().getExistingCaseNumber(),
-                    true);
-            addElement(document, rootElem, "existingCaseSearch", "Search", true);
-        }
 
         addElement(document, rootElem, "closeDate", closeComplaintRequest.getDisposition().getCloseDate().toString(), true);
         addElement(document, rootElem, "complaintNumber", complaint.getComplaintNumber(), true);
-        addElement(document, rootElem, "complaintDisposition", complaint.getDisposition().getDispositionType(), true);
+        addElement(document, rootElem, "complaintDisposition", closeComplaintRequest.getDisposition().getDispositionType(), true);
 
-        addElement(document, rootElem, "referExternalNameOfAgency", complaint.getDisposition().getReferExternalOrganizationName(), true);
-        addElement(document, rootElem, "referExternalDate", "KLAJ DATA!", true);
-        addElement(document, rootElem, "referExternalContactName", complaint.getDisposition().getReferExternalContactPersonName(), true);
+        String caseId = ctx.getCloseComplaintRequest().getDisposition().getExistingCaseNumber();
+        if (caseId != null)
+        {
+            // CaseFile existingCase = caseFileDao.findByCaseNumber(caseId);
+            addElement(document, rootElem, "existingCaseNumber", caseId, true);
+            addElement(document, rootElem, "existingCaseSearchBtn", "Search", true);
+            // addElement(document, rootElem, "existingCaseTitle", ctx.getPropertyValue("existingCaseTitle").toString(),
+            // true);
+            // addElement(document, rootElem, "existingCaseCreated",
+            // ctx.getPropertyValue("existingCaseCreated").toString(), true);
+            // addElement(document, rootElem, "existingCasePriority",
+            // ctx.getPropertyValue("existingCasePriority").toString(), true);
+        }
 
-        addElement(document, rootElem, "referExternalContactType", complaint.getDisposition().getReferExternalContactMethod().getType(),
-                true);
-        addElement(document, rootElem, "referExternalContactValue", complaint.getDisposition().getReferExternalContactMethod().getValue(),
-                true);
+        if (closeComplaintRequest.getDisposition().getReferExternalContactMethod() != null)
+        {
+            addElement(document, rootElem, "referExternalNameOfAgency",
+                    closeComplaintRequest.getDisposition().getReferExternalOrganizationName(), true);
+            addElement(document, rootElem, "referExternalDate", "KLAJ DATA!", true);
+            addElement(document, rootElem, "referExternalContactName",
+                    closeComplaintRequest.getDisposition().getReferExternalContactPersonName(), true);
 
-        // addElement(document, rootElem, "existingCaseTitle", existingCase.getTitle(),
-        // true);
-        // addElement(document, rootElem, "existingCaseCreationDate", existingCase.getCreated().toString(),
-        // true);
-        // addElement(document, rootElem, "existingCasePriority", existingCase.getPriority(),
-        // true);
+            addElement(document, rootElem, "referExternalContactType",
+                    closeComplaintRequest.getDisposition().getReferExternalContactMethod().getType(),
+                    true);
+            addElement(document, rootElem, "referExternalContactValue",
+                    closeComplaintRequest.getDisposition().getReferExternalContactMethod().getValue(),
+                    true);
+        }
 
-        // if (complaint.getDefaultAddress() != null)
-        // {
-        // PostalAddress location = complaint.getDefaultAddress();
-        // addElement(document, rootElem, "locationType", location.getType(), false);
-        // addElement(document, rootElem, "locationAddress", location.getStreetAddress(), false);
-        // addElement(document, rootElem, "locationCity", location.getCity(), false);
-        // addElement(document, rootElem, "locationState", location.getState(), false);
-        // addElement(document, rootElem, "locationZip", location.getZip(), false);
-        // addElement(document, rootElem, "locationAddedBy", location.getCreator(), false);
-        // }
-        // else
-        // {
-        // addElement(document, rootElem, "locationType", "N/A", false);
-        // addElement(document, rootElem, "locationAddress", "N/A", false);
-        // addElement(document, rootElem, "locationCity", "N/A", false);
-        // addElement(document, rootElem, "locationState", "N/A", false);
-        // addElement(document, rootElem, "locationZip", "N/A", false);
-        // addElement(document, rootElem, "locationAddedBy", "N/A", false);
-        // }
-        //
-        // if (!complaint.getPersonAssociations().isEmpty())
+        if (!closeComplaintRequest.getParticipants().isEmpty())
+        {
+            Element participantsElement = document.createElement("participants");
+            rootElem.appendChild(participantsElement);
 
-        // if (!closeComplaintRequest.getParticipants().isEmpty())
-        // {
-        // Element participantsElement = document.createElement("participants");
-        // rootElem.appendChild(participantsElement);
-        //
-        // List<AcmParticipant> participants = closeComplaintRequest.getParticipants();
-        // for (AcmParticipant participant : participants)
-        // {
-        // Element participantElement = document.createElement("participant");
-        // participantsElement.appendChild(participantElement);
-        // addElement(document, participantElement, "participantName", participant.getParticipantLdapId(), false);
-        // }
-        // }
+            List<AcmParticipant> participants = closeComplaintRequest.getParticipants();
+            for (AcmParticipant participant : participants)
+            {
+                Element participantElement = document.createElement("participant");
+                participantsElement.appendChild(participantElement);
+                addElement(document, participantElement, "participantName", participant.getParticipantLdapId(), false);
+            }
+        }
         return document;
 
     }

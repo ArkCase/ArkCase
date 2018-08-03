@@ -25,6 +25,9 @@ angular.module('complaints').controller(
                             referExternalContactPersonName: null,
                             referExternalContactMethod: null,
                             existingCaseNumber: null,
+                            existingCaseTitle: null,
+                            existingCaseDate: null,
+                            existingCasePriority: null,
                             created: null,
                             creator: null,
                             modified: null,
@@ -116,6 +119,22 @@ angular.module('complaints').controller(
                             $scope.referExternal = {
                                 "date": new Date()
                             };
+
+                            $scope.closeComplaintRequest.disposition.referExternalContactMethod = {
+                                created: null,
+                                creator: null,
+                                modified: null,
+                                modifier: null,
+                                status: null,
+                                type: null,
+                                subType: null,
+                                types: null,
+                                value: null,
+                                description: null,
+                                className: "com.armedia.acm.plugins.addressable.model.ContactMethod",
+                                objectType: "CONTACT_METHOD"
+                            };
+
                             $scope.showReferExternal = true;
                             $scope.showExistingCase = false;
                         } else {
@@ -184,22 +203,22 @@ angular.module('complaints').controller(
                         });
                     }
 
-                    function searchCase(caseNumber) {
-                        CaseInfoService.getCaseInfoByNumber(caseNumber).then(function(caseInfo) {
+                    function searchCase() {
+                        CaseInfoService.getCaseInfoByNumber($scope.closeComplaintRequest.disposition.existingCaseNumber).then(function(caseInfo) {
                             $scope.objectId = caseInfo.id;
                             $scope.existingCase.caseNumber = caseInfo.caseNumber;
                             $scope.closeComplaintRequest.disposition.existingCaseNumber = caseInfo.caseNumber;
-                            $scope.existingCase.caseTitle = caseInfo.title;
-                            $scope.existingCase.caseCreationDate = caseInfo.created; //Tuka so date vidi!!!
-                            $scope.existingCase.casePriority = caseInfo.priority;
+                            $scope.closeComplaintRequest.disposition.existingCaseTitle = caseInfo.title;
+                            $scope.closeComplaintRequest.disposition.existingCaseCreated = caseInfo.created;
+                            $scope.closeComplaintRequest.disposition.existingCasePriority = caseInfo.priority;
                         });
                     }
 
                     function save() {
                         $scope.loading = true;
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                        $http.post('https://acm-arkcase/arkcase/api/latest/plugin/complaint/close?mode=create', $scope.closeComplaintRequest).then(function(data) {
-                            console.log(data);
+
+                        ComplaintInfoService.closeComplaint('create', $scope.closeComplaintRequest).then(function(data) {
                             $modalInstance.dismiss();
                         });
                     }

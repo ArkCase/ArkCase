@@ -60,16 +60,16 @@
                 <div class="panel-body">
                     <div class="row form-group">
                         <div class="col-sm-6">
-                            <label translate>complaints.comp.closeComplaint.add.existing.case.case.number <span
+                            <label translate>complaints.comp.closeComplaint.add.existing.case.case.number<span
                                     class="required-asterisk">*</span></label>
                             <div class="input-group">
                                 <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required"
-                                        ng-model="caseNumber" required>
+                                        ng-model="closeComplaintRequest.disposition.existingCaseNumber" required>
                                 <div class="input-group-btn">
 
                                     <button type="button" class="btn btn-primary">
                                         <i class="fa fa-search"></i>
-                                        <span translate="" class="ng-scope" ng-click="searchCase(caseNumber)">Search</span>
+                                        <span translate="" class="ng-scope" ng-click="searchCase()">Search</span>
                                     </button>
                                 </div>
                             </div>
@@ -78,12 +78,14 @@
                     <div class="row form-group">
                         <div class="col-sm-6">
                             <label translate>complaints.comp.closeComplaint.add.existing.case.case.title</label>
-                            <input type="text" class="form-control" ng-model="existingCase.caseTitle" disabled />
+                            <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.existingCaseTitle"
+                                    disabled />
                         </div>
                         <div class="col-sm-3">
                             <label translate>complaints.comp.closeComplaint.add.existing.case.case.date</label>
                             <p class="input-group">
-                                <input type="text" class="form-control" ng-model="existingCase.caseCreationDate" disabled />
+                                <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.existingCaseCreated"
+                                        disabled />
                                 <span class="input-group-btn">
                                      <button type="button" class="btn btn-default" disabled>
                                              <i class="fa fa-calendar"></i>
@@ -93,7 +95,8 @@
                         </div>
                         <div class="col-sm-3">
                             <label translate>complaints.comp.closeComplaint.add.existing.case.case.priority</label>
-                            <input type="text" class="form-control" ng-model="existingCase.casePriority" disabled />
+                            <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.existingCasePriority"
+                                    disabled />
                         </div>
                     </div>
                 </div>
@@ -112,7 +115,8 @@
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.name <span
                                     class="required-asterisk">*</span></label>
-                            <input type="text" class="form-control" ng-model="closeComplaintRequest.referExternal.agency" required />
+                            <input type="text" class="form-control"
+                                    ng-model="closeComplaintRequest.disposition.referExternalOrganizationName" required />
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.date</label>
@@ -131,7 +135,8 @@
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.contact.name <span
                                     class="required-asterisk">*</span></label>
-                            <input type="text" class="form-control" ng-model="closeComplaintRequest.referExternal.contact" required />
+                            <input type="text" class="form-control"
+                                    ng-model="closeComplaintRequest.disposition.referExternalContactPersonName" required />
                         </div>
                     </div>
 
@@ -145,9 +150,10 @@
                             <div class="panel-body">
                                 <div class="row form-group">
                                     <div class="col-sm-6">
-                                        <label translate>complaints.comp.closeComplaint.refer.external.contact.type <span
-                                                class="required-asterisk">*</span></label>
-                                        <select ng-model="closeComplaintRequest.referExternal.contact.type" class="form-control input-md"
+                                        <span translate>complaints.comp.closeComplaint.refer.external.contact.type <label
+                                                class="required-asterisk">*</label></span>
+                                        <select ng-model="closeComplaintRequest.disposition.referExternalContactMethod.type"
+                                                class="form-control input-md"
                                                 required>
                                             <option ng-repeat="option in contactTypes" ng-value="option.value">
                                                 {{option.value}}
@@ -157,7 +163,8 @@
                                     <div class="col-sm-6">
                                         <label translate>complaints.comp.closeComplaint.refer.external.contact.value <span
                                                 class="required-asterisk">*</span></label>
-                                        <input type="text" class="form-control" ng-model="closeComplaintRequest.referExternal.contact.value"
+                                        <input type="text" class="form-control"
+                                                ng-model="closeComplaintRequest.disposition.referExternalContactMethod.value"
                                                 required />
                                     </div>
                                 </div>
@@ -192,7 +199,7 @@
                         </div>
                         <div class="pull-left">
                             <button type="button" class="btn btn-link form-control" ng-click="addNewApprover()"
-                                    ng-disabled="!participant.participantName" ng-show="$last">
+                                    ng-disabled="!participant.participantLdapId" ng-show="$last">
                                 <i class="fa fa-plus text-success"></i><span
                                     translate>complaints.comp.closeComplaint.approver.addAnother</span>
                             </button>
@@ -205,7 +212,7 @@
         <div class="well-sm">
             <div class="row">
                 <div class="col-sm-12 form-group">
-                    <summernote id="complaintDesc" config="options" ng-model=""></summernote>
+                    <summernote id="complaintDesc" config="options" ng-model="description"></summernote>
                 </div>
             </div>
         </div>
