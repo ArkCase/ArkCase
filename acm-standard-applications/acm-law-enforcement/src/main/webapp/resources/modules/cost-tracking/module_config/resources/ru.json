@@ -76,12 +76,32 @@
             }
         }
     },
-    "costTracking.comp.approvers": {
-        "title": "Утверждающие",
+    "costTracking.comp.tasks": {
+        "title": "Задания",
         "table.columns": {
-            "fullName": "Полное имя",
-            "userId": "Имя пользователя"
+            "title": "Заглавие",
+            "assignee": "Правопреемник",
+            "due": "В связи",
+            "status": "Положение дел",
+            "priority": "Приоритет",
+            "created": "Созданный"
         }
+    },
+    "costTracking.comp.expenses": {
+        "title": "Затраты",
+        "table.columns": {
+            "date": "Дата",
+            "title": "Заглавие",
+            "description": "Описание",
+            "amount": "Количество"
+        }
+    },
+    "costTracking.comp.documents": {
+        "title": "Документы",
+        "filterInputPlaceholder": "Фильтр",
+        "searchInputPlaceholder": "Поиск",
+        "newTask": "Новое задание",
+        "sendEmail": "Отправить электронное письмо"
     },
     "costTracking.tree": {
         "nodeTypes": {
@@ -89,7 +109,8 @@
             "person.label": "Человек",
             "summary.label": "Затраты",
             "tags.label": "Теги",
-            "approvers.label": "Утверждающие"
+            "tasks.label": "Задания",
+            "documents.label": "Документы"
         },
         "sorters": {
             "dateAsc": "Сортировка даты по возрастанию",

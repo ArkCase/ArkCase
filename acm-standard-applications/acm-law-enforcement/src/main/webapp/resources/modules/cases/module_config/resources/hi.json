@@ -361,6 +361,31 @@
             "approverDecision": "अपॉइवर डिसिसन"
         }
     },
+    "cases.comp.newCase": {
+        "title": "hi_New Case File",
+        "editCase.title": "hi_Edit Case File",
+        "caseTitle": "hi_Case Title",
+        "caseTitle.placeholder": "hi_Enter Case File Title",
+        "caseType": "hi_Case Type",
+        "initiator": "hi_Initiator",
+        "initiator.placeholder": "hi_Select Initiator",
+        "description": "hi_Description",
+        "people": {
+            "title": "hi_People",
+            "selectPerson.placeholder": "hi_Search existing Person",
+            "personType": "hi_Person Type"
+        },
+        "participants": {
+            "title": "hi_Participants",
+            "selectParticipant.placeholder": "hi_Select Participant",
+            "participantType": "hi_Participant Type"
+        },
+        "cancelButton": "hi_Cancel",
+        "saveButton": "hi_Save Case File",
+        "updateButton": "hi_Update Case File",
+        "removeButton": "hi_Remove",
+        "addButton": "hi_Add Another"
+    },
     "cases.userOrGroupSearch": {
         "id": "उपयोगकर्ताखोज",
         "title": "उपयोगकर्ता / समूह खोज",
