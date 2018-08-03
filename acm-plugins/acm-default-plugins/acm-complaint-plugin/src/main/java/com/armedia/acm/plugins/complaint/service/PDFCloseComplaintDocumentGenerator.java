@@ -8,6 +8,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.CloseComplaintPipelineContext;
@@ -147,7 +148,6 @@ public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T exte
         CloseComplaintRequest closeComplaintRequest = ctx.getCloseComplaintRequest();
         Complaint complaint = businessObject;
 
-
         addElement(document, rootElem, "closeDate", closeComplaintRequest.getDisposition().getCloseDate().toString(), true);
         addElement(document, rootElem, "complaintNumber", complaint.getComplaintNumber(), true);
         addElement(document, rootElem, "complaintDisposition", closeComplaintRequest.getDisposition().getDispositionType(), true);
@@ -155,15 +155,15 @@ public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T exte
         String caseId = ctx.getCloseComplaintRequest().getDisposition().getExistingCaseNumber();
         if (caseId != null)
         {
-            // CaseFile existingCase = caseFileDao.findByCaseNumber(caseId);
+            CaseFile existingCase = caseFileDao.findByCaseNumber(caseId);
             addElement(document, rootElem, "existingCaseNumber", caseId, true);
             addElement(document, rootElem, "existingCaseSearchBtn", "Search", true);
-            // addElement(document, rootElem, "existingCaseTitle", ctx.getPropertyValue("existingCaseTitle").toString(),
-            // true);
-            // addElement(document, rootElem, "existingCaseCreated",
-            // ctx.getPropertyValue("existingCaseCreated").toString(), true);
-            // addElement(document, rootElem, "existingCasePriority",
-            // ctx.getPropertyValue("existingCasePriority").toString(), true);
+            addElement(document, rootElem, "existingCaseTitle", ctx.getPropertyValue("existingCaseTitle").toString(),
+                    true);
+            addElement(document, rootElem, "existingCaseCreated",
+                    ctx.getPropertyValue("existingCaseCreated").toString(), true);
+            addElement(document, rootElem, "existingCasePriority",
+                    ctx.getPropertyValue("existingCasePriority").toString(), true);
         }
 
         if (closeComplaintRequest.getDisposition().getReferExternalContactMethod() != null)

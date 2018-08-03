@@ -63,6 +63,20 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
             isArray: false
         },
 
+        /**
+         * @ngdoc method
+         * @name get
+         * @methodOf services:Case.InfoService
+         *
+         * @description
+         * Query case data from database.
+         *
+         * @param {String} caseNumber  caseNumber
+         * @param {Function} onSuccess (Optional)Callback function of success query.
+         * @param {Function} onError (Optional) Callback function when fail.
+         *
+         * @returns {Object} Object returned by $resource
+         */
         getByNumber: {
             method: 'GET',
             url: complaintGetByNumberUrl,
@@ -131,13 +145,13 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
 
     /**
      * @ngdoc method
-     * @name getComplaintInfo
+     * @name getCaseInfoByNumber
      * @methodOf services:Complaint.InfoService
      *
      * @description
-     * Query complaint data
+     * Query complaint data by number
      *
-     * @param {Number} id  Complaint ID
+     * @param {String} caseNumber caseNumber
      *
      * @returns {Object} Promise
      */

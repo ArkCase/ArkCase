@@ -129,6 +129,20 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
         });
     };
 
+    /**
+     * @ngdoc method
+     * @name closeComplaint
+     * @methodOf services:Complaint.InfoService
+     *
+     * @description
+     * Close/Save complaint
+     *
+     * @param {String} mode mode
+     *
+     * @data {Object} data CloseComplaintRequest
+     *
+     * @returns {Object} Promise
+     */
     Service.closeComplaint = function(mode, data) {
         return Util.serviceCall({
             service: Service.close,
