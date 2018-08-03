@@ -156,6 +156,12 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return query.getResultList();
     }
 
+    @Transactional
+    public void deleteGroup(AcmGroup group)
+    {
+        getEm().remove(group);
+    }
+
     @Override
     protected Class<AcmGroup> getPersistenceClass()
     {
