@@ -1353,7 +1353,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
-        deleteFile(objectId, false);
+        deleteFile(objectId, true);
     }
 
     @Override
