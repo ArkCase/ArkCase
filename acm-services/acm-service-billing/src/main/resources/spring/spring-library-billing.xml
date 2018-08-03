@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="billingItemDao" class="com.armedia.acm.services.billing.dao.BillingItemDao"/>
+    
+    <bean id="billingInvoiceDao" class="com.armedia.acm.services.billing.dao.BillingInvoiceDao"/>
+
+    <bean id="billingEventPublisher" class="com.armedia.acm.services.billing.model.BillingEventPublisher"/>
+
+    <bean id="billingService" class="com.armedia.acm.services.billing.service.impl.BillingServiceImpl">
+        <property name="billingItemDao" ref="billingItemDao"/>
+        <property name="billingInvoiceDao" ref="billingInvoiceDao"/>
+        <property name="billingEventPublisher" ref="billingEventPublisher"/>
+        <property name="billingInvoiceBusinessRule" ref="billingInvoiceBusinessRule"/>
+    </bean>
+
+    <bean id="billingInvoiceBusinessRule" class="com.armedia.acm.services.billing.rules.BillingInvoiceBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
+        <property name="ruleSpreadsheetFilename" value="drools-billing-invoice-rules.xlsx"/>
+    </bean>
+
+    <bean id="billingItemToSolrTransformer" class="com.armedia.acm.services.billing.transformer.BillingItemToSolrTransformer">
+        <property name="billingItemDao" ref="billingItemDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="billingInvoiceToSolrTransformer" class="com.armedia.acm.services.billing.transformer.BillingInvoiceToSolrTransformer">
+        <property name="billingInvoiceDao" ref="billingInvoiceDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="billingAcmTaskActivitiEventHandler" class="com.armedia.acm.services.billing.listener.BillingAcmTaskActivitiEventHandler">
+        <property name="billingService" ref="billingService"/>
+        <property name="acmTimesheetDao" ref="acmTimesheetDao"/>
+        <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
+    </bean>
+
+</beans>

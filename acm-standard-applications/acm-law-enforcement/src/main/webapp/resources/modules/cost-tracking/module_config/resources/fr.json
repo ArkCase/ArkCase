@@ -76,12 +76,32 @@
             }
         }
     },
-    "costTracking.comp.approvers": {
-        "title": "Approbateurs",
+    "costTracking.comp.tasks": {
+        "title": "Les tâches",
         "table.columns": {
-            "fullName": "Nom complet",
-            "userId": "Nom d'utilisateur"
+            "title": "Titre",
+            "assignee": "Cessionnaire",
+            "due": "Dû",
+            "status": "Statut",
+            "priority": "Priorité",
+            "created": "Créé"
         }
+    },
+    "costTracking.comp.expenses": {
+        "title": "Dépenses",
+        "table.columns": {
+            "date": "Date",
+            "title": "Titre",
+            "description": "La description",
+            "amount": "Montant"
+        }
+    },
+    "costTracking.comp.documents": {
+        "title": "Documents",
+        "filterInputPlaceholder": "Filtre",
+        "searchInputPlaceholder": "Chercher",
+        "newTask": "Nouvelle tâche",
+        "sendEmail": "Envoyer un email"
     },
     "costTracking.tree": {
         "nodeTypes": {
@@ -89,7 +109,8 @@
             "person.label": "Personnes",
             "summary.label": "Frais",
             "tags.label": "Étiquettes",
-            "approvers.label": "Approbateurs"
+            "tasks.label": "Les tâches",
+            "documents.label": "Documents"
         },
         "sorters": {
             "dateAsc": "Trier Date Asc",

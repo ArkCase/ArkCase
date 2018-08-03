@@ -622,6 +622,15 @@
                 "modal.info": "La configuración tendrá efecto después de actualizar",
                 "modal.ok": "Proceder"
             },
+            "formsType.config": {
+                "title": "es_Forms Type Configuration",
+                "angular.label": "es_Use Angular Forms",
+                "frevvo.label": "es_Use Frevvo Forms",
+                "apply": "es_Apply",
+                "modal.title": "es_Information",
+                "modal.info": "es_Settings will take effect after refresh",
+                "modal.ok": "es_OK"
+            },
             "login.config": {
                 "title": "Configuración de acceso",
                 "idleLimit.label": "Límite inactivo de inicio de sesión (en milisegundos)",

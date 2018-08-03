@@ -569,6 +569,15 @@
                 "modal.info": "設定はリフレッシュ後に有効になります",
                 "modal.ok": "[OK]"
             },
+            "formsType.config": {
+                "title": "ja_Forms Type Configuration",
+                "angular.label": "ja_Use Angular Forms",
+                "frevvo.label": "ja_Use Frevvo Forms",
+                "apply": "ja_Apply",
+                "modal.title": "ja_Information",
+                "modal.info": "ja_Settings will take effect after refresh",
+                "modal.ok": "ja_OK"
+            },
             "login.config": {
                 "title": "ログインの設定",
                 "idleLimit.label": "ログインアイドル制限（ミリ秒単位）",
