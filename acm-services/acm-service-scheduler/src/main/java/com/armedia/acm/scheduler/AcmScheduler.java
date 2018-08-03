@@ -263,6 +263,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
 
         if (!configuration.getBoolean(SCHEDULE_ENABLED_KEY))
         {
+            log.info("Scheduler is disabled - removing all tasks");
             if (taskSchedulerFuture != null)
             {
                 taskSchedulerFuture.cancel(false);
@@ -295,6 +296,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
     {
         if (!configuration.has(TASKS_KEY) || configuration.isNull(TASKS_KEY))
         {
+            log.info("No tasks are defined - removing all tasks");
             tasks.clear();
             return;
         }
@@ -359,6 +361,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
 
             if (taskSchedulerFuture != null)
             {
+                log.info("Schedule interval changed - canceling existing scheduler");
                 taskSchedulerFuture.cancel(false);
             }
 
@@ -418,7 +421,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         log.debug("Updating configuration file...");
         if (taskSchedulerFuture == null)
         {
-            log.debug("Updating configuration canceled, SchedulerFuture is null");
+            log.warn("Updating configuration canceled, SchedulerFuture is null");
             return;
         }
         File configFile = FileUtils.getFile(configurationPath);
