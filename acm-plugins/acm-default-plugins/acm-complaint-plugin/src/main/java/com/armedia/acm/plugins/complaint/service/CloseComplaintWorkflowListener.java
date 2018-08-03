@@ -35,7 +35,6 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
     private void handleNewCloseComplaintRequest(CloseComplaintEvent closeComplaintEvent)
     {
-        // pdfCloseComplaintDocumentGenerator.generatePdf();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
         configuration.setEcmFile(closeComplaintEvent.getFrevvoUploadedFiles().getPdfRendition());
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);

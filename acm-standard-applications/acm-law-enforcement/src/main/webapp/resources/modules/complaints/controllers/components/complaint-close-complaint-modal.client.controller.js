@@ -16,8 +16,7 @@ angular.module('complaints').controller(
                     $scope.cancelModal = cancelModal;
                     //Objects
                     $scope.closeComplaintRequest = {
-                        // "id": null,
-                        complaintId: modalParams.info.complaintId, //Id na complaint
+                        complaintId: modalParams.info.complaintId, 
                         disposition: {
                             closeDate: new Date(),
                             dispositionType: "",
@@ -43,30 +42,6 @@ angular.module('complaints').controller(
                         modifier: null
                     // "description": ""
                     };
-                    /*$scope.complaint = {
-                        "complaintId": null,
-                        "status": "DRAFT",
-                        "participants": [ {} ],
-                        "created": "",
-                        "creator": "",
-                        "modified": "",
-                        "modifier": "",
-                        "information": {
-                            "id": modalParams.info.complaintId,
-                            "number": modalParams.info.complaintNumber,
-                            "date": new Date(),
-                            "option": "",
-                            "resolveOptions": null
-                        },
-                        "referExternal": null,
-                        "existingCase": {
-                            "caseNumber": null,
-                            "caseTitle": null,
-                            "caseCreationDate": null,//Tuka datata od selectiraniot case
-                            "casePriority": null
-                        }
-                    // "description": ""
-                    };*/
                     $scope.complaintDispositions = [];
                     $scope.contactTypes = [];
                     $scope.loading = false;
@@ -110,7 +85,6 @@ angular.module('complaints').controller(
                     });
 
                     function dispositionTypeChanged(temp) {
-                        //TUKA VIDI DRUG NACIN! PRERABOTI
                         if ($scope.closeComplaintRequest.disposition.dispositionType == 'add_existing_case') {
                             $scope.existingCase = {};
                             $scope.showReferExternal = false;

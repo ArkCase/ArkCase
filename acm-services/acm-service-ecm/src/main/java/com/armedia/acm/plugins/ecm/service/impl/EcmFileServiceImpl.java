@@ -661,10 +661,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String query = "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:" + "CONTAINER AND parent_object_id_i:"
                 + container.getContainerObjectId() + " AND parent_object_type_s:" + container.getContainerObjectType();
 
-        // String filterQuery = category == null ? "fq=hidden_b:false"
-        // : "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in
+        String filterQuery = category == null ? "fq=hidden_b:false"
+                : "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in
         // case some bad data gets through
-        String filterQuery = "";
 
         return findObjects(auth, container, container.getFolder().getId(), category, query, filterQuery, startRow, maxRows, sortBy,
                 sortDirection);
