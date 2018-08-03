@@ -14,8 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
-// OVAJ TREBA da se vika checkCloseComplaintRequest
-public class CheckCloseComplaintHandler implements PipelineHandler<CloseComplaintRequest, CloseComplaintPipelineContext>
+public class CheckCloseComplaintRequest implements PipelineHandler<CloseComplaintRequest, CloseComplaintPipelineContext>
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
     private AcmUserActionExecutor userActionExecutor;
@@ -34,7 +33,6 @@ public class CheckCloseComplaintHandler implements PipelineHandler<CloseComplain
             message = "Cannot unmarshall Close Complaint Form.";
         }
 
-        // Get Complaint depends on the complaint ID
         Complaint complaint = getComplaintDao().find(form.getComplaintId());
         if (complaint == null)
         {
@@ -46,7 +44,6 @@ public class CheckCloseComplaintHandler implements PipelineHandler<CloseComplain
             message = "The complaint is already in '" + complaint.getStatus() + "' mode. No further action will be taken.";
         }
 
-        // proverka message
         if (!message.isEmpty())
         {
             throw new PipelineProcessException(message);

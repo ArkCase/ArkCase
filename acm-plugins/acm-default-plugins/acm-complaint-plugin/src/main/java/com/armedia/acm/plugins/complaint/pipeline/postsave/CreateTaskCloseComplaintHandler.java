@@ -30,9 +30,6 @@ public class CreateTaskCloseComplaintHandler
                 complaint.getContainer().getAttachmentFolder().getId(), CLOSE_COMPLAINT_DOCUMENT);
 
         frevvoUploadedFile.setPdfRendition(existing);
-        // List<EcmFile> temp = new ArrayList<>();
-        // temp.add(existing);
-        // frevvoUploadedFile.setUploadedFiles(temp);
 
         CloseComplaintEvent event = new CloseComplaintEvent(complaint.getComplaintNumber(),
                 complaint.getComplaintId(),

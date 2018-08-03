@@ -47,8 +47,6 @@ public class ComplaintPipelineContext extends AbstractPipelineContext
      */
     private boolean newComplaint;
 
-    private boolean allowCloseComplaint;
-
     /**
      * IP Address.
      */

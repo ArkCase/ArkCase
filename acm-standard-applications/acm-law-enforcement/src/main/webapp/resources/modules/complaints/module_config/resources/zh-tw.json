@@ -316,6 +316,48 @@
             "approverDecision": "審批決定"
         }
     },
+    "complaints.comp.closeComplaint": {
+        "title": "zh-tw_Close Complaint",
+        "info": "zh-tw_Incident Information",
+        "infoMessage": "zh-tw_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "zh-tw_Complaint Title",
+        "information": {
+            "title": "zh-tw_Close Complaint Information",
+            "close.date": "zh-tw_Complaint Close Date",
+            "complaint.number": "zh-tw_Complaint Number",
+            "complaint.disposition": "zh-tw_Complaint Disposition"
+        },
+        "add.existing.case": {
+            "title": "zh-tw_Add Existing Case",
+            "search": "zh-tw_Search",
+            "case": {
+                "number": "zh-tw_Enter Case Number",
+                "title": "zh-tw_Case Title",
+                "date": "zh-tw_Case Creation Date",
+                "priority": "zh-tw_Case Priority"
+            }
+        },
+        "refer.external": {
+            "title": "zh-tw_Refer External",
+            "name": "zh-tw_Name of Agency",
+            "date": "zh-tw_Referral Date",
+            "contact": {
+                "title": "zh-tw_Contact",
+                "name": "zh-tw_Contact Name",
+                "type": "zh-tw_Type",
+                "value": "zh-tw_Value"
+            }
+        },
+        "approver": {
+            "placeholder": "zh-tw_Select Approver",
+            "label": "zh-tw_Select Approver",
+            "addAnother": "zh-tw_Add another",
+            "remove": "zh-tw_Remove Approver",
+            "pickerModal.header": "zh-tw_Choose Approver"
+        },
+        "cancelButton": "zh-tw_Cancel",
+        "saveButton": "zh-tw_Save Complaint"
+    },
     "complaints.comp.newComplaint": {
         "title": "zh-tw_New Complaint",
         "info": "zh-tw_Incident Information",
