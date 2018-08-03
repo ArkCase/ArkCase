@@ -76,12 +76,32 @@
             }
         }
     },
-    "costTracking.comp.approvers": {
-        "title": "Aproximadores",
+    "costTracking.comp.tasks": {
+        "title": "Tarefas",
         "table.columns": {
-            "fullName": "Nome completo",
-            "userId": "Nome de usuário"
+            "title": "Título",
+            "assignee": "Responsável",
+            "due": "Vencimento",
+            "status": "Status",
+            "priority": "Prioridade",
+            "created": "Criada"
         }
+    },
+    "costTracking.comp.expenses": {
+        "title": "Despesas",
+        "table.columns": {
+            "date": "Data",
+            "title": "Título",
+            "description": "Descrição",
+            "amount": "Montante"
+        }
+    },
+    "costTracking.comp.documents": {
+        "title": "Documentos",
+        "filterInputPlaceholder": "Filtro",
+        "searchInputPlaceholder": "Pesquisa",
+        "newTask": "Nova tarefa",
+        "sendEmail": "Enviar email"
     },
     "costTracking.tree": {
         "nodeTypes": {
@@ -89,7 +109,8 @@
             "person.label": "Pessoas",
             "summary.label": "Despesa",
             "tags.label": "Etiquetas",
-            "approvers.label": "Aproximadores"
+            "tasks.label": "Tarefas",
+            "documents.label": "Documentos"
         },
         "sorters": {
             "dateAsc": "Ordenar Data Asc",

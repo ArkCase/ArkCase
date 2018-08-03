@@ -40,8 +40,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class AcmConcurrentSessionControlAuthenticationStrategy extends ConcurrentSessionControlAuthenticationStrategy
 {
@@ -105,15 +103,8 @@ public class AcmConcurrentSessionControlAuthenticationStrategy extends Concurren
         String emailTicket = request.getParameter("acm_email_ticket");
         if (emailTicket != null)
         {
-            List<AuthenticationToken> tokens = authenticationTokenService.findByKey(emailTicket);
-            List<AuthenticationToken> activeTokens = tokens.stream()
-                    .filter(it -> it.getStatus().equals("ACTIVE"))
-                    .collect(Collectors.toList());
-
-            Optional<AuthenticationToken> principalToken = activeTokens.stream()
-                    .filter(token -> token.getCreator().equals(principal))
-                    .findAny();
-            if (principalToken.isPresent())
+            AuthenticationToken token = authenticationTokenService.findByKey(emailTicket);
+            if (token.isActive() && token.getCreator().equals(principal))
             {
                 // This is the same user with external request and new session
                 return;

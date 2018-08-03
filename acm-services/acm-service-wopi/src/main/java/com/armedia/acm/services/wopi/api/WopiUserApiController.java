@@ -27,15 +27,17 @@ package com.armedia.acm.services.wopi.api;
  * #L%
  */
 
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
-import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.wopi.model.WopiSessionInfo;
 import com.armedia.acm.services.wopi.model.WopiUserInfo;
+import com.armedia.acm.services.wopi.service.WopiAcmService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,33 +45,34 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-import java.time.Period;
-import java.util.List;
-
 @Controller
 @RequestMapping(value = "/api/latest/wopi/users")
 public class WopiUserApiController
 {
     private static final Logger log = LoggerFactory.getLogger(WopiUserApiController.class);
-    private AuthenticationTokenService tokenService;
+    private WopiAcmService wopiService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public WopiUserInfo getUserInfo(@RequestParam("acm_email_ticket") String token, HttpSession session)
+    public WopiUserInfo getUserInfo(@RequestParam("acm_email_ticket") String token,
+            HttpSession session)
     {
         log.info("Getting user info per email ticket [{}]", token);
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        List<AuthenticationToken> tokens = tokenService.findByKey(token);
-        Long tokenTtl = tokens.stream()
-                .filter(it -> it.getStatus().equals("ACTIVE"))
-                .findFirst().map(it -> it.getCreated().toInstant()
-                        .plus(Period.ofDays(AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS)).toEpochMilli())
-                .orElse(0L);
-        return new WopiUserInfo(user.getFullName(), user.getUserId(), user.getLang(), tokenTtl);
+        return wopiService.getUserInfo(user, token);
     }
 
-    public void setTokenService(AuthenticationTokenService tokenService)
+    @RequestMapping(value = "/resource/{file_id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public WopiSessionInfo getSessionInfo(@PathVariable("file_id") Long fileId, @RequestParam("acm_email_ticket") String token,
+            Authentication authentication)
     {
-        this.tokenService = tokenService;
+        log.info("Getting wopi session info per email ticket [{}]", token);
+        return wopiService.getSessionInfo(authentication, fileId, token);
+    }
+
+    public void setWopiService(WopiAcmService wopiService)
+    {
+        this.wopiService = wopiService;
     }
 }
