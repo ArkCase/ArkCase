@@ -1,0 +1,149 @@
+<form name="caseForm" ng-submit="save()">
+    <div class="modal-header">
+        <h3 ng-show="!isEdit"><span translate>cases.comp.newCase.title</span></h3>
+        <h3 ng-show="isEdit"><span translate>cases.comp.newCase.editCase.title</span></h3>
+    </div>
+    <div class="modal-body">
+        <div style="margin-right: 6px; margin-left: 6px;">
+            <div class="row well-sm">
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <label for="title" translate>cases.comp.newCase.caseTitle</label>
+                        <span class="required-asterisk">*</span>
+                        <input id="title" type="text" ng-model="casefile.title" class="input-md form-control"
+                                placeholder="{{ 'cases.comp.newCase.caseTitle.placeholder' | translate }}" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <label for="caseType" translate>cases.comp.newCase.caseType</label>
+                        <span class="required-asterisk">*</span>
+                        <select id="caseType" ng-model="casefile.caseType" class="form-control input-md" required>
+                            <option ng-repeat="option in caseCategory" value="{{option.key}}">
+                                {{option.value | translate}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label for="initiator" translate>cases.comp.newCase.initiator</label>
+                        <span class="required-asterisk">*</span>
+                        <input id="initiator" type="text" ng-model="casefile.initiator" ng-click="addPersonInitiator()"
+                                class="input-md form-control" placeholder="{{ 'cases.comp.newCase.initiator.placeholder' | translate }}"
+                                readonly required>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion45" href="#collapseDesc" translate>cases.comp.newCase.description</a>
+                </h4>
+            </div>
+            <div id="collapseDesc" class="panel-collapse">
+                <div class="panel-body">
+                    <div class="row form-group">
+                        <summernote id="caseDesc" config="options" ng-model="casefile.details"></summernote>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion45" href="#collapsePeople"
+                            translate>cases.comp.newCase.people.title</a>
+                </h4>
+            </div>
+            <div id="collapsePeople" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div ng-repeat="personAssociation in casefile.personAssociations">
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <label for="searchExisting">&nbsp;</label>
+                                <input id="searchExisting" type="text" ng-model="personAssociation.personFullName"
+                                        ng-click="searchPerson($index, true)" class="input-md form-control" readonly
+                                        placeholder="{{ 'cases.comp.newCase.people.selectPerson.placeholder' | translate }}">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label translate>cases.comp.newCase.people.personType</label>
+                                <input class="form-control" readonly ng-model="personAssociation.personType">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <div class="pull-left">
+                                    <label class="control-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-link form-control" ng-click="removePerson(personAssociation)"
+                                            ng-show="!$first">
+                                        <i class="fa fa-minus text-danger"></i><span translate>cases.comp.newCase.removeButton</span>
+                                    </button>
+                                </div>
+                                <div class="pull-left">
+                                    <label class="control-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-link form-control" ng-click="addPerson();"
+                                            ng-disabled="!personAssociation.personFullName" ng-show="$last">
+                                        <i class="fa fa-plus text-success"></i><span translate>cases.comp.newCase.addButton</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="accordion4" class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion4" href="#collapseParticipants" translate>cases.comp.newCase.participants.title</a>
+                    </h4>
+                </div>
+                <div id="collapseParticipants" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div ng-repeat="participant in casefile.participants">
+                            <div class="row">
+                                <div class="col-sm-4 form-group">
+                                    <label for="searchParticipant">&nbsp;</label>
+                                    <input id="searchParticipant" type="text" ng-model="participant.participantFullName"
+                                            ng-click="userOrGroupSearch($index, true)" class="input-md form-control" readonly
+                                            placeholder="{{ 'cases.comp.newCase.participants.selectParticipant.placeholder' | translate }}">
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label translate>cases.comp.newCase.participants.participantType</label>
+                                    <input class="form-control" readonly ng-model="participant.participantType">
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <div class="pull-left">
+                                        <label class="control-label">&nbsp;</label>
+                                        <button type="button" class="btn btn-link form-control" ng-click="removeParticipant(participant)"
+                                                ng-show="!$first">
+                                            <i class="fa fa-minus text-danger"></i><span translate>cases.comp.newCase.removeButton</span>
+                                        </button>
+                                    </div>
+                                    <div class="pull-left">
+                                        <label class="control-label">&nbsp;</label>
+                                        <button type="button" class="btn btn-link form-control" ng-click="addParticipant();"
+                                                ng-disabled="!participant.participantFullName" ng-show="$last">
+                                            <i class="fa fa-plus text-success"></i><span translate>cases.comp.newCase.addButton</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
+            <span translate>cases.comp.newCase.cancelButton</span>
+        </button>
+        <button type="submit" ng-disabled="caseForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+                id="saveButton" data-title="Save">
+            <i class="{{loadingIcon}}"></i>
+            <span ng-show="!isEdit" translate>cases.comp.newCase.saveButton</span>
+            <span ng-show="isEdit" translate>cases.comp.newCase.updateButton</span>
+        </button>
+    </div>
+</form>

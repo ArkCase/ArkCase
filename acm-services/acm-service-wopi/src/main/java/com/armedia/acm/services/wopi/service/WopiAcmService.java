@@ -40,9 +40,12 @@ import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.wopi.model.WopiConfig;
 import com.armedia.acm.services.wopi.model.WopiFileInfo;
 import com.armedia.acm.services.wopi.model.WopiLockInfo;
+import com.armedia.acm.services.wopi.model.WopiSessionInfo;
+import com.armedia.acm.services.wopi.model.WopiUserInfo;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -55,13 +58,9 @@ import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Instant;
 import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class WopiAcmService
 {
@@ -74,7 +73,26 @@ public class WopiAcmService
     private AuthenticationTokenService tokenService;
     private static final Logger log = LoggerFactory.getLogger(WopiAcmService.class);
 
-    public Optional<WopiFileInfo> getFileInfo(Long id, Authentication authentication)
+    public WopiSessionInfo getSessionInfo(Authentication authentication, Long fileId, String accessToken)
+    {
+        boolean canWrite = permissionEvaluator.hasPermission(authentication, fileId, "FILE", "write|group-write");
+        return new WopiSessionInfo(accessToken, authentication.getName(), fileId.toString(), !canWrite, canWrite);
+    }
+
+    public WopiUserInfo getUserInfo(AcmUser user, String token)
+    {
+        AuthenticationToken authToken = tokenService.findByKey(token);
+
+        Long tokenTtl = 0L;
+        if (authToken.isActive())
+        {
+            tokenTtl = tokenService.calculateTokenTimeToLive(authToken,
+                    Period.ofDays(AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS));
+        }
+        return new WopiUserInfo(user.getFullName(), user.getUserId(), user.getLang(), tokenTtl);
+    }
+
+    public Optional<WopiFileInfo> getFileInfo(Long id)
     {
         EcmFile file = ecmFileService.findById(id);
         if (file == null)
@@ -82,16 +100,14 @@ public class WopiAcmService
             log.error("File with id [{}] is not found", id);
             return Optional.empty();
         }
-        boolean userCanWrite = permissionEvaluator.hasPermission(authentication, file.getId(),
-                "FILE", "write|group-write");
+
         Optional<EcmFileVersion> ecmFileVersion = file.getVersions().stream()
                 .filter(fileVersion -> fileVersion.getVersionTag().equals(file.getActiveVersionTag()))
                 .findFirst();
         Long fileSize = ecmFileVersion.map(EcmFileVersion::getFileSizeBytes).orElse(0L);
 
         return Optional.of(new WopiFileInfo(file.getFileId(), file.getFileName(),
-                file.getFileExtension(), file.getCreator(), file.getActiveVersionTag(),
-                fileSize, userCanWrite, !userCanWrite));
+                file.getFileExtension(), file.getCreator(), file.getActiveVersionTag(), fileSize));
     }
 
     public InputStreamResource getFileContents(Long id) throws AcmUserActionFailedException
@@ -152,33 +168,6 @@ public class WopiAcmService
     public void deleteFile(Long fileId) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         ecmFileService.deleteFile(fileId);
-    }
-
-    public String getWopiAccessToken(Long fileId, String userMail, Authentication authentication)
-    {
-        List<AuthenticationToken> tokens = tokenService.findByTokenEmailAndFileId(userMail, fileId);
-        List<AuthenticationToken> activeTokens = tokens.stream()
-                .filter(token -> token.getStatus().equals("ACTIVE"))
-                .collect(Collectors.toList());
-        String authenticationTokenKey;
-        if (activeTokens.isEmpty())
-        {
-            authenticationTokenKey = tokenService.generateAndSaveAuthenticationToken(fileId, userMail, authentication);
-        }
-        else
-        {
-            authenticationTokenKey = activeTokens.stream()
-                    .filter(authenticationToken -> {
-                        Instant tokenCreated = authenticationToken.getCreated().toInstant();
-                        Instant tokenExpiration = tokenCreated.plus(Period.ofDays(AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS));
-                        // 10min before expiration, Office Online client will expect renewed token
-                        return ChronoUnit.MINUTES.between(Instant.now(), tokenExpiration) > 11;
-                    })
-                    .map(AuthenticationToken::getKey)
-                    .findFirst()
-                    .orElseGet(() -> tokenService.generateAndSaveAuthenticationToken(fileId, userMail, authentication));
-        }
-        return authenticationTokenKey;
     }
 
     public WopiConfig getWopiConfig()

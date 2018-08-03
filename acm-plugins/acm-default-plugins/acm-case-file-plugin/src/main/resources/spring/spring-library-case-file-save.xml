@@ -22,6 +22,7 @@
                 <ref bean="caseFileOutlookHandler"/>
                 <ref bean="caseFileFolderStructureHandler"/>
                 <ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
+                <ref bean="casefileDocumentHandler"/>
             </list>
         </property>
     </bean>
@@ -49,6 +50,11 @@
         class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileStartBusinessProcessIfNeededHandler">
         <property name="startBusinessProcessBusinessRule" ref="caseFileStartBusinessProcessBusinessRule"/>
         <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+    </bean>
+    <bean id="casefileDocumentHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CasefileDocumentHandler"
+        parent="pdfDocumentGenerator">
+        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
+        <property name="dao" ref="caseFileDao"/>
     </bean>
 
 </beans>

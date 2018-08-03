@@ -636,6 +636,15 @@
                 "modal.info": "Settings will take effect after refresh",
                 "modal.ok": "OK"
             },
+            "formsType.config": {
+                "title": "Forms Type Configuration",
+                "angular.label": "Use Angular Forms",
+                "frevvo.label": "Use Frevvo Forms",
+                "apply": "Apply",
+                "modal.title": "Information",
+                "modal.info": "Settings will take effect after refresh",
+                "modal.ok": "OK"
+            },
             "login.config": {
                 "title": "Login Configuration",
                 "idleLimit.label": "Login idle limit (in milliseconds)",

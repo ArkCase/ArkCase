@@ -57,4 +57,14 @@ public interface CaseFileConstants
     String PARENT_OBJECT_TYPE = "PARENT_OBJECT_TYPE";
 
     String PARENT_OBJECT_ID = "PARENT_OBJECT_ID";
+
+    String MIME_TYPE_PDF = "application/pdf";
+    String NEW_FILE = "NEW_FILE";
+    String FILE_ID = "FILE_ID";
+    String FILE_VERSION = "FILE_VERSION";
+
+    String CASEFILE_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/pdf-stylesheets/casefile-document.xsl";
+    String CASEFILE_DOCUMENT = "Casefile";
+    String CASEFILE_FILENAMEFORMAT = "Casefile.pdf";
+
 }

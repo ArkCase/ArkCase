@@ -115,6 +115,10 @@ angular.module('services').factory(
 
                             that.scope.gridOptions.enableColumnResizing = true;
                             that.scope.gridOptions.enableRowSelection = config.enableRowSelection;
+
+                            that.scope.gridOptions.showColumnFooter = config.showColumnFooter || false;
+                            that.scope.gridOptions.showGridFooter = config.showGridFooter || false;
+
                             that.scope.gridOptions.enableRowHeaderSelection = config.enableRowHeaderSelection;
                             that.scope.gridOptions.enableFullRowSelection = config.enableFullRowSelection;
                             that.scope.gridOptions.multiSelect = config.multiSelect;
