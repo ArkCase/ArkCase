@@ -80,20 +80,6 @@ public interface PdfService
      * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters.
      * NOTE: the caller is responsible for deleting the file afterwards (not to leave mess behind)
      *
-     * @param xslFile
-     *            XSL-FO stylesheet
-     * @param source
-     *            XML data source required for XML transformation
-     * @return path to the newly generated PDF file (random filename stored in temp folder)
-     * @throws PdfServiceException
-     *             on PDF creation error
-     */
-    String generatePdf(File xslFile, Source source) throws PdfServiceException;
-
-    /**
-     * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters.
-     * NOTE: the caller is responsible for deleting the file afterwards (not to leave mess behind)
-     *
      * @param xslFilename
      *            path to XSL-FO stylesheet
      * @param source

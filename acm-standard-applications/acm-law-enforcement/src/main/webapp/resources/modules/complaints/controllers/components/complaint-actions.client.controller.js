@@ -3,8 +3,8 @@
 angular.module('complaints').controller(
         'Complaints.ActionsController',
         [ '$scope', '$state', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Complaint.LookupService', 'Object.SubscriptionService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService',
-                'Profile.UserInfoService',
-                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService, ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService) {
+                'Profile.UserInfoService', 'FormsType.Service',
+                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService, ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, FormsTypeService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -16,6 +16,14 @@ angular.module('complaints').controller(
                         onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
+                    });
+
+                    FormsTypeService.isAngularFormType().then(function(isAngularFormType) {
+                        $scope.isAngularFormType = isAngularFormType;
+                    });
+
+                    FormsTypeService.isFrevvoFormType().then(function(isFrevvoFormType) {
+                        $scope.isFrevvoFormType = isFrevvoFormType;
                     });
 
                     $scope.showBtnChildOutcomes = false;

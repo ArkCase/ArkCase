@@ -35,6 +35,7 @@ import static com.armedia.acm.plugins.complaint.model.ComplaintConstants.NEW_FIL
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
@@ -47,9 +48,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-/**
- * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 18, 2016
- */
 public class ComplaintDocumentHandler extends PDFComplaintDocumentGenerator<ComplaintDao, Complaint>
         implements PipelineHandler<Complaint, ComplaintPipelineContext>
 {
@@ -57,28 +55,44 @@ public class ComplaintDocumentHandler extends PDFComplaintDocumentGenerator<Comp
     /**
      * Logger instance.
      */
+    private JsonPropertiesManagementService jsonPropertiesManagementService;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(Complaint complaint, ComplaintPipelineContext ctx) throws PipelineProcessException
     {
-        log.debug("Entering pipeline handler for complaint with id [{}] and title [{}]", complaint.getId(), complaint.getTitle());
-
-        // ensure the SQL of all prior handlers is visible to this handler
-        getDao().getEm().flush();
-
+        String formsType = "";
         try
         {
-            generatePdf(complaint.getObjectType(), complaint.getId(), ctx);
+            formsType = jsonPropertiesManagementService.getProperty("formsType").get("formsType").toString();
         }
-        catch (ParserConfigurationException e)
+        catch (Exception e)
         {
-            log.warn("Unable to generate pdf document for the complaint with id [{}] and title [{}]", complaint.getId(),
-                    complaint.getTitle());
-            throw new PipelineProcessException(e);
+            String msg = "Can't retrieve application property";
+            log.error(msg, e);
         }
 
-        log.debug("Exiting pipeline handler for object: [{}]", complaint);
+        if (!formsType.equals("frevvo"))
+        {
+
+            log.debug("Entering pipeline handler for complaint with id [{}] and title [{}]", complaint.getId(), complaint.getTitle());
+
+            // ensure the SQL of all prior handlers is visible to this handler
+            getDao().getEm().flush();
+
+            try
+            {
+                generatePdf(complaint.getId(), ctx);
+            }
+            catch (ParserConfigurationException e)
+            {
+                log.warn("Unable to generate pdf document for the complaint with id [{}] and title [{}]", complaint.getId(),
+                        complaint.getTitle());
+                throw new PipelineProcessException(e);
+            }
+
+            log.debug("Exiting pipeline handler for object: [{}]", complaint);
+        }
     }
 
     @Override
@@ -108,4 +122,8 @@ public class ComplaintDocumentHandler extends PDFComplaintDocumentGenerator<Comp
         }
     }
 
+    public void setJsonPropertiesManagementService(JsonPropertiesManagementService jsonPropertiesManagementService)
+    {
+        this.jsonPropertiesManagementService = jsonPropertiesManagementService;
+    }
 }
