@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -123,8 +124,12 @@ public class EcmFileServiceImplTest extends EasyMockSupport
 
         EcmFileVersion first = new EcmFileVersion();
         first.setVersionTag(UUID.randomUUID().toString());
+        first.setVersionMimeType("text/plain");
+        first.setVersionFileNameExtension(".txt");
         EcmFileVersion second = new EcmFileVersion();
         second.setVersionTag(UUID.randomUUID().toString());
+        second.setVersionMimeType("text/xml");
+        second.setVersionFileNameExtension(".xml");
         toBeDeleted.getVersions().add(first);
         toBeDeleted.getVersions().add(second);
 
@@ -148,6 +153,18 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         EcmFile saved = updated.getValue();
         assertEquals(1, saved.getVersions().size());
         assertEquals(first.getVersionTag(), saved.getVersions().get(0).getVersionTag());
+        
+        assertNotNull(saved.getActiveVersionTag());
+        assertEquals(first.getVersionTag(), saved.getActiveVersionTag());
+        
+        assertNotNull("version name extension", saved.getFileActiveVersionNameExtension());
+        assertNotNull("file extension", saved.getFileExtension());
+        assertEquals("txt", saved.getFileExtension());
+        
+        assertEquals(first.getVersionFileNameExtension(), saved.getFileActiveVersionNameExtension());
+        
+        assertNotNull("file active version mime type", saved.getFileActiveVersionMimeType());
+        assertEquals(first.getVersionMimeType(), saved.getFileActiveVersionMimeType());
     }
 
 
