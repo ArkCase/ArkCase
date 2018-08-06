@@ -41,6 +41,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
@@ -60,6 +61,7 @@ import javax.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 /**
  * Created by armdev on 3/11/15.
@@ -110,6 +112,114 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
     }
 
+    @Test
+    public void deleteFile_oneVersion_shouldNotRemoveOtherVersions() throws Exception
+    {
+
+        EcmFile toBeDeleted = new EcmFile();
+        toBeDeleted.setFileId(500L);
+        toBeDeleted.setVersionSeriesId(UUID.randomUUID().toString());
+        toBeDeleted.setCmisRepositoryId("Grateful Dead");
+
+        EcmFileVersion first = new EcmFileVersion();
+        first.setVersionTag(UUID.randomUUID().toString());
+        EcmFileVersion second = new EcmFileVersion();
+        second.setVersionTag(UUID.randomUUID().toString());
+        toBeDeleted.getVersions().add(first);
+        toBeDeleted.getVersions().add(second);
+
+        Map<String, Object> props = new HashMap<>();
+        props.put(EcmFileConstants.ECM_FILE_ID, second.getVersionTag());
+        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, null);
+        props.put(EcmFileConstants.ALL_VERSIONS, false);
+
+        expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
+        expect(mockCmisConfigUtils.getCmisConfiguration(toBeDeleted.getCmisRepositoryId())).andReturn(null);
+        expect(mockMuleContextManager.send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, toBeDeleted, props)).andReturn(mockMuleMessage);
+        Capture<EcmFile> updated = Capture.newInstance();
+        expect(mockEcmFileDao.save(capture(updated))).andReturn(new EcmFile());
+
+        replayAll();
+
+        unit.deleteFile(toBeDeleted.getFileId(), false);
+
+        verifyAll();
+
+        EcmFile saved = updated.getValue();
+        assertEquals(1, saved.getVersions().size());
+        assertEquals(first.getVersionTag(), saved.getVersions().get(0).getVersionTag());
+    }
+
+
+    @Test
+    public void deleteFile_allVersions_shouldDeleteFile() throws Exception
+    {
+
+        EcmFile toBeDeleted = new EcmFile();
+        toBeDeleted.setFileId(500L);
+        toBeDeleted.setVersionSeriesId(UUID.randomUUID().toString());
+        toBeDeleted.setCmisRepositoryId("Grateful Dead");
+
+        EcmFileVersion first = new EcmFileVersion();
+        first.setVersionTag(UUID.randomUUID().toString());
+        EcmFileVersion second = new EcmFileVersion();
+        second.setVersionTag(UUID.randomUUID().toString());
+        toBeDeleted.getVersions().add(first);
+        toBeDeleted.getVersions().add(second);
+        
+
+        Map<String, Object> props = new HashMap<>();
+        props.put(EcmFileConstants.ECM_FILE_ID, toBeDeleted.getVersionSeriesId());
+        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, null);
+        props.put(EcmFileConstants.ALL_VERSIONS, true);
+
+        expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
+        expect(mockCmisConfigUtils.getCmisConfiguration(toBeDeleted.getCmisRepositoryId())).andReturn(null);
+        expect(mockMuleContextManager.send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, toBeDeleted, props)).andReturn(mockMuleMessage);
+
+        mockEcmFileDao.deleteFile(toBeDeleted.getFileId());
+        
+        replayAll();
+
+        unit.deleteFile(toBeDeleted.getFileId(), true);
+
+        verifyAll();
+
+    }
+
+    @Test
+    public void deleteFile_oneVersion_butFileOnlyHasOneVersion_shouldDeleteFile() throws Exception
+    {
+
+        EcmFile toBeDeleted = new EcmFile();
+        toBeDeleted.setFileId(500L);
+        toBeDeleted.setVersionSeriesId(UUID.randomUUID().toString());
+        toBeDeleted.setCmisRepositoryId("Grateful Dead");
+
+        EcmFileVersion only = new EcmFileVersion();
+        only.setVersionTag(UUID.randomUUID().toString());
+        toBeDeleted.getVersions().add(only);
+
+        Map<String, Object> props = new HashMap<>();
+        props.put(EcmFileConstants.ECM_FILE_ID, toBeDeleted.getVersionSeriesId());
+        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, null);
+        props.put(EcmFileConstants.ALL_VERSIONS, true);
+
+        expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
+        expect(mockCmisConfigUtils.getCmisConfiguration(toBeDeleted.getCmisRepositoryId())).andReturn(null);
+        expect(mockMuleContextManager.send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, toBeDeleted, props)).andReturn(mockMuleMessage);
+
+        mockEcmFileDao.deleteFile(toBeDeleted.getFileId());
+        
+        replayAll();
+
+        unit.deleteFile(toBeDeleted.getFileId(), true);
+
+        verifyAll();
+
+    }
+
+    
     @Test
     public void moveFile() throws Exception
     {

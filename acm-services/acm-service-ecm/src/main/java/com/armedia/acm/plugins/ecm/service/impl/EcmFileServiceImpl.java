@@ -1368,8 +1368,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
         }
 
+        boolean removeFileFromDatabase = allVersions || file.getVersions().size() < 2;
+        String versionToRemoveFromEcm = removeFileFromDatabase ?
+            file.getVersionSeriesId() : file.getVersions().get(file.getVersions().size() - 1).getVersionTag();
+
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
+        props.put(EcmFileConstants.ECM_FILE_ID, versionToRemoveFromEcm);
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
@@ -1382,7 +1386,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
 
-            getEcmFileDao().deleteFile(objectId);
+            if ( removeFileFromDatabase )
+            {
+                getEcmFileDao().deleteFile(objectId);
+            }
+            else
+            {
+                file.getVersions().remove(file.getVersions().size() - 1);
+                getEcmFileDao().save(file);
+            }
         }
         catch (MuleException | PersistenceException e)
         {
