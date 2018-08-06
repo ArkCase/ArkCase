@@ -1393,6 +1393,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             else
             {
                 file.getVersions().remove(file.getVersions().size() - 1);
+                EcmFileVersion current = file.getVersions().get(file.getVersions().size() - 1);
+                file.setActiveVersionTag(current.getVersionTag());
+                file.setFileActiveVersionNameExtension(current.getVersionFileNameExtension());
+                file.setFileActiveVersionMimeType(current.getVersionMimeType());
                 getEcmFileDao().save(file);
             }
         }
