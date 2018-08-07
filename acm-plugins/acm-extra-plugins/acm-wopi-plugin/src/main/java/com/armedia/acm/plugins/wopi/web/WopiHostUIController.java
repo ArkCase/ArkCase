@@ -1,4 +1,4 @@
-package com.armedia.acm.services.wopi.web;
+package com.armedia.acm.plugins.wopi.web;
 
 /*-
  * #%L
@@ -27,14 +27,14 @@ package com.armedia.acm.services.wopi.web;
  * #L%
  */
 
+import com.armedia.acm.plugins.wopi.model.WopiConfig;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.wopi.model.WopiConfig;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,7 +42,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 
-@RequestMapping("/office")
+@Controller
+@RequestMapping("/plugin/office")
 public class WopiHostUIController
 {
     private static final Logger log = LoggerFactory.getLogger(WopiHostUIController.class);

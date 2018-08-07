@@ -1,4 +1,4 @@
-package com.armedia.acm.services.wopi.model;
+package com.armedia.acm.plugins.wopi.model;
 
 /*-
  * #%L
@@ -41,7 +41,7 @@ public class WopiConfig
 
     public String getWopiHostUrl(Long fileId, String accessToken)
     {
-        return String.format(wopiHostUrl, fileId, accessToken, wopiTenantProtocol, wopiTenantDomain, wopiTenantPort,
+        return String.format(wopiHostUrl, fileId, accessToken, wopiTenantProtocol, "arkcase-host", 8843,
                 wopiTenantContext, wopiTenantAccessTokenParamName, wopiTenantFileIdParamName);
     }
 

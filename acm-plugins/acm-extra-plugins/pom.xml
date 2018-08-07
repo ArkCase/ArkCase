@@ -17,6 +17,7 @@
         <module>acm-personnel-security-plugin</module>
         <module>acm-ms-outlook-plugin</module>
         <module>acm-onlyoffice-plugin</module>
+        <module>acm-wopi-plugin</module>
     </modules>
 
 </project>
