@@ -1,5 +1,26 @@
 package com.armedia.acm.correspondence.service;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
+import com.armedia.acm.correspondence.model.CorrespondenceQuery;
+import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.utils.PoiWordGenerator;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.spring.SpringContextHolder;
+
+import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.security.core.Authentication;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 /*-
  * #%L
  * ACM Service: Correspondence Library
@@ -34,28 +55,11 @@ import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
-import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.security.core.Authentication;
-
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.CorrespondenceQuery;
-import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
-import com.armedia.acm.correspondence.utils.PoiWordGenerator;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.spring.SpringContextHolder;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 12/15/14.
@@ -130,7 +134,9 @@ public class CorrespondenceGenerator
         return retval;
     }
 
-    public OutputStream generateCorrespondenceOutputStream(CorrespondenceTemplate template, Object[] queryArguments, OutputStream correspondenceOutputStream) throws IOException {
+    public OutputStream generateCorrespondenceOutputStream(CorrespondenceTemplate template, Object[] queryArguments,
+            OutputStream correspondenceOutputStream) throws IOException
+    {
 
         Map<String, Object> queryResult = query(template, queryArguments);
         if (queryResult == null || queryResult.isEmpty())
@@ -180,56 +186,10 @@ public class CorrespondenceGenerator
 
         if (result != null && toBeFormatted.isAssignableFrom(result.getClass()))
         {
-            if (result instanceof Date)
-            {
-                result = addOrRemoveAmountOfTime((Date) result, mergeField);
-            }
             result = format.format(result);
         }
 
         return result;
-    }
-
-    private Date addOrRemoveAmountOfTime(Date date, CorrespondenceMergeField mergeField)
-    {
-        if (date != null && mergeField != null && mergeField.getFieldId() != null)
-        {
-            // ID must be in this format: <FIELD_ID_NAME>_<ACTION>_<AMOUNT>_<UNIT>
-            // Where:
-            // <FIELD_ID_NAME> is the name that will not have "_" in the name
-            // <ACTION> can have two values: PLUS or MINUS (can be any case sensitive)
-            // <AMOUNT> any positive integer number
-            // <UNIT> can have these values: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, YEARS (can be any case
-            // sensitive)
-            String id = mergeField.getFieldId();
-            String[] idArray = id.split("_");
-            String action = idArray.length > 1 ? idArray[1] : "";
-            int amount = idArray.length > 2 ? stringToInt(idArray[2]) : 0;
-            String unit = idArray.length > 3 ? idArray[3] : "";
-            int unitInInt = getUnitInInt(unit);
-
-            if ("PLUS".equalsIgnoreCase(action) && unitInInt != 0)
-            {
-                // Maybe this is not necessary, but just to be sure that there is a PLUS or MINUS
-                amount = Math.abs(amount);
-            }
-            else if ("MINUS".equalsIgnoreCase(action) && unitInInt != 0)
-            {
-                amount = Math.abs(amount) * (-1);
-            }
-            else
-            {
-                return date;
-            }
-
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
-            cal.add(unitInInt, amount);
-
-            return cal.getTime();
-        }
-
-        return date;
     }
 
     private int stringToInt(String str)

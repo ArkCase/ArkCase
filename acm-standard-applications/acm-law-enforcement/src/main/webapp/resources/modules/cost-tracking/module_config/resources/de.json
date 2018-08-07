@@ -76,12 +76,32 @@
             }
         }
     },
-    "costTracking.comp.approvers": {
-        "title": "Genehmiger",
+	"costTracking.comp.tasks": {
+        "title": "Aufgaben",
         "table.columns": {
-            "fullName": "Vollständiger Name",
-            "userId": "Nutzername"
+            "title": "Titel",
+            "assignee": "Beauftragter",
+            "due": "Fällig",
+            "status": "Status",
+            "priority": "Priorität",
+            "created": "Erstellt"
         }
+	},	
+	"costTracking.comp.expenses": {
+        "title": "Kosten",
+        "table.columns": {
+            "date": "Datum",
+            "title": "Titel",
+            "description": "Beschreibung",
+            "amount": "Menge"
+        }
+    },
+    "costTracking.comp.documents": {
+        "title": "Unterlagen",
+        "filterInputPlaceholder": "Filter",
+        "searchInputPlaceholder": "Suche",
+        "newTask": "Neue Aufgabe",
+        "sendEmail": "E-Mail senden"
     },
     "costTracking.tree": {
         "nodeTypes": {
@@ -89,7 +109,8 @@
             "person.label": "Menschen",
             "summary.label": "Kosten",
             "tags.label": "Etiketten",
-            "approvers.label": "Genehmiger"
+            "tasks.label": "Aufgaben",
+            "documents.label": "Unterlagen"
         },
         "sorters": {
             "dateAsc": "Sortieren Datum Auf",

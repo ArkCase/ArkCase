@@ -915,8 +915,10 @@
         "modal": {
             "title": "Correspondence Templates",
             "select": "Select Correspondence Templates",
+            "documentName.label": "Enter Multi Correspondence Template Name",
+            "documentName.placeholder": "Document Name",
             "buttons": {
-                "ok": "Ok",
+                "ok": "Create",
                 "cancel": "Cancel"
             }
         }

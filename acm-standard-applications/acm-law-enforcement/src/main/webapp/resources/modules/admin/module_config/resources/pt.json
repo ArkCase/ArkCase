@@ -569,6 +569,15 @@
                 "modal.info": "As configurações entrarão em vigor após a atualização",
                 "modal.ok": "Está bem"
             },
+            "formsType.config": {
+                "title": "pt_Forms Type Configuration",
+                "angular.label": "pt_Use Angular Forms",
+                "frevvo.label": "pt_Use Frevvo Forms",
+                "apply": "pt_Apply",
+                "modal.title": "pt_Information",
+                "modal.info": "pt_Settings will take effect after refresh",
+                "modal.ok": "pt_OK"
+            },
             "login.config": {
                 "title": "Configuração de login",
                 "idleLimit.label": "Inicie sessão no limite ocioso (em milissegundos)",
