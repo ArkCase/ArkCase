@@ -466,8 +466,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-wopi</artifactId>
+            <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
+            <artifactId>acm-wopi-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

@@ -1,4 +1,4 @@
-package com.armedia.acm.services.wopi.model;
+package com.armedia.acm.plugins.wopi.model;
 
 /*-
  * #%L
@@ -27,25 +27,45 @@ package com.armedia.acm.services.wopi.model;
  * #L%
  */
 
-public class WopiLockInfo
+public class WopiSessionInfo
 {
-    private Long lockId;
+    private final String accessToken;
+    private final String userId;
+    private final String fileId;
+    private final boolean readOnly;
+    private final boolean userCanWrite;
 
-    private Long expiryEpochSeconds;
-
-    public WopiLockInfo(Long lockId, Long expiryEpochSeconds)
+    public WopiSessionInfo(String accessToken, String userId, String fileId, boolean readOnly, boolean userCanWrite)
     {
-        this.lockId = lockId;
-        this.expiryEpochSeconds = expiryEpochSeconds;
+        this.accessToken = accessToken;
+        this.userId = userId;
+        this.fileId = fileId;
+        this.readOnly = readOnly;
+        this.userCanWrite = userCanWrite;
     }
 
-    public Long getLockId()
+    public String getAccessToken()
     {
-        return lockId;
+        return accessToken;
     }
 
-    public Long getExpiryEpochSeconds()
+    public String getUserId()
     {
-        return expiryEpochSeconds;
+        return userId;
+    }
+
+    public String getFileId()
+    {
+        return fileId;
+    }
+
+    public boolean isReadOnly()
+    {
+        return readOnly;
+    }
+
+    public boolean isUserCanWrite()
+    {
+        return userCanWrite;
     }
 }
