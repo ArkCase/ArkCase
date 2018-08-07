@@ -1,4 +1,4 @@
-package com.armedia.acm.services.wopi.model;
+package com.armedia.acm.plugins.wopi.model;
 
 /*-
  * #%L
