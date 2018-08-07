@@ -569,6 +569,15 @@
                 "modal.info": "Настройки вступят в силу после обновления",
                 "modal.ok": "ОК"
             },
+            "formsType.config": {
+                "title": "ru_Forms Type Configuration",
+                "angular.label": "ru_Use Angular Forms",
+                "frevvo.label": "ru_Use Frevvo Forms",
+                "apply": "ru_Apply",
+                "modal.title": "ru_Information",
+                "modal.info": "ru_Settings will take effect after refresh",
+                "modal.ok": "ru_OK"
+            },
             "login.config": {
                 "title": "Конфигурация входа",
                 "idleLimit.label": "Предел простоя входа (в миллисекундах)",

@@ -1594,7 +1594,7 @@ angular
                                     execute: function(nodes, args) {
                                         var node = nodes[0];
                                         var baseUrl = window.location.href.split('home.html#!')[0];
-                                        window.open(baseUrl + 'office/' + node.data.objectId);
+                                        window.open(baseUrl + 'plugin/office/' + node.data.objectId);
                                     }
                                 },
                                 {

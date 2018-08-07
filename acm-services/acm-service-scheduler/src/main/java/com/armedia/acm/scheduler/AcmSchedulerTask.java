@@ -92,10 +92,11 @@ public class AcmSchedulerTask
     public void startTask(String taskName, TaskExecutor taskExecutor, CountDownLatch taskCompletedSignal)
     {
         long now = System.currentTimeMillis();
+        log.debug("Starting task [{}] at [{}]", taskName, now);
 
         if (taskLastRun + howOften <= now)
         {
-            log.debug("Submitting task {} for execution.", taskName);
+            log.debug("Submitting task [{}] for execution.", taskName);
             taskExecutor.execute(() -> {
                 try
                 {
@@ -104,13 +105,15 @@ public class AcmSchedulerTask
                 finally
                 {
                     taskCompletedSignal.countDown();
-                    log.debug("Finished executing task {}.", taskName);
+                    log.debug("Finished executing task [{}].", taskName);
                 }
             });
             taskLastRun = System.currentTimeMillis();
+            log.debug("Task [{}] last run at [{}]", taskName, taskLastRun);
         }
         else
         {
+            log.debug("Task [{}] was not submitted for execution.", taskName);
             taskCompletedSignal.countDown();
         }
     }

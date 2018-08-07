@@ -2,163 +2,147 @@
     <!-- Controller needs to go inside panel-view directive - otherwise, scope gets messed up -->
     <div ng-controller="Admin.ReportsScheduleController">
         <div class="row">
-            <div class="col-xs-12">
-                <!-- Type of report to select -->
-                <div class="col-xs-4 b-r">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label for="reportFile" translate>admin.reports.schedule.selectReportType</label>
-                            <select ng-model="reportFile"
-                                    ng-options="item.value as item.label for item in reportTypesList" size="10"
-                                    class="form-control" id="reportFile">
-
-                            </select>
-                        </div>
+                <div class="col-xs-4 form-group">
+                    <div class="form-group">
+                        <label for="reportFile" translate>admin.reports.schedule.selectReportType</label>
+                        <select ng-model="reportFile"
+                                ng-options="item.value as item.label for item in reportTypesList" size="10"
+                                class="form-control" id="reportFile">
+    
+                        </select>
                     </div>
                 </div>
                 <!-- Details - recurrence, time, and start date -->
-                <div class="col-xs-4 b-r">
-                    <div class="row">
-                        <div class="col-xs-12 b-r">
-                            <label for="reportRecurrence" translate>admin.reports.schedule.recurrence</label><br>
-                            <select ng-model="reportRecurrence"
-                                    ng-options="item.value as item.label for item in reportRecurrenceList"
-                                    id="reportRecurrence"
-                            >
-                            </select>
-                        </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="reportRecurrence" translate>admin.reports.schedule.recurrence</label><br>
+                        <select ng-model="reportRecurrence"
+                                ng-options="item.value as item.label for item in reportRecurrenceList"
+                                id="reportRecurrence"
+                        >
+                        </select>
                     </div>
-                    <div class="row">
+                    <div class="form-group">
                         <label style="padding-left: 15px;" translate>admin.reports.schedule.time</label>
-                        <div class="col-xs-12 b-r">
-                            <div class="input-group" id="time">
-                                <timepicker ng-model="reportStartDate" hour-step="1" minute-step="1"
-                                            show-meridian="true" show-spinners="false">
-                                </timepicker>
-                            </div>
+                        <div class="input-group" id="time">
+                            <timepicker ng-model="reportStartDate" hour-step="1" minute-step="1"
+                                        show-meridian="true" show-spinners="false">
+                            </timepicker>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label for="startDate" translate>admin.reports.schedule.startDate</label>
-                            <span class="required-asterisk">*</span>
-                            <div class="input-group" id="startDate">
-                                <input type="text" class="form-control"
-                                       name="reportStartDate"
-                                       datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                       ng-model="reportStartDate"
-                                       is-open="opened.openedStart"
-                                       close-on-date-selection="true"
-                                       show-button-bar="true"
-                                       on-open-focus="false"
-                                       close-text="Close"/>
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default"
-                                            ng-click="opened.openedStart = !opened.openedStart">
-                                        <i class="fa fa-calendar"></i>
-                                    </button>
-                                </span>
-                            </div>
+                    <div class="form-group">
+                        <label for="startDate" translate>admin.reports.schedule.startDate</label>
+                        <span class="required-asterisk">*</span>
+                        <div class="input-group" id="startDate">
+                            <input type="text" class="form-control"
+                                   name="reportStartDate"
+                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                   ng-model="reportStartDate"
+                                   is-open="opened.openedStart"
+                                   close-on-date-selection="true"
+                                   show-button-bar="true"
+                                   on-open-focus="false"
+                                   close-text="Close"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default"
+                                        ng-click="opened.openedStart = !opened.openedStart">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label for="endDate" translate>admin.reports.schedule.endDate</label>
-                            <div class="input-group" id="endDate">
-                                <input type="text" class="form-control"
-                                       name="reportEndDate"
-                                       datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                       ng-model="reportEndDate"
-                                       is-open="opened.openedEnd"
-                                       close-on-date-selection="true"
-                                       show-button-bar="true"
-                                       on-open-focus="false"
-                                       close-text="Close"/>
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default"
-                                            ng-click="opened.openedEnd = !opened.openedEnd">
-                                        <i class="fa fa-calendar"></i>
-                                    </button>
-                                </span>
-                            </div>
+                    <div class="form-group">
+                        <label for="endDate" translate>admin.reports.schedule.endDate</label>
+                        <div class="input-group" id="endDate">
+                            <input type="text" class="form-control"
+                                   name="reportEndDate"
+                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                   ng-model="reportEndDate"
+                                   is-open="opened.openedEnd"
+                                   close-on-date-selection="true"
+                                   show-button-bar="true"
+                                   on-open-focus="false"
+                                   close-text="Close"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default"
+                                        ng-click="opened.openedEnd = !opened.openedEnd">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-4 b-r">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label for="startDate" translate>admin.reports.schedule.filterStartDate</label>
-                            <span class="required-asterisk">*</span>
-                            <div class="input-group" id="filterStartDate">
-                                <input type="text" class="form-control"
-                                       name="filterStartDate"
-                                       datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                       ng-model="filterStartDate"
-                                       is-open="opened.openedFilterStart"
-                                       close-on-date-selection="true"
-                                       show-button-bar="true"
-                                       on-open-focus="false"
-                                       close-text="Close"/>
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default"
-                                            ng-click="opened.openedFilterStart = !opened.openedFilterStart">
-                                        <i class="fa fa-calendar"></i>
-                                    </button>
-                                </span>
-                            </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="startDate" translate>admin.reports.schedule.filterStartDate</label>
+                        <span class="required-asterisk">*</span>
+                        <div class="input-group" id="filterStartDate">
+                            <input type="text" class="form-control"
+                                   name="filterStartDate"
+                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                   ng-model="filterStartDate"
+                                   is-open="opened.openedFilterStart"
+                                   close-on-date-selection="true"
+                                   show-button-bar="true"
+                                   on-open-focus="false"
+                                   close-text="Close"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default"
+                                        ng-click="opened.openedFilterStart = !opened.openedFilterStart">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label for="endDate" translate>admin.reports.schedule.filterEndDate</label>
-                            <span class="required-asterisk">*</span>
-                            <div class="input-group" id="filterEndDate">
-                                <input type="text" class="form-control"
-                                       name="filterEndDate"
-                                       datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                       ng-model="filterEndDate"
-                                       is-open="opened.openedFilterEnd"
-                                       close-on-date-selection="true"
-                                       show-button-bar="true"
-                                       on-open-focus="false"
-                                       close-text="Close"/>
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default"
-                                            ng-click="opened.openedFilterEnd = !opened.openedFilterEnd">
-                                        <i class="fa fa-calendar"></i>
-                                    </button>
-                                </span>
-                            </div>
+                    <div class="form-group">
+                        <label for="endDate" translate>admin.reports.schedule.filterEndDate</label>
+                        <span class="required-asterisk">*</span>
+                        <div class="input-group" id="filterEndDate">
+                            <input type="text" class="form-control"
+                                   name="filterEndDate"
+                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                   ng-model="filterEndDate"
+                                   is-open="opened.openedFilterEnd"
+                                   close-on-date-selection="true"
+                                   show-button-bar="true"
+                                   on-open-focus="false"
+                                   close-text="Close"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default"
+                                        ng-click="opened.openedFilterEnd = !opened.openedFilterEnd">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label for="outputFormat" translate>admin.reports.schedule.outputFormat</label>
-                            <select ng-model="outputFormat"
-                                    ng-options="item.value as item.label for item in outputTypesList"
-                                    id="outputFormat">
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label for="outputFormat" translate>admin.reports.schedule.outputFormat</label>
+                        <select ng-model="outputFormat"
+                                ng-options="item.value as item.label for item in outputTypesList"
+                                id="outputFormat">
+                        </select>
                     </div>
                 </div>
-            </div>
         </div>
         <div class="row">
-            <div class="col-xs-12 b-r">
-                <label for="emailAddresses" translate>admin.reports.schedule.emailAddress.title</label>
-                <input type="text" ng-model="reportEmailAddresses"
-                       placeholder="{{'admin.reports.schedule.emailAddress.placeholder' | translate}}"
-                       class="form-control" id="emailAddresses">
-            </div>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label for="emailAddresses" translate>admin.reports.schedule.emailAddress.title</label>
+                    <input type="text" ng-model="reportEmailAddresses"
+                           placeholder="{{'admin.reports.schedule.emailAddress.placeholder' | translate}}"
+                           class="form-control" id="emailAddresses">
+               </div>
+           </div>
         </div>
-        <br>
         <div class="row">
-            <div class="col-xs-12 b-r">
-                <button type="button" class="btn btn-primary pull-right"
-                        ng-click="saveNewScheduledReport()"
-                        ng-disabled="isSubmitDisabled()">
-                    {{'admin.reports.schedule.submit' | translate }}
-                </button>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary pull-right"
+                            ng-click="saveNewScheduledReport()"
+                            ng-disabled="isSubmitDisabled()">
+                        {{'admin.reports.schedule.submit' | translate }}
+                    </button>
+                </div>
             </div>
         </div>
     </div>
