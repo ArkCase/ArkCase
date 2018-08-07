@@ -1,4 +1,4 @@
-package com.armedia.acm.services.wopi.api;
+package com.armedia.acm.plugins.wopi.api;
 
 /*-
  * #%L
@@ -28,9 +28,9 @@ package com.armedia.acm.services.wopi.api;
  */
 
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.wopi.model.WopiSessionInfo;
-import com.armedia.acm.services.wopi.model.WopiUserInfo;
-import com.armedia.acm.services.wopi.service.WopiAcmService;
+import com.armedia.acm.plugins.wopi.model.WopiSessionInfo;
+import com.armedia.acm.plugins.wopi.model.WopiUserInfo;
+import com.armedia.acm.plugins.wopi.service.WopiAcmService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping(value = "/api/latest/wopi/users")
+@RequestMapping(value = "/api/latest/plugin/wopi/users")
 public class WopiUserApiController
 {
     private static final Logger log = LoggerFactory.getLogger(WopiUserApiController.class);

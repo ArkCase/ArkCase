@@ -3,7 +3,7 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="wopiAcmService" class="com.armedia.acm.services.wopi.service.WopiAcmService">
+    <bean id="wopiAcmService" class="com.armedia.acm.plugins.wopi.service.WopiAcmService">
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="fileTransaction" ref="ecmFileTransaction"/>
         <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
@@ -13,7 +13,7 @@
         <property name="tokenService" ref="authenticationTokenService"/>
     </bean>
 
-    <bean id="wopiConfig" class="com.armedia.acm.services.wopi.model.WopiConfig">
+    <bean id="wopiConfig" class="com.armedia.acm.plugins.wopi.model.WopiConfig">
         <property name="wopiHostUrl" value="${wopi.host.url}"/>
         <property name="wopiHostValidationUrl" value="${wopi.host.validation.url}"/>
         <property name="wopiTenantDomain" value="${wopi.tenant.domain}"/>

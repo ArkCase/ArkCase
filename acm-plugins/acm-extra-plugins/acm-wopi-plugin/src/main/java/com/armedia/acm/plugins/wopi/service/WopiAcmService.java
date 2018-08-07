@@ -1,4 +1,4 @@
-package com.armedia.acm.services.wopi.service;
+package com.armedia.acm.plugins.wopi.service;
 
 /*-
  * #%L
@@ -41,11 +41,11 @@ import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.wopi.model.WopiConfig;
-import com.armedia.acm.services.wopi.model.WopiFileInfo;
-import com.armedia.acm.services.wopi.model.WopiLockInfo;
-import com.armedia.acm.services.wopi.model.WopiSessionInfo;
-import com.armedia.acm.services.wopi.model.WopiUserInfo;
+import com.armedia.acm.plugins.wopi.model.WopiConfig;
+import com.armedia.acm.plugins.wopi.model.WopiFileInfo;
+import com.armedia.acm.plugins.wopi.model.WopiLockInfo;
+import com.armedia.acm.plugins.wopi.model.WopiSessionInfo;
+import com.armedia.acm.plugins.wopi.model.WopiUserInfo;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;

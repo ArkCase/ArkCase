@@ -1,4 +1,4 @@
-package com.armedia.acm.services.wopi.model;
+package com.armedia.acm.plugins.wopi.model;
 
 /*-
  * #%L
@@ -27,26 +27,24 @@ package com.armedia.acm.services.wopi.model;
  * #L%
  */
 
-public class WopiSessionInfo
+public class WopiUserInfo
 {
-    private final String accessToken;
+    private final String displayName;
     private final String userId;
-    private final String fileId;
-    private final boolean readOnly;
-    private final boolean userCanWrite;
+    private final String lang;
+    private final Long accessTokenTtl;
 
-    public WopiSessionInfo(String accessToken, String userId, String fileId, boolean readOnly, boolean userCanWrite)
+    public WopiUserInfo(String displayName, String id, String lang, Long accessTokenTtl)
     {
-        this.accessToken = accessToken;
-        this.userId = userId;
-        this.fileId = fileId;
-        this.readOnly = readOnly;
-        this.userCanWrite = userCanWrite;
+        this.displayName = displayName;
+        this.userId = id;
+        this.lang = lang;
+        this.accessTokenTtl = accessTokenTtl;
     }
 
-    public String getAccessToken()
+    public String getDisplayName()
     {
-        return accessToken;
+        return displayName;
     }
 
     public String getUserId()
@@ -54,18 +52,13 @@ public class WopiSessionInfo
         return userId;
     }
 
-    public String getFileId()
+    public String getLang()
     {
-        return fileId;
+        return lang;
     }
 
-    public boolean isReadOnly()
+    public Long getAccessTokenTtl()
     {
-        return readOnly;
-    }
-
-    public boolean isUserCanWrite()
-    {
-        return userCanWrite;
+        return accessTokenTtl;
     }
 }

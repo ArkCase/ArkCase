@@ -1,4 +1,4 @@
-package com.armedia.acm.services.wopi.api;
+package com.armedia.acm.plugins.wopi.api;
 
 /*-
  * #%L
@@ -29,10 +29,11 @@ package com.armedia.acm.services.wopi.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.wopi.model.WopiFileInfo;
+import com.armedia.acm.plugins.wopi.model.WopiLockInfo;
+import com.armedia.acm.plugins.wopi.service.WopiAcmService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
-import com.armedia.acm.services.wopi.model.WopiFileInfo;
-import com.armedia.acm.services.wopi.model.WopiLockInfo;
-import com.armedia.acm.services.wopi.service.WopiAcmService;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 
 @Controller
-@RequestMapping(value = "/api/latest/wopi/files")
+@RequestMapping(value = "/api/latest/plugin/wopi/files")
 public class WopiFilesApiController
 {
     private WopiAcmService wopiService;
