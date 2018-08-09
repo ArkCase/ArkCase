@@ -4,9 +4,4 @@
 
     <bean id="pdfService" class="com.armedia.acm.pdf.service.PdfServiceImpl"/>
 
-    <bean id="pdfDocumentGenerator" class="com.armedia.acm.pdf.PDFDocumentGenerator" abstract="true">
-        <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="pdfService" ref="pdfService"/>
-        <property name="ecmFileDao" ref="ecmFileDao"/>
-    </bean>
 </beans>

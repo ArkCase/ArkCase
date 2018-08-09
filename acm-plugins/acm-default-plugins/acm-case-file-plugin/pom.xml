@@ -137,12 +137,6 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-pdf-utilities</artifactId>
-            <version>${acm.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-admin-plugin</artifactId>
             <version>${acm.version}</version>

@@ -137,9 +137,7 @@ angular.module('complaints').controller(
                         });
 
                         modalInstance.result.then(function(data) {
-                            console.log(data);
-                        }, function() {
-                            console.log("error");
+                            //Do nothing
                         });
                     };
 

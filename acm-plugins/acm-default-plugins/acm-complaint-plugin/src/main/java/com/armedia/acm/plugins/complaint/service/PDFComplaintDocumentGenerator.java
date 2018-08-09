@@ -28,11 +28,11 @@ package com.armedia.acm.plugins.complaint.service;
  */
 
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.pdf.PDFDocumentGenerator;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
+import com.armedia.acm.plugins.ecm.service.PDFDocumentGenerator;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
