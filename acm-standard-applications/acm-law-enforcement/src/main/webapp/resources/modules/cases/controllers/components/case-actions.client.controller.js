@@ -34,6 +34,10 @@ angular.module('cases').controller(
                         $scope.isAngularFormType = isAngularFormType;
                     });
 
+                    FormsTypeService.isFrevvoFormType().then(function(isFrevvoFormType) {
+                        $scope.isFrevvoFormType = isFrevvoFormType;
+                    });
+
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.restricted = objectInfo.restricted;
                         $scope.showBtnChildOutcomes = false;

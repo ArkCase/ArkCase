@@ -1,95 +1,114 @@
 'use strict';
 
-angular.module('cases').controller(
-        'Cases.NewCaseController',
-        [ '$scope', '$stateParams', '$translate', '$modalInstance', 'Case.InfoService', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'ObjectService', 'modalParams', 'Person.InfoService', 'Object.ModelService', 'Object.ParticipantService',
+angular.module('complaints').controller(
+        'Complaints.NewComplaintController',
+        [
+                '$scope',
+                '$stateParams',
+                '$translate',
+                '$modalInstance',
+                'Complaint.InfoService',
+                '$state',
+                'Object.LookupService',
+                'MessageService',
+                '$timeout',
+                'UtilService',
+                '$modal',
+                'ConfigService',
+                'Organization.InfoService',
+                'ObjectService',
+                'modalParams',
+                'Person.InfoService',
                 'Profile.UserInfoService',
-                function($scope, $stateParams, $translate, $modalInstance, CaseInfoService, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService, UserInfoService) {
+                'Object.ModelService',
+                'Object.ParticipantService',
+                function($scope, $stateParams, $translate, $modalInstance, ComplaintInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, PersonInfoService, UserInfoService, ObjectModelService,
+                        ObjectParticipantService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.selectedFiles = [];
                     $scope.userSearchConfig = null;
-                    $scope.isEdit = $scope.modalParams.isEdit;
 
-                    ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
+                    ConfigService.getModuleConfig("complaints").then(function(moduleConfig) {
                         $scope.config = moduleConfig;
 
                         $scope.userSearchConfig = _.find(moduleConfig.components, {
                             id: "userSearch"
                         });
-                        $scope.caseParticipantConfig = _.find(moduleConfig.components, {
+                        $scope.complaintParticipantConfig = _.find(moduleConfig.components, {
                             id: "participants"
                         });
 
                         return moduleConfig;
                     });
 
-                    if ($scope.isEdit) {
+                    //new complaint with predefined values
+                    $scope.complaint = {
+                        className: 'com.armedia.acm.plugins.complaint.model.Complaint',
+                        complaintType: '',
+                        complaintTitle: '',
+                        details: '',
+                        priority: 'Low',
+                        incidentDate: new Date(),
+                        tag: '',
+                        frequency: '',
+                        defaultAddress: {
+                            created: new Date()
+                        },
+                        initiator: '',
+                        addresses: [],
+                        personAssociations: [ {} ],
+                        participants: []
+                    };
 
-                        $scope.objectInfo = $scope.modalParams.casefile;
-                        var tmpCasefile = $scope.modalParams.casefile;
+                    $scope.isAddressTypeSelected = false;
+                    $scope.selectChanged = function() {
+                        if ($scope.complaint.defaultAddress.type)
+                            $scope.isAddressTypeSelected = true;
+                        else
+                            $scope.isAddressTypeSelected = false;
+                    };
 
-                        if (tmpCasefile.personAssociations != undefined) {
-                            _.forEach(tmpCasefile.personAssociations, function(personAssociation) {
-                                personAssociation.personFullName = personAssociation.person.givenName + " " + personAssociation.person.familyName;
-                            });
-                        }
-
-                        if (tmpCasefile.participants != undefined) {
-                            _.forEach(tmpCasefile.participants, function(participant) {
-                                if (participant.participantType == "*" || participant.participantType == "owning group") {
-                                    participant.participantFullName = participant.participantLdapId;
-                                } else {
-                                    UserInfoService.getUserInfoById(participant.participantLdapId).then(function(userInfo) {
-                                        participant.participantFullName = userInfo.fullName;
-                                    }, function(err) {
-                                        participant.participantFullName = participant.participantLdapId;
-                                    })
-                                }
-                            });
-                        }
-
-                        $scope.casefile = {
-                            caseType: $scope.objectInfo.caseType,
-                            title: $scope.objectInfo.title,
-                            details: $scope.objectInfo.details,
-                            initiator: $scope.modalParams.initiator,
-                            personAssociations: tmpCasefile.personAssociations,
-                            participants: tmpCasefile.participants
-                        };
-
-                    } else {
-
-                        //new casefile with predefined values
-                        $scope.casefile = {
-                            className: 'com.armedia.acm.plugins.casefile.model.CaseFile',
-                            caseType: '',
-                            title: '',
-                            details: '',
-                            initiator: '',
-                            personAssociations: [ {} ],
-                            participants: []
-                        };
-                    }
                     var initiatorType = 'Initiator';
 
-                    ObjectLookupService.getCaseFileTypes().then(function(caseTypes) {
-                        $scope.caseCategory = caseTypes;
+                    ObjectLookupService.getComplaintTypes().then(function(complaintTypes) {
+                        $scope.incidentCategory = complaintTypes;
                     });
 
-                    ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE).then(function(personTypes) {
+                    ObjectLookupService.getPriorities().then(function(priorities) {
+                        $scope.priorities = priorities;
+                    });
+
+                    ObjectLookupService.getFrequencies().then(function(frequencies) {
+                        $scope.frequencies = frequencies;
+                    });
+
+                    ObjectLookupService.getAddressTypes().then(function(addressTypes) {
+                        $scope.addressTypes = addressTypes;
+                    });
+
+                    ObjectLookupService.getCountries().then(function(countries) {
+                        $scope.countries = countries;
+                    });
+
+                    ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(function(personTypes) {
                         $scope.personTypes = personTypes;
                         return personTypes;
                     });
-                    ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true).then(function(personTypes) {
+                    ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT, true).then(function(personTypes) {
                         $scope.personTypesInitiator = personTypes;
                         return personTypes;
                     });
 
-                    ObjectLookupService.getCaseFileParticipantTypes().then(function(caseFileParticipantTypes) {
-                        $scope.caseFileParticipantTypes = caseFileParticipantTypes;
+                    ObjectLookupService.getComplaintParticipantTypes().then(function(complaintParticipantTypes) {
+                        $scope.complaintParticipantTypes = complaintParticipantTypes;
+                    });
+
+                    UserInfoService.getUserInfo().then(function(data) {
+                        $scope.complaint.defaultAddress.creator = data.userId;
+                        $scope.complaint.defaultAddress.creatorFullName = data.fullName;
                     });
 
                     // ---------------------------            initiator         --------------------------------------
@@ -97,9 +116,9 @@ angular.module('cases').controller(
                         return {
                             id: null,
                             personType: "",
-                            parentId: $scope.casefile.id,
-                            parentType: ObjectService.ObjectTypes.CASE_FILE,
-                            parentTitle: $scope.casefile.caseNumber,
+                            parentId: $scope.complaint.complaintId,
+                            parentType: ObjectService.ObjectTypes.COMPLAINT,
+                            parentTitle: $scope.complaint.complaintNumber,
                             personDescription: "",
                             notes: "",
                             person: null,
@@ -137,12 +156,12 @@ angular.module('cases').controller(
                             if (data.isNew) {
                                 PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function(response) {
                                     data.person = response.data;
-                                    $scope.casefile.initiator = data.person.givenName + " " + data.person.familyName;
+                                    $scope.complaint.initiator = data.person.givenName + " " + data.person.familyName;
                                     updatePersonAssociationData(association, data.person, data);
                                 });
                             } else {
                                 PersonInfoService.getPersonInfo(data.personId).then(function(person) {
-                                    $scope.casefile.initiator = person.givenName + " " + person.familyName;
+                                    $scope.complaint.initiator = person.givenName + " " + person.familyName;
                                     updatePersonAssociationData(association, person, data);
                                 });
                             }
@@ -153,9 +172,9 @@ angular.module('cases').controller(
                         association.person = person;
                         association.personType = data.type;
                         association.personDescription = data.description;
-                        association.parentTitle = $scope.casefile.caseNumber;
+                        association.parentTitle = $scope.complaint.complaintNumber;
                         if (!association.id) {
-                            $scope.casefile.originator = association;
+                            $scope.complaint.originator = association;
                         }
                     }
 
@@ -168,17 +187,17 @@ angular.module('cases').controller(
 
                     $scope.removePerson = function(person) {
                         $timeout(function() {
-                            _.remove($scope.casefile.personAssociations, function(object) {
+                            _.remove($scope.complaint.personAssociations, function(object) {
                                 return object === person;
                             });
                         }, 0);
                     };
 
-                    $scope.searchPerson = function(index, isNewCase) {
-                        var associationFound = _.find($scope.casefile.personAssociations, function(item) {
-                            return !Util.isEmpty(item) && !Util.isEmpty(item.casefile);
+                    $scope.searchPerson = function(index, isNewComplaint) {
+                        var associationFound = _.find($scope.complaint.personAssociations, function(item) {
+                            return !Util.isEmpty(item) && !Util.isEmpty(item.complaint);
                         });
-                        var association = index > -1 ? $scope.casefile.personAssociations[index] : {};
+                        var association = index > -1 ? $scope.complaint.personAssociations[index] : {};
                         var params = {
                             showSetPrimary: true,
                             isDefault: false,
@@ -235,13 +254,13 @@ angular.module('cases').controller(
                     function setPersonAssociation(association, data) {
                         association.person = data.person;
                         association.personType = data.type;
-                        association.parentId = $scope.casefile.id;
-                        association.parentType = ObjectService.ObjectTypes.CASE_FILE;
-                        association.parentTitle = $scope.casefile.caseNumber;
+                        association.parentId = $scope.complaint.complaintId;
+                        association.parentType = ObjectService.ObjectTypes.COMPLAINT;
+                        association.parentTitle = $scope.complaint.complaintNumber;
 
                         if (data.isDefault) {
                             //find and change previously primary contact
-                            var defaultAssociation = _.find($scope.casefile.personAssociations, function(object) {
+                            var defaultAssociation = _.find($scope.complaint.personAssociations, function(object) {
                                 return object.primaryContact;
                             });
                             if (defaultAssociation) {
@@ -253,12 +272,12 @@ angular.module('cases').controller(
                         association.personFullName = association.person.givenName + ' ' + association.person.familyName;
 
                         //if is new created, add it to the organization associations list
-                        if (!$scope.casefile.personAssociations) {
-                            $scope.casefile.personAssociations = [];
+                        if (!$scope.complaint.personAssociations) {
+                            $scope.complaint.personAssociations = [];
                         }
 
-                        if (!_.includes($scope.casefile.personAssociations, association)) {
-                            $scope.casefile.personAssociations.push(association);
+                        if (!_.includes($scope.complaint.personAssociations, association)) {
+                            $scope.complaint.personAssociations.push(association);
                         }
                     }
 
@@ -275,7 +294,7 @@ angular.module('cases').controller(
                             $scope.owningGroup = null;
                         }
                         $timeout(function() {
-                            _.remove($scope.casefile.participants, function(object) {
+                            _.remove($scope.complaint.participants, function(object) {
                                 return object === participant;
                             });
 
@@ -286,27 +305,27 @@ angular.module('cases').controller(
                     };
 
                     $scope.userOrGroupSearch = function(index) {
-                        var participant = {};
+                        var participant = {}; //index > -1 ? $scope.complaint.participants[index] : {};
                         var typeOwningGroup = "owning group";
                         var typeAssignee = "assignee";
                         var typeOwner = "owner";
 
-                        //only one assignee(owner), if there is already one added, no option to add another one
-                        for ( var i in $scope.casefile.participants) {
-                            if ($scope.casefile.participants[i].participantType == typeAssignee) {
-                                for ( var j in $scope.caseFileParticipantTypes) {
-                                    if ($scope.caseFileParticipantTypes[j].key == typeAssignee) {
-                                        $scope.caseFileParticipantTypes.splice(j, 1);
+                        //only one assignee, if there is already one added, no option to add another one
+                        for ( var i in $scope.complaint.participants) {
+                            if ($scope.complaint.participants[i].participantType == typeAssignee) {
+                                for ( var j in $scope.complaintParticipantTypes) {
+                                    if ($scope.complaintParticipantTypes[j].key == typeAssignee) {
+                                        $scope.complaintParticipantTypes.splice(j, 1);
                                     }
                                 }
                             } else {
-                                ObjectLookupService.getCaseFileParticipantTypes().then(function(caseFileParticipantTypes) {
-                                    $scope.caseFileParticipantTypes = caseFileParticipantTypes;
+                                ObjectLookupService.getComplaintParticipantTypes().then(function(complaintParticipantTypes) {
+                                    $scope.complaintParticipantTypes = complaintParticipantTypes;
                                 });
                             }
                         }
 
-                        participant.participantTypes = $scope.caseFileParticipantTypes;
+                        participant.participantTypes = $scope.complaintParticipantTypes;
                         participant.replaceChildrenParticipant = true;
 
                         var modalScope = $scope.$new();
@@ -314,7 +333,7 @@ angular.module('cases').controller(
                         modalScope.isEdit = false;
                         modalScope.showReplaceChildrenParticipants = true;
                         modalScope.selectedType = participant.selectedType ? participant.selectedType : "";
-                        modalScope.config = $scope.caseParticipantConfig;
+                        modalScope.config = $scope.complaintParticipantConfig;
 
                         var params = {};
 
@@ -335,9 +354,8 @@ angular.module('cases').controller(
                         modalInstance.result.then(function(data) {
                             if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
 
-                                var assignee = ObjectModelService.getParticipantByType($scope.casefile, typeAssignee);
+                                var assignee = ObjectModelService.getParticipantByType($scope.complaint, typeAssignee);
                                 var typeNoAccess = 'No Access';
-
                                 participant.participantLdapId = data.participant.participantLdapId;
 
                                 if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
@@ -349,18 +367,17 @@ angular.module('cases').controller(
                                         participantOwningGroup.participantType = typeOwningGroup;
                                         participantOwningGroup.className = "com.armedia.acm.services.participants.model.AcmParticipant";
 
-                                        if (ObjectParticipantService.validateParticipants([ participantOwningGroup ], true) && !_.includes($scope.casefile.participants, participantOwningGroup)) {
-                                            $scope.casefile.participants.push(participantOwningGroup);
+                                        if (ObjectParticipantService.validateParticipants([ participantOwningGroup ], true) && !_.includes($scope.complaint.participants, participantOwningGroup)) {
+                                            $scope.complaint.participants.push(participantOwningGroup);
                                         }
                                     }
-
                                     participant.id = data.participant.id;
                                     participant.participantType = data.participant.participantType;
                                     participant.className = "com.armedia.acm.services.participants.model.AcmParticipant";
                                     participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
 
-                                    if (ObjectParticipantService.validateParticipants([ participant ], true) && !_.includes($scope.casefile.participants, participant)) {
-                                        $scope.casefile.participants.push(participant);
+                                    if (ObjectParticipantService.validateParticipants([ participant ], true) && !_.includes($scope.complaint.participants, participant)) {
+                                        $scope.complaint.participants.push(participant);
 
                                         if (participant.participantType == typeAssignee) {
                                             participant.participantTypeFormatted = typeOwner;
@@ -381,90 +398,56 @@ angular.module('cases').controller(
                     //-----------------------------------------------------------------------------------------------
 
                     $scope.save = function() {
-
-                        if (!$scope.isEdit) {
-                            $scope.loading = true;
-                            $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                            CaseInfoService.saveCaseInfoNewCase(clearNotFilledElements(_.cloneDeep($scope.casefile))).then(function(objectInfo) {
-                                var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.CASE_FILE);
-                                var caseCreatedMessage = $translate.instant('{{objectType}} {{caseTitle}} was created.', {
-                                    objectType: objectTypeString,
-                                    caseTitle: objectInfo.title
-                                });
-                                MessageService.info(caseCreatedMessage);
-                                ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, objectInfo.id);
-                                $modalInstance.dismiss();
-                                $scope.loading = false;
-                                $scope.loadingIcon = "fa fa-floppy-o";
-                            }, function(error) {
-                                $scope.loading = false;
-                                $scope.loadingIcon = "fa fa-floppy-o";
-                                if (error.data && error.data.message) {
-                                    $scope.error = error.data.message;
-                                } else {
-                                    MessageService.error(error);
-                                }
+                        $scope.loading = true;
+                        $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
+                        ComplaintInfoService.saveComplaintInfoNewComplaint(clearNotFilledElements(_.cloneDeep($scope.complaint))).then(function(objectInfo) {
+                            var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.COMPLAINT);
+                            var complaintCreatedMessage = $translate.instant('{{objectType}} {{complaintTitle}} was created.', {
+                                objectType: objectTypeString,
+                                complaintTitle: objectInfo.complaintTitle
                             });
-                        } else {
-                            // Updates the ArkCase database when the user changes a case attribute
-                            // from the form accessed by clicking 'Edit' and then 'update case file' button
-                            $scope.loading = true;
-                            $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-                            checkForChanges($scope.objectInfo);
-                            if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
-                                var objectInfo = Util.omitNg($scope.objectInfo);
-                                promiseSaveInfo = CaseInfoService.saveCaseInfo(objectInfo);
-                                promiseSaveInfo.then(function(caseInfo) {
-                                    $scope.$emit("report-object-updated", caseInfo);
-                                    var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.CASE_FILE);
-                                    var caseUpdatedMessage = $translate.instant('{{objectType}} {{caseTitle}} was updated.', {
-                                        objectType: objectTypeString,
-                                        caseTitle: objectInfo.title
-                                    });
-                                    MessageService.info(caseUpdatedMessage);
-                                    $modalInstance.dismiss();
-                                    $scope.loading = false;
-                                    $scope.loadingIcon = "fa fa-floppy-o";
-                                }, function(error) {
-                                    $scope.$emit("report-object-update-failed", error);
-                                    $scope.loading = false;
-                                    $scope.loadingIcon = "fa fa-floppy-o";
-                                    if (error.data && error.data.message) {
-                                        $scope.error = error.data.message;
-                                    } else {
-                                        MessageService.error(error);
-                                    }
-                                });
+                            MessageService.info(complaintCreatedMessage);
+                            ObjectService.showObject(ObjectService.ObjectTypes.COMPLAINT, objectInfo.complaintId);
+                            $modalInstance.dismiss();
+                            $scope.loading = false;
+                            $scope.loadingIcon = "fa fa-floppy-o";
+                        }, function(error) {
+                            $scope.loading = false;
+                            $scope.loadingIcon = "fa fa-floppy-o";
+                            if (error.data && error.data.message) {
+                                $scope.error = error.data.message;
+                            } else {
+                                MessageService.error(error);
                             }
-                            return promiseSaveInfo;
-                        }
+                        });
                     };
 
-                    function checkForChanges(objectInfo) {
-                        if (objectInfo.title != $scope.casefile.title) {
-                            objectInfo.title = $scope.casefile.title
-                        }
-                        if (objectInfo.caseType != $scope.casefile.caseType) {
-                            objectInfo.caseType = $scope.casefile.caseType
-                        }
-                        if ($scope.casefile.originator != undefined && objectInfo.originator.person != $scope.casefile.originator.person) {
-                            objectInfo.originator.person = $scope.casefile.originator.person
-                        }
-                        if (objectInfo.details != $scope.casefile.details) {
-                            objectInfo.details = $scope.casefile.details
-                        }
-                        return objectInfo;
-                    }
+                    function clearNotFilledElements(complaint) {
 
-                    function clearNotFilledElements(casefile) {
-
-                        if (Util.isEmpty(casefile.details)) {
-                            casefile.details = null;
+                        //addresses
+                        if (complaint.defaultAddress) {
+                            if (!complaint.defaultAddress.streetAddress) {
+                                complaint.defaultAddress = null;
+                            } else {
+                                delete complaint.defaultAddress['creatorFullName'];
+                                complaint.addresses.push(complaint.defaultAddress);
+                            }
                         }
 
-                        //remove empty casefile before save
-                        _.remove(casefile.personAssociations, function(association) {
+                        if (Util.isEmpty(complaint.details)) {
+                            complaint.details = null;
+                        }
+
+                        if (Util.isEmpty(complaint.tag)) {
+                            complaint.tag = null;
+                        }
+
+                        if (Util.isEmpty(complaint.frequency)) {
+                            complaint.frequency = null;
+                        }
+
+                        //remove empty complaint before save
+                        _.remove(complaint.personAssociations, function(association) {
                             if (!association.personFullName) {
                                 return true;
                             } else {
@@ -474,7 +457,7 @@ angular.module('cases').controller(
                             }
                         });
 
-                        _.remove(casefile.participants, function(participant) {
+                        _.remove(complaint.participants, function(participant) {
                             if (!participant.participantFullName) {
                                 return true;
                             } else {
@@ -484,7 +467,7 @@ angular.module('cases').controller(
                             }
                         });
 
-                        return casefile;
+                        return complaint;
                     }
 
                     $scope.cancelModal = function() {

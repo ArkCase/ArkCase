@@ -194,6 +194,7 @@
         "header": "Buscar",
         "btnSearch.text": "Buscar",
         "btnOk.text": "Aceptar",
+        "btnConfirm.text": "es_Confirm",
         "btnCancel.text": "Cancelar",
         "edtPlaceholder": "Escriba para buscar",
         "noData.text": "Sin resultados",
@@ -601,6 +602,7 @@
             "btnOk.text": "Salvar",
             "btnCancel.text": "Cancelar",
             "dialogUserPicker.header": "Usuario de búsqueda",
+            "dialogUserGroupPicker.header": "es_Search User/Group",
             "dialogGroupPicker.header": "Grupo de búsqueda",
             "replaceChildrenParticipant": "Reemplazar a los niños participantes"
         },
