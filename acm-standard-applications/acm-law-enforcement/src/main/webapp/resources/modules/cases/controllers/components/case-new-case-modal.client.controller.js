@@ -363,9 +363,9 @@ angular.module('cases').controller(
                                         $scope.casefile.participants.push(participant);
 
                                         if (participant.participantType == typeAssignee) {
-                                            participant.participantTypeFormated = typeOwner;
+                                            participant.participantTypeFormatted = typeOwner;
                                         } else {
-                                            participant.participantTypeFormated = participant.participantType;
+                                            participant.participantTypeFormatted = participant.participantType;
                                         }
                                         if ($scope.participantsWithoutOwningGroup.length > 0) {
                                             if ($scope.participantsWithoutOwningGroup[0].participantLdapId == undefined)

@@ -602,6 +602,7 @@
             "btnOk.text": "Salve ",
             "btnCancel.text": "Cancelar",
             "dialogUserPicker.header": "Pesquisar usuário",
+            "dialogUserGroupPicker.header": "pt_Search User/Group",
             "dialogGroupPicker.header": "Grupo de pesquisa",
             "replaceChildrenParticipant": "substitua os participantes das crianças"
         },

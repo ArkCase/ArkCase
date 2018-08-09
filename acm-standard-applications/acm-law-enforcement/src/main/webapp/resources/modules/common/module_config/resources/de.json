@@ -602,6 +602,7 @@
             "btnOk.text": "Sparen",
             "btnCancel.text": "Stornieren",
             "dialogUserPicker.header": "Benutzer suchen",
+            "dialogUserGroupPicker.header": "de_Search User/Group",
             "dialogGroupPicker.header": "Suchgruppe",
             "replaceChildrenParticipant": "Ersetzen Kinder Teilnehmer"
         },

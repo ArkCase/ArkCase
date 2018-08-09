@@ -602,6 +602,7 @@
             "btnOk.text": "Сохранить",
             "btnCancel.text": "Отмена",
             "dialogUserPicker.header": "Поиск пользователя",
+            "dialogUserGroupPicker.header": "ru_Search User/Group",
             "dialogGroupPicker.header": "Поиск группы",
             "replaceChildrenParticipant": "Заменить детей-участниц"
         },

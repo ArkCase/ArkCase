@@ -602,6 +602,7 @@
             "btnOk.text": "बचाना",
             "btnCancel.text": "रद्द करना",
             "dialogUserPicker.header": "खोज उपयोगकर्ता",
+            "dialogUserGroupPicker.header": "hi_Search User/Group",
             "dialogGroupPicker.header": "खोज समूह",
             "replaceChildrenParticipant": "बच्चों के प्रतिभागी की जगह"
         },
