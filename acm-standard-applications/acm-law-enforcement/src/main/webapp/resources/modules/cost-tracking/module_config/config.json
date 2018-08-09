@@ -387,7 +387,7 @@
                     "name": "value",
                     "displayName": "costTracking.comp.summary.table.columns.value",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>${{ row.entity.value | number : 2}}</div>"
+                    "cellTemplate": "<div>{{ row.entity.value | currency}}</div>"
                 },
                 {
                     "name": "title",
