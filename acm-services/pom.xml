@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.2.14-SNAPSHOT</version>
+        <version>3.2.15-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -51,7 +51,6 @@
         <module>acm-service-timesheet</module>
         <module>acm-service-users</module>
         <module>acm-service-webdav</module>
-        <module>acm-service-wopi</module>
         <module>acm-service-calendar</module>
         <module>acm-service-calendar-integration-exchange</module>
         <module>acm-service-labels</module>

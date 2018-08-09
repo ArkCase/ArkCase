@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.armedia.acm</groupId>
-        <artifactId>acm-services</artifactId>
-        <version>3.2.14-SNAPSHOT</version>
+        <artifactId>acm-extra-plugins</artifactId>
+        <groupId>com.armedia.acm.acm-plugins</groupId>
+        <version>3.2.15-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.acm.acm-services</groupId>
-    <artifactId>acm-service-wopi</artifactId>
-    <name>ACM Service: Wopi service</name>
+    <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
+    <artifactId>acm-wopi-plugin</artifactId>
+    <name>ACM Extra Plugin: WOPI Integration</name>
     <packaging>jar</packaging>
 
     <dependencies>
