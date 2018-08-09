@@ -214,7 +214,7 @@
             "titleKey": "common.directive.docTree.menu.collaborate",
             "cmd": "collaborate",
             "uiIcon": "ui-icon-person",
-            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx)$'), 'i').test(nodes[0].data.ext))"
+            "disabledExpression": "!(new RegExp('\\.(docx|xlsx|pptx)$', 'i').test(nodes[0].data.ext))"
           },
           {
             "titleKey": "common.directive.docTree.menu.coEdit",
