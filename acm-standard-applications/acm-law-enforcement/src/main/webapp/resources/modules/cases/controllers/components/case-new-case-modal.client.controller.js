@@ -137,6 +137,7 @@ angular.module('cases').controller(
                             if (data.isNew) {
                                 PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function(response) {
                                     data.person = response.data;
+                                    $scope.casefile.initiator = data.person.givenName + " " + data.person.familyName;
                                     updatePersonAssociationData(association, data.person, data);
                                 });
                             } else {
