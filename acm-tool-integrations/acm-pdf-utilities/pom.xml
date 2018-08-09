@@ -37,12 +37,6 @@
             <artifactId>jai-imageio-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-ecm</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-
         <!-- Barcode generation support for Apache FOP -->
         <dependency>
             <groupId>net.sf.barcode4j</groupId>

@@ -27,10 +27,10 @@ package com.armedia.acm.plugins.casefile.service;
  */
 
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.pdf.PDFDocumentGenerator;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
+import com.armedia.acm.plugins.ecm.service.PDFDocumentGenerator;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 

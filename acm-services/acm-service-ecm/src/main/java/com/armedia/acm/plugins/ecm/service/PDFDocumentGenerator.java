@@ -1,4 +1,4 @@
-package com.armedia.acm.pdf;
+package com.armedia.acm.plugins.ecm.service;
 /*-
  * #%L
  * ACM Default Plugin: Case File
@@ -28,11 +28,11 @@ package com.armedia.acm.pdf;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
 import org.apache.commons.io.FileUtils;
@@ -87,8 +87,7 @@ public abstract class PDFDocumentGenerator<T>
                 filename = getPdfService().generatePdf(new File(stylesheet), source);
                 log.debug("Created {} document [{}]", documentName, filename);
 
-                String arkcaseFilename = String.format(fileNameFormat,
-                        objectId);
+                String arkcaseFilename = String.format(fileNameFormat, objectId);
 
                 EcmFile existing = ecmFileDao.findForContainerAttachmentFolderAndFileType(container.getId(),
                         container.getAttachmentFolder().getId(), documentName);
@@ -102,8 +101,7 @@ public abstract class PDFDocumentGenerator<T>
                     if (existing == null)
                     {
                         EcmFile ecmFile = ecmFileService.upload(arkcaseFilename,
-                                documentName, "Document", fis,
-                                MIME_TYPE_PDF,
+                                documentName, "Document", fis, MIME_TYPE_PDF,
                                 arkcaseFilename, authentication, targetFolderId, objectType, objectId);
                         if (ctx != null)
                         {
