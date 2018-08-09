@@ -194,6 +194,7 @@
         "header": "Suche",
         "btnSearch.text": "Suche",
         "btnOk.text": "Bestätigen",
+        "btnConfirm.text": "de_Confirm",
         "btnCancel.text": "Abbrechen",
         "edtPlaceholder": "In die Suche eingeben",
         "noData.text": "Keine Ergebnisse",

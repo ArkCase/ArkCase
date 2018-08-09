@@ -196,6 +196,7 @@
         "header": "Search",
         "btnSearch.text": "Search",
         "btnOk.text": "OK",
+        "btnConfirm.text": "Confirm",
         "btnCancel.text": "Cancel",
         "edtPlaceholder": "Type in to search",
         "noData.text": "No Results",

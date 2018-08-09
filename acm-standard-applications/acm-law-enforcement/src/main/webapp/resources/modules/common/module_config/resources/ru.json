@@ -194,6 +194,7 @@
         "header": "Поиск",
         "btnSearch.text": "Поиск",
         "btnOk.text": "Хорошо",
+        "btnConfirm.text": "ru_Confirm",
         "btnCancel.text": "Отмена",
         "edtPlaceholder": "Введите поиск",
         "noData.text": "Нет результатов",

@@ -194,6 +194,7 @@
         "header": "検索",
         "btnSearch.text": "検索",
         "btnOk.text": "[OK]",
+        "btnConfirm.text": "ja_Confirm",
         "btnCancel.text": "キャンセル",
         "edtPlaceholder": "検索するには入力",
         "noData.text": "結果なし",

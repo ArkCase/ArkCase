@@ -194,6 +194,7 @@
         "header": "Buscar",
         "btnSearch.text": "Buscar",
         "btnOk.text": "Aceptar",
+        "btnConfirm.text": "es_Confirm",
         "btnCancel.text": "Cancelar",
         "edtPlaceholder": "Escriba para buscar",
         "noData.text": "Sin resultados",

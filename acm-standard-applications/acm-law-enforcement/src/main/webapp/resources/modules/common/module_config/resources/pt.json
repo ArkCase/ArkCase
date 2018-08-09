@@ -194,6 +194,7 @@
         "header": "Pesquisa",
         "btnSearch.text": "Pesquisa",
         "btnOk.text": "Está bem",
+        "btnConfirm.text": "pt_Confirm",
         "btnCancel.text": "Cancelar",
         "edtPlaceholder": "Digite para pesquisar",
         "noData.text": "Sem resultados",
