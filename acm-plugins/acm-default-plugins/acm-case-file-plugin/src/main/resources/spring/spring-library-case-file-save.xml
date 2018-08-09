@@ -57,4 +57,12 @@
         <property name="dao" ref="caseFileDao"/>
     </bean>
 
+    <bean id="pdfDocumentGenerator" class="com.armedia.acm.plugins.casefile.service.PDFCasefileDocumentGenerator">
+      <property name="ecmFileService" ref="ecmFileService"/>
+      <property name="pdfService" ref="pdfService"/>
+      <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
+
+
+
 </beans>
