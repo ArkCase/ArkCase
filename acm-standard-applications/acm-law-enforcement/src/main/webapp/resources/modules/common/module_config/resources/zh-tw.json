@@ -194,6 +194,7 @@
         "header": "搜索",
         "btnSearch.text": "搜索",
         "btnOk.text": "確定",
+        "btnConfirm.text": "zh-tw_Confirm",
         "btnCancel.text": "消除",
         "edtPlaceholder": "鍵入搜索內容",
         "noData.text": "無結果",

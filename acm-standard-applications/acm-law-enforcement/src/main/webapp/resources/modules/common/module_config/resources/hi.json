@@ -194,6 +194,7 @@
         "header": "खोज",
         "btnSearch.text": "खोज",
         "btnOk.text": "ठीक",
+        "btnConfirm.text": "hi_Confirm",
         "btnCancel.text": "रद्द करना",
         "edtPlaceholder": "खोज में टाइप करें",
         "noData.text": "कोई परिणाम नहीं",
