@@ -602,6 +602,7 @@
             "btnOk.text": "保存",
             "btnCancel.text": "取消",
             "dialogUserPicker.header": "搜索用戶",
+            "dialogUserGroupPicker.header": "zh-tw_Search User/Group",
             "dialogGroupPicker.header": "搜索組",
             "replaceChildrenParticipant": "替換子文檔參與者"
         },

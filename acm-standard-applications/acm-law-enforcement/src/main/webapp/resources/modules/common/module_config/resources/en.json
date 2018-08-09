@@ -604,6 +604,7 @@
             "btnOk.text": "Save",
             "btnCancel.text": "Cancel",
             "dialogUserPicker.header": "Search User",
+            "dialogUserGroupPicker.header": "Search User/Group",
             "dialogGroupPicker.header": "Search Group",
             "replaceChildrenParticipant": "replace children participant"
         },
