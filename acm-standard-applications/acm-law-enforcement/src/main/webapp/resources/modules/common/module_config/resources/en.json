@@ -196,6 +196,7 @@
         "header": "Search",
         "btnSearch.text": "Search",
         "btnOk.text": "OK",
+        "btnConfirm.text": "Confirm",
         "btnCancel.text": "Cancel",
         "edtPlaceholder": "Type in to search",
         "noData.text": "No Results",
@@ -603,6 +604,7 @@
             "btnOk.text": "Save",
             "btnCancel.text": "Cancel",
             "dialogUserPicker.header": "Search User",
+            "dialogUserGroupPicker.header": "Search User/Group",
             "dialogGroupPicker.header": "Search Group",
             "replaceChildrenParticipant": "replace children participant"
         },
