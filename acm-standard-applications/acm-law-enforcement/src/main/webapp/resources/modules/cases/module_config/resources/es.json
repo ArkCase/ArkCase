@@ -377,6 +377,8 @@
         },
         "participants": {
             "title": "es_Participants",
+            "owningGroup": "es_Owning Group",
+            "owningGroup.info": "es_The Owning Group can be chosen only through the Owner field",
             "selectParticipant.placeholder": "es_Select Participant",
             "participantType": "es_Participant Type"
         },
