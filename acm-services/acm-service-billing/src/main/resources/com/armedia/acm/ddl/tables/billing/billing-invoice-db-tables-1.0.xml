@@ -83,4 +83,12 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="06-add-billing-invoice-ecm-file" author="marko.stojanoski">
+        <addColumn tableName="acm_billing_invoice">
+            <column name="cm_billing_invoice_ecm_file_id" type="${idType}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
