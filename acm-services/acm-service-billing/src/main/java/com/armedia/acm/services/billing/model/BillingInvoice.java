@@ -31,6 +31,7 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -51,6 +52,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -86,6 +88,10 @@ public class BillingInvoice implements Serializable, AcmObject, AcmEntity, AcmPa
 
     @Column(name = "cm_billing_invoice_number")
     private String invoiceNumber;
+
+    @OneToOne
+    @JoinColumn(name = "cm_billing_invoice_ecm_file_id")
+    private EcmFile billingInvoiceEcmFile;
 
     @Column(name = "cm_billing_invoice_paid_flag")
     @Convert(converter = BooleanToStringConverter.class)
@@ -161,6 +167,16 @@ public class BillingInvoice implements Serializable, AcmObject, AcmEntity, AcmPa
     public void setInvoiceNumber(String invoiceNumber)
     {
         this.invoiceNumber = invoiceNumber;
+    }
+
+    public EcmFile getBillingInvoiceEcmFile()
+    {
+        return billingInvoiceEcmFile;
+    }
+
+    public void setBillingInvoiceEcmFile(EcmFile billingInvoiceEcmFile)
+    {
+        this.billingInvoiceEcmFile = billingInvoiceEcmFile;
     }
 
     /**
