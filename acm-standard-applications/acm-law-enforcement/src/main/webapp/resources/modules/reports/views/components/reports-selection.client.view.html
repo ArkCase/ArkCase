@@ -1,6 +1,6 @@
 <div ng-controller="Reports.SelectionController" ng-cloak class="form-group">
     <label for="selectionReports" translate>reports.selectReport.label</label>
-    <select id="selectionReports" ng-model="data.reportSelected" ng-options="option.id as option.name for option in availableReports"
+    <select id="selectionReports" ng-model="data.reportSelected" ng-options="option.id as option.name for option in availableReports | orderBy:'name'"
             class="form-control input-sm">
         <option value="" translate>reports.selectReport.label</option>
     </select>
