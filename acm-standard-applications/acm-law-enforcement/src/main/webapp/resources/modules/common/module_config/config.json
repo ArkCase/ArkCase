@@ -333,55 +333,11 @@
       "record": {
         "root": [
           {
-            "___title": "New Folder <kbd>Ctrl+N</kbd>",
-            "titleKey": "common.directive.docTree.menu.newFolder",
-            "cmd": "newFolder",
-            "uiIcon": "ui-icon-plus"
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.newDocument",
-            "cmd": "subMenuFileTypes"
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.newCorrespondence",
-            "cmd": "subMenuCorrespondenceForms"
-          },
-          {
-            "title": "----"
-          },
-          {
             "title": "Participants",
             "cmd": "showParticipants"
-          },
-          {
-            "title": "----"
-          },
-          {
-            "___title": "Paste <kbd>Ctrl+V</kbd>",
-            "titleKey": "common.directive.docTree.menu.paste",
-            "cmd": "paste",
-            "uiIcon": "ui-icon-clipboard",
-            "disabled": true
           }
         ],
         "folder": [
-          {
-            "___title": "New Folder <kbd>Ctrl+N</kbd>",
-            "titleKey": "common.directive.docTree.menu.newFolder",
-            "cmd": "newFolder",
-            "uiIcon": "ui-icon-plus"
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.newDocument",
-            "cmd": "subMenuFileTypes"
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.newCorrespondence",
-            "cmd": "subMenuCorrespondenceForms"
-          },
-          {
-            "title": "----"
-          },
           {
             "title": "Participants",
             "cmd": "showParticipants"
@@ -400,16 +356,6 @@
             "titleKey": "common.directive.docTree.menu.copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
-          },
-          {
-            "___title": "Paste <kbd>Ctrl+V</kbd>",
-            "titleKey": "common.directive.docTree.menu.paste",
-            "cmd": "paste",
-            "uiIcon": "ui-icon-clipboard",
-            "disabled": true
-          },
-          {
-            "title": "----"
           }
         ],
         "file": [
