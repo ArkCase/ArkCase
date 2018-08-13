@@ -38,10 +38,11 @@ public class WopiConfig
     private String wopiTenantAccessTokenParamName;
     private String wopiTenantFileIdParamName;
     private Long wopiLockDuration;
+    private Boolean wopiPluginEnabled;
 
     public String getWopiHostUrl(Long fileId, String accessToken)
     {
-        return String.format(wopiHostUrl, fileId, accessToken, wopiTenantProtocol, wopiTenantDomain, wopiTenantPort,
+        return String.format(wopiHostUrl, fileId, accessToken, wopiTenantProtocol, "arkcase-host", 8843,
                 wopiTenantContext, wopiTenantAccessTokenParamName, wopiTenantFileIdParamName);
     }
 
@@ -52,7 +53,7 @@ public class WopiConfig
 
     public String getWopiHostValidationUrl(Long fileId, String accessToken)
     {
-        return String.format(wopiHostValidationUrl, fileId, accessToken, wopiTenantProtocol, wopiTenantDomain, wopiTenantPort,
+        return String.format(wopiHostValidationUrl, fileId, accessToken, wopiTenantProtocol, "arkcase-host", 8843,
                 wopiTenantContext, wopiTenantAccessTokenParamName, wopiTenantFileIdParamName);
     }
 
@@ -129,5 +130,15 @@ public class WopiConfig
     public void setWopiLockDuration(Long wopiLockDuration)
     {
         this.wopiLockDuration = wopiLockDuration;
+    }
+
+    public Boolean getWopiPluginEnabled()
+    {
+        return wopiPluginEnabled;
+    }
+
+    public void setWopiPluginEnabled(Boolean wopiPluginEnabled)
+    {
+        this.wopiPluginEnabled = wopiPluginEnabled;
     }
 }
