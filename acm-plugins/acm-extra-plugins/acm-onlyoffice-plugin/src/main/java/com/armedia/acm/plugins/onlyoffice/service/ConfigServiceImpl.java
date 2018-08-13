@@ -27,10 +27,17 @@ package com.armedia.acm.plugins.onlyoffice.service;
  * #L%
  */
 
+import com.armedia.acm.pluginmanager.service.AcmConfigurablePlugin;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.onlyoffice.exceptions.UnsupportedExtension;
-import com.armedia.acm.plugins.onlyoffice.model.config.*;
+import com.armedia.acm.plugins.onlyoffice.model.config.Config;
+import com.armedia.acm.plugins.onlyoffice.model.config.Document;
+import com.armedia.acm.plugins.onlyoffice.model.config.DocumentInfo;
+import com.armedia.acm.plugins.onlyoffice.model.config.DocumentPermissions;
+import com.armedia.acm.plugins.onlyoffice.model.config.EditorConfig;
+import com.armedia.acm.plugins.onlyoffice.model.config.EditorCustomization;
+import com.armedia.acm.plugins.onlyoffice.model.config.User;
 import com.armedia.acm.plugins.onlyoffice.util.DocumentTypeResolver;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
@@ -43,7 +50,7 @@ import org.springframework.security.core.Authentication;
 
 import java.text.SimpleDateFormat;
 
-public class ConfigServiceImpl implements ConfigService
+public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin
 {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private EcmFileDao ecmFileDao;
@@ -54,6 +61,8 @@ public class ConfigServiceImpl implements ConfigService
 
     private String documentServerUrlApi;
     private String arkcaseBaseUrl;
+    private Boolean pluginEnabled;
+    private static final String ONLY_OFFICE_PLUGIN = "ONLY_OFFICE";
 
     @Override
     public Config getConfig(Long fileId, Authentication auth)
@@ -194,5 +203,27 @@ public class ConfigServiceImpl implements ConfigService
     public void setDocumentTypeResolver(DocumentTypeResolver documentTypeResolver)
     {
         this.documentTypeResolver = documentTypeResolver;
+    }
+
+    public Boolean getPluginEnabled()
+    {
+        return pluginEnabled;
+    }
+
+    public void setPluginEnabled(Boolean pluginEnabled)
+    {
+        this.pluginEnabled = pluginEnabled;
+    }
+
+    @Override
+    public boolean isEnabled()
+    {
+        return pluginEnabled;
+    }
+
+    @Override
+    public String getName()
+    {
+        return ONLY_OFFICE_PLUGIN;
     }
 }

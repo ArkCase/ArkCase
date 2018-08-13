@@ -192,7 +192,8 @@
           {
             "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked"
+            "uiIcon": "ui-icon-locked",
+            "plugin": "RMA"
           }
         ],
         "file": [
@@ -214,13 +215,15 @@
             "titleKey": "common.directive.docTree.menu.collaborate",
             "cmd": "collaborate",
             "uiIcon": "ui-icon-person",
-            "disabledExpression": "!(new RegExp('\\.(docx|xlsx|pptx)$', 'i').test(nodes[0].data.ext))"
+            "disabledExpression": "!(new RegExp('\\.(docx|xlsx|pptx)$', 'i').test(nodes[0].data.ext))",
+            "plugin": "WOPI"
           },
           {
             "titleKey": "common.directive.docTree.menu.coEdit",
             "cmd": "co-edit",
             "uiIcon": "ui-icon-document",
-            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))"
+            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))",
+            "plugin": "ONLY_OFFICE"
           },
           {
             "titleKey": "common.directive.docTree.menu.email",
@@ -326,7 +329,8 @@
           {
             "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked"
+            "uiIcon": "ui-icon-locked",
+            "plugin": "RMA"
           }
         ]
       },
@@ -448,7 +452,8 @@
           {
             "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked"
+            "uiIcon": "ui-icon-locked",
+            "plugin": "RMA"
           }
         ],
         "folders": [
@@ -473,7 +478,8 @@
           {
             "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked"
+            "uiIcon": "ui-icon-locked",
+            "plugin": "RMA"
           }
         ],
         "filesAndFolders": [
@@ -498,7 +504,8 @@
           {
             "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked"
+            "uiIcon": "ui-icon-locked",
+            "plugin": "RMA"
           }
         ],
         "filesOrFoldersRecord": [
@@ -517,7 +524,8 @@
           {
             "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked"
+            "uiIcon": "ui-icon-locked",
+            "plugin": "RMA"
           }
         ]
       },
