@@ -848,7 +848,12 @@
         "people": {
             "title": "लोग",
             "searchExisting.placeholder": "मौजूदा व्यक्ति खोजें",
-            "personType": "व्यक्ति का प्रकार"
+            "personType": "व्यक्ति का प्रकार",
+            "comp":{
+                "details":{
+                    "title":"hi_Details"
+                }
+            }
         },
         "locations": {
             "title": "स्थान",
