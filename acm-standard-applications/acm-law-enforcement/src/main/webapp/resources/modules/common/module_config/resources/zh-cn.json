@@ -848,7 +848,12 @@
         "people": {
             "title": "人员",
             "searchExisting.placeholder": "搜索现有人员",
-            "personType": ""
+            "personType": "",
+            "comp":{
+                "details":{
+                    "title":"zh-cn_Details"
+                }
+            }
         },
         "locations": {
             "title": "地点",

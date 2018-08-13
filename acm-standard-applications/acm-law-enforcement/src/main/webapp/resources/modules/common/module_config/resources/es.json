@@ -848,7 +848,12 @@
         "people": {
             "title": "Gente",
             "searchExisting.placeholder": "Buscar persona existente",
-            "personType": "Tipo de persona"
+            "personType": "Tipo de persona",
+            "comp":{
+                "details":{
+                    "title":"es_Details"
+                }
+            }
         },
         "locations": {
             "title": "Ubicaciones",

@@ -848,7 +848,12 @@
         "people": {
             "title": "People",
             "searchExisting.placeholder": "Search Existing Person",
-            "personType": "Person Type"
+            "personType": "Person Type",
+            "comp":{
+                "details":{
+                    "title":"en-in_Details"
+                }
+            }
         },
         "locations": {
             "title": "Locations",

@@ -848,7 +848,12 @@
         "people": {
             "title": "Люди",
             "searchExisting.placeholder": "Поиск существующего лица",
-            "personType": "Тип лица"
+            "personType": "Тип лица",
+            "comp":{
+                "details":{
+                    "title":"ru_Details"
+                }
+            }
         },
         "locations": {
             "title": "Места",

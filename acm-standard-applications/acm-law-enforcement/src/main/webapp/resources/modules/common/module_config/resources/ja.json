@@ -848,7 +848,12 @@
         "people": {
             "title": "人物",
             "searchExisting.placeholder": "既存の人を検索する",
-            "personType": "人物の種類"
+            "personType": "人物の種類",
+            "comp":{
+                "details":{
+                    "title":"ja_Details"
+                }
+            }
         },
         "locations": {
             "title": "場所",
