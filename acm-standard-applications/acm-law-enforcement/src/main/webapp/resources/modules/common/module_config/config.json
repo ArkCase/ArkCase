@@ -221,7 +221,8 @@
             "titleKey": "common.directive.docTree.menu.coEdit",
             "cmd": "co-edit",
             "uiIcon": "ui-icon-document",
-            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))"
+            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))",
+            "plugin": "ONLY_OFFICE"
           },
           {
             "titleKey": "common.directive.docTree.menu.email",
