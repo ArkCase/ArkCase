@@ -96,7 +96,7 @@ public class AWSTranscribeService implements TranscribeService, AcmConfigurableP
     private TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
     private String credentialConfigurationFileLocation;
     private TranscribeEventPublisher transcribeEventPublisher;
-    private static final String AWS_TRANSCRIBE_PLUGIN = "AWS";
+    private static final String AWS_TRANSCRIBE_PLUGIN = "AWS_TRANSCRIBE";
 
     public void init() throws GetConfigurationException
     {
