@@ -42,7 +42,7 @@ public class WopiConfig
 
     public String getWopiHostUrl(Long fileId, String accessToken)
     {
-        return String.format(wopiHostUrl, fileId, accessToken, wopiTenantProtocol, "arkcase-host", 8843,
+        return String.format(wopiHostUrl, fileId, accessToken, wopiTenantProtocol, wopiTenantDomain, wopiTenantPort,
                 wopiTenantContext, wopiTenantAccessTokenParamName, wopiTenantFileIdParamName);
     }
 
@@ -53,7 +53,7 @@ public class WopiConfig
 
     public String getWopiHostValidationUrl(Long fileId, String accessToken)
     {
-        return String.format(wopiHostValidationUrl, fileId, accessToken, wopiTenantProtocol, "arkcase-host", 8843,
+        return String.format(wopiHostValidationUrl, fileId, accessToken, wopiTenantProtocol, wopiTenantDomain, wopiTenantPort,
                 wopiTenantContext, wopiTenantAccessTokenParamName, wopiTenantFileIdParamName);
     }
 
