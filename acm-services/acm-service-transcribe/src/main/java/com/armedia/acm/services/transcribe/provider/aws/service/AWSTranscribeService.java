@@ -42,6 +42,7 @@ import com.amazonaws.services.transcribe.model.StartTranscriptionJobRequest;
 import com.amazonaws.services.transcribe.model.StartTranscriptionJobResult;
 import com.amazonaws.services.transcribe.model.TranscriptionJobStatus;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.pluginmanager.service.AcmConfigurablePlugin;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
@@ -83,7 +84,7 @@ import java.util.List;
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/12/2018
  */
-public class AWSTranscribeService implements TranscribeService
+public class AWSTranscribeService implements TranscribeService, AcmConfigurablePlugin
 {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -95,6 +96,7 @@ public class AWSTranscribeService implements TranscribeService
     private TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
     private String credentialConfigurationFileLocation;
     private TranscribeEventPublisher transcribeEventPublisher;
+    private static final String AWS_TRANSCRIBE_PLUGIN = "AWS";
 
     public void init() throws GetConfigurationException
     {
@@ -607,5 +609,25 @@ public class AWSTranscribeService implements TranscribeService
     public void setTranscribeEventPublisher(TranscribeEventPublisher transcribeEventPublisher)
     {
         this.transcribeEventPublisher = transcribeEventPublisher;
+    }
+
+    @Override
+    public boolean isEnabled()
+    {
+        try
+        {
+            return transcribeConfigurationPropertiesService.get().isEnabled();
+        }
+        catch (GetConfigurationException e)
+        {
+            LOG.warn("Could not read transcribe configuration.", e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public String getName()
+    {
+        return AWS_TRANSCRIBE_PLUGIN;
     }
 }
