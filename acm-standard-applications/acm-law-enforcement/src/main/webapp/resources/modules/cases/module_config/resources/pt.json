@@ -361,6 +361,33 @@
             "approverDecision": "Decisão Aprovação"
         }
     },
+    "cases.comp.newCase": {
+        "title": "pt_New Case File",
+        "editCase.title": "pt_Edit Case File",
+        "caseTitle": "pt_Case Title",
+        "caseTitle.placeholder": "pt_Enter Case File Title",
+        "caseType": "pt_Case Type",
+        "initiator": "pt_Initiator",
+        "initiator.placeholder": "pt_Select Initiator",
+        "description": "pt_Description",
+        "people": {
+            "title": "pt_People",
+            "selectPerson.placeholder": "pt_Search existing Person",
+            "personType": "pt_Person Type"
+        },
+        "participants": {
+            "title": "pt_Participants",
+            "owningGroup": "pt_Owning Group",
+            "owningGroup.info": "pt_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "pt_Select Participant",
+            "participantType": "pt_Participant Type"
+        },
+        "cancelButton": "pt_Cancel",
+        "saveButton": "pt_Save Case File",
+        "updateButton": "pt_Update Case File",
+        "removeButton": "pt_Remove",
+        "addButton": "pt_Add Another"
+    },
     "cases.userOrGroupSearch": {
         "id": "PesquisarUsuários",
         "title": "Pesquisa de usuário / grupo",

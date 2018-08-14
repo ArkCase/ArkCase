@@ -398,6 +398,8 @@
         },
         "participants": {
             "title": "zh-cn_Participants",
+            "owningGroup": "zh-cn_Owning Group",
+            "owningGroup.info": "zh-cn_The Owning Group can be chosen only through the Owner field",
             "selectParticipant.placeholder": "zh-cn_Select Participant",
             "participantType": "zh-cn_Participant Type"
         },

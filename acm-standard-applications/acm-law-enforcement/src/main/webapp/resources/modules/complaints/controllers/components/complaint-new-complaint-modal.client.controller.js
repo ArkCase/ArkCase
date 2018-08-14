@@ -60,7 +60,7 @@ angular.module('complaints').controller(
                         initiator: '',
                         addresses: [],
                         personAssociations: [ {} ],
-                        participants: [ {} ]
+                        participants: []
                     };
 
                     $scope.isAddressTypeSelected = false;
@@ -156,6 +156,7 @@ angular.module('complaints').controller(
                             if (data.isNew) {
                                 PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function(response) {
                                     data.person = response.data;
+                                    $scope.complaint.initiator = data.person.givenName + " " + data.person.familyName;
                                     updatePersonAssociationData(association, data.person, data);
                                 });
                             } else {
@@ -281,6 +282,7 @@ angular.module('complaints').controller(
                     }
 
                     //-----------------------------------   participants    -------------------------------------------
+                    $scope.participantsWithoutOwningGroup = [ {} ];
                     $scope.addParticipant = function() {
                         $timeout(function() {
                             $scope.userOrGroupSearch(-1);
@@ -288,15 +290,22 @@ angular.module('complaints').controller(
                     };
 
                     $scope.removeParticipant = function(participant) {
+                        if (participant.participantType == "owning group") {
+                            $scope.owningGroup = null;
+                        }
                         $timeout(function() {
                             _.remove($scope.complaint.participants, function(object) {
+                                return object === participant;
+                            });
+
+                            _.remove($scope.participantsWithoutOwningGroup, function(object) {
                                 return object === participant;
                             });
                         }, 0);
                     };
 
                     $scope.userOrGroupSearch = function(index) {
-                        var participant = index > -1 ? $scope.complaint.participants[index] : {};
+                        var participant = {}; //index > -1 ? $scope.complaint.participants[index] : {};
                         var typeOwningGroup = "owning group";
                         var typeAssignee = "assignee";
                         var typeOwner = "owner";
@@ -328,13 +337,11 @@ angular.module('complaints').controller(
 
                         var params = {};
 
-                        params.owningGroup = ObjectModelService.getParticipantByType($scope.complaint, typeOwningGroup);
-
                         var modalInstance = $modal.open({
                             scope: modalScope,
                             animation: true,
                             templateUrl: "directives/core-participants/core-participants-modal.client.view.html",
-                            controller: "Directives.NewComplaintCoreParticipantsModalController",
+                            controller: "Directives.NewComplaintCaseCoreParticipantsModalController",
                             size: 'lg',
                             backdrop: 'static',
                             resolve: {
@@ -348,29 +355,40 @@ angular.module('complaints').controller(
                             if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
 
                                 var assignee = ObjectModelService.getParticipantByType($scope.complaint, typeAssignee);
-                                var owner = ObjectModelService.getParticipantByType($scope.complaint, typeOwner);
-                                var owningGroup = "";
-
-                                if (data.participant.participantType == typeOwningGroup) {
-                                    owningGroup = data.participant.participantLdapId;
-                                }
-
                                 var typeNoAccess = 'No Access';
                                 participant.participantLdapId = data.participant.participantLdapId;
 
                                 if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
                                     MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
                                 } else {
+                                    if (data.owningGroup != null) {
+                                        $scope.owningGroup = data.owningGroup.participantFullName;
+                                        var participantOwningGroup = data.owningGroup;
+                                        participantOwningGroup.participantType = typeOwningGroup;
+                                        participantOwningGroup.className = "com.armedia.acm.services.participants.model.AcmParticipant";
+
+                                        if (ObjectParticipantService.validateParticipants([ participantOwningGroup ], true) && !_.includes($scope.complaint.participants, participantOwningGroup)) {
+                                            $scope.complaint.participants.push(participantOwningGroup);
+                                        }
+                                    }
                                     participant.id = data.participant.id;
                                     participant.participantType = data.participant.participantType;
                                     participant.className = "com.armedia.acm.services.participants.model.AcmParticipant";
                                     participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
 
-                                    var participants = [];
-                                    participants.push(participant);
-
-                                    if (ObjectParticipantService.validateParticipants(participants, true) && !_.includes($scope.complaint.participants, participant)) {
+                                    if (ObjectParticipantService.validateParticipants([ participant ], true) && !_.includes($scope.complaint.participants, participant)) {
                                         $scope.complaint.participants.push(participant);
+
+                                        if (participant.participantType == typeAssignee) {
+                                            participant.participantTypeFormatted = typeOwner;
+                                        } else {
+                                            participant.participantTypeFormatted = participant.participantType;
+                                        }
+                                        if ($scope.participantsWithoutOwningGroup.length > 0) {
+                                            if ($scope.participantsWithoutOwningGroup[0].participantLdapId == undefined)
+                                                $scope.participantsWithoutOwningGroup.splice(0);
+                                        }
+                                        $scope.participantsWithoutOwningGroup.push(participant);
                                     }
                                 }
                             }

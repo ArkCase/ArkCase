@@ -361,6 +361,33 @@
             "approverDecision": "Genehmigungsentscheidung"
         }
     },
+    "cases.comp.newCase": {
+        "title": "de_New Case File",
+        "editCase.title": "de_Edit Case File",
+        "caseTitle": "de_Case Title",
+        "caseTitle.placeholder": "de_Enter Case File Title",
+        "caseType": "de_Case Type",
+        "initiator": "de_Initiator",
+        "initiator.placeholder": "de_Select Initiator",
+        "description": "de_Description",
+        "people": {
+            "title": "de_People",
+            "selectPerson.placeholder": "de_Search existing Person",
+            "personType": "de_Person Type"
+        },
+        "participants": {
+            "title": "de_Participants",
+            "owningGroup": "de_Owning Group",
+            "owningGroup.info": "de_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "de_Select Participant",
+            "participantType": "de_Participant Type"
+        },
+        "cancelButton": "de_Cancel",
+        "saveButton": "de_Save Case File",
+        "updateButton": "de_Update Case File",
+        "removeButton": "de_Remove",
+        "addButton": "de_Add Another"
+    },
     "cases.userOrGroupSearch": {
         "id": "BenutzerSuche",
         "title": "Benutzer- / Gruppensuche",

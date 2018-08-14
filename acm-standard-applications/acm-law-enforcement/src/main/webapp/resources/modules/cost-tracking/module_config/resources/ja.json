@@ -76,12 +76,32 @@
             }
         }
     },
-    "costTracking.comp.approvers": {
-        "title": "承認者",
+    "costTracking.comp.tasks": {
+        "title": "仕事",
         "table.columns": {
-            "fullName": "フルネーム",
-            "userId": "ユーザー名"
+            "title": "タイトル",
+            "assignee": "譲受人",
+            "due": "支払期日",
+            "status": "状態",
+            "priority": "優先",
+            "created": "作成した"
         }
+    },
+    "costTracking.comp.expenses": {
+        "title": "経費",
+        "table.columns": {
+            "date": "日付",
+            "title": "タイトル",
+            "description": "説明",
+            "amount": "量"
+        }
+    },
+    "costTracking.comp.documents": {
+        "title": "書類",
+        "filterInputPlaceholder": "フィルタ",
+        "searchInputPlaceholder": "サーチ",
+        "newTask": "新しい仕事",
+        "sendEmail": "メールを送る"
     },
     "costTracking.tree": {
         "nodeTypes": {
@@ -89,7 +109,8 @@
             "person.label": "人物",
             "summary.label": "経費",
             "tags.label": "タグ",
-            "approvers.label": "承認者"
+            "tasks.label": "仕事",
+            "documents.label": "書類"
         },
         "sorters": {
             "dateAsc": "日付で並べ替え",

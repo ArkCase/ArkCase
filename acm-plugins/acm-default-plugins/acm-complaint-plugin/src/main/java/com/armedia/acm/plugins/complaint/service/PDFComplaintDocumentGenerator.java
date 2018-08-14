@@ -27,137 +27,43 @@ package com.armedia.acm.plugins.complaint.service;
  * #L%
  */
 
-import static com.armedia.acm.plugins.complaint.model.ComplaintConstants.*;
-
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.pdf.PdfServiceException;
-import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
-import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.PDFDocumentGenerator;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends Complaint>
+public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends Complaint> extends PDFDocumentGenerator
 {
-    private final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
     private D dao;
 
-    private T businessObject;
-
-    private EcmFileService ecmFileService;
-
-    private EcmFileDao ecmFileDao;
-
-    private PdfService pdfService;
-
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    public void generatePdf(String objectType, Long complaintId) throws ParserConfigurationException
+    public void generatePdf(Long complaintId, ComplaintPipelineContext ctx) throws ParserConfigurationException
     {
-        generatePdf(objectType, complaintId, null);
-    }
-
-    public void generatePdf(String objectType, Long complaintId, ComplaintPipelineContext ctx) throws ParserConfigurationException
-    {
+        String objectType = ComplaintConstants.OBJECT_TYPE;
         if (getDao().getSupportedObjectType().equals(objectType))
         {
-
-            T businessObject = (T) getDao().find(complaintId);
-
-            if (businessObject != null)
-            {
-                Document document = (Document) getComplaint(businessObject);
-                Source source = new DOMSource(document);
-                String filename = null;
-
-                try
-                {
-                    filename = getPdfService().generatePdf(new File(ComplaintConstants.COMPLAINT_STYLESHEET), source);
-                    log.debug("Created {} document [{}]", ComplaintConstants.COMPLAINT_DOCUMENT, filename);
-
-                    String arkcaseFilename = String.format(ComplaintConstants.COMPLAINT_FILENAMEFORMAT,
-                            businessObject.getId());
-
-                    EcmFile existing = ecmFileDao.findForContainerAttachmentFolderAndFileType(businessObject.getContainer().getId(),
-                            businessObject.getContainer().getAttachmentFolder().getId(), ComplaintConstants.COMPLAINT_DOCUMENT);
-
-                    String targetFolderId = businessObject.getContainer().getAttachmentFolder() == null
-                            ? businessObject.getContainer().getFolder().getCmisFolderId()
-                            : businessObject.getContainer().getAttachmentFolder().getCmisFolderId();
-
-                    Authentication authentication = ctx.getAuthentication();
-
-                    try (InputStream fis = new FileInputStream(filename))
-                    {
-                        if (existing == null)
-                        {
-                            EcmFile ecmFile = ecmFileService.upload(arkcaseFilename,
-                                    ComplaintConstants.COMPLAINT_DOCUMENT, "Document", fis,
-                                    MIME_TYPE_PDF,
-                                    arkcaseFilename, authentication, targetFolderId, objectType, businessObject.getId());
-                            if (ctx != null)
-                            {
-                                ctx.addProperty(NEW_FILE, true);
-                                ctx.addProperty(FILE_ID, ecmFile.getId());
-                            }
-                        }
-                        else
-                        {
-                            EcmFile ecmFile = ecmFileService.update(existing, fis, authentication);
-                            if (ctx != null)
-                            {
-                                ctx.addProperty(NEW_FILE, false);
-                                ctx.addProperty(FILE_ID, ecmFile.getId());
-                                ctx.addProperty(FILE_VERSION, ecmFile.getActiveVersionTag());
-                            }
-                        }
-                    }
-                }
-                catch (PdfServiceException | AcmCreateObjectFailedException | AcmUserActionFailedException | IOException e)
-                {
-                    log.error("Unable to create {} document for request [{}]",
-                            ComplaintConstants.COMPLAINT_DOCUMENT, businessObject.getId(), e);
-                }
-                finally
-                {
-                    FileUtils.deleteQuietly(new File(filename));
-                }
-            }
-
+            T complaint = (T) getDao().find(complaintId);
+            generatePdf(objectType, complaintId, ctx, ctx.getAuthentication(), complaint, complaint.getContainer(),
+                    ComplaintConstants.COMPLAINT_STYLESHEET, ComplaintConstants.COMPLAINT_DOCUMENT,
+                    ComplaintConstants.COMPLAINT_FILENAMEFORMAT);
         }
-
     }
 
-    public Document getComplaint(T businessObject) throws ParserConfigurationException
+    @Override
+    public Document buildXmlForPdfDocument(Object businessObject) throws ParserConfigurationException
     {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
@@ -236,33 +142,6 @@ public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends C
         return document;
     }
 
-    /**
-     * A helper method that simplifies this class.
-     *
-     * @param doc
-     *            the DOM Document, used as a factory for
-     *            creating Elements.
-     * @param parent
-     *            the DOM Element to add the child to.
-     * @param elemName
-     *            the name of the XML element to create.
-     * @param elemValue
-     *            the text content of the new XML element.
-     * @param required
-     *            if true, insert 'required="true"' attribute.
-     */
-    private void addElement(Document doc, Element parent, String elemName,
-            String elemValue, boolean required)
-    {
-        Element elem = doc.createElement(elemName);
-        elem.appendChild(doc.createTextNode(elemValue));
-        if (required)
-        {
-            elem.setAttribute("required", "true");
-        }
-        parent.appendChild(elem);
-    }
-
     public D getDao()
     {
         return dao;
@@ -271,50 +150,5 @@ public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends C
     public void setDao(D dao)
     {
         this.dao = dao;
-    }
-
-    public T getBusinessObject()
-    {
-        return businessObject;
-    }
-
-    public void setBusinessObject(T businessObject)
-    {
-        this.businessObject = businessObject;
-    }
-
-    public EcmFileService getEcmFileService()
-    {
-        return ecmFileService;
-    }
-
-    public void setEcmFileService(EcmFileService ecmFileService)
-    {
-        this.ecmFileService = ecmFileService;
-    }
-
-    public PdfService getPdfService()
-    {
-        return pdfService;
-    }
-
-    public void setPdfService(PdfService pdfService)
-    {
-        this.pdfService = pdfService;
-    }
-
-    public DateTimeFormatter getDatePattern()
-    {
-        return datePattern;
-    }
-
-    public EcmFileDao getEcmFileDao()
-    {
-        return ecmFileDao;
-    }
-
-    public void setEcmFileDao(EcmFileDao ecmFileDao)
-    {
-        this.ecmFileDao = ecmFileDao;
     }
 }

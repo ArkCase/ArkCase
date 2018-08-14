@@ -215,35 +215,41 @@
                 </div>
                 <div id="collapseParticipants" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <div ng-repeat="participant in complaint.participants">
-                            <div class="row">
-                                <div class="col-sm-4 form-group">
-                                    <label for="searchParticipant">&nbsp;</label>
-                                    <input id="searchParticipant" type="text" ng-model="participant.participantFullName"
-                                            ng-click="userOrGroupSearch($index, true)" class="input-md form-control" readonly
-                                            placeholder="{{ 'complaints.comp.newComplaint.participants.selectParticipant.placeholder' | translate }}">
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <label translate>complaints.comp.newComplaint.participants.owningGroup</label>
+                                <i class="fa fa-info-circle"
+                                        title="{{ 'complaints.comp.newComplaint.participants.owningGroup.info' | translate }}"></i>
+                                <input class="form-control" readonly ng-model="owningGroup">
+                            </div>
+                        </div>
+                        <div class="row" ng-repeat="participant in participantsWithoutOwningGroup">
+                            <div class="col-sm-4 form-group">
+                                <label for="searchParticipant">&nbsp;</label>
+                                <input id="searchParticipant" type="text" ng-model="participant.participantFullName"
+                                        ng-click="userOrGroupSearch($index, true)" class="input-md form-control" readonly
+                                        placeholder="{{ 'complaints.comp.newComplaint.participants.selectParticipant.placeholder' | translate }}">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label translate>complaints.comp.newComplaint.participants.participantType</label>
+                                <input style="text-transform: capitalize;" class="form-control" readonly
+                                        ng-model="participant.participantTypeFormatted">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <div class="pull-left">
+                                    <label class="control-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-link form-control" ng-click="removeParticipant(participant)"
+                                            ng-show="!$first">
+                                        <i class="fa fa-minus text-danger"></i><span
+                                            translate>complaints.comp.newComplaint.removeButton</span>
+                                    </button>
                                 </div>
-                                <div class="col-sm-4 form-group">
-                                    <label translate>complaints.comp.newComplaint.participants.participantType</label>
-                                    <input class="form-control" readonly ng-model="participant.participantType">
-                                </div>
-                                <div class="col-sm-4 form-group">
-                                    <div class="pull-left">
-                                        <label class="control-label">&nbsp;</label>
-                                        <button type="button" class="btn btn-link form-control" ng-click="removeParticipant(participant)"
-                                                ng-show="!$first">
-                                            <i class="fa fa-minus text-danger"></i><span
-                                                translate>complaints.comp.newComplaint.removeButton</span>
-                                        </button>
-                                    </div>
-                                    <div class="pull-left">
-                                        <label class="control-label">&nbsp;</label>
-                                        <button type="button" class="btn btn-link form-control" ng-click="addParticipant();"
-                                                ng-disabled="!participant.participantFullName" ng-show="$last">
-                                            <i class="fa fa-plus text-success"></i><span
-                                                translate>complaints.comp.newComplaint.addButton</span>
-                                        </button>
-                                    </div>
+                                <div class="pull-left">
+                                    <label class="control-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-link form-control" ng-click="addParticipant();"
+                                            ng-disabled="!participant.participantFullName" ng-show="$last">
+                                        <i class="fa fa-plus text-success"></i><span translate>complaints.comp.newComplaint.addButton</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
