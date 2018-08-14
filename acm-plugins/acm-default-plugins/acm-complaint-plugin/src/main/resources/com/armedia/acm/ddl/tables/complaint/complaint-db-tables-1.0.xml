@@ -388,5 +388,13 @@
         <sql>UPDATE acm_complaint SET cm_default_address=cm_address_id
         </sql>
     </changeSet>
+
+    <changeSet id="complaint-27-change-location-to-address-id" author="dimitar.stefanovski">
+        <addColumn tableName="acm_close_complaint_request">
+            <column name="cm_close_complaint_description" type="VARCHAR(1024)" defaultValue="">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
 

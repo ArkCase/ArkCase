@@ -35,7 +35,7 @@ import com.armedia.acm.form.time.model.TimeForm;
 import com.armedia.acm.form.time.model.TimeItem;
 import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.admin.service.TimesheetConfigurationService;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -262,7 +262,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
         boolean startWorkflow = getTimesheetService()
                 .checkWorkflowStartup(TimesheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
 
-        FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(),
+        UploadedFiles uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(),
                 getFormName().toUpperCase(), saved.getId());
 
         getTimesheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles,

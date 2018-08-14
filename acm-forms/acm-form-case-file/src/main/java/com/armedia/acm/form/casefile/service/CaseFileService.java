@@ -38,16 +38,12 @@ import com.armedia.acm.form.casefile.model.CaseFileFormConstants;
 import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.dao.IdentificationDao;
@@ -145,7 +141,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         updateXMLAttachment(attachments, getFormName(), form);
 
         // Save Attachments
-        FrevvoUploadedFiles frevvoFiles = saveAttachments(getAttachmentFileType(form), attachments, form.getCmisFolderId(),
+        UploadedFiles uploadedFiles = saveAttachments(getAttachmentFileType(form), attachments, form.getCmisFolderId(),
                 FrevvoFormName.CASE_FILE.toUpperCase(), form.getId());
 
         // Log the last user action
@@ -158,7 +154,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         if (!"edit".equals(mode))
         {
             CaseFileWorkflowListener workflowListener = new CaseFileWorkflowListener();
-            workflowListener.handleNewCaseFile(getCaseFile(), frevvoFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule(),
+            workflowListener.handleNewCaseFile(getCaseFile(), uploadedFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule(),
                     this);
         }
 
