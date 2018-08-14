@@ -2,8 +2,8 @@
 
 angular.module('tasks').controller(
     'Tasks.SignaturesController',
-    ['$scope', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Object.SignatureService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$rootScope',
-        function ($scope, $stateParams, $q, Util, ConfigService, ObjectService, ObjectSignatureService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, $rootScope) {
+    ['$rootScope', '$scope', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Object.SignatureService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService',
+        function ($rootScope, $scope, $stateParams, $q, Util, ConfigService, ObjectService, ObjectSignatureService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
             var componentHelper = new HelperObjectBrowserService.Component({
                 moduleId: "tasks",
@@ -20,7 +20,6 @@ angular.module('tasks').controller(
             $rootScope.$on('task-signed', function () {
                 $scope.retrieveGridData();
             });
-
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
@@ -46,7 +45,5 @@ angular.module('tasks').controller(
                         $scope.gridOptions.totalItems = signatures.length;
                     });
                 }
-
             };
-
         }]);
