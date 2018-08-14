@@ -3,7 +3,7 @@
 angular.module('tasks').controller(
     'Tasks.ActionsController',
     ['$rootScope', '$scope', '$state', '$stateParams', '$modal', '$translate', 'UtilService', 'ConfigService', 'Authentication', 'Object.SignatureService', 'ObjectService', 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'Helper.ObjectBrowserService', 'MessageService',
-        function($rootScope, $scope, $state, $stateParams, $modal, $translate, Util, ConfigService, Authentication, ObjectSignatureService, ObjectService, TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, HelperObjectBrowserService, MessageService) {
+        function ($rootScope, $scope, $state, $stateParams, $modal, $translate, Util, ConfigService, Authentication, ObjectSignatureService, ObjectService, TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, HelperObjectBrowserService, MessageService) {
             new HelperObjectBrowserService.Component({
                 scope: $scope,
                 stateParams: $stateParams,
@@ -11,14 +11,14 @@ angular.module('tasks').controller(
                 componentId: "actions",
                 retrieveObjectInfo: TaskInfoService.getTaskInfo,
                 validateObjectInfo: TaskInfoService.validateTaskInfo,
-                onObjectInfoRetrieved: function(objectInfo) {
+                onObjectInfoRetrieved: function (objectInfo) {
                     onObjectInfoRetrieved(objectInfo);
                 }
             });
 
             var promiseQueryUser = Authentication.queryUserInfo();
 
-            var onObjectInfoRetrieved = function(objectInfo) {
+            var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
 
                 // For adhock tasks we don't have business process who can be shown with graphic,
@@ -30,7 +30,7 @@ angular.module('tasks').controller(
                 $scope.showBtnReject = false;
                 $scope.showBtnOutcomes = false;
 
-                promiseQueryUser.then(function(userInfo) {
+                promiseQueryUser.then(function (userInfo) {
                     $scope.userId = userInfo.userId;
                     $scope.userInfo = userInfo;
 
@@ -60,7 +60,7 @@ angular.module('tasks').controller(
                         }
                     }
 
-                    ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId).then(function(subscriptions) {
+                    ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId).then(function (subscriptions) {
                         var found = _.find(subscriptions, {
                             userId: userInfo.userId,
                             subscriptionObjectType: ObjectService.ObjectTypes.TASK,
@@ -73,42 +73,42 @@ angular.module('tasks').controller(
                 });
             };
 
-            $scope.diagram = function() {
+            $scope.diagram = function () {
                 var modalInstance = $modal.open({
                     templateUrl: "modules/tasks/views/components/task-diagram-modal.client.view.html",
                     controller: 'Tasks.DiagramModalController',
                     windowClass: 'modal-width-80',
                     resolve: {
-                        taskId: function() {
+                        taskId: function () {
                             return $scope.objectInfo.taskId;
                         },
-                        showLoader: function() {
+                        showLoader: function () {
                             return true;
                         },
-                        showError: function() {
+                        showError: function () {
                             return false;
                         }
                     }
                 });
-                modalInstance.result.then(function(result) {
+                modalInstance.result.then(function (result) {
                     if (result) {
                         // Do nothing
                     }
                 });
             };
 
-            $scope.sign = function() {
+            $scope.sign = function () {
                 var modalInstance = $modal.open({
                     templateUrl: "modules/tasks/views/components/task-signature.dialog.html",
                     controller: 'Tasks.SignatureDialogController'
                 });
-                modalInstance.result.then(function(result) {
+                modalInstance.result.then(function (result) {
                     if (result) {
                         console.log("sign task here");
-                        ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass).then(function(result) {
+                        ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass).then(function (result) {
                             MessageService.succsessAction();
                             $rootScope.$broadcast('task-signed');
-                            }, function(error) {
+                        }, function (error) {
                             if (!Util.isEmpty(error.data.message)) {
                                 MessageService.error(error.data.message);
 
@@ -119,58 +119,58 @@ angular.module('tasks').controller(
                     }
                 });
             };
-            $scope.subscribe = function() {
-                ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId).then(function(data) {
+            $scope.subscribe = function () {
+                ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId).then(function (data) {
                     $scope.showBtnSubscribe = false;
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                     return data;
                 });
             };
 
-            $scope.unsubscribe = function() {
-                ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId).then(function(data) {
+            $scope.unsubscribe = function () {
+                ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId).then(function (data) {
                     $scope.showBtnSubscribe = true;
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                     return data;
                 });
             };
 
-            $scope.deleteTaskAction = function() {
+            $scope.deleteTaskAction = function () {
                 var taskInfo = Util.omitNg($scope.objectInfo);
                 if (TaskInfoService.validateTaskInfo(taskInfo)) {
-                    TaskWorkflowService.deleteTask(taskInfo.taskId).then(function(taskInfo) {
+                    TaskWorkflowService.deleteTask(taskInfo.taskId).then(function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
                         return taskInfo;
                     });
                 }
             };
-            $scope.complete = function() {
+            $scope.complete = function () {
                 //var taskInfo = Util.omitNg($scope.objectInfo);
                 //if (TaskInfoService.validateTaskInfo(taskInfo)) {
                 if (Util.goodMapValue($scope.objectInfo, "taskId", false)) {
-                    TaskWorkflowService.completeTask($scope.objectInfo.taskId).then(function(taskInfo) {
+                    TaskWorkflowService.completeTask($scope.objectInfo.taskId).then(function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
                         return taskInfo;
                     });
                 }
             };
-            $scope.reject = function() {
+            $scope.reject = function () {
                 var modalInstance = $modal.open({
                     templateUrl: "modules/tasks/views/components/task-reject.dialog.html",
                     controller: 'Tasks.SignatureDialogController',
                     resolve: {
-                        aValue: function() {
+                        aValue: function () {
                             return "some value";
                         }
                     }
                 });
-                modalInstance.result.then(function(result) {
+                modalInstance.result.then(function (result) {
                     if (result) {
                         console.log("reject task here");
                     }
                 });
             };
-            $scope.onClickOutcome = function(name) {
+            $scope.onClickOutcome = function (name) {
                 var taskInfo = Util.omitNg($scope.objectInfo);
 
                 //QUICK FIX TO BE REMOVED AFTER THE DEMO
@@ -189,22 +189,22 @@ angular.module('tasks').controller(
                 }
 
                 if (TaskInfoService.validateTaskInfo(taskInfo)) {
-                    TaskWorkflowService.completeTaskWithOutcome(taskInfo, name).then(function(taskInfo) {
+                    TaskWorkflowService.completeTaskWithOutcome(taskInfo, name).then(function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
                         if (taskInfo.pendingStatus != null && taskInfo.pendingStatus == "DELETED") {
                             // wait solr to index the change, and update the tree i.e. remove task from tree
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 $scope.$emit("report-tree-updated", taskInfo);
                             }, 4000);
                         }
                         return taskInfo;
-                    }, function(error) {
+                    }, function (error) {
                         $scope.showErrorDialog(error);
                     });
                 }
             };
 
-            $scope.showClaimBtn = function() {
+            $scope.showClaimBtn = function () {
                 var isClosedStatus = Util.compare(Util.goodMapValue($scope.objectInfo, 'status'), "CLOSED") || Util.compare(Util.goodMapValue($scope.objectInfo, 'status'), "TERMINATED");
                 if ($scope.objectInfo && !Util.goodMapValue($scope.objectInfo, "assignee", false)) {
                     if (Util.goodMapValue($scope.objectInfo, "candidateGroups", false) && !Util.isArrayEmpty($scope.objectInfo.candidateGroups)) {
@@ -222,9 +222,9 @@ angular.module('tasks').controller(
                 return false;
             };
 
-            $scope.claimTask = function() {
+            $scope.claimTask = function () {
                 if (Util.goodMapValue($scope.objectInfo, "taskId", false)) {
-                    TaskWorkflowService.claimTask($scope.objectInfo.taskId).then(function(taskInfo) {
+                    TaskWorkflowService.claimTask($scope.objectInfo.taskId).then(function (taskInfo) {
                         TaskInfoService.resetTaskCacheById(taskInfo.taskId);
                         $scope.$emit("report-object-updated", taskInfo);
                         return TaskInfoService.getTaskInfo(taskInfo.taskId);
@@ -232,7 +232,7 @@ angular.module('tasks').controller(
                 }
             };
 
-            $scope.showUnclaimBtn = function() {
+            $scope.showUnclaimBtn = function () {
                 if ($scope.objectInfo && Util.goodMapValue($scope.objectInfo, "assignee", false)) {
                     if (Util.goodMapValue($scope.userInfo, "authorities", false) && !Util.isArrayEmpty($scope.userInfo.authorities)) {
                         if (_.includes($scope.userInfo.authorities, "ROLE_ADMINISTRATOR")) {
@@ -246,27 +246,27 @@ angular.module('tasks').controller(
                 return false;
             };
 
-            $scope.unclaimTask = function() {
+            $scope.unclaimTask = function () {
                 if (Util.goodMapValue($scope.objectInfo, "taskId", false)) {
-                    TaskWorkflowService.unclaimTask($scope.objectInfo.taskId).then(function(taskInfo) {
+                    TaskWorkflowService.unclaimTask($scope.objectInfo.taskId).then(function (taskInfo) {
                         TaskInfoService.resetTaskCacheById(taskInfo.taskId);
                         $scope.$emit("report-object-updated", taskInfo);
                         return TaskInfoService.getTaskInfo(taskInfo.taskId);
-                    }, function(error) {
+                    }, function (error) {
                         return error;
                     });
                 }
             };
 
-            $scope.refresh = function() {
+            $scope.refresh = function () {
                 $scope.$emit('report-object-refreshed', $stateParams.id);
             };
 
-            var saveTask = function(taskInfoUpdated) {
+            var saveTask = function (taskInfoUpdated) {
                 var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
                 if (TaskInfoService.validateTaskInfo($scope.objectInfo)) {
                     var objectInfo = taskInfoUpdated == null ? Util.omitNg($scope.objectInfo) : Util.omitNg(taskInfoUpdated);
-                    TaskInfoService.saveTaskInfo(objectInfo).then(function(taskInfo) {
+                    TaskInfoService.saveTaskInfo(objectInfo).then(function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
                         return taskInfo;
                     });
@@ -274,42 +274,42 @@ angular.module('tasks').controller(
                 return promiseSaveInfo;
             };
 
-            $scope.showErrorDialog = function(error) {
+            $scope.showErrorDialog = function (error) {
                 $modal.open({
                     animation: true,
                     templateUrl: 'modules/tasks/views/components/task-actions-error-dialog.client.view.html',
                     controller: 'Tasks.ActionsErrorDialogController',
                     backdrop: 'static',
                     resolve: {
-                        errorMessage: function() {
+                        errorMessage: function () {
                             return error;
                         }
                     }
                 });
             }
-        } ]);
-angular.module('tasks').controller('Tasks.ActionsErrorDialogController', [ '$scope', '$modalInstance', 'errorMessage', function($scope, $modalInstance, errorMessage) {
+        }]);
+angular.module('tasks').controller('Tasks.ActionsErrorDialogController', ['$scope', '$modalInstance', 'errorMessage', function ($scope, $modalInstance, errorMessage) {
     $scope.errorMessage = errorMessage;
-    $scope.onClickOk = function() {
+    $scope.onClickOk = function () {
         $modalInstance.dismiss('cancel');
     };
-} ]);
-angular.module('tasks').controller('Tasks.RejectDialogController', [ '$scope', '$modalInstance', 'aValue', function($scope, $modalInstance, aValue) {
+}]);
+angular.module('tasks').controller('Tasks.RejectDialogController', ['$scope', '$modalInstance', 'aValue', function ($scope, $modalInstance, aValue) {
     $scope.valuePassed = aValue;
-    $scope.onClickCancel = function() {
+    $scope.onClickCancel = function () {
         $modalInstance.close(false);
     };
-    $scope.onClickOk = function() {
+    $scope.onClickOk = function () {
         $modalInstance.close(true);
     };
-} ]);
-angular.module('tasks').controller('Tasks.SignatureDialogController', [ '$scope', '$modalInstance', function($scope, $modalInstance) {
-    $scope.onClickCancel = function() {
+}]);
+angular.module('tasks').controller('Tasks.SignatureDialogController', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+    $scope.onClickCancel = function () {
         $modalInstance.dismiss('Cancel');
     };
-    $scope.onClickOk = function() {
+    $scope.onClickOk = function () {
         $modalInstance.close({
             pass: $scope.password
         });
     };
-} ]);
+}]);
