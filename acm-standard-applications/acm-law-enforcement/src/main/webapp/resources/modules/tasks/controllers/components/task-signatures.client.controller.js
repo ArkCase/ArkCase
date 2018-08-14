@@ -2,8 +2,8 @@
 
 angular.module('tasks').controller(
     'Tasks.SignaturesController',
-    [ '$scope', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Object.SignatureService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$rootScope',
-        function($scope, $stateParams, $q, Util, ConfigService, ObjectService, ObjectSignatureService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService,  $rootScope) {
+    ['$scope', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Object.SignatureService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$rootScope',
+        function ($scope, $stateParams, $q, Util, ConfigService, ObjectService, ObjectSignatureService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, $rootScope) {
 
             var componentHelper = new HelperObjectBrowserService.Component({
                 moduleId: "tasks",
@@ -12,12 +12,12 @@ angular.module('tasks').controller(
                 stateParams: $stateParams,
                 retrieveObjectInfo: TaskInfoService.getTaskInfo,
                 validateObjectInfo: TaskInfoService.validateTaskInfo,
-                onConfigRetrieved: function(componentConfig) {
+                onConfigRetrieved: function (componentConfig) {
                     return onConfigRetrieved(componentConfig);
                 }
             });
 
-            $rootScope.$on('task-signed', function(){
+            $rootScope.$on('task-signed', function () {
                 $scope.retrieveGridData();
             });
 
@@ -26,7 +26,7 @@ angular.module('tasks').controller(
                 scope: $scope
             });
 
-            var onConfigRetrieved = function(config) {
+            var onConfigRetrieved = function (config) {
                 $scope.config = config;
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
@@ -36,11 +36,11 @@ angular.module('tasks').controller(
                 $scope.retrieveGridData();
             };
 
-            $scope.retrieveGridData = function() {
+            $scope.retrieveGridData = function () {
                 if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                     var promiseQueryAudit = ObjectSignatureService.findSignatures(ObjectService.ObjectTypes.TASK, componentHelper.currentObjectId);
 
-                    $q.all([ promiseQueryAudit ]).then(function(data) {
+                    $q.all([promiseQueryAudit]).then(function (data) {
                         var signatures = data[0];
                         $scope.gridOptions.data = signatures;
                         $scope.gridOptions.totalItems = signatures.length;
@@ -49,4 +49,4 @@ angular.module('tasks').controller(
 
             };
 
-        } ]);
+        }]);
