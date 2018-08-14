@@ -16,7 +16,7 @@ angular.module('complaints').controller(
                     $scope.cancelModal = cancelModal;
                     //Objects
                     $scope.closeComplaintRequest = {
-                        complaintId: modalParams.info.complaintId, 
+                        complaintId: modalParams.info.complaintId,
                         disposition: {
                             closeDate: new Date(),
                             dispositionType: "",
@@ -39,8 +39,8 @@ angular.module('complaints').controller(
                         created: null,
                         creator: null,
                         modified: null,
-                        modifier: null
-                    // "description": ""
+                        modifier: null,
+                        description: ""
                     };
                     $scope.complaintDispositions = [];
                     $scope.contactTypes = [];
@@ -48,15 +48,11 @@ angular.module('complaints').controller(
                     $scope.showExistingCase = false;
                     $scope.showReferExternal = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
-                    $scope.userSearchConfig = null;
                     $scope.futureTaskConfig = null;
 
                     ConfigService.getModuleConfig("complaints").then(function(moduleConfig) {
                         $scope.futureTaskConfig = _.find(moduleConfig.components, {
                             id: "newFutureTask"
-                        });
-                        $scope.userSearchConfig = _.find(moduleConfig.components, {
-                            id: "userSearch"
                         });
                     });
 
@@ -84,7 +80,7 @@ angular.module('complaints').controller(
                         });
                     });
 
-                    function dispositionTypeChanged(temp) {
+                    function dispositionTypeChanged() {
                         if ($scope.closeComplaintRequest.disposition.dispositionType == 'add_existing_case') {
                             $scope.existingCase = {};
                             $scope.showReferExternal = false;

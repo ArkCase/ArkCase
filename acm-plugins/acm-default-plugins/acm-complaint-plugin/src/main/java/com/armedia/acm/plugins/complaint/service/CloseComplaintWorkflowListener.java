@@ -36,7 +36,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
     private void handleNewCloseComplaintRequest(CloseComplaintEvent closeComplaintEvent)
     {
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
-        configuration.setEcmFile(closeComplaintEvent.getFrevvoUploadedFiles().getPdfRendition());
+        configuration.setEcmFile(closeComplaintEvent.getUploadedFiles().getPdfRendition());
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
         if (configuration.isBuckslipProcess())
         {
@@ -72,17 +72,17 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         pvars.put("reviewers", reviewers);
         pvars.put("taskName", taskName);
         pvars.put("documentAuthor", author);
-        pvars.put("pdfRenditionId", closeComplaintEvent.getFrevvoUploadedFiles().getPdfRendition().getFileId());
+        pvars.put("pdfRenditionId", closeComplaintEvent.getUploadedFiles().getPdfRendition().getFileId());
         Long formXmlId = null;
-        if (closeComplaintEvent.getFrevvoUploadedFiles().getFormXml() != null)
+        if (closeComplaintEvent.getUploadedFiles().getFormXml() != null)
         {
-            formXmlId = closeComplaintEvent.getFrevvoUploadedFiles().getFormXml().getFileId();
+            formXmlId = closeComplaintEvent.getUploadedFiles().getFormXml().getFileId();
         }
         pvars.put("formXmlId", formXmlId);
 
         pvars.put("OBJECT_TYPE", "FILE");
-        pvars.put("OBJECT_ID", closeComplaintEvent.getFrevvoUploadedFiles().getPdfRendition().getFileId());
-        pvars.put("OBJECT_NAME", closeComplaintEvent.getFrevvoUploadedFiles().getPdfRendition().getFileName());
+        pvars.put("OBJECT_ID", closeComplaintEvent.getUploadedFiles().getPdfRendition().getFileId());
+        pvars.put("OBJECT_NAME", closeComplaintEvent.getUploadedFiles().getPdfRendition().getFileName());
         pvars.put("PARENT_OBJECT_TYPE", "COMPLAINT");
         pvars.put("PARENT_OBJECT_ID", closeComplaintEvent.getComplaintId());
         pvars.put("COMPLAINT", closeComplaintEvent.getComplaintId());

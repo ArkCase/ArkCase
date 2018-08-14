@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.complaint.pipeline.postsave;
 
 import static com.armedia.acm.plugins.complaint.model.CloseComplaintConstants.CLOSE_COMPLAINT_DOCUMENT;
 
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.closeModal.CloseComplaintEvent;
@@ -25,7 +25,7 @@ public class CreateTaskCloseComplaintHandler
     {
         String mode = (String) ctx.getPropertyValue("mode");
         Complaint complaint = ctx.getComplaint();
-        FrevvoUploadedFiles frevvoUploadedFile = new FrevvoUploadedFiles();
+        UploadedFiles frevvoUploadedFile = new UploadedFiles();
         EcmFile existing = ecmFileDao.findForContainerAttachmentFolderAndFileType(complaint.getContainer().getId(),
                 complaint.getContainer().getAttachmentFolder().getId(), CLOSE_COMPLAINT_DOCUMENT);
 

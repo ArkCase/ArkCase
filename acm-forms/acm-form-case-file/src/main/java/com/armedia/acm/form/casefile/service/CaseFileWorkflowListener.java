@@ -28,7 +28,7 @@ package com.armedia.acm.form.casefile.service;
  */
 
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
@@ -39,11 +39,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -53,7 +49,7 @@ public class CaseFileWorkflowListener
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public void handleNewCaseFile(CaseFile caseFile, FrevvoUploadedFiles files, RuntimeService activitiRuntimeService,
+    public void handleNewCaseFile(CaseFile caseFile, UploadedFiles files, RuntimeService activitiRuntimeService,
             FileWorkflowBusinessRule fileWorkflowBusinessRule,
             FrevvoFormAbstractService formService)
     {

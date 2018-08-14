@@ -31,8 +31,8 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.frevvo.model.FrevvoForm;
 import com.armedia.acm.frevvo.model.FrevvoFormConstants;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.frevvo.model.Strings;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
@@ -40,12 +40,7 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -82,11 +77,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class FrevvoFormAbstractService implements FrevvoFormService
@@ -491,16 +482,16 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
         return null;
     }
 
-    public FrevvoUploadedFiles saveAttachments(MultiValueMap<String, MultipartFile> attachments, String targetCmisFolderId,
+    public UploadedFiles saveAttachments(MultiValueMap<String, MultipartFile> attachments, String targetCmisFolderId,
             String parentObjectType, Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         return saveAttachments(getAttachmentFileType(""), attachments, targetCmisFolderId, parentObjectType, parentObjectId);
     }
 
-    public FrevvoUploadedFiles saveAttachments(String fileType, MultiValueMap<String, MultipartFile> attachments, String targetCmisFolderId,
+    public UploadedFiles saveAttachments(String fileType, MultiValueMap<String, MultipartFile> attachments, String targetCmisFolderId,
             String parentObjectType, Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        FrevvoUploadedFiles retval = new FrevvoUploadedFiles();
+        UploadedFiles retval = new UploadedFiles();
 
         if (attachments != null)
         {

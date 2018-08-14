@@ -34,7 +34,7 @@ import com.armedia.acm.form.cost.model.CostForm;
 import com.armedia.acm.form.cost.model.CostItem;
 import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
@@ -154,7 +154,7 @@ public class CostService extends FrevvoFormChargeAbstractService
         boolean startWorkflow = getCostsheetService()
                 .checkWorkflowStartup(CostsheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
 
-        FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(),
+        UploadedFiles uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(),
                 FrevvoFormName.COSTSHEET.toUpperCase(), saved.getId());
 
         getCostsheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles,
