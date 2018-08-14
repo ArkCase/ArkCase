@@ -1,3 +1,5 @@
+/*
+Because Admin module configuration feature is still incomplete this controller is commented out
 'use strict';
 
 angular.module('admin').controller('Admin.ModuleConfigController', [ '$scope', function($scope) {
@@ -6,4 +8,4 @@ angular.module('admin').controller('Admin.ModuleConfigController', [ '$scope', f
     function moduleSelected(e, module) {
         $scope.$broadcast('module-selected', module);
     }
-} ]);
+} ]);*/

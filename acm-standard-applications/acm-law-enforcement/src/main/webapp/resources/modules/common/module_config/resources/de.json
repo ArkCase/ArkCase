@@ -194,6 +194,7 @@
         "header": "Suche",
         "btnSearch.text": "Suche",
         "btnOk.text": "Bestätigen",
+        "btnConfirm.text": "de_Confirm",
         "btnCancel.text": "Abbrechen",
         "edtPlaceholder": "In die Suche eingeben",
         "noData.text": "Keine Ergebnisse",
@@ -601,6 +602,7 @@
             "btnOk.text": "Sparen",
             "btnCancel.text": "Stornieren",
             "dialogUserPicker.header": "Benutzer suchen",
+            "dialogUserGroupPicker.header": "de_Search User/Group",
             "dialogGroupPicker.header": "Suchgruppe",
             "replaceChildrenParticipant": "Ersetzen Kinder Teilnehmer"
         },
@@ -846,7 +848,12 @@
         "people": {
             "title": "Menschen",
             "searchExisting.placeholder": "Existierende Person suchen",
-            "personType": "Personentyp"
+            "personType": "Personentyp",
+            "comp":{
+                "details":{
+                    "title":"de_Details"
+                }
+            }
         },
         "locations": {
             "title": "Standorte",

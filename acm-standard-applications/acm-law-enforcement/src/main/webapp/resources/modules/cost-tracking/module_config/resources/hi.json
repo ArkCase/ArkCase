@@ -76,12 +76,32 @@
             }
         }
     },
-    "costTracking.comp.approvers": {
-        "title": "अनुमोदन कर्मियों",
+	"costTracking.comp.tasks": {
+        "title": "कार्य",
         "table.columns": {
-            "fullName": "पूरा नाम",
-            "userId": "उपयोगकर्ता नाम"
+            "title": "शीर्षक",
+            "assignee": "अभिहस्तांकिती",
+            "due": "देय",
+            "status": "स्थिति",
+            "priority": "प्राथमिकता",
+            "created": "बनाया था"
         }
+    },
+    "costTracking.comp.expenses": {
+        "title": "व्यय",
+        "table.columns": {
+            "date": "तारीख",
+            "title": "शीर्षक",
+            "description": "विवरण",
+            "amount": "रकम"
+        }
+    },
+    "costTracking.comp.documents": {
+        "title": "दस्तावेज़",
+        "filterInputPlaceholder": "फ़िल्टर",
+        "searchInputPlaceholder": "खोज",
+        "newTask": "नया कार्य",
+        "sendEmail": "ईमेल भेजें"
     },
     "costTracking.tree": {
         "nodeTypes": {
@@ -89,7 +109,8 @@
             "person.label": "लोग",
             "summary.label": "लागत",
             "tags.label": "टैग",
-            "approvers.label": "अनुमोदन कर्मियों"
+            "tasks.label": "कार्य",
+            "documents.label": "दस्तावेज़"
         },
         "sorters": {
             "dateAsc": "कक्रमबद्ध करें दिनांक ए एस सी",

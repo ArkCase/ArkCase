@@ -362,6 +362,33 @@
             "approverDecision": "Approver Decision"
         }
     },
+    "cases.comp.newCase": {
+        "title": "New Case File",
+        "editCase.title": "Edit Case File",
+        "caseTitle": "Case Title",
+        "caseTitle.placeholder": "Enter Case File Title",
+        "caseType": "Case Type",
+        "initiator": "Initiator",
+        "initiator.placeholder": "Select Initiator",
+        "description": "Description",
+        "people": {
+            "title": "People",
+            "selectPerson.placeholder": "Search existing Person",
+            "personType": "Person Type"
+        },
+        "participants": {
+            "title": "Participants",
+            "owningGroup": "Owning Group",
+            "owningGroup.info": "The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "Select Participant",
+            "participantType": "Participant Type"
+        },
+        "cancelButton": "Cancel",
+        "saveButton": "Save Case File",
+        "updateButton": "Update Case File",
+        "removeButton": "Remove",
+        "addButton": "Add Another"
+    },
     "cases.userOrGroupSearch": {
         "id": "userSearch",
         "title": "User/Group Search",

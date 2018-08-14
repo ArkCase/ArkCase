@@ -361,6 +361,33 @@
             "approverDecision": "Approver Decision"
         }
     },
+    "cases.comp.newCase": {
+        "title": "en-in_New Case File",
+        "editCase.title": "en-in_Edit Case File",
+        "caseTitle": "en-in_Case Title",
+        "caseTitle.placeholder": "en-in_Enter Case File Title",
+        "caseType": "en-in_Case Type",
+        "initiator": "en-in_Initiator",
+        "initiator.placeholder": "en-in_Select Initiator",
+        "description": "en-in_Description",
+        "people": {
+            "title": "en-in_People",
+            "selectPerson.placeholder": "en-in_Search existing Person",
+            "personType": "en-in_Person Type"
+        },
+        "participants": {
+            "title": "en-in_Participants",
+            "owningGroup": "en-in_Owning Group",
+            "owningGroup.info": "en-in_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "en-in_Select Participant",
+            "participantType": "en-in_Participant Type"
+        },
+        "cancelButton": "en-in_Cancel",
+        "saveButton": "en-in_Save Case File",
+        "updateButton": "en-in_Update Case File",
+        "removeButton": "en-in_Remove",
+        "addButton": "en-in_Add Another"
+    },
     "cases.userOrGroupSearch": {
         "id": "userSearch",
         "title": "User/Group Search",

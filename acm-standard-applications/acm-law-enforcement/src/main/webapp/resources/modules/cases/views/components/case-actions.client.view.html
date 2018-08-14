@@ -11,12 +11,22 @@
 
     <div class="pull-right">
         <div class="btn-group">
-            <a class="btn btn-sm btn-default" ui-sref="frevvo.new-case()">
+            <a class="btn btn-sm btn-default" ui-sref="frevvo.new-case()" ng-show="isFrevvoFormType">
+                <i class="fa fa-edit"></i>
+                <span translate>cases.comp.actions.new.button</span>
+            </a>
+            <a class="btn btn-sm btn-default" ng-click="newCaseFile()" ng-show="isAngularFormType">
                 <i class="fa fa-edit"></i>
                 <span translate>cases.comp.actions.new.button</span>
             </a>
             <a class="btn btn-sm btn-default" ui-sref="frevvo.edit-case(editParams)" permission="editCase"
-                    permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="hide">
+                    permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="hide"
+                    ng-hide="isAngularFormType">
+                <i class="fa fa-edit"></i>
+                <span translate>cases.comp.actions.edit.button</span>
+            </a>
+            <a class="btn btn-sm btn-default" ng-click="editCaseFile()" permission="editCase" permission-object-type="CASE_FILE"
+                    permission-properties="objectInfo" permission-action="hide" ng-show="isAngularFormType">
                 <i class="fa fa-edit"></i>
                 <span translate>cases.comp.actions.edit.button</span>
             </a>
@@ -42,11 +52,11 @@
                 <span translate>cases.comp.actions.subscribe.button</span>
             </button>
             <button class="btn btn-sm btn-default" ng-click="merge(objectInfo)">
-                <i ng-class="merging ? 'fa fa-circle-o-notch fa-spin' : 'fa fa-random'"/>
+                <i ng-class="merging ? 'fa fa-circle-o-notch fa-spin' : 'fa fa-random'" />
                 <span translate>cases.comp.actions.merge.button</span>
             </button>
             <button class="btn btn-sm btn-default" ng-click="split()">
-                <i ng-class="splitting ? 'fa fa-circle-o-notch fa-spin' : 'fa fa-code-fork'"/>
+                <i ng-class="splitting ? 'fa fa-circle-o-notch fa-spin' : 'fa fa-code-fork'" />
                 <span translate>cases.comp.actions.split.button</span>
             </button>
             <button class="btn btn-sm btn-default" ng-if="assignee.length == 0 && currentUserProfile.groups.indexOf(owningGroup) > -1"

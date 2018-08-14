@@ -398,7 +398,9 @@
         },
         "participants": {
             "title": "ja_Participants",
-            "selectParticipant.placeholder": "Sja_elect Participant",
+            "owningGroup": "ja_Owning Group",
+            "owningGroup.info": "ja_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "ja_Select Participant",
             "participantType": "ja_Participant Type"
         },
         "cancelButton": "ja_Cancel",

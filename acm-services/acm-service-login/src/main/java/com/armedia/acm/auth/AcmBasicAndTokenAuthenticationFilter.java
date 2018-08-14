@@ -69,6 +69,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Lookup cached authentications for token requests (token requests are requests that include an acm_ticket in the
@@ -192,41 +193,38 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         String emailToken = ServletRequestUtils.getStringParameter(request, "acm_email_ticket");
         if (emailToken != null)
         {
-            List<AuthenticationToken> authenticationTokens = authenticationTokenService.findByKey(emailToken);
-            if (authenticationTokens != null)
+            AuthenticationToken authenticationToken = authenticationTokenService.findByKey(emailToken);
+            if (authenticationToken != null)
             {
-                for (AuthenticationToken authenticationToken : authenticationTokens)
+                if ((AuthenticationTokenConstants.ACTIVE).equals(authenticationToken.getStatus()))
                 {
-                    if ((AuthenticationTokenConstants.ACTIVE).equals(authenticationToken.getStatus()))
+                    String fileId = ServletRequestUtils.getStringParameter(request, "ecmFileId");
+                    if (emailToken.equals(authenticationToken.getKey())
+                            && Objects.equals(fileId, authenticationToken.getFileId().toString()))
                     {
-                        String fileId = ServletRequestUtils.getStringParameter(request, "ecmFileId");
-                        if (emailToken.equals(authenticationToken.getKey())
-                                && fileId.equals(authenticationToken.getFileId().toString()))
+                        log.trace("Starting token authentication for email links using acm_email_ticket [{}]", emailToken);
+                        int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
+                        // token expires after 3 days
+                        if (days > AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS)
                         {
-                            log.trace("Starting token authentication for email links using acm_email_ticket [{}]", emailToken);
-                            int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
-                            // token expires after 3 days
-                            if (days > AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS)
-                            {
-                                authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
-                                authenticationToken.setModifier(authenticationToken.getCreator());
-                                authenticationToken.setModified(new Date());
-                                authenticationTokenService.saveAuthenticationToken(authenticationToken);
-                                log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", emailToken,
-                                        authenticationToken.getCreator());
-                                return;
-                            }
-                            try
-                            {
-                                authenticateUser(request, authenticationToken.getCreator());
-                                log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
-                                        authenticationToken.getCreator(), emailToken);
-                            }
-                            catch (MuleException e)
-                            {
-                                log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
-                                        emailToken);
-                            }
+                            authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
+                            authenticationToken.setModifier(authenticationToken.getCreator());
+                            authenticationToken.setModified(new Date());
+                            authenticationTokenService.saveAuthenticationToken(authenticationToken);
+                            log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", emailToken,
+                                    authenticationToken.getCreator());
+                            return;
+                        }
+                        try
+                        {
+                            authenticateUser(request, authenticationToken.getCreator());
+                            log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
+                                    authenticationToken.getCreator(), emailToken);
+                        }
+                        catch (MuleException e)
+                        {
+                            log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
+                                    emailToken);
                         }
                     }
                 }

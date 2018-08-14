@@ -31,7 +31,11 @@ import com.armedia.acm.pdf.PdfServiceException;
 import com.github.jaiimageio.impl.plugins.tiff.TIFFImageWriterSpi;
 import com.github.jaiimageio.plugins.tiff.TIFFImageWriteParam;
 
-import org.apache.fop.apps.*;
+import org.apache.fop.apps.FOPException;
+import org.apache.fop.apps.FOUserAgent;
+import org.apache.fop.apps.Fop;
+import org.apache.fop.apps.FopFactory;
+import org.apache.fop.apps.MimeConstants;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -46,15 +50,32 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
-import javax.xml.transform.*;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * PDF document generator built upon XSL-FO library (Apache FOP). Created by Petar Ilin <petar.ilin@armedia.com> on
@@ -78,55 +99,6 @@ public class PdfServiceImpl implements PdfService
      * Random number generator.
      */
     private Random random = new Random();
-
-    /**
-     * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
-     * responsible for deleting the file afterwards (not to leave mess behind)
-     *
-     * @param xslFile
-     *            XSL-FO stylesheet
-     * @param source
-     *            XML data source required for XML transformation
-     * @param parameters
-     *            a key-value map of parameters to be replaced in the stylesheet
-     * @return path to the newly generated PDF file (random filename stored in temp folder)
-     * @throws PdfServiceException
-     *             on PDF creation error
-     */
-    @Override
-    public String generatePdf(File xslFile, Source source, Map<String, String> parameters) throws PdfServiceException
-    {
-        // create a temporary file name
-        String filename = String.format("%s/acm-%020d.pdf", System.getProperty("java.io.tmpdir"), Math.abs(random.nextLong()));
-        log.debug("PDF creation: using [{}] as temporary file name", filename);
-        try
-        {
-            // Base URI is where the FOP engine will be resolving URIs against
-            URI baseURI = xslFile.getParentFile().toURI();
-            log.debug("Using [{}] as FOP base URI", baseURI);
-            FopFactory fopFactory = FopFactory.newInstance(baseURI);
-            FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
-
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
-
-            parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));
-
-            try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
-            {
-                Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, os);
-                Result result = new SAXResult(fop.getDefaultHandler());
-                transformer.transform(source, result);
-            }
-
-        }
-        catch (FOPException | TransformerException | IOException e)
-        {
-            log.error("Unable to generate PDF document", e);
-            throw new PdfServiceException(e);
-        }
-        return filename;
-    }
 
     /**
      * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
@@ -166,6 +138,38 @@ public class PdfServiceImpl implements PdfService
 
         }
         catch (FOPException | TransformerException | IOException e)
+        {
+            log.error("Unable to generate PDF document", e);
+            throw new PdfServiceException(e);
+        }
+        return filename;
+    }
+
+    /**
+     * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
+     * responsible for deleting the file afterwards (not to leave mess behind)
+     *
+     * @param xslFile
+     *            XSL-FO stylesheet
+     * @param source
+     *            XML data source required for XML transformation
+     * @param parameters
+     *            a key-value map of parameters to be replaced in the stylesheet
+     * @return path to the newly generated PDF file (random filename stored in temp folder)
+     * @throws PdfServiceException
+     *             on PDF creation error
+     */
+    @Override
+    public String generatePdf(File xslFile, Source source, Map<String, String> parameters) throws PdfServiceException
+    {
+        // create a temporary file name
+        String filename = String.format("%s/acm-%020d.pdf", System.getProperty("java.io.tmpdir"), Math.abs(random.nextLong()));
+        log.debug("PDF creation: using [{}] as temporary file name", filename);
+        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
+        {
+            generatePdf(xslFile, source, os, parameters);
+        }
+        catch (IOException e)
         {
             log.error("Unable to generate PDF document", e);
             throw new PdfServiceException(e);
@@ -230,6 +234,35 @@ public class PdfServiceImpl implements PdfService
     {
         Source source = new DOMSource();
         return generatePdf(xslFilename, source, parameters);
+    }
+
+    @Override
+    public void generatePdf(File xslFile, Source source, OutputStream targetStream, Map<String, String> parameters)
+            throws PdfServiceException
+    {
+        try
+        {
+            // Base URI is where the FOP engine will be resolving URIs against
+            URI baseURI = xslFile.getParentFile().toURI();
+            log.debug("Using [{}] as FOP base URI", baseURI);
+            FopFactory fopFactory = FopFactory.newInstance(baseURI);
+            FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
+
+            parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));
+
+            Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, targetStream);
+            Result result = new SAXResult(fop.getDefaultHandler());
+            transformer.transform(new DOMSource(), result);
+        }
+        catch (FOPException | TransformerException e)
+        {
+            log.error("Unable to generate PDF document", e);
+            throw new PdfServiceException(e);
+        }
+
     }
 
     /**

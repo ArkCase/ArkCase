@@ -98,13 +98,14 @@ angular
             'UtilService',
             'Util.DateService',
             'ConfigService',
+            'PluginService',
             'Profile.UserInfoService',
             'EcmService',
             'Admin.EmailSenderConfigurationService',
             'Helper.LocaleService',
             '$timeout',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                     UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout) {
+                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -1594,7 +1595,7 @@ angular
                                     execute: function(nodes, args) {
                                         var node = nodes[0];
                                         var baseUrl = window.location.href.split('home.html#!')[0];
-                                        window.open(baseUrl + 'office/' + node.data.objectId);
+                                        window.open(baseUrl + 'plugin/office/' + node.data.objectId);
                                     }
                                 },
                                 {
@@ -1852,7 +1853,7 @@ angular
                                     } else {
                                         menuResource = DocTree.Menu.getBasicResource(node);
                                     }
-                                    var menu = DocTree.Menu.makeContextMenu(menuResource, nodes);
+                                    var menu = DocTree.Menu.makeContextMenu(menuResource, nodes, DocTree.pluginsConfig);
 
                                     $q.when(menu).then(function(menuResult) {
                                         $s.contextmenu("replaceMenu", menuResult);
@@ -1937,7 +1938,7 @@ angular
                             }
                             return menuResource;
                         },
-                        makeContextMenu : function(menuResource, nodes) {
+                        makeContextMenu : function(menuResource, nodes, pluginsConfig) {
                             var emptyArray = [];
                             var promiseArray = [];
                             var menuDeferred = $q.defer();
@@ -2043,6 +2044,13 @@ angular
 
                             $q.all(promiseArray).then(function() {
                                 menu = _.filter(menu, function(item) {
+                                    if (item.plugin){
+                                        var pluginName = item.plugin;
+                                        var pluginConfig = pluginsConfig[pluginName];
+                                        if (pluginConfig){
+                                            return pluginConfig.enabled && !item.invisible;
+                                        }
+                                    }
                                     return !item.invisible;
                                 });
 
@@ -2054,9 +2062,7 @@ angular
                                             item.disabled = false;
                                         }
                                     });
-
                                 }
-
                                 menuDeferred.resolve(menu);
                             });
 
@@ -4788,6 +4794,12 @@ angular
                         if ("undefined" != typeof attrs.onInitTree) {
                             scope.onInitTree()(scope.treeControl);
                         }
+
+                        PluginService.getConfigurablePlugins().$promise.then(
+                            function(data){
+                                DocTree.pluginsConfig = data;
+                            }
+                        );
 
                         var promiseCommon = ConfigService.getModuleConfig("common").then(
                             function(moduleConfig) {

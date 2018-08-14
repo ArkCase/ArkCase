@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
+import com.armedia.acm.pluginmanager.service.AcmConfigurablePlugin;
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -54,7 +55,7 @@ import java.util.Properties;
 /**
  * Created by armdev on 3/27/15.
  */
-public class AlfrescoRecordsService implements InitializingBean
+public class AlfrescoRecordsService implements InitializingBean, AcmConfigurablePlugin
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -71,7 +72,7 @@ public class AlfrescoRecordsService implements InitializingBean
     private CompleteRecordService completeRecordService;
 
     @Override
-    public void afterPropertiesSet() throws Exception
+    public void afterPropertiesSet()
     {
         getEncryptablePropertyUtils().decryptProperties(alfrescoRmaProperties);
 
@@ -87,7 +88,7 @@ public class AlfrescoRecordsService implements InitializingBean
         }
         catch (AcmListObjectsFailedException e)
         {
-            log.error("Cannot finish Record Management Strategy for container " + container.getContainerObjectType() + " "
+            log.error("Cannot finish Record Management Strategy for container [{}]", container.getContainerObjectType() + " "
                     + container.getContainerObjectId(), e);
         }
     }
@@ -346,5 +347,17 @@ public class AlfrescoRecordsService implements InitializingBean
     public void setAlfrescoRmaPropertiesMap(Map<String, Object> alfrescoRmaPropertiesMap)
     {
         this.alfrescoRmaPropertiesMap = alfrescoRmaPropertiesMap;
+    }
+
+    @Override
+    public boolean isEnabled()
+    {
+        return Boolean.parseBoolean(alfrescoRmaProperties.getProperty("alfresco_rma_integration_enabled", "false"));
+    }
+
+    @Override
+    public String getName()
+    {
+        return AlfrescoRmaPluginConstants.RMA_PLUGIN;
     }
 }

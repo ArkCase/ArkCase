@@ -250,14 +250,6 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-4 form-group">
-                            <label translate> people.comp.editPerson.locations.country</label>
-                            <select class="form-control" ng-model="person.defaultAddress.country">
-                                <option ng-repeat="option in countries" value="{{option.key}}">
-                                    {{option.value | translate}}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4 form-group">
                             <label translate> people.comp.editPerson.locations.type</label>
                             <select class="form-control" ng-model="person.defaultAddress.type">
                                 <option ng-repeat="option in addressTypes" value="{{option.key}}">
@@ -265,39 +257,47 @@
                                 </option>
                             </select>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-4 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.streetAddress</label>
                             <input type="text" ng-model="person.defaultAddress.streetAddress" class="input-md form-control"
                                     placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-4 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.streetAddress2</label>
                             <input type="text" ng-model="person.defaultAddress.streetAddress2" class="input-md form-control"
                                     placeholder="{{ 'people.comp.editPerson.locations.streetAddress2.placeholder' | translate }}">
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-4 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.city</label>
                             <input type="text" ng-model="person.defaultAddress.city" class="input-md form-control"
                                     placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
                         </div>
-                        <div class="col-sm-3 form-group">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.state</label>
                             <input type="text" ng-model="person.defaultAddress.state" class="input-md form-control"
                                     placeholder="{{ 'people.comp.editPerson.locations.state.placeholder' | translate }}">
                         </div>
-                        <div class="col-sm-3 form-group">
+                        <div class="col-sm-2 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.zip</label>
                             <input type="text" ng-model="person.defaultAddress.zip" class="input-md form-control"
                                     placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label translate> people.comp.editPerson.locations.country</label>
+                            <select class="form-control" ng-model="person.defaultAddress.country">
+                                <option ng-repeat="option in countries" value="{{option.key}}">
+                                    {{option.value | translate}}
+                                </option>
+                            </select>
                         </div>
                         <div class="col-sm-2 form-group">
                             <div class="pull-left">
