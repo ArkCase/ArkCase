@@ -2,11 +2,11 @@
 
 /**
  * @ngdoc directive
- * @name format
+ * @name formatCurrency
  *
  * @description
  *
- * The format directive add decimal zeros and currency symbol to the input
+ * The formatCurrency directive add decimal zeros and currency symbol to the input
  * and only allows numbers to be inserted
  *
  */
