@@ -12,7 +12,7 @@
  */
 angular
     .module('directives')
-    .directive('format', ['$filter', 'Config.LocaleService', function ($filter, LocaleService) {
+    .directive('formatCurrency', ['$filter', 'Config.LocaleService', function ($filter, LocaleService) {
         return {
             require: '?ngModel',
             link: function (scope, elem, attrs, ctrl) {
@@ -22,7 +22,7 @@ angular
                 return $filter(attrs.format)(ctrl.$modelValue)
             });
 
-            var numberRegExp = new RegExp("^[0-9.-][.0-9]*$");
+            var numberRegExp = new RegExp("^[0-9-][.0-9]*$");
             $(elem).keypress(function(event){
                 if(!numberRegExp.test(event.target.value + event.key)){
                     return false;
@@ -33,7 +33,7 @@ angular
 
             elem.bind('blur', function(event) {
                 var plainNumber = elem.val().replace(/[^\d|\-+|\.+]/g, '');
-                elem.val($filter(attrs.format)(plainNumber, currencySymbol));
+                elem.val($filter("currency")(plainNumber, currencySymbol));
             });
         }
     };
