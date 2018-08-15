@@ -36,6 +36,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -46,6 +50,7 @@ public class HolidayConfigurationService
     private Resource holidayFile;
     private ObjectConverter objectConverter;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
+    private HolidayConfiguration holidayConfiguration;
 
     public void saveHolidayConfig(HolidayConfiguration holidayConfiguration)
     {
@@ -66,12 +71,54 @@ public class HolidayConfigurationService
         finally
         {
             lock.writeLock().unlock();
+            setHolidayConfigurationFromFile();
         }
     }
 
     public HolidayConfiguration getHolidayConfiguration()
     {
-        HolidayConfiguration holidayConfiguration = new HolidayConfiguration();
+        if (holidayConfiguration == null)
+        {
+            setHolidayConfigurationFromFile();
+        }
+        return holidayConfiguration;
+    }
+
+    public LocalDate addWorkingDaysToDate(LocalDate date, int workingDays)
+    {
+        LocalDate returnDate = date;
+        for (int i = 0; i < workingDays;)
+        {
+            returnDate = returnDate.plusDays(1);
+            if (!isHoliday(returnDate.plusDays(1)) && !isWeekendNonWorkingDay(returnDate.plusDays(1)))
+            {
+                i++;
+            }
+        }
+        return returnDate;
+    }
+
+    public Date addWorkingDaysToDate(Date date, int workingDays)
+    {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        localDate = addWorkingDaysToDate(localDate, workingDays);
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public boolean isWeekendNonWorkingDay(LocalDate date)
+    {
+        return (!getHolidayConfiguration().getIncludeWeekends() && (date.getDayOfWeek().equals(DayOfWeek.SATURDAY))
+                || date.getDayOfWeek().equals(DayOfWeek.SUNDAY));
+    }
+
+    public boolean isHoliday(LocalDate date)
+    {
+        return getHolidayConfiguration().getHolidays().stream().filter(item -> item.getHolidayDate().equals(date)).count() > 0;
+    }
+
+    private void setHolidayConfigurationFromFile()
+    {
+        holidayConfiguration = new HolidayConfiguration();
 
         try
         {
@@ -89,8 +136,6 @@ public class HolidayConfigurationService
         {
             lock.readLock().unlock();
         }
-
-        return holidayConfiguration;
     }
 
     public Resource getHolidayFile()
