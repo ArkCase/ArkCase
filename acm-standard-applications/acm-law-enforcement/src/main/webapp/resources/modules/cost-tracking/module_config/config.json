@@ -401,7 +401,8 @@
                 {
                     "name": "value",
                     "displayName": "costTracking.comp.summary.table.columns.value",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.value | currency}}</div>"
                 },
                 {
                     "name": "title",

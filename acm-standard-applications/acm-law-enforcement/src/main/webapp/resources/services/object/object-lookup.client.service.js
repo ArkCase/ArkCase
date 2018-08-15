@@ -340,11 +340,25 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
-     * @name getProjectParticipantTypes
+     * @name getComplaintParticipantTypes
      * @methodOf services:Object.LookupService
      *
      * @description
-     * Query list of participant types
+     * Query list of participant types for complaint
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getComplaintParticipantTypes = function() {
+        return Service.getLookupByLookupName("complaintParticipantTypes");
+    };
+
+    /**
+     * @ngdoc method
+     * @name getCaseFileParticipantTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of participant types for casefile
      *
      * @returns {Object} An array returned by $resource
      */
@@ -619,6 +633,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
      */
     Service.getCountries = function() {
         return Service.getLookupByLookupName("countries");
+    };
+
+    /**
+     * @ngdoc method
+     * @name getFrequencies
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of frequencies
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getFrequencies = function() {
+        return Service.getLookupByLookupName("frequencies");
     };
 
     /**

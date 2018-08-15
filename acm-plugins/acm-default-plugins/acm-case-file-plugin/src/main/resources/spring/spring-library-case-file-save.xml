@@ -52,7 +52,7 @@
         <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
     </bean>
     <bean id="casefileDocumentHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CasefileDocumentHandler"
-        parent="pdfDocumentGenerator">
+        parent="pdfCasefileDocumentGenerator">
         <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
         <property name="dao" ref="caseFileDao"/>
     </bean>
