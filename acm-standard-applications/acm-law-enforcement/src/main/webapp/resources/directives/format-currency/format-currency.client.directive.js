@@ -18,7 +18,7 @@ angular
             link: function (scope, elem, attrs, ctrl) {
                 if (!ctrl) return;
 
-            var numberRegExp = new RegExp("^[0-9-][.0-9]*$");
+            var numberRegExp = new RegExp("^[1-9-][.0-9]*$");
             $(elem).keypress(function(event){
                 if(!numberRegExp.test(event.target.value + event.key)){
                     return false;
