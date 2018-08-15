@@ -136,6 +136,29 @@ angular.module('cases').controller(
                         }
                     };
 
+                    $scope.changeCaseStatus = function(caseInfo) {
+                        var params = {
+                            "info": caseInfo
+                        };
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/cases/views/components/case-change-status-modal.client.view.html',
+                            controller: 'Cases.ChangeStatusController',
+                            size: 'lg',
+                            resolve: {
+                                modalParams: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(data) {
+                            console.log(data);
+                        }, function() {
+                            console.log("error");
+                        });
+                    };
+
                     $scope.subscribe = function(caseInfo) {
                         ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.CASE_FILE, caseInfo.id).then(function(data) {
                             $scope.showBtnSubscribe = false;
