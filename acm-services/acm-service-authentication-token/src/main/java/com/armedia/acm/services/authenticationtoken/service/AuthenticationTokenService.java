@@ -30,6 +30,8 @@ package com.armedia.acm.services.authenticationtoken.service;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -48,6 +50,7 @@ public class AuthenticationTokenService
     private AuthenticationTokenDao authenticationTokenDao;
 
     public static final int EMAIL_TICKET_EXPIRATION_DAYS = 3;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * Retrieve a token corresponding to the given Authentication. The token can be placed in service URLs
@@ -126,6 +129,7 @@ public class AuthenticationTokenService
 
     public String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, Authentication authentication)
     {
+        log.debug("Generation authentication token per user [{}] for email address [{}]", authentication.getName(), emailAddress);
         String token = getUncachedTokenForAuthentication(authentication);
         AuthenticationToken authenticationToken = new AuthenticationToken();
         authenticationToken.setKey(token);

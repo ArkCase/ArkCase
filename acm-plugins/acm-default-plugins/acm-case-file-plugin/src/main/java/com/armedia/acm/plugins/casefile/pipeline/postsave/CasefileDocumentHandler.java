@@ -77,7 +77,7 @@ public class CasefileDocumentHandler extends PDFCasefileDocumentGenerator<CaseFi
 
             try
             {
-                generatePdf(casefile.getObjectType(), casefile.getId(), ctx);
+                generatePdf(casefile.getId(), ctx);
             }
             catch (ParserConfigurationException e)
             {

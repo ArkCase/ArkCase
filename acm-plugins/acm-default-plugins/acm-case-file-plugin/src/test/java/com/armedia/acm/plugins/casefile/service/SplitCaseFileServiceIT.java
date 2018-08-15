@@ -82,6 +82,7 @@ import java.util.UUID;
 @ContextConfiguration(name = "spring", locations = {
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-admin.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-business-process.xml",
@@ -112,6 +113,7 @@ import java.util.UUID;
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-organization-rules.xml",
         "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-pdf-utilities.xml",
         "/spring/spring-library-person.xml",
         "/spring/spring-library-profile.xml",
         "/spring/spring-library-property-file-manager.xml",

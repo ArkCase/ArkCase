@@ -11,6 +11,7 @@
         <property name="documentTypeResolver" ref="documentTypeResolver"/>
         <property name="arkcaseBaseUrl" value="${arkcase.baseurl}"/>
         <property name="documentServerUrlApi" value="${files.docservice.url.api}"/>
+        <property name="pluginEnabled" value="${plugin.enabled}"/>
     </bean>
 
     <bean id="onlyOfficeCallbackService"

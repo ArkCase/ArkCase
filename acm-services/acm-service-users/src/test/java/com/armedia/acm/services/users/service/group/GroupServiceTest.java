@@ -27,21 +27,12 @@ package com.armedia.acm.services.users.service.group;
  * #L%
  */
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.collection.IsEmptyCollection.emptyCollectionOf;
-import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -55,6 +46,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.collection.IsEmptyCollection.emptyCollectionOf;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Nov 23, 2017
@@ -155,7 +154,7 @@ public class GroupServiceTest
         verify(mockedMemberGroup1).removeFromGroup(group);
         verify(mockedMemberGroup2).removeFromGroup(group);
         verify(group).setUserMembers(any(Set.class));
-        verify(groupService).save(group);
+        verify(mockedGroupDao).deleteGroup(group);
         assertThat(group.getMemberGroups(), emptyCollectionOf(AcmGroup.class));
 
         ancestorStrings.forEach((group, ancestorString) -> {
