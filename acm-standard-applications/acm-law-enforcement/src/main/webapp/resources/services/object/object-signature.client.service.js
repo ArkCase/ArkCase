@@ -87,7 +87,7 @@ angular.module('services').factory('Object.SignatureService', [ '$resource', 'Ac
             onSuccess: function(data) {
                 if (Service.validateSignature(data)) {
                     var cacheKey = objectType + "." + objectId;
-                    cacheSignatures.remove(cacheKey);
+                    cacheSignatures.remove(cacheKey); //clear cashed signatures so the next retrieving signatures will contain the new one we create here.
                     return data;
                 }
             },

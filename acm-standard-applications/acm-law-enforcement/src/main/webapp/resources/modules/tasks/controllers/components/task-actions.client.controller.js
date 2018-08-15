@@ -107,10 +107,10 @@ angular.module('tasks').controller(
                                 console.log("sign task here");
                                 ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass).then(function(result) {
                                     MessageService.succsessAction();
+                                    $rootScope.$broadcast('task-signed');
                                 }, function(error) {
                                     if (!Util.isEmpty(error.data.message)) {
                                         MessageService.error(error.data.message);
-                                        $rootScope.$broadcast('task-signed');
                                     } else {
                                         MessageService.errorAction();
                                     }
