@@ -21,6 +21,7 @@ angular.module('complaints').controller(
                             closeDate: new Date(),
                             dispositionType: "",
                             referExternalOrganizationName: null,
+                            referExternalDate: new Date(),
                             referExternalContactPersonName: null,
                             referExternalContactMethod: null,
                             existingCaseNumber: null,
@@ -189,6 +190,7 @@ angular.module('complaints').controller(
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
 
                         ComplaintInfoService.closeComplaint('create', $scope.closeComplaintRequest).then(function(data) {
+                            MessageService.info(data.info);
                             $modalInstance.dismiss();
                         });
                     }

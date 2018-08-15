@@ -72,6 +72,10 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_refer_ext_person_name")
     private String referExternalContactPersonName;
 
+    @Column(name = "cm_refer_ext_date")
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate referExternalDate;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_refer_ext_contact_method_id")
     private ContactMethod referExternalContactMethod;
@@ -231,4 +235,13 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
         this.className = className;
     }
 
+    public LocalDate getReferExternalDate()
+    {
+        return referExternalDate;
+    }
+
+    public void setReferExternalDate(LocalDate referExternalDate)
+    {
+        this.referExternalDate = referExternalDate;
+    }
 }

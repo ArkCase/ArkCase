@@ -122,11 +122,11 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         pvars.put("REQUEST_ID", closeComplaintFormEvent.getRequest().getId());
         pvars.put("IP_ADDRESS", closeComplaintFormEvent.getIpAddress());
 
-        log.debug("starting process: " + processName);
+        log.debug("starting process: [{}]", processName);
 
         ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
 
-        log.debug("process ID: " + pi.getId());
+        log.debug("process ID: [{}]", pi.getId());
     }
 
     private List<String> findReviewers(CloseComplaintFormEvent closeComplaintFormEvent)

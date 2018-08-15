@@ -33,6 +33,7 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.service.PDFDocumentGenerator;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -61,7 +62,7 @@ public class PDFCasefileDocumentGenerator<D extends AcmAbstractDao, T extends Ca
     }
 
     @Override
-    public Document buildXmlForPdfDocument(Object businessObject) throws ParserConfigurationException
+    public Document buildXmlForPdfDocument(Object businessObject, AbstractPipelineContext ctx) throws ParserConfigurationException
     {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();

@@ -54,7 +54,8 @@ angular.module('complaints').controller(
 
                         $scope.closeParams = {
                             complaintId: objectInfo.complaintId,
-                            complaintNumber: objectInfo.complaintNumber
+                            complaintNumber: objectInfo.complaintNumber,
+                            complaintTitle: objectInfo.complaintTitle
                         };
                     };
 
@@ -136,12 +137,6 @@ angular.module('complaints').controller(
                                     return params;
                                 }
                             }
-                        });
-
-                        modalInstance.result.then(function(data) {
-                            console.log(data);
-                        }, function() {
-                            console.log("error");
                         });
                     };
 

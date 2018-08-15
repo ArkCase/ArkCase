@@ -318,8 +318,6 @@
 
     <bean id="pdfCloseComplaintDocumentGeneratorHandler"
         class="com.armedia.acm.plugins.complaint.pipeline.postsave.PDFCloseComplaintDocumentGeneratorHandler">
-        <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
-        <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="pdfCloseComplaintDocumentGenerator" ref="pdfCloseComplaintDocumentGenerator"/>
     </bean>
 </beans>

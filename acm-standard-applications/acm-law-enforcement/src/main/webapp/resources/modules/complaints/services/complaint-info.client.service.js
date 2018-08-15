@@ -125,6 +125,10 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
                 if (Service.validateComplaintInfo(data)) {
                     return data;
                 }
+            },
+            onError: function(error) {
+                MessageService.error(error.data);
+                return error;
             }
         });
     };

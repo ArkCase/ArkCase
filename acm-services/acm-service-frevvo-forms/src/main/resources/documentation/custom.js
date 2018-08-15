@@ -5,8 +5,10 @@ document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/l
 document.writeln('<script type="text/javascript">var frevvo_jQuery = jQuery.noConflict(true);</script>');
 
 // Import jQuery UI
-document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.js"></script>');
-document.writeln('<link href="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" />');
+document
+    .writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.js"></script>');
+document
+    .writeln('<link href="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" />');
 
 // Import Bootstrap
 document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/bootstrap-3.1.1/js/bootstrap.js"></script>');
@@ -16,9 +18,12 @@ document.writeln('<link href="/frevvo/js-28315/arkcase/libs/bootstrap-3.1.1/css/
 document.writeln('<link rel="stylesheet" href="/frevvo/js-28315/arkcase/libs/font-awesome/css/font-awesome.css" type="text/css">');
 
 // Import Rich TextArea Plugin
-document.writeln('<link rel="stylesheet" href="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.css" type="text/css">');
-document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/richtextarea.plugin.js"></script>');
+document
+    .writeln('<link rel="stylesheet" href="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.css" type="text/css">');
+document
+    .writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.js"></script>');
+document
+    .writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/richtextarea.plugin.js"></script>');
 
 // Import ArkCase libs
 // Still we need these libraries because for Advanced User Picker we are taking more information for the user using REST call (please see method "doAdvancedUserPicker(..)")
@@ -57,7 +62,7 @@ var frevvoMessaging = null;
 var objectTypePicked;
 
 var CustomEventHandlers = {
-    setup: function(el) {
+    setup : function(el) {
         var elState = CustomView.getState(el);
         if (CustomView.hasClass(el, 'nextTab')) {
             FEvent.observe(el, 'click', this.scrollTop.bindAsObserver(this, el));
@@ -82,11 +87,11 @@ var CustomEventHandlers = {
         }
     },
 
-    scrollTop: function(event, element) {
+    scrollTop : function(event, element) {
         document.getElementById("wrapper").scrollIntoView();
     },
 
-    createCommonPicker: function() {
+    createCommonPicker : function() {
         if (isEmpty(frevvoMessaging)) {
             frevvoMessaging = {};
             frevvoMessaging.elements = {};
@@ -118,6 +123,7 @@ var CustomEventHandlers = {
                                 var pickedObject = e.data.data;
                                 // update charge code element
                                 updateElementValue(pickedObject.name, 'input', e.data.elementId, null);
+                                updateElement(element, 'objectTitle', e.data.title_parseable);
                             }
                         }
                         if (e.data.action == "fill-person-picker-data") {
@@ -156,7 +162,7 @@ var CustomEventHandlers = {
                                 updateElement(element, 'title', e.data.data.title);
 
                                 var groupElement = getHtmlElementsByCssClass('userOrGroupSearchPicker_participant_owningGroupHidden', 'input')[0];
-                                if (!isEmpty(e.data.data.groupName)) {
+                                if(!isEmpty(e.data.data.groupName)) {
                                     groupElement.value = e.data.data.groupName;
                                     dispatchChangeEvent(groupElement);
                                 }
@@ -169,7 +175,7 @@ var CustomEventHandlers = {
         }
     },
 
-    showUserPicker: function(event, element) {
+    showUserPicker : function(event, element) {
         if (!isEmpty(frevvoMessaging)) {
             var message = {};
             message.source = "frevvo";
@@ -185,7 +191,7 @@ var CustomEventHandlers = {
             }
             if (!isEmpty(owningGroup)) {
                 message.data = {
-                    "owningGroup": owningGroup
+                    "owningGroup" : owningGroup
                 };
             }
 
@@ -194,7 +200,7 @@ var CustomEventHandlers = {
         }
     },
 
-    showObjectPicker: function(event, element) {
+    showObjectPicker : function(event, element) {
         var itemsToExclude = [];
         var objectType;
         var costFormElement = getHtmlElement('costsheetForm', 'input');
@@ -220,8 +226,8 @@ var CustomEventHandlers = {
             frevvoMessaging.elements[element.id] = element;
             if (!isEmpty(objectType)) {
                 message.data = {
-                    "objectType": objectType,
-                    "itemsToExclude": itemsToExclude
+                    "objectType" : objectType,
+                    "itemsToExclude" : itemsToExclude
                 };
             }
             // Open user picker
@@ -236,8 +242,8 @@ var CustomEventHandlers = {
                 if (chargeCode.length > 0) {
                     var type = findObjectType(populatedElements[i]);
                     var item = {
-                        type: type,
-                        chargeCode: chargeCode
+                        type : type,
+                        chargeCode : chargeCode
                     };
                     chargeItems.push(item);
                 }
@@ -257,7 +263,7 @@ var CustomEventHandlers = {
         }
     },
 
-    showPersonPicker: function(event, element, formType) {
+    showPersonPicker : function(event, element, formType) {
         if (!isEmpty(frevvoMessaging)) {
             var message = {};
             message.source = "frevvo";
@@ -279,7 +285,7 @@ var CustomEventHandlers = {
         }
     },
 
-    showOrganizationPicker: function(event, element, formType) {
+    showOrganizationPicker : function(event, element, formType) {
         if (!isEmpty(frevvoMessaging)) {
             var message = {};
             message.source = "frevvo";
@@ -295,7 +301,7 @@ var CustomEventHandlers = {
         }
     },
 
-    showUserOrGroupPicker: function(event, element) {
+    showUserOrGroupPicker : function(event, element) {
         if (!isEmpty(frevvoMessaging)) {
             var message = {};
             message.source = "frevvo";
@@ -307,7 +313,7 @@ var CustomEventHandlers = {
 
             var participantType;
             var participantType = findElement(element, 'participantType');
-            if (!isEmpty(participantType)) {
+            if(!isEmpty(participantType)) {
                 message.data = {
                     participantType: participantType.getAttribute('ovalue')
                 }
@@ -497,7 +503,8 @@ function updateElement(element, fieldName, value) {
             elementToUpdate = elements[0];
         } else if (elements && elements.length > 1) {
             try {
-                elementToUpdate = element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('.' + cssClassDivided + '_' + fieldName + ' input')[0];
+                elementToUpdate = element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('.' + cssClassDivided + '_'
+                    + fieldName + ' input')[0];
             } catch (e) {
                 // Normal behaviour - element is not found
             }
@@ -623,10 +630,11 @@ function createInfoMesssage(objectType, objectNumber, objectTitle) {
 var rtaSelector = 'div.rta_container span.f-message:not([style="display: none;"])';
 
 var rtaSummernoteOptions = {
-    toolbar: [ [ 'style', [ 'style' ] ], [ 'font', [ 'bold', 'italic', 'underline', 'clear' ] ], [ 'fontsize', [ 'fontsize' ] ], [ 'color', [ 'color' ] ], [ 'para', [ 'ul', 'ol', 'paragraph' ] ], [ 'height', [ 'height' ] ], [ 'table', [ 'table' ] ], [ 'view', [ 'fullscreen', 'codeview' ] ],
-            [ 'help', [ 'help' ] ] ],
+    toolbar : [ [ 'style', [ 'style' ] ], [ 'font', [ 'bold', 'italic', 'underline', 'clear' ] ], [ 'fontsize', [ 'fontsize' ] ],
+        [ 'color', [ 'color' ] ], [ 'para', [ 'ul', 'ol', 'paragraph' ] ], [ 'height', [ 'height' ] ], [ 'table', [ 'table' ] ],
+        [ 'view', [ 'fullscreen', 'codeview' ] ], [ 'help', [ 'help' ] ] ],
 
-    height: 280
+    height : 280
 };
 
 var rtaRefreshMilliseconds = 500;
