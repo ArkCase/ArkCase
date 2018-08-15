@@ -658,7 +658,9 @@
         "PARTICIPANT-ASSOCIATION": "Participant-Association",
         "ASSIGNMENT": "Assignment",
         "ASSOCIATE_TAG": "Tag",
-        "TRANSCRIBE": "Transcription"
+        "TRANSCRIBE": "Transcription",
+        "BILLING_INVOICE": "Billing Invoice",
+        "BILLING_ITEM": "Billing Item"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",

@@ -87,7 +87,7 @@ public class BillingServiceImpl implements BillingService
     public List<BillingItem> getBillingItemsByParentObjectTypeAndId(String parentObjectType, Long parentObjectId)
             throws GetBillingItemException
     {
-        log.info("Finding Billing Items");
+        log.info("Finding Billing Items for [{}] [{}]", parentObjectType, parentObjectId);
         if (parentObjectId != null && parentObjectType != null)
         {
             try
@@ -113,7 +113,7 @@ public class BillingServiceImpl implements BillingService
     @Override
     public BillingItem createBillingItem(BillingItem billingItem) throws CreateBillingItemException
     {
-        log.info("Creating Billing Item");
+        log.info("Creating Billing Item for [{}] [{}]", billingItem.getParentObjectType(), billingItem.getParentObjectId());
         try
         {
             BillingItem saved = getBillingItemDao().createBillingItem(billingItem);
@@ -144,23 +144,13 @@ public class BillingServiceImpl implements BillingService
 
     /*
      * (non-Javadoc)
-     * @see com.armedia.acm.services.billing.service.BillingService#getAllLatestBillingInvoices()
-     */
-    @Override
-    public List<BillingInvoice> getAllLatestBillingInvoices() throws GetBillingInvoiceException
-    {
-        return getBillingInvoiceDao().getAllLatestBillingInvoices();
-    }
-
-    /*
-     * (non-Javadoc)
      * @see com.armedia.acm.services.billing.service.BillingService#getLastBillingInvoice(java.lang.String,
      * java.lang.Long)
      */
     @Override
     public BillingInvoice getLatestBillingInvoice(String parentObjectType, Long parentObjectId) throws GetBillingInvoiceException
     {
-        log.info("Getting Latest Billing Invoice");
+        log.info("Getting Latest Billing Invoice for [{}] [{}]", parentObjectType, parentObjectId);
         try
         {
             return getBillingInvoiceDao().getLatestBillingInvoice(parentObjectType, parentObjectId);
