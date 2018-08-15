@@ -194,6 +194,7 @@
         "header": "搜索",
         "btnSearch.text": "搜索",
         "btnOk.text": "確定",
+        "btnConfirm.text": "zh-tw_Confirm",
         "btnCancel.text": "消除",
         "edtPlaceholder": "鍵入搜索內容",
         "noData.text": "無結果",
@@ -601,6 +602,7 @@
             "btnOk.text": "保存",
             "btnCancel.text": "取消",
             "dialogUserPicker.header": "搜索用戶",
+            "dialogUserGroupPicker.header": "zh-tw_Search User/Group",
             "dialogGroupPicker.header": "搜索組",
             "replaceChildrenParticipant": "替換子文檔參與者"
         },
@@ -846,7 +848,12 @@
         "people": {
             "title": "人員",
             "searchExisting.placeholder": "搜索現有人員",
-            "personType": "人員類型"
+            "personType": "人員類型",
+            "comp":{
+                "details":{
+                    "title":"zh-tw_Details"
+                }
+            }
         },
         "locations": {
             "title": "地點",
