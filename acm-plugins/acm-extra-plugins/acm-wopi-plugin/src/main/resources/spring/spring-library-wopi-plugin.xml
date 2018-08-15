@@ -23,5 +23,6 @@
         <property name="wopiTenantAccessTokenParamName" value="${wopi.tenant.accessTokenParamName}"/>
         <property name="wopiTenantFileIdParamName" value="${wopi.tenant.fileIdParamName}"/>
         <property name="wopiLockDuration" value="${wopi.lockDuration}"/>
+        <property name="wopiPluginEnabled" value="${wopi.plugin.enabled}"/>
     </bean>
 </beans>

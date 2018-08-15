@@ -2,8 +2,9 @@
 
 angular.module('complaints').controller(
         'Complaints.ActionsController',
-        [ '$scope', '$state', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Complaint.LookupService', 'Object.SubscriptionService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService',
-                'Profile.UserInfoService', function($scope, $state, $stateParams, $q, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService, ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService) {
+        [ '$scope', '$state', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Complaint.LookupService', 'Object.SubscriptionService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService',
+                'Profile.UserInfoService', 'FormsType.Service',
+                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService, ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, FormsTypeService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -15,6 +16,14 @@ angular.module('complaints').controller(
                         onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
+                    });
+
+                    FormsTypeService.isAngularFormType().then(function(isAngularFormType) {
+                        $scope.isAngularFormType = isAngularFormType;
+                    });
+
+                    FormsTypeService.isFrevvoFormType().then(function(isFrevvoFormType) {
+                        $scope.isFrevvoFormType = isFrevvoFormType;
                     });
 
                     $scope.showBtnChildOutcomes = false;
@@ -69,6 +78,7 @@ angular.module('complaints').controller(
                             return data;
                         });
                     };
+
                     $scope.unsubscribe = function(complaintInfo) {
                         ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.COMPLAINT, complaintInfo.complaintId).then(function(data) {
                             $scope.showBtnSubscribe = true;
@@ -111,4 +121,24 @@ angular.module('complaints').controller(
                         $scope.availableChildOutcomes = outcomes;
                         $scope.showBtnChildOutcomes = true;
                     });
+
+                    $scope.newComplaint = function() {
+                        var params = {};
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/complaints/views/components/complaint-new-complaint-modal.client.view.html',
+                            controller: 'Complaints.NewComplaintController',
+                            size: 'lg',
+                            resolve: {
+                                modalParams: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(data) {
+                            //Do nothing
+                        });
+                    };
+
                 } ]);

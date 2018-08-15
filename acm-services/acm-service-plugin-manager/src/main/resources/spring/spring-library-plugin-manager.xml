@@ -22,4 +22,8 @@
         <property name="resolver" ref="acmPluginPathMatchingResolver"/>
     </bean>
 
+    <bean id="acmConfigurablePluginsManager" class="com.armedia.acm.pluginmanager.service.AcmConfigurablePluginsManager">
+        <property name="contextHolder" ref="acmContextHolder"/>
+    </bean>
+
 </beans>

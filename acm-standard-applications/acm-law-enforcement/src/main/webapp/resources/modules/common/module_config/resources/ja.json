@@ -194,6 +194,7 @@
         "header": "検索",
         "btnSearch.text": "検索",
         "btnOk.text": "[OK]",
+        "btnConfirm.text": "ja_Confirm",
         "btnCancel.text": "キャンセル",
         "edtPlaceholder": "検索するには入力",
         "noData.text": "結果なし",
@@ -601,6 +602,7 @@
             "btnOk.text": "セーブ",
             "btnCancel.text": "キャンセル",
             "dialogUserPicker.header": "ユーザーを検索",
+            "dialogUserGroupPicker.header": "ja_Search User/Group",
             "dialogGroupPicker.header": "検索グループ",
             "replaceChildrenParticipant": "子供の参加者を交換する"
         },
@@ -846,7 +848,12 @@
         "people": {
             "title": "人物",
             "searchExisting.placeholder": "既存の人を検索する",
-            "personType": "人物の種類"
+            "personType": "人物の種類",
+            "comp":{
+                "details":{
+                    "title":"ja_Details"
+                }
+            }
         },
         "locations": {
             "title": "場所",

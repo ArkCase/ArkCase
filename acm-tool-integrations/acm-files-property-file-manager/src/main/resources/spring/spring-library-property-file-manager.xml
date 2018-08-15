@@ -53,7 +53,7 @@
                 <value>file:${user.home}/.arkcase/acm/taskPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/usernamePasswordNotifier.properties</value>
                 <value>file:${user.home}/.arkcase/acm/websockets.properties</value>
-                <value>file:${user.home}/.arkcase/acm/wopiService.properties</value>
+                <value>file:${user.home}/.arkcase/acm/wopiPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring/spring-config-kerberos.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring/spring-config-saml.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring-security/sessionControl.properties</value>
