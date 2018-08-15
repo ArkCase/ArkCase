@@ -6,18 +6,23 @@
         <property name="costsheetBusinessRule" ref="saveCostsheetBusinessRule"/>
     </bean>
 
-    <bean id="costsheetContainerHandler"
-        class="com.armedia.acm.services.costsheet.pipeline.postsave.CostsheetContainerHandler"/>
+    <bean id="costsheetContainerHandler" class="com.armedia.acm.services.costsheet.pipeline.postsave.CostsheetContainerHandler">
+        <property name="fileParticipantService" ref="fileParticipantService"/>
+    </bean>
+    <bean id="costsheetEcmFolderHandler" class="com.armedia.acm.services.costsheet.pipeline.postsave.CostsheetEcmFolderHandler">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
 
     <bean id="costsheetPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
-                <ref bean="costsheetContainerHandler"/>
             </list>
         </property>
         <property name="postSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="costsheetRuleHandler"/>
+                <ref bean="costsheetContainerHandler"/>
+                <ref bean="costsheetEcmFolderHandler"/>
             </list>
         </property>
     </bean>

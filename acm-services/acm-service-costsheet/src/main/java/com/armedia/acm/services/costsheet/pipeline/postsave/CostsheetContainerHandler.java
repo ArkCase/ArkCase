@@ -27,21 +27,42 @@ package com.armedia.acm.services.costsheet.pipeline.postsave;
  * #L%
  */
 
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.pipeline.CostsheetPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CostsheetContainerHandler implements PipelineHandler<AcmCostsheet, CostsheetPipelineContext>
 {
+    /**
+     * Logger instance.
+     */
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    private EcmFileParticipantService fileParticipantService;
 
     @Override
     public void execute(AcmCostsheet entity, CostsheetPipelineContext pipelineContext) throws PipelineProcessException
     {
-
+        log.trace("Costsheet entering CostsheetContainerHandler : [{}]", entity);
         if (entity.getContainer().getContainerObjectTitle() == null)
         {
             entity.getContainer().setContainerObjectTitle(entity.getCostsheetNumber());
+        }
+
+        if (entity.getContainer().getFolder() == null)
+        {
+            AcmFolder folder = new AcmFolder();
+            folder.setName("ROOT");
+            folder.setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(entity.getParticipants()));
+
+            entity.getContainer().setFolder(folder);
+            entity.getContainer().setAttachmentFolder(folder);
         }
     }
 
@@ -49,5 +70,15 @@ public class CostsheetContainerHandler implements PipelineHandler<AcmCostsheet, 
     public void rollback(AcmCostsheet entity, CostsheetPipelineContext pipelineContext) throws PipelineProcessException
     {
 
+    }
+
+    public EcmFileParticipantService getFileParticipantService()
+    {
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
+    {
+        this.fileParticipantService = fileParticipantService;
     }
 }

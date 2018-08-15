@@ -103,6 +103,42 @@
         "newTask": "New Task",
         "sendEmail": "Send Email"
     },
+    "costTracking.comp.newCostsheet": {
+        "title": "Expenses",
+        "editCase.title": "Edit Expenses",
+        "user": "User",
+        "status": "Status",
+        "costType": "Type",
+        "selectTypeMessage": "You have to select 'Type', so that you can enter a 'Code'.",
+        "code": "Code",
+        "objectPicker": {
+            "title": "Search for object",
+            "table.columns": {
+                "name": "Name",
+                "type": "Type",
+                "title": "Title",
+                "id": "ID"
+            }
+        },
+        "cost": {
+            "title": "Costs",
+            "date": "Date",
+            "date.placeholder": "Select Date",
+            "date.close.button": "Close",
+            "costTitle": "Title",
+            "description": "Description",
+            "amount": "Amount",
+            "balance": "Balance"
+        },
+        "details": "Details",
+        "approver.placeholder": "Select Approver",
+        "cancelButton": "Cancel",
+        "saveButton": "Save",
+        "updateButton": "Update",
+        "sendForApproval": "Send for Approval",
+        "removeButton": "Remove",
+        "addButton": "Add Another"
+    },
     "costTracking.tree": {
         "nodeTypes": {
             "details.label": "Details",

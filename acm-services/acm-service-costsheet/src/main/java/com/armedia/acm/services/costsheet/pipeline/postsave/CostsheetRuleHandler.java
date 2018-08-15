@@ -33,16 +33,31 @@ import com.armedia.acm.services.costsheet.service.SaveCostsheetBusinessRule;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CostsheetRuleHandler implements PipelineHandler<AcmCostsheet, CostsheetPipelineContext>
 {
-
+    /**
+     * Logger instance.
+     */
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    /**
+     * Business rule manager.
+     */
     private SaveCostsheetBusinessRule costsheetBusinessRule;
 
     @Override
     public void execute(AcmCostsheet entity, CostsheetPipelineContext pipelineContext) throws PipelineProcessException
     {
-        // apply costsheet business rules after save
-        getCostsheetBusinessRule().applyRules(entity);
+        // // apply costsheet business rules after save
+        // getCostsheetBusinessRule().applyRules(entity);
+
+        log.info("Costsheet entering CostsheetRulesHandler : [{}]", entity);
+
+        entity = costsheetBusinessRule.applyRules(entity);
+
+        log.info("Costsheet exiting CostsheetRulesHandler : [{}]", entity);
     }
 
     @Override

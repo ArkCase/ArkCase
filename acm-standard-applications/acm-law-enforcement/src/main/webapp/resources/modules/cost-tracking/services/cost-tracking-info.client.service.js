@@ -138,6 +138,36 @@ angular.module('services').factory('CostTracking.InfoService', [ '$resource', '$
 
     /**
      * @ngdoc method
+     * @name saveCostsheetInfo
+     * @methodOf service:CostTracking.InfoService
+     *
+     * @description
+     * Save costsheet data
+     *
+     * @param {Object} costsheetInfo  Costsheet data
+     *
+     * @returns {Object} Promise
+     */
+    Service.saveCostsheetInfoNewCostsheet = function(costsheetInfo) {
+        if (!Service.validateCostsheetNewCostsheet(costsheetInfo)) {
+            return Util.errorPromise($translate.instant("common.service.error.invalidData"));
+        }
+        return Util.serviceCall({
+            service: Service.save,
+            data: costsheetInfo,
+            onSuccess: function(data) {
+                if (Service.validateCostsheet(data)) {
+                    var costsheetInfo = data;
+                    var cacheCostsheetInfo = new Store.CacheFifo(Service.CacheNames.COSTSHEET_INFO);
+                    cacheCostsheetInfo.put(costsheetInfo.id, costsheetInfo);
+                    return data;
+                }
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
      * @name validateCostsheet
      * @methodOf service:CostTracking.InfoService
      *
@@ -179,6 +209,52 @@ angular.module('services').factory('CostTracking.InfoService', [ '$resource', '$
         if (Util.isEmpty(data.creator)) {
             return false;
         }
+        return true;
+    };
+
+    /**
+     * @ngdoc method
+     * @name validateCostsheet
+     * @methodOf service:CostTracking.InfoService
+     *
+     * @description
+     * Validate costsheet
+     *
+     * @param {Object} data  Data to be validated
+     *
+     * @returns {Boolean} Return true if data is valid
+     */
+    Service.validateCostsheetNewCostsheet = function(data) {
+        if (Util.isEmpty(data)) {
+            return false;
+        }
+        if (data.id) {
+            return false;
+        }
+        if (Util.isEmpty(data.user)) {
+            return false;
+        }
+        if (Util.isEmpty(data.user.userId)) {
+            return false;
+        }
+        if (Util.isEmpty(data.parentId)) {
+            return false;
+        }
+        if (Util.isEmpty(data.parentType)) {
+            return false;
+        }
+        if (Util.isEmpty(data.parentNumber)) {
+            return false;
+        }
+        if (Util.isEmpty(data.costs)) {
+            return false;
+        }
+        if (Util.isEmpty(data.status)) {
+            return false;
+        }
+        // if (Util.isEmpty(data.creator)) {
+        //     return false;
+        // }
         return true;
     };
 
