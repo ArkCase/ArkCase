@@ -72,6 +72,10 @@ public class CloseComplaintFormAPIController
         }
         finally
         {
+            if (message.isEmpty())
+            {
+                message.put("info", "Closing complaint with id " + form.getComplaintId() + " failed");
+            }
             return message;
         }
     }

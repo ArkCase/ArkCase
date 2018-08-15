@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.model.Complaint;
@@ -60,7 +59,6 @@ public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T exte
         String caseId = ((CloseComplaintPipelineContext) ctx).getCloseComplaintRequest().getDisposition().getExistingCaseNumber();
         if (caseId != null)
         {
-            CaseFile existingCase = caseFileDao.findByCaseNumber(caseId);
             addElement(document, rootElem, "existingCaseNumber", caseId, true);
             addElement(document, rootElem, "existingCaseSearchBtn", "Search", true);
             addElement(document, rootElem, "existingCaseTitle", ctx.getPropertyValue("existingCaseTitle").toString(),

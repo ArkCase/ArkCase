@@ -50,6 +50,7 @@ angular.module('complaints').controller(
                     $scope.showReferExternal = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.futureTaskConfig = null;
+                    $scope.isDescriptionRequired = false;
 
                     ConfigService.getModuleConfig("complaints").then(function(moduleConfig) {
                         $scope.futureTaskConfig = _.find(moduleConfig.components, {
@@ -82,6 +83,7 @@ angular.module('complaints').controller(
                     });
 
                     function dispositionTypeChanged() {
+                        $scope.isDescriptionRequired = $scope.closeComplaintRequest.disposition.dispositionType == 'no_action'
                         if ($scope.closeComplaintRequest.disposition.dispositionType == 'add_existing_case') {
                             $scope.existingCase = {};
                             $scope.showReferExternal = false;
