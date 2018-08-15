@@ -53,7 +53,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -126,13 +125,6 @@ public class BillingInvoice implements Serializable, AcmObject, AcmEntity, AcmPa
                     @JoinColumn(name = "cm_billing_item_id", referencedColumnName = "cm_billing_item_id", unique = true)
             })
     private List<BillingItem> billingItems = new ArrayList<>();
-
-    @PrePersist
-    public void beforeInsert()
-    {
-        Date today = new Date();
-        setCreated(today);
-    }
 
     /**
      * @return the id
