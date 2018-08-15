@@ -78,7 +78,7 @@ public abstract class PDFDocumentGenerator<T>
     {
         if (businessObject != null)
         {
-            Document document = buildXmlForPdfDocument(businessObject);
+            Document document = buildXmlForPdfDocument(businessObject, ctx);
             Source source = new DOMSource(document);
             String filename = null;
 
@@ -133,7 +133,7 @@ public abstract class PDFDocumentGenerator<T>
         }
     }
 
-    public abstract Document buildXmlForPdfDocument(T businessObject) throws ParserConfigurationException;
+    public abstract Document buildXmlForPdfDocument(T businessObject, AbstractPipelineContext ctx) throws ParserConfigurationException;
 
     /**
      * A helper method that simplifies this class.

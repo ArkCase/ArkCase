@@ -19,7 +19,7 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
         capacity: 1
     });
     var caseGetUrl = 'api/latest/plugin/casefile/byId/';
-    var complaintGetByNumberUrl = 'api/latest/plugin/casefile/bynumber';
+    var caseGetByNumberUrl = 'api/latest/plugin/casefile/bynumber';
 
     var Service = $resource('api/latest/plugin', {}, {
         /**
@@ -79,7 +79,7 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
          */
         getByNumber: {
             method: 'GET',
-            url: complaintGetByNumberUrl,
+            url: caseGetByNumberUrl,
             cache: false,
             isArray: false
         }

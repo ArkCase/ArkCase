@@ -41,6 +41,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping({ "/api/latest/plugin/complaint" })
 public class CloseComplaintFormAPIController
@@ -50,21 +53,27 @@ public class CloseComplaintFormAPIController
 
     @RequestMapping(value = "/close/{mode}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Boolean completeTask(
+    public Map<String, String> completeTask(
             @PathVariable String mode, @RequestBody CloseComplaintRequest form, Authentication auth,
             HttpServletRequest request, HttpSession session)
     {
-        log.info("Closing complaint with id {}...", form.getComplaintId());
-
+        log.info("Closing complaint with id [{}]...", form.getComplaintId());
+        Map<String, String> message = null;
         try
         {
+            message = new HashMap<>();
             closeComplaintService.save(form, auth, mode);
+            message.put("info", "The complaint is in approval mode");
         }
         catch (Exception e)
         {
-            System.out.println(e.getMessage());
+            log.error("Closing complaint with id [{}] failed", form.getComplaintId(), e);
+            message.put("info", e.getMessage());
         }
-        return true;
+        finally
+        {
+            return message;
+        }
     }
 
     public CloseComplaintService getCloseComplaintService()

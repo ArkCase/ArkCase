@@ -42,7 +42,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         {
             return;
         }
-        log.debug("start process? " + configuration.isStartProcess());
+        log.debug("start process? [{}]", configuration.isStartProcess());
 
         if (configuration.isStartProcess())
         {
