@@ -2,8 +2,8 @@
 
 angular.module('tasks').controller(
         'Tasks.ActionsController',
-        [ '$scope', '$state', '$stateParams', '$modal', '$translate', 'UtilService', 'ConfigService', 'Authentication', 'Object.SignatureService', 'ObjectService', 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'Helper.ObjectBrowserService', 'MessageService',
-                function($scope, $state, $stateParams, $modal, $translate, Util, ConfigService, Authentication, ObjectSignatureService, ObjectService, TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, HelperObjectBrowserService, MessageService) {
+        [ '$rootScope', '$scope', '$state', '$stateParams', '$modal', '$translate', 'UtilService', 'ConfigService', 'Authentication', 'Object.SignatureService', 'ObjectService', 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'Helper.ObjectBrowserService',
+                'MessageService', function($rootScope, $scope, $state, $stateParams, $modal, $translate, Util, ConfigService, Authentication, ObjectSignatureService, ObjectService, TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, HelperObjectBrowserService, MessageService) {
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
                         stateParams: $stateParams,
@@ -107,10 +107,10 @@ angular.module('tasks').controller(
                                 console.log("sign task here");
                                 ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass).then(function(result) {
                                     MessageService.succsessAction();
+                                    $rootScope.$broadcast('task-signed');
                                 }, function(error) {
                                     if (!Util.isEmpty(error.data.message)) {
                                         MessageService.error(error.data.message);
-
                                     } else {
                                         MessageService.errorAction();
                                     }
