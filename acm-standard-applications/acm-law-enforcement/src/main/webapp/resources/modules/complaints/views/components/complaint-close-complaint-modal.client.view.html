@@ -212,7 +212,8 @@
         <div class="well-sm">
             <div class="row">
                 <div class="col-sm-12 form-group">
-                    <summernote id="complaintDesc" config="options" ng-model="description"></summernote>
+                    <span class="required-asterisk" ng-show="isDescriptionRequired">*</span>
+                    <summernote id="complaintDesc" config="options" ng-model="description" ng-required="isDescriptionRequired"></summernote>
                 </div>
             </div>
         </div>
