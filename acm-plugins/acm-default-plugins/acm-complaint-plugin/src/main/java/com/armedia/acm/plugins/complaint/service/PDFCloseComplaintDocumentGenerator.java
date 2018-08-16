@@ -1,15 +1,13 @@
 package com.armedia.acm.plugins.complaint.service;
 
-
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.CloseComplaintPipelineContext;
 import com.armedia.acm.plugins.ecm.service.PDFDocumentGenerator;
-import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,7 +17,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T extends Complaint> extends PDFDocumentGenerator
 {
@@ -27,14 +24,21 @@ public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T exte
 
     private D dao;
 
-    private CaseFileDao caseFileDao;
-
-    public void generatePdf(String objectType, Long complaintId, CloseComplaintPipelineContext ctx) throws ParserConfigurationException
+    public void generatePdf(String objectType, Long complaintId, CloseComplaintPipelineContext ctx)
+            throws PipelineProcessException
     {
-        Complaint complaint = (Complaint) getDao().find(complaintId);
-        generatePdf(objectType, complaintId, ctx, ctx.getAuthentication(), complaint, complaint.getContainer(),
-                CloseComplaintConstants.CLOSE_COMPLAINT_STYLESHEET,
-                CloseComplaintConstants.CLOSE_COMPLAINT_DOCUMENT, CloseComplaintConstants.CLOSE_COMPLAINT_FILENAMEFORMAT);
+        try
+        {
+
+            Complaint complaint = (Complaint) getDao().find(complaintId);
+            generatePdf(objectType, complaintId, ctx, ctx.getAuthentication(), complaint, complaint.getContainer(),
+                    CloseComplaintConstants.CLOSE_COMPLAINT_STYLESHEET,
+                    CloseComplaintConstants.CLOSE_COMPLAINT_DOCUMENT, CloseComplaintConstants.CLOSE_COMPLAINT_FILENAMEFORMAT);
+        }
+        catch (ParserConfigurationException e)
+        {
+            throw new PipelineProcessException(e);
+        }
     }
 
     @Override
@@ -85,22 +89,11 @@ public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T exte
                     closeComplaintRequest.getDisposition().getReferExternalContactMethod().getValue(),
                     true);
         }
-        if (!closeComplaintRequest.getParticipants().isEmpty())
-        {
-            Element participantsElement = document.createElement("participants");
-            rootElem.appendChild(participantsElement);
-            List<AcmParticipant> participants = closeComplaintRequest.getParticipants();
-            for (AcmParticipant participant : participants)
-            {
-                Element participantElement = document.createElement("participant");
-                participantsElement.appendChild(participantElement);
-                addElement(document, participantElement, "participantName", participant.getParticipantLdapId(), false);
-            }
-        }
+
+        addParticipants(closeComplaintRequest.getParticipants(), document, rootElem, "participantName", "");
 
         return document;
     }
-
 
     @Override
     public DateTimeFormatter getDatePattern()
@@ -118,13 +111,4 @@ public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T exte
         this.dao = dao;
     }
 
-    public CaseFileDao getCaseFileDao()
-    {
-        return caseFileDao;
-    }
-
-    public void setCaseFileDao(CaseFileDao caseFileDao)
-    {
-        this.caseFileDao = caseFileDao;
-    }
 }

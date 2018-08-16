@@ -265,12 +265,7 @@
 
     <bean id="pdfCloseComplaintDocumentGenerator"
         class="com.armedia.acm.plugins.complaint.service.PDFCloseComplaintDocumentGenerator">
-        <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="pdfService" ref="pdfService"/>
-        <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="dao" ref="acmComplaintDao"/>
-        <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
-        <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
     <bean id="complaintCloseWorkflowListener"
@@ -283,8 +278,6 @@
     <bean id="checkCloseComplaintRequest"
         class="com.armedia.acm.plugins.complaint.pipeline.presave.CheckCloseComplaintRequest">
         <property name="complaintDao" ref="acmComplaintDao"/>
-        <property name="userActionExecutor" ref="userActionExecutor"/>
-        <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
     </bean>
 
     <bean id="closeComplaintHandler" class="com.armedia.acm.plugins.complaint.pipeline.postsave.CloseComplaintHandler">
