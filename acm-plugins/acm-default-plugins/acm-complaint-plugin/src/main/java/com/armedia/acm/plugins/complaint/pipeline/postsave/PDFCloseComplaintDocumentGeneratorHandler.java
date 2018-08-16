@@ -6,15 +6,12 @@ import com.armedia.acm.plugins.complaint.service.PDFCloseComplaintDocumentGenera
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 public class PDFCloseComplaintDocumentGeneratorHandler implements PipelineHandler<CloseComplaintRequest, CloseComplaintPipelineContext>
 {
     private PDFCloseComplaintDocumentGenerator pdfCloseComplaintDocumentGenerator;
 
     @Override
-    public void execute(CloseComplaintRequest form, CloseComplaintPipelineContext ctx)
-            throws PipelineProcessException, ParserConfigurationException
+    public void execute(CloseComplaintRequest form, CloseComplaintPipelineContext ctx) throws PipelineProcessException
     {
         pdfCloseComplaintDocumentGenerator.generatePdf("COMPLAINT", form.getComplaintId(), ctx);
     }

@@ -17,26 +17,26 @@ public class CloseComplaintHandler
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    public void execute(CloseComplaintRequest entity, CloseComplaintPipelineContext pipelineContext)
+    public void execute(CloseComplaintRequest entity, CloseComplaintPipelineContext ctx)
     {
-        String mode = (String) pipelineContext.getPropertyValue("mode");
+        String mode = (String) ctx.getPropertyValue("mode");
         Complaint complaint = complaintDao.find(entity.getComplaintId());
         if (!complaint.getStatus().equals("IN APPROVAL") && !"edit".equals(mode))
         {
             complaint.setStatus("IN APPROVAL");
             Complaint updatedComplaint = getComplaintDao().save(complaint);
 
-            pipelineContext.setComplaint(updatedComplaint);
+            ctx.setComplaint(updatedComplaint);
 
             ComplaintUpdatedEvent complaintUpdatedEvent = new ComplaintUpdatedEvent(updatedComplaint);
             complaintUpdatedEvent.setSucceeded(true);
-            pipelineContext.addProperty("complaintUpdated", complaintUpdatedEvent);
+            ctx.addProperty("complaintUpdated", complaintUpdatedEvent);
             getApplicationEventPublisher().publishEvent(complaintUpdatedEvent);
         }
     }
 
     @Override
-    public void rollback(CloseComplaintRequest entity, CloseComplaintPipelineContext pipelineContext)
+    public void rollback(CloseComplaintRequest entity, CloseComplaintPipelineContext ctx)
     {
         // nothing to do here, there is no rollback action to be executed
     }

@@ -34,8 +34,8 @@ import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
 import com.armedia.acm.plugins.ecm.service.PDFDocumentGenerator;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -51,7 +51,7 @@ public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends C
 {
     private D dao;
 
-    public void generatePdf(Long complaintId, ComplaintPipelineContext ctx) throws ParserConfigurationException
+    public void generatePdf(Long complaintId, ComplaintPipelineContext ctx) throws ParserConfigurationException, PipelineProcessException
     {
         String objectType = ComplaintConstants.OBJECT_TYPE;
         if (getDao().getSupportedObjectType().equals(objectType))
@@ -126,20 +126,8 @@ public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends C
             }
         }
 
-        if (!complaint.getParticipants().isEmpty())
-        {
-            Element participantsElement = document.createElement("participants");
-            rootElem.appendChild(participantsElement);
+        addParticipants(complaint.getParticipants(), document, rootElem, "participantName", "participantType");
 
-            List<AcmParticipant> participants = complaint.getParticipants();
-            for (AcmParticipant participant : participants)
-            {
-                Element participantElement = document.createElement("participant");
-                participantsElement.appendChild(participantElement);
-                addElement(document, participantElement, "participantType", participant.getParticipantType(), false);
-                addElement(document, participantElement, "participantName", participant.getParticipantLdapId(), false);
-            }
-        }
         return document;
     }
 
