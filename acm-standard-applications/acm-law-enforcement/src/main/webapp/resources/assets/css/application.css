@@ -1665,3 +1665,12 @@ a.primary {
 .thumbnailSelectionRing {
 	padding: 0px !important;
 }
+
+/*billing item amount field css*/
+.invalid-billing-amount {
+    border-color: #fdadad;
+}
+
+.billing-font-size {
+    font-size: 14px;
+}
