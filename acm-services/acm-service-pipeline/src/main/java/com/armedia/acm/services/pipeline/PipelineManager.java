@@ -212,13 +212,21 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     }
 
     private void rollbackHandlers(T entity, S pipelineContext, PipelineProcessException e, ListIterator<PipelineHandler<T, S>> it,
-            String debugMessage, String warnMessage) throws PipelineProcessException
+            String debugMessage, String warnMessage)
     {
         while (it.hasPrevious())
         {
             PipelineHandler<T, S> handler = it.previous();
             log.debug(debugMessage, handler.getClass().getName());
-            handler.rollback(entity, pipelineContext);
+            try
+            {
+                handler.rollback(entity, pipelineContext);
+            }
+            catch (PipelineProcessException rollbackException)
+            {
+                log.warn(warnMessage, handler, rollbackException);
+                e.addSuppressed(rollbackException);
+            }
         }
     }
 
