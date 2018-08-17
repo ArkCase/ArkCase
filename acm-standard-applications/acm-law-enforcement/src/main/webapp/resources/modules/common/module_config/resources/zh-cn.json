@@ -731,6 +731,9 @@
             "identificationYearIssued": "鉴定已发布",
             "identificationYearIssued.placeholder": "选择标识已发布",
             "identificationYearIssued.close.button": "关闭"
+        },
+        "details": {
+            "title": "zh-cn_Details"
         }
     },
     "common.addPerson": {
@@ -848,12 +851,7 @@
         "people": {
             "title": "人员",
             "searchExisting.placeholder": "搜索现有人员",
-            "personType": "",
-            "comp":{
-                "details":{
-                    "title":"zh-cn_Details"
-                }
-            }
+            "personType": ""
         },
         "locations": {
             "title": "地点",
