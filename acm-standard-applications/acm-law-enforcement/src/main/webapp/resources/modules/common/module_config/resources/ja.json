@@ -731,6 +731,9 @@
             "identificationYearIssued": "身分証明書発行",
             "identificationYearIssued.placeholder": "選択された番号を選択",
             "identificationYearIssued.close.button": "閉じる"
+        },
+        "details": {
+            "title": "ja_Details"
         }
     },
     "common.addPerson": {
@@ -848,12 +851,7 @@
         "people": {
             "title": "人物",
             "searchExisting.placeholder": "既存の人を検索する",
-            "personType": "人物の種類",
-            "comp":{
-                "details":{
-                    "title":"ja_Details"
-                }
-            }
+            "personType": "人物の種類"
         },
         "locations": {
             "title": "場所",
