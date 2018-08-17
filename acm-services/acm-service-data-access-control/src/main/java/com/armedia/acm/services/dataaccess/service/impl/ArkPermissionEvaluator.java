@@ -132,24 +132,21 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
             return true;
         }
 
-        if (isAssignedObjectType(targetType))
+        // checking access to a single object
+        if (Long.class.isAssignableFrom(targetId.getClass()))
         {
-            // checking access to a single object
-            if (Long.class.isAssignableFrom(targetId.getClass()))
-            {
 
-                return checkAccessForSingleObject(authentication, (Long) targetId, targetType, permission);
-            }
+            return checkAccessForSingleObject(authentication, (Long) targetId, targetType, permission);
+        }
 
-            // checking access to list of objects
-            List<Long> ids = (List<Long>) targetId;
-            for (Long id : ids)
+        // checking access to list of objects
+        List<Long> ids = (List<Long>) targetId;
+        for (Long id : ids)
+        {
+            // if access is denied for any of the objects in list, then deny access for entire list
+            if (!checkAccessForSingleObject(authentication, id, targetType, permission))
             {
-                // if access is denied for any of the objects in list, then deny access for entire list
-                if (!checkAccessForSingleObject(authentication, id, targetType, permission))
-                {
-                    return false;
-                }
+                return false;
             }
         }
         return true;
@@ -192,22 +189,25 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
 
         log.trace("Checking [{}] for [{}] on object of type [{}] with id [{}]", permission, authentication.getName(), targetType, id);
 
-        String solrDocument = getSolrDocument(authentication, id, targetType);
-
-        if (solrDocument == null || !checkForReadAccess(solrDocument))
+        if (isAssignedObjectType(targetType))
         {
-            solrDocument = lookupAndConvertObjectFromDatabase(targetType, id);
-            if (solrDocument == null)
+            String solrDocument = getSolrDocument(authentication, id, targetType);
+
+            if (solrDocument == null || !checkForReadAccess(solrDocument))
             {
-                // there really is no such object, or else no DAO or no transformer
-                return false;
+                solrDocument = lookupAndConvertObjectFromDatabase(targetType, id);
+                if (solrDocument == null)
+                {
+                    // there really is no such object, or else no DAO or no transformer
+                    return false;
+                }
             }
-        }
 
-        // break here and return true if any of AC rules match (see SBI-956)
-        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission, solrDocument))
-        {
-            return true;
+            // break here and return true if any of AC rules match (see SBI-956)
+            if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission, solrDocument))
+            {
+                return true;
+            }
         }
 
         return evaluateAccess(authentication, id, targetType, Arrays.asList(((String) permission).split("\\|")));
