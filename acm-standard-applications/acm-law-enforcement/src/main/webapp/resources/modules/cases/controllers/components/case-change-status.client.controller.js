@@ -15,11 +15,18 @@ angular.module('cases').controller(
                     $scope.cancelModal = cancelModal;
                     //Objects
                     $scope.showCaseCloseStatus = false;
+                    //brisi
+                    $scope.changeDate = new Date();
                     $scope.obj = {
-                        changeDate: new Date(),
-                        caseNumber: modalParams.info.caseNumber,
+                        caseId: modalParams.info.caseId,
                         status: "",
-                        participants: [ {} ]
+                        objectType: "CHANGE_CASE_STATUS",
+                        // changeDate: new Date(),
+                        participants: [ {} ],
+                        created: null,
+                        creator: null,
+                        modified: null,
+                        modifier: null
                     };
 
                     ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
@@ -33,11 +40,11 @@ angular.module('cases').controller(
                     });
 
                     ObjectLookupService.getLookupByLookupName("changeCaseStatuses").then(function(caseStatuses) {
-                        $scope.obj.status = caseStatuses;
+                        $scope.statuses = caseStatuses;
                     });
 
                     function statusChanged() {
-                        $scope.showCaseCloseStatus = $scope.obj.statusSelected == 'CLOSED';
+                        $scope.showCaseCloseStatus = $scope.obj.status === "CLOSED";
                     }
 
                     function addNewApprover() {
@@ -73,26 +80,26 @@ angular.module('cases').controller(
 
                         modalInstance.result.then(function(data) {
                             if (data) {
-                                // var approver = {
-                                //     className: "com.armedia.acm.services.participants.model.AcmParticipant",
-                                //     objectType: null,
-                                //     objectId: null,
-                                //     participantType: "approver",
-                                //     participantLdapId: data.email_lcs,
-                                //     created: null,
-                                //     creator: null,
-                                //     modified: null,
-                                //     modifier: null,
-                                //     privileges: [],
-                                //     replaceChildrenParticipant: false,
-                                //     isEditableUser: true,
-                                //     isEditableType: true,
-                                //     isDeletable: true
-                                // };
+                                var approver = {
+                                    className: "com.armedia.acm.services.participants.model.AcmParticipant",
+                                    objectType: null,
+                                    objectId: null,
+                                    participantType: "approver",
+                                    participantLdapId: data.email_lcs,
+                                    created: null,
+                                    creator: null,
+                                    modified: null,
+                                    modifier: null,
+                                    privileges: [],
+                                    replaceChildrenParticipant: false,
+                                    isEditableUser: true,
+                                    isEditableType: true,
+                                    isDeletable: true
+                                };
                                 if (index > -1) {
-                                    $scope.obj.participants[index] = data;
+                                    $scope.obj.participants[index] = approver;
                                 } else {
-                                    $scope.obj.participants.push(data);
+                                    $scope.obj.participants.push(approver);
                                 }
                             }
                         }, function() {
@@ -101,7 +108,11 @@ angular.module('cases').controller(
                     }
 
                     function save() {
-
+                        $scope.loading = true;
+                        $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
+                        $http.post('https://acm-arkcase/arkcase/api/latest/plugin/casefile/change/status/change_case_status', $scope.obj).then(function(data) {
+                            console.log(data);
+                        });
                     }
 
                     function cancelModal() {

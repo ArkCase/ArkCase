@@ -15,7 +15,7 @@
                         <div class="col-sm-6">
                             <span translate>cases.comp.change.status.information.date</span>
                             <p class="input-group">
-                                <input type="text" class="form-control" ng-model="obj.changeDate"
+                                <input type="text" class="form-control" ng-model="changeDate"
                                         datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
                                         datepicker-append-to-body="false" is-open="defaultOpened" close-on-date-selection="true"
                                         show-button-bar="true" on-open-focus="false"
@@ -29,15 +29,15 @@
                         </div>
                         <div class="col-sm-6">
                             <span translate>cases.comp.change.status.information.case.number</span>
-                            <input type="text" ng-model="obj.caseNumber" class="input-md form-control" disabled>
+                            <input type="text" ng-model="modalParams.caseNumber" class="input-md form-control" disabled>
                         </div>
                     </div>
                     <div class="row form-group">
                         <div class="col-sm-6">
                             <span translate>cases.comp.change.status.information.status.title</span>
                             <p class="input-group">
-                                <select ng-model="obj.statusSelected" ng-change="statusChanged()" class="form-control input-md" required>
-                                    <option ng-repeat="option in obj.status" ng-value="option.key">
+                                <select ng-model="obj.status" ng-change="statusChanged()" class="form-control input-md" required>
+                                    <option ng-repeat="option in statuses" ng-value="option.key">
                                         {{option.value | translate}}
                                     </option>
                                 </select>
@@ -68,7 +68,8 @@
             <div class="" ng-repeat="participant in obj.participants">
                 <div class="row">
                     <div class="col-sm-4 form-group">
-                        <input type="text" id="participant" ng-model="participant.email_lcs" class="input-md form-control user-picker-input"
+                        <input type="text" id="participant" ng-model="participant.participantLdapId"
+                                class="input-md form-control user-picker-input"
                                 placeholder="{{ 'cases.comp.change.status.approver.placeholder' | translate }}"
                                 ng-click="addApprover($index)" readonly required>
                     </div>

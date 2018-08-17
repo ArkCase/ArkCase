@@ -39,21 +39,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -124,6 +110,9 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity, Acm
             ap.setObjectType(ChangeCaseStatusConstants.OBJECT_TYPE);
         }
     }
+
+    @Column(name = "cm_change_case_status_description")
+    private String description;
 
     @PreUpdate
     public void beforeUpdate()
@@ -239,5 +228,15 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity, Acm
     public String getParentObjectType()
     {
         return CaseFileConstants.OBJECT_TYPE;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 }

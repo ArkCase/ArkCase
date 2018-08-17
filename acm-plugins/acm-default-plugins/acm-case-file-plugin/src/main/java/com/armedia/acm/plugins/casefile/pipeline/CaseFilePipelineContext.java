@@ -27,6 +27,8 @@ package com.armedia.acm.plugins.casefile.pipeline;
  * #L%
  */
 
+import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
 import org.springframework.security.core.Authentication;
@@ -61,6 +63,16 @@ public class CaseFilePipelineContext extends AbstractPipelineContext
      * IP Address.
      */
     private String ipAddress;
+
+    /*
+     * Case File
+     */
+    private CaseFile caseFile;
+
+    /*
+     * Change Case Status
+     */
+    private ChangeCaseStatus changeCaseStatus;
 
     public boolean isNewCase()
     {
@@ -110,5 +122,25 @@ public class CaseFilePipelineContext extends AbstractPipelineContext
     public void setQueueName(String queueName)
     {
         this.queueName = queueName;
+    }
+
+    public ChangeCaseStatus getChangeCaseStatus()
+    {
+        return changeCaseStatus;
+    }
+
+    public void setChangeCaseStatus(ChangeCaseStatus changeCaseStatus)
+    {
+        this.changeCaseStatus = changeCaseStatus;
+    }
+
+    public CaseFile getCaseFile()
+    {
+        return caseFile;
+    }
+
+    public void setCaseFile(CaseFile caseFile)
+    {
+        this.caseFile = caseFile;
     }
 }
