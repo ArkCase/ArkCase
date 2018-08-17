@@ -9,6 +9,9 @@
  * The formatCurrency directive add decimal zeros and currency symbol to the input
  * and only allows numbers to be inserted
  *
+ * @param {Boolean} is-valid-amount True if it is valid amount inserted
+ * @param {String} amount  binding the value of the amount input field
+ *
  */
 angular
     .module('directives')
@@ -24,7 +27,7 @@ angular
 
                 var numberRegExp = new RegExp("^-?\\d{1,}$|^-?\\d{1,}\\.\\d{1,2}$");
 
-                var keyDownExecuted = false;
+                var keyDownExecuted = false; //avoid pressing keyboard too long
                 var strKeyPress = "";
                 var str = "";
                 $(elem).keypress(function(event){
@@ -37,7 +40,7 @@ angular
                 });
 
                 $(elem).keyup(function(event){
-                    str = event.target.value;
+                    str = event.target.value; //contains insert input
                     if((str.length > 1 ||
                             (str.length === 1 && str !== '-')) &&
                         !str.endsWith('.') &&
@@ -46,7 +49,7 @@ angular
                         elem.val(str);
                     }
                     keyDownExecuted = false;
-                    scope.amount = str;
+                    scope.amount = str; //update ngModel of amount field only if inserted input is valid
                 });
 
                 var currencySymbol = LocaleService.getCurrencySymbol();
@@ -59,7 +62,7 @@ angular
                     scope.isValidAmount = true;
                     var plainNumber = elem.val().replace(/[^\d|\-+|\.+]/g, '');
                     if(!Util.isEmpty(plainNumber) && plainNumber != 0) {
-                        elem.val($filter("currency")(plainNumber, currencySymbol));
+                        elem.val($filter("currency")(plainNumber, currencySymbol)); //update the insert number with currency filter
                     }
                     if(plainNumber == 0){
                         elem.val('');
@@ -68,7 +71,7 @@ angular
 
 
                 elem.bind('focus', function(event) {
-                    str = elem.val().replace(/\$|,|/g, "");
+                    str = elem.val().replace(/\$|,|/g, ""); //on focus remove the currency symbol($) and ,
                     elem.val(str);
                 });
             }
