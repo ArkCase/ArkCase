@@ -117,9 +117,11 @@
                 "name": "Name",
                 "type": "Type",
                 "title": "Title",
-                "id": "ID"
+                "id": "ID",
+                "username": "Username"
             }
         },
+        "userSearch.title": "Search for User",
         "cost": {
             "title": "Costs",
             "date": "Date",
@@ -128,16 +130,21 @@
             "costTitle": "Title",
             "description": "Description",
             "amount": "Amount",
-            "balance": "Balance"
+            "balance": "Balance",
+            "removeBtn": "Remove Cost",
+            "addBtn": "Add Another Cost"
         },
         "details": "Details",
-        "approver.placeholder": "Select Approver",
+        "approver": {
+            "title": "Approver",
+            "placeholder": "Select Approver",
+            "removeBtn": "Remove Approver",
+            "addBtn": "Add Another Approver"
+        },
         "cancelButton": "Cancel",
         "saveButton": "Save",
         "updateButton": "Update",
-        "sendForApproval": "Send for Approval",
-        "removeButton": "Remove",
-        "addButton": "Add Another"
+        "sendForApproval": "Send for Approval"
     },
     "costTracking.tree": {
         "nodeTypes": {

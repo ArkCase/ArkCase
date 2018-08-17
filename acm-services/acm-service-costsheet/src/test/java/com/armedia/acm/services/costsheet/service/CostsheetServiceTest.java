@@ -135,7 +135,7 @@ public class CostsheetServiceTest extends EasyMockSupport
 
         replayAll();
 
-        AcmCostsheet saved = costsheetService.save(costsheet);
+        AcmCostsheet saved = costsheetService.save(costsheet, mockAuthentication);
 
         verifyAll();
 

@@ -70,7 +70,7 @@ public class SaveCostsheetAPIController
 
         try
         {
-            return getCostsheetService().save(costsheet);
+            return getCostsheetService().save(costsheet, auth);
         }
         catch (RuntimeException | PipelineProcessException e)
         {

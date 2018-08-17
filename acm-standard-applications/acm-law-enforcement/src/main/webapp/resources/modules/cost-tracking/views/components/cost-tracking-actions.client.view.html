@@ -1,11 +1,20 @@
 <div ng-controller="CostTracking.ActionsController">
     <div class="pull-right">
         <div class="btn-group">
-            <a class="btn btn-sm btn-default" ui-sref="frevvo.new-costsheet()">
+            <a class="btn btn-sm btn-default" ui-sref="frevvo.new-costsheet()" ng-show="isFrevvoFormType">
                 <i class="fa fa-edit"></i>
                 <span translate>costTracking.comp.actions.new.button</span>
             </a>
-            <a class="btn btn-sm btn-default" ng-show="isVisible()" ui-sref="frevvo.edit-costsheet(editCostsheetParams)">
+            <a class="btn btn-sm btn-default" ng-click="newCostsheet()" ng-show="isAngularFormType">
+                <i class="fa fa-edit"></i>
+                <span translate>costTracking.comp.actions.new.button</span>
+            </a>
+            <a class="btn btn-sm btn-default" ng-show="isVisible() && isFrevvoFormType"
+                    ui-sref="frevvo.edit-costsheet(editCostsheetParams)">
+                <i class="fa fa-edit"></i>
+                <span translate>costTracking.comp.actions.edit.button</span>
+            </a>
+            <a class="btn btn-sm btn-default" ng-show="isVisible() && isAngularFormType" ng-click="editCostsheet()">
                 <i class="fa fa-edit"></i>
                 <span translate>costTracking.comp.actions.edit.button</span>
             </a>

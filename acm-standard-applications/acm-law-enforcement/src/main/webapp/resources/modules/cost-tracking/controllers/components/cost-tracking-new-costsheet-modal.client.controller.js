@@ -9,10 +9,9 @@ angular.module('cost-tracking').controller(
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
-                    $scope.selectedFiles = [];
-                    $scope.userSearchConfig = null;
                     $scope.isEdit = $scope.modalParams.isEdit;
-                    $scope.isTypeSelected = false;
+                    // $scope.isTypeSelected = false;
+                    $scope.sumAmount = 0;
 
                     ConfigService.getModuleConfig("cost-tracking").then(function(moduleConfig) {
                         $scope.config = moduleConfig;
@@ -21,26 +20,57 @@ angular.module('cost-tracking').controller(
                             id: "newCostObjectPicker"
                         });
 
+                        $scope.userSearchConfig = _.find(moduleConfig.components, {
+                            id: "userSearch"
+                        });
+
                         return moduleConfig;
                     });
 
-                    if ($scope.isEdit) {
+                    $scope.updateBalance = function(costs) {
+                        $scope.sumAmount = 0;
+                        _.forEach(costs, function(cost) {
+                            $scope.sumAmount += cost.value;
+                            if (cost.value == undefined)
+                                $scope.sumAmount = 0;
+                        });
+                    };
 
+                    if ($scope.isEdit) {
+                        $scope.isTypeSelected = true;
                         $scope.objectInfo = $scope.modalParams.costsheet;
                         var tmpCostsheet = $scope.modalParams.costsheet;
+                        $scope.isApproverAdded = !Util.isArrayEmpty($scope.objectInfo.participants);
+                        $scope.updateBalance($scope.objectInfo.costs);
+
+                        if (tmpCostsheet.participants != undefined) {
+                            _.forEach(tmpCostsheet.participants, function(participant) {
+                                UserInfoService.getUserInfoById(participant.participantLdapId).then(function(userInfo) {
+                                    participant.participantFullName = userInfo.fullName;
+                                });
+                            });
+                        }
+
+                        if (tmpCostsheet.costs != undefined) {
+                            _.forEach(tmpCostsheet.costs, function(cost) {
+                                cost.date = new Date(cost.date);
+                            });
+                        }
 
                         $scope.costsheet = {
-                            caseType: $scope.objectInfo.caseType,
-                            title: $scope.objectInfo.title,
+                            user: $scope.objectInfo.user,
+                            status: $scope.objectInfo.status,
+                            parentId: $scope.objectInfo.parentId,
+                            parentType: $scope.objectInfo.parentType,
+                            parentNumber: $scope.objectInfo.parentNumber,
                             details: $scope.objectInfo.details,
-                            initiator: $scope.modalParams.initiator,
-                            personAssociations: tmpCostsheet.personAssociations,
+                            costs: tmpCostsheet.costs,
                             participants: tmpCostsheet.participants
                         };
-
                     } else {
-
                         //new costsheet with predefined values
+                        $scope.isTypeSelected = false;
+                        $scope.isApproverAdded = false;
                         $scope.costsheet = {
                             className: 'com.armedia.acm.services.costsheet.model.AcmCostsheet',
                             status: 'DRAFT',
@@ -48,10 +78,10 @@ angular.module('cost-tracking').controller(
                             parentType: '',
                             parentNumber: '',
                             details: '',
-                            costs: [ {} ]
+                            costs: [ {} ],
+                            participants: [ {} ]
                         };
                     }
-                    var initiatorType = 'Initiator';
 
                     ObjectLookupService.getCostsheetTypes().then(function(costsheetTypes) {
                         $scope.costsheetTypes = costsheetTypes;
@@ -88,9 +118,6 @@ angular.module('cost-tracking').controller(
                             params.filter = 'fq="object_type_s": COMPLAINT';
                         }
 
-                        // var filter = '"Object Type": CASE_FILE' + '&fq="!status_lcs":"CLOSED"';
-                        // var f = 'object_type_s:CASE_FILE&fq=creator_lcs=?&fq=-status_s:COMPLETE&fq=-status_s:DELETE&fq=-status_s:CLOSED';
-                        // params.extraFilter = '&fq="name": ';
                         params.config = $scope.newCostObjectPicker;
 
                         var modalInstance = $modal.open({
@@ -124,7 +151,9 @@ angular.module('cost-tracking').controller(
                     //-----------------------------------   costs    -------------------------------------------
                     $scope.addCost = function() {
                         $timeout(function() {
-                            $scope.buildAndPushCostToCosts(-1);
+                            if (!_.isEmpty($scope.costsheet.costs[0])) {
+                                $scope.costsheet.costs.push({});
+                            }
                         }, 0);
                     };
 
@@ -133,50 +162,47 @@ angular.module('cost-tracking').controller(
                             _.remove($scope.costsheet.costs, function(object) {
                                 return object === cost;
                             });
+                            $scope.updateBalance($scope.costsheet.costs);
                         }, 0);
                     };
 
-                    $scope.buildAndPushCostToCosts = function(index) {
-                        if (!_.isEmpty($scope.costsheet.costs[0])) {
-                            $scope.costsheet.costs.push({});
-                        }
-                        // var cost = index > -1 ? $scope.costsheet.costs[index] : {};
-                        // $scope.costsheet.costs.push(cost);
+                    // ---------------------------            approver         --------------------------------------
+                    var participantType = 'approver';
+
+                    $scope.addApprover = function() {
+                        $timeout(function() {
+                            $scope.searchApprover(-1);
+                        }, 0);
                     };
 
-                    // ---------------------------            initiator         --------------------------------------
-                    var newPersonAssociation = function() {
-                        return {
-                            id: null,
-                            personType: "",
-                            parentId: $scope.casefile.id,
-                            parentType: ObjectService.ObjectTypes.CASE_FILE,
-                            parentTitle: $scope.casefile.caseNumber,
-                            personDescription: "",
-                            notes: "",
-                            person: null,
-                            className: "com.armedia.acm.plugins.person.model.PersonAssociation"
-                        };
+                    $scope.removeApprover = function(approver) {
+                        $timeout(function() {
+                            _.remove($scope.costsheet.participants, function(object) {
+                                return object === approver;
+                            });
+                            $scope.isApproverAdded = !Util.isArrayEmpty($scope.costsheet.participants);
+                        }, 0);
                     };
 
-                    $scope.addPersonInitiator = function() {
-                        pickPerson(null);
-                    };
-
-                    function pickPerson(association) {
+                    $scope.searchApprover = function(index) {
+                        var participant = index > -1 ? $scope.costsheet.participants[index] : {};
 
                         var params = {};
-                        params.types = $scope.personTypesInitiator;
-                        params.type = initiatorType;
-                        params.typeEnabled = false;
-                        association = new newPersonAssociation();
+
+                        params.header = $translate.instant("costTracking.comp.newCostsheet.userSearch.title");
+                        params.filter = 'fq="object_type_s": USER &fq="status_lcs": VALID';
+                        params.config = $scope.userSearchConfig;
 
                         var modalInstance = $modal.open({
-                            scope: $scope,
+                            templateUrl: "directives/core-participants/core-participants-picker-modal.client.view.html",
+                            controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+                                $scope.modalInstance = $modalInstance;
+                                $scope.header = params.header;
+                                $scope.filter = params.filter;
+                                $scope.config = params.config;
+                            } ],
                             animation: true,
-                            templateUrl: 'modules/common/views/add-person-modal.client.view.html',
-                            controller: 'Common.AddPersonModalController',
-                            size: 'md',
+                            size: 'lg',
                             backdrop: 'static',
                             resolve: {
                                 params: function() {
@@ -184,32 +210,19 @@ angular.module('cost-tracking').controller(
                                 }
                             }
                         });
-
-                        modalInstance.result.then(function(data) {
-                            if (data.isNew) {
-                                PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function(response) {
-                                    data.person = response.data;
-                                    $scope.casefile.initiator = data.person.givenName + " " + data.person.familyName;
-                                    updatePersonAssociationData(association, data.person, data);
-                                });
-                            } else {
-                                PersonInfoService.getPersonInfo(data.personId).then(function(person) {
-                                    $scope.casefile.initiator = person.givenName + " " + person.familyName;
-                                    updatePersonAssociationData(association, person, data);
-                                });
+                        modalInstance.result.then(function(selection) {
+                            if (selection) {
+                                participant.className = "com.armedia.acm.services.participants.model.AcmParticipant";
+                                participant.participantType = participantType;
+                                participant.participantLdapId = selection.object_id_s;
+                                participant.participantFullName = selection.name;
+                                if (ObjectParticipantService.validateParticipants([ participant ], true) && !_.includes($scope.costsheet.participants, participant)) {
+                                    $scope.costsheet.participants.push(participant);
+                                    $scope.isApproverAdded = true;
+                                }
                             }
                         });
-                    }
-
-                    function updatePersonAssociationData(association, person, data) {
-                        association.person = person;
-                        association.personType = data.type;
-                        association.personDescription = data.description;
-                        association.parentTitle = $scope.casefile.caseNumber;
-                        if (!association.id) {
-                            $scope.casefile.originator = association;
-                        }
-                    }
+                    };
 
                     //-----------------------------------------------------------------------------------------------
 
@@ -275,17 +288,15 @@ angular.module('cost-tracking').controller(
                     };
 
                     function checkForChanges(objectInfo) {
-                        if (objectInfo.title != $scope.costsheet.title) {
-                            objectInfo.title = $scope.costsheet.title
+                        if (objectInfo.parentType != $scope.costsheet.parentType) {
+                            objectInfo.parentType = $scope.costsheet.parentType;
                         }
-                        if (objectInfo.caseType != $scope.costsheet.caseType) {
-                            objectInfo.caseType = $scope.costsheet.caseType
-                        }
-                        if ($scope.costsheet.originator != undefined && objectInfo.originator.person != $scope.costsheet.originator.person) {
-                            objectInfo.originator.person = $scope.costsheet.originator.person
+                        if (objectInfo.parentNumber != $scope.costsheet.parentNumber) {
+                            objectInfo.parentNumber = $scope.costsheet.parentNumber;
+                            objectInfo.parentId = $scope.costsheet.parentId;
                         }
                         if (objectInfo.details != $scope.costsheet.details) {
-                            objectInfo.details = $scope.costsheet.details
+                            objectInfo.details = $scope.costsheet.details;
                         }
                         return objectInfo;
                     }
@@ -296,8 +307,22 @@ angular.module('cost-tracking').controller(
                             costsheet.details = null;
                         }
 
+                        _.remove(costsheet.participants, function(participant) {
+                            if (!participant.participantFullName) {
+                                return true;
+                            } else {
+                                //remove temporary values
+                                delete participant['participantFullName'];
+                                return false;
+                            }
+                        });
+
                         return costsheet;
                     }
+
+                    $scope.sendForApproval = function() {
+                        //add task
+                    };
 
                     $scope.cancelModal = function() {
                         $modalInstance.dismiss();

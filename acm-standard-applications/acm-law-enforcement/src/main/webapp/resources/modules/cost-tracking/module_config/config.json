@@ -586,6 +586,44 @@
             ],
             "paginationPageSize": 10,
             "start": 0
+        },
+        {
+            "id": "userSearch",
+            "title": "costTracking.comp.newCostsheet.userSearch.title",
+            "enableFiltering": false,
+            "configurable": true,
+            "multiSelect": false,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "costTracking.comp.newCostsheet.objectPicker.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "costTracking.comp.newCostsheet.objectPicker.table.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "costTracking.comp.newCostsheet.objectPicker.table.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "costTracking.comp.newCostsheet.objectPicker.table.columns.username",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
         }
     ]
 }

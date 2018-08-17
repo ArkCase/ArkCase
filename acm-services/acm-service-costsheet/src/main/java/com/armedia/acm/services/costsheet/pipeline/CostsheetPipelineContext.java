@@ -29,10 +29,56 @@ package com.armedia.acm.services.costsheet.pipeline;
 
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
+import org.springframework.security.core.Authentication;
+
 /**
  * Store all the case file saving-related references in this context.
  * Created by Petar Ilin <marjan.trifunov@armedia.com> on 27.02.2018.
  */
 public class CostsheetPipelineContext extends AbstractPipelineContext
 {
+    /**
+     * Spring authentication token.
+     */
+    private Authentication authentication;
+
+    /**
+     * Flag showing whether new costsheet is created.
+     */
+    private boolean newCostsheet;
+
+    /**
+     * IP Address.
+     */
+    private String ipAddress;
+
+    public String getIpAddress()
+    {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress)
+    {
+        this.ipAddress = ipAddress;
+    }
+
+    public Authentication getAuthentication()
+    {
+        return authentication;
+    }
+
+    public void setAuthentication(Authentication authentication)
+    {
+        this.authentication = authentication;
+    }
+
+    public boolean isNewCostsheet()
+    {
+        return newCostsheet;
+    }
+
+    public void setNewCostsheet(boolean newCostsheet)
+    {
+        this.newCostsheet = newCostsheet;
+    }
 }
