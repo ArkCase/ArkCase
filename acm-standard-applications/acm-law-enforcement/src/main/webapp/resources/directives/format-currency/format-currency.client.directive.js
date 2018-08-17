@@ -68,7 +68,7 @@ angular
 
 
                 elem.bind('focus', function(event) {
-                    str = elem.val().replace(/\$|,|\./g, "");
+                    str = elem.val().replace(/\$|,|/g, "");
                     elem.val(str);
                 });
             }
