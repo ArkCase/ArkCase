@@ -316,6 +316,56 @@
             "approverDecision": "Genehmigungsentscheidung"
         }
     },
+    "complaints.comp.newComplaint": {
+        "title": "de_New Complaint",
+        "info": "de_Incident Information",
+        "infoMessage": "de_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "de_Complaint Title",
+        "complaintTitle.placeholder": "de_Enter Complaint Title",
+        "incidentCategory": "de_Incident Category",
+        "initiator": "de_Initiator",
+        "initiator.placeholder": "de_Select Initiator",
+        "complaintDesc": "de_Complaint Description",
+        "priority": "de_Priority",
+        "incidentDate": "de_Incident Date",
+        "incidentDate.placeholder": "de_Select Incident Date",
+        "incidentDate.close.button": "de_Close",
+        "complaintTag": "de_Complaint Tag",
+        "complaintTag.placeholder": "de_Enter Complaint Tag",
+        "frequency": "de_Frequency",
+        "location": {
+            "title": "de_Location",
+            "addressType": "de_Type",
+            "streetAddress": "de_Address",
+            "streetAddress.placeholder": "de_Enter Street Address",
+            "city": "de_City",
+            "city.placeholder": "de_Enter City",
+            "state": "de_State",
+            "state.placeholder": "de_Enter State",
+            "country": "de_Country",
+            "zip": "de_Zip Code",
+            "zip.placeholder": "de_Enter Zip Code",
+            "dateCreated": "de_Date added",
+            "creator": "de_Added By",
+            "creator.placeholder": "de_Enter Creator"
+        },
+        "people": {
+            "title": "de_People",
+            "selectPerson.placeholder": "de_Search existing Person",
+            "personType": "de_Person Type"
+        },
+        "participants": {
+            "title": "de_Participants",
+            "owningGroup": "de_Owning Group",
+            "owningGroup.info": "de_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "de_Select Participant",
+            "participantType": "de_Participant Type"
+        },
+        "cancelButton": "de_Cancel",
+        "saveButton": "de_Save Complaint",
+        "removeButton": "de_Remove",
+        "addButton": "de_Add Another"
+    },
     "complaints.userOrGroupSearch": {
         "id": "Nutzersuche",
         "title": "Benutzer- / Gruppensuche",

@@ -38,6 +38,7 @@ public class WopiConfig
     private String wopiTenantAccessTokenParamName;
     private String wopiTenantFileIdParamName;
     private Long wopiLockDuration;
+    private Boolean wopiPluginEnabled;
 
     public String getWopiHostUrl(Long fileId, String accessToken)
     {
@@ -129,5 +130,15 @@ public class WopiConfig
     public void setWopiLockDuration(Long wopiLockDuration)
     {
         this.wopiLockDuration = wopiLockDuration;
+    }
+
+    public Boolean getWopiPluginEnabled()
+    {
+        return wopiPluginEnabled;
+    }
+
+    public void setWopiPluginEnabled(Boolean wopiPluginEnabled)
+    {
+        this.wopiPluginEnabled = wopiPluginEnabled;
     }
 }
