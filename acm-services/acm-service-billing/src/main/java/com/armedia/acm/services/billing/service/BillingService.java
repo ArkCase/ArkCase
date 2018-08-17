@@ -50,8 +50,6 @@ public interface BillingService
     List<BillingInvoice> getBillingInvoicesByParentObjectTypeAndId(String parentObjectType, Long parentObjectId)
             throws GetBillingInvoiceException;
 
-    List<BillingInvoice> getAllLatestBillingInvoices() throws GetBillingInvoiceException;
-
     BillingInvoice getLatestBillingInvoice(String parentObjectType, Long parentObjectId)
             throws GetBillingInvoiceException;
 
