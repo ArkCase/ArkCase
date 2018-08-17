@@ -658,7 +658,9 @@
         "PARTICIPANT-ASSOCIATION": "Participant-Association",
         "ASSIGNMENT": "Assignment",
         "ASSOCIATE_TAG": "Tag",
-        "TRANSCRIBE": "Transcription"
+        "TRANSCRIBE": "Transcription",
+        "BILLING_INVOICE": "Billing Invoice",
+        "BILLING_ITEM": "Billing Item"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",
@@ -734,6 +736,9 @@
             "identificationYearIssued": "Identification Issued",
             "identificationYearIssued.placeholder": "Select Identification Issued",
             "identificationYearIssued.close.button": "Close"
+        },
+        "details": {
+            "title": "Details"
         }
     },
     "common.addPerson": {
@@ -851,12 +856,7 @@
         "people": {
             "title": "People",
             "searchExisting.placeholder": "Search Existing Person",
-            "personType": "Person Type",
-            "comp":{
-                "details":{
-                    "title":"Details"
-                }
-            }
+            "personType": "Person Type"
         },
         "locations": {
             "title": "Locations",

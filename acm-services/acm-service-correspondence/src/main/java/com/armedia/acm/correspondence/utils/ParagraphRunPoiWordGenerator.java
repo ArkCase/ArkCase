@@ -125,6 +125,16 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
                     texts = replacement.toString().split("\n");
                 }
 
+                // Snowbound throws error on runs with empty text (see AFDP-6414). So we just delete these runs
+                if (texts[0].equals(""))
+                {
+                    for (int i = lastRunNum; i >= runNum; i--)
+                    {
+                        paragraph.removeRun(i);
+                    }
+                    break;
+                }
+
                 // set the run text to the first line of the replacement; this existing run maintains its formatting
                 // so no formatting code is needed.
                 run.setText(texts[0], 0);
@@ -135,31 +145,34 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
                 for (int i = 1; i < texts.length; i++)
                 {
                     newRun.addCarriageReturn();
-                    newRun = paragraph.insertNewRun(runNum + i);
-                    /*
-                     * We should copy all style attributes to the newRun from run
-                     * also from background color, ...
-                     * Here we duplicate only the simple attributes...
-                     */
-                    newRun.setText(texts[i]);
-                    newRun.setBold(run.isBold());
-                    newRun.setCapitalized(run.isCapitalized());
-                    // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
-                    // this will be fixed.
-                    // newRun.setCharacterSpacing(run.getCharacterSpacing());
-                    newRun.setColor(run.getColor());
-                    newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
-                    newRun.setEmbossed(run.isEmbossed());
-                    newRun.setFontFamily(run.getFontFamily());
-                    newRun.setFontSize(run.getFontSize());
-                    newRun.setImprinted(run.isImprinted());
-                    newRun.setItalic(run.isItalic());
-                    newRun.setKerning(run.getKerning());
-                    newRun.setShadow(run.isShadowed());
-                    newRun.setSmallCaps(run.isSmallCaps());
-                    newRun.setStrikeThrough(run.isStrikeThrough());
-                    newRun.setSubscript(run.getSubscript());
-                    newRun.setUnderline(run.getUnderline());
+                    if (texts[i] != null && !texts[i].equals(""))
+                    {
+                        newRun = paragraph.insertNewRun(runNum + i);
+                        /*
+                         * We should copy all style attributes to the newRun from run
+                         * also from background color, ...
+                         * Here we duplicate only the simple attributes...
+                         */
+                        newRun.setText(texts[i]);
+                        newRun.setBold(run.isBold());
+                        newRun.setCapitalized(run.isCapitalized());
+                        // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
+                        // this will be fixed.
+                        // newRun.setCharacterSpacing(run.getCharacterSpacing());
+                        newRun.setColor(run.getColor());
+                        newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
+                        newRun.setEmbossed(run.isEmbossed());
+                        newRun.setFontFamily(run.getFontFamily());
+                        newRun.setFontSize(run.getFontSize());
+                        newRun.setImprinted(run.isImprinted());
+                        newRun.setItalic(run.isItalic());
+                        newRun.setKerning(run.getKerning());
+                        newRun.setShadow(run.isShadowed());
+                        newRun.setSmallCaps(run.isSmallCaps());
+                        newRun.setStrikeThrough(run.isStrikeThrough());
+                        newRun.setSubscript(run.getSubscript());
+                        newRun.setUnderline(run.getUnderline());
+                    }
                 }
                 for (int i = lastRunNum + texts.length - 1; i > runNum + texts.length - 1; i--)
                 {
