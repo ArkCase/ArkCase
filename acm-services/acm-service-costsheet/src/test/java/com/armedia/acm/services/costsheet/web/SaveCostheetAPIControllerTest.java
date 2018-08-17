@@ -42,6 +42,7 @@ import com.armedia.acm.services.costsheet.service.CostsheetService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -121,7 +122,8 @@ public class SaveCostheetAPIControllerTest extends EasyMockSupport
         Capture<AcmCostsheet> saved = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn("acm-user");
-        expect(mockCostsheetService.save(capture(saved))).andReturn(costsheet);
+        Capture<Authentication> capturedAuthentication = EasyMock.newCapture();
+        expect(mockCostsheetService.save(capture(saved), capture(capturedAuthentication))).andReturn(costsheet);
 
         costsheet.setDetails(expectedDetails);
 
@@ -178,7 +180,8 @@ public class SaveCostheetAPIControllerTest extends EasyMockSupport
         Capture<AcmCostsheet> saved = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn("acm-user");
-        expect(mockCostsheetService.save(capture(saved))).andThrow(new RuntimeException());
+        Capture<Authentication> capturedAuthentication = EasyMock.newCapture();
+        expect(mockCostsheetService.save(capture(saved), capture(capturedAuthentication))).andThrow(new RuntimeException());
 
         replayAll();
 

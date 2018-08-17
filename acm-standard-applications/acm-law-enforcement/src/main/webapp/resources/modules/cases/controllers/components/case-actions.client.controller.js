@@ -126,6 +126,7 @@ angular.module('cases').controller(
                             console.log("error");
                         });
                     }
+                    ;
 
                     $scope.onClickRestrict = function($event) {
                         if ($scope.restricted != $scope.objectInfo.restricted) {
