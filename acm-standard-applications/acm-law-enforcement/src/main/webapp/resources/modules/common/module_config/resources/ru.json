@@ -731,6 +731,9 @@
             "identificationYearIssued": "Идентификация выпущена",
             "identificationYearIssued.placeholder": "Выберите Идентификация выпущена",
             "identificationYearIssued.close.button": "Закрыть"
+        },
+        "details": {
+            "title": "ru_Details"
         }
     },
     "common.addPerson": {
@@ -848,12 +851,7 @@
         "people": {
             "title": "Люди",
             "searchExisting.placeholder": "Поиск существующего лица",
-            "personType": "Тип лица",
-            "comp":{
-                "details":{
-                    "title":"ru_Details"
-                }
-            }
+            "personType": "Тип лица"
         },
         "locations": {
             "title": "Места",

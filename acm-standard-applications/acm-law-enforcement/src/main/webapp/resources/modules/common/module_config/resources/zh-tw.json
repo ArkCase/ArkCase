@@ -731,6 +731,9 @@
             "identificationYearIssued": "鑑定已發布",
             "identificationYearIssued.placeholder": "選擇標識已發布",
             "identificationYearIssued.close.button": "關閉"
+        },
+        "details": {
+            "title": "zh-tw_Details"
         }
     },
     "common.addPerson": {
@@ -848,12 +851,7 @@
         "people": {
             "title": "人員",
             "searchExisting.placeholder": "搜索現有人員",
-            "personType": "人員類型",
-            "comp":{
-                "details":{
-                    "title":"zh-tw_Details"
-                }
-            }
+            "personType": "人員類型"
         },
         "locations": {
             "title": "地點",
