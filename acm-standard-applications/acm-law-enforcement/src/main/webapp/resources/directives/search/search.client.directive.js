@@ -61,8 +61,8 @@
  */
 angular.module('directives').directive(
         'search',
-        [ 'SearchService', '$window', '$q', '$location', '$browser', '$translate', 'UtilService', 'Object.LookupService', 'uiGridExporterConstants', 'Tags.TagsService', 'Search.QueryBuilderService', 'ObjectService', 'Search.AutoSuggestService',
-                function(SearchService, $window, $q, $location, $browser, $translate, Util, ObjectLookupService, uiGridExporterConstants, TagsService, SearchQueryBuilder, ObjectService, AutoSuggestService) {
+        [ 'SearchService', '$window', '$q', '$location', '$browser', '$translate', '$interval', 'UtilService', 'Object.LookupService', 'uiGridExporterConstants', 'Tags.TagsService', 'Search.QueryBuilderService', 'ObjectService', 'Search.AutoSuggestService',
+                function(SearchService, $window, $q, $location, $browser, $translate, $interval, Util, ObjectLookupService, uiGridExporterConstants, TagsService, SearchQueryBuilder, ObjectService, AutoSuggestService) {
                     return {
                         restrict: 'E', //match only element name
                         scope: {
@@ -514,6 +514,10 @@ angular.module('directives').directive(
                                     }
                                 }, true);
                             });
+
+                            $interval(function() {
+                                scope.search();
+                            }, 0, 1);
 
                         },
 

@@ -31,10 +31,10 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
-import com.armedia.acm.plugins.complaint.service.ComplaintService;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -54,14 +54,17 @@ import java.util.Date;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/complaint", "/api/latest/plugin/complaint" })
+
 public class CreateComplaintAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private SaveComplaintTransaction complaintTransaction;
     private ComplaintEventPublisher eventPublisher;
+
     private FrevvoFormService complaintService;
     private ObjectConverter objectConverter;
+    private JsonPropertiesManagementService jsonPropertiesManagementService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @DecoratedAssignedObjectParticipants
@@ -89,8 +92,22 @@ public class CreateComplaintAPIController
 
             Complaint saved = getComplaintTransaction().saveComplaint(in, auth);
 
-            // Update Frevvo XML file
-            getComplaintService().updateXML(saved, auth, ComplaintForm.class);
+            String formsType = "";
+            try
+            {
+                formsType = jsonPropertiesManagementService.getProperty("formsType").get("formsType").toString();
+            }
+            catch (Exception e)
+            {
+                String msg = "Can't retrieve application property";
+                log.error(msg, e);
+            }
+
+            if (formsType.equals("frevvo"))
+            {
+                // Update Frevvo XML file
+                getComplaintService().updateXML(saved, auth, ComplaintForm.class);
+            }
 
             getEventPublisher().publishComplaintEvent(saved, oldComplaint, auth, isInsert, true);
 
@@ -137,7 +154,7 @@ public class CreateComplaintAPIController
         return complaintService;
     }
 
-    public void setComplaintService(ComplaintService complaintService)
+    public void setComplaintService(FrevvoFormService complaintService)
     {
         this.complaintService = complaintService;
     }
@@ -152,4 +169,8 @@ public class CreateComplaintAPIController
         this.objectConverter = objectConverter;
     }
 
+    public void setJsonPropertiesManagementService(JsonPropertiesManagementService jsonPropertiesManagementService)
+    {
+        this.jsonPropertiesManagementService = jsonPropertiesManagementService;
+    }
 }

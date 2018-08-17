@@ -1,8 +1,8 @@
-package com.armedia.acm.services.billing;
+package com.armedia.acm.pluginmanager.service;
 
 /*-
  * #%L
- * ACM Service: Billing
+ * ACM Service: Plugin Manager
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -26,39 +26,10 @@ package com.armedia.acm.services.billing;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-    extends TestCase
+public interface AcmConfigurablePlugin
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+    boolean isEnabled();
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
-
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
+    String getName();
 }

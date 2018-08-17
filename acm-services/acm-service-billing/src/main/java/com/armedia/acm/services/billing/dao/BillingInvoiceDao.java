@@ -79,28 +79,6 @@ public class BillingInvoiceDao extends AcmAbstractDao<BillingInvoice>
         return billingInvoices;
     }
 
-    public List<BillingInvoice> getAllLatestBillingInvoices()
-    {
-
-        String queryText = "SELECT caseFile.caseNumber, billingInvoice.id, billingInvoice.invoiceNumber, billingInvoice.invoicePaidFlag, billingInvoice.created, SUM(billingItem.itemAmount) "
-                +
-                "FROM CaseFile caseFile JOIN BillingInvoice billingInvoice JOIN billingInvoice.billingItems billingItem " +
-                "WHERE billingInvoice.parentObjectType = caseFile.objectType " +
-                "AND billingInvoice.parentObjectId = caseFile.id " +
-                "AND billingInvoice.id IN (SELECT MAX(billingInvoice.id) FROM BillingInvoice billingInvoice GROUP BY billingInvoice.parentObjectType, billingInvoice.parentObjectId) "
-                +
-                "GROUP BY caseFile.caseNumber ORDER BY caseFile.caseNumber";
-
-        TypedQuery<BillingInvoice> query = getEntityManager().createQuery(queryText, BillingInvoice.class);
-
-        List<BillingInvoice> billingInvoices = query.getResultList();
-        if (null == billingInvoices)
-        {
-            billingInvoices = new ArrayList<BillingInvoice>();
-        }
-        return billingInvoices;
-    }
-
     public BillingInvoice getLatestBillingInvoice(String parentObjectType, Long parentObjectId)
     {
 

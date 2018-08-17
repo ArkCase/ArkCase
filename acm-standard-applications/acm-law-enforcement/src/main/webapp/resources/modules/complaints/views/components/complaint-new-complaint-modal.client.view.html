@@ -1,0 +1,272 @@
+<form name="complaintForm" ng-submit="save()">
+    <div class="modal-header">
+        <h3><span translate>complaints.comp.newComplaint.title</span></h3>
+    </div>
+    <div class="modal-body">
+        <div style="margin-right: 6px; margin-left: 6px;">
+            <div class="row well-sm">
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <h3><span translate>complaints.comp.newComplaint.info</span></h3>
+                        <span translate>complaints.comp.newComplaint.infoMessage</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <label for="complaintTitle" translate>complaints.comp.newComplaint.complaintTitle</label>
+                        <span class="required-asterisk">*</span>
+                        <input id="complaintTitle" type="text" ng-model="complaint.complaintTitle" class="input-md form-control"
+                                placeholder="{{ 'complaints.comp.newComplaint.complaintTitle.placeholder' | translate }}" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <label for="incidentCategory" translate>complaints.comp.newComplaint.incidentCategory</label>
+                        <span class="required-asterisk">*</span>
+                        <select id="incidentCategory" ng-model="complaint.complaintType" class="form-control input-md" required>
+                            <option ng-repeat="option in incidentCategory" value="{{option.key}}">
+                                {{option.value | translate}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label for="initiator" translate>complaints.comp.newComplaint.initiator</label>
+                        <span class="required-asterisk">*</span>
+                        <input id="initiator" type="text" ng-model="complaint.initiator" ng-click="addPersonInitiator()"
+                                class="input-md form-control"
+                                placeholder="{{ 'complaints.comp.newComplaint.initiator.placeholder' | translate }}" readonly required>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-4">
+                        <label for="priority" translate>complaints.comp.newComplaint.priority</label>
+                        <select id="priority" ng-model="complaint.priority" class="form-control input-md">
+                            <option ng-repeat="option in priorities" value="{{option.key}}">
+                                {{option.value | translate}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label translate>complaints.comp.newComplaint.incidentDate</label>
+                        <p class="input-group">
+                            <input type="text" class="form-control"
+                                    placeholder="{{'complaints.comp.newComplaint.incidentDate.placeholder' | translate}}"
+                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" datepicker-append-to-body="false"
+                                    ng-model="complaint.incidentDate" is-open="defaultOpened" close-on-date-selection="true"
+                                    show-button-bar="true" on-open-focus="false"
+                                    close-text="{{'complaints.comp.newComplaint.incidentDate.close.button' | translate}}" />
+                            <span class="input-group-btn">
+                         <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
+                                 <i class="fa fa-calendar"></i>
+                         </button>
+                    </span>
+                        </p>
+                    </div>
+                    <div class="col-sm-4">
+                        <label translate>complaints.comp.newComplaint.complaintTag</label>
+                        <input type="text" ng-model="complaint.tag" class="input-md form-control"
+                                placeholder="{{ 'complaints.comp.newComplaint.complaintTag.placeholder' | translate }}">
+                    </div>
+                    <div class="col-sm-12">
+                        <label translate>complaints.comp.newComplaint.frequency</label>
+                        <select ng-model="complaint.frequency" class="form-control input-md">
+                            <option ng-repeat="option in frequencies" value="{{option.key}}">
+                                {{option.value | translate}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion45" href="#collapseDesc" translate>complaints.comp.newComplaint.complaintDesc</a>
+                </h4>
+            </div>
+            <div id="collapseDesc" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="row form-group">
+                        <summernote id="complaintDesc" config="options" ng-model="complaint.details"></summernote>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion1" href="#collapseLocation" translate>complaints.comp.newComplaint.location.title</a>
+                </h4>
+            </div>
+            <div id="collapseLocation" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="row form-group">
+                        <div class="col-sm-12">
+                            <label translate>complaints.comp.newComplaint.location.addressType</label>
+                            <select ng-model="complaint.defaultAddress.type" ng-change="selectChanged()" class="form-control input-md">
+                                <option ng-repeat="option in addressTypes" value="{{option.key}}">
+                                    {{option.value | translate}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-4">
+                            <label translate>complaints.comp.newComplaint.location.streetAddress</label>
+                            <input type="text" ng-model="complaint.defaultAddress.streetAddress" class="input-md form-control"
+                                    placeholder="{{ 'complaints.comp.newComplaint.location.streetAddress.placeholder' | translate }}"
+                                    ng-required="isAddressTypeSelected">
+                        </div>
+                        <div class="col-sm-4">
+                            <label translate>complaints.comp.newComplaint.location.city</label>
+                            <input type="text" ng-model="complaint.defaultAddress.city" class="input-md form-control"
+                                    placeholder="{{ 'complaints.comp.newComplaint.location.city.placeholder' | translate }}"
+                                    ng-required="isAddressTypeSelected">
+                        </div>
+                        <div class="col-sm-4">
+                            <label translate>complaints.comp.newComplaint.location.state</label>
+                            <input type="text" ng-model="complaint.defaultAddress.state" class="input-md form-control"
+                                    placeholder="{{ 'complaints.comp.newComplaint.location.state.placeholder' | translate }}"
+                                    ng-required="isAddressTypeSelected">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label translate>complaints.comp.newComplaint.location.zip</label>
+                            <input type="text" ng-model="complaint.defaultAddress.zip" class="input-md form-control"
+                                    placeholder="{{ 'complaints.comp.newComplaint.location.zip.placeholder' | translate }}"
+                                    ng-required="isAddressTypeSelected">
+                        </div>
+                        <div class="col-sm-4">
+                            <label translate>complaints.comp.newComplaint.location.dateCreated</label>
+                            <p class="input-group">
+                                <input type="text" class="form-control" placeholder="{{'Select Incident Date' | translate}}"
+                                        datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                        datepicker-append-to-body="false" ng-model="complaint.defaultAddress.created" is-open="opened"
+                                        close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
+                                        close-text="{{'common.newPerson.identification.identificationYearIssued.close.button' | translate}}"
+                                        ng-required="isAddressTypeSelected" />
+                                <span class="input-group-btn">
+                                         <button type="button" class="btn btn-default" ng-click="opened = !opened">
+                                                 <i class="fa fa-calendar"></i>
+                                         </button>
+                                    </span>
+                            </p>
+                        </div>
+                        <div class="col-sm-4">
+                            <label translate>complaints.comp.newComplaint.location.creator</label>
+                            <input type="text" ng-model="complaint.defaultAddress.creatorFullName" ng-disabled="true"
+                                    class="input-md form-control"
+                                    placeholder="{{ 'complaints.comp.newComplaint.location.creator.placeholder' | translate }}"
+                                    ng-required="isAddressTypeSelected">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion45" href="#collapsePeople" translate>complaints.comp.newComplaint.people.title</a>
+                </h4>
+            </div>
+            <div id="collapsePeople" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div ng-repeat="personAssociation in complaint.personAssociations">
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <label for="searchExisting">&nbsp;</label>
+                                <input id="searchExisting" type="text" ng-model="personAssociation.personFullName"
+                                        ng-click="searchPerson($index, true)" class="input-md form-control" readonly
+                                        placeholder="{{ 'complaints.comp.newComplaint.people.selectPerson.placeholder' | translate }}">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label translate>complaints.comp.newComplaint.people.personType</label>
+                                <input class="form-control" readonly ng-model="personAssociation.personType">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <div class="pull-left">
+                                    <label class="control-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-link form-control" ng-click="removePerson(personAssociation)"
+                                            ng-show="!$first">
+                                        <i class="fa fa-minus text-danger"></i><span
+                                            translate>complaints.comp.newComplaint.removeButton</span>
+                                    </button>
+                                </div>
+                                <div class="pull-left">
+                                    <label class="control-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-link form-control" ng-click="addPerson();"
+                                            ng-disabled="!personAssociation.personFullName" ng-show="$last">
+                                        <i class="fa fa-plus text-success"></i><span translate>complaints.comp.newComplaint.addButton</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="accordion4" class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion4" href="#collapseParticipants" translate>complaints.comp.newComplaint.participants.title</a>
+                    </h4>
+                </div>
+                <div id="collapseParticipants" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <label translate>complaints.comp.newComplaint.participants.owningGroup</label>
+                                <i class="fa fa-info-circle"
+                                        title="{{ 'complaints.comp.newComplaint.participants.owningGroup.info' | translate }}"></i>
+                                <input class="form-control" readonly ng-model="owningGroup">
+                            </div>
+                        </div>
+                        <div class="row" ng-repeat="participant in participantsWithoutOwningGroup">
+                            <div class="col-sm-4 form-group">
+                                <label for="searchParticipant">&nbsp;</label>
+                                <input id="searchParticipant" type="text" ng-model="participant.participantFullName"
+                                        ng-click="userOrGroupSearch($index, true)" class="input-md form-control" readonly
+                                        placeholder="{{ 'complaints.comp.newComplaint.participants.selectParticipant.placeholder' | translate }}">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label translate>complaints.comp.newComplaint.participants.participantType</label>
+                                <input style="text-transform: capitalize;" class="form-control" readonly
+                                        ng-model="participant.participantTypeFormatted">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <div class="pull-left">
+                                    <label class="control-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-link form-control" ng-click="removeParticipant(participant)"
+                                            ng-show="!$first">
+                                        <i class="fa fa-minus text-danger"></i><span
+                                            translate>complaints.comp.newComplaint.removeButton</span>
+                                    </button>
+                                </div>
+                                <div class="pull-left">
+                                    <label class="control-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-link form-control" ng-click="addParticipant();"
+                                            ng-disabled="!participant.participantFullName" ng-show="$last">
+                                        <i class="fa fa-plus text-success"></i><span translate>complaints.comp.newComplaint.addButton</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
+            <span translate>complaints.comp.newComplaint.cancelButton</span>
+        </button>
+        <button type="submit" ng-disabled="complaintForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+                id="saveButton" data-title="Save">
+            <i class="{{loadingIcon}}"></i>
+            <span translate>complaints.comp.newComplaint.saveButton</span>
+        </button>
+    </div>
+</form>
