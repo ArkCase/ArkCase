@@ -736,6 +736,9 @@
             "identificationYearIssued": "Identification Issued",
             "identificationYearIssued.placeholder": "Select Identification Issued",
             "identificationYearIssued.close.button": "Close"
+        },
+        "details": {
+            "title": "Details"
         }
     },
     "common.addPerson": {
@@ -853,12 +856,7 @@
         "people": {
             "title": "People",
             "searchExisting.placeholder": "Search Existing Person",
-            "personType": "Person Type",
-            "comp":{
-                "details":{
-                    "title":"Details"
-                }
-            }
+            "personType": "Person Type"
         },
         "locations": {
             "title": "Locations",
