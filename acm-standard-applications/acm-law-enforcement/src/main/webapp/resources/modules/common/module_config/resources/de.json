@@ -731,6 +731,9 @@
             "identificationYearIssued": "Identifikation ausgestellt",
             "identificationYearIssued.placeholder": "Ausgewählte Identifikation auswählen",
             "identificationYearIssued.close.button": "Schließen"
+        },
+        "details": {
+            "title": "de_Details"
         }
     },
     "common.addPerson": {
@@ -848,12 +851,7 @@
         "people": {
             "title": "Menschen",
             "searchExisting.placeholder": "Existierende Person suchen",
-            "personType": "Personentyp",
-            "comp":{
-                "details":{
-                    "title":"de_Details"
-                }
-            }
+            "personType": "Personentyp"
         },
         "locations": {
             "title": "Standorte",

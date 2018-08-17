@@ -135,7 +135,6 @@
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-pdf-utilities</artifactId>
             <version>${acm.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- spring -->

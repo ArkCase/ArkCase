@@ -731,6 +731,9 @@
             "identificationYearIssued": "पहचान जारी",
             "identificationYearIssued.placeholder": "पहचान जारी जारी करें",
             "identificationYearIssued.close.button": "बंद करे"
+        },
+        "details": {
+            "title": "hi_Details"
         }
     },
     "common.addPerson": {
@@ -848,12 +851,7 @@
         "people": {
             "title": "लोग",
             "searchExisting.placeholder": "मौजूदा व्यक्ति खोजें",
-            "personType": "व्यक्ति का प्रकार",
-            "comp":{
-                "details":{
-                    "title":"hi_Details"
-                }
-            }
+            "personType": "व्यक्ति का प्रकार"
         },
         "locations": {
             "title": "स्थान",

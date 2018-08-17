@@ -731,6 +731,9 @@
             "identificationYearIssued": "Identificación emitida",
             "identificationYearIssued.placeholder": "Seleccionar identificación emitida",
             "identificationYearIssued.close.button": "Cerca"
+        },
+        "details": {
+            "title": "es_Details"
         }
     },
     "common.addPerson": {
@@ -848,12 +851,7 @@
         "people": {
             "title": "Gente",
             "searchExisting.placeholder": "Buscar persona existente",
-            "personType": "Tipo de persona",
-            "comp":{
-                "details":{
-                    "title":"es_Details"
-                }
-            }
+            "personType": "Tipo de persona"
         },
         "locations": {
             "title": "Ubicaciones",
