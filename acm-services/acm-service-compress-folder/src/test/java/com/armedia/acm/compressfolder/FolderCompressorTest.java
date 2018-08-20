@@ -6,22 +6,22 @@ package com.armedia.acm.compressfolder;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -144,8 +144,8 @@ public class FolderCompressorTest extends EasyMockSupport
         expect(mockedResponseFolder.getName()).andReturn("Response").atLeastOnce();
         expect(mockedResponseFolder.getId()).andReturn(101l).atLeastOnce();
         expect(mockedFolderService.getFolderChildren(101l)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel1Folder, mockedLevel1File)));
-        expect(mockedLevel1Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).times(3);
-        expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(3);
+        expect(mockedLevel1Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).anyTimes();
+        expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).anyTimes();
         File folder_level_1 = null;
         for (File child : responseFolder.listFiles())
         {
@@ -160,15 +160,15 @@ public class FolderCompressorTest extends EasyMockSupport
                 String childFileName = child.getName().replace("." + FilenameUtils.getExtension(child.getName()), "");
                 String childFileExtension = "." + FilenameUtils.getExtension(child.getName());
                 expect(mockedLevel1File.getFileName()).andReturn(childFileName);
-                expect(mockedLevel1File.getFileActiveVersionNameExtension()).andReturn(childFileExtension);
+                expect(mockedLevel1File.getFileActiveVersionNameExtension()).andReturn(childFileExtension).anyTimes();
                 expect(mockedLevel1File.getId()).andReturn(101l);
                 expect(mockedFileService.downloadAsInputStream(101l)).andReturn(new FileInputStream(child));
             }
         }
         expect(mockedLevel1Folder.getId()).andReturn(102l);
         expect(mockedFolderService.getFolderChildren(102l)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel2Folder, mockedLevel2File)));
-        expect(mockedLevel2Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).times(3);
-        expect(mockedLevel2File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(3);
+        expect(mockedLevel2Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).anyTimes();
+        expect(mockedLevel2File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).anyTimes();
         File folder_level_2 = null;
         for (File child : folder_level_1.listFiles())
         {
@@ -183,7 +183,7 @@ public class FolderCompressorTest extends EasyMockSupport
                 String childFileName = child.getName().replace("." + FilenameUtils.getExtension(child.getName()), "");
                 String childFileExtension = "." + FilenameUtils.getExtension(child.getName());
                 expect(mockedLevel2File.getFileName()).andReturn(childFileName);
-                expect(mockedLevel2File.getFileActiveVersionNameExtension()).andReturn(childFileExtension);
+                expect(mockedLevel2File.getFileActiveVersionNameExtension()).andReturn(childFileExtension).anyTimes();
                 expect(mockedLevel2File.getId()).andReturn(102l);
                 expect(mockedFileService.downloadAsInputStream(102l)).andReturn(new FileInputStream(child));
             }
@@ -199,7 +199,7 @@ public class FolderCompressorTest extends EasyMockSupport
                 String childFileName = child.getName().replace("." + FilenameUtils.getExtension(child.getName()), "");
                 String childFileExtension = "." + FilenameUtils.getExtension(child.getName());
                 expect(mockedLevel3File.getFileName()).andReturn(childFileName);
-                expect(mockedLevel3File.getFileActiveVersionNameExtension()).andReturn(childFileExtension);
+                expect(mockedLevel3File.getFileActiveVersionNameExtension()).andReturn(childFileExtension).anyTimes();
                 expect(mockedLevel3File.getId()).andReturn(103l);
                 expect(mockedFileService.downloadAsInputStream(103l)).andReturn(new FileInputStream(child));
             }
@@ -307,7 +307,8 @@ public class FolderCompressorTest extends EasyMockSupport
         expect(mockedFolderService.getFolderChildren(folderId)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel1File)));
         expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(3);
         expect(mockedLevel1File.getFileName()).andReturn(bigFile.getName());
-        expect(mockedLevel1File.getFileActiveVersionNameExtension()).andReturn("." + FilenameUtils.getExtension(bigFile.getName()));
+        expect(mockedLevel1File.getFileActiveVersionNameExtension())
+                .andReturn("." + FilenameUtils.getExtension(bigFile.getName())).anyTimes();
         expect(mockedLevel1File.getId()).andReturn(folderId);
         expect(mockedFileService.downloadAsInputStream(folderId)).andReturn(new FileInputStream(bigFile));
 
