@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ import java.util.stream.Collectors;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 26, 2018
  *
  */
-public class DefaultFolderConverter implements FolderConverter
+public class DefaultFolderAndFileConverter implements FolderConverter, FileConverter
 {
 
     /**
@@ -66,7 +67,9 @@ public class DefaultFolderConverter implements FolderConverter
 
     private Map<String, List<FileConverter>> convertersByType;
 
-    public DefaultFolderConverter(List<FileConverter> converters)
+    private List<String> supportedTypes;
+
+    public DefaultFolderAndFileConverter(List<FileConverter> converters)
     {
         convertersByType = new HashMap<>();
         setConverters(converters);
@@ -101,7 +104,7 @@ public class DefaultFolderConverter implements FolderConverter
                     }
                     else
                     {
-                        convertFile(EcmFile.class.cast(obj), auth);
+                        convert(EcmFile.class.cast(obj), auth);
                     }
                 }
                 catch (ConversionException ce)
@@ -118,12 +121,23 @@ public class DefaultFolderConverter implements FolderConverter
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.convertfolder.FileConverter#getSupportedTypesExtensions()
+     */
+    @Override
+    public List<String> getSupportedTypesExtensions()
+    {
+        return supportedTypes;
+    }
+
     /**
      * @param auth
      * @param id
      * @throws ConversionException
      */
-    private void convertFile(EcmFile file, Authentication auth) throws ConversionException
+    @Override
+    public void convert(EcmFile file, Authentication auth) throws ConversionException
     {
         List<FileConverter> converters = convertersByType.get(file.getFileExtension().toLowerCase());
         if (converters == null)
@@ -169,6 +183,7 @@ public class DefaultFolderConverter implements FolderConverter
                 computedConverters.add(converter);
             }
         }
+        supportedTypes = Collections.unmodifiableList(new ArrayList<>(convertersByType.keySet()));
     }
 
     /**
