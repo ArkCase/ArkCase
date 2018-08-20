@@ -84,7 +84,7 @@ angular.module('time-tracking').controller(
                     };
 
                     $scope.isDeleteDisabled = function(rowEntity) {
-                        return !rowEntity.adhocTask_b;
+                        return ((Util.isEmpty(rowEntity.task_owner_s) || (rowEntity.task_owner_s !== rowEntity.author_s)) || (rowEntity.status_s === "CLOSED"));
                     };
                     $scope.deleteRow = function(rowEntity) {
                         var timesheetInfo = Util.omitNg($scope.objectInfo);
