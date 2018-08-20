@@ -194,6 +194,7 @@
         "header": "Suche",
         "btnSearch.text": "Suche",
         "btnOk.text": "Bestätigen",
+        "btnConfirm.text": "de_Confirm",
         "btnCancel.text": "Abbrechen",
         "edtPlaceholder": "In die Suche eingeben",
         "noData.text": "Keine Ergebnisse",
@@ -601,6 +602,7 @@
             "btnOk.text": "Sparen",
             "btnCancel.text": "Stornieren",
             "dialogUserPicker.header": "Benutzer suchen",
+            "dialogUserGroupPicker.header": "de_Search User/Group",
             "dialogGroupPicker.header": "Suchgruppe",
             "replaceChildrenParticipant": "Ersetzen Kinder Teilnehmer"
         },
@@ -729,6 +731,9 @@
             "identificationYearIssued": "Identifikation ausgestellt",
             "identificationYearIssued.placeholder": "Ausgewählte Identifikation auswählen",
             "identificationYearIssued.close.button": "Schließen"
+        },
+        "details": {
+            "title": "de_Details"
         }
     },
     "common.addPerson": {

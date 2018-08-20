@@ -317,6 +317,56 @@
             "approverDecision": "Decisão de aprovação"
         }
     },
+    "complaints.comp.newComplaint": {
+        "title": "pt_New Complaint",
+        "info": "pt_Incident Information",
+        "infoMessage": "pt_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "pt_Complaint Title",
+        "complaintTitle.placeholder": "pt_Enter Complaint Title",
+        "incidentCategory": "pt_Incident Category",
+        "initiator": "pt_Initiator",
+        "initiator.placeholder": "pt_Select Initiator",
+        "complaintDesc": "pt_Complaint Description",
+        "priority": "pt_Priority",
+        "incidentDate": "pt_Incident Date",
+        "incidentDate.placeholder": "pt_Select Incident Date",
+        "incidentDate.close.button": "pt_Close",
+        "complaintTag": "pt_Complaint Tag",
+        "complaintTag.placeholder": "pt_Enter Complaint Tag",
+        "frequency": "pt_Frequency",
+        "location": {
+            "title": "pt_Location",
+            "addressType": "pt_Type",
+            "streetAddress": "pt_Address",
+            "streetAddress.placeholder": "pt_Enter Street Address",
+            "city": "pt_City",
+            "city.placeholder": "pt_Enter City",
+            "state": "pt_State",
+            "state.placeholder": "pt_Enter State",
+            "country": "pt_Country",
+            "zip": "pt_Zip Code",
+            "zip.placeholder": "pt_Enter Zip Code",
+            "dateCreated": "pt_Date added",
+            "creator": "pt_Added By",
+            "creator.placeholder": "pt_Enter Creator"
+        },
+        "people": {
+            "title": "pt_People",
+            "selectPerson.placeholder": "pt_Search existing Person",
+            "personType": "pt_Person Type"
+        },
+        "participants": {
+            "title": "pt_Participants",
+            "owningGroup": "pt_Owning Group",
+            "owningGroup.info": "pt_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "pt_Select Participant",
+            "participantType": "pt_Participant Type"
+        },
+        "cancelButton": "pt_Cancel",
+        "saveButton": "pt_Save Complaint",
+        "removeButton": "pt_Remove",
+        "addButton": "pt_Add Another"
+    },
     "complaints.userOrGroupSearch": {
         "id": "Pesquisa do usuário",
         "title": "Pesquisa de usuário / grupo",

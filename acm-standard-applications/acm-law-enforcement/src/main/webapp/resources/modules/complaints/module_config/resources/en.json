@@ -347,6 +347,56 @@
             "approverDecision": "Approver Decision"
         }
     },
+    "complaints.comp.newComplaint": {
+        "title": "New Complaint",
+        "info": "Incident Information",
+        "infoMessage": "Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "Complaint Title",
+        "complaintTitle.placeholder": "Enter Complaint Title",
+        "incidentCategory": "Incident Category",
+        "initiator": "Initiator",
+        "initiator.placeholder": "Select Initiator",
+        "complaintDesc": "Complaint Description",
+        "priority": "Priority",
+        "incidentDate": "Incident Date",
+        "incidentDate.placeholder": "Select Incident Date",
+        "incidentDate.close.button": "Close",
+        "complaintTag": "Complaint Tag",
+        "complaintTag.placeholder": "Enter Complaint Tag",
+        "frequency": "Frequency",
+        "location": {
+            "title": "Location",
+            "addressType": "Type",
+            "streetAddress": "Address",
+            "streetAddress.placeholder": "Enter Street Address",
+            "city": "City",
+            "city.placeholder": "Enter City",
+            "state": "State",
+            "state.placeholder": "Enter State",
+            "country": "Country",
+            "zip": "Zip Code",
+            "zip.placeholder": "Enter Zip Code",
+            "dateCreated": "Date added",
+            "creator": "Added By",
+            "creator.placeholder": "Enter Creator"
+        },
+        "people": {
+            "title": "People",
+            "selectPerson.placeholder": "Search existing Person",
+            "personType": "Person Type"
+        },
+        "participants": {
+            "title": "Participants",
+            "owningGroup": "Owning Group",
+            "owningGroup.info": "The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "Select Participant",
+            "participantType": "Participant Type"
+        },
+        "cancelButton": "Cancel",
+        "saveButton": "Save Complaint",
+        "removeButton": "Remove",
+        "addButton": "Add Another"
+    },
     "complaints.userOrGroupSearch": {
         "id": "userSearch",
         "title": "User/Group Search",

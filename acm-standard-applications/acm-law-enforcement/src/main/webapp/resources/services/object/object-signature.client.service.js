@@ -73,7 +73,9 @@ angular.module('services').factory('Object.SignatureService', [ '$resource', 'Ac
      * @returns {Object} Promise
      */
     Service.confirmSignature = function(objectType, objectId, pass) {
+        var cacheSignatures = new Store.CacheFifo(Service.CacheNames.SIGNATURES);
         return Util.serviceCall({
+
             service: Service._confirmSignature,
             param: {
                 objectType: objectType,
@@ -84,6 +86,8 @@ angular.module('services').factory('Object.SignatureService', [ '$resource', 'Ac
             },
             onSuccess: function(data) {
                 if (Service.validateSignature(data)) {
+                    var cacheKey = objectType + "." + objectId;
+                    cacheSignatures.remove(cacheKey); //clear cashed signatures so the next retrieving signatures will contain the new one we create here.
                     return data;
                 }
             },
@@ -167,6 +171,7 @@ angular.module('services').factory('Object.SignatureService', [ '$resource', 'Ac
         if (Util.isEmpty(data.signedBy))
             return false;
         return true;
+
     };
 
     return Service;

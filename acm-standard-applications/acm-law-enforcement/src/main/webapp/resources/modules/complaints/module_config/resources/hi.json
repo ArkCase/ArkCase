@@ -317,6 +317,56 @@
             "approverDecision": "अनुमोदन निर्णय"
         }
     },
+    "complaints.comp.newComplaint": {
+        "title": "hi_New Complaint",
+        "info": "hi_Incident Information",
+        "infoMessage": "hi_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "hi_Complaint Title",
+        "complaintTitle.placeholder": "hi_Enter Complaint Title",
+        "incidentCategory": "hi_Incident Category",
+        "initiator": "hi_Initiator",
+        "initiator.placeholder": "hi_Select Initiator",
+        "complaintDesc": "hi_Complaint Description",
+        "priority": "hi_Priority",
+        "incidentDate": "hi_Incident Date",
+        "incidentDate.placeholder": "hi_Select Incident Date",
+        "incidentDate.close.button": "hi_Close",
+        "complaintTag": "hi_Complaint Tag",
+        "complaintTag.placeholder": "hi_Enter Complaint Tag",
+        "frequency": "hi_Frequency",
+        "location": {
+            "title": "hi_Location",
+            "addressType": "hi_Type",
+            "streetAddress": "hi_Address",
+            "streetAddress.placeholder": "hi_Enter Street Address",
+            "city": "hi_City",
+            "city.placeholder": "hi_Enter City",
+            "state": "hi_State",
+            "state.placeholder": "hi_Enter State",
+            "country": "hi_Country",
+            "zip": "hi_Zip Code",
+            "zip.placeholder": "hi_Enter Zip Code",
+            "dateCreated": "hi_Date added",
+            "creator": "hi_Added By",
+            "creator.placeholder": "hi_Enter Creator"
+        },
+        "people": {
+            "title": "hi_People",
+            "selectPerson.placeholder": "hi_Search existing Person",
+            "personType": "hi_Person Type"
+        },
+        "participants": {
+            "title": "hi_Participants",
+            "owningGroup": "hi_Owning Group",
+            "owningGroup.info": "hi_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "hi_Select Participant",
+            "participantType": "hi_Participant Type"
+        },
+        "cancelButton": "hi_Cancel",
+        "saveButton": "hi_Save Complaint",
+        "removeButton": "hi_Remove",
+        "addButton": "hi_Add Another"
+    },
     "complaints.userOrGroupSearch": {
         "id": "उपयोगकर्ता खोज",
         "title": "उपयोगकर्ता / समूह खोज",

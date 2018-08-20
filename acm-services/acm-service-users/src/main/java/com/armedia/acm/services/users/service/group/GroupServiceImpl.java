@@ -51,7 +51,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -83,24 +87,11 @@ public class GroupServiceImpl implements GroupService
         {
             throw new AcmObjectAlreadyExistsException("Group " + group.getName() + " already exists.");
         }
-        if (acmGroup == null)
-        {
-            group.setStatus(AcmGroupStatus.ACTIVE);
-            group.setName(groupName);
-            group.setDisplayName(groupName);
-            return groupDao.save(group);
-        }
-        else
-        {
-            acmGroup.setType(AcmGroupType.ADHOC_GROUP);
-            acmGroup.setStatus(AcmGroupStatus.ACTIVE);
-            acmGroup.setDescription(group.getDescription());
-            acmGroup.setSupervisor(group.getSupervisor());
-            acmGroup.setDisplayName(groupName);
-            acmGroup.setDistinguishedName(null);
-            acmGroup.setDirectoryName(null);
-            return groupDao.save(acmGroup);
-        }
+
+        group.setStatus(AcmGroupStatus.ACTIVE);
+        group.setName(groupName);
+        group.setDisplayName(groupName);
+        return groupDao.save(group);
     }
 
     @Override
@@ -297,6 +288,7 @@ public class GroupServiceImpl implements GroupService
 
         Assert.isTrue(acmGroup.getMemberOfGroups().isEmpty());
 
+        AcmGroupType groupType = acmGroup.getType();
         Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
 
         acmGroup.setAscendantsList(null);
@@ -306,7 +298,7 @@ public class GroupServiceImpl implements GroupService
 
         acmGroup.setUserMembers(new HashSet<>());
 
-        save(acmGroup);
+        groupDao.deleteGroup(acmGroup);
 
         descendantGroups.forEach(group -> {
             String ancestorsStringList = AcmGroupUtils.buildAncestorsStringForAcmGroup(group);
@@ -319,7 +311,7 @@ public class GroupServiceImpl implements GroupService
             groupDao.getEm().flush();
         }
 
-        if (acmGroup.getType() == AcmGroupType.ADHOC_GROUP)
+        if (groupType == AcmGroupType.ADHOC_GROUP)
         {
             acmGroupEventPublisher.publishAdHocGroupDeletedEvent(acmGroup);
         }
@@ -723,5 +715,32 @@ public class GroupServiceImpl implements GroupService
     public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher)
     {
         this.acmGroupEventPublisher = acmGroupEventPublisher;
+    }
+
+    @Override
+    public boolean isUserMemberOfGroup(String userId, String groupName)
+    {
+        AcmUser user = userDao.findByUserId(userId);
+        List<AcmGroup> groups = findByUserMember(user);
+
+        for (AcmGroup group : groups)
+        {
+            if (group.getName().equals(groupName))
+            {
+                return true;
+            }
+
+            // check ascendant groups
+            Set<String> ascendantGroupNames = group.getAscendants();
+            for (String ascendantGroupName : ascendantGroupNames)
+            {
+                if (ascendantGroupName.equals(groupName))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

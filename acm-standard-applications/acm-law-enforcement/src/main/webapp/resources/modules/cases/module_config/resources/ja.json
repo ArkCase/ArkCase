@@ -362,6 +362,33 @@
             "approverDecision": "承認者の決定"
         }
     },
+    "cases.comp.newCase": {
+        "title": "ja_New Case File",
+        "editCase.title": "ja_Edit Case File",
+        "caseTitle": "ja_Case Title",
+        "caseTitle.placeholder": "ja_Enter Case File Title",
+        "caseType": "ja_Case Type",
+        "initiator": "ja_Initiator",
+        "initiator.placeholder": "ja_Select Initiator",
+        "description": "ja_Description",
+        "people": {
+            "title": "ja_People",
+            "selectPerson.placeholder": "ja_Search existing Person",
+            "personType": "ja_Person Type"
+        },
+        "participants": {
+            "title": "ja_Participants",
+            "owningGroup": "ja_Owning Group",
+            "owningGroup.info": "ja_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "ja_Select Participant",
+            "participantType": "ja_Participant Type"
+        },
+        "cancelButton": "ja_Cancel",
+        "saveButton": "ja_Save Case File",
+        "updateButton": "ja_Update Case File",
+        "removeButton": "ja_Remove",
+        "addButton": "ja_Add Another"
+    },
     "cases.userOrGroupSearch": {
         "id": "ユーザー検索",
         "title": "ユーザー/グループ検索",

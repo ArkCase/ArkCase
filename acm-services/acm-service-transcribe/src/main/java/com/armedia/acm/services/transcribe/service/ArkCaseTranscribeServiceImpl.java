@@ -779,7 +779,7 @@ public class ArkCaseTranscribeServiceImpl implements ArkCaseTranscribeService
             if (transcribeForProcessing.getId() != null)
             {
                 // Reset 'remoteId' for existing Transcriptions that we want to be transcribed again
-                transcribe.setRemoteId(null);
+                transcribeForProcessing.setRemoteId(null);
             }
             Transcribe created = getPipelineManager().executeOperation(transcribeForProcessing, context, () -> {
                 try
