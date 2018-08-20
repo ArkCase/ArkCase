@@ -489,7 +489,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
                     }
                     catch (InstantiationException | IllegalAccessException e)
                     {
-                        log.debug("Can not determine object type for class [{}]", it.getJavaType().getSimpleName());
+                        log.warn("Can not determine object type for class [{}]", it.getJavaType().getSimpleName());
                     }
                     return null;
                 }).filter(Objects::nonNull)
