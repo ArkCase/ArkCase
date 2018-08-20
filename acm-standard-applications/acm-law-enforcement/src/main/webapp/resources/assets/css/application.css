@@ -1671,7 +1671,7 @@ a.primary {
     border-color: #fdadad;
 }
 
-.module-header .col-xs-12.col-md-4 .h4.font-bold {
+.module-header .h4.font-bold {
     text-overflow: ellipsis;
     overflow: hidden;
 }
