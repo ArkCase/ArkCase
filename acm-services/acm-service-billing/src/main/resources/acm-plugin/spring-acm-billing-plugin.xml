@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="acmCreateBillingItemPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Create Billing Item Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmCreateBillingItemPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmCreateBillingItemUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/billing/items"/>
+                    <property name="requiredPrivilege" ref="acmCreateBillingItemPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmListBillingItemsPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="List Billing Items Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmListBillingItemsPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmListBillingItemsUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/billing/items"/>
+                    <property name="requiredPrivilege" ref="acmListBillingItemsPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmCreateBillingInvoicePluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Create Billing Invoice Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmCreateBillingInvoicePrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmCreateBillingInvoiceUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/billing/invoices"/>
+                    <property name="requiredPrivilege" ref="acmCreateBillingInvoicePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/plugin/billing/invoices/document"/>
+                    <property name="requiredPrivilege" ref="acmCreateBillingInvoicePrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmListBillingInvoicesPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="List Billing Invoices Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmListBillingInvoicesPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmListBillingInvoicesUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/billing/invoices"/>
+                    <property name="requiredPrivilege" ref="acmListBillingInvoicesPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/billing/invoices/all"/>
+                    <property name="requiredPrivilege" ref="acmListBillingInvoicesPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+</beans>

@@ -197,6 +197,7 @@
         "header": "Search",
         "btnSearch.text": "Search",
         "btnOk.text": "OK",
+        "btnConfirm.text": "Confirm",
         "btnCancel.text": "Cancel",
         "edtPlaceholder": "Type in to search",
         "noData.text": "No Results",
@@ -604,6 +605,7 @@
             "btnOk.text": "Save",
             "btnCancel.text": "Cancel",
             "dialogUserPicker.header": "Search User",
+            "dialogUserGroupPicker.header": "Search User/Group",
             "dialogGroupPicker.header": "Search Group",
             "replaceChildrenParticipant": "replace children participant"
         },
@@ -657,7 +659,9 @@
         "PARTICIPANT-ASSOCIATION": "Participant-Association",
         "ASSIGNMENT": "Assignment",
         "ASSOCIATE_TAG": "Tag",
-        "TRANSCRIBE": "Transcription"
+        "TRANSCRIBE": "Transcription",
+        "BILLING_INVOICE": "Billing Invoice",
+        "BILLING_ITEM": "Billing Item"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",
@@ -733,6 +737,9 @@
             "identificationYearIssued": "Identification Issued",
             "identificationYearIssued.placeholder": "Select Identification Issued",
             "identificationYearIssued.close.button": "Close"
+        },
+        "details": {
+            "title": "Details"
         }
     },
     "common.addPerson": {

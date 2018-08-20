@@ -362,6 +362,33 @@
             "approverDecision": "审批人决定"
         }
     },
+    "cases.comp.newCase": {
+        "title": "zh-cn_New Case File",
+        "editCase.title": "zh-cn_Edit Case File",
+        "caseTitle": "zh-cn_Case Title",
+        "caseTitle.placeholder": "zh-cn_Enter Case File Title",
+        "caseType": "zh-cn_Case Type",
+        "initiator": "zh-cn_Initiator",
+        "initiator.placeholder": "zh-cn_Select Initiator",
+        "description": "zh-cn_Description",
+        "people": {
+            "title": "zh-cn_People",
+            "selectPerson.placeholder": "zh-cn_Search existing Person",
+            "personType": "zh-cn_Person Type"
+        },
+        "participants": {
+            "title": "zh-cn_Participants",
+            "owningGroup": "zh-cn_Owning Group",
+            "owningGroup.info": "zh-cn_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "zh-cn_Select Participant",
+            "participantType": "zh-cn_Participant Type"
+        },
+        "cancelButton": "zh-cn_Cancel",
+        "saveButton": "zh-cn_Save Case File",
+        "updateButton": "zh-cn_Update Case File",
+        "removeButton": "zh-cn_Remove",
+        "addButton": "zh-cn_Add Another"
+    },
     "cases.userOrGroupSearch": {
         "id": "选择用户",
         "title": "用户/组搜索",

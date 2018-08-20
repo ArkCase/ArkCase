@@ -27,20 +27,10 @@ package com.armedia.acm.scheduler;
  * #L%
  */
 
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.BEAN_NAME_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.HOW_OFTEN_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.NAME_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULED_TASKS_CONFIGUTATION_FILENAME;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULE_ENABLED_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULE_INTERVAL_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.TASKS_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.TASK_LAST_RUN_KEY;
-
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,6 +56,15 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.BEAN_NAME_KEY;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.HOW_OFTEN_KEY;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.NAME_KEY;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULED_TASKS_CONFIGUTATION_FILENAME;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULE_ENABLED_KEY;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULE_INTERVAL_KEY;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.TASKS_KEY;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.TASK_LAST_RUN_KEY;
 
 /**
  * A generic configurable scheduler capable of executing beans defined in spring context that implement the
@@ -264,6 +263,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
 
         if (!configuration.getBoolean(SCHEDULE_ENABLED_KEY))
         {
+            log.info("Scheduler is disabled - removing all tasks");
             if (taskSchedulerFuture != null)
             {
                 taskSchedulerFuture.cancel(false);
@@ -296,6 +296,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
     {
         if (!configuration.has(TASKS_KEY) || configuration.isNull(TASKS_KEY))
         {
+            log.info("No tasks are defined - removing all tasks");
             tasks.clear();
             return;
         }
@@ -360,6 +361,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
 
             if (taskSchedulerFuture != null)
             {
+                log.info("Schedule interval changed - canceling existing scheduler");
                 taskSchedulerFuture.cancel(false);
             }
 
@@ -381,19 +383,21 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         return () -> {
 
             CountDownLatch taskCompletedSignal = new CountDownLatch(tasks.size());
-            tasks.forEach((taskName, task) -> {
-                task.startTask(taskName, taskExecutor, taskCompletedSignal);
-            });
+            tasks.forEach((taskName, task) -> task.startTask(taskName, taskExecutor, taskCompletedSignal));
 
             Runnable configurationUpdater = () -> {
                 try
                 {
                     log.debug("Waiting for {} tasks to complete.", taskCompletedSignal.getCount());
-                    taskCompletedSignal.await(scheduleInterval, TimeUnit.MILLISECONDS);
+                    boolean finished = taskCompletedSignal.await(scheduleInterval, TimeUnit.MILLISECONDS);
+                    if (!finished)
+                    {
+                        log.warn("Tasks failed to complete but no interruption happened.");
+                    }
                 }
                 catch (InterruptedException e)
                 {
-                    log.error("Configuration update thread was interrupted prematurelly with exception {}.", e);
+                    log.error("Configuration update thread was interrupted prematurely with exception {}.", e);
                 }
                 finally
                 {
@@ -414,8 +418,10 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      */
     private synchronized void updateCоnfiguration()
     {
+        log.debug("Updating configuration file...");
         if (taskSchedulerFuture == null)
         {
+            log.warn("Updating configuration canceled, SchedulerFuture is null");
             return;
         }
         File configFile = FileUtils.getFile(configurationPath);
@@ -442,7 +448,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
             FileTime lastModified = getConfigLastModifiedTime(configFile);
 
             lastModifiedTime = lastModified.toMillis();
-
+            log.debug("Configuration updated at [{}]", lastModifiedTime);
         }
         catch (IOException | JSONException e)
         {

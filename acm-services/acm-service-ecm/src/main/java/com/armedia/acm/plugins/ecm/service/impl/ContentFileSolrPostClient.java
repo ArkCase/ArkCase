@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.ecm.service.impl;
  */
 
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.plugins.ecm.model.EcmFileContentIndexedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -43,6 +44,8 @@ import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -51,7 +54,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ContentFileSolrPostClient implements SolrPostClient
+public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEventPublisherAware
 {
 
     private transient final Logger logger = LoggerFactory.getLogger(getClass());
@@ -60,6 +63,7 @@ public class ContentFileSolrPostClient implements SolrPostClient
     private CmisConfigUtils cmisConfigUtils;
     private SolrRestClient solrRestClient;
     private String solrContentFileHandler;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public void sendToSolr(SolrCore core, String json) throws SolrPostException
@@ -104,6 +108,8 @@ public class ContentFileSolrPostClient implements SolrPostClient
         HttpEntity<InputStreamResource> entity = new HttpEntity<>(inputStreamResource, headers);
 
         getSolrRestClient().postToSolr(core.getCore(), getSolrContentFileHandler(), entity, logText, urlWithPlaceholders, urlValues);
+
+        applicationEventPublisher.publishEvent(new EcmFileContentIndexedEvent(solrContentDocument));
 
     }
 
@@ -172,6 +178,12 @@ public class ContentFileSolrPostClient implements SolrPostClient
     public void setSolrRestClient(SolrRestClient solrRestClient)
     {
         this.solrRestClient = solrRestClient;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
 }

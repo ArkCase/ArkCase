@@ -1,0 +1,26 @@
+<panel-view header="{{'admin.application.formsType.config.title' | translate}}" collapsible="false">
+
+    <div ng-controller="Admin.FormsTypeConfigController" class="well-sm">
+        <form>
+            <div class="radio">
+                <label>
+                    <input type="radio" ng-model="nameProperty" value="angular">
+                    <span translate>admin.application.formsType.config.angular.label</span>
+                </label>
+            </div>
+
+            <div class="radio">
+                <label>
+                    <input type="radio" ng-model="nameProperty" value="frevvo">
+                    <span translate>admin.application.formsType.config.frevvo.label</span>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <button ng-click="applyChanges()" class="btn btn-sm btn-primary" translate>
+                    admin.application.formsType.config.apply
+                </button>
+            </div>
+        </form>
+    </div>
+</panel-view>

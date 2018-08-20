@@ -58,8 +58,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/search", "/api/latest/plugin/search" })
@@ -402,38 +404,31 @@ public class SearchObjectByTypeAPIController
 
     private String addSearchQueryPropertiesToParams(String searchQuery, String[] searchQueryProperties, String params)
     {
-        if (searchQueryProperties != null && searchQueryProperties.length > 0 && StringUtils.isNotEmpty(searchQuery))
+        if (searchQueryProperties != null && StringUtils.isNotEmpty(searchQuery))
         {
-            String searchQueryBuilded = "fq=";
-            int index = 0;
-            for (String searchQueryProperty : searchQueryProperties)
-            {
-                String separator = "";
-                if (index > 0)
-                {
-                    separator = " " + SearchConstants.OPERATOR_OR + " ";
-                }
-
+            String[] specialChars = { " ", "_", "-" };
+            String fqValue = Arrays.stream(searchQueryProperties).map(it -> {
+                String query = it.trim() + ":";
                 // If the search keywords contains empty space, search for that particular phrase, otherwise find any
-                // objects that
-                // contains the characters in the searched properties
-                String value = searchQuery;
-                if (searchQuery.contains(" ") || searchQuery.contains("_"))
+                // objects that contains the characters in the searched properties
+                if (StringUtils.containsAny(searchQuery, specialChars))
                 {
-                    value = "\"" + value + "\"";
+                    query += "\"" + searchQuery + "\"";
                 }
-                searchQueryBuilded += separator + searchQueryProperty.trim() + ":" + value;
-                index++;
-            }
+                else
+                {
+                    query += searchQuery;
+                }
+                return query;
+            }).collect(Collectors.joining(" " + SearchConstants.OPERATOR_OR + " ", "fq=", ""));
 
             String splitter = "";
             if (StringUtils.isNotEmpty(params))
             {
                 splitter = SearchConstants.AND_SPLITTER;
             }
-            params += splitter + searchQueryBuilded;
+            params += splitter + fqValue;
         }
-
         return params;
     }
 

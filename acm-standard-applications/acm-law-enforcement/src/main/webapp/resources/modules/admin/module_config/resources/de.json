@@ -570,6 +570,15 @@
                 "modal.info": "Einstellungen werden nach der Aktualisierung wirksam",
                 "modal.ok": "OK"
             },
+            "formsType.config": {
+                "title": "de_Forms Type Configuration",
+                "angular.label": "de_Use Angular Forms",
+                "frevvo.label": "de_Use Frevvo Forms",
+                "apply": "de_Apply",
+                "modal.title": "de_Information",
+                "modal.info": "de_Settings will take effect after refresh",
+                "modal.ok": "de_OK"
+            },
             "login.config": {
                 "title": "Login-Konfiguration",
                 "idleLimit.label": "Login-Leerungslimit (in Millisekunden)",

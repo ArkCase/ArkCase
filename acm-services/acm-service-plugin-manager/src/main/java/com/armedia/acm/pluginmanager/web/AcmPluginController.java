@@ -29,7 +29,8 @@ package com.armedia.acm.pluginmanager.web;
 
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.AcmUserAction;
-
+import com.armedia.acm.pluginmanager.model.AcmPluginConfig;
+import com.armedia.acm.pluginmanager.service.AcmConfigurablePluginsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -38,19 +39,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping({ "/api/v1/plugins", "/api/latest/plugins" })
 public class AcmPluginController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    private AcmConfigurablePluginsManager configurablePluginsManager;
 
     /**
      * REST service to get the list of accessible navigator tabs. It is NOT used by the ACM webapp (the webapp uses
@@ -59,18 +60,13 @@ public class AcmPluginController
      */
     @RequestMapping(value = "/navigatorPlugins", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody List<AcmUserAction> enabledNavigatorPlugins(
-            HttpSession userSession,
-            HttpServletResponse response)
-            throws IOException
+            HttpSession userSession)
     {
         Map<String, Boolean> userPrivileges = (Map<String, Boolean>) userSession.getAttribute("acm_privileges");
         AcmApplication acmApplication = (AcmApplication) userSession.getAttribute("acm_application");
 
-        if (log.isDebugEnabled())
-        {
-            log.debug("User Privileges is null? " + (userPrivileges == null));
-            log.debug("ACM App is null? " + (acmApplication == null));
-        }
+        log.debug("User Privileges is null? {}", (userPrivileges == null));
+        log.debug("ACM App is null? {}", (acmApplication == null));
 
         if (userPrivileges == null || acmApplication == null)
         {
@@ -78,16 +74,26 @@ public class AcmPluginController
         }
 
         List<AcmUserAction> tabs = acmApplication.getNavigatorTabs();
-        List<AcmUserAction> userAccessibleTabs = new ArrayList<>();
-        for (AcmUserAction action : tabs)
-        {
-            String requiredPrivilege = action.getRequiredPrivilege();
-            if (userPrivileges.containsKey(requiredPrivilege) && userPrivileges.get(requiredPrivilege))
-            {
-                userAccessibleTabs.add(action);
-            }
-        }
 
-        return userAccessibleTabs;
+        Predicate<AcmUserAction> userHasPrivilege = action -> {
+            String requiredPrivilege = action.getRequiredPrivilege();
+            return userPrivileges.containsKey(requiredPrivilege)
+                    && userPrivileges.get(requiredPrivilege);
+        };
+
+        return tabs.stream()
+                .filter(userHasPrivilege)
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/configurablePlugins", method = RequestMethod.GET)
+    public @ResponseBody Map<String, AcmPluginConfig> getConfigurablePlugins()
+    {
+        return configurablePluginsManager.getConfigurablePlugins();
+    }
+
+    public void setConfigurablePluginsManager(AcmConfigurablePluginsManager configurablePluginsManager)
+    {
+        this.configurablePluginsManager = configurablePluginsManager;
     }
 }
