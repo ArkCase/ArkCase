@@ -53,22 +53,23 @@ public interface ReportService
 
     public boolean saveReports(List<Report> reports) throws AcmEncryptionException;
 
-    public Map<String, List<String>> getReportToGroupsMap();
+    public Map<String, List<String>> getReportToRolesMap();
 
-    public List<String> getReportToGroups(String sortDirection, Integer startRow, Integer maxRows, String filterName) throws IOException;
+    public List<String> getReportToRoles(String sortDirection, Integer startRow, Integer maxRows, String filterName) throws IOException;
 
-    public List<String> getReportToGroupsPaged(String sortDirection, Integer startRow, Integer maxRows) throws IOException;
+    public List<String> getReportToRolesPaged(String sortDirection, Integer startRow, Integer maxRows) throws IOException;
 
-    public List<String> getReportToGroupsByName(String sortDirection, Integer startRow, Integer maxRows, String filterQuery)
+    public List<String> getReportToRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterQuery)
             throws IOException;
 
-    public boolean saveReportToGroupsMap(Map<String, List<String>> reportToGroupsMap, Authentication auth);
+    public boolean saveReportToRolesMap(Map<String, List<String>> reportToRolesMap, Authentication auth);
 
-    public List<String> saveGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth);
+    public List<String> saveRolesToReport(String reportName, List<String> roles, Authentication auth) throws AcmEncryptionException;
 
-    public List<String> removeGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth);
+    public List<String> removeRolesToReport(String reportName, List<String> roles, Authentication auth) throws Exception;
+
+    public List<String> getRolesForReport(Boolean authorized, String reportId) throws AcmEncryptionException;
 
     public List<Report> sync() throws Exception;
 
-    public String buildGroupsForReportSolrQuery(Boolean authorized, String reportId, String filterQuery) throws AcmEncryptionException;
 }
