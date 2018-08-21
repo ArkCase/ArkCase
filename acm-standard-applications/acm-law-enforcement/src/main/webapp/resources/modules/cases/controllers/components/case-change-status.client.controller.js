@@ -26,7 +26,8 @@ angular.module('cases').controller(
                         created: null,
                         creator: null,
                         modified: null,
-                        modifier: null
+                        modifier: null,
+                        description: ""
                     };
 
                     ConfigService.getModuleConfig("cases").then(function(moduleConfig) {

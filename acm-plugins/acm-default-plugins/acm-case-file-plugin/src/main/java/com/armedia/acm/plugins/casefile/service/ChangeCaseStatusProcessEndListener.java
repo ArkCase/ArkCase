@@ -161,8 +161,7 @@ public class ChangeCaseStatusProcessEndListener implements ApplicationListener<A
         return changeCaseFileStateService;
     }
 
-    public void setChangeCaseFileStateService(
-            ChangeCaseFileStateService changeCaseFileStateService)
+    public void setChangeCaseFileStateService(ChangeCaseFileStateService changeCaseFileStateService)
     {
         this.changeCaseFileStateService = changeCaseFileStateService;
     }

@@ -33,6 +33,7 @@ import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
 import org.apache.commons.io.FileUtils;
@@ -51,6 +52,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public abstract class PDFDocumentGenerator<T>
 {
@@ -160,6 +162,39 @@ public abstract class PDFDocumentGenerator<T>
             elem.setAttribute("required", "true");
         }
         parent.appendChild(elem);
+    }
+
+    /**
+     * A helper method which appends the participants to the document.
+     *
+     * @param participants
+     *            List of AcmParticipants.
+     * @param document
+     *            The document on which we append the participants.
+     * @param rootElem
+     *            Root elemen of the document.
+     */
+    public void addParticipantsInXmlDocument(List<AcmParticipant> participants, Document document, Element rootElem, String elementName,
+            String elementType)
+    {
+        if (!participants.isEmpty())
+        {
+            Element participantsElement = document.createElement("participants");
+            rootElem.appendChild(participantsElement);
+            for (AcmParticipant participant : participants)
+            {
+                Element participantElement = document.createElement("participant");
+                participantsElement.appendChild(participantElement);
+                if (!elementName.isEmpty())
+                {
+                    addElement(document, participantElement, "participantName", participant.getParticipantLdapId(), false);
+                }
+                if (!elementType.isEmpty())
+                {
+                    addElement(document, participantElement, "participantType", participant.getParticipantType(), false);
+                }
+            }
+        }
     }
 
     public T getBusinessObject()

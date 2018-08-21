@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.casefile.service;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Case File
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStateContants;
@@ -15,6 +42,8 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import java.util.Date;
 
 public class PDFChangeCaseFileStateDocumentGenerator<D extends AcmAbstractDao, T extends CaseFile> extends PDFDocumentGenerator
 {
@@ -46,11 +75,26 @@ public class PDFChangeCaseFileStateDocumentGenerator<D extends AcmAbstractDao, T
         Element rootElem = document.createElement("changeCaseFileState");
         document.appendChild(rootElem);
 
-        ChangeCaseStatus caseFilePipelineContext = ((CaseFilePipelineContext) ctx).getChangeCaseStatus();
-        CaseFile caseFile = (CaseFile) businessObject;
+        ChangeCaseStatus changeCaseStatus = ((CaseFilePipelineContext) ctx).getChangeCaseStatus();
 
-        addElement(document, rootElem, "caseTitle", "Dimee",
+        addElement(document, rootElem, "changeDate", new Date().toString(),
                 true);
+
+        addElement(document, rootElem, "caseNumber", changeCaseStatus.getCaseId().toString(),
+                true);
+
+        addElement(document, rootElem, "status", changeCaseStatus.getStatus(),
+                true);
+
+        if (!changeCaseStatus.getStatus().isEmpty())
+        {
+            addElement(document, rootElem, "showStatusResolution", "true",
+                    true);
+        }
+        addElement(document, rootElem, "statusResolution", "Full",
+                true);
+
+        addParticipantsInXmlDocument(changeCaseStatus.getParticipants(), document, rootElem, "participantName", "participantType");
 
         return document;
     }

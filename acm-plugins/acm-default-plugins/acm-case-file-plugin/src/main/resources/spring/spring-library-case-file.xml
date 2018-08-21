@@ -31,20 +31,29 @@
         <property name="objectConverter" ref="objectConverter"/>
         <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
     </bean>
-    <!--*******************************************************************************-->
-    <bean id="checkChangeCaseFileState"
-        class="com.armedia.acm.plugins.casefile.pipeline.presave.CheckChangeCaseFileState">
-        <property name="caseFileDao" ref="caseFileDao"/>
-    </bean>
-
-    <bean id="pdfChangeCaseFileStateDocumentGeneratorHandler"
-        class="com.armedia.acm.plugins.casefile.pipeline.postsave.PDFChangeCaseFileStateDocumentGeneratorHandler">
-        <property name="pdfChangeCaseFileStateDocumentGenerator" ref="pdfChangeCaseFileStateDocumentGenerator"/>
+    
+    <bean id="changeCaseStatusTaskName" class="java.lang.String">
+        <constructor-arg>
+            <value>Request to Change Case Status '%s'</value>
+        </constructor-arg>
     </bean>
 
     <bean id="pdfChangeCaseFileStateDocumentGenerator"
-        class="com.armedia.acm.plugins.casefile.service.PDFChangeCaseFileStateDocumentGenerator">
+        class="com.armedia.acm.plugins.casefile.service.PDFChangeCaseFileStateDocumentGenerator"
+        parent="pdfDocumentGenerator">
         <property name="dao" ref="caseFileDao"/>
+    </bean>
+
+    <bean id="changeCaseStatusWorkflowListener123"
+        class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusWorkflowListener">
+        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="changeCaseStatusTaskName" ref="changeCaseStatusTaskName"/>
+    </bean>
+
+    <bean id="checkChangeCaseFileState"
+        class="com.armedia.acm.plugins.casefile.pipeline.presave.CheckChangeCaseFileState">
+        <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
     <bean id="changeCaseFileStateHandler"
@@ -73,14 +82,22 @@
         </property>
     </bean>
 
-    <bean id="changeCaseFileStateService" class="com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService">
+    <bean id="changeCaseFileStateService"
+        class="com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService">
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="dao" ref="caseFileDao"/>
         <property name="changeCaseStatusDao" ref="changeCaseStatusDao"/>
         <property name="pipelineManager" ref="changeCaseFileStatusPipelineManager"/>
     </bean>
 
-    <!--*******************************************************************************-->
+    <bean id="pdfChangeCaseFileStateDocumentGeneratorHandler"
+        class="com.armedia.acm.plugins.casefile.pipeline.postsave.PDFChangeCaseFileStateDocumentGeneratorHandler"
+        parent="pdfChangeCaseFileStateDocumentGenerator">
+        <property name="pdfChangeCaseFileStateDocumentGenerator" ref="pdfChangeCaseFileStateDocumentGenerator"/>
+        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
+        <property name="dao" ref="caseFileDao"/>
+    </bean>
+
     <bean id="caseFileToSolrTransformer" class="com.armedia.acm.plugins.casefile.service.CaseFileToSolrTransformer">
         <property name="userDao" ref="userJpaDao"/>
         <property name="caseFileDao" ref="caseFileDao"/>
