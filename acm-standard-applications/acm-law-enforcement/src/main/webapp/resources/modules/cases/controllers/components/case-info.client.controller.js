@@ -81,13 +81,9 @@ angular.module('cases').controller(
 
 
                     $scope.userOrGroupSearch = function() {
-                        var users = $scope.userFullNames;
                         var assigneUserName = _.find($scope.userFullNames, function (user)
                          {
-                             return user.id === $scope.assignee
-
-
-
+                             return user.name === $scope.assignee
                         });
                         var params = {
                           owningGroup: $scope.owningGroup,
