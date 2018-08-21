@@ -346,7 +346,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
      *             if a user exists and its status is "VALID"
      */
     @Transactional
-    AcmUser checkExistingUser(String userId)
+    public AcmUser checkExistingUser(String userId)
     {
         AcmUser existing = userDao.findByUserId(userId);
         if (existing == null)
