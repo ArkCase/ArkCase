@@ -27,14 +27,14 @@
                     <property name="url" value="/api/{version}/plugin/report/save"/>
                     <property name="requiredPrivilege" ref="reportPrivilege"/>
                 </bean>
-                <bean id="reportsToGroupsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="reportsToRolesUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/report/reporttogroupsmap"/>
+                    <property name="url" value="/api/{version}/plugin/report/reporttorolesmap"/>
                     <property name="requiredPrivilege" ref="reportPrivilege"/>
                 </bean>
-                <bean id="saveReportsToGroupsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="saveReportsToRolesUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/report/reporttogroupsmap"/>
+                    <property name="url" value="/api/{version}/plugin/report/reporttorolesmap"/>
                     <property name="requiredPrivilege" ref="reportPrivilege"/>
                 </bean>
             </list>

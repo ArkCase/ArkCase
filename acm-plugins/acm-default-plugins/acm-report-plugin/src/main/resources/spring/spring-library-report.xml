@@ -15,12 +15,12 @@
         </property>
     </bean>
 
-    <bean id="reportToGroupsMapProperties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
+    <bean id="reportToRolesMapProperties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
 
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/reportToGroupsMap.properties"/>
+        <property name="location" value="file:${user.home}/.arkcase/acm/reportToRolesMap.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -51,15 +51,15 @@
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="reportsPropertiesFileLocation" value="${user.home}/.arkcase/acm/acm-reports.properties"/>
-        <property name="reportToGroupsMapPropertiesFileLocation" value="${user.home}/.arkcase/acm/reportToGroupsMap.properties"/>
+        <property name="reportToRolesMapPropertiesFileLocation" value="${user.home}/.arkcase/acm/reportToRolesMap.properties"/>
         <property name="reportServerConfigPropertiesFileLocation" value="${user.home}/.arkcase/acm/acm-reports-server-config.properties"/>
         <property name="reportPluginProperties" ref="reportPluginProperties"/>
-        <property name="reportToGroupsMapProperties" ref="reportToGroupsMapProperties"/>
+        <property name="reportToRolesMapProperties" ref="reportToRolesMapProperties"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="searchResults">
             <bean class="com.armedia.acm.services.search.service.SearchResults"/>
         </property>
-        <property name="groupDao" ref="groupDao"/>
+        <property name="applicationRolesProperties" ref="acm-roles-properties"/>
     </bean>
 
     <bean id="uploadReportService" class="com.armedia.acm.plugins.report.service.PentahoUploadGeneratedReportService">
