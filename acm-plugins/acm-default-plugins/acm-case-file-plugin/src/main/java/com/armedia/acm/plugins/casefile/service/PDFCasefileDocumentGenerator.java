@@ -95,7 +95,7 @@ public class PDFCasefileDocumentGenerator<D extends AcmAbstractDao, T extends Ca
             }
         }
 
-        addParticipants(caseFile.getParticipants(), document, rootElem, "participantName", "participantType");
+        addParticipantsInXmlDocument(caseFile.getParticipants(), document, rootElem, "participantName", "participantType");
 
         return document;
     }

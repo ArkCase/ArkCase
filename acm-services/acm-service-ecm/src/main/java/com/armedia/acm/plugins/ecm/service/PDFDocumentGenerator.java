@@ -176,7 +176,7 @@ public abstract class PDFDocumentGenerator<T>
      * @param rootElem
      *            Root elemen of the document.
      */
-    public void addParticipants(List<AcmParticipant> participants, Document document, Element rootElem, String elementName,
+    public void addParticipantsInXmlDocument(List<AcmParticipant> participants, Document document, Element rootElem, String elementName,
             String elementType)
     {
         if (!participants.isEmpty())

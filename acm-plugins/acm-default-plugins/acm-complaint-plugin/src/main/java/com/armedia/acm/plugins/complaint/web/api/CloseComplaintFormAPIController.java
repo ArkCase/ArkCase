@@ -36,7 +36,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -53,7 +57,7 @@ public class CloseComplaintFormAPIController
 
     @RequestMapping(value = "/close/{mode}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, String> completeTask(
+    public Map<String, String> closeComplaint(
             @PathVariable String mode, @RequestBody CloseComplaintRequest form, Authentication auth,
             HttpServletRequest request, HttpSession session)
     {

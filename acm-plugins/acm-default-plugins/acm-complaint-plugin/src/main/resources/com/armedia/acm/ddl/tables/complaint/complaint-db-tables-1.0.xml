@@ -391,9 +391,7 @@
 
     <changeSet id="27-description-in-acm-close-complaint-request-table" author="dimitar.stefanovski">
         <addColumn tableName="acm_close_complaint_request">
-            <column name="cm_close_complaint_description" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="cm_close_complaint_description" type="VARCHAR(1024)"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>

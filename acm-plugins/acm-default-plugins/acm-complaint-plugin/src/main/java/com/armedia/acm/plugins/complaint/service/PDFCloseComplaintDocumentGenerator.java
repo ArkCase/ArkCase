@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.model.Complaint;
@@ -23,6 +25,8 @@ public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T exte
     private final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private D dao;
+
+    private CaseFileDao caseFileDao;
 
     public void generatePdf(String objectType, Long complaintId, CloseComplaintPipelineContext ctx)
             throws PipelineProcessException
@@ -61,16 +65,18 @@ public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T exte
                 closeComplaintRequest.getDisposition().getDispositionType(), true);
 
         String caseId = ((CloseComplaintPipelineContext) ctx).getCloseComplaintRequest().getDisposition().getExistingCaseNumber();
+        CaseFile caseFile = caseFileDao.findByCaseNumber(
+                ((CloseComplaintPipelineContext) ctx).getCloseComplaintRequest().getDisposition().getExistingCaseNumber());
         if (caseId != null)
         {
             addElement(document, rootElem, "existingCaseNumber", caseId, true);
             addElement(document, rootElem, "existingCaseSearchBtn", "Search", true);
-            addElement(document, rootElem, "existingCaseTitle", ctx.getPropertyValue("existingCaseTitle").toString(),
+            addElement(document, rootElem, "existingCaseTitle", caseFile.getTitle(),
                     true);
             addElement(document, rootElem, "existingCaseCreated",
-                    ctx.getPropertyValue("existingCaseCreated").toString(), true);
+                    caseFile.getCreated().toString(), true);
             addElement(document, rootElem, "existingCasePriority",
-                    ctx.getPropertyValue("existingCasePriority").toString(), true);
+                    caseFile.getPriority(), true);
         }
 
         if (closeComplaintRequest.getDisposition().getReferExternalContactMethod() != null)
@@ -90,7 +96,7 @@ public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T exte
                     true);
         }
 
-        addParticipants(closeComplaintRequest.getParticipants(), document, rootElem, "participantName", "");
+        addParticipantsInXmlDocument(closeComplaintRequest.getParticipants(), document, rootElem, "participantName", "");
 
         return document;
     }
@@ -111,4 +117,13 @@ public class PDFCloseComplaintDocumentGenerator<D extends AcmAbstractDao, T exte
         this.dao = dao;
     }
 
+    public CaseFileDao getCaseFileDao()
+    {
+        return caseFileDao;
+    }
+
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
+        this.caseFileDao = caseFileDao;
+    }
 }
