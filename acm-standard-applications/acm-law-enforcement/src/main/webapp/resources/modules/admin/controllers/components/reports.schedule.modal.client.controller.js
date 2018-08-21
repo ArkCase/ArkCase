@@ -13,7 +13,6 @@ angular.module('admin').controller('Admin.ReportsScheduleModalController',
                 filterEndDate: '',
                 outputFormat: '',
                 reportEmailAddresses: ''
-
             };
             // instantiate the promise to pull from acm-reports-server.config.properties
             var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
