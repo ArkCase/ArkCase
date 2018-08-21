@@ -126,7 +126,7 @@ public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends C
             }
         }
 
-        addParticipants(complaint.getParticipants(), document, rootElem, "participantName", "participantType");
+        addParticipantsInXmlDocument(complaint.getParticipants(), document, rootElem, "participantName", "participantType");
 
         return document;
     }

@@ -25,15 +25,15 @@ public class CreateTaskCloseComplaintHandler
     {
         String mode = (String) ctx.getPropertyValue("mode");
         Complaint complaint = ctx.getComplaint();
-        UploadedFiles frevvoUploadedFile = new UploadedFiles();
+        UploadedFiles uploadedFiles = new UploadedFiles();
         EcmFile existing = ecmFileDao.findForContainerAttachmentFolderAndFileType(complaint.getContainer().getId(),
                 complaint.getContainer().getAttachmentFolder().getId(), CLOSE_COMPLAINT_DOCUMENT);
 
-        frevvoUploadedFile.setPdfRendition(existing);
+        uploadedFiles.setPdfRendition(existing);
 
         CloseComplaintEvent event = new CloseComplaintEvent(complaint.getComplaintNumber(),
                 complaint.getComplaintId(),
-                entity, frevvoUploadedFile, mode, ctx.getAuthentication().getName(), ctx.getIpAddress(),
+                entity, uploadedFiles, mode, ctx.getAuthentication().getName(), ctx.getIpAddress(),
                 true);
         getApplicationEventPublisher().publishEvent(event);
     }

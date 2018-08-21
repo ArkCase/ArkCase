@@ -261,11 +261,11 @@
         </constructor-arg>
     </bean>
 
-    <bean id="caseFileDao" class="com.armedia.acm.plugins.casefile.dao.CaseFileDao"/>
-
     <bean id="pdfCloseComplaintDocumentGenerator"
-        class="com.armedia.acm.plugins.complaint.service.PDFCloseComplaintDocumentGenerator">
+        class="com.armedia.acm.plugins.complaint.service.PDFCloseComplaintDocumentGenerator"
+        parent="pdfDocumentGenerator">
         <property name="dao" ref="acmComplaintDao"/>
+        <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
     <bean id="complaintCloseWorkflowListener"
@@ -310,7 +310,9 @@
     </bean>
 
     <bean id="pdfCloseComplaintDocumentGeneratorHandler"
-        class="com.armedia.acm.plugins.complaint.pipeline.postsave.PDFCloseComplaintDocumentGeneratorHandler">
-        <property name="pdfCloseComplaintDocumentGenerator" ref="pdfCloseComplaintDocumentGenerator"/>
+        class="com.armedia.acm.plugins.complaint.pipeline.postsave.PDFCloseComplaintDocumentGeneratorHandler"
+        parent="pdfCloseComplaintDocumentGenerator">
+        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
+        <property name="dao" ref="acmComplaintDao"/>
     </bean>
 </beans>
