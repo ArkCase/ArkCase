@@ -45,6 +45,8 @@ public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
 
     private String defaultReturnQueue;
 
+    private String defaultDenyQueue;
+
     public T getBusinessObject()
     {
         return businessObject;
@@ -95,6 +97,23 @@ public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
     public void setDefaultReturnQueue(String defaultReturnQueue)
     {
         this.defaultReturnQueue = defaultReturnQueue;
+    }
+
+    /**
+     * @return the defaultDenyQueue
+     */
+    public String getDefaultDenyQueue()
+    {
+        return defaultDenyQueue;
+    }
+
+    /**
+     * @param defaultDenyQueue
+     *            the defaultDenyQueue to set
+     */
+    public void setDefaultDenyQueue(String defaultDenyQueue)
+    {
+        this.defaultDenyQueue = defaultDenyQueue;
     }
 
 }
