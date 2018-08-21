@@ -200,7 +200,10 @@
         "noData.text": "Sem resultados",
         "pickUserLabel": "Escolha Usuário associado",
         "pickGroupLabel": "Escolha Grupo Associado",
-        "selectedItemsGrid.label": "Entradas selecionadas"
+        "selectedItemsGrid.label": "Entradas selecionadas",
+        "notValidUser": "pt_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
+        "notValidGroup": "pt_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
+
     },
     "common.directive.search": {
         "showMore.button.text": "Mostrar mais valores",

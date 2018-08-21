@@ -45,6 +45,11 @@ angular.module('cases').controller(
                     ConfigService.getComponentConfig("cases", "participants").then(function(componentConfig) {
                         $scope.config = componentConfig;
                     });
+                    ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
+                        $scope.userOrGroupSearchConfig = _.find(moduleConfig.components, {
+                            id: "userOrGroupSearch"
+                        });
+                    });
 
                     ObjectLookupService.getGroups().then(function(groups) {
                         var options = [];
@@ -73,126 +78,80 @@ angular.module('cases').controller(
                         return caseStatuses;
                     });
 
-                    $scope.openAssigneePickerModal = function() {
-                        var participant = {
-                            id: '',
-                            participantLdapId: '',
-                            config: $scope.config
+
+
+                    $scope.userOrGroupSearch = function() {
+                        var users = $scope.userFullNames;
+                        var assigneUserName = _.find($scope.userFullNames, function (user)
+                         {
+                             return user.id === $scope.assignee
+
+
+
+                        });
+                        var params = {
+                          owningGroup: $scope.owningGroup,
+                          assignee: assigneUserName
                         };
-                        showModal(participant);
-                    };
-
-                    var showModal = function(participant) {
-                        var modalScope = $scope.$new();
-                        modalScope.participant = participant || {};
-
                         var modalInstance = $modal.open({
-                            scope: modalScope,
-                            animation: true,
-                            templateUrl: "modules/cases/views/components/case-assignee-picker-modal.client.view.html",
-                            controller: "Cases.AssigneePickerController",
-                            size: 'md',
-                            backdrop: 'static',
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'modules/cases/views/components/case-user-group-picker-modal.client.view.html',
+                            controller: 'Cases.UserGroupPickerController',
+                            size: 'lg',
                             resolve: {
-                                owningGroup: function() {
-                                    return $scope.owningGroup;
+                                $filter: function() {
+                                    return $scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetFilter;
+                                },
+                                $extraFilter: function() {
+                                    return $scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetExtraFilter;
+                                },
+                                $config: function() {
+                                    return $scope.userOrGroupSearchConfig;
+                                },
+                                $params: function () {
+                                    return params;
                                 }
                             }
                         });
 
-                        modalInstance.result.then(function(data) {
-                            $scope.participant = {};
-                            if (data.participant.participantLdapId != '' && data.participant.participantLdapId != null) {
-                                $scope.participant.participantLdapId = data.participant.participantLdapId;
-                                $scope.assignee = data.participant.participantLdapId;
-                                $scope.updateAssignee();
-                            }
-                        }, function(error) {
-                        });
-                    };
+                        modalInstance.result.then(function(selection) {
 
-                    $scope.openGroupPickerModal = function() {
-                        var participant = {
-                            id: '',
-                            participantLdapId: '',
-                            config: $scope.config
-                        };
-                        showGroupModal(participant);
-                    };
+                            if (selection) {
+                                var selectedObjectType = selection.masterSelectedItem.object_type_s;
+                                if (selectedObjectType === 'USER') { // Selected user
+                                    var selectedUser = selection.masterSelectedItem;
+                                    var selectedGroup = selection.detailSelectedItems;
 
-                    var showGroupModal = function(participant) {
-                        var modalScope = $scope.$new();
-                        modalScope.participant = participant || {};
+                                    $scope.assignee = selectedUser.name;
+                                    $scope.updateAssignee();
+                                    if (selectedGroup) {
+                                        $scope.owningGroup = selectedGroup.name;
+                                        $scope.updateOwningGroup();
 
-                        var modalInstance = $modal.open({
-                            scope: modalScope,
-                            animation: true,
-                            templateUrl: "modules/cases/views/components/case-group-picker-modal.client.view.html",
-                            controller: "Cases.GroupPickerController",
-                            size: 'md',
-                            backdrop: 'static',
-                            resolve: {
-                                owningGroup: function() {
-                                    return $scope.owningGroup;
+                                    }
+
+                                    return;
+                                } else if (selectedObjectType === 'GROUP') { // Selected group
+                                    var selectedUser = selection.detailSelectedItems;
+                                    var selectedGroup = selection.masterSelectedItem;
+                                    if (selectedUser) {
+                                        $scope.assignee = selectedUser.name;
+                                        $scope.updateAssignee();
+                                    }
+                                    $scope.owningGroup = selectedGroup.name;
+                                    $scope.updateOwningGroup();
+
+                                    return;
                                 }
                             }
+
+                        }, function() {
+                            // Cancel button was clicked.
+                            return [];
                         });
 
-                        modalInstance.result.then(function(chosenGroup) {
-                            $scope.participant = {};
-
-                            if (chosenGroup.participant.participantLdapId != '' && chosenGroup.participant.participantLdapId != null) {
-                                $scope.participant.participantLdapId = chosenGroup.participant.participantLdapId;
-                                $scope.participant.object_type_s = chosenGroup.participant.object_type_s;
-
-                                var currentAssignee = $scope.assignee;
-                                var chosenOwningGroup = chosenGroup.participant.participantLdapId;
-                                $scope.iscurrentAssigneeInOwningGroup = false;
-                                var size = 20;
-                                var start = 0;
-                                var searchQuery = '*';
-                                var filter = 'fq=fq="object_type_s": USER' + '&fq="groups_id_ss": ' + chosenOwningGroup;
-
-                                var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(searchQuery, filter, size, start);
-                                if (query) {
-                                    SearchService.queryFilteredSearch({
-                                        query: query
-                                    }, function(data) {
-                                        var returnedUsers = data.response.docs;
-                                        // Going through th collection of returnedUsers to see if there is a match with the current assignee
-                                        // if there is a match that means the current assignee is within that owning group hence no 
-                                        // changes to the current assignee is needed
-                                        _.each(returnedUsers, function(returnedUser) {
-                                            if (currentAssignee === returnedUser.object_id_s) {
-                                                $scope.iscurrentAssigneeInOwningGroup = true;
-                                            }
-                                        });
-
-                                        if ($scope.participant.participantLdapId && $scope.iscurrentAssigneeInOwningGroup) {
-                                            $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
-                                            $scope.updateOwningGroup();
-                                        } else {
-                                            $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
-                                            $scope.assignee = '';
-
-                                            var assigneeParticipantType = 'assignee';
-                                            // Iterating through the array to find the participant with the ParticipantType eqaul assignee
-                                            // then setiing the participantLdapId to empty string
-                                            _.each($scope.objectInfo.participants, function(participant) {
-                                                if (participant.participantType == assigneeParticipantType) {
-                                                    participant.participantLdapId = '';
-                                                }
-                                            });
-
-                                            $scope.updateOwningGroup();
-                                            $scope.updateAssignee();
-                                        }
-                                    });
-                                }
-                            }
-                        }, function(error) {
-                        });
                     };
+
 
                     var onObjectInfoRetrieved = function(data) {
                         $scope.dateInfo = $scope.dateInfo || {};
@@ -213,12 +172,7 @@ angular.module('cases').controller(
                         });
                     };
 
-                    $scope.picker = {
-                        opened: false
-                    };
-                    $scope.onPickerClick = function() {
-                        $scope.picker.opened = true;
-                    };
+
 
                     // Updates the ArkCase database when the user changes a case attribute
                     // in a case top bar menu item and clicks the save check button
