@@ -200,7 +200,10 @@
         "noData.text": "無結果",
         "pickUserLabel": "选择关联的用户",
         "pickGroupLabel": "选择相关组",
-        "selectedItemsGrid.label": "选定的项目"
+        "selectedItemsGrid.label": "选定的项目",
+        "notValidUser": "zh-cn_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
+        "notValidGroup": "zh-cn_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
+
     },
     "common.directive.search": {
         "showMore.button.text": "显示更多",

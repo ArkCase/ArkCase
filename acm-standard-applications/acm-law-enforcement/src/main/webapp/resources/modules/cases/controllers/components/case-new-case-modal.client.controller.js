@@ -55,7 +55,7 @@ angular.module('cases').controller(
                             caseType: $scope.objectInfo.caseType,
                             title: $scope.objectInfo.title,
                             details: $scope.objectInfo.details,
-                            initiator: $scope.modalParams.initiator,
+                            initiator: $scope.objectInfo.originator.person.givenName + " " + $scope.objectInfo.originator.person.familyName,
                             personAssociations: tmpCasefile.personAssociations,
                             participants: tmpCasefile.participants
                         };
