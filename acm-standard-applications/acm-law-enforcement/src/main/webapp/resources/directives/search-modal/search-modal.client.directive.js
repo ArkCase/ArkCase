@@ -92,7 +92,7 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
             } else {
                 scope.searchQuery = '';
             }
-            if( scope.secondSelectionOptional) { //check if the second grid selection is not mandatory, then if is true set some property
+            if(scope.secondSelectionOptional) { //check if the second grid selection is not mandatory, then if is true set some property
                 scope.firstGridSelected = false;
                 scope.disableSearchButton = true;
                 scope.selectedDetailItem = null;
