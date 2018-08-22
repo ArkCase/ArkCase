@@ -361,6 +361,34 @@
             "approverDecision": "अपॉइवर डिसिसन"
         }
     },
+    "cases.comp.change.status": {
+        "title": "hi_Change Case Status",
+        "information": {
+            "title": "hi_Change Case Status Information",
+            "date": "hi_Change Date",
+            "case.number": "hi_Case Number",
+            "status": {
+                "title": "hi_Status",
+                "resolution": {
+                    "title": "hi_Case Resolution",
+                    "denied": "hi_Denied",
+                    "full": "hi_Full",
+                    "partial": "hi_Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "hi_Select Approver",
+            "label": "hi_Select Approver",
+            "addAnother": "hi_Add another",
+            "remove": "hi_Remove Approver",
+            "pickerModal.header": "hi_Choose Approver"
+        },
+        "button": {
+            "cancel": "hi_Cancel",
+            "save": "hi_Save"
+        }
+    },
     "cases.comp.newCase": {
         "title": "hi_New Case File",
         "editCase.title": "hi_Edit Case File",
