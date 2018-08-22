@@ -31,6 +31,7 @@ package com.armedia.acm.services.costsheet.web;
  */
 
 import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -123,7 +124,7 @@ public class SaveCostheetAPIControllerTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn("acm-user");
         Capture<Authentication> capturedAuthentication = EasyMock.newCapture();
-        expect(mockCostsheetService.save(capture(saved), capture(capturedAuthentication))).andReturn(costsheet);
+        expect(mockCostsheetService.save(capture(saved), capture(capturedAuthentication), eq("Save"))).andReturn(costsheet);
 
         costsheet.setDetails(expectedDetails);
 
@@ -133,7 +134,7 @@ public class SaveCostheetAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/v1/service/costsheet")
+                post("/api/v1/service/costsheet/{submissionName}", "Save")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication)
@@ -181,7 +182,7 @@ public class SaveCostheetAPIControllerTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn("acm-user");
         Capture<Authentication> capturedAuthentication = EasyMock.newCapture();
-        expect(mockCostsheetService.save(capture(saved), capture(capturedAuthentication))).andThrow(new RuntimeException());
+        expect(mockCostsheetService.save(capture(saved), capture(capturedAuthentication), eq("Save"))).andThrow(new RuntimeException());
 
         replayAll();
 
@@ -190,7 +191,7 @@ public class SaveCostheetAPIControllerTest extends EasyMockSupport
         try
         {
             result = mockMvc.perform(
-                    post("/api/v1/service/costsheet")
+                    post("/api/v1/service/costsheet/{submissionName}", "Save")
                             .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                             .contentType(MediaType.APPLICATION_JSON)
                             .principal(mockAuthentication)

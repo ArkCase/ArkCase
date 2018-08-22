@@ -31,7 +31,7 @@ angular.module('cost-tracking').controller(
                         $scope.sumAmount = 0;
                         _.forEach(costs, function(cost) {
                             $scope.sumAmount += cost.value;
-                            if (cost.value == undefined)
+                            if (Util.isEmpty(cost.value))
                                 $scope.sumAmount = 0;
                         });
                     };
@@ -44,11 +44,15 @@ angular.module('cost-tracking').controller(
                         $scope.updateBalance($scope.objectInfo.costs);
 
                         if (tmpCostsheet.participants != undefined) {
-                            _.forEach(tmpCostsheet.participants, function(participant) {
-                                UserInfoService.getUserInfoById(participant.participantLdapId).then(function(userInfo) {
-                                    participant.participantFullName = userInfo.fullName;
+                            if (!Util.isArrayEmpty(tmpCostsheet.participants)) {
+                                _.forEach(tmpCostsheet.participants, function(participant) {
+                                    UserInfoService.getUserInfoById(participant.participantLdapId).then(function(userInfo) {
+                                        participant.participantFullName = userInfo.fullName;
+                                    });
                                 });
-                            });
+                            } else {
+                                tmpCostsheet.participants = [ {} ];
+                            }
                         }
 
                         if (tmpCostsheet.costs != undefined) {
@@ -110,7 +114,7 @@ angular.module('cost-tracking').controller(
                     $scope.pickObject = function() {
 
                         var params = {};
-                        params.header = $translate.instant("Search object");
+                        params.header = $translate.instant("costTracking.comp.newCostsheet.objectPicker.title");
 
                         if ($scope.costsheet.parentType == ObjectService.ObjectTypes.CASE_FILE) {
                             params.filter = 'fq="object_type_s": CASE_FILE';
@@ -218,7 +222,11 @@ angular.module('cost-tracking').controller(
                                 participant.participantFullName = selection.name;
                                 if (ObjectParticipantService.validateParticipants([ participant ], true) && !_.includes($scope.costsheet.participants, participant)) {
                                     $scope.costsheet.participants.push(participant);
-                                    $scope.isApproverAdded = true;
+                                }
+                                if ($scope.isEdit) {
+                                    $scope.isApproverAdded = !Util.isArrayEmpty($scope.objectInfo.participants);
+                                } else {
+                                    $scope.isApproverAdded = !Util.isArrayEmpty($scope.costsheet.participants);
                                 }
                             }
                         });
@@ -226,12 +234,12 @@ angular.module('cost-tracking').controller(
 
                     //-----------------------------------------------------------------------------------------------
 
-                    $scope.save = function() {
+                    $scope.save = function(submissionName) {
 
                         if (!$scope.isEdit) {
                             $scope.loading = true;
                             $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                            CostTrackingInfoService.saveCostsheetInfoNewCostsheet(clearNotFilledElements(_.cloneDeep($scope.costsheet))).then(function(objectInfo) {
+                            CostTrackingInfoService.saveNewCostsheetInfo(clearNotFilledElements(_.cloneDeep($scope.costsheet)), submissionName).then(function(objectInfo) {
                                 var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.COSTSHEET);
                                 var costsheetUpdatedMessage = $translate.instant('{{objectType}} {{costsheetTitle}} was created.', {
                                     objectType: objectTypeString,
@@ -260,7 +268,7 @@ angular.module('cost-tracking').controller(
                             checkForChanges($scope.objectInfo);
                             if (CostTrackingInfoService.validateCostsheet($scope.objectInfo)) {
                                 var objectInfo = Util.omitNg($scope.objectInfo);
-                                promiseSaveInfo = CostTrackingInfoService.saveCostsheetInfo(objectInfo);
+                                promiseSaveInfo = CostTrackingInfoService.saveCostsheetInfo(objectInfo, submissionName);
                                 promiseSaveInfo.then(function(costsheetInfo) {
                                     $scope.$emit("report-object-updated", costsheetInfo);
                                     var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.COSTSHEET);
@@ -321,7 +329,8 @@ angular.module('cost-tracking').controller(
                     }
 
                     $scope.sendForApproval = function() {
-                        //add task
+                        var submissionName = "Submit";
+                        $scope.save(submissionName);
                     };
 
                     $scope.cancelModal = function() {

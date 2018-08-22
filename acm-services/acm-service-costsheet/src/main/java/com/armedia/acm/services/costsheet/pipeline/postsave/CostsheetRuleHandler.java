@@ -38,37 +38,25 @@ import org.slf4j.LoggerFactory;
 
 public class CostsheetRuleHandler implements PipelineHandler<AcmCostsheet, CostsheetPipelineContext>
 {
-    /**
-     * Logger instance.
-     */
+
     private final Logger log = LoggerFactory.getLogger(getClass());
-    /**
-     * Business rule manager.
-     */
     private SaveCostsheetBusinessRule costsheetBusinessRule;
 
     @Override
-    public void execute(AcmCostsheet entity, CostsheetPipelineContext pipelineContext) throws PipelineProcessException
+    public void execute(AcmCostsheet entity, CostsheetPipelineContext ctx) throws PipelineProcessException
     {
-        // // apply costsheet business rules after save
-        // getCostsheetBusinessRule().applyRules(entity);
-
-        log.info("Costsheet entering CostsheetRulesHandler : [{}]", entity);
+        // apply costsheet business rules after save
+        log.info("Costsheet with id [{}] and title [{}] entering CostsheetRulesHandler", entity.getId(), entity.getTitle());
 
         entity = costsheetBusinessRule.applyRules(entity);
 
-        log.info("Costsheet exiting CostsheetRulesHandler : [{}]", entity);
+        log.info("Costsheet with id [{}] and title [{}] exiting CostsheetRulesHandler", entity.getId(), entity.getTitle());
     }
 
     @Override
-    public void rollback(AcmCostsheet entity, CostsheetPipelineContext pipelineContext) throws PipelineProcessException
+    public void rollback(AcmCostsheet entity, CostsheetPipelineContext ctx) throws PipelineProcessException
     {
         // nothing to execute on rollback
-    }
-
-    public SaveCostsheetBusinessRule getCostsheetBusinessRule()
-    {
-        return costsheetBusinessRule;
     }
 
     public void setCostsheetBusinessRule(SaveCostsheetBusinessRule costsheetBusinessRule)

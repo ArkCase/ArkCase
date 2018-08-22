@@ -1,7 +1,7 @@
 'use strict';
 
 //Menu service used for managing  menus
-angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.ModulesService', 'Authentication', 'Admin.ApplicationSettingsService', function($q, PermissionsService, ModuleService, Authentication, ApplicationSettingsService) {
+angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.ModulesService', 'Authentication', 'Admin.ApplicationFormsTypeConfigService', function($q, PermissionsService, ModuleService, Authentication, ApplicationFormsTypeConfigService) {
     // Define a set of default roles
     this.defaultRoles = [ '*' ];
 
@@ -11,7 +11,7 @@ angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.Mod
 
     var appModulesPromise = ModuleService.getAppModules();
     var userRolesPromise = Authentication.queryUserInfo();
-    var formsTypePromise = ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.FORMS_TYPE).then(function(response) {
+    var formsTypePromise = ApplicationFormsTypeConfigService.getProperty(ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE).then(function(response) {
         return response;
     });
 
@@ -114,7 +114,7 @@ angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.Mod
         $q.all([ appModulesPromise, userRolesPromise, formsTypePromise ]).then(function(data) {
             var appModules = data[0].data;
             var userRoles = data[1].authorities;
-            var formsType = data[2].data[ApplicationSettingsService.PROPERTIES.FORMS_TYPE];
+            var formsType = data[2].data[ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE];
 
             for (var i = 0; i < menuObjects.length; i++) {
                 var menuObj = menuObjects[i];

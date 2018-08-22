@@ -143,7 +143,8 @@ public class CostService extends FrevvoFormChargeAbstractService
         costsheet.setContainer(container);
         costsheet.setTitle(folderName);
 
-        AcmCostsheet saved = getCostsheetService().save(costsheet, submissionName);
+        AcmCostsheet saved = getCostsheetService().save(costsheet, submissionName); // tuka status = draft ili in
+                                                                                    // approval
 
         form = getCostFactory().asFrevvoCostForm(saved);
 

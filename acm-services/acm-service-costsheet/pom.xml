@@ -50,11 +50,6 @@
             <artifactId>acm-reload-properties</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
-            <artifactId>acm-admin-plugin</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>

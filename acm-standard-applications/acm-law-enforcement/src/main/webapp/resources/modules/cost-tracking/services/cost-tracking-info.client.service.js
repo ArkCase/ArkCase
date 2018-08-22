@@ -52,7 +52,7 @@ angular.module('services').factory('CostTracking.InfoService', [ '$resource', '$
          */
         save: {
             method: 'POST',
-            url: 'api/v1/service/costsheet',
+            url: 'api/v1/service/costsheet/:submissionName',
             cache: false
         }
     });
@@ -118,12 +118,15 @@ angular.module('services').factory('CostTracking.InfoService', [ '$resource', '$
      *
      * @returns {Object} Promise
      */
-    Service.saveCostsheetInfo = function(costsheetInfo) {
+    Service.saveCostsheetInfo = function(costsheetInfo, submissionName) {
         if (!Service.validateCostsheet(costsheetInfo)) {
             return Util.errorPromise($translate.instant("common.service.error.invalidData"));
         }
         return Util.serviceCall({
             service: Service.save,
+            param: {
+                submissionName: submissionName
+            },
             data: costsheetInfo,
             onSuccess: function(data) {
                 if (Service.validateCostsheet(data)) {
@@ -148,12 +151,15 @@ angular.module('services').factory('CostTracking.InfoService', [ '$resource', '$
      *
      * @returns {Object} Promise
      */
-    Service.saveCostsheetInfoNewCostsheet = function(costsheetInfo) {
-        if (!Service.validateCostsheetNewCostsheet(costsheetInfo)) {
+    Service.saveNewCostsheetInfo = function(costsheetInfo, submissionName) {
+        if (!Service.validateNewCostsheet(costsheetInfo)) {
             return Util.errorPromise($translate.instant("common.service.error.invalidData"));
         }
         return Util.serviceCall({
             service: Service.save,
+            param: {
+                submissionName: submissionName
+            },
             data: costsheetInfo,
             onSuccess: function(data) {
                 if (Service.validateCostsheet(data)) {
@@ -224,7 +230,7 @@ angular.module('services').factory('CostTracking.InfoService', [ '$resource', '$
      *
      * @returns {Boolean} Return true if data is valid
      */
-    Service.validateCostsheetNewCostsheet = function(data) {
+    Service.validateNewCostsheet = function(data) {
         if (Util.isEmpty(data)) {
             return false;
         }
@@ -252,9 +258,6 @@ angular.module('services').factory('CostTracking.InfoService', [ '$resource', '$
         if (Util.isEmpty(data.status)) {
             return false;
         }
-        // if (Util.isEmpty(data.creator)) {
-        //     return false;
-        // }
         return true;
     };
 

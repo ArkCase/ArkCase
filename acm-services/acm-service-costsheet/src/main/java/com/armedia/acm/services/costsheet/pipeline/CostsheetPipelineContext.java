@@ -52,6 +52,11 @@ public class CostsheetPipelineContext extends AbstractPipelineContext
      */
     private String ipAddress;
 
+    /**
+     * submissionName - value will be 'Save' or 'Submit'.
+     */
+    private String submissonName;
+
     public String getIpAddress()
     {
         return ipAddress;
@@ -80,5 +85,15 @@ public class CostsheetPipelineContext extends AbstractPipelineContext
     public void setNewCostsheet(boolean newCostsheet)
     {
         this.newCostsheet = newCostsheet;
+    }
+
+    public String getSubmissonName()
+    {
+        return submissonName;
+    }
+
+    public void setSubmissonName(String submissonName)
+    {
+        this.submissonName = submissonName;
     }
 }

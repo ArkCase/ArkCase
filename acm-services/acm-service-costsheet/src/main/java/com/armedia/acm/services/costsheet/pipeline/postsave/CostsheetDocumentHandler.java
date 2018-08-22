@@ -35,7 +35,7 @@ import static com.armedia.acm.services.costsheet.model.CostsheetConstants.NEW_FI
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService;
+import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.pipeline.CostsheetPipelineContext;
@@ -52,27 +52,14 @@ public class CostsheetDocumentHandler extends PDFCostsheetDocumentGenerator<AcmC
         implements PipelineHandler<AcmCostsheet, CostsheetPipelineContext>
 {
 
-    /**
-     * Logger instance.
-     */
-    private JsonPropertiesManagementService jsonPropertiesManagementService;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private FormsTypeCheckService formsTypeCheckService;
 
     @Override
     public void execute(AcmCostsheet costsheet, CostsheetPipelineContext ctx) throws PipelineProcessException
     {
-        String formsType = "";
-        try
-        {
-            formsType = jsonPropertiesManagementService.getProperty("formsType").get("formsType").toString();
-        }
-        catch (Exception e)
-        {
-            String msg = "Can't retrieve application property";
-            log.error(msg, e);
-        }
 
-        if (!formsType.equals("frevvo"))
+        if (!formsTypeCheckService.getTypeOfForm().equals("frevvo"))
         {
 
             log.debug("Entering pipeline handler for costsheet with id [{}] and title [{}]", costsheet.getId(), costsheet.getTitle());
@@ -91,7 +78,7 @@ public class CostsheetDocumentHandler extends PDFCostsheetDocumentGenerator<AcmC
                 throw new PipelineProcessException(e);
             }
 
-            log.debug("Exiting pipeline handler for object: [{}]", costsheet);
+            log.debug("Exiting pipeline handler for costsheet with id [{}] and title [{}]", costsheet.getId(), costsheet.getTitle());
         }
     }
 
@@ -122,8 +109,8 @@ public class CostsheetDocumentHandler extends PDFCostsheetDocumentGenerator<AcmC
         }
     }
 
-    public void setJsonPropertiesManagementService(JsonPropertiesManagementService jsonPropertiesManagementService)
+    public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService)
     {
-        this.jsonPropertiesManagementService = jsonPropertiesManagementService;
+        this.formsTypeCheckService = formsTypeCheckService;
     }
 }

@@ -57,12 +57,9 @@ public interface CostsheetConstants
     String ROOT_FOLDER_KEY = "root.folder";
     String SEARCH_TREE_SORT = "search.tree.sort";
 
-    String MIME_TYPE_PDF = "application/pdf";
     String NEW_FILE = "NEW_FILE";
     String FILE_ID = "FILE_ID";
-    String FILE_VERSION = "FILE_VERSION";
 
-    String NEW_COSTSHEET_TYPE = "New Costsheet";
     String COSTSHEET_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/pdf-stylesheets/costsheet-document.xsl";
     String COSTSHEET_DOCUMENT = "Costsheet";
     String COSTSHEET_FILENAMEFORMAT = "Costsheet.pdf";
