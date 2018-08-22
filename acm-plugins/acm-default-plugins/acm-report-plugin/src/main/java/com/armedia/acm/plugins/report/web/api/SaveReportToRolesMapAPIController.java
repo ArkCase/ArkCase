@@ -41,42 +41,42 @@ import java.util.Map;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/report", "/api/latest/plugin/report" })
-public class SaveReportToGroupsMapAPIController
+public class SaveReportToRolesMapAPIController
 {
 
     private Logger LOG = LoggerFactory.getLogger(getClass());
     private ReportService reportService;
 
-    @RequestMapping(value = "/reporttogroupsmap", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/reporttorolesmap", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public boolean saveReportToGroupsMap(@RequestBody Map<String, List<String>> reportToGroupsMap, Authentication auth)
+    public boolean saveReportToRolesMap(@RequestBody Map<String, List<String>> reportToRolesMap, Authentication auth)
     {
-        LOG.debug("Saving reports to groups map ...");
+        LOG.debug("Saving reports to roles map ...");
 
-        boolean retval = getReportService().saveReportToGroupsMap(reportToGroupsMap, auth);
+        boolean retval = getReportService().saveReportToRolesMap(reportToRolesMap, auth);
         LOG.debug("Successfuly saved ? " + retval);
 
         return retval;
     }
 
-    @RequestMapping(value = "/{reportName:.+}/groups", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{reportName:.+}/roles", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<String> addGroupsToReport(@PathVariable("reportName") String reportName, @RequestBody List<String> adhocGroups,
-            Authentication auth)
+    public List<String> addRolesToReport(@PathVariable("reportName") String reportName, @RequestBody List<String> roles,
+            Authentication auth) throws Exception
     {
-        LOG.debug("Saving adhoc groups to report [{}]", reportName);
+        LOG.debug("Saving roles to report [{}]", reportName);
 
-        return getReportService().saveGroupsToReport(reportName, adhocGroups, auth);
+        return getReportService().saveRolesToReport(reportName, roles, auth);
     }
 
-    @RequestMapping(value = "/{reportName:.+}/groups", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{reportName:.+}/roles", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<String> removeGroupsToReport(@PathVariable("reportName") String reportName, @RequestBody List<String> adhocGroups,
-            Authentication auth)
+    public List<String> removeRolesToReport(@PathVariable("reportName") String reportName, @RequestBody List<String> roles,
+            Authentication auth) throws Exception
     {
-        LOG.debug("Saving adhoc groups to report [{}]", reportName);
+        LOG.debug("Saving roles to report [{}]", reportName);
 
-        return getReportService().removeGroupsToReport(reportName, adhocGroups, auth);
+        return getReportService().removeRolesToReport(reportName, roles, auth);
     }
 
     public ReportService getReportService()

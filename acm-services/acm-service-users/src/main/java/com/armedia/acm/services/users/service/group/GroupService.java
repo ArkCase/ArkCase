@@ -170,6 +170,18 @@ public interface GroupService
     String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException;
 
     /**
+     * Returns true if the user is a member of the given group
+     * 
+     * @param userId
+     *            the user id
+     * @param groupName
+     *            the group name
+     * @return
+     *         true if the user is a member of the given group, false otherwise.
+     */
+    boolean isUserMemberOfGroup(String userId, String groupName);
+
+    /**
      * @param groupName
      *            list users for this specific group
      * @param userStatus

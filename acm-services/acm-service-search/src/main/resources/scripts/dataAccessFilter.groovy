@@ -27,19 +27,26 @@ if (!enableDocumentACL && targetType != null && (targetType.equals("FILE") || ta
     // include records where current user is directly on allow_acl_ss
     dataAccessFilter += ", termfreq(allow_acl_ss, " + safeUserId + ")";
 
-    // exclude records where the user is specifically locked out
-    denyAccessFilter = "-deny_acl_ss:" + safeUserId;
-
     for (GrantedAuthority granted : authentication.getAuthorities()) {
         String authName = granted.getAuthority();
         String safeAuthName = encodeCharacters(authName);
         // include records where current user is in a group on allow_acl_ss
         dataAccessFilter += ", termfreq(allow_acl_ss, " + safeAuthName + ")";
-        // exclude records where current user is in a locked-out group
-        denyAccessFilter += " AND -deny_acl_ss:" + safeAuthName;
     }
 
     dataAccessFilter += ")";
+}
+
+boolean includeDenyAccessFilter = message.getInboundProperty("includeDenyAccessFilter")
+if (includeDenyAccessFilter) {
+    // exclude records where the user is specifically locked out
+    denyAccessFilter = "-deny_acl_ss:" + safeUserId
+    for (GrantedAuthority granted : authentication.getAuthorities()) {
+        String authName = granted.getAuthority()
+        String safeAuthName = encodeCharacters(authName)
+        // exclude records where current user is in a locked-out group
+        denyAccessFilter += " AND -deny_acl_ss:" + safeAuthName
+    }
 }
 
 message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter, StandardCharsets.UTF_8.displayName()));
@@ -56,14 +63,17 @@ for (GrantedAuthority granted : authentication.getAuthorities()) {
     // include records where current user is in a group on allow_acl_ss
     childObjectDacFilter += " OR allow_acl_ss:" + safeAuthName;
 }
+childObjectDacFilter += " )"
 
+if (includeDenyAccessFilter) {
 // now we have to add the mandatory denies
-childObjectDacFilter += " ) AND -deny_acl_ss:" + safeUserId;
-for (GrantedAuthority granted : authentication.getAuthorities()) {
-    String authName = granted.getAuthority();
-    String safeAuthName = encodeCharacters(authName);
-    // include records where current user is in a group on allow_acl_ss
-    childObjectDacFilter += " AND -deny_acl_ss:" + safeAuthName;
+    childObjectDacFilter += " AND -deny_acl_ss:" + safeUserId
+    for (GrantedAuthority granted : authentication.getAuthorities()) {
+        String authName = granted.getAuthority()
+        String safeAuthName = encodeCharacters(authName)
+        // include records where current user is in a group on allow_acl_ss
+        childObjectDacFilter += " AND -deny_acl_ss:" + safeAuthName
+    }
 }
 
 // Solr 7.2.1
