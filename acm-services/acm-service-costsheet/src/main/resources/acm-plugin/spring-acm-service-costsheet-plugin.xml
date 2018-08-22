@@ -52,7 +52,7 @@
 
                 <bean id="saveCostsheetUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/service/costsheet"/>
+                    <property name="url" value="/api/{version}/service/costsheet/{submissionName}"/>
                     <property name="requiredPrivilege" ref="costsheetPrivilege"/>
                 </bean>
 

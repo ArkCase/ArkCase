@@ -30,6 +30,7 @@ package com.armedia.acm.services.costsheet.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
@@ -79,11 +80,22 @@ public class CostsheetServiceImpl implements CostsheetService
 
     @Override
     @Transactional
-    public AcmCostsheet save(AcmCostsheet costsheet) throws PipelineProcessException
+    public AcmCostsheet save(AcmCostsheet costsheet, Authentication authentication, String submissionName) throws PipelineProcessException
     {
         CostsheetPipelineContext pipelineContext = new CostsheetPipelineContext();
+        // populate the context
+        pipelineContext.setAuthentication(authentication);
+        pipelineContext.setNewCostsheet(costsheet.getId() == null);
+        pipelineContext.setSubmissonName(submissionName);
+        String ipAddress = AuthenticationUtils.getUserIpAddress();
+        pipelineContext.setIpAddress(ipAddress);
 
-        return pipelineManager.executeOperation(costsheet, pipelineContext, () -> getAcmCostsheetDao().save(costsheet));
+        return pipelineManager.executeOperation(costsheet, pipelineContext, () -> {
+            costsheet.setStatus(getSubmissionStatusesMap().get(submissionName));
+            AcmCostsheet saved = getAcmCostsheetDao().save(costsheet);
+            LOG.info("Costsheet with id [{}] and title [{}] was saved", saved.getId(), saved.getTitle());
+            return saved;
+        });
     }
 
     @Override

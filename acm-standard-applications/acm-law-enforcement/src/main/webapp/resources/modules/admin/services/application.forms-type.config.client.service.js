@@ -2,46 +2,40 @@
 
 /**
  * @ngdoc service
- * @name admin.service:Admin.ApplicationSettingsService
+ * @name admin.service:Admin.ApplicationFormsTypeConfigService
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/labels.config.client.service.js modules/admin/services/application-settings.client.service.js }
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/application.forms-type.config.client.service.js }
  *
- * The Admin.ApplicationSettingsService provides service to get and manage application settings.
+ * The Admin.ApplicationFormsTypeConfigService provides service to get and manage forms type settings.
  */
-angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', function($http) {
+angular.module('admin').factory('Admin.ApplicationFormsTypeConfigService', [ '$http', function($http) {
     return {
         PROPERTIES: {
-            DISPLAY_USERNAME: 'displayUserName',
-            IDLE_LIMIT: 'idleLimit',
-            IDLE_PULL: 'idlePull',
-            IDLE_CONFIRM: 'idleConfirm',
-            HISTORY_DAYS: 'historyDays'
+            FORMS_TYPE: 'formsType'
         },
 
         /**
          * @ngdoc method
          * @name getSettings
-         * @methodOf admin.service:Admin.ApplicationSettingsService
          *
          * @description
          * Performs retrieving all application settings
          *
          *
-         * @returns {Object} Application seting structure
+         * @returns {Object} Application settings structure
          */
         getSettings: function() {
             return $http({
                 method: 'GET',
-                url: 'api/latest/plugin/admin/app-properties'
+                url: 'api/latest/service/forms/type'
             });
         },
 
         /**
          * @ngdoc method
          * @name getProperty
-         * @methodOf admin.service:Admin.ApplicationSettingsService
          *
          * @description
          * Get property of application settings
@@ -53,14 +47,13 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
         getProperty: function(propertyName) {
             return $http({
                 method: 'GET',
-                url: 'api/latest/plugin/admin/app-properties/' + propertyName
+                url: 'api/latest/service/forms/type/' + propertyName
             });
         },
 
         /**
          * @ngdoc method
          * @name setProperty
-         * @methodOf admin.service:Admin.ApplicationSettingsService
          *
          * @description
          * Set property of application settings
@@ -75,7 +68,7 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
 
             return $http({
                 method: 'PUT',
-                url: 'api/latest/plugin/admin/app-properties',
+                url: 'api/latest/service/forms/type',
                 data: data
             });
         }

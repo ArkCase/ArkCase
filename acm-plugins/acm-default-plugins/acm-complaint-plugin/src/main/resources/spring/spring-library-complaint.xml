@@ -139,7 +139,7 @@
     </bean>
     <bean id="complaintDocumentHandler" class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintDocumentHandler"
         parent="pdfComplaintDocumentGenerator">
-        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
+        <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
         <property name="dao" ref="acmComplaintDao"/>
     </bean>
 
