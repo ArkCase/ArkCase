@@ -81,10 +81,7 @@ angular.module('tasks').factory(
                             that.scope.populateGridData = arg.populateGridData || function() {
                                 var currentObjectId = Util.goodMapValue(that.scope.objectInfo, "id");
                                 if (Util.goodPositive(currentObjectId, false)) {
-                                                    ObjectTaskService.queryChildTasks(that.objectType, currentObjectId,
-                                                            Util.goodValue(that.scope.start, 0), Util.goodValue(that.scope.pageSize, 10),
-                                                            Util.goodMapValue(that.scope.sort, "by"),
-                                                            Util.goodMapValue(that.scope.sort, "dir")).then(function(data) {
+                                    ObjectTaskService.queryChildTasks(that.objectType, currentObjectId, Util.goodValue(that.scope.start, 0), Util.goodValue(that.scope.pageSize, 10), Util.goodMapValue(that.scope.sort, "by"), Util.goodMapValue(that.scope.sort, "dir")).then(function(data) {
                                         var tasks = data.response.docs;
                                         angular.forEach(tasks, function(task) {
                                             //calculate to show alert icons if task is in overdue or deadline is approaching
@@ -101,7 +98,7 @@ angular.module('tasks').factory(
                             };
 
                             that.scope.isDeleteDisabled = arg.isDeleteDisabled || function(rowEntity) {
-                                return !rowEntity.adhocTask_b;
+                                return ((Util.isEmpty(rowEntity.task_owner_s) || (rowEntity.task_owner_s !== rowEntity.author_s)) || (rowEntity.status_s === "CLOSED"));
                             };
 
                             that.scope.onClickObjLink = arg.onClickObjLink || function(event, rowEntity) {

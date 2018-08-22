@@ -14,12 +14,12 @@
         <property name="reportService" ref="reportService"/>
     </bean>
 
-    <bean id="getReportsToGroupsAPIController" class="com.armedia.acm.plugins.report.web.api.GetReportToGroupsMapAPIController">
+    <bean id="getReportsToRolesAPIController" class="com.armedia.acm.plugins.report.web.api.GetReportToRolesMapAPIController">
         <property name="reportService" ref="reportService"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
-    <bean id="saveReportsToGroupsAPIController" class="com.armedia.acm.plugins.report.web.api.SaveReportToGroupsMapAPIController">
+    <bean id="saveReportsToRolesAPIController" class="com.armedia.acm.plugins.report.web.api.SaveReportToRolesMapAPIController">
         <property name="reportService" ref="reportService"/>
     </bean>
 
