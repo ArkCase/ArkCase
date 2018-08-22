@@ -32,6 +32,7 @@ package com.armedia.acm.services.costsheet.service;
 
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
@@ -135,7 +136,7 @@ public class CostsheetServiceTest extends EasyMockSupport
 
         replayAll();
 
-        AcmCostsheet saved = costsheetService.save(costsheet);
+        AcmCostsheet saved = costsheetService.save(costsheet, mockAuthentication, eq("Save"));
 
         verifyAll();
 

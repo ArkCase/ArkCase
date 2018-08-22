@@ -1,6 +1,7 @@
 {
     "id": "cases",
     "title": "Cases",
+    "className": "com.armedia.acm.plugins.casefile.model.CaseFile",
     "configurable": true,
     "initialLinksShown": true,
     "caseInfoFilter": "\"Object Type\": CASE_FILE",
