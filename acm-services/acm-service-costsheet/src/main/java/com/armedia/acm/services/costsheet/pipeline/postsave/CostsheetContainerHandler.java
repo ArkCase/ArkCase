@@ -39,17 +39,14 @@ import org.slf4j.LoggerFactory;
 
 public class CostsheetContainerHandler implements PipelineHandler<AcmCostsheet, CostsheetPipelineContext>
 {
-    /**
-     * Logger instance.
-     */
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileParticipantService fileParticipantService;
 
     @Override
-    public void execute(AcmCostsheet entity, CostsheetPipelineContext pipelineContext) throws PipelineProcessException
+    public void execute(AcmCostsheet entity, CostsheetPipelineContext ctx) throws PipelineProcessException
     {
-        log.trace("Costsheet entering CostsheetContainerHandler : [{}]", entity);
+        log.trace("Costsheet with id [{}] and title [{}] entering CostsheetContainerHandler ", entity.getId(), entity.getTitle());
         if (entity.getContainer().getContainerObjectTitle() == null)
         {
             entity.getContainer().setContainerObjectTitle(entity.getCostsheetNumber());
@@ -67,9 +64,9 @@ public class CostsheetContainerHandler implements PipelineHandler<AcmCostsheet, 
     }
 
     @Override
-    public void rollback(AcmCostsheet entity, CostsheetPipelineContext pipelineContext) throws PipelineProcessException
+    public void rollback(AcmCostsheet entity, CostsheetPipelineContext ctx) throws PipelineProcessException
     {
-
+        // nothing to execute on rollback
     }
 
     public EcmFileParticipantService getFileParticipantService()

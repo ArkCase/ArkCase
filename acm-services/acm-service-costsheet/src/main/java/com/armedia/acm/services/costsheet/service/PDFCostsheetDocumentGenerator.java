@@ -8,6 +8,7 @@ import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.costsheet.pipeline.CostsheetPipelineContext;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -48,8 +49,8 @@ public class PDFCostsheetDocumentGenerator<D extends AcmAbstractDao, T extends A
         AcmCostsheet costsheet = (AcmCostsheet) businessObject;
 
         addElement(document, rootElem, "user", costsheet.getUser().getFullName(), true);
-        addElement(document, rootElem, "status", costsheet.getStatus(), true);
-        addElement(document, rootElem, "type", costsheet.getParentType(), true);
+        addElement(document, rootElem, "status", StringUtils.capitalize(costsheet.getStatus().toLowerCase()), true);
+        addElement(document, rootElem, "type", StringUtils.capitalize(costsheet.getParentType().toLowerCase()), true);
         addElement(document, rootElem, "code", costsheet.getParentNumber(), true);
 
         addElement(document, rootElem, "details", costsheet.getDetails() != null ? costsheet.getDetails() : "N/A", false);
@@ -67,18 +68,18 @@ public class PDFCostsheetDocumentGenerator<D extends AcmAbstractDao, T extends A
                 Element costElement = document.createElement("cost");
                 costsElement.appendChild(costElement);
                 addElement(document, costElement, "date",
-                        cost.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString(), false);
+                        cost.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString(), true);
                 addElement(document, costElement, "title", cost.getTitle(), true);
-                addElement(document, costElement, "description", cost.getDescription(), false);
-                addElement(document, costElement, "amount", cost.getValue().toString(), false);
+                addElement(document, costElement, "description", cost.getDescription() != null ? cost.getDescription() : "N/A", false);
+                addElement(document, costElement, "amount", cost.getValue().toString(), true);
             }
         }
 
+        Element participantsElement = document.createElement("participants");
+        rootElem.appendChild(participantsElement);
+
         if (!costsheet.getParticipants().isEmpty())
         {
-            Element participantsElement = document.createElement("participants");
-            rootElem.appendChild(participantsElement);
-
             List<AcmParticipant> participants = costsheet.getParticipants();
             for (AcmParticipant participant : participants)
             {
@@ -86,6 +87,12 @@ public class PDFCostsheetDocumentGenerator<D extends AcmAbstractDao, T extends A
                 participantsElement.appendChild(participantElement);
                 addElement(document, participantElement, "participantName", participant.getParticipantLdapId(), false);
             }
+        }
+        else
+        {
+            Element participantElement = document.createElement("participant");
+            participantsElement.appendChild(participantElement);
+            addElement(document, participantElement, "participantName", "N/A", false);
         }
         return document;
     }

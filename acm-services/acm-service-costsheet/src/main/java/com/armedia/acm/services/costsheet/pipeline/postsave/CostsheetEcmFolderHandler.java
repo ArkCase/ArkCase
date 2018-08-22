@@ -15,19 +15,13 @@ import org.slf4j.LoggerFactory;
  */
 public class CostsheetEcmFolderHandler implements PipelineHandler<AcmCostsheet, CostsheetPipelineContext>
 {
-    /**
-     * Logger instance.
-     */
     private final Logger log = LoggerFactory.getLogger(getClass());
-    /**
-     * CMIS service.
-     */
     private EcmFileService ecmFileService;
 
     @Override
-    public void execute(AcmCostsheet entity, CostsheetPipelineContext pipelineContext) throws PipelineProcessException
+    public void execute(AcmCostsheet entity, CostsheetPipelineContext ctx) throws PipelineProcessException
     {
-        log.trace("Costsheet entering CostsheetEcmFolderHandler : [{}]", entity);
+        log.trace("Costsheet with id [{}] and title [{}] entering CostsheetEcmFolderHandler", entity.getId(), entity.getTitle());
         if (entity.getEcmFolderPath() != null)
         {
             try
@@ -45,18 +39,13 @@ public class CostsheetEcmFolderHandler implements PipelineHandler<AcmCostsheet, 
         {
             log.info("There is no need to create folder");
         }
-        log.trace("Costsheet exiting CostsheetEcmFolderHandler : [{}]", entity);
+        log.trace("Costsheet with id [{}] and title [{}] exiting CostsheetEcmFolderHandler", entity.getId(), entity.getTitle());
     }
 
     @Override
-    public void rollback(AcmCostsheet entity, CostsheetPipelineContext pipelineContext) throws PipelineProcessException
+    public void rollback(AcmCostsheet entity, CostsheetPipelineContext ctx) throws PipelineProcessException
     {
         // TODO: implement CMIS folder deletion
-    }
-
-    public EcmFileService getEcmFileService()
-    {
-        return ecmFileService;
     }
 
     public void setEcmFileService(EcmFileService ecmFileService)

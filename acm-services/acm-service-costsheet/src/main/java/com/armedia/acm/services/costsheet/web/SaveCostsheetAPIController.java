@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -58,9 +59,10 @@ public class SaveCostsheetAPIController
     private Logger LOG = LoggerFactory.getLogger(getClass());
     private CostsheetService costsheetService;
 
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{submissionName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmCostsheet getCostsheet(@RequestBody AcmCostsheet costsheet,
+            @PathVariable("submissionName") String submissionName,
             Authentication auth) throws AcmCreateObjectFailedException
     {
         if (LOG.isInfoEnabled())
@@ -70,7 +72,7 @@ public class SaveCostsheetAPIController
 
         try
         {
-            return getCostsheetService().save(costsheet, auth);
+            return getCostsheetService().save(costsheet, auth, submissionName);
         }
         catch (RuntimeException | PipelineProcessException e)
         {

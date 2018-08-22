@@ -35,7 +35,7 @@ import static com.armedia.acm.plugins.complaint.model.ComplaintConstants.NEW_FIL
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService;
+import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
@@ -51,28 +51,13 @@ import javax.xml.parsers.ParserConfigurationException;
 public class ComplaintDocumentHandler extends PDFComplaintDocumentGenerator<ComplaintDao, Complaint>
         implements PipelineHandler<Complaint, ComplaintPipelineContext>
 {
-
-    /**
-     * Logger instance.
-     */
-    private JsonPropertiesManagementService jsonPropertiesManagementService;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private FormsTypeCheckService formsTypeCheckService;
 
     @Override
     public void execute(Complaint complaint, ComplaintPipelineContext ctx) throws PipelineProcessException
     {
-        String formsType = "";
-        try
-        {
-            formsType = jsonPropertiesManagementService.getProperty("formsType").get("formsType").toString();
-        }
-        catch (Exception e)
-        {
-            String msg = "Can't retrieve application property";
-            log.error(msg, e);
-        }
-
-        if (!formsType.equals("frevvo"))
+        if (!formsTypeCheckService.getTypeOfForm().equals("frevvo"))
         {
 
             log.debug("Entering pipeline handler for complaint with id [{}] and title [{}]", complaint.getId(), complaint.getTitle());
@@ -122,8 +107,8 @@ public class ComplaintDocumentHandler extends PDFComplaintDocumentGenerator<Comp
         }
     }
 
-    public void setJsonPropertiesManagementService(JsonPropertiesManagementService jsonPropertiesManagementService)
+    public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService)
     {
-        this.jsonPropertiesManagementService = jsonPropertiesManagementService;
+        this.formsTypeCheckService = formsTypeCheckService;
     }
 }
