@@ -36,7 +36,18 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
@@ -76,7 +87,14 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.UUID;
 
 /**
  * Created by armdev on 5/1/14.
@@ -1351,8 +1369,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         boolean removeFileFromDatabase = allVersions || file.getVersions().size() < 2;
-        String versionToRemoveFromEcm = removeFileFromDatabase ?
-            file.getVersionSeriesId() : file.getVersions().get(file.getVersions().size() - 1).getVersionTag();
+        String versionToRemoveFromEcm = removeFileFromDatabase ? file.getVersionSeriesId()
+                : file.getVersions().get(file.getVersions().size() - 1).getVersionTag();
 
         Map<String, Object> props = new HashMap<>();
         props.put(EcmFileConstants.ECM_FILE_ID, versionToRemoveFromEcm);
@@ -1368,7 +1386,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
 
-            if ( removeFileFromDatabase )
+            if (removeFileFromDatabase)
             {
                 getEcmFileDao().deleteFile(objectId);
             }
