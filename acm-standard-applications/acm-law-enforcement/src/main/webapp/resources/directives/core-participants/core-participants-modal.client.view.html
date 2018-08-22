@@ -14,7 +14,7 @@
             <label for="participantType"><span
                     translate>common.directive.coreParticipants.modal.participantType.label</span><span
                     class="required-asterisk">*</span></label>
-            <select id="participantType" class="form-control" ng-model="participant.participantType"
+            <select id="participantType" class="form-control" ng-model="participantEdit.participantType"
                     ng-disabled="participant.editableType === false" required
                     ng-options="item.key as item.value | translate for item in participant.participantTypes"></select>
         </div>
@@ -22,15 +22,14 @@
             <label for="participantName"><span
                     translate>common.directive.coreParticipants.modal.participantName.label</span>
                 <span class="required-asterisk">*</span></label>
-            <input id="participantName" class="form-control" type="text" ng-model="participant.participantLdapId"
-                   ng-disabled="participant.editableUser === false"
-                   ng-click="pickParticipant()" required>
+            <input id="participantName" class="form-control" type="text" ng-model="participantEdit.participantLdapId"
+                    ng-disabled="participant.editableUser === false" ng-click="pickParticipant()" required>
 
             </input>
         </div>
         <div class="text-right" ng-show="showReplaceChildrenParticipants">
-            <input id="replaceChildrenParticipant" type="checkbox" ng-model="participant.replaceChildrenParticipant"
-                   ng-true-value="true">
+            <input id="replaceChildrenParticipant" type="checkbox" ng-model="participantEdit.replaceChildrenParticipant"
+                    ng-true-value="true">
             <label for="replaceChildrenParticipant">
                 <span translate>common.directive.coreParticipants.modal.replaceChildrenParticipant</span>
             </label>
