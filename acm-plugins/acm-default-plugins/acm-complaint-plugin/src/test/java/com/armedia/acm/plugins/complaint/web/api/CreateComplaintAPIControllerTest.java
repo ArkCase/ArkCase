@@ -38,6 +38,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
@@ -84,6 +85,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
     private ComplaintEventPublisher mockEventPublisher;
     private Authentication mockAuthentication;
     private ComplaintService mockComplaintService;
+    private FormsTypeCheckService mockFormsTypeCheckService;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -100,11 +102,13 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         mockEventPublisher = createMock(ComplaintEventPublisher.class);
         mockAuthentication = createMock(Authentication.class);
         mockComplaintService = createMock(ComplaintService.class);
+        mockFormsTypeCheckService = createMock(FormsTypeCheckService.class);
 
         unit.setComplaintTransaction(mockSaveTransaction);
         unit.setEventPublisher(mockEventPublisher);
         unit.setComplaintService(mockComplaintService);
         unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
+        unit.setFormsTypeCheckService(mockFormsTypeCheckService);
     }
 
     @Test
@@ -155,6 +159,8 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
+
+        expect(mockFormsTypeCheckService.getTypeOfForm()).andReturn("frevvo");
 
         replayAll();
 
