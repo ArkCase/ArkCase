@@ -10,11 +10,26 @@ angular.module('cost-tracking').controller(
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.isEdit = $scope.modalParams.isEdit;
-                    // $scope.isTypeSelected = false;
                     $scope.sumAmount = 0;
 
                     ConfigService.getModuleConfig("cost-tracking").then(function(moduleConfig) {
                         $scope.config = moduleConfig;
+
+                        if (!$scope.isEdit) {
+                            //new costsheet with predefined values
+                            $scope.isTypeSelected = false;
+                            $scope.isApproverAdded = false;
+                            $scope.costsheet = {
+                                className: $scope.config.className,
+                                status: 'DRAFT',
+                                parentId: '',
+                                parentType: '',
+                                parentNumber: '',
+                                details: '',
+                                costs: [ {} ],
+                                participants: [ {} ]
+                            };
+                        }
 
                         $scope.newCostObjectPicker = _.find(moduleConfig.components, {
                             id: "newCostObjectPicker"
@@ -22,6 +37,10 @@ angular.module('cost-tracking').controller(
 
                         $scope.userSearchConfig = _.find(moduleConfig.components, {
                             id: "userSearch"
+                        });
+
+                        $scope.participantsConfig = _.find(moduleConfig.components, {
+                            id: "person"
                         });
 
                         return moduleConfig;
@@ -70,20 +89,6 @@ angular.module('cost-tracking').controller(
                             details: $scope.objectInfo.details,
                             costs: tmpCostsheet.costs,
                             participants: tmpCostsheet.participants
-                        };
-                    } else {
-                        //new costsheet with predefined values
-                        $scope.isTypeSelected = false;
-                        $scope.isApproverAdded = false;
-                        $scope.costsheet = {
-                            className: 'com.armedia.acm.services.costsheet.model.AcmCostsheet',
-                            status: 'DRAFT',
-                            parentId: '',
-                            parentType: '',
-                            parentNumber: '',
-                            details: '',
-                            costs: [ {} ],
-                            participants: [ {} ]
                         };
                     }
 
@@ -216,7 +221,7 @@ angular.module('cost-tracking').controller(
                         });
                         modalInstance.result.then(function(selection) {
                             if (selection) {
-                                participant.className = "com.armedia.acm.services.participants.model.AcmParticipant";
+                                participant.className = $scope.participantsConfig.className;
                                 participant.participantType = participantType;
                                 participant.participantLdapId = selection.object_id_s;
                                 participant.participantFullName = selection.name;

@@ -34,34 +34,37 @@ angular.module('complaints').controller(
                     ConfigService.getModuleConfig("complaints").then(function(moduleConfig) {
                         $scope.config = moduleConfig;
 
+                        //new complaint with predefined values
+                        $scope.complaint = {
+                            className: $scope.config.className,
+                            complaintType: '',
+                            complaintTitle: '',
+                            details: '',
+                            priority: 'Low',
+                            incidentDate: new Date(),
+                            tag: '',
+                            frequency: '',
+                            defaultAddress: {
+                                created: new Date()
+                            },
+                            initiator: '',
+                            addresses: [],
+                            personAssociations: [ {} ],
+                            participants: []
+                        };
+
                         $scope.userSearchConfig = _.find(moduleConfig.components, {
                             id: "userSearch"
                         });
                         $scope.complaintParticipantConfig = _.find(moduleConfig.components, {
                             id: "participants"
                         });
+                        $scope.complaintPeopleConfig = _.find(moduleConfig.components, {
+                            id: "people"
+                        });
 
                         return moduleConfig;
                     });
-
-                    //new complaint with predefined values
-                    $scope.complaint = {
-                        className: 'com.armedia.acm.plugins.complaint.model.Complaint',
-                        complaintType: '',
-                        complaintTitle: '',
-                        details: '',
-                        priority: 'Low',
-                        incidentDate: new Date(),
-                        tag: '',
-                        frequency: '',
-                        defaultAddress: {
-                            created: new Date()
-                        },
-                        initiator: '',
-                        addresses: [],
-                        personAssociations: [ {} ],
-                        participants: []
-                    };
 
                     $scope.isAddressTypeSelected = false;
                     $scope.selectChanged = function() {
@@ -122,7 +125,7 @@ angular.module('complaints').controller(
                             personDescription: "",
                             notes: "",
                             person: null,
-                            className: "com.armedia.acm.plugins.person.model.PersonAssociation"
+                            className: $scope.complaintPeopleConfig.personAssociationClassName
                         };
                     };
 
@@ -365,7 +368,7 @@ angular.module('complaints').controller(
                                         $scope.owningGroup = data.owningGroup.participantFullName;
                                         var participantOwningGroup = data.owningGroup;
                                         participantOwningGroup.participantType = typeOwningGroup;
-                                        participantOwningGroup.className = "com.armedia.acm.services.participants.model.AcmParticipant";
+                                        participantOwningGroup.className = $scope.complaintParticipantConfig.className;
 
                                         if (ObjectParticipantService.validateParticipants([ participantOwningGroup ], true) && !_.includes($scope.complaint.participants, participantOwningGroup)) {
                                             $scope.complaint.participants.push(participantOwningGroup);
@@ -373,7 +376,7 @@ angular.module('complaints').controller(
                                     }
                                     participant.id = data.participant.id;
                                     participant.participantType = data.participant.participantType;
-                                    participant.className = "com.armedia.acm.services.participants.model.AcmParticipant";
+                                    participant.className = $scope.complaintParticipantConfig.className;
                                     participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
 
                                     if (ObjectParticipantService.validateParticipants([ participant ], true) && !_.includes($scope.complaint.participants, participant)) {
