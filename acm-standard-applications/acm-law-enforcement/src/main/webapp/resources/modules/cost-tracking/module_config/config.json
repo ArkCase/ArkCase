@@ -1,6 +1,7 @@
 {
     "id": "cost-tracking",
     "title": "Cost Tracking",
+    "className": "com.armedia.acm.services.costsheet.model.AcmCostsheet",
     "configurable": true,
     "initialLinksShown": true,
     "menus": [
@@ -339,6 +340,7 @@
         {
             "id": "person",
             "title": "costTracking.comp.person.title",
+            "className": "com.armedia.acm.services.participants.model.AcmParticipant",
             "icon": "fa fa-user",
             "enabled": true,
             "configurable": true,
