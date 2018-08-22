@@ -438,5 +438,20 @@
             "nameAsc": "Sort By Case Name Asc",
             "noSort": "(No Sort)"
         }
+    },
+  "cases.userOrGroupSearch": {
+    "title": "User/Group Search",
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "search": {
+      "placeholder": "Search for user or group",
+      "btn": "Search"
+    },
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "username": "Username"
     }
+  }
 }
