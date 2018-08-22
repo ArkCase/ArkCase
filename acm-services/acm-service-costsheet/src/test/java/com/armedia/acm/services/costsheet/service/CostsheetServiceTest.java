@@ -32,8 +32,10 @@ package com.armedia.acm.services.costsheet.service;
 
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
@@ -47,17 +49,13 @@ import com.armedia.acm.services.search.service.SearchResults;
 
 import org.apache.commons.io.IOUtils;
 import org.easymock.Capture;
-import org.easymock.EasyMockSupport;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -67,11 +65,7 @@ import java.util.Map;
 /**
  * @author riste.tutureski
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "classpath:/spring/spring-library-service-costsheet-test.xml"
-})
-public class CostsheetServiceTest extends EasyMockSupport
+public class CostsheetServiceTest 
 {
 
     private Logger LOG = LoggerFactory.getLogger(getClass());
@@ -83,6 +77,8 @@ public class CostsheetServiceTest extends EasyMockSupport
     private ExecuteSolrQuery mockExecuteSolrQuery;
     private Map<String, String> submissionStatusesMap;
     private PipelineManager<AcmCostsheet, CostsheetPipelineContext> pipelineManager;
+
+    private Object[] mocks;
 
     @Before
     public void setUp() throws Exception
@@ -102,6 +98,9 @@ public class CostsheetServiceTest extends EasyMockSupport
         costsheetService.setExecuteSolrQuery(mockExecuteSolrQuery);
         costsheetService.setSubmissionStatusesMap(submissionStatusesMap);
         costsheetService.setPipelineManager(pipelineManager);
+
+        mocks = new Object[] { mockAuthentication, mockAcmCostsheetDao, mockExecuteSolrQuery, pipelineManager };
+
     }
 
     @Test
@@ -127,20 +126,21 @@ public class CostsheetServiceTest extends EasyMockSupport
 
         costsheet.setCosts(Arrays.asList(cost1, cost2));
 
-        Capture<AcmCostsheet> costsheetCapture = new Capture<>();
+        Capture<AcmCostsheet> costsheetCapture = Capture.newInstance();
 
         expect(mockAcmCostsheetDao.save(capture(costsheetCapture))).andReturn(costsheet);
         expect(pipelineManager.executeOperation(anyObject(AcmCostsheet.class), anyObject(CostsheetPipelineContext.class),
                 anyObject(PipelineManager.PipelineManagerOperation.class)))
                         .andAnswer(() -> mockAcmCostsheetDao.save(costsheet));
 
-        replayAll();
+        replay(mocks);
 
-        AcmCostsheet saved = costsheetService.save(costsheet, mockAuthentication, eq("Save"));
+        AcmCostsheet saved = costsheetService.save(costsheet, mockAuthentication, "Save");
 
-        verifyAll();
+        verify(mocks);
 
         assertEquals(saved.getId(), costsheetCapture.getValue().getId());
+
     }
 
     @Test
@@ -166,18 +166,18 @@ public class CostsheetServiceTest extends EasyMockSupport
 
         costsheet.setCosts(Arrays.asList(cost1, cost2));
 
-        Capture<AcmCostsheet> costsheetCapture = new Capture<>();
+        Capture<AcmCostsheet> costsheetCapture = Capture.newInstance();
 
         expect(mockAcmCostsheetDao.save(capture(costsheetCapture))).andReturn(costsheet);
         expect(pipelineManager.executeOperation(anyObject(AcmCostsheet.class), anyObject(CostsheetPipelineContext.class),
                 anyObject(PipelineManager.PipelineManagerOperation.class)))
                         .andAnswer(() -> mockAcmCostsheetDao.save(costsheet));
 
-        replayAll();
+        replay(mocks);
 
         AcmCostsheet saved = costsheetService.save(costsheet, "Save");
 
-        verifyAll();
+        verify(mocks);
 
         assertEquals(costsheetCapture.getValue().getId(), saved.getId());
         // our responsiblity now is only to call the pipeline save... so we don't have to check any effects of the
@@ -208,18 +208,18 @@ public class CostsheetServiceTest extends EasyMockSupport
 
         costsheet.setCosts(Arrays.asList(cost1, cost2));
 
-        Capture<AcmCostsheet> costsheetCapture = new Capture<>();
+        Capture<AcmCostsheet> costsheetCapture = Capture.newInstance();
 
         expect(mockAcmCostsheetDao.save(capture(costsheetCapture))).andReturn(costsheet);
         expect(pipelineManager.executeOperation(anyObject(AcmCostsheet.class), anyObject(CostsheetPipelineContext.class),
                 anyObject(PipelineManager.PipelineManagerOperation.class)))
                         .andAnswer(() -> mockAcmCostsheetDao.save(costsheet));
 
-        replayAll();
+        replay(mocks);
 
         AcmCostsheet saved = costsheetService.save(costsheet, "Submit");
 
-        verifyAll();
+        verify(mocks);
 
         assertEquals(costsheetCapture.getValue().getId(), saved.getId());
         // our responsiblity now is only to call the pipeline save... so we don't have to check any effects of the
@@ -252,11 +252,11 @@ public class CostsheetServiceTest extends EasyMockSupport
 
         expect(mockAcmCostsheetDao.find(1L)).andReturn(costsheet);
 
-        replayAll();
+        replay(mocks);
 
         AcmCostsheet found = costsheetService.get(1L);
 
-        verifyAll();
+        verify(mocks);
 
         assertEquals(costsheet.getId(), found.getId());
     }
@@ -273,11 +273,11 @@ public class CostsheetServiceTest extends EasyMockSupport
         expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, ""))
                 .andReturn(expected);
 
-        replayAll();
+        replay(mocks);
 
         String response = costsheetService.getObjectsFromSolr(objectType, mockAuthentication, 0, 10, "", "*", null);
 
-        verifyAll();
+        verify(mocks);
 
         LOG.info("Results: " + response);
 
@@ -300,11 +300,11 @@ public class CostsheetServiceTest extends EasyMockSupport
         expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, ""))
                 .andReturn(expected);
 
-        replayAll();
+        replay(mocks);
 
         String response = costsheetService.getObjectsFromSolr(objectType, mockAuthentication, 0, 10, "", null);
 
-        verifyAll();
+        verify(mocks);
 
         LOG.info("Results: " + response);
 
@@ -319,7 +319,7 @@ public class CostsheetServiceTest extends EasyMockSupport
     @Test
     public void getCostsheetsByObjectIdTest() throws Exception
     {
-        long objectId = 5L;
+        Long objectId = 5L;
         String objectType = "type";
 
         // We have three costsheets. Two of them is for objectId 5L and one is for objectId 6L
@@ -347,11 +347,11 @@ public class CostsheetServiceTest extends EasyMockSupport
 
         expect(mockAcmCostsheetDao.findByObjectIdAndType(objectId, objectType, 0, 10, "")).andReturn(Arrays.asList(costsheet1, costsheet3));
 
-        replayAll();
+        replay(mocks);
 
         List<AcmCostsheet> found = costsheetService.getByObjectIdAndType(objectId, objectType, 0, 10, "");
 
-        verifyAll();
+        verify(mocks);
 
         assertEquals(2, found.size());
     }

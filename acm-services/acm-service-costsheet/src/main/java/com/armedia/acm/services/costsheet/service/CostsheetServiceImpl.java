@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.armedia.acm.services.costsheet.service;
 
 /*-
@@ -57,7 +54,7 @@ import java.util.Properties;
 public class CostsheetServiceImpl implements CostsheetService
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     private Properties properties;
     private AcmCostsheetDao acmCostsheetDao;
@@ -93,7 +90,7 @@ public class CostsheetServiceImpl implements CostsheetService
         return pipelineManager.executeOperation(costsheet, pipelineContext, () -> {
             costsheet.setStatus(getSubmissionStatusesMap().get(submissionName));
             AcmCostsheet saved = getAcmCostsheetDao().save(costsheet);
-            LOG.info("Costsheet with id [{}] and title [{}] was saved", saved.getId(), saved.getTitle());
+            log.info("Costsheet with id [{}] and title [{}] was saved", saved.getId(), saved.getTitle());
             return saved;
         });
     }
@@ -148,7 +145,7 @@ public class CostsheetServiceImpl implements CostsheetService
     {
         String retval = null;
 
-        LOG.debug("Taking objects from Solr for object type {}", objectType);
+        log.debug("Taking objects from Solr for object type {}", objectType);
 
         String authorQuery = "";
         if (!searchQuery.equals("*"))
@@ -167,11 +164,11 @@ public class CostsheetServiceImpl implements CostsheetService
             retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
                     sortParams);
 
-            LOG.debug("Objects was retrieved.");
+            log.debug("Objects was retrieved.");
         }
         catch (MuleException e)
         {
-            LOG.error("Cannot retrieve objects from Solr.", e);
+            log.error("Cannot retrieve objects from Solr.", e);
         }
 
         return retval;
@@ -187,7 +184,7 @@ public class CostsheetServiceImpl implements CostsheetService
     {
         String retval = null;
 
-        LOG.debug("Taking objects from Solr for object type {}", objectType);
+        log.debug("Taking objects from Solr for object type {}", objectType);
 
         String authorQuery = "";
         if (userId != null)
@@ -201,11 +198,11 @@ public class CostsheetServiceImpl implements CostsheetService
             retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
                     sortParams);
 
-            LOG.debug("Objects was retrieved.");
+            log.debug("Objects was retrieved.");
         }
         catch (MuleException e)
         {
-            LOG.error("Cannot retrieve objects from Solr.", e);
+            log.error("Cannot retrieve objects from Solr.", e);
         }
 
         return retval;
