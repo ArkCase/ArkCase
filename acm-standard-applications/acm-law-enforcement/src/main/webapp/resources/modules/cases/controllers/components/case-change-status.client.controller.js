@@ -15,13 +15,12 @@ angular.module('cases').controller(
                     $scope.cancelModal = cancelModal;
                     //Objects
                     $scope.showCaseCloseStatus = false;
-                    //brisi
-                    $scope.changeDate = new Date();
-                    $scope.obj = {
+                    $scope.changeCaseStatus = {
                         caseId: modalParams.info.caseId,
                         status: "",
+                        caseResolution: "",
                         objectType: "CHANGE_CASE_STATUS",
-                        // changeDate: new Date(),
+                        changeDate: new Date(),
                         participants: [ {} ],
                         created: null,
                         creator: null,
@@ -45,7 +44,7 @@ angular.module('cases').controller(
                     });
 
                     function statusChanged() {
-                        $scope.showCaseCloseStatus = $scope.obj.status === "CLOSED";
+                        $scope.showCaseCloseStatus = $scope.changeCaseStatus.status === "CLOSED";
                     }
 
                     function addNewApprover() {
@@ -53,7 +52,7 @@ angular.module('cases').controller(
                     }
 
                     function removeApprover(approver) {
-                        _.remove($scope.obj.participants, function(object) {
+                        _.remove($scope.changeCaseStatus.participants, function(object) {
                             return object === approver;
                         });
                     }
@@ -82,7 +81,7 @@ angular.module('cases').controller(
                         modalInstance.result.then(function(data) {
                             if (data) {
                                 var approver = {
-                                    className: "com.armedia.acm.services.participants.model.AcmParticipant",
+                                    className: $scope.config.className,
                                     objectType: null,
                                     objectId: null,
                                     participantType: "approver",
@@ -98,9 +97,9 @@ angular.module('cases').controller(
                                     isDeletable: true
                                 };
                                 if (index > -1) {
-                                    $scope.obj.participants[index] = approver;
+                                    $scope.changeCaseStatus.participants[index] = approver;
                                 } else {
-                                    $scope.obj.participants.push(approver);
+                                    $scope.changeCaseStatus.participants.push(approver);
                                 }
                             }
                         }, function() {
@@ -111,9 +110,11 @@ angular.module('cases').controller(
                     function save() {
                         $scope.loading = true;
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                        $http.post('https://acm-arkcase/arkcase/api/latest/plugin/casefile/change/status/change_case_status', $scope.obj).then(function(data) {
-                            console.log(data);
+                        CaseInfoService.changeCaseFileState('change_case_status', $scope.changeCaseStatus).then(function(data) {
+                            MessageService.info(data.info);
+                            $modalInstance.dismiss();
                         });
+
                     }
 
                     function cancelModal() {

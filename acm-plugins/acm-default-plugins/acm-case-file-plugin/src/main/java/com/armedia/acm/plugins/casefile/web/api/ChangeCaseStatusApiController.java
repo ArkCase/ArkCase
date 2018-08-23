@@ -56,7 +56,6 @@ public class ChangeCaseStatusApiController
 
     private ChangeCaseFileStateService changeCaseFileStateService;
 
-    // {formName} -> change_case_status
     @RequestMapping(value = "/change/status/{mode}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, String> changeCaseFileState(
