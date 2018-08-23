@@ -19,6 +19,7 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
         capacity: 1
     });
     var caseGetUrl = 'api/latest/plugin/casefile/byId/';
+    var caseUrl = 'api/latest/plugin/casefile/';
 
     var Service = $resource('api/latest/plugin', {}, {
         /**
@@ -60,6 +61,27 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
             url: caseGetUrl + ':id',
             cache: caseCache,
             isArray: false
+        },
+
+        /**
+         * @ngdoc method
+         * @name post
+         * @methodOf services:Case.InfoService
+         *
+         * @description
+         * Change case file state.
+         *
+         * @param {Object} params Map of input parameter.
+         * @param {Object} params.mode  Object mode
+         * @param {Function} onSuccess (Optional)Callback function of success query.
+         * @param {Function} onError (Optional) Callback function when fail.
+         *
+         * @returns {Object} Object returned by $resource
+         */
+        changeState: {
+            method: 'POST',
+            url: caseUrl + "change/status/" + ':mode',
+            cache: false
         }
     });
 
@@ -155,6 +177,34 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
             }
         });
     };
+
+    /**
+     * @ngdoc method
+     * @name changeCaseFileState
+     * @methodOf services:Case.InfoService
+     *
+     * @description
+     * Change/Save case file state
+     *
+     * @param {String} mode mode
+     *
+     * @data {Object} data ChangeCaseStatus
+     *
+     * @returns {Object} Promise
+     */
+    Service.changeCaseFileState = function(mode, data) {
+        return Util.serviceCall({
+            service: Service.changeState,
+            param: {
+                mode: mode
+            },
+            data: data,
+            onSuccess: function(data) {
+                return data;
+            }
+        });
+    };
+
 
     /**
      * @ngdoc method

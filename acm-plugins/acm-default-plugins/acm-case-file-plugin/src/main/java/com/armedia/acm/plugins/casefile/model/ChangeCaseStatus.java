@@ -54,8 +54,10 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -85,6 +87,12 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity, Acm
 
     @Column(name = "cm_change_case_status_status")
     private String status = "ACTIVE";
+
+    @Transient
+    private String caseResolution;
+
+    @Transient
+    private LocalDate changeDate;
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = ChangeCaseStatusConstants.OBJECT_TYPE;
@@ -239,5 +247,25 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity, Acm
     public String getParentObjectType()
     {
         return CaseFileConstants.OBJECT_TYPE;
+    }
+
+    public String getCaseResolution()
+    {
+        return caseResolution;
+    }
+
+    public void setCaseResolution(String caseResolution)
+    {
+        this.caseResolution = caseResolution;
+    }
+
+    public LocalDate getChangeDate()
+    {
+        return changeDate;
+    }
+
+    public void setChangeDate(LocalDate changeDate)
+    {
+        this.changeDate = changeDate;
     }
 }
