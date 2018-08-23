@@ -94,12 +94,12 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
             } else {
                 scope.searchQuery = '';
             }
-            if(scope.secondSelectionOptional) { //check if the second grid selection is not mandatory, then if is true set some property
+            if (scope.secondSelectionOptional) { //check if the second grid selection is not mandatory, then if is true set some property
                 scope.firstGridSelected = false;
                 scope.disableSearchButton = true;
                 scope.selectedDetailItem = null;
                 scope.userNotValid = false;
-                scope.groupNotValid=false;
+                scope.groupNotValid = false;
                 scope.participant = {
                     assignee: scope.params().assignee,
                     owningGroup: scope.params().owningGroup
@@ -373,25 +373,25 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
                             if (scope.showSelectedItemsGrid && !_.isEmpty(scope.selectedItems)) {
                                 scope.gridSelectedItems.data = _.uniq(scope.gridSelectedItems.data.concat(scope.selectedItems));
                             }
-                            if(row.isSelected && scope.secondSelectionOptional){
+                            if (row.isSelected && scope.secondSelectionOptional) {
                                 scope.disableSearchButton = true;
-                                    scope.firstGridSelected = true;
-                                    if(row.entity.object_type_s === 'USER'){
-                                        _.find(row.entity.groups_id_ss, function (group) {
-                                            if(scope.participant.owningGroup === group){   // Going through the collection of groups to see if there is a match with the current owning group
-                                                scope.disableSearchButton = false;         // if there is a match that means the user is a member of the current owning group
-                                            }
-                                        });
-                                        scope.userNotValid = scope.disableSearchButton;
-                                    }else if(scope.participant.assignee != undefined){
-                                        _.find(row.entity.member_id_ss, function (member) {
-                                            if(scope.participant.assignee.id === member){   //Going through the collection of members to see if there is a match with the current assignee
-                                                scope.disableSearchButton = false;          // if there is a match that means the current assignee is within that owning group
-                                            }
-                                        });
-                                        scope.groupNotValid = scope.disableSearchButton;
-                                    }else{
-                                        scope.groupNotValid = scope.disableSearchButton = false;
+                                scope.firstGridSelected = true;
+                                if (row.entity.object_type_s === 'USER') {
+                                    _.find(row.entity.groups_id_ss, function(group) {
+                                        if (scope.participant.owningGroup === group) { // Going through the collection of groups to see if there is a match with the current owning group
+                                            scope.disableSearchButton = false; // if there is a match that means the user is a member of the current owning group
+                                        }
+                                    });
+                                    scope.userNotValid = scope.disableSearchButton;
+                                } else if (scope.participant.assignee != undefined) {
+                                    _.find(row.entity.member_id_ss, function(member) {
+                                        if (scope.participant.assignee.id === member) { //Going through the collection of members to see if there is a match with the current assignee
+                                            scope.disableSearchButton = false; // if there is a match that means the current assignee is within that owning group
+                                        }
+                                    });
+                                    scope.groupNotValid = scope.disableSearchButton;
+                                } else {
+                                    scope.groupNotValid = scope.disableSearchButton = false;
                                     }
                                 }
                         });
