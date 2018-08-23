@@ -27,27 +27,55 @@ package com.armedia.acm.services.costsheet.pipeline.postsave;
  * #L%
  */
 
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.pipeline.CostsheetPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CostsheetContainerHandler implements PipelineHandler<AcmCostsheet, CostsheetPipelineContext>
 {
 
-    @Override
-    public void execute(AcmCostsheet entity, CostsheetPipelineContext pipelineContext) throws PipelineProcessException
-    {
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    private EcmFileParticipantService fileParticipantService;
 
+    @Override
+    public void execute(AcmCostsheet entity, CostsheetPipelineContext ctx) throws PipelineProcessException
+    {
+        log.trace("Costsheet with id [{}] and title [{}] entering CostsheetContainerHandler ", entity.getId(), entity.getTitle());
         if (entity.getContainer().getContainerObjectTitle() == null)
         {
             entity.getContainer().setContainerObjectTitle(entity.getCostsheetNumber());
         }
+
+        if (entity.getContainer().getFolder() == null)
+        {
+            AcmFolder folder = new AcmFolder();
+            folder.setName("ROOT");
+            folder.setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(entity.getParticipants()));
+
+            entity.getContainer().setFolder(folder);
+            entity.getContainer().setAttachmentFolder(folder);
+        }
     }
 
     @Override
-    public void rollback(AcmCostsheet entity, CostsheetPipelineContext pipelineContext) throws PipelineProcessException
+    public void rollback(AcmCostsheet entity, CostsheetPipelineContext ctx) throws PipelineProcessException
     {
+        // nothing to execute on rollback
+    }
 
+    public EcmFileParticipantService getFileParticipantService()
+    {
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
+    {
+        this.fileParticipantService = fileParticipantService;
     }
 }

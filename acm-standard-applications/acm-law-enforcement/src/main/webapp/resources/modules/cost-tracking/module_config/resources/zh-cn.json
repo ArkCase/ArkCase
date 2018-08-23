@@ -103,6 +103,49 @@
         "newTask": "新任务",
         "sendEmail": "发电子邮件"
     },
+    "costTracking.comp.newCostsheet": {
+        "title": "zh-cn_Expenses",
+        "editCase.title": "zh-cn_Edit Expenses",
+        "user": "zh-cn_User",
+        "status": "zh-cn_Status",
+        "costType": "zh-cn_Type",
+        "selectTypeMessage": "zh-cn_You have to select 'Type', so that you can enter a 'Code'.",
+        "code": "zh-cn_Code",
+        "objectPicker": {
+            "title": "zh-cn_Search for object",
+            "table.columns": {
+                "name": "zh-cn_Name",
+                "type": "zh-cn_Type",
+                "title": "zh-cn_Title",
+                "id": "zh-cn_ID",
+                "username": "zh-cn_Username"
+            }
+        },
+        "userSearch.title": "zh-cn_Search for User",
+        "cost": {
+            "title": "zh-cn_Costs",
+            "date": "zh-cn_Date",
+            "date.placeholder": "zh-cn_Select Date",
+            "date.close.button": "zh-cn_Close",
+            "costTitle": "zh-cn_Title",
+            "description": "zh-cn_Description",
+            "amount": "zh-cn_Amount",
+            "balance": "zh-cn_Balance",
+            "removeBtn": "zh-cn_Remove Cost",
+            "addBtn": "zh-cn_Add Another Cost"
+        },
+        "details": "zh-cn_Details",
+        "approver": {
+            "title": "zh-cn_Approver",
+            "placeholder": "zh-cn_Select Approver",
+            "removeBtn": "zh-cn_Remove Approver",
+            "addBtn": "zh-cn_Add Another Approver"
+        },
+        "cancelButton": "zh-cn_Cancel",
+        "saveButton": "zh-cn_Save",
+        "updateButton": "zh-cn_Update",
+        "sendForApproval": "zh-cn_Send for Approval"
+    },
     "costTracking.tree": {
         "nodeTypes": {
             "details.label": "详情",

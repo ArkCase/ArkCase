@@ -103,6 +103,49 @@
         "newTask": "新任務",
         "sendEmail": "發電子郵件"
     },
+    "costTracking.comp.newCostsheet": {
+        "title": "zh-tw_Expenses",
+        "editCase.title": "zh-tw_Edit Expenses",
+        "user": "zh-tw_User",
+        "status": "zh-tw_Status",
+        "costType": "zh-tw_Type",
+        "selectTypeMessage": "zh-tw_You have to select 'Type', so that you can enter a 'Code'.",
+        "code": "zh-tw_Code",
+        "objectPicker": {
+            "title": "zh-tw_Search for object",
+            "table.columns": {
+                "name": "zh-tw_Name",
+                "type": "zh-tw_Type",
+                "title": "zh-tw_Title",
+                "id": "zh-tw_ID",
+                "username": "zh-tw_Username"
+            }
+        },
+        "userSearch.title": "zh-tw_Search for User",
+        "cost": {
+            "title": "zh-tw_Costs",
+            "date": "zh-tw_Date",
+            "date.placeholder": "zh-tw_Select Date",
+            "date.close.button": "zh-tw_Close",
+            "costTitle": "zh-tw_Title",
+            "description": "zh-tw_Description",
+            "amount": "zh-tw_Amount",
+            "balance": "zh-tw_Balance",
+            "removeBtn": "zh-tw_Remove Cost",
+            "addBtn": "zh-tw_Add Another Cost"
+        },
+        "details": "zh-tw_Details",
+        "approver": {
+            "title": "zh-tw_Approver",
+            "placeholder": "zh-tw_Select Approver",
+            "removeBtn": "zh-tw_Remove Approver",
+            "addBtn": "zh-tw_Add Another Approver"
+        },
+        "cancelButton": "zh-tw_Cancel",
+        "saveButton": "zh-tw_Save",
+        "updateButton": "zh-tw_Update",
+        "sendForApproval": "zh-tw_Send for Approval"
+    },
     "costTracking.tree": {
         "nodeTypes": {
             "details.label": "詳情",

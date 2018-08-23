@@ -63,7 +63,9 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
             secondGrid: '@',
             pickUserLabel: '@',
             pickGroupLabel: '@',
-            showSelectedItemsGrid: '=?'
+            showSelectedItemsGrid: '=?',
+            secondSelectionOptional: '@',
+            params: '&'
         },
 
         link: function(scope, el, attrs) {
@@ -84,11 +86,24 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
             scope.disableSearchControls = (scope.disableSearch === 'true') ? true : false;
             scope.findGroups = scope.findGroups === 'true';
             scope.secondGrid = scope.secondGrid === 'true';
+            scope.secondSelectionOptional = scope.secondSelectionOptional === 'true';
             if (scope.searchQuery) {
                 scope.searchQuery = scope.searchQuery;
             } else {
                 scope.searchQuery = '';
             }
+            if(scope.secondSelectionOptional) { //check if the second grid selection is not mandatory, then if is true set some property
+                scope.firstGridSelected = false;
+                scope.disableSearchButton = true;
+                scope.selectedDetailItem = null;
+                scope.userNotValid = false;
+                scope.groupNotValid=false;
+                scope.participant = {
+                    assignee: scope.params().assignee,
+                    owningGroup: scope.params().owningGroup
+                };
+            }
+
             scope.minSearchLength = 3;
             if (typeof (scope.config().showFacets) === 'undefined') {
                 scope.config.showFacets = true;
@@ -342,10 +357,12 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
                     onRegisterApi: function(gridApi) {
                         scope.gridApi = gridApi;
                         gridApi.selection.on.rowSelectionChanged(scope, function(row) {
+
                             scope.selectedItems = gridApi.selection.getSelectedRows();
                             scope.selectedItem = row.entity;
                             if (scope.onItemsSelected) {
                                 scope.onItemsSelected(scope.selectedItems, [ scope.selectedItem ], row.isSelected);
+
                             }
                             if (scope.secondGrid) {
                                 scope.setSecondGridData();
@@ -354,6 +371,27 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
                             if (scope.showSelectedItemsGrid && !_.isEmpty(scope.selectedItems)) {
                                 scope.gridSelectedItems.data = _.uniq(scope.gridSelectedItems.data.concat(scope.selectedItems));
                             }
+                            if(row.isSelected && scope.secondSelectionOptional){
+                                scope.disableSearchButton = true;
+                                    scope.firstGridSelected = true;
+                                    if(row.entity.object_type_s === 'USER'){
+                                        _.find(row.entity.groups_id_ss, function (group) {
+                                            if(scope.participant.owningGroup === group){   // Going through the collection of groups to see if there is a match with the current owning group
+                                                scope.disableSearchButton = false;         // if there is a match that means the user is a member of the current owning group
+                                            }
+                                        });
+                                        scope.userNotValid = scope.disableSearchButton;
+                                    }else if(scope.participant.assignee != undefined){
+                                        _.find(row.entity.member_id_ss, function (member) {
+                                            if(scope.participant.assignee.id === member){   //Going through the collection of members to see if there is a match with the current assignee
+                                                scope.disableSearchButton = false;          // if there is a match that means the current assignee is within that owning group
+                                            }
+                                        });
+                                        scope.groupNotValid = scope.disableSearchButton;
+                                    }else{
+                                        scope.groupNotValid = scope.disableSearchButton = false;
+                                    }
+                                }
                         });
 
                         gridApi.selection.on.rowSelectionChangedBatch(scope, function(rows) {

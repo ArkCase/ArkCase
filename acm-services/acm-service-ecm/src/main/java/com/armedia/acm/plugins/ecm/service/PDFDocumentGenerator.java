@@ -126,7 +126,7 @@ public abstract class PDFDocumentGenerator<T>
             }
             catch (PdfServiceException | AcmCreateObjectFailedException | AcmUserActionFailedException | IOException e)
             {
-                log.error("Unable to create {} document for request [{}]",
+                log.error("Unable to create {} document for costsheet [{}]",
                         documentName, objectId, e);
             }
             finally

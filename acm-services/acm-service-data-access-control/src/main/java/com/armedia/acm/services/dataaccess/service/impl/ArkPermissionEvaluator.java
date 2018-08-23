@@ -1,39 +1,13 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.objectonverter.json.JSONMarshaller;
-
-/*-
- * #%L
- * ACM Service: Data Access Control
- * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
- * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
- * provided under the following open source license terms:
- * 
- * ArkCase is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *  
- * ArkCase is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
- * #L%
- */
-
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrAbstractDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -48,16 +22,49 @@ import com.armedia.acm.spring.SpringContextHolder;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.metamodel.EntityType;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+/*-
+ * #%L
+ * ACM Service: Data Access Control
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
+ * provided under the following open source license terms:
+ *
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
 
 /**
  * Determine whether a user is authorized to take an action for a specific object.
@@ -81,7 +88,7 @@ import java.util.stream.Stream;
  * <p/>
  * The first two conditions are checked in a single query. The group access is checked in a separate query.
  */
-public class ArkPermissionEvaluator implements PermissionEvaluator
+public class ArkPermissionEvaluator implements PermissionEvaluator, InitializingBean
 {
     private final transient Logger log = LoggerFactory.getLogger(getClass());
 
@@ -95,6 +102,9 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     private AcmDataService acmDataService;
     private SpringContextHolder springContextHolder;
     private JSONMarshaller jsonMarshaller;
+    private Set<String> assignedObjectTypes;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission)
@@ -107,11 +117,11 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
 
         if (!Long.class.isAssignableFrom(targetId.getClass()) && !List.class.isAssignableFrom(targetId.getClass()))
         {
-            log.error("The id type '" + targetId.getClass().getName() + "' is not a List - denying access");
+            log.error("The id type [{}] is not a List - denying access", targetId.getClass().getName());
             return false;
         }
 
-        if (permission == null || !(permission instanceof String))
+        if (!(permission instanceof String))
         {
             log.error("Permission must be a non-null string... returning false");
             return false;
@@ -125,6 +135,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         // checking access to a single object
         if (Long.class.isAssignableFrom(targetId.getClass()))
         {
+
             return checkAccessForSingleObject(authentication, (Long) targetId, targetType, permission);
         }
 
@@ -139,6 +150,11 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             }
         }
         return true;
+    }
+
+    protected boolean isAssignedObjectType(String objectType)
+    {
+        return assignedObjectTypes.contains(objectType);
     }
 
     protected <T> AcmObjectToSolrDocTransformer<T> findTransformerForEntity(Class<T> entityClass)
@@ -173,22 +189,25 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
 
         log.trace("Checking [{}] for [{}] on object of type [{}] with id [{}]", permission, authentication.getName(), targetType, id);
 
-        String solrDocument = getSolrDocument(authentication, id, targetType);
-
-        if (solrDocument == null || !checkForReadAccess(solrDocument))
+        if (isAssignedObjectType(targetType))
         {
-            solrDocument = lookupAndConvertObjectFromDatabase(targetType, id);
-            if (solrDocument == null)
+            String solrDocument = getSolrDocument(authentication, id, targetType);
+
+            if (solrDocument == null || !checkForReadAccess(solrDocument))
             {
-                // there really is no such object, or else no DAO or no transformer
-                return false;
+                solrDocument = lookupAndConvertObjectFromDatabase(targetType, id);
+                if (solrDocument == null)
+                {
+                    // there really is no such object, or else no DAO or no transformer
+                    return false;
+                }
             }
-        }
 
-        // break here and return true if any of AC rules match (see SBI-956)
-        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission, solrDocument))
-        {
-            return true;
+            // break here and return true if any of AC rules match (see SBI-956)
+            if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission, solrDocument))
+            {
+                return true;
+            }
         }
 
         return evaluateAccess(authentication, id, targetType, Arrays.asList(((String) permission).split("\\|")));
@@ -448,5 +467,32 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     public void setJsonMarshaller(JSONMarshaller jsonMarshaller)
     {
         this.jsonMarshaller = jsonMarshaller;
+    }
+
+    public Set<String> getAssignedObjectTypes()
+    {
+        return assignedObjectTypes;
+    }
+
+    @Override
+    public void afterPropertiesSet()
+    {
+        Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
+
+        assignedObjectTypes = entities.stream()
+                .filter(entityType -> AcmAssignedObject.class.isAssignableFrom(entityType.getJavaType()))
+                .peek(entityType -> log.debug("Found entity [{}]", entityType.getJavaType().getSimpleName()))
+                .map(it -> {
+                    try
+                    {
+                        return ((AcmObject) it.getJavaType().newInstance()).getObjectType();
+                    }
+                    catch (InstantiationException | IllegalAccessException e)
+                    {
+                        log.warn("Can not determine object type for class [{}]", it.getJavaType().getSimpleName());
+                    }
+                    return null;
+                }).filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 }
