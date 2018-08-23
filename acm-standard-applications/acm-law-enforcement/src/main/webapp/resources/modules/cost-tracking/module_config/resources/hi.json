@@ -76,7 +76,7 @@
             }
         }
     },
-	"costTracking.comp.tasks": {
+    "costTracking.comp.tasks": {
         "title": "कार्य",
         "table.columns": {
             "title": "शीर्षक",
@@ -102,6 +102,49 @@
         "searchInputPlaceholder": "खोज",
         "newTask": "नया कार्य",
         "sendEmail": "ईमेल भेजें"
+    },
+    "costTracking.comp.newCostsheet": {
+        "title": "hi_Expenses",
+        "editCase.title": "hi_Edit Expenses",
+        "user": "hi_User",
+        "status": "hi_Status",
+        "costType": "hi_Type",
+        "selectTypeMessage": "hi_You have to select 'Type', so that you can enter a 'Code'.",
+        "code": "hi_Code",
+        "objectPicker": {
+            "title": "hi_Search for object",
+            "table.columns": {
+                "name": "hi_Name",
+                "type": "hi_Type",
+                "title": "hi_Title",
+                "id": "hi_ID",
+                "username": "hi_Username"
+            }
+        },
+        "userSearch.title": "hi_Search for User",
+        "cost": {
+            "title": "hi_Costs",
+            "date": "hi_Date",
+            "date.placeholder": "hi_Select Date",
+            "date.close.button": "hi_Close",
+            "costTitle": "hi_Title",
+            "description": "hi_Description",
+            "amount": "hi_Amount",
+            "balance": "hi_Balance",
+            "removeBtn": "hi_Remove Cost",
+            "addBtn": "hi_Add Another Cost"
+        },
+        "details": "hi_Details",
+        "approver": {
+            "title": "hi_Approver",
+            "placeholder": "hi_Select Approver",
+            "removeBtn": "hi_Remove Approver",
+            "addBtn": "hi_Add Another Approver"
+        },
+        "cancelButton": "hi_Cancel",
+        "saveButton": "hi_Save",
+        "updateButton": "hi_Update",
+        "sendForApproval": "hi_Send for Approval"
     },
     "costTracking.tree": {
         "nodeTypes": {

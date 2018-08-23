@@ -10,7 +10,7 @@
  *
  * FormsType.Service provides function which returns boolean whether the type of the forms is angular or not
  */
-angular.module('services').service('FormsType.Service', [ 'Admin.ApplicationSettingsService', function(ApplicationSettingsService) {
+angular.module('services').service('FormsType.Service', [ 'Admin.ApplicationFormsTypeConfigService', function(ApplicationFormsTypeConfigService) {
 
     return ({
         isAngularFormType: isAngularFormType,
@@ -18,15 +18,15 @@ angular.module('services').service('FormsType.Service', [ 'Admin.ApplicationSett
     });
 
     function isAngularFormType() {
-        return ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.FORMS_TYPE).then(function(response) {
-            var formsType = response.data[ApplicationSettingsService.PROPERTIES.FORMS_TYPE];
+        return ApplicationFormsTypeConfigService.getProperty(ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE).then(function(response) {
+            var formsType = response.data[ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE];
             return formsType == "angular";
         });
     }
 
     function isFrevvoFormType() {
-        return ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.FORMS_TYPE).then(function(response) {
-            var formsType = response.data[ApplicationSettingsService.PROPERTIES.FORMS_TYPE];
+        return ApplicationFormsTypeConfigService.getProperty(ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE).then(function(response) {
+            var formsType = response.data[ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE];
             return formsType == "frevvo";
         });
     }

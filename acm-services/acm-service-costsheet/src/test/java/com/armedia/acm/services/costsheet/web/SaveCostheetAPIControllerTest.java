@@ -31,6 +31,7 @@ package com.armedia.acm.services.costsheet.web;
  */
 
 import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,6 +43,7 @@ import com.armedia.acm.services.costsheet.service.CostsheetService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -121,7 +123,8 @@ public class SaveCostheetAPIControllerTest extends EasyMockSupport
         Capture<AcmCostsheet> saved = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn("acm-user");
-        expect(mockCostsheetService.save(capture(saved))).andReturn(costsheet);
+        Capture<Authentication> capturedAuthentication = EasyMock.newCapture();
+        expect(mockCostsheetService.save(capture(saved), capture(capturedAuthentication), eq("Save"))).andReturn(costsheet);
 
         costsheet.setDetails(expectedDetails);
 
@@ -131,7 +134,7 @@ public class SaveCostheetAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/v1/service/costsheet")
+                post("/api/v1/service/costsheet/{submissionName}", "Save")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication)
@@ -178,7 +181,8 @@ public class SaveCostheetAPIControllerTest extends EasyMockSupport
         Capture<AcmCostsheet> saved = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn("acm-user");
-        expect(mockCostsheetService.save(capture(saved))).andThrow(new RuntimeException());
+        Capture<Authentication> capturedAuthentication = EasyMock.newCapture();
+        expect(mockCostsheetService.save(capture(saved), capture(capturedAuthentication), eq("Save"))).andThrow(new RuntimeException());
 
         replayAll();
 
@@ -187,7 +191,7 @@ public class SaveCostheetAPIControllerTest extends EasyMockSupport
         try
         {
             result = mockMvc.perform(
-                    post("/api/v1/service/costsheet")
+                    post("/api/v1/service/costsheet/{submissionName}", "Save")
                             .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                             .contentType(MediaType.APPLICATION_JSON)
                             .principal(mockAuthentication)

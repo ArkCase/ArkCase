@@ -693,6 +693,48 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getCostsheetTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Costsheet Types
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCostsheetTypes = function() {
+        return Service.getLookupByLookupName('costsheetTypes');
+    };
+
+    /**
+     * @ngdoc method
+     * @name getCostsheetTitles
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Costsheet Titles
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCostsheetTitles = function() {
+        return Service.getLookupByLookupName('costsheetTitles');
+    };
+
+    /**
+     * @ngdoc method
+     * @name getCostsheetStatuses
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Costsheet Statuses
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCostsheetStatuses = function() {
+        return Service.getLookupByLookupName('costsheetStatuses');
+    };
+
+    /**
+     * @ngdoc method
      * @name getLookupsDefs
      * @methodOf services:Object.LookupService
      *

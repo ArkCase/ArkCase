@@ -29,7 +29,6 @@ package com.armedia.acm.plugins.report.web.api;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.report.service.ReportService;
-import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
 import org.mule.api.MuleException;
@@ -46,7 +45,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/report", "/api/latest/plugin/report" })
-public class GetReportToGroupsMapAPIController
+public class GetReportToRolesMapAPIController
 {
 
     private Logger LOG = LoggerFactory.getLogger(getClass());
@@ -54,21 +53,21 @@ public class GetReportToGroupsMapAPIController
     private ReportService reportService;
     private ExecuteSolrQuery executeSolrQuery;
 
-    @RequestMapping(value = "/reporttogroupsmap", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/reporttorolesmap", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, List<String>> getReportToGroupsMap()
+    public Map<String, List<String>> getReportToRolesMap()
     {
-        LOG.debug("Getting report to groups map ...");
-        Map<String, List<String>> retval = getReportService().getReportToGroupsMap();
+        LOG.debug("Getting report to roles map ...");
+        Map<String, List<String>> retval = getReportService().getReportToRolesMap();
         if (null == retval)
         {
             LOG.warn("Properties not available..");
         }
-        LOG.debug("Reports to groups map : {}", retval);
+        LOG.debug("Reports to roles map : {}", retval);
         return retval;
     }
 
-    @RequestMapping(value = "/reportstogroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/reportstoroles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<String> getReportsPaged(
             @RequestParam(value = "sortBy", required = false, defaultValue = "name_lcs") String sortBy,
@@ -78,16 +77,16 @@ public class GetReportToGroupsMapAPIController
     {
         LOG.debug("Getting reports ...");
 
-        List<String> retval = getReportService().getReportToGroupsPaged(sortDirection, startRow, maxRows);
+        List<String> retval = getReportService().getReportToRolesPaged(sortDirection, startRow, maxRows);
         if (null == retval)
         {
             LOG.warn("Properties not available..");
         }
-        LOG.debug("Reports to groups : {}", retval);
+        LOG.debug("Reports to roles : {}", retval);
         return retval;
     }
 
-    @RequestMapping(value = "/reportstogroups", params = { "fq" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/reportstoroles", params = { "fq" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<String> getReportsByName(
             @RequestParam(value = "fq") String filterQuery,
@@ -98,18 +97,18 @@ public class GetReportToGroupsMapAPIController
     {
         LOG.debug("Getting reports ...");
 
-        List<String> retval = getReportService().getReportToGroupsByName(sortDirection, startRow, maxRows, filterQuery);
+        List<String> retval = getReportService().getReportToRolesByName(sortDirection, startRow, maxRows, filterQuery);
         if (null == retval)
         {
             LOG.warn("Properties not available..");
         }
-        LOG.debug("Reports to groups : {}", retval);
+        LOG.debug("Reports to roles : {}", retval);
         return retval;
     }
 
-    @RequestMapping(value = "/{reportId:.+}/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{reportId:.+}/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String findGroupsForReport(@PathVariable("reportId") String reportId,
+    public List<String> findRolesForReport(@PathVariable("reportId") String reportId,
             @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
@@ -117,36 +116,9 @@ public class GetReportToGroupsMapAPIController
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             Authentication auth) throws MuleException, AcmEncryptionException
     {
-        LOG.debug("Taking groups from Solr for specific report");
 
-        String solrQuery = reportService.buildGroupsForReportSolrQuery(authorized, reportId, "");
-
-        LOG.debug("Returning groups for report [{}]", reportId);
-
-        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows,
-                sortBy + " " + sortDirection);
-    }
-
-    @RequestMapping(value = "/{reportId:.+}/groups", params = {
-            "fq" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String findGroupsForReport(@PathVariable("reportId") String reportId,
-            @RequestParam(value = "fq") String filterQuery,
-            @RequestParam(value = "authorized") Boolean authorized,
-            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
-            @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
-            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
-            Authentication auth) throws MuleException, AcmEncryptionException
-    {
-        LOG.debug("Taking groups from Solr for specific report");
-
-        String solrQuery = reportService.buildGroupsForReportSolrQuery(authorized, reportId, filterQuery);
-
-        LOG.debug("Returning groups for report [{}]", reportId);
-
-        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows,
-                sortBy + " " + sortDirection);
+        LOG.debug("Taking roles from property file for specific report");
+        return reportService.getRolesForReport(authorized, reportId);
     }
 
     public ReportService getReportService()

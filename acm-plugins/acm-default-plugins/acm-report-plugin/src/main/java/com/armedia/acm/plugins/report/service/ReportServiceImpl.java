@@ -37,9 +37,6 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-import com.armedia.acm.services.users.dao.group.AcmGroupDao;
-import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
-import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -84,16 +81,16 @@ public class ReportServiceImpl implements ReportService
     private final String PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE = "PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE";
     private final String PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
     private String reportsPropertiesFileLocation;
-    private String reportToGroupsMapPropertiesFileLocation;
+    private String reportToRolesMapPropertiesFileLocation;
     private String reportServerConfigPropertiesFileLocation;
-    private Map<String, String> reportToGroupsMapProperties;
+    private Map<String, String> reportToRolesMapProperties;
     private Map<String, String> reportPluginProperties;
     private MuleContextManager muleContextManager;
     private PropertyFileManager propertyFileManager;
     private PentahoReportUrl reportUrl;
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
-    private AcmGroupDao groupDao;
+    private Properties applicationRolesProperties;
 
     @Override
     public List<Report> getPentahoReports() throws Exception
@@ -209,19 +206,19 @@ public class ReportServiceImpl implements ReportService
     {
         boolean authorized = false;
 
-        Map<String, List<String>> reportsToGroupsMap = getReportToGroupsMap();
+        Map<String, List<String>> reportsToRolesMap = getReportToRolesMap();
 
-        if (report != null && reportsToGroupsMap != null && !reportsToGroupsMap.isEmpty())
+        if (report != null && reportsToRolesMap != null && !reportsToRolesMap.isEmpty())
         {
-            if (reportsToGroupsMap.containsKey(report.getPropertyName()))
+            if (reportsToRolesMap.containsKey(report.getPropertyName()))
             {
-                List<String> reportToGroups = reportsToGroupsMap.get(report.getPropertyName());
-                List<String> userGroups = getUserGroups(userId);
-                if (reportToGroups != null && userGroups != null)
+                List<String> reportToRoles = reportsToRolesMap.get(report.getPropertyName());
+                List<String> userRoles = getApplicationRoles();
+                if (reportToRoles != null && userRoles != null)
                 {
                     try
                     {
-                        Optional<String> optional = reportToGroups.stream().filter(reportGroup -> userGroups.contains(reportGroup))
+                        Optional<String> optional = reportToRoles.stream().filter(reportRoles -> userRoles.contains(reportRoles))
                                 .findAny();
 
                         authorized = optional.isPresent();
@@ -238,103 +235,22 @@ public class ReportServiceImpl implements ReportService
         return authorized;
     }
 
-    private List<String> getUserGroups(String userId)
+
+    private List<String> getApplicationRoles()
     {
-        List<String> retval = new ArrayList<>();
+        List<String> applicationRoles = new ArrayList<>();
 
         try
         {
-            String query = "object_id_s:" + userId
-                    + " AND object_type_s:USER AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
-
-            Authentication auth = new UsernamePasswordAuthenticationToken(userId, userId);
-            String response = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 1, "");
-
-            LOG.debug("Response: {}", response);
-
-            if (response != null && getSearchResults().getNumFound(response) > 0)
-            {
-                JSONArray docs = getSearchResults().getDocuments(response);
-                if (docs != null && docs.length() > 0)
-                {
-                    JSONObject doc = docs.getJSONObject(0);
-                    retval = getSearchResults().extractStringList(doc, SearchConstants.PROPERTY_GROUPS_ID_SS);
-                }
-            }
+            Properties roleProperties = getApplicationRolesProperties();
+            applicationRoles = Arrays.asList(roleProperties.getProperty("application.roles").split(","));
         }
         catch (Exception e)
         {
-            LOG.error("Cannot retrieve User information from Solr for userId={}", userId, e);
+            LOG.error("Cannot read application roles from configuration.", e);
         }
 
-        return retval;
-    }
-
-    @Override
-    public boolean saveReportToGroupsMap(Map<String, List<String>> reportsToGroupsMap, Authentication auth)
-    {
-        boolean success;
-        try
-        {
-            Map<String, String> prepared = prepareReportToGroupsMapForSaving(reportsToGroupsMap);
-            getPropertyFileManager().storeMultiple(prepared,
-                    getReportToGroupsMapPropertiesFileLocation(), true);
-            setReportToGroupsMapProperties(prepared);
-            success = true;
-        }
-        catch (Exception e)
-        {
-            LOG.error("Cannot save report to groups map", e);
-            success = false;
-        }
-        return success;
-    }
-
-    @Override
-    public List<String> saveGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth)
-    {
-        String reportUpdated = "";
-        try
-        {
-            reportUpdated += getPropertyFileManager().load(getReportToGroupsMapPropertiesFileLocation(), reportName, null);
-            reportUpdated += (reportUpdated.isEmpty() ? "" : ",") + adhocGroups.stream().collect(Collectors.joining(","));
-            getPropertyFileManager().store(reportName, reportUpdated, getReportToGroupsMapPropertiesFileLocation(), false);
-        }
-        catch (AcmEncryptionException e)
-        {
-            LOG.warn("Cannot save groups to application role", e);
-        }
-
-        return Arrays.asList(reportUpdated.split(","));
-    }
-
-    @Override
-    public List<String> removeGroupsToReport(String reportName, List<String> adhocGroups, Authentication auth)
-    {
-        List<String> reportGroups;
-        String reportUpdated = "";
-        try
-        {
-            reportGroups = new ArrayList<>(
-                    Arrays.asList(
-                            getPropertyFileManager().load(getReportToGroupsMapPropertiesFileLocation(), reportName, null).split(",")));
-
-            for (String group : adhocGroups)
-            {
-                reportGroups.remove(group);
-            }
-
-            reportUpdated += reportGroups.stream().collect(Collectors.joining(","));
-
-            getPropertyFileManager().store(reportName, reportUpdated, getReportToGroupsMapPropertiesFileLocation(), false);
-
-        }
-        catch (AcmEncryptionException e)
-        {
-            LOG.error("Cannot save groups to application role", e);
-        }
-
-        return Arrays.asList(reportUpdated.split(","));
+        return applicationRoles;
     }
 
     @Override
@@ -356,59 +272,10 @@ public class ReportServiceImpl implements ReportService
             propertiesToDelete.forEach(item -> reportPluginProperties.remove(item));
 
             getPropertyFileManager().removeMultiple(propertiesToDelete, getReportsPropertiesFileLocation());
-            getPropertyFileManager().removeMultiple(propertiesToDelete, getReportToGroupsMapPropertiesFileLocation());
+            getPropertyFileManager().removeMultiple(propertiesToDelete, getReportToRolesMapPropertiesFileLocation());
         }
 
         return reports;
-    }
-
-    @Override
-    public Map<String, List<String>> getReportToGroupsMap()
-    {
-        Map<String, String> reportsToGroupsMap = getReportToGroupsMapProperties();
-        return prepareReportToGroupsMapForRetrieving(reportsToGroupsMap);
-    }
-
-    @Override
-    public List<String> getReportToGroupsPaged(String sortDirection, Integer startRow, Integer maxRows) throws IOException
-    {
-        return getReportToGroups(sortDirection, startRow, maxRows, "");
-    }
-
-    @Override
-    public List<String> getReportToGroupsByName(String sortDirection, Integer startRow, Integer maxRows, String filterName)
-            throws IOException
-    {
-        return getReportToGroups(sortDirection, startRow, maxRows, filterName);
-    }
-
-    @Override
-    public List<String> getReportToGroups(String sortDirection, Integer startRow, Integer maxRows, String filterName) throws IOException
-    {
-        Properties reportsToGroups = propertyFileManager.readFromFile(new File(getReportToGroupsMapPropertiesFileLocation()));
-        List<String> result = new ArrayList<>(reportsToGroups.stringPropertyNames());
-
-        if (sortDirection.contains("DESC"))
-        {
-            Collections.sort(result, Collections.reverseOrder());
-        }
-        else
-        {
-            Collections.sort(result);
-        }
-
-        if (startRow > result.size())
-        {
-            return result;
-        }
-        maxRows = maxRows > result.size() ? result.size() : maxRows;
-
-        if (!filterName.isEmpty())
-        {
-            result.removeIf(report -> !(report.toLowerCase().contains(filterName.toLowerCase())));
-        }
-
-        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
     @Override
@@ -502,61 +369,150 @@ public class ReportServiceImpl implements ReportService
         return obj;
     }
 
-    private Map<String, String> prepareReportToGroupsMapForSaving(Map<String, List<String>> reportsToGroupsMap)
+
+    private Map<String, String> prepareReportToRolesMapForSaving(Map<String, List<String>> reportsToRolesMap)
     {
         Map<String, String> retval = new HashMap<>();
 
-        if (reportsToGroupsMap != null && reportsToGroupsMap.size() > 0)
+        if (reportsToRolesMap != null && reportsToRolesMap.size() > 0)
         {
-            reportsToGroupsMap.forEach((key, value) -> retval.put(key, StringUtils.join(value, ",")));
+            reportsToRolesMap.forEach((key, value) -> retval.put(key, StringUtils.join(value, ",")));
         }
 
         return retval;
     }
 
-    private Map<String, List<String>> prepareReportToGroupsMapForRetrieving(Map<String, String> reportsToGroupsMap)
+    private Map<String, List<String>> prepareReportToRolesMapForRetrieving(Map<String, String> reportsToRolesMap)
     {
-        if (reportsToGroupsMap != null && reportsToGroupsMap.size() > 0)
-        {
-            Map<String, List<AcmGroup>> groupsCache = new HashMap<>();
-
-            return reportsToGroupsMap.entrySet().stream()
-                    .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
-                    .collect(Collectors.toMap(Entry::getKey,
-                            entry -> Arrays.stream(entry.getValue().split(","))
-                                    .flatMap(AcmRoleToGroupMapping.mapGroupsString(
-                                            name -> groupsCache.computeIfAbsent(name, it -> groupDao.findByMatchingName(it))))
-                                    .collect(Collectors.toList())));
-        }
-
-        return new HashMap<>();
+        return reportsToRolesMap.entrySet().stream()
+                .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
+                .collect(Collectors.toMap(Entry::getKey,
+                        entry -> Arrays.stream(entry.getValue().split(","))
+                                .collect(Collectors.toList())));
     }
 
     @Override
-    public String buildGroupsForReportSolrQuery(Boolean authorized, String reportId, String filterQuery) throws AcmEncryptionException
+    public Map<String, List<String>> getReportToRolesMap()
     {
-        StringBuilder solrQuery = new StringBuilder();
-        List<String> groupsForReport = new ArrayList<>(
-                Arrays.asList(propertyFileManager.load(getReportToGroupsMapPropertiesFileLocation(), reportId, "").split(",")));
+        Map<String, String> reportsToRolesMap = getReportToRolesMapProperties();
+        return prepareReportToRolesMapForRetrieving(reportsToRolesMap);
+    }
 
-        solrQuery.append(
-                "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED");
+    @Override
+    public List<String> getReportToRoles(String sortDirection, Integer startRow, Integer maxRows, String filterName) throws IOException
+    {
+        Properties reportsToRoles = propertyFileManager.readFromFile(new File(getReportToRolesMapPropertiesFileLocation()));
+        List<String> result = new ArrayList<>(reportsToRoles.stringPropertyNames());
 
-        if (!groupsForReport.equals(""))
+        if (sortDirection.contains("DESC"))
         {
-            solrQuery.append(authorized ? " AND name_lcs:" : " AND -name_lcs:");
-            solrQuery.append(groupsForReport.stream().collect(Collectors.joining("\" OR \"", "(\"", "\")")));
+            Collections.sort(result, Collections.reverseOrder());
         }
-        else if (authorized)
+        else
         {
-            return "";
+            Collections.sort(result);
         }
 
-        if (!filterQuery.isEmpty())
+        if (startRow > result.size())
         {
-            solrQuery.append(" AND name_partial:" + filterQuery);
+            return result;
         }
-        return solrQuery.toString();
+        maxRows = maxRows > result.size() ? result.size() : maxRows;
+
+        if (!filterName.isEmpty())
+        {
+            result.removeIf(report -> !(report.toLowerCase().contains(filterName.toLowerCase())));
+        }
+
+        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getReportToRolesPaged(String sortDirection, Integer startRow, Integer maxRows) throws IOException
+    {
+        return getReportToRoles(sortDirection, startRow, maxRows, "");
+    }
+
+    @Override
+    public List<String> getReportToRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterQuery)
+            throws IOException
+    {
+        return getReportToRoles(sortDirection, startRow, maxRows, filterQuery);
+    }
+
+    @Override
+    public boolean saveReportToRolesMap(Map<String, List<String>> reportToRolesMap, Authentication auth)
+    {
+        boolean success;
+        try
+        {
+            Map<String, String> prepared = prepareReportToRolesMapForSaving(reportToRolesMap);
+            getPropertyFileManager().storeMultiple(prepared,
+                    getReportToRolesMapPropertiesFileLocation(), true);
+            setReportToRolesMapProperties(prepared);
+            success = true;
+        }
+        catch (Exception e)
+        {
+            LOG.error("Cannot save report to roles map", e);
+            success = false;
+        }
+        return success;
+    }
+
+    @Override
+    public List<String> saveRolesToReport(String reportName, List<String> roles, Authentication auth)
+    {
+        String reportUpdated = "";
+        try
+        {
+            reportUpdated += getPropertyFileManager().load(getReportToRolesMapPropertiesFileLocation(), reportName, null);
+            reportUpdated += (reportUpdated.isEmpty() ? "" : ",") + roles.stream().collect(Collectors.joining(","));
+            getPropertyFileManager().store(reportName, reportUpdated, getReportToRolesMapPropertiesFileLocation(), false);
+        }
+        catch (AcmEncryptionException e)
+        {
+            LOG.warn("Cannot save roles to report", e);
+        }
+
+        return Arrays.asList(reportUpdated.split(","));
+
+    }
+
+    @Override
+    public List<String> removeRolesToReport(String reportName, List<String> roles, Authentication auth) throws Exception
+    {
+        String reportUpdated = "";
+        List<String> rolesForReport = new ArrayList<>(
+                Arrays.asList(propertyFileManager.load(getReportToRolesMapPropertiesFileLocation(), reportName, "").split(",")));
+
+        for (String role : roles)
+        {
+            rolesForReport.remove(role);
+        }
+
+        reportUpdated += rolesForReport.stream().collect(Collectors.joining(","));
+
+        getPropertyFileManager().store(reportName, reportUpdated, getReportToRolesMapPropertiesFileLocation(), false);
+
+        return Arrays.asList(reportUpdated.split(","));
+    }
+
+    @Override
+    public List<String> getRolesForReport(Boolean authorized, String reportId) throws AcmEncryptionException
+    {
+
+        List<String> rolesForReport = new ArrayList<>(
+                Arrays.asList(propertyFileManager.load(getReportToRolesMapPropertiesFileLocation(), reportId, "").split(",")));
+
+        if (!authorized)
+        {
+            return getApplicationRoles().stream()
+                    .filter(role -> rolesForReport.stream().noneMatch(r -> r.trim().equals(role)))
+                    .collect(Collectors.toList());
+        }
+
+        return rolesForReport;
     }
 
     public MuleContextManager getMuleContextManager()
@@ -599,16 +555,6 @@ public class ReportServiceImpl implements ReportService
         this.reportsPropertiesFileLocation = reportsPropertiesFileLocation;
     }
 
-    public String getReportToGroupsMapPropertiesFileLocation()
-    {
-        return reportToGroupsMapPropertiesFileLocation;
-    }
-
-    public void setReportToGroupsMapPropertiesFileLocation(String reportToGroupsMapPropertiesFileLocation)
-    {
-        this.reportToGroupsMapPropertiesFileLocation = reportToGroupsMapPropertiesFileLocation;
-    }
-
     public String getReportServerConfigPropertiesFileLocation()
     {
         return reportServerConfigPropertiesFileLocation;
@@ -617,16 +563,6 @@ public class ReportServiceImpl implements ReportService
     public void setReportServerConfigPropertiesFileLocation(String reportServerConfigPropertiesFileLocation)
     {
         this.reportServerConfigPropertiesFileLocation = reportServerConfigPropertiesFileLocation;
-    }
-
-    public Map<String, String> getReportToGroupsMapProperties()
-    {
-        return reportToGroupsMapProperties;
-    }
-
-    public void setReportToGroupsMapProperties(Map<String, String> reportToGroupsMapProperties)
-    {
-        this.reportToGroupsMapProperties = reportToGroupsMapProperties;
     }
 
     public Map<String, String> getReportPluginProperties()
@@ -659,8 +595,33 @@ public class ReportServiceImpl implements ReportService
         this.searchResults = searchResults;
     }
 
-    public void setGroupDao(AcmGroupDao groupDao)
+    public String getReportToRolesMapPropertiesFileLocation()
     {
-        this.groupDao = groupDao;
+        return reportToRolesMapPropertiesFileLocation;
+    }
+
+    public void setReportToRolesMapPropertiesFileLocation(String reportToRolesMapPropertiesFileLocation)
+    {
+        this.reportToRolesMapPropertiesFileLocation = reportToRolesMapPropertiesFileLocation;
+    }
+
+    public Map<String, String> getReportToRolesMapProperties()
+    {
+        return reportToRolesMapProperties;
+    }
+
+    public void setReportToRolesMapProperties(Map<String, String> reportToRolesMapProperties)
+    {
+        this.reportToRolesMapProperties = reportToRolesMapProperties;
+    }
+
+    public Properties getApplicationRolesProperties()
+    {
+        return applicationRolesProperties;
+    }
+
+    public void setApplicationRolesProperties(Properties applicationRolesProperties)
+    {
+        this.applicationRolesProperties = applicationRolesProperties;
     }
 }

@@ -88,7 +88,7 @@ public class BillingItemDao extends AcmAbstractDao<BillingItem>
         return saved;
     }
 
-    private int getNextItemNumber(String parentObjectType, Long parentObjectId)
+    private synchronized int getNextItemNumber(String parentObjectType, Long parentObjectId)
     {
         String queryText = "SELECT MAX(billingItem.itemNumber) " +
                 "FROM BillingItem billingItem " +

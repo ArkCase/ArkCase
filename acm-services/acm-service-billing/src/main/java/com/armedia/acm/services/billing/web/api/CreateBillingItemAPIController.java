@@ -50,7 +50,6 @@ public class CreateBillingItemAPIController
 {
     BillingService billingService;
 
-    // @PreAuthorize("hasPermission(#billingItem.parentObjectId, #billingItem.parentObjectType, 'createBillingItem')")
     @RequestMapping(value = "/items", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public BillingItem createBillingItem(

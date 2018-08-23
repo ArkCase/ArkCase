@@ -1,8 +1,8 @@
-package com.armedia.acm.services.billing;
+package com.armedia.acm.form.config;
 
 /*-
  * #%L
- * ACM Service: Billing
+ * ACM Service: Form Configuration
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -26,39 +26,32 @@ package com.armedia.acm.services.billing;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-    extends TestCase
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class FormsTypeCheckService
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private FormsTypeManagementService formsTypeManagementService;
+
+    public String getTypeOfForm()
     {
-        super( testName );
+        String formsType = "";
+        try
+        {
+            formsType = formsTypeManagementService.getProperty("formsType").get("formsType").toString();
+        }
+        catch (Exception e)
+        {
+            String msg = "Can't retrieve application property";
+            log.error(msg, e);
+        }
+        return formsType;
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
+    public void setFormsTypeManagementService(FormsTypeManagementService formsTypeManagementService)
     {
-        return new TestSuite( AppTest.class );
-    }
-
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+        this.formsTypeManagementService = formsTypeManagementService;
     }
 }
