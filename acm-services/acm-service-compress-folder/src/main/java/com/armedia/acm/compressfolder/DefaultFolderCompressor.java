@@ -227,13 +227,12 @@ public class DefaultFolderCompressor implements FolderCompressor
             }
             catch (IOException e)
             {
-                // TODO add proper logging
-                e.printStackTrace();
+                log.warn("ZIP creation: Error while creating zip entry for object with [{}] id of [{}] type.", c.getId(), c.getObjectType(),
+                        e);
             }
             catch (AcmUserActionFailedException e)
             {
-                // TODO add proper logging
-                e.printStackTrace();
+                log.warn("Error while downloading stream for object with [{}] id of [{}] type.", c.getId(), c.getObjectType(), e);
             }
         });
 
@@ -254,13 +253,12 @@ public class DefaultFolderCompressor implements FolderCompressor
             }
             catch (IOException e)
             {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.warn("ZIP creation: Error while creating zip entry for object with [{}] id of [{}] type.", c.getId(), c.getObjectType(),
+                        e);
             }
             catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
             {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.warn("Error while downloading stream for object with [{}] id of [{}] type.", c.getId(), c.getObjectType(), e);
             }
         });
 

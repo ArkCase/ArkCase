@@ -305,11 +305,11 @@ public class FolderCompressorTest extends EasyMockSupport
         expect(mockedResponseFolder.getName()).andReturn("Response").atLeastOnce();
         expect(mockedResponseFolder.getId()).andReturn(folderId).atLeastOnce();
         expect(mockedFolderService.getFolderChildren(folderId)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel1File)));
-        expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(3);
+        expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).anyTimes();
         expect(mockedLevel1File.getFileName()).andReturn(bigFile.getName());
         expect(mockedLevel1File.getFileActiveVersionNameExtension())
                 .andReturn("." + FilenameUtils.getExtension(bigFile.getName())).anyTimes();
-        expect(mockedLevel1File.getId()).andReturn(folderId);
+        expect(mockedLevel1File.getId()).andReturn(folderId).anyTimes();
         expect(mockedFileService.downloadAsInputStream(folderId)).andReturn(new FileInputStream(bigFile));
 
         replayAll();
