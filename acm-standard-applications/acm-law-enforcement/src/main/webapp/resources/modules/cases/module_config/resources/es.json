@@ -361,6 +361,34 @@
             "approverDecision": "Aprobación de la decisión"
         }
     },
+    "cases.comp.change.status": {
+        "title": "es_Change Case Status",
+        "information": {
+            "title": "es_Change Case Status Information",
+            "date": "es_Change Date",
+            "case.number": "es_Case Number",
+            "status": {
+                "title": "es_Status",
+                "resolution": {
+                    "title": "es_Case Resolution",
+                    "denied": "es_Denied",
+                    "full": "es_Full",
+                    "partial": "es_Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "es_Select Approver",
+            "label": "es_Select Approver",
+            "addAnother": "es_Add another",
+            "remove": "es_Remove Approver",
+            "pickerModal.header": "es_Choose Approver"
+        },
+        "button": {
+            "cancel": "es_Cancel",
+            "save": "es_Save"
+        }
+    },
     "cases.comp.newCase": {
         "title": "es_New Case File",
         "editCase.title": "es_Edit Case File",

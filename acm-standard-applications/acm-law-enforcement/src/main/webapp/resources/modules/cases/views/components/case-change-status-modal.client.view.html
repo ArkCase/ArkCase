@@ -1,0 +1,122 @@
+<form name="changeCaseFileStateForm" ng-submit="save()">
+    <div class="modal-header">
+        <h3><span translate>cases.comp.change.status.title</span></h3>
+    </div>
+    <div class="modal-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="accordion46" href="#collapseInfo" translate>cases.comp.change.status.information.title</a>
+                </h4>
+            </div>
+            <div id="collapseInfo" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="row form-group">
+                        <div class="col-sm-6">
+                            <span translate>cases.comp.change.status.information.date</span>
+                            <p class="input-group">
+                                <input type="text" class="form-control" ng-model="changeCaseStatus.changeDate"
+                                        datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                        datepicker-append-to-body="false" is-open="defaultOpened" close-on-date-selection="true"
+                                        show-button-bar="true" on-open-focus="false"
+                                        close-text="{{'complaints.comp.newComplaint.incidentDate.close.button' | translate}}" />
+                                <span class="input-group-btn">
+                                     <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
+                                             <i class="fa fa-calendar"></i>
+                                     </button>
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-sm-6">
+                            <span translate>cases.comp.change.status.information.case.number</span>
+                            <input type="text" ng-model="modalParams.caseNumber" class="input-md form-control" disabled>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-6">
+                            <span translate>cases.comp.change.status.information.status.title</span>
+                            <p class="input-group">
+                                <select ng-model="changeCaseStatus.status" ng-change="statusChanged()" class="form-control input-md"
+                                        required>
+                                    <option ng-repeat="option in statuses" ng-value="option.key">
+                                        {{option.value | translate}}
+                                    </option>
+                                </select>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row form-group" ng-if="showCaseCloseStatus">
+                        <div class="col-sm-6">
+                            <span translate>cases.comp.change.status.information.status.resolution.title</span>
+                            <p class="input-group">
+                                <label class="radio-inline"><input ng-model="changeCaseStatus.caseResolution" type="radio"
+                                        name="caseResolution"
+                                        value="{{'cases.comp.change.status.information.status.resolution.denied' | translate}}"><span
+                                        translate>cases.comp.change.status.information.status.resolution.denied</span></label>
+                                <label class="radio-inline"><input ng-model="changeCaseStatus.caseResolution" type="radio"
+                                        name="caseResolution"
+                                        value="{{'cases.comp.change.status.information.status.resolution.full' | translate}}"><span
+                                        translate>cases.comp.change.status.information.status.resolution.full</span></label>
+                                <label class="radio-inline"><input ng-model="changeCaseStatus.caseResolution" type="radio"
+                                        name="caseResolution"
+                                        value="{{'cases.comp.change.status.information.status.resolution.partial' | translate}}"><span
+                                        translate>cases.comp.change.status.information.status.resolution.partial</span></label>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="well-sm">
+            <div class="row">
+                <div class="col-sm-5">
+                    <label for="participant">{{'cases.comp.change.status.approver.label' | translate}} <span
+                            class="required-asterisk">*</span></label>
+                </div>
+            </div>
+            <div class="" ng-repeat="participant in changeCaseStatus.participants">
+                <div class="row">
+                    <div class="col-sm-4 form-group">
+                        <input type="text" id="participant" ng-model="participant.participantLdapId"
+                                class="input-md form-control user-picker-input"
+                                placeholder="{{ 'cases.comp.change.status.approver.placeholder' | translate }}"
+                                ng-click="addApprover($index)" readonly required>
+                    </div>
+                    <div class="col-sm-4 pull-left form-group">
+                        <div class="pull-left">
+                            <button type="button" class="btn btn-link form-control" ng-click="removeApprover(participant)"
+                                    ng-show="!$first">
+                                <i class="fa fa-minus text-danger"></i><span translate>cases.comp.change.status.approver.remove</span>
+                            </button>
+                        </div>
+                        <div class="pull-left">
+                            <button type="button" class="btn btn-link form-control" ng-click="addNewApprover()"
+                                    ng-disabled="!participant.email_lcs" ng-show="$last">
+                                <i class="fa fa-plus text-success"></i><span translate>cases.comp.change.status.approver.addAnother</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="well-sm">
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <summernote config="options" ng-model="changeCaseStatus.description"></summernote>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
+            <span translate>cases.comp.change.status.button.cancel</span>
+        </button>
+        <button type="submit" ng-disabled="changeCaseFileStateForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+                id="saveButton" data-title="Save">
+            <i class="{{loadingIcon}}"></i>
+            <span translate>cases.comp.change.status.button.save</span>
+        </button>
+    </div>
+</form>

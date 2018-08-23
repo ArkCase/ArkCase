@@ -361,6 +361,34 @@
             "approverDecision": "承認者の決定"
         }
     },
+    "cases.comp.change.status": {
+        "title": "ja_Change Case Status",
+        "information": {
+            "title": "ja_Change Case Status Information",
+            "date": "ja_Change Date",
+            "case.number": "ja_Case Number",
+            "status": {
+                "title": "ja_Status",
+                "resolution": {
+                    "title": "ja_Case Resolution",
+                    "denied": "ja_Denied",
+                    "full": "ja_Full",
+                    "partial": "ja_Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "ja_Select Approver",
+            "label": "ja_Select Approver",
+            "addAnother": "ja_Add another",
+            "remove": "ja_Remove Approver",
+            "pickerModal.header": "ja_Choose Approver"
+        },
+        "button": {
+            "cancel": "ja_Cancel",
+            "save": "ja_Save"
+        }
+    },
     "cases.comp.newCase": {
         "title": "ja_New Case File",
         "editCase.title": "ja_Edit Case File",
