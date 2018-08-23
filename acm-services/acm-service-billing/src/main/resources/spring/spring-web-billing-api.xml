@@ -14,10 +14,6 @@
         <property name="billingService" ref="billingService"/>
     </bean>
     
-    <bean id="getAllLatestBillingInvoices" class="com.armedia.acm.services.billing.web.api.GetAllLatestBillingInvoicesAPIController">
-        <property name="billingService" ref="billingService"/>
-    </bean>
-
     <bean id="createBillingInvoice" class="com.armedia.acm.services.billing.web.api.CreateBillingInvoiceAPIController">
         <property name="billingService" ref="billingService"/>
     </bean>

@@ -30,9 +30,9 @@ package com.armedia.acm.form.casefile.service;
  * #L%
  */
 
+import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
-import com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 
@@ -52,23 +52,13 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
 
     private Properties properties;
     private FrevvoFormService caseFileService;
-    private JsonPropertiesManagementService jsonPropertiesManagementService;
+    private FormsTypeCheckService formsTypeCheckService;
 
     @Override
     public void onApplicationEvent(CaseEvent event)
     {
-        String formsType = "";
-        try
-        {
-            formsType = jsonPropertiesManagementService.getProperty("formsType").get("formsType").toString();
-        }
-        catch (Exception e)
-        {
-            String msg = "Can't retrieve application property";
-            LOG.error(msg, e);
-        }
 
-        if (formsType.equals("frevvo"))
+        if (formsTypeCheckService.getTypeOfForm().equals("frevvo"))
         {
             if ("com.armedia.acm.casefile.created".equals(event.getEventType().toLowerCase())
                     || "com.armedia.acm.casefile.updated".equals(event.getEventType().toLowerCase()))
@@ -100,9 +90,9 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
         }
     }
 
-    public void setJsonPropertiesManagementService(JsonPropertiesManagementService jsonPropertiesManagementService)
+    public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService)
     {
-        this.jsonPropertiesManagementService = jsonPropertiesManagementService;
+        this.formsTypeCheckService = formsTypeCheckService;
     }
 
     public Properties getProperties()

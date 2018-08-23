@@ -124,7 +124,7 @@ angular.module('directives').directive(
                                 });
 
                                 modalInstance.result.then(function(data) {
-                                    if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
+                                    if (ObjectParticipantService.validateType(data.participant.participantLdapId, data.participant.participantType)) {
                                         scope.participant.id = data.participant.id;
                                         scope.participant.participantLdapId = data.participant.participantLdapId;
                                         scope.participant.participantType = data.participant.participantType;

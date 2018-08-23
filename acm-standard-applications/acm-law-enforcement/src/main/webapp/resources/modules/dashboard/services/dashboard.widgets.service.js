@@ -61,4 +61,11 @@ angular.module('dashboard').factory('Dashboard.WidgetService', [ '$http', functi
             return (response && response.data && response.data.query.results) ? response.data.query.results.rss.channel : null;
         });
     }
+    return data;
+
+    function serviceError(errorResponse) {
+        $log.error("JSONP request failed for Dashboard.WidgetService");
+        $log.error(errorResponse);
+        return $q.reject(errorResponse);
+    }
 } ]);
