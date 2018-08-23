@@ -269,7 +269,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     private String legacySystemId;
 
     @Column(name = "cm_case_denied_flag")
-    private boolean deniedFlag = false;
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean deniedFlag = Boolean.FALSE;
 
     @PrePersist
     protected void beforeInsert()
@@ -800,7 +801,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     /**
      * @return the deniedFlag
      */
-    public boolean isDeniedFlag()
+    public Boolean getDeniedFlag()
     {
         return deniedFlag;
     }
@@ -809,7 +810,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
      * @param deniedFlag
      *            the deniedFlag to set
      */
-    public void setDeniedFlag(boolean deniedFlag)
+    public void setDeniedFlag(Boolean deniedFlag)
     {
         this.deniedFlag = deniedFlag;
     }

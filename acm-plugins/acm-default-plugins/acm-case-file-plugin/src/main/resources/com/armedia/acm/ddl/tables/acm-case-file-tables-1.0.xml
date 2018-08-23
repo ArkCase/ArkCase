@@ -533,8 +533,7 @@
 
     <changeSet id="33-add-denied-flag-column" author="sasko.tanaskoski">
         <addColumn tableName="acm_case_file">
-            <column name="cm_case_denied_flag" type="BOOLEAN" defaultValueBoolean="false">
-                <constraints nullable="false"/>
+            <column name="cm_case_denied_flag" type="VARCHAR(10)" defaultValue="false">
             </column>
         </addColumn>
     </changeSet>
