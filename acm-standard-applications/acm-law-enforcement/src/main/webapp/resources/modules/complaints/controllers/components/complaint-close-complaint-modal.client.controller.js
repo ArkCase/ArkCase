@@ -15,6 +15,7 @@ angular.module('complaints').controller(
                     $scope.save = save;
                     $scope.cancelModal = cancelModal;
                     //Objects
+                    $scope.complaintInfo = {};
                     $scope.closeComplaintRequest = {
                         complaintId: modalParams.info.complaintId,
                         disposition: {
@@ -32,7 +33,7 @@ angular.module('complaints').controller(
                             creator: null,
                             modified: null,
                             modifier: null,
-                            className: "com.armedia.acm.plugins.casefile.model.Disposition"
+                            className: ""
                         },
                         status: "IN APPROVAL",
                         objectType: "CLOSE_COMPLAINT_REQUEST",
@@ -56,6 +57,8 @@ angular.module('complaints').controller(
                         $scope.futureTaskConfig = _.find(moduleConfig.components, {
                             id: "newFutureTask"
                         });
+                        $scope.complaintInfo = moduleConfig;
+                        $scope.closeComplaintRequest.disposition.className = moduleConfig.closeComplaintClassNames.disposition.className;
                     });
 
                     ConfigService.getComponentConfig("complaints", "participants").then(function(componentConfig) {
@@ -104,7 +107,7 @@ angular.module('complaints').controller(
                                 types: null,
                                 value: null,
                                 description: null,
-                                className: "com.armedia.acm.plugins.addressable.model.ContactMethod",
+                                className: $scope.complaintInfo.closeComplaintClassNames.disposition.referExternalMethod.className,
                                 objectType: "CONTACT_METHOD"
                             };
 
@@ -150,7 +153,7 @@ angular.module('complaints').controller(
                         modalInstance.result.then(function(data) {
                             if (data) {
                                 var approver = {
-                                    className: "com.armedia.acm.services.participants.model.AcmParticipant",
+                                    className: $scope.config.className,
                                     objectType: null,
                                     objectId: null,
                                     participantType: "approver",
