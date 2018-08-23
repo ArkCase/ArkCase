@@ -57,6 +57,7 @@ public class ExecuteSolrQuery
     private ObjectConverter objectConverter;
     private SendDocumentsToSolr sendDocumentsToSolr;
     private boolean enableDocumentACL;
+    private boolean includeDenyAccessFilter;
 
     /**
      * Executes solr queries and returns results as String
@@ -351,6 +352,7 @@ public class ExecuteSolrQuery
         headers.put("filterSubscriptionEvents", filterSubscriptionEvents);
         headers.put("rowQueryParametars", rowQueryParameters);
         headers.put("enableDocumentACL", isEnableDocumentACL());
+        headers.put("includeDenyAccessFilter", isIncludeDenyAccessFilter());
         headers.put("indent", indent ? indent : "");
         headers.put("df", defaultField);
 
@@ -417,6 +419,16 @@ public class ExecuteSolrQuery
     public void setEnableDocumentACL(boolean enableDocumentACL)
     {
         this.enableDocumentACL = enableDocumentACL;
+    }
+
+    public boolean isIncludeDenyAccessFilter()
+    {
+        return includeDenyAccessFilter;
+    }
+
+    public void setIncludeDenyAccessFilter(boolean includeDenyAccessFilter)
+    {
+        this.includeDenyAccessFilter = includeDenyAccessFilter;
     }
 
     public SendDocumentsToSolr getSendDocumentsToSolr()

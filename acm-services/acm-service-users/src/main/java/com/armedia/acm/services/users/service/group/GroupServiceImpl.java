@@ -716,4 +716,31 @@ public class GroupServiceImpl implements GroupService
     {
         this.acmGroupEventPublisher = acmGroupEventPublisher;
     }
+
+    @Override
+    public boolean isUserMemberOfGroup(String userId, String groupName)
+    {
+        AcmUser user = userDao.findByUserId(userId);
+        List<AcmGroup> groups = findByUserMember(user);
+
+        for (AcmGroup group : groups)
+        {
+            if (group.getName().equals(groupName))
+            {
+                return true;
+            }
+
+            // check ascendant groups
+            Set<String> ascendantGroupNames = group.getAscendants();
+            for (String ascendantGroupName : ascendantGroupNames)
+            {
+                if (ascendantGroupName.equals(groupName))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

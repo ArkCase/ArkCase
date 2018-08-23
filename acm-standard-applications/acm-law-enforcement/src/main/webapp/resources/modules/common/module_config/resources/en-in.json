@@ -200,7 +200,10 @@
         "noData.text": "No Results",
         "pickUserLabel": "Pick Associated User",
         "pickGroupLabel": "Pick Associated Group",
-        "selectedItemsGrid.label": "Selected entries"
+        "selectedItemsGrid.label": "Selected entries",
+        "notValidUser": "en-in_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
+        "notValidGroup": "en-in_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
+
     },
     "common.directive.search": {
         "showMore.button.text": "Show More Values",
@@ -731,6 +734,9 @@
             "identificationYearIssued": "Identification Issued",
             "identificationYearIssued.placeholder": "Select Identification Issued",
             "identificationYearIssued.close.button": "Close"
+        },
+        "details": {
+            "title": "en-in_Details"
         }
     },
     "common.addPerson": {
@@ -848,12 +854,7 @@
         "people": {
             "title": "People",
             "searchExisting.placeholder": "Search Existing Person",
-            "personType": "Person Type",
-            "comp":{
-                "details":{
-                    "title":"en-in_Details"
-                }
-            }
+            "personType": "Person Type"
         },
         "locations": {
             "title": "Locations",

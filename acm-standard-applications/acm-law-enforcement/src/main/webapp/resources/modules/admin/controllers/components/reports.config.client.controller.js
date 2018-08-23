@@ -32,7 +32,7 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
         "loadUnauthorizedScroll": $scope.reportsUnauthorizedScroll,
         "loadAuthorizedScroll": $scope.reportsAuthorizedScroll
     };
-    var currentAuthGroups = [];
+    var currentAuthRoles = [];
     $scope.reportsData.chooseObject = [];
     $scope.reportsMap = [];
     $scope.reportsConfig = null;
@@ -51,18 +51,18 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
     function reportsUnauthorizedFilter(data) {
         data.isAuthorized = false;
         data.report = $scope.lastSelectedReport;
-        ReportsConfigService.getGroupsForReportByName(data).then(function(response) {
+        ReportsConfigService.getRolesForReportByName(data).then(function(response) {
             $scope.reportsData.selectedNotAuthorized = [];
-            fillList($scope.reportsData.selectedNotAuthorized, response.data.response.docs);
+            fillList($scope.reportsData.selectedNotAuthorized, response.data);
         });
     }
 
     function reportsAuthorizedFilter(data) {
         data.isAuthorized = true;
         data.report = $scope.lastSelectedReport;
-        ReportsConfigService.getGroupsForReportByName(data).then(function(response) {
+        ReportsConfigService.getRolesForReportByName(data).then(function(response) {
             $scope.reportsData.selectedAuthorized = [];
-            fillList($scope.reportsData.selectedAuthorized, response.data.response.docs);
+            fillList($scope.reportsData.selectedAuthorized, response.data);
         });
     }
 
@@ -82,7 +82,7 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
             start: $scope.reportsData.selectedNotAuthorized.length,
             isAuthorized: false
         };
-        $scope.retrieveDataScroll(data, "getGroupsForReport", "selectedNotAuthorized");
+        $scope.retrieveDataScroll(data, "getRolesForReport", "selectedNotAuthorized");
     }
 
     function reportsAuthorizedScroll() {
@@ -91,7 +91,7 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
             start: $scope.reportsData.selectedAuthorized.length,
             isAuthorized: true
         };
-        $scope.retrieveDataScroll(data, "getGroupsForReport", "selectedAuthorized");
+        $scope.retrieveDataScroll(data, "getRolesForReport", "selectedAuthorized");
     }
 
     function retrieveDataScroll(data, methodName, panelName) {
@@ -99,12 +99,12 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
             if (_.isArray(response.data)) {
                 $scope.fillList($scope.reportsData[panelName], response.data);
             } else {
-                $scope.fillList($scope.reportsData[panelName], response.data.response.docs);
+                $scope.fillList($scope.reportsData[panelName], response.data);
             }
             if (panelName === "selectedAuthorized") {
-                currentAuthGroups = [];
+                currentAuthRoles = [];
                 _.forEach($scope.reportsData[panelName], function(obj) {
-                    currentAuthGroups.push(obj.key);
+                    currentAuthRoles.push(obj.key);
                 });
             }
         }, function() {
@@ -115,17 +115,17 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
     $scope.execute = function() {
         var tempReportsPentahoPromise = ReportsConfigService.getReportsPaged({});
         var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
-        var tempReportsUserGroupsPromise = ReportsConfigService.getReportsUserGroups();
+        var tempReportsRolesPromise = ReportsConfigService.getReportsRoles();
 
         //wait all promises to resolve
-        $q.all([ tempReportsPentahoPromise, promiseServerConfig, tempReportsUserGroupsPromise ]).then(function(payload) {
+        $q.all([ tempReportsPentahoPromise, promiseServerConfig, tempReportsRolesPromise ]).then(function(payload) {
             $scope.reportsData.chooseObject = [];
             //get all reports
             fillListReport($scope.reportsMap, payload[0].data, $scope.reportsData.chooseObject);
 
             $scope.reportsConfig = payload[1];
 
-            $scope.reportsUserGroups = payload[2].data;
+            $scope.reportsRoles = payload[2].data;
 
             var url = $scope.reportsConfig['PENTAHO_SERVER_URL'] + '/pentaho';
             $scope.reportDesignerUrl = $sce.trustAsResourceUrl(url);
@@ -138,8 +138,8 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
     function fillList(listToFill, data) {
         _.forEach(data, function(obj) {
             var element = {};
-            element.name = obj.object_id_s;
-            element.key = obj.object_id_s;
+            element.name = obj;
+            element.key = obj;
             listToFill.push(element);
         });
     }
@@ -166,50 +166,50 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
         $scope.lastSelectedReport = [];
         $scope.lastSelectedReport = selectedObject;
         data.isAuthorized = false;
-        var unAuthorizedGroupsForReport = ReportsConfigService.getGroupsForReport(data);
+        var unAuthorizedRolesForReport = ReportsConfigService.getRolesForReport(data);
         data.isAuthorized = true;
-        var authorizedGroupsForReport = ReportsConfigService.getGroupsForReport(data);
-        $q.all([ authorizedGroupsForReport, unAuthorizedGroupsForReport ]).then(function(result) {
-            currentAuthGroups = [];
-            //set authorized groups
-            _.forEach(result[0].data.response.docs, function(obj) {
+        var authorizedRolesForReport = ReportsConfigService.getRolesForReport(data);
+        $q.all([ authorizedRolesForReport, unAuthorizedRolesForReport ]).then(function(result) {
+            currentAuthRoles = [];
+            //set authorized roles
+            _.forEach(result[0].data, function(obj) {
                 var element = {};
-                element.name = obj.object_id_s;
-                element.key = obj.object_id_s;
+                element.name = obj;
+                element.key = obj;
                 $scope.reportsData.selectedAuthorized.push(element);
-                currentAuthGroups.push(element.key);
+                currentAuthRoles.push(element.key);
             });
 
-            //set not authorized groups.
-            fillList($scope.reportsData.selectedNotAuthorized, result[1].data.response.docs);
+            //set not authorized roles.
+            fillList($scope.reportsData.selectedNotAuthorized, result[1].data);
         });
     };
 
-    //callback function when groups are moved
+    //callback function when roles are moved
     $scope.onAuthRoleSelected = function(selectedObject, authorized, notAuthorized) {
         var toBeAdded = [];
         var toBeRemoved = [];
 
         //get roles which needs to be added
-        _.forEach(authorized, function(group) {
-            if (currentAuthGroups.indexOf(group.key) === -1) {
-                toBeAdded.push(group.key);
+        _.forEach(authorized, function(role) {
+            if (currentAuthRoles.indexOf(role.key) === -1) {
+                toBeAdded.push(role.key);
             }
         });
-        _.forEach(notAuthorized, function(group) {
-            if (currentAuthGroups.indexOf(group.key) !== -1) {
-                toBeRemoved.push(group.key);
+        _.forEach(notAuthorized, function(role) {
+            if (currentAuthRoles.indexOf(role.key) !== -1) {
+                toBeRemoved.push(role.key);
             }
         });
         //perform adding on server
         if (toBeAdded.length > 0) {
-            currentAuthGroups = currentAuthGroups.concat(toBeAdded);
+            currentAuthRoles = currentAuthRoles.concat(toBeAdded);
 
-            ReportsConfigService.addGroupsToReport(selectedObject.key, toBeAdded).then(function(data) {
+            ReportsConfigService.addRolesToReport(selectedObject.key, toBeAdded).then(function(data) {
                 $scope.reCreateReports(selectedObject, data.data);
                 MessageService.succsessAction();
             }, function() {
-                //error adding group
+                //error adding role
                 MessageService.errorAction();
             });
             return deferred.promise;
@@ -217,14 +217,14 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
 
         if (toBeRemoved.length > 0) {
             _.forEach(toBeRemoved, function(element) {
-                currentAuthGroups.splice(currentAuthGroups.indexOf(element), 1);
+                currentAuthRoles.splice(currentAuthRoles.indexOf(element), 1);
             });
 
-            ReportsConfigService.removeGroupsFromReport(selectedObject.key, toBeRemoved).then(function(data) {
+            ReportsConfigService.removeRolesFromReport(selectedObject.key, toBeRemoved).then(function(data) {
                 $scope.reCreateReports(selectedObject, data.data);
                 MessageService.succsessAction();
             }, function() {
-                //error adding group
+                //error adding role
                 MessageService.errorAction();
             });
             return deferred.promise;
@@ -233,17 +233,17 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
     };
 
     $scope.reCreateReports = function(selectedObject, authorized) {
-        $scope.reportsUserGroups[selectedObject.key] = [];
+        $scope.reportsRoles[selectedObject.key] = [];
         angular.forEach(authorized, function(element) {
-            $scope.reportsUserGroups[selectedObject.key].push(element);
+            $scope.reportsRoles[selectedObject.key].push(element);
         });
-        ReportsConfigService.saveReportsUserGroups($scope.reportsUserGroups);
+        ReportsConfigService.saveReportsRoles($scope.reportsRoles);
 
         //recreate reports array
         var reports = [];
         for ( var key in $scope.reportsMap) {
-            if ($scope.reportsUserGroups && $scope.reportsUserGroups[key]) {
-                var injected = $scope.reportsUserGroups[key].length === 0 ? false : true;
+            if ($scope.reportsRoles && $scope.reportsRoles[key]) {
+                var injected = $scope.reportsRoles[key].length === 0 ? false : true;
                 $scope.reportsMap[key].injected = injected;
             }
 

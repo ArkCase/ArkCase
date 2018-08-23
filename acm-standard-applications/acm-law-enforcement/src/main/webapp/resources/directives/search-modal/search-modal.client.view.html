@@ -78,10 +78,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-12 div-mt">
+                        <div  ng-if="firstGridSelected && userNotValid && selectedDetailItem == null" class="alert alert-danger">
+                            <span>{{ 'common.directive.searchModal.notValidUser' | translate: {owningGroup: participant.owningGroup} }}</span>
+                        </div>
+                        <div ng-if="firstGridSelected && groupNotValid && selectedDetailItem == null" class="alert alert-danger">
+                            <span>{{ 'common.directive.searchModal.notValidGroup' | translate: {assignee: participant.assignee.name} }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <div class="modal-footer" ng-if="showHeaderFooter">
@@ -89,7 +98,7 @@
         {{cancel}}
     </button>
     <button class="btn btn-primary" ng-click="onClickOk()"
-            ng-disabled="selectedItems.length < 1 || (secondGrid && selectedDetailItem == null)">
+            ng-disabled="selectedItems.length < 1 || (secondGrid && selectedDetailItem == null && !secondSelectionOptional) || (secondSelectionOptional && selectedDetailItem == null && disableSearchButton) ">
         {{ok}}
     </button>
 </div>
