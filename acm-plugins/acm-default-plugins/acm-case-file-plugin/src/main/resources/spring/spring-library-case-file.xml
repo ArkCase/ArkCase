@@ -31,7 +31,7 @@
         <property name="objectConverter" ref="objectConverter"/>
         <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
     </bean>
-    
+
     <bean id="changeCaseStatusTaskName" class="java.lang.String">
         <constructor-arg>
             <value>Request to Change Case Status '%s'</value>
@@ -94,7 +94,6 @@
         class="com.armedia.acm.plugins.casefile.pipeline.postsave.PDFChangeCaseFileStateDocumentGeneratorHandler"
         parent="pdfChangeCaseFileStateDocumentGenerator">
         <property name="pdfChangeCaseFileStateDocumentGenerator" ref="pdfChangeCaseFileStateDocumentGenerator"/>
-        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
         <property name="dao" ref="caseFileDao"/>
     </bean>
 
@@ -224,7 +223,8 @@
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
-    <bean id="pdfCasefileDocumentGenerator" class="com.armedia.acm.plugins.casefile.service.PDFCasefileDocumentGenerator"
+    <bean id="pdfCasefileDocumentGenerator"
+        class="com.armedia.acm.plugins.casefile.service.PDFCasefileDocumentGenerator"
         parent="pdfDocumentGenerator">
     </bean>
 </beans>
