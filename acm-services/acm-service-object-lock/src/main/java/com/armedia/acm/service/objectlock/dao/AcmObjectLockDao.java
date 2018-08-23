@@ -75,6 +75,10 @@ public class AcmObjectLockDao extends AcmAbstractDao<AcmObjectLock>
 
     public void remove(AcmObjectLock ol)
     {
+        if (!getEm().contains(ol))
+        {
+            ol = getEm().merge(ol);
+        }
         getEm().remove(ol);
     }
 
