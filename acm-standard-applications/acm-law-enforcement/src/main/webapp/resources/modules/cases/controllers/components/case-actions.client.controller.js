@@ -82,17 +82,7 @@ angular.module('cases').controller(
 
                         $scope.editCaseParams = {
                             isEdit: true,
-                            casefile: objectInfo,
-                            caseId: objectInfo.id,
-                            caseTitle: objectInfo.title,
-                            caseType: objectInfo.caseType,
-                            initiator: objectInfo.originator.person.givenName + " " + objectInfo.originator.person.familyName,
-                            details: objectInfo.details,
-                            personAssociations: objectInfo.personAssociations,
-                            participants: objectInfo.participants,
-                            caseNumber: objectInfo.caseNumber,
-                            containerId: objectInfo.container.id,
-                            folderId: objectInfo.container.folder.id
+                            casefile: objectInfo
                         };
                     };
 
@@ -104,7 +94,7 @@ angular.module('cases').controller(
                     };
 
                     $scope.editCaseFile = function() {
-                        showModal($scope.editCaseParams, true);
+                        showModal($scope.editCaseParams);
                     };
 
                     function showModal(params) {
