@@ -108,7 +108,8 @@
                 "witnessInterview2%": "证人面试请求2.0"
             }
         },
-        "newTask": "新任务"
+        "newTask": "新任务",
+        "addDocument": "选择要添加的文档。"
     },
     "cases.comp.people": {
         "title": "成员",
