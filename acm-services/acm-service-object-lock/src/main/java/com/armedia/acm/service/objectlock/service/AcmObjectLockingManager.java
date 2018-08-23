@@ -33,7 +33,6 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +46,6 @@ import java.util.Map;
  */
 public class AcmObjectLockingManager
 {
-    private Date nextCleanup = null;
     private Map<String, ObjectLockingProvider> objectLockingProvidersMap = new HashMap<>();
     private ObjectLockingProvider defaultObjectLockingProvider;
 
@@ -139,7 +137,7 @@ public class AcmObjectLockingManager
         getObjectLockingProvider(objectType).releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId, lockId);
     }
 
-    @Scheduled(fixedRateString = "10000")
+    @Scheduled(fixedRateString = "${expired_locks.scan_interval}")
     public void automaticallyReleaseExpiredLocks()
     {
         acmObjectLockService.removeExpiredLocks();

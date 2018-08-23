@@ -72,7 +72,8 @@ public class FolderLockingProvider implements ObjectLockingProvider
         AcmObjectLock existingLock = objectLockService.findLock(objectId, objectType);
 
         Date now = new Date(System.currentTimeMillis());
-        if (now.after(existingLock.getExpiry())) {
+        if (existingLock != null && now.after(existingLock.getExpiry()))
+        {
             //lock has expired and will be removed
             objectLockService.removeLock(existingLock);
             existingLock = null;
