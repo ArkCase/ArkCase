@@ -43,8 +43,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import java.util.Date;
-
 public class PDFChangeCaseFileStateDocumentGenerator<D extends AcmAbstractDao, T extends CaseFile> extends PDFDocumentGenerator
 {
     private D dao;
@@ -57,7 +55,7 @@ public class PDFChangeCaseFileStateDocumentGenerator<D extends AcmAbstractDao, T
             CaseFile caseFile = (CaseFile) getDao().find(caseFileId);
             generatePdf(objectType, caseFileId, ctx, ctx.getAuthentication(), caseFile, caseFile.getContainer(),
                     ChangeCaseStateContants.CHANGE_CASE_STATUS_STYLESHEET,
-                    ChangeCaseStateContants.CHANGE_CASE_STATUS_DOCUMENT, ChangeCaseStateContants.CHANGE_CASE_STATUS_FILENAMEFORMAT);
+                    ChangeCaseStateContants.CHANGE_CASE_STATUS, ChangeCaseStateContants.CHANGE_CASE_STATUS_FILENAMEFORMAT);
         }
         catch (ParserConfigurationException e)
         {
@@ -77,7 +75,7 @@ public class PDFChangeCaseFileStateDocumentGenerator<D extends AcmAbstractDao, T
 
         ChangeCaseStatus changeCaseStatus = ((CaseFilePipelineContext) ctx).getChangeCaseStatus();
 
-        addElement(document, rootElem, "changeDate", new Date().toString(),
+        addElement(document, rootElem, "changeDate", ctx.getPropertyValue("changeDate").toString(),
                 true);
 
         addElement(document, rootElem, "caseNumber", changeCaseStatus.getCaseId().toString(),
@@ -88,11 +86,9 @@ public class PDFChangeCaseFileStateDocumentGenerator<D extends AcmAbstractDao, T
 
         if (!changeCaseStatus.getStatus().isEmpty())
         {
-            addElement(document, rootElem, "showStatusResolution", "true",
+            addElement(document, rootElem, "showStatusResolution", ctx.getPropertyValue("caseResolution").toString(),
                     true);
         }
-        addElement(document, rootElem, "statusResolution", "Full",
-                true);
 
         addParticipantsInXmlDocument(changeCaseStatus.getParticipants(), document, rootElem, "participantName", "participantType");
 

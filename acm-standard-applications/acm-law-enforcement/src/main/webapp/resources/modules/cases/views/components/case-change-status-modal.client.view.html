@@ -15,7 +15,7 @@
                         <div class="col-sm-6">
                             <span translate>cases.comp.change.status.information.date</span>
                             <p class="input-group">
-                                <input type="text" class="form-control" ng-model="changeDate"
+                                <input type="text" class="form-control" ng-model="changeCaseStatus.changeDate"
                                         datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
                                         datepicker-append-to-body="false" is-open="defaultOpened" close-on-date-selection="true"
                                         show-button-bar="true" on-open-focus="false"
@@ -36,7 +36,8 @@
                         <div class="col-sm-6">
                             <span translate>cases.comp.change.status.information.status.title</span>
                             <p class="input-group">
-                                <select ng-model="obj.status" ng-change="statusChanged()" class="form-control input-md" required>
+                                <select ng-model="changeCaseStatus.status" ng-change="statusChanged()" class="form-control input-md"
+                                        required>
                                     <option ng-repeat="option in statuses" ng-value="option.key">
                                         {{option.value | translate}}
                                     </option>
@@ -48,9 +49,18 @@
                         <div class="col-sm-6">
                             <span translate>cases.comp.change.status.information.status.resolution.title</span>
                             <p class="input-group">
-                                <label class="radio-inline"><input type="radio" name="caseResolution"><span translate>cases.comp.change.status.information.status.resolution.denied</span></label>
-                                <label class="radio-inline"><input type="radio" name="caseResolution"><span translate>cases.comp.change.status.information.status.resolution.full</span></label>
-                                <label class="radio-inline"><input type="radio" name="caseResolution"><span translate>cases.comp.change.status.information.status.resolution.partial</span></label>
+                                <label class="radio-inline"><input ng-model="changeCaseStatus.caseResolution" type="radio"
+                                        name="caseResolution"
+                                        value="{{'cases.comp.change.status.information.status.resolution.denied' | translate}}"><span
+                                        translate>cases.comp.change.status.information.status.resolution.denied</span></label>
+                                <label class="radio-inline"><input ng-model="changeCaseStatus.caseResolution" type="radio"
+                                        name="caseResolution"
+                                        value="{{'cases.comp.change.status.information.status.resolution.full' | translate}}"><span
+                                        translate>cases.comp.change.status.information.status.resolution.full</span></label>
+                                <label class="radio-inline"><input ng-model="changeCaseStatus.caseResolution" type="radio"
+                                        name="caseResolution"
+                                        value="{{'cases.comp.change.status.information.status.resolution.partial' | translate}}"><span
+                                        translate>cases.comp.change.status.information.status.resolution.partial</span></label>
                             </p>
                         </div>
                     </div>
@@ -65,7 +75,7 @@
                             class="required-asterisk">*</span></label>
                 </div>
             </div>
-            <div class="" ng-repeat="participant in obj.participants">
+            <div class="" ng-repeat="participant in changeCaseStatus.participants">
                 <div class="row">
                     <div class="col-sm-4 form-group">
                         <input type="text" id="participant" ng-model="participant.participantLdapId"
@@ -94,7 +104,7 @@
         <div class="well-sm">
             <div class="row">
                 <div class="col-sm-12 form-group">
-                    <summernote config="options" ng-model="obj.description"></summernote>
+                    <summernote config="options" ng-model="changeCaseStatus.description"></summernote>
                 </div>
             </div>
         </div>

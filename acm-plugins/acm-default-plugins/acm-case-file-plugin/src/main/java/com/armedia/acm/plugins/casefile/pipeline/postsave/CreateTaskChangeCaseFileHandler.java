@@ -56,7 +56,7 @@ public class CreateTaskChangeCaseFileHandler
         FrevvoUploadedFiles frevvoUploadedFile = new FrevvoUploadedFiles();
 
         EcmFile existing = ecmFileDao.findForContainerAttachmentFolderAndFileType(caseFile.getContainer().getId(),
-                caseFile.getContainer().getAttachmentFolder().getId(), ChangeCaseStateContants.CHANGE_CASE_STATUS_DOCUMENT);
+                caseFile.getContainer().getAttachmentFolder().getId(), ChangeCaseStateContants.CHANGE_CASE_STATUS);
 
         frevvoUploadedFile.setPdfRendition(existing);
 

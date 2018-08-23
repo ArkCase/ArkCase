@@ -64,6 +64,8 @@ public class ChangeCaseFileStateService
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         ctx.setIpAddress(ipAddress);
         ctx.addProperty("mode", mode);
+        ctx.addProperty("caseResolution", form.getCaseResolution());
+        ctx.addProperty("changeDate", form.getChangeDate().toString());
 
         pipelineManager.executeOperation(form, ctx, () -> {
 

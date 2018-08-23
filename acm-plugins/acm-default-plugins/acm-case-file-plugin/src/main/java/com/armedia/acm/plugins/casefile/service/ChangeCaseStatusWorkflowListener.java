@@ -37,7 +37,6 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChangeCaseStatusWorkflowListener implements ApplicationListener<ChangeCaseFileStatusEvent>, InitializingBean
+public class ChangeCaseStatusWorkflowListener implements ApplicationListener<ChangeCaseFileStatusEvent>
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -174,11 +173,5 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
     public void setChangeCaseStatusTaskName(String changeCaseStatusTaskName)
     {
         this.changeCaseStatusTaskName = changeCaseStatusTaskName;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception
-    {
-        System.out.println("ALLOO");
     }
 }
