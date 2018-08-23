@@ -1,6 +1,7 @@
 {
     "id": "complaints",
     "title": "Complaints",
+    "className": "com.armedia.acm.plugins.complaint.model.Complaint",
     "configurable": true,
     "initialLinksShown": true,
     "menus": [

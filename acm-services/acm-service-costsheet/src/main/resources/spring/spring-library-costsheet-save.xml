@@ -6,19 +6,43 @@
         <property name="costsheetBusinessRule" ref="saveCostsheetBusinessRule"/>
     </bean>
 
-    <bean id="costsheetContainerHandler"
-        class="com.armedia.acm.services.costsheet.pipeline.postsave.CostsheetContainerHandler"/>
+    <bean id="costsheetEventHandler" class="com.armedia.acm.services.costsheet.pipeline.postsave.CostsheetEventHandler">
+        <property name="costsheetEventPublisher" ref="costsheetEventPublisher"/>
+        <property name="costsheetService" ref="costsheetService"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
+
+    <bean id="costsheetContainerHandler" class="com.armedia.acm.services.costsheet.pipeline.postsave.CostsheetContainerHandler">
+        <property name="fileParticipantService" ref="fileParticipantService"/>
+    </bean>
+
+    <bean id="costsheetEcmFolderHandler" class="com.armedia.acm.services.costsheet.pipeline.postsave.CostsheetEcmFolderHandler">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="costsheetDocumentHandler" class="com.armedia.acm.services.costsheet.pipeline.postsave.CostsheetDocumentHandler"
+        parent="pdfCostsheetDocumentGenerator">
+        <property name="dao" ref="acmCostsheetDao"/>
+        <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
+    </bean>
 
     <bean id="costsheetPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
-                <ref bean="costsheetContainerHandler"/>
             </list>
         </property>
         <property name="postSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="costsheetRuleHandler"/>
+                <ref bean="costsheetContainerHandler"/>
+                <ref bean="costsheetEcmFolderHandler"/>
+                <ref bean="costsheetDocumentHandler"/>
+                <ref bean="costsheetEventHandler"/>
             </list>
         </property>
+    </bean>
+
+    <bean id="pdfCostsheetDocumentGenerator" class="com.armedia.acm.services.costsheet.service.PDFCostsheetDocumentGenerator"
+        parent="pdfDocumentGenerator">
     </bean>
 </beans>
