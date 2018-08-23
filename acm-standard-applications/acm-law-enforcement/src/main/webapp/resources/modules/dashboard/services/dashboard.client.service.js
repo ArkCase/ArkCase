@@ -41,7 +41,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService',
                 },
                 queryNewCases: {
                     method: 'GET',
-                    url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' + 'AND+NOT+status_lcs\\:DELETED+AND+create_date_tdt\\:[NOW-1MONTH TO NOW]',
+                    url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' + 'AND+NOT+status_lcs\\:DELETED+AND+create_date_tdt\\:[NOW/DAY-1MONTH TO NOW%252B1DAY]',
                     isArray: false
                 },
                 queryMyTasks: {
