@@ -103,6 +103,49 @@
         "newTask": "Nouvelle tâche",
         "sendEmail": "Envoyer un email"
     },
+    "costTracking.comp.newCostsheet": {
+        "title": "fr_Expenses",
+        "editCase.title": "fr_Edit Expenses",
+        "user": "fr_User",
+        "status": "fr_Status",
+        "costType": "fr_Type",
+        "selectTypeMessage": "fr_You have to select 'Type', so that you can enter a 'Code'.",
+        "code": "fr_Code",
+        "objectPicker": {
+            "title": "fr_Search for object",
+            "table.columns": {
+                "name": "fr_Name",
+                "type": "fr_Type",
+                "title": "fr_Title",
+                "id": "fr_ID",
+                "username": "fr_Username"
+            }
+        },
+        "userSearch.title": "fr_Search for User",
+        "cost": {
+            "title": "fr_Costs",
+            "date": "fr_Date",
+            "date.placeholder": "fr_Select Date",
+            "date.close.button": "fr_Close",
+            "costTitle": "fr_Title",
+            "description": "fr_Description",
+            "amount": "fr_Amount",
+            "balance": "fr_Balance",
+            "removeBtn": "fr_Remove Cost",
+            "addBtn": "fr_Add Another Cost"
+        },
+        "details": "fr_Details",
+        "approver": {
+            "title": "fr_Approver",
+            "placeholder": "fr_Select Approver",
+            "removeBtn": "fr_Remove Approver",
+            "addBtn": "fr_Add Another Approver"
+        },
+        "cancelButton": "fr_Cancel",
+        "saveButton": "fr_Save",
+        "updateButton": "fr_Update",
+        "sendForApproval": "fr_Send for Approval"
+    },
     "costTracking.tree": {
         "nodeTypes": {
             "details.label": "Détails",

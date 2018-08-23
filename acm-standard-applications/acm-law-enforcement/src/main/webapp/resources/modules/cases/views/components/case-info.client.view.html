@@ -48,7 +48,7 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()"
+                    <a href="javascript:;" class="editable-click no-outline" ng-click="userOrGroupSearch()"
                             permission="editCaseOwningGroup" permission-object-type="CASE_FILE" permission-properties="objectInfo"
                             permission-action="disable">
                         <user-full-name userId="assignee" fallback="{{'cases.comp.approvalRouting.assigne.none' | translate}}" />
@@ -58,7 +58,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="javascript:;" class="editable-click no-outline" ng-click="openGroupPickerModal()"
+                    <a href="javascript:;" class="editable-click no-outline" ng-click="userOrGroupSearch()"
                             permission="editCaseOwningGroup" permission-object-type="CASE_FILE" permission-properties="objectInfo"
                             permission-action="disable">
                         {{owningGroup || 'common.value.unknown' | translate}}</a>
