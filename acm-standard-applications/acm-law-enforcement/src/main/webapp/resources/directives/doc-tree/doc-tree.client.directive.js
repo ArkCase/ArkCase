@@ -1693,6 +1693,11 @@ angular
                                         }
                                         return DocTree.uploadSetting.deferSelectFile.promise;
                                     }
+                                }, {
+                                    name: "searchDocument",
+                                    execute: function() {
+                                        DocTree.scope.$emit('onSearchDocumentsDocTree');
+                                    }
                                 }
 
                             ];

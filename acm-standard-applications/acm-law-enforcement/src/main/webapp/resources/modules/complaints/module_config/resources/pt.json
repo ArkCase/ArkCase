@@ -63,7 +63,8 @@
                 "witnessInterview2%": "Pedido de entrevista de testemunha-2.0"
             }
         },
-        "newTask": "Nova tarefa"
+        "newTask": "Nova tarefa",
+        "addDocument": "Escolha o documento para adicionar."
     },
     "complaints.comp.people": {
         "title": "Pessoas",

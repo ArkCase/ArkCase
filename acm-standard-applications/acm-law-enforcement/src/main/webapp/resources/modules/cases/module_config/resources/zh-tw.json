@@ -108,7 +108,8 @@
                 "witnessInterview2%": "證人面試請求2.0"
             }
         },
-        "newTask": "新任務"
+        "newTask": "新任務",
+        "addDocument": "選擇要添加的文檔。"
     },
     "cases.comp.people": {
         "title": "成員",

@@ -120,6 +120,11 @@
             "cmd": "subMenuCorrespondenceForms"
           },
           {
+            "titleKey": "common.directive.docTree.menu.searchDocument",
+            "cmd": "searchDocument",
+            "uiIcon": "ui-icon-search"
+          },
+          {
             "title": "----"
           },
           {
@@ -144,6 +149,11 @@
           {
             "titleKey": "common.directive.docTree.menu.newCorrespondence",
             "cmd": "subMenuCorrespondenceForms"
+          },
+          {
+            "titleKey": "common.directive.docTree.menu.searchDocument",
+            "cmd": "searchDocument",
+            "uiIcon": "ui-icon-search"
           },
           {
             "title": "----"
