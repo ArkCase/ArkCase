@@ -113,7 +113,7 @@
         <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
             <span translate>cases.comp.change.status.button.cancel</span>
         </button>
-        <button type="submit" ng-disabled="complaintForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+        <button type="submit" ng-disabled="changeCaseFileStateForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="{{loadingIcon}}"></i>
             <span translate>cases.comp.change.status.button.save</span>

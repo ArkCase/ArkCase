@@ -29,7 +29,7 @@ package com.armedia.acm.plugins.casefile.pipeline.postsave;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService;
+import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStateContants;
@@ -45,28 +45,34 @@ import org.slf4j.LoggerFactory;
 public class PDFChangeCaseFileStateDocumentGeneratorHandler extends PDFChangeCaseFileStateDocumentGenerator<CaseFileDao, CaseFile>
         implements PipelineHandler<ChangeCaseStatus, CaseFilePipelineContext>
 {
-    private JsonPropertiesManagementService jsonPropertiesManagementService;
+    private FormsTypeCheckService formsTypeCheckService;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private PDFChangeCaseFileStateDocumentGenerator pdfChangeCaseFileStateDocumentGenerator;
 
     @Override
     public void execute(ChangeCaseStatus form, CaseFilePipelineContext ctx) throws PipelineProcessException
     {
+        if (!formsTypeCheckService.getTypeOfForm().equals("frevvo"))
+        {
+            log.debug("Entering pipeline handler forEntering pipeline handler for case file with id [{}]",
+                    form.getId());
 
-        String formsType = "";
-        try
-        {
-            formsType = jsonPropertiesManagementService.getProperty("formsType").get("formsType").toString();
-        }
-        catch (Exception e)
-        {
-            log.error("Can't retrieve application property", e);
+            // ensure the SQL of all prior handlers is visible to this handler
+            getDao().getEm().flush();
+
+            try
+            {
+                generatePdf("CASE_FILE", form.getCaseId(), ctx);
+            }
+            catch (Exception e)
+            {
+                log.warn("Unable to generate pdf document for the case file with id [{}]", form.getId());
+                throw new PipelineProcessException(e);
+            }
+
+            log.debug("Exiting pipeline handler for object: [{}]", form.getId());
         }
 
-        if (!formsType.equals("frevvo"))
-        {
-            generatePdf("CASE_FILE", form.getCaseId(), ctx);
-        }
     }
 
     @Override
@@ -105,14 +111,13 @@ public class PDFChangeCaseFileStateDocumentGeneratorHandler extends PDFChangeCas
         this.pdfChangeCaseFileStateDocumentGenerator = pdfChangeCaseFileStateDocumentGenerator;
     }
 
-    public JsonPropertiesManagementService getJsonPropertiesManagementService()
+    public FormsTypeCheckService getFormsTypeCheckService()
     {
-        return jsonPropertiesManagementService;
+        return formsTypeCheckService;
     }
 
-    public void setJsonPropertiesManagementService(JsonPropertiesManagementService jsonPropertiesManagementService)
+    public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService)
     {
-        this.jsonPropertiesManagementService = jsonPropertiesManagementService;
+        this.formsTypeCheckService = formsTypeCheckService;
     }
-
 }
