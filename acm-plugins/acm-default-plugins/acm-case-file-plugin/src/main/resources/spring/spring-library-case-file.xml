@@ -95,6 +95,7 @@
         parent="pdfChangeCaseFileStateDocumentGenerator">
         <property name="pdfChangeCaseFileStateDocumentGenerator" ref="pdfChangeCaseFileStateDocumentGenerator"/>
         <property name="dao" ref="caseFileDao"/>
+        <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
     </bean>
 
     <bean id="caseFileToSolrTransformer" class="com.armedia.acm.plugins.casefile.service.CaseFileToSolrTransformer">
