@@ -23,9 +23,8 @@ public class PDFCloseComplaintDocumentGeneratorHandler extends PDFCloseComplaint
     {
         if (!formsTypeCheckService.getTypeOfForm().equals("frevvo"))
         {
-            log.debug("Entering pipeline handler forEntering pipeline handler for complaint with id [{}] and title [{}]",
-                    ctx.getComplaint().getId(),
-                    ctx.getComplaint().getTitle());
+            log.debug("Entering pipeline handler forEntering pipeline handler for complaint with id [{}]",
+                    form.getId());
 
             // ensure the SQL of all prior handlers is visible to this handler
             getDao().getEm().flush();
@@ -36,12 +35,11 @@ public class PDFCloseComplaintDocumentGeneratorHandler extends PDFCloseComplaint
             }
             catch (Exception e)
             {
-                log.warn("Unable to generate pdf document for the complaint with id [{}] and title [{}]", ctx.getComplaint().getId(),
-                        ctx.getComplaint().getTitle());
+                log.warn("Unable to generate pdf document for the complaint with id [{}]", form.getId());
                 throw new PipelineProcessException(e);
             }
 
-            log.debug("Exiting pipeline handler for object: [{}]", ctx.getComplaint().getId());
+            log.debug("Exiting pipeline handler for object: [{}]", form.getId());
         }
     }
 
