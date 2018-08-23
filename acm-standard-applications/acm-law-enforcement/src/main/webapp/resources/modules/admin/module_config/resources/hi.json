@@ -436,7 +436,8 @@
             "btn": {
                 "reportDesigner": "रिपोर्ट डिजाइनर",
                 "sync": "सिंक्रनाइज़ करें"
-            }
+            },
+            "cancel": "Cancel"
         },
         "forms.title": "फार्म",
         "forms.config": "फॉर्म कॉन्फ़िगरेशन",

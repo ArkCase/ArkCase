@@ -485,7 +485,8 @@
                 "filterStartDate": "Fecha de inicio del filtro de resultados",
                 "filterEndDate": "Fecha final del filtro de resultados",
                 "outputFormat": "Seleccionar formato de salida",
-                "submit": "Enviar"
+                "submit": "Enviar",
+                "cancel": "Cancel"
             }
         },
         "forms.title": "Formularios",

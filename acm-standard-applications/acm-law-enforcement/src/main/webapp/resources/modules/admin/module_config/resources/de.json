@@ -435,7 +435,43 @@
             "btn": {
                 "reportDesigner": "Berichtsdesigner",
                 "sync": "Synchronisieren"
-            }
+            },
+            "schedule": {
+                "title": "de_Reports Scheduling",
+                "selectReportType": "de_Select Report Type",
+                "emailAddress": {
+                    "title": "de_Enter Email Addresses",
+                    "placeholder": "de_Please enter comma (,) separated email addresses"
+                },
+                "table": {
+                    "header": "de_Existing Schedules",
+                    "startTimeFormat": "de_hh:mm a",
+                    "columns": {
+                        "jobName": "de_Schedule Name",
+                        "recurrence": "de_Recurrence",
+                        "startTime": "de_Start Time",
+                        "startDate": "de_Start Date",
+                        "endDate": "de_End Date",
+                        "emailAddresses": "de_Email Addresses",
+                        "state": "de_Status"
+                    }
+                },
+                "delete": {
+                    "success": "de_Schedule deleted successfully",
+                    "error": "de_Failed to delete schedule"
+                },
+                "createScheduleSuccess": "de_Schedule created successfully",
+                "createScheduleFailure": "de_Failed to create schedule",
+                "enterFutureDate": "de_Enter a start time in the future",
+                "recurrence": "de_Recurrence (Enter future time)",
+                "time": "de_Time",
+                "startDate": "de_Start Date",
+                "endDate": "de_End Date",
+                "filterStartDate": "de_Result Filter Start Date",
+                "filterEndDate": "de_Result Filter End Date",
+                "outputFormat": "de_Select Output Format",
+                "submit": "de_Submit",
+                "cancel": "de_Cancel"
         },
         "forms.title": "Formen",
         "forms.config": "Formularkonfiguration",

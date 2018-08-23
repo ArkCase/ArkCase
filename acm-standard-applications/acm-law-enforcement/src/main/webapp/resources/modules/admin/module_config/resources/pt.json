@@ -436,6 +436,43 @@
             "btn": {
                 "reportDesigner": "Report Designer",
                 "sync": "Sincronizar"
+            },
+            "schedule": {
+                "title": "pt_Reports Scheduling",
+                "selectReportType": "pt_Select Report Type",
+                "emailAddress": {
+                    "title": "pt_Enter Email Addresses",
+                    "placeholder": "pt_Please enter comma (,) separated email addresses"
+                },
+                "table": {
+                    "header": "pt_Existing Schedules",
+                    "startTimeFormat": "pt_hh:mm a",
+                    "columns": {
+                        "jobName": "pt_Schedule Name",
+                        "recurrence": "pt_Recurrence",
+                        "startTime": "pt_Start Time",
+                        "startDate": "pt_Start Date",
+                        "endDate": "pt_End Date",
+                        "emailAddresses": "pt_Email Addresses",
+                        "state": "pt_Status"
+                    }
+                },
+                "delete": {
+                    "success": "pt_Schedule deleted successfully",
+                    "error": "pt_Failed to delete schedule"
+                },
+                "createScheduleSuccess": "pt_Schedule created successfully",
+                "createScheduleFailure": "pt_Failed to create schedule",
+                "enterFutureDate": "pt_Enter a start time in the future",
+                "recurrence": "pt_Recurrence (Enter future time)",
+                "time": "pt_Time",
+                "startDate": "pt_Start Date",
+                "endDate": "pt_End Date",
+                "filterStartDate": "pt_Result Filter Start Date",
+                "filterEndDate": "pt_Result Filter End Date",
+                "outputFormat": "pt_Select Output Format",
+                "submit": "pt_Submit",
+                "cancel": "pt_Cancel"
             }
         },
         "forms.title": "Formulários",
