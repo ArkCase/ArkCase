@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.complaint.pipeline.postsave;
 
-import com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService;
+import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.model.Complaint;
@@ -15,25 +15,33 @@ import org.slf4j.LoggerFactory;
 public class PDFCloseComplaintDocumentGeneratorHandler extends PDFCloseComplaintDocumentGenerator<ComplaintDao, Complaint>
         implements PipelineHandler<CloseComplaintRequest, CloseComplaintPipelineContext>
 {
-    private JsonPropertiesManagementService jsonPropertiesManagementService;
+    private FormsTypeCheckService formsTypeCheckService;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(CloseComplaintRequest form, CloseComplaintPipelineContext ctx) throws PipelineProcessException
     {
-        String formsType = "";
-        try
+        if (!formsTypeCheckService.getTypeOfForm().equals("frevvo"))
         {
-            formsType = jsonPropertiesManagementService.getProperty("formsType").get("formsType").toString();
-        }
-        catch (Exception e)
-        {
-            log.error("Can't retrieve application property", e);
-        }
+            log.debug("Entering pipeline handler forEntering pipeline handler for complaint with id [{}] and title [{}]",
+                    ctx.getComplaint().getId(),
+                    ctx.getComplaint().getTitle());
 
-        if (!formsType.equals("frevvo"))
-        {
-            generatePdf("COMPLAINT", form.getComplaintId(), ctx);
+            // ensure the SQL of all prior handlers is visible to this handler
+            getDao().getEm().flush();
+
+            try
+            {
+                generatePdf("COMPLAINT", form.getComplaintId(), ctx);
+            }
+            catch (Exception e)
+            {
+                log.warn("Unable to generate pdf document for the complaint with id [{}] and title [{}]", ctx.getComplaint().getId(),
+                        ctx.getComplaint().getTitle());
+                throw new PipelineProcessException(e);
+            }
+
+            log.debug("Exiting pipeline handler for object: [{}]", ctx.getComplaint().getId());
         }
     }
 
@@ -43,13 +51,13 @@ public class PDFCloseComplaintDocumentGeneratorHandler extends PDFCloseComplaint
         // nothing to do here, there is no rollback action to be executed
     }
 
-    public JsonPropertiesManagementService getJsonPropertiesManagementService()
+    public FormsTypeCheckService getFormsTypeCheckService()
     {
-        return jsonPropertiesManagementService;
+        return formsTypeCheckService;
     }
 
-    public void setJsonPropertiesManagementService(JsonPropertiesManagementService jsonPropertiesManagementService)
+    public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService)
     {
-        this.jsonPropertiesManagementService = jsonPropertiesManagementService;
+        this.formsTypeCheckService = formsTypeCheckService;
     }
 }

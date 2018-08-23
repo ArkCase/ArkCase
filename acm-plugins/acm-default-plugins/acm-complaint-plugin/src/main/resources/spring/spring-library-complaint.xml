@@ -166,7 +166,8 @@
         </property>
     </bean>
 
-    <bean id="pdfComplaintDocumentGenerator" class="com.armedia.acm.plugins.complaint.service.PDFComplaintDocumentGenerator"
+    <bean id="pdfComplaintDocumentGenerator"
+        class="com.armedia.acm.plugins.complaint.service.PDFComplaintDocumentGenerator"
         parent="pdfDocumentGenerator">
     </bean>
 
@@ -312,7 +313,7 @@
     <bean id="pdfCloseComplaintDocumentGeneratorHandler"
         class="com.armedia.acm.plugins.complaint.pipeline.postsave.PDFCloseComplaintDocumentGeneratorHandler"
         parent="pdfCloseComplaintDocumentGenerator">
-        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
+        <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
         <property name="dao" ref="acmComplaintDao"/>
     </bean>
 </beans>
