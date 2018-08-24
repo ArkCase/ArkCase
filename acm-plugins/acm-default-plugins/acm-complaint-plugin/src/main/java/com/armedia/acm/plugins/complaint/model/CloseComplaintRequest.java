@@ -105,6 +105,9 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_close_complaint_modifier")
     private String modifier;
 
+    @Column(name = "cm_close_complaint_description")
+    private String description;
+
     @PrePersist
     public void beforeInsert()
     {
@@ -243,5 +246,15 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     public String getParentObjectType()
     {
         return ComplaintConstants.OBJECT_TYPE;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 }

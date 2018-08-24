@@ -108,7 +108,8 @@
                 "witnessInterview2%": "證人面試請求2.0"
             }
         },
-        "newTask": "新任務"
+        "newTask": "新任務",
+        "addDocument": "選擇要添加的文檔。"
     },
     "cases.comp.people": {
         "title": "成員",
@@ -361,6 +362,34 @@
             "approverDecision": "審批人決定"
         }
     },
+    "cases.comp.change.status": {
+        "title": "zh-tw_Change Case Status",
+        "information": {
+            "title": "zh-tw_Change Case Status Information",
+            "date": "zh-tw_Change Date",
+            "case.number": "zh-tw_Case Number",
+            "status": {
+                "title": "zh-tw_Status",
+                "resolution": {
+                    "title": "zh-tw_Case Resolution",
+                    "denied": "zh-tw_Denied",
+                    "full": "zh-tw_Full",
+                    "partial": "zh-tw_Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "zh-tw_Select Approver",
+            "label": "zh-tw_Select Approver",
+            "addAnother": "zh-tw_Add another",
+            "remove": "zh-tw_Remove Approver",
+            "pickerModal.header": "zh-tw_Choose Approver"
+        },
+        "button": {
+            "cancel": "zh-tw_Cancel",
+            "save": "zh-tw_Save"
+        }
+    },
     "cases.comp.newCase": {
         "title": "zh-tw_New Case File",
         "editCase.title": "zh-tw_Edit Case File",
@@ -377,6 +406,8 @@
         },
         "participants": {
             "title": "zh-tw_Participants",
+            "owningGroup": "zh-tw_Owning Group",
+            "owningGroup.info": "zh-tw_The Owning Group can be chosen only through the Owner field",
             "selectParticipant.placeholder": "zh-tw_Select Participant",
             "participantType": "zh-tw_Participant Type"
         },

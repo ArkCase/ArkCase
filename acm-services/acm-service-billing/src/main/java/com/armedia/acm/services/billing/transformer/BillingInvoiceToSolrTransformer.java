@@ -29,7 +29,6 @@ package com.armedia.acm.services.billing.transformer;
 import com.armedia.acm.services.billing.dao.BillingInvoiceDao;
 import com.armedia.acm.services.billing.model.BillingConstants;
 import com.armedia.acm.services.billing.model.BillingInvoice;
-import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -91,6 +90,7 @@ public class BillingInvoiceToSolrTransformer implements AcmObjectToSolrDocTransf
 
         solr.setAdditionalProperty("parent_object_type_s", in.getParentObjectType());
         solr.setAdditionalProperty("parent_object_id_i", in.getParentObjectId());
+        solr.setAdditionalProperty("invoice_ecm_file_id_i", in.getBillingInvoiceEcmFile().getId());
         solr.setParent_ref_s(String.format("%d-%s", in.getParentObjectId(), in.getParentObjectType()));
 
         return solr;
@@ -112,6 +112,7 @@ public class BillingInvoiceToSolrTransformer implements AcmObjectToSolrDocTransf
 
         solrDoc.setAdditionalProperty("invoice_number_lcs", in.getInvoiceNumber());
         solrDoc.setAdditionalProperty("invoice_paid_flag_b", in.getInvoicePaidFlag());
+        solrDoc.setAdditionalProperty("invoice_ecm_file_id_i", in.getBillingInvoiceEcmFile().getId());
 
         return solrDoc;
     }
@@ -119,7 +120,7 @@ public class BillingInvoiceToSolrTransformer implements AcmObjectToSolrDocTransf
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        return BillingItem.class.equals(acmObjectType);
+        return BillingInvoice.class.equals(acmObjectType);
     }
 
     public UserDao getUserDao()
@@ -145,6 +146,6 @@ public class BillingInvoiceToSolrTransformer implements AcmObjectToSolrDocTransf
     @Override
     public Class<?> getAcmObjectTypeSupported()
     {
-        return BillingItem.class;
+        return BillingInvoice.class;
     }
 }

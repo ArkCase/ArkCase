@@ -48,7 +48,7 @@ public interface CostsheetService
     public Properties getProperties();
 
     @Transactional
-    public AcmCostsheet save(AcmCostsheet costsheet) throws PipelineProcessException;
+    public AcmCostsheet save(AcmCostsheet costsheet, Authentication authentication, String submissionName) throws PipelineProcessException;
 
     @Transactional
     public AcmCostsheet save(AcmCostsheet costsheet, String submissionName) throws PipelineProcessException;

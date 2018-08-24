@@ -30,7 +30,7 @@ package com.armedia.acm.services.costsheet.service;
  * #L%
  */
 
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.AcmCostsheetEvent;
 
@@ -51,11 +51,11 @@ public class CostsheetEventPublisher implements ApplicationEventPublisherAware
     private ApplicationEventPublisher applicationEventPublisher;
 
     public void publishEvent(AcmCostsheet source, String userId, String ipAddress, boolean succeeded, String type,
-            FrevvoUploadedFiles frevvoUploadedFiles, boolean startWorkflow)
+            UploadedFiles uploadedFiles, boolean startWorkflow)
     {
         LOG.debug("Publishing AcmCostsheet event.");
 
-        AcmCostsheetEvent event = new AcmCostsheetEvent(source, userId, ipAddress, succeeded, type, frevvoUploadedFiles, startWorkflow);
+        AcmCostsheetEvent event = new AcmCostsheetEvent(source, userId, ipAddress, succeeded, type, uploadedFiles, startWorkflow);
 
         getApplicationEventPublisher().publishEvent(event);
     }

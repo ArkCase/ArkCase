@@ -38,7 +38,7 @@ import com.armedia.acm.form.casefile.model.CaseFileFormConstants;
 import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
@@ -145,7 +145,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         updateXMLAttachment(attachments, getFormName(), form);
 
         // Save Attachments
-        FrevvoUploadedFiles frevvoFiles = saveAttachments(getAttachmentFileType(form), attachments, form.getCmisFolderId(),
+        UploadedFiles uploadedFiles = saveAttachments(getAttachmentFileType(form), attachments, form.getCmisFolderId(),
                 FrevvoFormName.CASE_FILE.toUpperCase(), form.getId());
 
         // Log the last user action
@@ -158,7 +158,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         if (!"edit".equals(mode))
         {
             CaseFileWorkflowListener workflowListener = new CaseFileWorkflowListener();
-            workflowListener.handleNewCaseFile(getCaseFile(), frevvoFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule(),
+            workflowListener.handleNewCaseFile(getCaseFile(), uploadedFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule(),
                     this);
         }
 

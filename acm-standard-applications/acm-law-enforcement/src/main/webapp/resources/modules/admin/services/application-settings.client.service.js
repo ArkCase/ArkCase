@@ -17,8 +17,7 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
             IDLE_LIMIT: 'idleLimit',
             IDLE_PULL: 'idlePull',
             IDLE_CONFIRM: 'idleConfirm',
-            HISTORY_DAYS: 'historyDays',
-            FORMS_TYPE: 'formsType'
+            HISTORY_DAYS: 'historyDays'
         },
 
         /**

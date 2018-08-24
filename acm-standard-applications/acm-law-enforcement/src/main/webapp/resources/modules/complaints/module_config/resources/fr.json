@@ -63,7 +63,8 @@
                 "witnessInterview2%": "Demande d'entrevue de témoin-2.0"
             }
         },
-        "newTask": "Nouvelle tâche"
+        "newTask": "Nouvelle tâche",
+        "addDocument": "Choisissez le document à ajouter."
     },
     "complaints.comp.people": {
         "title": "Personnes",
@@ -315,6 +316,98 @@
             "approverFullName": "Approbateur",
             "approverDecision": "Décision d'approbation"
         }
+    },
+    "complaints.comp.closeComplaint": {
+        "title": "fr_Close Complaint",
+        "info": "fr_Incident Information",
+        "infoMessage": "fr_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "fr_Complaint Title",
+        "information": {
+            "title": "fr_Close Complaint Information",
+            "close.date": "fr_Complaint Close Date",
+            "complaint.number": "fr_Complaint Number",
+            "complaint.disposition": "fr_Complaint Disposition"
+        },
+        "add.existing.case": {
+            "title": "fr_Add Existing Case",
+            "search": "fr_Search",
+            "case": {
+                "number": "fr_Enter Case Number",
+                "title": "fr_Case Title",
+                "date": "fr_Case Creation Date",
+                "priority": "fr_Case Priority"
+            }
+        },
+        "refer.external": {
+            "title": "fr_Refer External",
+            "name": "fr_Name of Agency",
+            "date": "fr_Referral Date",
+            "contact": {
+                "title": "fr_Contact",
+                "name": "fr_Contact Name",
+                "type": "fr_Type",
+                "value": "fr_Value"
+            }
+        },
+        "approver": {
+            "placeholder": "fr_Select Approver",
+            "label": "fr_Select Approver",
+            "addAnother": "fr_Add another",
+            "remove": "fr_Remove Approver",
+            "pickerModal.header": "fr_Choose Approver"
+        },
+        "cancelButton": "fr_Cancel",
+        "saveButton": "fr_Save Complaint"
+    },
+    "complaints.comp.newComplaint": {
+        "title": "fr_New Complaint",
+        "info": "fr_Incident Information",
+        "infoMessage": "fr_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "fr_Complaint Title",
+        "complaintTitle.placeholder": "fr_Enter Complaint Title",
+        "incidentCategory": "fr_Incident Category",
+        "initiator": "fr_Initiator",
+        "initiator.placeholder": "fr_Select Initiator",
+        "complaintDesc": "fr_Complaint Description",
+        "priority": "fr_Priority",
+        "incidentDate": "fr_Incident Date",
+        "incidentDate.placeholder": "fr_Select Incident Date",
+        "incidentDate.close.button": "fr_Close",
+        "complaintTag": "fr_Complaint Tag",
+        "complaintTag.placeholder": "fr_Enter Complaint Tag",
+        "frequency": "fr_Frequency",
+        "location": {
+            "title": "fr_Location",
+            "addressType": "fr_Type",
+            "streetAddress": "fr_Address",
+            "streetAddress.placeholder": "fr_Enter Street Address",
+            "city": "fr_City",
+            "city.placeholder": "fr_Enter City",
+            "state": "fr_State",
+            "state.placeholder": "fr_Enter State",
+            "country": "fr_Country",
+            "zip": "fr_Zip Code",
+            "zip.placeholder": "fr_Enter Zip Code",
+            "dateCreated": "fr_Date added",
+            "creator": "fr_Added By",
+            "creator.placeholder": "fr_Enter Creator"
+        },
+        "people": {
+            "title": "fr_People",
+            "selectPerson.placeholder": "fr_Search existing Person",
+            "personType": "fr_Person Type"
+        },
+        "participants": {
+            "title": "fr_Participants",
+            "owningGroup": "fr_Owning Group",
+            "owningGroup.info": "fr_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "fr_Select Participant",
+            "participantType": "fr_Participant Type"
+        },
+        "cancelButton": "fr_Cancel",
+        "saveButton": "fr_Save Complaint",
+        "removeButton": "fr_Remove",
+        "addButton": "fr_Add Another"
     },
     "complaints.userOrGroupSearch": {
         "id": "Recherche d'utilisateur",

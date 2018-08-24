@@ -79,7 +79,8 @@
             "checkout": "Check Out",
             "checkin": "Check In",
             "declareRecord": "Declare As Record(s)",
-            "collaborate": "Collaborate"
+            "collaborate": "Collaborate",
+            "searchDocument": "Search Document(s)"
         },
         "table.columns": {
             "title": "Title",
@@ -196,12 +197,15 @@
         "header": "Search",
         "btnSearch.text": "Search",
         "btnOk.text": "OK",
+        "btnConfirm.text": "Confirm",
         "btnCancel.text": "Cancel",
         "edtPlaceholder": "Type in to search",
         "noData.text": "No Results",
         "pickUserLabel": "Pick Associated User",
         "pickGroupLabel": "Pick Associated Group",
-        "selectedItemsGrid.label": "Selected entries"
+        "selectedItemsGrid.label": "Selected entries",
+        "notValidUser": "The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
+        "notValidGroup": "The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
     },
     "common.directive.search": {
         "showMore.button.text": "Show More Values",
@@ -603,6 +607,7 @@
             "btnOk.text": "Save",
             "btnCancel.text": "Cancel",
             "dialogUserPicker.header": "Search User",
+            "dialogUserGroupPicker.header": "Search User/Group",
             "dialogGroupPicker.header": "Search Group",
             "replaceChildrenParticipant": "replace children participant"
         },
@@ -656,7 +661,9 @@
         "PARTICIPANT-ASSOCIATION": "Participant-Association",
         "ASSIGNMENT": "Assignment",
         "ASSOCIATE_TAG": "Tag",
-        "TRANSCRIBE": "Transcription"
+        "TRANSCRIBE": "Transcription",
+        "BILLING_INVOICE": "Billing Invoice",
+        "BILLING_ITEM": "Billing Item"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",
@@ -732,6 +739,9 @@
             "identificationYearIssued": "Identification Issued",
             "identificationYearIssued.placeholder": "Select Identification Issued",
             "identificationYearIssued.close.button": "Close"
+        },
+        "details": {
+            "title": "Details"
         }
     },
     "common.addPerson": {

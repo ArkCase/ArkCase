@@ -194,12 +194,16 @@
         "header": "搜索",
         "btnSearch.text": "搜索",
         "btnOk.text": "確定",
+        "btnConfirm.text": "zh-cn_Confirm",
         "btnCancel.text": "消除",
         "edtPlaceholder": "鍵入搜索內容",
         "noData.text": "無結果",
         "pickUserLabel": "选择关联的用户",
         "pickGroupLabel": "选择相关组",
-        "selectedItemsGrid.label": "选定的项目"
+        "selectedItemsGrid.label": "选定的项目",
+        "notValidUser": "zh-cn_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
+        "notValidGroup": "zh-cn_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
+
     },
     "common.directive.search": {
         "showMore.button.text": "显示更多",
@@ -601,6 +605,7 @@
             "btnOk.text": "保存",
             "btnCancel.text": "取消",
             "dialogUserPicker.header": "搜索用户",
+            "dialogUserGroupPicker.header": "zh-cn_Search User/Group",
             "dialogGroupPicker.header": "搜索组",
             "replaceChildrenParticipant": "替换儿童参与者"
         },
@@ -729,6 +734,9 @@
             "identificationYearIssued": "鉴定已发布",
             "identificationYearIssued.placeholder": "选择标识已发布",
             "identificationYearIssued.close.button": "关闭"
+        },
+        "details": {
+            "title": "zh-cn_Details"
         }
     },
     "common.addPerson": {

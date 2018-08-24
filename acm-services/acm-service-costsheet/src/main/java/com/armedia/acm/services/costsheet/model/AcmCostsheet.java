@@ -44,7 +44,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -130,6 +151,14 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
+
+    /**
+     * This field is only used when the cost sheet is created. Usually it will be null. Use the container to get the
+     * CMIS
+     * object ID of the cost sheet folder.
+     */
+    @Transient
+    private String ecmFolderPath;
 
     @PrePersist
     protected void beforeInsert()
@@ -385,5 +414,15 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
     public String getParentObjectType()
     {
         return parentType;
+    }
+
+    public String getEcmFolderPath()
+    {
+        return ecmFolderPath;
+    }
+
+    public void setEcmFolderPath(String ecmFolderPath)
+    {
+        this.ecmFolderPath = ecmFolderPath;
     }
 }

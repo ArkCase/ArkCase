@@ -314,6 +314,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getDispositionTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of disposition types
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getDispositionTypes = function() {
+        return Service.getLookupByLookupName("dispositions");
+    };
+
+    /**
+     * @ngdoc method
      * @name getParticipantTypes
      * @methodOf services:Object.LookupService
      *
@@ -340,11 +354,25 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
-     * @name getProjectParticipantTypes
+     * @name getComplaintParticipantTypes
      * @methodOf services:Object.LookupService
      *
      * @description
-     * Query list of participant types
+     * Query list of participant types for complaint
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getComplaintParticipantTypes = function() {
+        return Service.getLookupByLookupName("complaintParticipantTypes");
+    };
+
+    /**
+     * @ngdoc method
+     * @name getCaseFileParticipantTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of participant types for casefile
      *
      * @returns {Object} An array returned by $resource
      */
@@ -623,6 +651,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getFrequencies
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of frequencies
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getFrequencies = function() {
+        return Service.getLookupByLookupName("frequencies");
+    };
+
+    /**
+     * @ngdoc method
      * @name getPersonOrganizationRelationTypes
      * @methodOf services:Object.LookupService
      *
@@ -661,6 +703,48 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
      */
     Service.getBusinessProcessTypes = function() {
         return Service.getLookupByLookupName('businessProcessTypes');
+    };
+
+    /**
+     * @ngdoc method
+     * @name getCostsheetTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Costsheet Types
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCostsheetTypes = function() {
+        return Service.getLookupByLookupName('costsheetTypes');
+    };
+
+    /**
+     * @ngdoc method
+     * @name getCostsheetTitles
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Costsheet Titles
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCostsheetTitles = function() {
+        return Service.getLookupByLookupName('costsheetTitles');
+    };
+
+    /**
+     * @ngdoc method
+     * @name getCostsheetStatuses
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Costsheet Statuses
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCostsheetStatuses = function() {
+        return Service.getLookupByLookupName('costsheetStatuses');
     };
 
     /**

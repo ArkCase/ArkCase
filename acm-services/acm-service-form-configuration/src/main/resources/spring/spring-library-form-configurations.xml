@@ -41,4 +41,12 @@
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
+    <bean id="formsTypeManagementService" class="com.armedia.acm.form.config.FormsTypeManagementService">
+        <property name="propertiesFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/formsType.json"/>
+    </bean>
+
+    <bean id="formsTypeCheckService" class="com.armedia.acm.form.config.FormsTypeCheckService">
+        <property name="formsTypeManagementService" ref="formsTypeManagementService"/>
+    </bean>
+
 </beans>
