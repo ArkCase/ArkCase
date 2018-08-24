@@ -61,7 +61,9 @@ public class CaseFileEnqueueAPIController
     @RequestMapping(value = "/enqueue/{caseId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CaseFileEnqueueResponse enqueue(@PathVariable("caseId") Long caseId,
-            @RequestParam(value = "nextQueue", required = true) String nextQueue, HttpSession session, Authentication auth)
+            @RequestParam(value = "nextQueue", required = true) String nextQueue,
+            @RequestParam(value = "nextQueueAction") String nextQueueAction,
+            HttpSession session, Authentication auth)
     {
 
         CaseFilePipelineContext context = new CaseFilePipelineContext();
@@ -72,7 +74,7 @@ public class CaseFileEnqueueAPIController
 
         getUserTrackerService().trackUser(ipAddress);
 
-        CaseFileEnqueueResponse response = getEnqueueCaseFileService().enqueueCaseFile(caseId, nextQueue, context);
+        CaseFileEnqueueResponse response = getEnqueueCaseFileService().enqueueCaseFile(caseId, nextQueue, nextQueueAction, context);
 
         if (response.isSuccess())
         {

@@ -39,7 +39,6 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -205,6 +204,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setParent_number_lcs(in.getContainer().getContainerObjectTitle());
 
         solr.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
+        solr.setParent_folder_id_i(in.getFolder().getId());
 
         solr.setEcmFileId(in.getVersionSeriesId());
         solr.setCmis_version_series_id_s(in.getVersionSeriesId());

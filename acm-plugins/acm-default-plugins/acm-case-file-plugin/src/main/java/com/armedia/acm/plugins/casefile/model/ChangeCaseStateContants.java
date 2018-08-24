@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.casefile.service;
+package com.armedia.acm.plugins.casefile.model;
 
 /*-
  * #%L
@@ -27,14 +27,16 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
-import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse;
-
-public interface EnqueueCaseFileService
+public interface ChangeCaseStateContants
 {
+    String MIME_TYPE_PDF = "application/pdf";
+    String NEW_FILE = "NEW_FILE";
+    String FILE_ID = "FILE_ID";
+    String FILE_VERSION = "FILE_VERSION";
 
-    CaseFileEnqueueResponse enqueueCaseFile(Long caseId, String nextQueue, CaseFilePipelineContext context);
-
-    CaseFileEnqueueResponse enqueueCaseFile(Long caseId, String nextQueue, String nextQueueAction, CaseFilePipelineContext context);
-
+    String CHANGE_CASE_STATUS_STYLESHEET = System.getProperty("user.home")
+            + "/.arkcase/acm/pdf-stylesheets/change-case-file-state-document.xsl";
+    String CHANGE_CASE_STATUS_DOCUMENT = "CHANGE_CASE";
+    String CHANGE_CASE_STATUS_FILENAMEFORMAT = "Change Case Status.pdf";
+    String CHANGE_CASE_STATUS = "CHANGE_CASE_STATUS";
 }

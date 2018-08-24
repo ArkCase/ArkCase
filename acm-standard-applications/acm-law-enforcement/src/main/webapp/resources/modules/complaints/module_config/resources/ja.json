@@ -63,7 +63,8 @@
                 "witnessInterview2%": "目撃者のインタビュー要求2.0"
             }
         },
-        "newTask": "新しい仕事"
+        "newTask": "新しい仕事",
+        "addDocument": "追加する文書を選択します。"
     },
     "complaints.comp.people": {
         "title": "人物",
