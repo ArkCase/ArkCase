@@ -97,16 +97,20 @@ import java.util.UUID;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-file-lock.xml",        
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-email.xml",
         "/spring/spring-library-email-smtp.xml",
         "/spring/spring-library-event.xml",
         "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-form-configurations.xml",
+        "/spring/spring-library-forms-configuration.xml",
         "/spring/spring-library-merge-case-test-IT.xml",
         "/spring/spring-library-ms-outlook-integration.xml",
         "/spring/spring-library-ms-outlook-plugin.xml",
         "/spring/spring-library-note.xml",
         "/spring/spring-library-notification.xml",
+        "/spring/spring-library-object-converter.xml",        
         "/spring/spring-library-object-diff.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-object-association-plugin.xml",
@@ -121,9 +125,8 @@ import java.util.UUID;
         "/spring/spring-library-search.xml",
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-task.xml",
-        "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-object-converter.xml",
-        "/spring/spring-library-ecm-file-lock.xml" })
+        "/spring/spring-library-user-service.xml"
+    })
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {
