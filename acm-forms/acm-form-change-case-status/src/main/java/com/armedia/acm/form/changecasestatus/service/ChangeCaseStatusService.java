@@ -35,7 +35,7 @@ import com.armedia.acm.form.changecasestatus.model.ChangeCaseStatusFormEvent;
 import com.armedia.acm.form.config.ResolveInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -167,7 +167,7 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
 
         // Save attachments (or update XML form and PDF form if the mode is "edit")
         String cmisFolderId = findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
-        FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, cmisFolderId, FrevvoFormName.CASE_FILE.toUpperCase(),
+        UploadedFiles uploadedFiles = saveAttachments(attachments, cmisFolderId, FrevvoFormName.CASE_FILE.toUpperCase(),
                 caseFile.getId());
 
         ChangeCaseStatusFormEvent event = new ChangeCaseStatusFormEvent(caseFile.getCaseNumber(), caseFile.getId(), savedRequest,

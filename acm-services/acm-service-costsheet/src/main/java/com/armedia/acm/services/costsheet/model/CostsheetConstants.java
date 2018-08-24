@@ -40,21 +40,27 @@ public interface CostsheetConstants
     /**
      * Object type
      */
-    public final static String OBJECT_TYPE = "COSTSHEET";
+    String OBJECT_TYPE = "COSTSHEET";
 
     /**
      * Statuses
      */
-    public final static String DRAFT = "DRAFT";
-    public final static String IN_APPROVAL = "IN_APPROVAL";
-    public final static String APPROVED = "APPROVED";
+    String DRAFT = "DRAFT";
+    String IN_APPROVAL = "IN_APPROVAL";
+    String APPROVED = "APPROVED";
 
     /**
      * Event type (root name)
      */
-    public final static String EVENT_TYPE = "com.armedia.acm." + OBJECT_TYPE.toLowerCase();
+    String EVENT_TYPE = "com.armedia.acm." + OBJECT_TYPE.toLowerCase();
 
-    public final static String ROOT_FOLDER_KEY = "root.folder";
-    public final static String SEARCH_TREE_SORT = "search.tree.sort";
+    String ROOT_FOLDER_KEY = "root.folder";
+    String SEARCH_TREE_SORT = "search.tree.sort";
 
+    String NEW_FILE = "NEW_FILE";
+    String FILE_ID = "FILE_ID";
+
+    String COSTSHEET_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/pdf-stylesheets/costsheet-document.xsl";
+    String COSTSHEET_DOCUMENT = "Costsheet";
+    String COSTSHEET_FILENAMEFORMAT = "Costsheet.pdf";
 }

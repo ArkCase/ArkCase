@@ -108,7 +108,8 @@
                 "witnessInterview2%": "Witness Interview Request-2.0"
             }
         },
-        "newTask": "New Task"
+        "newTask": "New Task",
+        "addDocument": "Choose document to add."
     },
     "cases.comp.people": {
         "title": "People",
@@ -362,6 +363,34 @@
             "approverDecision": "Approver Decision"
         }
     },
+    "cases.comp.change.status": {
+        "title": "Change Case Status",
+        "information": {
+            "title": "Change Case Status Information",
+            "date": "Change Date",
+            "case.number": "Case Number",
+            "status": {
+                "title": "Status",
+                "resolution": {
+                    "title": "Case Resolution",
+                    "denied": "Denied",
+                    "full": "Full",
+                    "partial": "Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "Select Approver",
+            "label": "Select Approver",
+            "addAnother": "Add another",
+            "remove": "Remove Approver",
+            "pickerModal.header": "Choose Approver"
+        },
+        "button": {
+            "cancel": "Cancel",
+            "save": "Save"
+        }
+    },
     "cases.comp.newCase": {
         "title": "New Case File",
         "editCase.title": "Edit Case File",
@@ -378,6 +407,8 @@
         },
         "participants": {
             "title": "Participants",
+            "owningGroup": "Owning Group",
+            "owningGroup.info": "The Owning Group can be chosen only through the Owner field",
             "selectParticipant.placeholder": "Select Participant",
             "participantType": "Participant Type"
         },
@@ -436,5 +467,20 @@
             "nameAsc": "Sort By Case Name Asc",
             "noSort": "(No Sort)"
         }
+    },
+  "cases.userOrGroupSearch": {
+    "title": "User/Group Search",
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "search": {
+      "placeholder": "Search for user or group",
+      "btn": "Search"
+    },
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "username": "Username"
     }
+  }
 }

@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.wopi.service;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.pluginmanager.service.AcmConfigurablePlugin;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -62,7 +63,7 @@ import java.time.Period;
 import java.util.Date;
 import java.util.Optional;
 
-public class WopiAcmService
+public class WopiAcmService implements AcmConfigurablePlugin
 {
     private WopiConfig wopiConfig;
     private EcmFileService ecmFileService;
@@ -72,6 +73,7 @@ public class WopiAcmService
     private ArkPermissionEvaluator permissionEvaluator;
     private AuthenticationTokenService tokenService;
     private static final Logger log = LoggerFactory.getLogger(WopiAcmService.class);
+    private static final String WOPI_PLUGIN = "WOPI";
 
     public WopiSessionInfo getSessionInfo(Authentication authentication, Long fileId, String accessToken)
     {
@@ -238,5 +240,17 @@ public class WopiAcmService
     public void setTokenService(AuthenticationTokenService tokenService)
     {
         this.tokenService = tokenService;
+    }
+
+    @Override
+    public boolean isEnabled()
+    {
+        return wopiConfig.getWopiPluginEnabled();
+    }
+
+    @Override
+    public String getName()
+    {
+        return WOPI_PLUGIN;
     }
 }

@@ -1,15 +1,15 @@
 'use strict';
 
-angular.module('admin').controller('Admin.FormsTypeConfigController', [ '$scope', '$q', '$modal', 'Admin.ApplicationSettingsService', 'MessageService', function($scope, $q, $modal, ApplicationSettingsService, messageService) {
+angular.module('admin').controller('Admin.FormsTypeConfigController', [ '$scope', '$q', '$modal', 'Admin.ApplicationFormsTypeConfigService', 'MessageService', function($scope, $q, $modal, ApplicationFormsTypeConfigService, messageService) {
     var oldPropertyValue;
-    ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.FORMS_TYPE).then(function(response) {
-        $scope.nameProperty = response.data[ApplicationSettingsService.PROPERTIES.FORMS_TYPE];
+    ApplicationFormsTypeConfigService.getProperty(ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE).then(function(response) {
+        $scope.nameProperty = response.data[ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE];
         oldPropertyValue = $scope.nameProperty;
     });
 
     $scope.applyChanges = function() {
         if (oldPropertyValue != $scope.nameProperty) {
-            ApplicationSettingsService.setProperty(ApplicationSettingsService.PROPERTIES.FORMS_TYPE, $scope.nameProperty);
+            ApplicationFormsTypeConfigService.setProperty(ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE, $scope.nameProperty);
             var modalInstance = $modal.open({
                 templateUrl: 'modules/admin/views/components/application-user-name.config.modal-info.client.view.html',
                 controller: 'AdminFormsTypeModalController',
@@ -24,7 +24,7 @@ angular.module('admin').controller('Admin.FormsTypeConfigController', [ '$scope'
 
             oldPropertyValue = $scope.nameProperty;
         }
-    }
+    };
 } ]);
 
 angular.module('admin').controller('AdminFormsTypeModalController', [ '$scope', '$modalInstance', '$modal', function($scope, $modalInstance, $modal) {

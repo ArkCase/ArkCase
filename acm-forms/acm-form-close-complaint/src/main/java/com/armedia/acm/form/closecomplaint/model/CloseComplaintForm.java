@@ -94,6 +94,7 @@ public class CloseComplaintForm
         this.approvers = approvers;
     }
 
+    @XmlElement(name = "description")
     public String getDescription()
     {
         return description;

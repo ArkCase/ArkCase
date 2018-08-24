@@ -194,12 +194,16 @@
         "header": "Rechercher",
         "btnSearch.text": "Rechercher",
         "btnOk.text": "D'accord",
+        "btnConfirm.text": "fr_Confirm",
         "btnCancel.text": "Annuler",
         "edtPlaceholder": "Entrez pour rechercher",
         "noData.text": "Aucun résultat",
         "pickUserLabel": "Choisissez un utilisateur associé",
         "pickGroupLabel": "Choisissez un groupe associé",
-        "selectedItemsGrid.label": "Entrées sélectionnées"
+        "selectedItemsGrid.label": "Entrées sélectionnées",
+        "notValidUser": "fr_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
+        "notValidGroup": "fr_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
+
     },
     "common.directive.search": {
         "showMore.button.text": "Afficher plus de valeurs",
@@ -601,6 +605,7 @@
             "btnOk.text": "Sauvegarder",
             "btnCancel.text": "Annuler",
             "dialogUserPicker.header": "Rechercher un utilisateur",
+            "dialogUserGroupPicker.header": "fr_Search User/Group",
             "dialogGroupPicker.header": "Groupe de recherche",
             "replaceChildrenParticipant": "remplacer les enfants participants"
         },
@@ -729,6 +734,9 @@
             "identificationYearIssued": "Identification émise",
             "identificationYearIssued.placeholder": "Sélectionner l'identification émise",
             "identificationYearIssued.close.button": "Fermer"
+        },
+        "details": {
+            "title": "fr_Details"
         }
     },
     "common.addPerson": {

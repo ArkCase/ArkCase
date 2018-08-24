@@ -31,7 +31,7 @@ import static com.armedia.acm.plugins.casefile.model.CaseFileConstants.NEW_FILE;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService;
+import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
@@ -47,28 +47,14 @@ import javax.xml.parsers.ParserConfigurationException;
 public class CasefileDocumentHandler extends PDFCasefileDocumentGenerator<CaseFileDao, CaseFile>
         implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
-
-    /**
-     * Logger instance.
-     */
-    private JsonPropertiesManagementService jsonPropertiesManagementService;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private FormsTypeCheckService formsTypeCheckService;
 
     @Override
     public void execute(CaseFile casefile, CaseFilePipelineContext ctx) throws PipelineProcessException
     {
-        String formsType = "";
-        try
-        {
-            formsType = jsonPropertiesManagementService.getProperty("formsType").get("formsType").toString();
-        }
-        catch (Exception e)
-        {
-            String msg = "Can't retrieve application property";
-            log.error(msg, e);
-        }
 
-        if (!formsType.equals("frevvo"))
+        if (!formsTypeCheckService.getTypeOfForm().equals("frevvo"))
         {
             log.debug("Entering pipeline handler for case file with id [{}] and title [{}]", casefile.getId(), casefile.getTitle());
 
@@ -77,7 +63,7 @@ public class CasefileDocumentHandler extends PDFCasefileDocumentGenerator<CaseFi
 
             try
             {
-                generatePdf(casefile.getObjectType(), casefile.getId(), ctx);
+                generatePdf(casefile.getId(), ctx);
             }
             catch (ParserConfigurationException e)
             {
@@ -117,9 +103,8 @@ public class CasefileDocumentHandler extends PDFCasefileDocumentGenerator<CaseFi
         }
     }
 
-    public void setJsonPropertiesManagementService(JsonPropertiesManagementService jsonPropertiesManagementService)
+    public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService)
     {
-        this.jsonPropertiesManagementService = jsonPropertiesManagementService;
+        this.formsTypeCheckService = formsTypeCheckService;
     }
-
 }
