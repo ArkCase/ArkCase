@@ -224,8 +224,4 @@
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
-    <bean id="pdfCasefileDocumentGenerator"
-        class="com.armedia.acm.plugins.casefile.service.PDFCasefileDocumentGenerator"
-        parent="pdfDocumentGenerator">
-    </bean>
 </beans>
