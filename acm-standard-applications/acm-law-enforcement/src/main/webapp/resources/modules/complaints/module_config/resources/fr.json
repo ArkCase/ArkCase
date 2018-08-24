@@ -317,6 +317,48 @@
             "approverDecision": "Décision d'approbation"
         }
     },
+    "complaints.comp.closeComplaint": {
+        "title": "fr_Close Complaint",
+        "info": "fr_Incident Information",
+        "infoMessage": "fr_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "fr_Complaint Title",
+        "information": {
+            "title": "fr_Close Complaint Information",
+            "close.date": "fr_Complaint Close Date",
+            "complaint.number": "fr_Complaint Number",
+            "complaint.disposition": "fr_Complaint Disposition"
+        },
+        "add.existing.case": {
+            "title": "fr_Add Existing Case",
+            "search": "fr_Search",
+            "case": {
+                "number": "fr_Enter Case Number",
+                "title": "fr_Case Title",
+                "date": "fr_Case Creation Date",
+                "priority": "fr_Case Priority"
+            }
+        },
+        "refer.external": {
+            "title": "fr_Refer External",
+            "name": "fr_Name of Agency",
+            "date": "fr_Referral Date",
+            "contact": {
+                "title": "fr_Contact",
+                "name": "fr_Contact Name",
+                "type": "fr_Type",
+                "value": "fr_Value"
+            }
+        },
+        "approver": {
+            "placeholder": "fr_Select Approver",
+            "label": "fr_Select Approver",
+            "addAnother": "fr_Add another",
+            "remove": "fr_Remove Approver",
+            "pickerModal.header": "fr_Choose Approver"
+        },
+        "cancelButton": "fr_Cancel",
+        "saveButton": "fr_Save Complaint"
+    },
     "complaints.comp.newComplaint": {
         "title": "fr_New Complaint",
         "info": "fr_Incident Information",

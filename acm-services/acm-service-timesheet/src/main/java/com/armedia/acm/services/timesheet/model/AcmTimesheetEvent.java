@@ -31,7 +31,7 @@ package com.armedia.acm.services.timesheet.model;
  */
 
 import com.armedia.acm.core.model.AcmEvent;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 
 import java.util.Date;
 
@@ -44,11 +44,11 @@ public class AcmTimesheetEvent extends AcmEvent
 
     private static final long serialVersionUID = 7323464693900974967L;
 
-    private FrevvoUploadedFiles frevvoUploadedFiles;
+    private UploadedFiles uploadedFiles;
     private boolean startWorkflow;
 
     public AcmTimesheetEvent(AcmTimesheet source, String userId, String ipAddress, boolean succeeded, String type,
-            FrevvoUploadedFiles frevvoUploadedFiles, boolean startWorkflow)
+            UploadedFiles uploadedFiles, boolean startWorkflow)
     {
         super(source);
 
@@ -60,18 +60,18 @@ public class AcmTimesheetEvent extends AcmEvent
         setEventDate(new Date());
         setEventType(TimesheetConstants.EVENT_TYPE + "." + type);
 
-        setFrevvoUploadedFiles(frevvoUploadedFiles);
+        setUploadedFiles(uploadedFiles);
         setStartWorkflow(startWorkflow);
     }
 
-    public FrevvoUploadedFiles getFrevvoUploadedFiles()
+    public UploadedFiles getUploadedFiles()
     {
-        return frevvoUploadedFiles;
+        return uploadedFiles;
     }
 
-    public void setFrevvoUploadedFiles(FrevvoUploadedFiles frevvoUploadedFiles)
+    public void setUploadedFiles(UploadedFiles uploadedFiles)
     {
-        this.frevvoUploadedFiles = frevvoUploadedFiles;
+        this.uploadedFiles = uploadedFiles;
     }
 
     public boolean isStartWorkflow()

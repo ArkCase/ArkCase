@@ -33,7 +33,7 @@ package com.armedia.acm.form.plain.service;
 import com.armedia.acm.form.plain.model.PlainForm;
 import com.armedia.acm.form.plain.model.PlainFormCreatedEvent;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +83,7 @@ public class PlainFormService extends FrevvoFormAbstractService
             return false;
         }
 
-        FrevvoUploadedFiles uploaded = saveAttachments(attachments, cmisFolderId, form.getObjectType(), form.getObjectId());
+        UploadedFiles uploaded = saveAttachments(attachments, cmisFolderId, form.getObjectType(), form.getObjectId());
 
         PlainFormCreatedEvent event = new PlainFormCreatedEvent(
                 form, getFormName(), folderId, cmisFolderId, getAuthentication().getName(), getUserIpAddress(),

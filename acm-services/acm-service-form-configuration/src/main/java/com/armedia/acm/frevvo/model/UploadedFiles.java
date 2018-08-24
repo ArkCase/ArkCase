@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Created by armdev on 11/4/14.
  */
-public class FrevvoUploadedFiles
+public class UploadedFiles
 {
     private EcmFile pdfRendition;
     private EcmFile formXml;

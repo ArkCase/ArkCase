@@ -314,6 +314,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getDispositionTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of disposition types
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getDispositionTypes = function() {
+        return Service.getLookupByLookupName("dispositions");
+    };
+
+    /**
+     * @ngdoc method
      * @name getParticipantTypes
      * @methodOf services:Object.LookupService
      *
