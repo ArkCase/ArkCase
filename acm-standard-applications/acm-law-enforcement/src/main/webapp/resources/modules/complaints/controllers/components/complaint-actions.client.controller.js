@@ -54,7 +54,8 @@ angular.module('complaints').controller(
 
                         $scope.closeParams = {
                             complaintId: objectInfo.complaintId,
-                            complaintNumber: objectInfo.complaintNumber
+                            complaintNumber: objectInfo.complaintNumber,
+                            complaintTitle: objectInfo.complaintTitle
                         };
                     };
 
@@ -121,6 +122,23 @@ angular.module('complaints').controller(
                         $scope.availableChildOutcomes = outcomes;
                         $scope.showBtnChildOutcomes = true;
                     });
+
+                    $scope.closeComplaint = function(complaintInfo) {
+                        var params = {
+                            "info": complaintInfo
+                        };
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/complaints/views/components/complaint-close-complaint-modal.client.view.html',
+                            controller: 'Complaints.CloseComplaintController',
+                            size: 'lg',
+                            resolve: {
+                                modalParams: function() {
+                                    return params;
+                                }
+                            }
+                        });
+                    };
 
                     $scope.newComplaint = function() {
                         var params = {};

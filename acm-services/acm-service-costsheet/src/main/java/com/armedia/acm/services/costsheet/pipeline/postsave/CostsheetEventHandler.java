@@ -27,7 +27,7 @@ package com.armedia.acm.services.costsheet.pipeline.postsave;
  * #L%
  */
 
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
@@ -54,7 +54,7 @@ public class CostsheetEventHandler implements PipelineHandler<AcmCostsheet, Cost
         log.info("Costsheet with id [{}] and title [{}] entering CostsheetEventHandler", costsheet.getId(), costsheet.getTitle());
 
         String submissionName = ctx.getSubmissonName(); // "Save" or "Submit"
-        FrevvoUploadedFiles uploadedFiles = new FrevvoUploadedFiles();
+        UploadedFiles uploadedFiles = new UploadedFiles();
 
         EcmFile existing = getEcmFileDao().findForContainerAttachmentFolderAndFileType(costsheet.getContainer().getId(),
                 costsheet.getContainer().getAttachmentFolder().getId(), CostsheetConstants.COSTSHEET_DOCUMENT);

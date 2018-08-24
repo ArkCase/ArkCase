@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.core.model.AcmEvent;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 
 import java.util.Date;
 
@@ -10,13 +10,13 @@ public class ChangeCaseFileStatusEvent extends AcmEvent
     private static final long serialVersionUID = 9214955996048509545L;
 
     private ChangeCaseStatus request;
-    private FrevvoUploadedFiles frevvoUploadedFiles;
+    private UploadedFiles uploadedFiles;
     private String caseNumber;
     private Long caseId;
     private String mode;
 
     public ChangeCaseFileStatusEvent(String caseNumber, Long caseId, ChangeCaseStatus source,
-            FrevvoUploadedFiles files, String mode, String userId, String ipAddress,
+            UploadedFiles files, String mode, String userId, String ipAddress,
             boolean succeeded)
     {
         super(source);
@@ -35,7 +35,7 @@ public class ChangeCaseFileStatusEvent extends AcmEvent
         setSucceeded(succeeded);
 
         setRequest(source);
-        setFrevvoUploadedFiles(files);
+        setUploadedFiles(files);
 
         setCaseNumber(caseNumber);
         setCaseId(caseId);
@@ -51,14 +51,14 @@ public class ChangeCaseFileStatusEvent extends AcmEvent
         this.request = request;
     }
 
-    public FrevvoUploadedFiles getFrevvoUploadedFiles()
+    public UploadedFiles getUploadedFiles()
     {
-        return frevvoUploadedFiles;
+        return uploadedFiles;
     }
 
-    public void setFrevvoUploadedFiles(FrevvoUploadedFiles frevvoUploadedFiles)
+    public void setUploadedFiles(UploadedFiles uploadedFiles)
     {
-        this.frevvoUploadedFiles = frevvoUploadedFiles;
+        this.uploadedFiles = uploadedFiles;
     }
 
     public String getCaseNumber()
