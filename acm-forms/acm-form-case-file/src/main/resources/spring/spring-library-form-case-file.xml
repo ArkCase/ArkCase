@@ -27,6 +27,7 @@
 
     <bean id="caseFileUpdatedListener" class="com.armedia.acm.form.casefile.service.CaseFileUpdatedListener">
         <property name="properties" ref="acm-forms-properties"/>
+        <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
         <lookup-method name="getCaseFileService" bean="caseFileService"/>
     </bean>
 

@@ -436,6 +436,43 @@
             "btn": {
                 "reportDesigner": "报表设计器",
                 "sync": "同步"
+            },
+            "schedule": {
+                "title": "zh-cn_Reports Scheduling",
+                "selectReportType": "zh-cn_Select Report Type",
+                "emailAddress": {
+                    "title": "zh-cn_Enter Email Addresses",
+                    "placeholder": "zh-cn_Please enter comma (,) separated email addresses"
+                },
+                "table": {
+                    "header": "zh-cn_Existing Schedules",
+                    "startTimeFormat": "zh-cn_hh:mm a",
+                    "columns": {
+                        "jobName": "zh-cn_Schedule Name",
+                        "recurrence": "zh-cn_Recurrence",
+                        "startTime": "zh-cn_Start Time",
+                        "startDate": "zh-cn_Start Date",
+                        "endDate": "zh-cn_End Date",
+                        "emailAddresses": "zh-cn_Email Addresses",
+                        "state": "zh-cn_Status"
+                    }
+                },
+                "delete": {
+                    "success": "zh-cn_Schedule deleted successfully",
+                    "error": "zh-cn_Failed to delete schedule"
+                },
+                "createScheduleSuccess": "zh-cn_Schedule created successfully",
+                "createScheduleFailure": "zh-cn_Failed to create schedule",
+                "enterFutureDate": "zh-cn_Enter a start time in the future",
+                "recurrence": "zh-cn_Recurrence (Enter future time)",
+                "time": "zh-cn_Time",
+                "startDate": "zh-cn_Start Date",
+                "endDate": "zh-cn_End Date",
+                "filterStartDate": "zh-cn_Result Filter Start Date",
+                "filterEndDate": "zh-cn_Result Filter End Date",
+                "outputFormat": "zh-cn_Select Output Format",
+                "submit": "zh-cn_Submit",
+                "cancel": "zh-cn_Cancel"
             }
         },
         "forms.title": "形式",
@@ -568,6 +605,15 @@
                 "modal.title": "信息",
                 "modal.info": "设置将在刷新后生效",
                 "modal.ok": "确定"
+            },
+            "formsType.config": {
+                "title": "zh-cn_Forms Type Configuration",
+                "angular.label": "zh-cn_Use Angular Forms",
+                "frevvo.label": "zh-cn_Use Frevvo Forms",
+                "apply": "zh-cn_Apply",
+                "modal.title": "zh-cn_Information",
+                "modal.info": "zh-cn_Settings will take effect after refresh",
+                "modal.ok": "zh-cn_OK"
             },
             "login.config": {
                 "title": "登录配置",

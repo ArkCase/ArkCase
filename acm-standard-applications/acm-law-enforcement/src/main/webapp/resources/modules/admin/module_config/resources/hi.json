@@ -436,7 +436,8 @@
             "btn": {
                 "reportDesigner": "रिपोर्ट डिजाइनर",
                 "sync": "सिंक्रनाइज़ करें"
-            }
+            },
+            "cancel": "Cancel"
         },
         "forms.title": "फार्म",
         "forms.config": "फॉर्म कॉन्फ़िगरेशन",
@@ -568,6 +569,15 @@
                 "modal.title": "जानकारी",
                 "modal.info": "रीफ्रेश के बाद से सेटिंग प्रभावी हो जाएंगी",
                 "modal.ok": "ठीक"
+            },
+            "formsType.config": {
+                "title": "hi_Forms Type Configuration",
+                "angular.label": "hi_Use Angular Forms",
+                "frevvo.label": "hi_Use Frevvo Forms",
+                "apply": "hi_Apply",
+                "modal.title": "hi_Information",
+                "modal.info": "hi_Settings will take effect after refresh",
+                "modal.ok": "hi_OK"
             },
             "login.config": {
                 "title": "लॉग इन कॉन्फ़िगरेशन",

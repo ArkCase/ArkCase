@@ -76,12 +76,75 @@
             }
         }
     },
-    "costTracking.comp.approvers": {
-        "title": "अनुमोदन कर्मियों",
+    "costTracking.comp.tasks": {
+        "title": "कार्य",
         "table.columns": {
-            "fullName": "पूरा नाम",
-            "userId": "उपयोगकर्ता नाम"
+            "title": "शीर्षक",
+            "assignee": "अभिहस्तांकिती",
+            "due": "देय",
+            "status": "स्थिति",
+            "priority": "प्राथमिकता",
+            "created": "बनाया था"
         }
+    },
+    "costTracking.comp.expenses": {
+        "title": "व्यय",
+        "table.columns": {
+            "date": "तारीख",
+            "title": "शीर्षक",
+            "description": "विवरण",
+            "amount": "रकम"
+        }
+    },
+    "costTracking.comp.documents": {
+        "title": "दस्तावेज़",
+        "filterInputPlaceholder": "फ़िल्टर",
+        "searchInputPlaceholder": "खोज",
+        "newTask": "नया कार्य",
+        "sendEmail": "ईमेल भेजें"
+    },
+    "costTracking.comp.newCostsheet": {
+        "title": "hi_Expenses",
+        "editCase.title": "hi_Edit Expenses",
+        "user": "hi_User",
+        "status": "hi_Status",
+        "costType": "hi_Type",
+        "selectTypeMessage": "hi_You have to select 'Type', so that you can enter a 'Code'.",
+        "code": "hi_Code",
+        "objectPicker": {
+            "title": "hi_Search for object",
+            "table.columns": {
+                "name": "hi_Name",
+                "type": "hi_Type",
+                "title": "hi_Title",
+                "id": "hi_ID",
+                "username": "hi_Username"
+            }
+        },
+        "userSearch.title": "hi_Search for User",
+        "cost": {
+            "title": "hi_Costs",
+            "date": "hi_Date",
+            "date.placeholder": "hi_Select Date",
+            "date.close.button": "hi_Close",
+            "costTitle": "hi_Title",
+            "description": "hi_Description",
+            "amount": "hi_Amount",
+            "balance": "hi_Balance",
+            "removeBtn": "hi_Remove Cost",
+            "addBtn": "hi_Add Another Cost"
+        },
+        "details": "hi_Details",
+        "approver": {
+            "title": "hi_Approver",
+            "placeholder": "hi_Select Approver",
+            "removeBtn": "hi_Remove Approver",
+            "addBtn": "hi_Add Another Approver"
+        },
+        "cancelButton": "hi_Cancel",
+        "saveButton": "hi_Save",
+        "updateButton": "hi_Update",
+        "sendForApproval": "hi_Send for Approval"
     },
     "costTracking.tree": {
         "nodeTypes": {
@@ -89,7 +152,8 @@
             "person.label": "लोग",
             "summary.label": "लागत",
             "tags.label": "टैग",
-            "approvers.label": "अनुमोदन कर्मियों"
+            "tasks.label": "कार्य",
+            "documents.label": "दस्तावेज़"
         },
         "sorters": {
             "dateAsc": "कक्रमबद्ध करें दिनांक ए एस सी",

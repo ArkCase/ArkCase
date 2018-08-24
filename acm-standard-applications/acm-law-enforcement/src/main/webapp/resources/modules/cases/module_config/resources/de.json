@@ -108,7 +108,8 @@
                 "witnessInterview2%": "Zeugen-Interviewantrag-2.0"
             }
         },
-        "newTask": "Neue Aufgabe"
+        "newTask": "Neue Aufgabe",
+        "addDocument": "Wählen Sie das hinzuzufügende Dokument aus."
     },
     "cases.comp.people": {
         "title": "Menschen",
@@ -360,6 +361,61 @@
             "approverFullName": "Genehmiger",
             "approverDecision": "Genehmigungsentscheidung"
         }
+    },
+    "cases.comp.change.status": {
+        "title": "de_Change Case Status",
+        "information": {
+            "title": "de_Change Case Status Information",
+            "date": "de_Change Date",
+            "case.number": "de_Case Number",
+            "status": {
+                "title": "de_Status",
+                "resolution": {
+                    "title": "de_Case Resolution",
+                    "denied": "de_Denied",
+                    "full": "de_Full",
+                    "partial": "de_Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "de_Select Approver",
+            "label": "de_Select Approver",
+            "addAnother": "de_Add another",
+            "remove": "de_Remove Approver",
+            "pickerModal.header": "de_Choose Approver"
+        },
+        "button": {
+            "cancel": "de_Cancel",
+            "save": "de_Save"
+        }
+    },
+    "cases.comp.newCase": {
+        "title": "de_New Case File",
+        "editCase.title": "de_Edit Case File",
+        "caseTitle": "de_Case Title",
+        "caseTitle.placeholder": "de_Enter Case File Title",
+        "caseType": "de_Case Type",
+        "initiator": "de_Initiator",
+        "initiator.placeholder": "de_Select Initiator",
+        "description": "de_Description",
+        "people": {
+            "title": "de_People",
+            "selectPerson.placeholder": "de_Search existing Person",
+            "personType": "de_Person Type"
+        },
+        "participants": {
+            "title": "de_Participants",
+            "owningGroup": "de_Owning Group",
+            "owningGroup.info": "de_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "de_Select Participant",
+            "participantType": "de_Participant Type"
+        },
+        "cancelButton": "de_Cancel",
+        "saveButton": "de_Save Case File",
+        "updateButton": "de_Update Case File",
+        "removeButton": "de_Remove",
+        "addButton": "de_Add Another"
     },
     "cases.userOrGroupSearch": {
         "id": "BenutzerSuche",

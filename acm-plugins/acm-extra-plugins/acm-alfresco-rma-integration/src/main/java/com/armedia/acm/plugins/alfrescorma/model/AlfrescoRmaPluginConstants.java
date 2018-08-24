@@ -52,4 +52,6 @@ public interface AlfrescoRmaPluginConstants
     String FILE_DECLARE_REQUEST_INTEGRATION_KEY = "alfresco_rma_declare_file_record_on_declare_request";
     String FOLDER_DECLARE_REQUEST_INTEGRATION_KEY = "alfresco_rma_declare_folder_record_on_declare_request";
 
+    String RMA_PLUGIN = "RMA";
+
 }

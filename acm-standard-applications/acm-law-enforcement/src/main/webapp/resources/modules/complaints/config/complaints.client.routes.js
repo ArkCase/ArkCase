@@ -110,7 +110,6 @@ angular.module('complaints').config([ '$stateProvider', function($stateProvider)
         url: '/:type/:id/approvals',
         templateUrl: 'modules/complaints/views/components/complaint-approval-routing.client.view.html'
     })
-
 }
 
 ]).run([ 'Helper.DashboardService', function(DashboardHelper) {

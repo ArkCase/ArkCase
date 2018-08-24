@@ -63,7 +63,8 @@
                 "witnessInterview2%": "Свидетельство о проведении собеседований-2.0"
             }
         },
-        "newTask": "Новое задание"
+        "newTask": "Новое задание",
+        "addDocument": "Выберите документ для добавления."
     },
     "complaints.comp.people": {
         "title": "Люди",
@@ -315,6 +316,56 @@
             "approverFullName": "Утверждающий",
             "approverDecision": "Решение об утверждении"
         }
+    },
+    "complaints.comp.newComplaint": {
+        "title": "ru_New Complaint",
+        "info": "ru_Incident Information",
+        "infoMessage": "ru_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "ru_Complaint Title",
+        "complaintTitle.placeholder": "ru_Enter Complaint Title",
+        "incidentCategory": "ru_Incident Category",
+        "initiator": "ru_Initiator",
+        "initiator.placeholder": "ru_Select Initiator",
+        "complaintDesc": "ru_Complaint Description",
+        "priority": "ru_Priority",
+        "incidentDate": "ru_Incident Date",
+        "incidentDate.placeholder": "ru_Select Incident Date",
+        "incidentDate.close.button": "ru_Close",
+        "complaintTag": "ru_Complaint Tag",
+        "complaintTag.placeholder": "ru_Enter Complaint Tag",
+        "frequency": "ru_Frequency",
+        "location": {
+            "title": "ru_Location",
+            "addressType": "ru_Type",
+            "streetAddress": "ru_Address",
+            "streetAddress.placeholder": "ru_Enter Street Address",
+            "city": "ru_City",
+            "city.placeholder": "ru_Enter City",
+            "state": "ru_State",
+            "state.placeholder": "ru_Enter State",
+            "country": "ru_Country",
+            "zip": "ru_Zip Code",
+            "zip.placeholder": "ru_Enter Zip Code",
+            "dateCreated": "ru_Date added",
+            "creator": "ru_Added By",
+            "creator.placeholder": "ru_Enter Creator"
+        },
+        "people": {
+            "title": "ru_People",
+            "selectPerson.placeholder": "ru_Search existing Person",
+            "personType": "ru_Person Type"
+        },
+        "participants": {
+            "title": "ru_Participants",
+            "owningGroup": "ru_Owning Group",
+            "owningGroup.info": "ru_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "ru_Select Participant",
+            "participantType": "ru_Participant Type"
+        },
+        "cancelButton": "ru_Cancel",
+        "saveButton": "ru_Save Complaint",
+        "removeButton": "ru_Remove",
+        "addButton": "ru_Add Another"
     },
     "complaints.userOrGroupSearch": {
         "id": "Поиск пользователей",

@@ -1,7 +1,7 @@
 'use strict';
 
 //Menu service used for managing  menus
-angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.ModulesService', 'Authentication', function($q, PermissionsService, ModuleService, Authentication) {
+angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.ModulesService', 'Authentication', 'Admin.ApplicationFormsTypeConfigService', function($q, PermissionsService, ModuleService, Authentication, ApplicationFormsTypeConfigService) {
     // Define a set of default roles
     this.defaultRoles = [ '*' ];
 
@@ -11,6 +11,9 @@ angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.Mod
 
     var appModulesPromise = ModuleService.getAppModules();
     var userRolesPromise = Authentication.queryUserInfo();
+    var formsTypePromise = ApplicationFormsTypeConfigService.getProperty(ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE).then(function(response) {
+        return response;
+    });
 
     // A private function for rendering decision
     var shouldRender = function(user) {
@@ -108,9 +111,10 @@ angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.Mod
     this.addMenuItems = function(menuObjects) {
         var context = this;
 
-        $q.all([ appModulesPromise, userRolesPromise ]).then(function(data) {
+        $q.all([ appModulesPromise, userRolesPromise, formsTypePromise ]).then(function(data) {
             var appModules = data[0].data;
             var userRoles = data[1].authorities;
+            var formsType = data[2].data[ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE];
 
             for (var i = 0; i < menuObjects.length; i++) {
                 var menuObj = menuObjects[i];
@@ -143,8 +147,14 @@ angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.Mod
                         if (menuObj.moduleId != null && menuObj.moduleId === "none") {
 
                             if (moduleAllowedByActionPermission) {
-                                // Push new menu item
-                                pushMenuItem(menuObj, context);
+                                if (menuObj.menuId == "topbar") {
+                                    if (menuObj.formsType == formsType || menuObj.formsType == undefined) {
+                                        pushMenuItem(menuObj, context);
+                                    }
+                                } else {
+                                    // Push new menu item
+                                    pushMenuItem(menuObj, context);
+                                }
                             }
                         }
                         if (moduleObject != null) {
@@ -158,8 +168,14 @@ angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.Mod
                                 });
 
                                 if (moduleAllowedByActionPermission && moduleAllowedByRoles) {
-                                    // Push new menu item
-                                    pushMenuItem(menuObj, context);
+                                    if (menuObj.menuId == "topbar") {
+                                        if (menuObj.formsType == formsType || menuObj.formsType == undefined) {
+                                            pushMenuItem(menuObj, context);
+                                        }
+                                    } else {
+                                        // Push new menu item
+                                        pushMenuItem(menuObj, context);
+                                    }
                                 }
                             })
                         }
@@ -249,8 +265,8 @@ angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.Mod
             position: menuObj.position || 0,
             iconClass: menuObj.iconClass,
             permissionAction: menuObj.permissionAction || 'noAction',
-            modalDialog: menuObj.modalDialog
-
+            modalDialog: menuObj.modalDialog,
+            formsType: menuObj.formsType
         });
     }
 

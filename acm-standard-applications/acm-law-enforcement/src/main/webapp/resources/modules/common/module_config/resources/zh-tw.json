@@ -194,12 +194,16 @@
         "header": "搜索",
         "btnSearch.text": "搜索",
         "btnOk.text": "確定",
+        "btnConfirm.text": "zh-tw_Confirm",
         "btnCancel.text": "消除",
         "edtPlaceholder": "鍵入搜索內容",
         "noData.text": "無結果",
         "pickUserLabel": "選擇關聯的用戶",
         "pickGroupLabel": "選擇相關組",
-        "selectedItemsGrid.label": "選定的條目"
+        "selectedItemsGrid.label": "選定的條目",
+        "notValidUser": "zh-tw_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
+        "notValidGroup": "zh-tw_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
+
     },
     "common.directive.search": {
         "showMore.button.text": "顯示更多",
@@ -601,6 +605,7 @@
             "btnOk.text": "保存",
             "btnCancel.text": "取消",
             "dialogUserPicker.header": "搜索用戶",
+            "dialogUserGroupPicker.header": "zh-tw_Search User/Group",
             "dialogGroupPicker.header": "搜索組",
             "replaceChildrenParticipant": "替換子文檔參與者"
         },
@@ -729,6 +734,9 @@
             "identificationYearIssued": "鑑定已發布",
             "identificationYearIssued.placeholder": "選擇標識已發布",
             "identificationYearIssued.close.button": "關閉"
+        },
+        "details": {
+            "title": "zh-tw_Details"
         }
     },
     "common.addPerson": {

@@ -108,7 +108,8 @@
                 "witnessInterview2%": "Свидетельство о проведении собеседований-2.0"
             }
         },
-        "newTask": "Новое задание"
+        "newTask": "Новое задание",
+        "addDocument": "Выберите документ для добавления."
     },
     "cases.comp.people": {
         "title": "Люди",
@@ -360,6 +361,61 @@
             "approverFullName": "Утверждающий",
             "approverDecision": "Принятие решения"
         }
+    },
+    "cases.comp.change.status": {
+        "title": "ru_Change Case Status",
+        "information": {
+            "title": "ru_Change Case Status Information",
+            "date": "ru_Change Date",
+            "case.number": "ru_Case Number",
+            "status": {
+                "title": "ru_Status",
+                "resolution": {
+                    "title": "ru_Case Resolution",
+                    "denied": "ru_Denied",
+                    "full": "ru_Full",
+                    "partial": "ru_Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "ru_Select Approver",
+            "label": "ru_Select Approver",
+            "addAnother": "ru_Add another",
+            "remove": "ru_Remove Approver",
+            "pickerModal.header": "ru_Choose Approver"
+        },
+        "button": {
+            "cancel": "ru_Cancel",
+            "save": "ru_Save"
+        }
+    },
+    "cases.comp.newCase": {
+        "title": "ru_New Case File",
+        "editCase.title": "ru_Edit Case File",
+        "caseTitle": "ru_Case Title",
+        "caseTitle.placeholder": "ru_Enter Case File Title",
+        "caseType": "ru_Case Type",
+        "initiator": "ru_Initiator",
+        "initiator.placeholder": "ru_Select Initiator",
+        "description": "ru_Description",
+        "people": {
+            "title": "ru_People",
+            "selectPerson.placeholder": "ru_Search existing Person",
+            "personType": "ru_Person Type"
+        },
+        "participants": {
+            "title": "ru_Participants",
+            "owningGroup": "ru_Owning Group",
+            "owningGroup.info": "ru_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "ru_Select Participant",
+            "participantType": "ru_Participant Type"
+        },
+        "cancelButton": "ru_Cancel",
+        "saveButton": "ru_Save Case File",
+        "updateButton": "ru_Update Case File",
+        "removeButton": "ru_Remove",
+        "addButton": "ru_Add Another"
     },
     "cases.userOrGroupSearch": {
         "id": "ПоискольПзователей",

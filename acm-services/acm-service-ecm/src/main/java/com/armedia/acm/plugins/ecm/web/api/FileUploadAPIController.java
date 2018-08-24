@@ -31,6 +31,12 @@ import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFilePostUploadEvent;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -41,6 +47,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +70,7 @@ import java.util.List;
 import java.util.Map;
 
 @RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
-public class FileUploadAPIController
+public class FileUploadAPIController implements ApplicationEventPublisherAware
 {
     private final String uploadFileType = "attachment";
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -70,6 +78,7 @@ public class FileUploadAPIController
     private AcmFolderService acmFolderService;
     private ObjectConverter objectConverter;
     private ArkPermissionEvaluator arkPermissionEvaluator;
+    private ApplicationEventPublisher applicationEventPublisher;
     private UploadService uploadService;
 
     // #parentObjectType == 'USER_ORG' applies to uploading profile picture
@@ -164,7 +173,7 @@ public class FileUploadAPIController
                                 folderCmisId, parentObjectType, parentObjectId);
                         uploadedFiles.add(temp);
 
-                        // TODO: audit events
+                        applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp));
                     }
                 }
             }
@@ -315,6 +324,12 @@ public class FileUploadAPIController
     public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
     {
         this.arkPermissionEvaluator = arkPermissionEvaluator;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     public String getUploadFileType() {
