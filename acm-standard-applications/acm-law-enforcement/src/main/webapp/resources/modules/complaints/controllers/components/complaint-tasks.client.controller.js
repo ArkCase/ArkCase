@@ -105,7 +105,7 @@ angular.module('complaints').controller(
                     };
 
                     $scope.isDeleteDisabled = function(rowEntity) {
-                        return (Util.isEmpty(rowEntity.task_owner_s) || (rowEntity.task_owner_s !== rowEntity.author_s));
+                        return ((Util.isEmpty(rowEntity.task_owner_s) || (rowEntity.task_owner_s !== rowEntity.author_s)) || (rowEntity.status_s === "CLOSED"));
                     };
 
                 } ]);

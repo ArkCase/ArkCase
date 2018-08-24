@@ -19,6 +19,7 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
         capacity: 1
     });
     var caseGetUrl = 'api/latest/plugin/casefile/byId/';
+    var caseUrl = 'api/latest/plugin/casefile/';
 
     var Service = $resource('api/latest/plugin', {}, {
         /**
@@ -60,6 +61,27 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
             url: caseGetUrl + ':id',
             cache: caseCache,
             isArray: false
+        },
+
+        /**
+         * @ngdoc method
+         * @name post
+         * @methodOf services:Case.InfoService
+         *
+         * @description
+         * Change case file state.
+         *
+         * @param {Object} params Map of input parameter.
+         * @param {Object} params.mode  Object mode
+         * @param {Function} onSuccess (Optional)Callback function of success query.
+         * @param {Function} onError (Optional) Callback function when fail.
+         *
+         * @returns {Object} Object returned by $resource
+         */
+        changeState: {
+            method: 'POST',
+            url: caseUrl + "change/status/" + ':mode',
+            cache: false
         }
     });
 
@@ -158,6 +180,69 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
 
     /**
      * @ngdoc method
+     * @name changeCaseFileState
+     * @methodOf services:Case.InfoService
+     *
+     * @description
+     * Change/Save case file state
+     *
+     * @param {String} mode mode
+     *
+     * @data {Object} data ChangeCaseStatus
+     *
+     * @returns {Object} Promise
+     */
+    Service.changeCaseFileState = function(mode, data) {
+        return Util.serviceCall({
+            service: Service.changeState,
+            param: {
+                mode: mode
+            },
+            data: data,
+            onSuccess: function(data) {
+                return data;
+            }
+        });
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name saveCaseInfoNewCase
+     * @methodOf services:Case.InfoService
+     *
+     * @description
+     * Save case data
+     *
+     * @param {Object} caseInfo  Case data
+     *
+     * @returns {Object} Promise
+     */
+    Service.saveCaseInfoNewCase = function(caseInfo) {
+        if (!Service.validateCaseInfoNewCasefile(caseInfo)) {
+            return Util.errorPromise($translate.instant("common.service.error.invalidData"));
+        }
+        //we need to make one of the fields is changed in order to be sure that update will be executed
+        //if we change modified won't make any differences since is updated before update to database
+        //but update will be trigger
+        caseInfo.modified = null;
+        return Util.serviceCall({
+            service: Service.save,
+            data: JSOG.encode(caseInfo),
+            onSuccess: function(data) {
+                if (Service.validateCaseInfo(data)) {
+                    var caseInfo = data;
+                    if (caseInfo.id) {
+                        caseCache.put(caseGetUrl + caseInfo.id, caseInfo);
+                    }
+                    return caseInfo;
+                }
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
      * @name validateCaseInfo
      * @methodOf services:Case.InfoService
      *
@@ -191,6 +276,34 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
             return false;
         }
         if (!Util.isArray(data.references)) {
+            return false;
+        }
+        return true;
+    };
+
+    /**
+     * @ngdoc method
+     * @name validateCaseInfoNewCasefile
+     * @methodOf services:Case.InfoService
+     *
+     * @description
+     * Validate case data when creating new casefile
+     *
+     * @param {Object} data  Data to be validated
+     *
+     * @returns {Boolean} Return true if data is valid
+     */
+    Service.validateCaseInfoNewCasefile = function(data) {
+        if (Util.isEmpty(data)) {
+            return false;
+        }
+        if (data.id) {
+            return false;
+        }
+        if (data.participants && !Util.isArray(data.participants)) {
+            return false;
+        }
+        if (data.personAssociations && !Util.isArray(data.personAssociations)) {
             return false;
         }
         return true;

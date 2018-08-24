@@ -3,8 +3,8 @@
 angular.module('cases').controller(
         'Cases.ActionsController',
         [ '$scope', '$state', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService', 'Helper.ObjectBrowserService',
-                'Profile.UserInfoService', '$timeout',
-                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, $timeout) {
+                'Profile.UserInfoService', '$timeout', 'FormsType.Service',
+                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, $timeout, FormsTypeService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -28,6 +28,14 @@ angular.module('cases').controller(
                         $scope.caseFileSearchConfig = _.find(moduleConfig.components, {
                             id: "merge"
                         });
+                    });
+
+                    FormsTypeService.isAngularFormType().then(function(isAngularFormType) {
+                        $scope.isAngularFormType = isAngularFormType;
+                    });
+
+                    FormsTypeService.isFrevvoFormType().then(function(isFrevvoFormType) {
+                        $scope.isFrevvoFormType = isFrevvoFormType;
                     });
 
                     var onObjectInfoRetrieved = function(objectInfo) {
@@ -71,7 +79,43 @@ angular.module('cases').controller(
                             caseNumber: objectInfo.caseNumber,
                             status: objectInfo.status
                         };
+
+                        $scope.editCaseParams = {
+                            isEdit: true,
+                            casefile: objectInfo
+                        };
                     };
+
+                    $scope.newCaseFile = function() {
+                        var params = {
+                            isEdit: false
+                        };
+                        showModal(params);
+                    };
+
+                    $scope.editCaseFile = function() {
+                        showModal($scope.editCaseParams);
+                    };
+
+                    function showModal(params) {
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/cases/views/components/case-new-case-modal.client.view.html',
+                            controller: 'Cases.NewCaseController',
+                            size: 'lg',
+                            resolve: {
+                                modalParams: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(data) {
+                            console.log(data);
+                        }, function() {
+                            console.log("error");
+                        });
+                    }
 
                     $scope.onClickRestrict = function($event) {
                         if ($scope.restricted != $scope.objectInfo.restricted) {
@@ -84,6 +128,29 @@ angular.module('cases').controller(
                                 $scope.restricted = !$scope.restricted;
                             });
                         }
+                    };
+
+                    $scope.changeCaseStatus = function(caseInfo) {
+                        var params = {
+                            "info": caseInfo
+                        };
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/cases/views/components/case-change-status-modal.client.view.html',
+                            controller: 'Cases.ChangeStatusController',
+                            size: 'lg',
+                            resolve: {
+                                modalParams: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(data) {
+                            console.log(data);
+                        }, function() {
+                            console.log("error");
+                        });
                     };
 
                     $scope.subscribe = function(caseInfo) {

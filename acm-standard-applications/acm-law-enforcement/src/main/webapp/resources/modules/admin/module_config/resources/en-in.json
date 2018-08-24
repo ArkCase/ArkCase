@@ -627,6 +627,15 @@
                         "modal.info": "Settings will take effect after refresh",
                         "modal.ok": "OK"
                     },
+                    "formsType.config": {
+                        "title": "Forms Type Configuration",
+                        "angular.label": "Use Angular Forms",
+                        "frevvo.label": "Use Frevvo Forms",
+                        "apply": "Apply",
+                        "modal.title": "Information",
+                        "modal.info": "Settings will take effect after refresh",
+                        "modal.ok": "OK"
+                    },
                     "login.config": {
                         "title": "Login Configuration",
                         "idleLimit.label": "Login idle limit (in milliseconds)",
@@ -840,8 +849,52 @@
                     }
                 }
             }
-        }
-    },
+        },
+        "reports": {
+            "title": "en-in_Reports",
+            "config": "en-in_Reports Configuration",
+            "btn": {
+                "reportDesigner": "en-in_Report Designer",
+                "sync": "en-in_Synchronise"
+            },
+            "schedule": {
+                "title": "en-in_Reports Scheduling",
+                "selectReportType": "en-in_Select Report Type",
+                "emailAddress": {
+                    "title": "en-in_Enter Email Addresses",
+                    "placeholder": "en-in_Please enter comma (,) separated email addresses"
+                },
+                "table": {
+                    "header": "en-in_Existing Schedules",
+                    "startTimeFormat": "en-in_hh:mm a",
+                    "columns": {
+                        "jobName": "en-in_Schedule Name",
+                        "recurrence": "en-in_Recurrence",
+                        "startTime": "en-in_Start Time",
+                        "startDate": "en-in_Start Date",
+                        "endDate": "en-in_End Date",
+                        "emailAddresses": "en-in_Email Addresses",
+                        "state": "en-in_Status"
+                    }
+                },
+                "delete": {
+                    "success": "en-in_Schedule deleted successfully",
+                    "error": "en-in_Failed to delete schedule"
+                },
+                "createScheduleSuccess": "en-in_Schedule created successfully",
+                "createScheduleFailure": "en-in_Failed to create schedule",
+                "enterFutureDate": "en-in_Enter a start time in the future",
+                "recurrence": "en-in_Recurrence (Enter future time)",
+                "time": "en-in_Time",
+                "startDate": "en-in_Start Date",
+                "endDate": "en-in_End Date",
+                "filterStartDate": "en-in_Result Filter Start Date",
+                "filterEndDate": "en-in_Result Filter End Date",
+                "outputFormat": "en-in_Select Output Format",
+                "submit": "en-in_Submit",
+                "cancel": "en-in_Cancel"
+            }
+        },
     "admin.security.addNew": "Add New Directory",
     "admin.comp.securityLdapConfig": {
         "title": "Security - Ldap config grid"

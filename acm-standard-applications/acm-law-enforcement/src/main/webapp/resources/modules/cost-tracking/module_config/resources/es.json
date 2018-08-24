@@ -76,12 +76,75 @@
             }
         }
     },
-    "costTracking.comp.approvers": {
-        "title": "Aprobadores",
+    "costTracking.comp.tasks": {
+        "title": "Tareas",
         "table.columns": {
-            "fullName": "Nombre completo",
-            "userId": "Nombre de usuario"
+            "title": "Título",
+            "assignee": "Cesionario",
+            "due": "Debido",
+            "status": "Estado",
+            "priority": "Prioridad",
+            "created": "Creado"
         }
+    },
+    "costTracking.comp.expenses": {
+        "title": "Gastos",
+        "table.columns": {
+            "date": "Fecha",
+            "title": "Título",
+            "description": "Descripción",
+            "amount": "Cantidad"
+        }
+    },
+    "costTracking.comp.documents": {
+        "title": "Documentos",
+        "filterInputPlaceholder": "Filtrar",
+        "searchInputPlaceholder": "Buscar",
+        "newTask": "Nueva tarea",
+        "sendEmail": "Enviar correo electrónico"
+    },
+    "costTracking.comp.newCostsheet": {
+        "title": "es_Expenses",
+        "editCase.title": "es_Edit Expenses",
+        "user": "es_User",
+        "status": "es_Status",
+        "costType": "es_Type",
+        "selectTypeMessage": "es_You have to select 'Type', so that you can enter a 'Code'.",
+        "code": "es_Code",
+        "objectPicker": {
+            "title": "es_Search for object",
+            "table.columns": {
+                "name": "es_Name",
+                "type": "es_Type",
+                "title": "es_Title",
+                "id": "es_ID",
+                "username": "es_Username"
+            }
+        },
+        "userSearch.title": "es_Search for User",
+        "cost": {
+            "title": "es_Costs",
+            "date": "es_Date",
+            "date.placeholder": "es_Select Date",
+            "date.close.button": "es_Close",
+            "costTitle": "es_Title",
+            "description": "es_Description",
+            "amount": "es_Amount",
+            "balance": "es_Balance",
+            "removeBtn": "es_Remove Cost",
+            "addBtn": "es_Add Another Cost"
+        },
+        "details": "es_Details",
+        "approver": {
+            "title": "es_Approver",
+            "placeholder": "es_Select Approver",
+            "removeBtn": "es_Remove Approver",
+            "addBtn": "es_Add Another Approver"
+        },
+        "cancelButton": "es_Cancel",
+        "saveButton": "es_Save",
+        "updateButton": "es_Update",
+        "sendForApproval": "es_Send for Approval"
     },
     "costTracking.tree": {
         "nodeTypes": {
@@ -89,7 +152,8 @@
             "person.label": "Persona",
             "summary.label": "Gastos",
             "tags.label": "Etiquetas",
-            "approvers.label": "Aprobadores"
+            "tasks.label": "Tareas",
+            "documents.label": "Documentos"
         },
         "sorters": {
             "dateAsc": "Ordenar Fecha Asc",

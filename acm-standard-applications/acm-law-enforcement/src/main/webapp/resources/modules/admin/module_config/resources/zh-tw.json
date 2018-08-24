@@ -436,6 +436,43 @@
             "btn": {
                 "reportDesigner": "報表設計器",
                 "sync": "同步"
+            },
+            "schedule": {
+                "title": "zh-tw_Reports Scheduling",
+                "selectReportType": "zh-tw_Select Report Type",
+                "emailAddress": {
+                    "title": "zh-tw_Enter Email Addresses",
+                    "placeholder": "zh-tw_Please enter comma (,) separated email addresses"
+                },
+                "table": {
+                    "header": "zh-tw_Existing Schedules",
+                    "startTimeFormat": "zh-tw_hh:mm a",
+                    "columns": {
+                        "jobName": "zh-tw_Schedule Name",
+                        "recurrence": "zh-tw_Recurrence",
+                        "startTime": "zh-tw_Start Time",
+                        "startDate": "zh-tw_Start Date",
+                        "endDate": "zh-tw_End Date",
+                        "emailAddresses": "zh-tw_Email Addresses",
+                        "state": "zh-tw_Status"
+                    }
+                },
+                "delete": {
+                    "success": "zh-tw_Schedule deleted successfully",
+                    "error": "zh-tw_Failed to delete schedule"
+                },
+                "createScheduleSuccess": "zh-tw_Schedule created successfully",
+                "createScheduleFailure": "zh-tw_Failed to create schedule",
+                "enterFutureDate": "zh-tw_Enter a start time in the future",
+                "recurrence": "zh-tw_Recurrence (Enter future time)",
+                "time": "zh-tw_Time",
+                "startDate": "zh-tw_Start Date",
+                "endDate": "zh-tw_End Date",
+                "filterStartDate": "zh-tw_Result Filter Start Date",
+                "filterEndDate": "zh-tw_Result Filter End Date",
+                "outputFormat": "zh-tw_Select Output Format",
+                "submit": "zh-tw_Submit",
+                "cancel": "zh-tw_Cancel"
             }
         },
         "forms.title": "形式",
@@ -569,6 +606,15 @@
             "modal.title": "信息",
             "modal.info": "設置將在刷新後生效",
             "modal.ok": "確定"
+        },
+        "formsType.config": {
+            "title": "zh-tw_Forms Type Configuration",
+            "angular.label": "zh-tw_Use Angular Forms",
+            "frevvo.label": "zh-tw_Use Frevvo Forms",
+            "apply": "zh-tw_Apply",
+            "modal.title": "zh-tw_Information",
+            "modal.info": "zh-tw_Settings will take effect after refresh",
+            "modal.ok": "zh-tw_OK"
         },
         "login.config": {
             "title": "登錄配置",

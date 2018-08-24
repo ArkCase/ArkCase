@@ -120,6 +120,11 @@
             "cmd": "subMenuCorrespondenceForms"
           },
           {
+            "titleKey": "common.directive.docTree.menu.searchDocument",
+            "cmd": "searchDocument",
+            "uiIcon": "ui-icon-search"
+          },
+          {
             "title": "----"
           },
           {
@@ -144,6 +149,11 @@
           {
             "titleKey": "common.directive.docTree.menu.newCorrespondence",
             "cmd": "subMenuCorrespondenceForms"
+          },
+          {
+            "titleKey": "common.directive.docTree.menu.searchDocument",
+            "cmd": "searchDocument",
+            "uiIcon": "ui-icon-search"
           },
           {
             "title": "----"
@@ -192,7 +202,8 @@
           {
             "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked"
+            "uiIcon": "ui-icon-locked",
+            "plugin": "RMA"
           }
         ],
         "file": [
@@ -214,13 +225,15 @@
             "titleKey": "common.directive.docTree.menu.collaborate",
             "cmd": "collaborate",
             "uiIcon": "ui-icon-person",
-            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx)$'), 'i').test(nodes[0].data.ext))"
+            "disabledExpression": "!(new RegExp('\\.(docx|xlsx|pptx)$', 'i').test(nodes[0].data.ext))",
+            "plugin": "WOPI"
           },
           {
             "titleKey": "common.directive.docTree.menu.coEdit",
             "cmd": "co-edit",
             "uiIcon": "ui-icon-document",
-            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))"
+            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))",
+            "plugin": "ONLY_OFFICE"
           },
           {
             "titleKey": "common.directive.docTree.menu.email",
@@ -326,62 +339,19 @@
           {
             "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked"
+            "uiIcon": "ui-icon-locked",
+            "plugin": "RMA"
           }
         ]
       },
       "record": {
         "root": [
           {
-            "___title": "New Folder <kbd>Ctrl+N</kbd>",
-            "titleKey": "common.directive.docTree.menu.newFolder",
-            "cmd": "newFolder",
-            "uiIcon": "ui-icon-plus"
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.newDocument",
-            "cmd": "subMenuFileTypes"
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.newCorrespondence",
-            "cmd": "subMenuCorrespondenceForms"
-          },
-          {
-            "title": "----"
-          },
-          {
             "title": "Participants",
             "cmd": "showParticipants"
-          },
-          {
-            "title": "----"
-          },
-          {
-            "___title": "Paste <kbd>Ctrl+V</kbd>",
-            "titleKey": "common.directive.docTree.menu.paste",
-            "cmd": "paste",
-            "uiIcon": "ui-icon-clipboard",
-            "disabled": true
           }
         ],
         "folder": [
-          {
-            "___title": "New Folder <kbd>Ctrl+N</kbd>",
-            "titleKey": "common.directive.docTree.menu.newFolder",
-            "cmd": "newFolder",
-            "uiIcon": "ui-icon-plus"
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.newDocument",
-            "cmd": "subMenuFileTypes"
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.newCorrespondence",
-            "cmd": "subMenuCorrespondenceForms"
-          },
-          {
-            "title": "----"
-          },
           {
             "title": "Participants",
             "cmd": "showParticipants"
@@ -400,16 +370,6 @@
             "titleKey": "common.directive.docTree.menu.copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
-          },
-          {
-            "___title": "Paste <kbd>Ctrl+V</kbd>",
-            "titleKey": "common.directive.docTree.menu.paste",
-            "cmd": "paste",
-            "uiIcon": "ui-icon-clipboard",
-            "disabled": true
-          },
-          {
-            "title": "----"
           }
         ],
         "file": [
@@ -502,7 +462,8 @@
           {
             "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked"
+            "uiIcon": "ui-icon-locked",
+            "plugin": "RMA"
           }
         ],
         "folders": [
@@ -527,7 +488,8 @@
           {
             "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked"
+            "uiIcon": "ui-icon-locked",
+            "plugin": "RMA"
           }
         ],
         "filesAndFolders": [
@@ -552,7 +514,8 @@
           {
             "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked"
+            "uiIcon": "ui-icon-locked",
+            "plugin": "RMA"
           }
         ],
         "filesOrFoldersRecord": [
@@ -571,7 +534,8 @@
           {
             "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked"
+            "uiIcon": "ui-icon-locked",
+            "plugin": "RMA"
           }
         ]
       },

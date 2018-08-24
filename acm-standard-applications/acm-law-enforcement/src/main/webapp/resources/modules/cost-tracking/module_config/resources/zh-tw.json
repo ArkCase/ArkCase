@@ -76,12 +76,75 @@
             }
         }
     },
-    "costTracking.comp.approvers": {
-        "title": "審批",
+    "costTracking.comp.tasks": {
+        "title": "任務",
         "table.columns": {
-            "fullName": "全名",
-            "userId": "用戶名"
+            "title": "標題",
+            "assignee": "代理人",
+            "due": "應有",
+            "status": "狀態",
+            "priority": "優先",
+            "created": "創建"
         }
+    },
+    "costTracking.comp.expenses": {
+        "title": "花費",
+        "table.columns": {
+            "date": "日期",
+            "title": "標題",
+            "description": "描述",
+            "amount": "量"
+        }
+    },
+    "costTracking.comp.documents": {
+        "title": "文件",
+        "filterInputPlaceholder": "過濾",
+        "searchInputPlaceholder": "搜索",
+        "newTask": "新任務",
+        "sendEmail": "發電子郵件"
+    },
+    "costTracking.comp.newCostsheet": {
+        "title": "zh-tw_Expenses",
+        "editCase.title": "zh-tw_Edit Expenses",
+        "user": "zh-tw_User",
+        "status": "zh-tw_Status",
+        "costType": "zh-tw_Type",
+        "selectTypeMessage": "zh-tw_You have to select 'Type', so that you can enter a 'Code'.",
+        "code": "zh-tw_Code",
+        "objectPicker": {
+            "title": "zh-tw_Search for object",
+            "table.columns": {
+                "name": "zh-tw_Name",
+                "type": "zh-tw_Type",
+                "title": "zh-tw_Title",
+                "id": "zh-tw_ID",
+                "username": "zh-tw_Username"
+            }
+        },
+        "userSearch.title": "zh-tw_Search for User",
+        "cost": {
+            "title": "zh-tw_Costs",
+            "date": "zh-tw_Date",
+            "date.placeholder": "zh-tw_Select Date",
+            "date.close.button": "zh-tw_Close",
+            "costTitle": "zh-tw_Title",
+            "description": "zh-tw_Description",
+            "amount": "zh-tw_Amount",
+            "balance": "zh-tw_Balance",
+            "removeBtn": "zh-tw_Remove Cost",
+            "addBtn": "zh-tw_Add Another Cost"
+        },
+        "details": "zh-tw_Details",
+        "approver": {
+            "title": "zh-tw_Approver",
+            "placeholder": "zh-tw_Select Approver",
+            "removeBtn": "zh-tw_Remove Approver",
+            "addBtn": "zh-tw_Add Another Approver"
+        },
+        "cancelButton": "zh-tw_Cancel",
+        "saveButton": "zh-tw_Save",
+        "updateButton": "zh-tw_Update",
+        "sendForApproval": "zh-tw_Send for Approval"
     },
     "costTracking.tree": {
         "nodeTypes": {
@@ -89,7 +152,8 @@
             "person.label": "成員",
             "summary.label": "費用",
             "tags.label": "標籤",
-            "approvers.label": "審批人"
+            "tasks.label": "任務",
+            "documents.label": "文件"
         },
         "sorters": {
             "dateAsc": "按日期排序",

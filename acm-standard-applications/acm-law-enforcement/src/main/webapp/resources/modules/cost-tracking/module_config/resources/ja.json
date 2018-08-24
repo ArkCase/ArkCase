@@ -76,12 +76,75 @@
             }
         }
     },
-    "costTracking.comp.approvers": {
-        "title": "承認者",
+    "costTracking.comp.tasks": {
+        "title": "仕事",
         "table.columns": {
-            "fullName": "フルネーム",
-            "userId": "ユーザー名"
+            "title": "タイトル",
+            "assignee": "譲受人",
+            "due": "支払期日",
+            "status": "状態",
+            "priority": "優先",
+            "created": "作成した"
         }
+    },
+    "costTracking.comp.expenses": {
+        "title": "経費",
+        "table.columns": {
+            "date": "日付",
+            "title": "タイトル",
+            "description": "説明",
+            "amount": "量"
+        }
+    },
+    "costTracking.comp.documents": {
+        "title": "書類",
+        "filterInputPlaceholder": "フィルタ",
+        "searchInputPlaceholder": "サーチ",
+        "newTask": "新しい仕事",
+        "sendEmail": "メールを送る"
+    },
+    "costTracking.comp.newCostsheet": {
+        "title": "ja_Expenses",
+        "editCase.title": "ja_Edit Expenses",
+        "user": "ja_User",
+        "status": "ja_Status",
+        "costType": "ja_Type",
+        "selectTypeMessage": "ja_You have to select 'Type', so that you can enter a 'Code'.",
+        "code": "ja_Code",
+        "objectPicker": {
+            "title": "ja_Search for object",
+            "table.columns": {
+                "name": "ja_Name",
+                "type": "ja_Type",
+                "title": "ja_Title",
+                "id": "ja_ID",
+                "username": "ja_Username"
+            }
+        },
+        "userSearch.title": "ja_Search for User",
+        "cost": {
+            "title": "ja_Costs",
+            "date": "ja_Date",
+            "date.placeholder": "ja_Select Date",
+            "date.close.button": "ja_Close",
+            "costTitle": "ja_Title",
+            "description": "ja_Description",
+            "amount": "ja_Amount",
+            "balance": "ja_Balance",
+            "removeBtn": "ja_Remove Cost",
+            "addBtn": "ja_Add Another Cost"
+        },
+        "details": "ja_Details",
+        "approver": {
+            "title": "ja_Approver",
+            "placeholder": "ja_Select Approver",
+            "removeBtn": "ja_Remove Approver",
+            "addBtn": "ja_Add Another Approver"
+        },
+        "cancelButton": "ja_Cancel",
+        "saveButton": "ja_Save",
+        "updateButton": "ja_Update",
+        "sendForApproval": "ja_Send for Approval"
     },
     "costTracking.tree": {
         "nodeTypes": {
@@ -89,7 +152,8 @@
             "person.label": "人物",
             "summary.label": "経費",
             "tags.label": "タグ",
-            "approvers.label": "承認者"
+            "tasks.label": "仕事",
+            "documents.label": "書類"
         },
         "sorters": {
             "dateAsc": "日付で並べ替え",

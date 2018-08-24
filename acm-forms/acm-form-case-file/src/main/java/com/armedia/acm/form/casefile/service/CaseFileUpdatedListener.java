@@ -30,6 +30,7 @@ package com.armedia.acm.form.casefile.service;
  * #L%
  */
 
+import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
@@ -51,36 +52,47 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
 
     private Properties properties;
     private FrevvoFormService caseFileService;
+    private FormsTypeCheckService formsTypeCheckService;
 
     @Override
     public void onApplicationEvent(CaseEvent event)
     {
-        if ("com.armedia.acm.casefile.created".equals(event.getEventType().toLowerCase())
-                || "com.armedia.acm.casefile.updated".equals(event.getEventType().toLowerCase()))
+
+        if (formsTypeCheckService.getTypeOfForm().equals("frevvo"))
         {
-            LOG.debug("Updating Frevvo XML file ...");
-
-            if (getProperties() != null)
+            if ("com.armedia.acm.casefile.created".equals(event.getEventType().toLowerCase())
+                    || "com.armedia.acm.casefile.updated".equals(event.getEventType().toLowerCase()))
             {
+                LOG.debug("Updating Frevvo XML file ...");
 
-                if (getProperties().containsKey(CaseFileConstants.ACTIVE_CASE_FORM_KEY))
+                if (getProperties() != null)
                 {
-                    String activeFormName = (String) getProperties().get(CaseFileConstants.ACTIVE_CASE_FORM_KEY);
 
-                    try
+                    if (getProperties().containsKey(CaseFileConstants.ACTIVE_CASE_FORM_KEY))
                     {
-                        if (FrevvoFormName.CASE_FILE.equals(activeFormName))
+                        String activeFormName = (String) getProperties().get(CaseFileConstants.ACTIVE_CASE_FORM_KEY);
+
+                        try
                         {
-                            getCaseFileService().updateXML(event.getCaseFile(), event.getEventUser(), getCaseFileService().getFormClass());
+                            if (FrevvoFormName.CASE_FILE.equals(activeFormName))
+                            {
+                                getCaseFileService().updateXML(event.getCaseFile(), event.getEventUser(),
+                                        getCaseFileService().getFormClass());
+                            }
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        LOG.error(String.format("Could not update Frevvo form XML: [%s]", e.getMessage()), e);
+                        catch (Exception e)
+                        {
+                            LOG.error(String.format("Could not update Frevvo form XML: [%s]", e.getMessage()), e);
+                        }
                     }
                 }
             }
         }
+    }
+
+    public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService)
+    {
+        this.formsTypeCheckService = formsTypeCheckService;
     }
 
     public Properties getProperties()

@@ -108,7 +108,8 @@
                 "witnessInterview2%": "Pedido de entrevista de testemunha-2.0"
             }
         },
-        "newTask": "Nova tarefa"
+        "newTask": "Nova tarefa",
+        "addDocument": "Escolha o documento para adicionar."
     },
     "cases.comp.people": {
         "title": "Pessoas",
@@ -360,6 +361,61 @@
             "approverFullName": "Aprovador",
             "approverDecision": "Decisão Aprovação"
         }
+    },
+    "cases.comp.change.status": {
+        "title": "pt_Change Case Status",
+        "information": {
+            "title": "pt_Change Case Status Information",
+            "date": "pt_Change Date",
+            "case.number": "pt_Case Number",
+            "status": {
+                "title": "pt_Status",
+                "resolution": {
+                    "title": "pt_Case Resolution",
+                    "denied": "pt_Denied",
+                    "full": "pt_Full",
+                    "partial": "pt_Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "pt_Select Approver",
+            "label": "pt_Select Approver",
+            "addAnother": "pt_Add another",
+            "remove": "pt_Remove Approver",
+            "pickerModal.header": "pt_Choose Approver"
+        },
+        "button": {
+            "cancel": "pt_Cancel",
+            "save": "pt_Save"
+        }
+    },
+    "cases.comp.newCase": {
+        "title": "pt_New Case File",
+        "editCase.title": "pt_Edit Case File",
+        "caseTitle": "pt_Case Title",
+        "caseTitle.placeholder": "pt_Enter Case File Title",
+        "caseType": "pt_Case Type",
+        "initiator": "pt_Initiator",
+        "initiator.placeholder": "pt_Select Initiator",
+        "description": "pt_Description",
+        "people": {
+            "title": "pt_People",
+            "selectPerson.placeholder": "pt_Search existing Person",
+            "personType": "pt_Person Type"
+        },
+        "participants": {
+            "title": "pt_Participants",
+            "owningGroup": "pt_Owning Group",
+            "owningGroup.info": "pt_The Owning Group can be chosen only through the Owner field",
+            "selectParticipant.placeholder": "pt_Select Participant",
+            "participantType": "pt_Participant Type"
+        },
+        "cancelButton": "pt_Cancel",
+        "saveButton": "pt_Save Case File",
+        "updateButton": "pt_Update Case File",
+        "removeButton": "pt_Remove",
+        "addButton": "pt_Add Another"
     },
     "cases.userOrGroupSearch": {
         "id": "PesquisarUsuários",

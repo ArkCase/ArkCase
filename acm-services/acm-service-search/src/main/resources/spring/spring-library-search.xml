@@ -124,6 +124,7 @@
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
+        <property name="includeDenyAccessFilter" value="${dac.includeDenyAccessFilter}"/>
     </bean>
 
     <!-- event publishers -->
