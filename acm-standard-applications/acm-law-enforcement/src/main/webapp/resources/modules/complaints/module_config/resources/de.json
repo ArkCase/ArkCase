@@ -63,7 +63,8 @@
                 "witnessInterview2%": "Zeugen-Interviewantrag-2.0"
             }
         },
-        "newTask": "Neue Aufgabe"
+        "newTask": "Neue Aufgabe",
+        "addDocument": "Wählen Sie das hinzuzufügende Dokument aus."
     },
     "complaints.comp.people": {
         "title": "Menschen",

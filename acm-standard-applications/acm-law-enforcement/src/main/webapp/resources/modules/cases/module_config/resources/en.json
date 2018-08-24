@@ -108,7 +108,8 @@
                 "witnessInterview2%": "Witness Interview Request-2.0"
             }
         },
-        "newTask": "New Task"
+        "newTask": "New Task",
+        "addDocument": "Choose document to add."
     },
     "cases.comp.people": {
         "title": "People",
@@ -360,6 +361,34 @@
             "approverId": "Approver",
             "approverFullName": "Approver",
             "approverDecision": "Approver Decision"
+        }
+    },
+    "cases.comp.change.status": {
+        "title": "Change Case Status",
+        "information": {
+            "title": "Change Case Status Information",
+            "date": "Change Date",
+            "case.number": "Case Number",
+            "status": {
+                "title": "Status",
+                "resolution": {
+                    "title": "Case Resolution",
+                    "denied": "Denied",
+                    "full": "Full",
+                    "partial": "Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "Select Approver",
+            "label": "Select Approver",
+            "addAnother": "Add another",
+            "remove": "Remove Approver",
+            "pickerModal.header": "Choose Approver"
+        },
+        "button": {
+            "cancel": "Cancel",
+            "save": "Save"
         }
     },
     "cases.comp.newCase": {

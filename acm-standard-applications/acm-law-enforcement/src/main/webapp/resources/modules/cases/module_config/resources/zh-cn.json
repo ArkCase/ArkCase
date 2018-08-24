@@ -108,7 +108,8 @@
                 "witnessInterview2%": "证人面试请求2.0"
             }
         },
-        "newTask": "新任务"
+        "newTask": "新任务",
+        "addDocument": "选择要添加的文档。"
     },
     "cases.comp.people": {
         "title": "成员",
@@ -359,6 +360,34 @@
             "approverId": "审批人",
             "approverFullName": "审批人",
             "approverDecision": "审批人决定"
+        }
+    },
+    "cases.comp.change.status": {
+        "title": "zh-cn_Change Case Status",
+        "information": {
+            "title": "zh-cn_Change Case Status Information",
+            "date": "zh-cn_Change Date",
+            "case.number": "zh-cn_Case Number",
+            "status": {
+                "title": "zh-cn_Status",
+                "resolution": {
+                    "title": "zh-cn_Case Resolution",
+                    "denied": "zh-cn_Denied",
+                    "full": "zh-cn_Full",
+                    "partial": "zh-cn_Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "zh-cn_Select Approver",
+            "label": "zh-cn_Select Approver",
+            "addAnother": "zh-cn_Add another",
+            "remove": "zh-cn_Remove Approver",
+            "pickerModal.header": "zh-cn_Choose Approver"
+        },
+        "button": {
+            "cancel": "zh-cn_Cancel",
+            "save": "zh-cn_Save"
         }
     },
     "cases.comp.newCase": {
