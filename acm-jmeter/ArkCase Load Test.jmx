@@ -24,7 +24,7 @@
           </elementProp>
           <elementProp name="csv.complaint.data" elementType="Argument">
             <stringProp name="Argument.name">csv.complaint.data</stringProp>
-            <stringProp name="Argument.value">complaint-data-100K.csv</stringProp>
+            <stringProp name="Argument.value">complaint-data-10K.csv</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="acm.url.arkcase" elementType="Argument">
@@ -2217,7 +2217,7 @@ return Math.max(0, remaining);</stringProp>
               <threadCounts>true</threadCounts>
             </value>
           </objProp>
-          <stringProp name="filename">C:\Users\drivera\Desktop\ACM3\acm-jmeter\test-results-100K-20160615-2.jtl</stringProp>
+          <stringProp name="filename">C:\Users\drivera\Desktop\ACM3\acm-jmeter\test-results-10K-20160615-2.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="Errors Detected" enabled="true">
