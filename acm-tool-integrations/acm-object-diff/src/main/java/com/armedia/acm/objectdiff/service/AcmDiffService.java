@@ -58,7 +58,9 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.lang.reflect.Field;
+import java.time.temporal.Temporal;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -283,8 +285,10 @@ public class AcmDiffService
                             validValue = oldValue != null ? oldValue : newValue;
                         }
 
-                        // compare primitives or String
-                        if (ClassUtils.isPrimitiveOrWrapper(validValueClass) || validValueClass.isAssignableFrom(String.class))
+                        // compare primitives, String or Date/Time values
+                        if (ClassUtils.isPrimitiveOrWrapper(validValueClass) || String.class.isAssignableFrom(validValueClass)
+                                || Date.class.isAssignableFrom(validValueClass)
+                                || Temporal.class.isAssignableFrom(validValueClass))
                         {
                             if (ObjectUtils.compare(Comparable.class.cast(oldValue), Comparable.class.cast(newValue)) != 0)
                             {
