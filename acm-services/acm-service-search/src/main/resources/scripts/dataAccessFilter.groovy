@@ -49,8 +49,14 @@ if (includeDenyAccessFilter) {
     }
 }
 
-message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter, StandardCharsets.UTF_8.displayName()));
-message.setInboundProperty("denyAccessFilter", URLEncoder.encode(denyAccessFilter, StandardCharsets.UTF_8.displayName()));
+boolean includeDACFilter = message.getInboundProperty("includeDACFilter")
+if (includeDACFilter) {
+    message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter, StandardCharsets.UTF_8.displayName()))
+    message.setInboundProperty("denyAccessFilter", URLEncoder.encode(denyAccessFilter, StandardCharsets.UTF_8.displayName()))
+} else {
+    message.setInboundProperty("dataAccessFilter", "")
+    message.setInboundProperty("denyAccessFilter", "")
+}
 
 String childObjectDacFilter = "{!join from=id to=parent_ref_s}(not(exists(protected_object_b)) OR ";
 childObjectDacFilter += "protected_object_b:false OR public_doc_b:true ";
@@ -68,6 +74,7 @@ childObjectDacFilter += " )"
 if (includeDenyAccessFilter) {
 // now we have to add the mandatory denies
     childObjectDacFilter += " AND -deny_acl_ss:" + safeUserId
+
     for (GrantedAuthority granted : authentication.getAuthorities()) {
         String authName = granted.getAuthority()
         String safeAuthName = encodeCharacters(authName)
@@ -83,12 +90,12 @@ String childObjectFilterQuery = "{!frange l=1}if(not(exists(parent_ref_s)), 1, \
 
 boolean filterParentRef = message.getInboundProperty("filterParentRef");
 
-if (filterParentRef) {
+if (filterParentRef && includeDACFilter) {
     message.setInboundProperty("childObjectDacFilter", URLEncoder.encode(childObjectDacFilter, StandardCharsets.UTF_8.displayName()));
     message.setInboundProperty("childObjectFilterQuery", URLEncoder.encode(childObjectFilterQuery, StandardCharsets.UTF_8.displayName()));
 } else {
-    message.setInboundProperty("childObjectDacFilter", "");
-    message.setInboundProperty("childObjectFilterQuery", "");
+    message.setInboundProperty("childObjectDacFilter", "")
+    message.setInboundProperty("childObjectFilterQuery", "")
 }
 
 String subscribedFilter = "{!join from=id to=related_subscription_ref_s}object_type_s:SUBSCRIPTION";
