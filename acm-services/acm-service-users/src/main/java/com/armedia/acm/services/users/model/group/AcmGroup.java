@@ -73,6 +73,8 @@ public class AcmGroup implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = -2729731595684630823L;
 
+    private Long id;
+
     @Id
     @Column(name = "cm_group_name")
     private String name;
@@ -237,6 +239,17 @@ public class AcmGroup implements Serializable, AcmEntity
     {
         memberOfGroups.forEach(memberOfGroup -> memberOfGroup.removeGroupMember(this));
         memberOfGroups.clear();
+    }
+
+    @JsonIgnore
+    public Long getId()
+    {
+        return id;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
     }
 
     public String getName()

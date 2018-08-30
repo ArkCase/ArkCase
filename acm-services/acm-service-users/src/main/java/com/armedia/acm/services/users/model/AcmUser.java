@@ -62,6 +62,8 @@ public class AcmUser implements Serializable
 {
     private static final long serialVersionUID = 3399640646540732944L;
 
+    private Long id;
+
     @Id
     @Column(name = "cm_user_id")
     private String userId;
@@ -184,6 +186,17 @@ public class AcmUser implements Serializable
     public void preUpdate()
     {
         setModified(new Date());
+    }
+
+    @JsonIgnore
+    public Long getId()
+    {
+        return id;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
     }
 
     public String getFullName()

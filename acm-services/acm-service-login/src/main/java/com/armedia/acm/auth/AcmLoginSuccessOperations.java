@@ -35,6 +35,8 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.service.AcmUserRoleService;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.slf4j.Logger;
@@ -51,6 +53,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 6/3/14.
@@ -64,12 +68,19 @@ public class AcmLoginSuccessOperations
     private UserDao userDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ObjectConverter objectConverter;
+    private AcmUserRoleService userRoleService;
 
     public void onSuccessfulAuthentication(HttpServletRequest request, Authentication authentication)
     {
-        String internalUserId = addAcmUserToSession(request, authentication);
+        AcmUser acmUser = addAcmUserToSession(request, authentication);
 
-        addUserIdToSession(request, internalUserId);
+        addUserNameToSession(request, acmUser.getUserId());
+
+        addUserIdToSession(request, acmUser.getId());
+
+        addUserRolesToSession(request, acmUser);
+
+        addUserGroupIdsToSession(request, acmUser);
 
         addAlfrescoUserIdToSession(request);
 
@@ -81,9 +92,33 @@ public class AcmLoginSuccessOperations
 
         addAcmApplicationToSession(request);
 
-        recordAuditPropertyUser(internalUserId);
+        recordAuditPropertyUser(acmUser.getUserId());
 
         setPasswordExpirationSessionAttribute(request);
+    }
+
+    private void addUserIdToSession(HttpServletRequest request, Long id)
+    {
+        HttpSession session = request.getSession(true);
+        session.setAttribute("acm_user_id", id);
+
+        log.debug("Session 'acm_user_id' set to [{}]", id);
+    }
+
+    private void addUserGroupIdsToSession(HttpServletRequest request, AcmUser acmUser)
+    {
+        HttpSession session = request.getSession(true);
+        Set<Long> userGroupIds = acmUser.getGroups().stream()
+                .map(AcmGroup::getId)
+                .collect(Collectors.toSet());
+        session.setAttribute("acm_user_group_ids", userGroupIds);
+    }
+
+    private void addUserRolesToSession(HttpServletRequest request, AcmUser acmUser)
+    {
+        HttpSession session = request.getSession(true);
+        Set<String> userRoles = userRoleService.getUserRoles(acmUser.getUserId());
+        session.setAttribute("acm_user_roles", userRoles);
     }
 
     private void addAlfrescoUserIdToAuthenticationDetails(Authentication authentication)
@@ -121,7 +156,7 @@ public class AcmLoginSuccessOperations
         getAuditPropertyEntityAdapter().setUserId(userId);
     }
 
-    protected void addUserIdToSession(HttpServletRequest request, String userId)
+    protected void addUserNameToSession(HttpServletRequest request, String userId)
     {
         HttpSession session = request.getSession(true);
         session.setAttribute("acm_username", userId);
@@ -222,7 +257,7 @@ public class AcmLoginSuccessOperations
 
     }
 
-    protected String addAcmUserToSession(HttpServletRequest request, Authentication authentication)
+    protected AcmUser addAcmUserToSession(HttpServletRequest request, Authentication authentication)
     {
         String userId = authentication.getName();
 
@@ -232,8 +267,7 @@ public class AcmLoginSuccessOperations
 
         session.setAttribute("acm_user", user);
 
-        return user.getUserId();
-
+        return user;
     }
 
     public AcmPluginManager getAcmPluginManager()
@@ -284,5 +318,15 @@ public class AcmLoginSuccessOperations
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public AcmUserRoleService getUserRoleService()
+    {
+        return userRoleService;
+    }
+
+    public void setUserRoleService(AcmUserRoleService userRoleService)
+    {
+        this.userRoleService = userRoleService;
     }
 }

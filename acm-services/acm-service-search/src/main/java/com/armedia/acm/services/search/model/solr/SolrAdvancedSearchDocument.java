@@ -62,8 +62,14 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private boolean public_doc_b;
     private boolean protected_object_b;
 
-    private List<String> deny_acl_ss;
-    private List<String> allow_acl_ss;
+    private List<Long> deny_group_ls;
+    private List<Long> allow_group_ls;
+
+    private List<Long> deny_user_ls;
+    private List<Long> allow_user_ls;
+
+    private List<String> allow_role_ss;
+    private List<String> deny_role_ss;
 
     /////////////////// for complaints, case files, other objects with a title or description ////////////
     private String title_parseable;
@@ -810,28 +816,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         this.protected_object_b = protected_object_b;
     }
 
-    public List<String> getDeny_acl_ss()
-    {
-        return deny_acl_ss;
-    }
-
-    @Override
-    public void setDeny_acl_ss(List<String> deny_acl_ss)
-    {
-        this.deny_acl_ss = deny_acl_ss;
-    }
-
-    public List<String> getAllow_acl_ss()
-    {
-        return allow_acl_ss;
-    }
-
-    @Override
-    public void setAllow_acl_ss(List<String> allow_acl_ss)
-    {
-        this.allow_acl_ss = allow_acl_ss;
-    }
-
     public List<String> getTags_ss()
     {
         return tags_ss;
@@ -892,82 +876,150 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         this.parent_folder_id_i = parent_folder_id_i;
     }
 
+    public List<Long> getDenyGroup_ls()
+    {
+        return deny_group_ls;
+    }
+
+    @Override
+    public void setDenyGroup_ls(List<Long> deny_group_ls)
+    {
+        this.deny_group_ls = deny_group_ls;
+    }
+
+    public List<Long> getAllowGroup_ls()
+    {
+        return allow_group_ls;
+    }
+
+    @Override
+    public void setAllowGroup_ls(List<Long> allow_group_ls)
+    {
+        this.allow_group_ls = allow_group_ls;
+    }
+
+    public List<Long> getDenyUser_ls()
+    {
+        return deny_user_ls;
+    }
+
+    @Override
+    public void setDenyUser_ls(List<Long> deny_user_ls)
+    {
+        this.deny_user_ls = deny_user_ls;
+    }
+
+    public List<Long> getAllowUser_ls()
+    {
+        return allow_user_ls;
+    }
+
+    @Override
+    public void setAllowUser_ls(List<Long> allow_user_ls)
+    {
+        this.allow_user_ls = allow_user_ls;
+    }
+
+    public List<String> getAllowRole_ss()
+    {
+        return allow_role_ss;
+    }
+
+    @Override
+    public void setAllowRole_ss(List<String> allow_role_ss)
+    {
+        this.allow_role_ss = allow_role_ss;
+    }
+
+    public List<String> getDenyRole_ss()
+    {
+        return deny_role_ss;
+    }
+
+    @Override
+    public void setDenyRole_ss(List<String> deny_role_ss)
+    {
+        this.deny_role_ss = deny_role_ss;
+    }
+
     @Override
     public String toString()
     {
-        return "SolrAdvancedSearchDocument{" +
-                "id='" + id + '\'' +
-                ", object_id_s='" + object_id_s + '\'' +
-                ", object_display_name_s='" + object_display_name_s + '\'' +
-                ", object_type_s='" + object_type_s + '\'' +
-                ", object_sub_type_s='" + object_sub_type_s + '\'' +
-                ", name='" + name + '\'' +
-                ", ext_s='" + ext_s + '\'' +
-                ", mime_type_s='" + mime_type_s + '\'' +
-                ", create_date_tdt=" + create_date_tdt +
-                ", creator_lcs='" + creator_lcs + '\'' +
-                ", modified_date_tdt=" + modified_date_tdt +
-                ", modifier_lcs='" + modifier_lcs + '\'' +
-                ", public_doc_b=" + public_doc_b +
-                ", protected_object_b=" + protected_object_b +
-                ", deny_acl_ss=" + deny_acl_ss +
-                ", allow_acl_ss=" + allow_acl_ss +
-                ", title_parseable='" + title_parseable + '\'' +
-                ", description_parseable='" + description_parseable + '\'' +
-                ", title_parseable_lcs='" + title_parseable_lcs + '\'' +
-                ", description_no_html_tags_parseable='" + description_no_html_tags_parseable + '\'' +
-                ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\'' +
-                ", incident_date_tdt=" + incident_date_tdt +
-                ", dueDate_tdt=" + dueDate_tdt +
-                ", priority_lcs='" + priority_lcs + '\'' +
-                ", assignee_id_lcs='" + assignee_id_lcs + '\'' +
-                ", assignee_first_name_lcs='" + assignee_first_name_lcs + '\'' +
-                ", assignee_last_name_lcs='" + assignee_last_name_lcs + '\'' +
-                ", assignee_full_name_lcs='" + assignee_full_name_lcs + '\'' +
-                ", incident_type_lcs='" + incident_type_lcs + '\'' +
-                ", tag_token_lcs='" + tag_token_lcs + '\'' +
-                ", status_lcs='" + status_lcs + '\'' +
-                ", person_title_lcs='" + person_title_lcs + '\'' +
-                ", first_name_lcs='" + first_name_lcs + '\'' +
-                ", last_name_lcs='" + last_name_lcs + '\'' +
-                ", full_name_lcs='" + full_name_lcs + '\'' +
-                ", email_lcs='" + email_lcs + '\'' +
-                ", type_lcs='" + type_lcs + '\'' +
-                ", value_parseable='" + value_parseable + '\'' +
-                ", location_street_address_lcs='" + location_street_address_lcs + '\'' +
-                ", location_city_lcs='" + location_city_lcs + '\'' +
-                ", location_state_lcs='" + location_state_lcs + '\'' +
-                ", location_postal_code_sdo='" + location_postal_code_sdo + '\'' +
-                ", child_id_s='" + child_id_s + '\'' +
-                ", child_type_s='" + child_type_s + '\'' +
-                ", parent_id_s='" + parent_id_s + '\'' +
-                ", parent_type_s='" + parent_type_s + '\'' +
-                ", parent_name_t='" + parent_name_t + '\'' +
-                ", parent_number_lcs='" + parent_number_lcs + '\'' +
-                ", organization_id_ss=" + organization_id_ss +
-                ", postal_address_id_ss=" + postal_address_id_ss +
-                ", contact_method_ss=" + contact_method_ss +
-                ", person_alias_ss=" + person_alias_ss +
-                ", supervisor_id_s='" + supervisor_id_s + '\'' +
-                ", child_id_ss=" + child_id_ss +
-                ", member_id_ss=" + member_id_ss +
-                ", groups_id_ss=" + groups_id_ss +
-                ", adhocTask_b=" + adhocTask_b +
-                ", owner_lcs='" + owner_lcs + '\'' +
-                ", business_process_name_lcs='" + business_process_name_lcs + '\'' +
-                ", business_process_id_i=" + business_process_id_i +
-                ", content_type='" + content_type + '\'' +
-                ", ecmFileId='" + ecmFileId + '\'' +
-                ", cmis_version_series_id_s='" + cmis_version_series_id_s + '\'' +
-                ", tags_ss=" + tags_ss +
-                ", state_lcs='" + state_lcs + '\'' +
-                ", data_lcs='" + data_lcs + '\'' +
-                ", action_lcs='" + action_lcs + '\'' +
-                ", notification_type_lcs='" + notification_type_lcs + '\'' +
-                ", parent_ref_s='" + parent_ref_s + '\'' +
-                ", hidden_b=" + hidden_b +
-                ", parent_folder_id_i=" + parent_folder_id_i +
-                '}';
+        return "SolrAdvancedSearchDocument{" + "id='" + id + '\''
+                + ", object_id_s='" + object_id_s + '\''
+                + ", object_display_name_s='" + object_display_name_s + '\''
+                + ", object_type_s='" + object_type_s + '\''
+                + ", object_sub_type_s='" + object_sub_type_s + '\''
+                + ", name='" + name + '\''
+                + ", ext_s='" + ext_s + '\''
+                + ", mime_type_s='" + mime_type_s + '\''
+                + ", create_date_tdt=" + create_date_tdt
+                + ", creator_lcs='" + creator_lcs + '\''
+                + ", modified_date_tdt=" + modified_date_tdt
+                + ", modifier_lcs='" + modifier_lcs + '\''
+                + ", public_doc_b=" + public_doc_b
+                + ", protected_object_b=" + protected_object_b
+                + ", deny_group_ls=" + deny_group_ls
+                + ", allow_group_ls=" + allow_group_ls
+                + ", deny_user_ls=" + deny_user_ls
+                + ", allow_user_ls=" + allow_user_ls
+                + ", allow_role_ss=" + allow_role_ss
+                + ", deny_role_ss=" + deny_role_ss
+                + ", title_parseable='" + title_parseable + '\''
+                + ", description_parseable='" + description_parseable + '\''
+                + ", title_parseable_lcs='" + title_parseable_lcs + '\''
+                + ", description_no_html_tags_parseable='" + description_no_html_tags_parseable + '\''
+                + ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\''
+                + ", incident_date_tdt=" + incident_date_tdt
+                + ", dueDate_tdt=" + dueDate_tdt
+                + ", priority_lcs='" + priority_lcs + '\''
+                + ", assignee_id_lcs='" + assignee_id_lcs + '\''
+                + ", assignee_first_name_lcs='" + assignee_first_name_lcs + '\''
+                + ", assignee_last_name_lcs='" + assignee_last_name_lcs + '\''
+                + ", assignee_full_name_lcs='" + assignee_full_name_lcs + '\''
+                + ", incident_type_lcs='" + incident_type_lcs + '\''
+                + ", tag_token_lcs='" + tag_token_lcs + '\''
+                + ", status_lcs='" + status_lcs + '\''
+                + ", person_title_lcs='" + person_title_lcs + '\''
+                + ", first_name_lcs='" + first_name_lcs + '\''
+                + ", last_name_lcs='" + last_name_lcs + '\''
+                + ", full_name_lcs='" + full_name_lcs + '\''
+                + ", email_lcs='" + email_lcs + '\''
+                + ", type_lcs='" + type_lcs + '\''
+                + ", value_parseable='" + value_parseable + '\''
+                + ", location_street_address_lcs='" + location_street_address_lcs + '\''
+                + ", location_city_lcs='" + location_city_lcs + '\''
+                + ", location_state_lcs='" + location_state_lcs + '\''
+                + ", location_postal_code_sdo='" + location_postal_code_sdo + '\''
+                + ", child_id_s='" + child_id_s + '\''
+                + ", child_type_s='" + child_type_s + '\''
+                + ", parent_id_s='" + parent_id_s + '\''
+                + ", parent_type_s='" + parent_type_s + '\''
+                + ", parent_name_t='" + parent_name_t + '\''
+                + ", parent_number_lcs='" + parent_number_lcs + '\''
+                + ", organization_id_ss=" + organization_id_ss
+                + ", postal_address_id_ss=" + postal_address_id_ss
+                + ", contact_method_ss=" + contact_method_ss
+                + ", person_alias_ss=" + person_alias_ss
+                + ", supervisor_id_s='" + supervisor_id_s + '\''
+                + ", child_id_ss=" + child_id_ss
+                + ", member_id_ss=" + member_id_ss
+                + ", groups_id_ss=" + groups_id_ss
+                + ", adhocTask_b=" + adhocTask_b
+                + ", owner_lcs='" + owner_lcs + '\''
+                + ", business_process_name_lcs='" + business_process_name_lcs + '\''
+                + ", business_process_id_i=" + business_process_id_i
+                + ", content_type='" + content_type + '\''
+                + ", ecmFileId='" + ecmFileId + '\''
+                + ", cmis_version_series_id_s='" + cmis_version_series_id_s + '\''
+                + ", tags_ss=" + tags_ss
+                + ", state_lcs='" + state_lcs + '\''
+                + ", data_lcs='" + data_lcs + '\''
+                + ", action_lcs='" + action_lcs + '\''
+                + ", notification_type_lcs='" + notification_type_lcs + '\''
+                + ", parent_ref_s='" + parent_ref_s + '\''
+                + ", hidden_b=" + hidden_b
+                + ", parent_folder_id_i=" + parent_folder_id_i
+                + '}';
     }
-
 }
