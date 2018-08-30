@@ -121,7 +121,7 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
 
         replayAll();
 
-        unit.addUserIdToSession(mockRequest, userId);
+        unit.addUserNameToSession(mockRequest, userId);
 
         verifyAll();
     }

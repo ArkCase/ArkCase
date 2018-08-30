@@ -51,6 +51,8 @@
 
     <bean id="searchAccessControlFields" class="com.armedia.acm.services.dataaccess.service.SearchAccessControlFields">
         <property name="participantAccessChecker" ref="participantAccessChecker"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="groupService" ref="groupService"/>
     </bean>
 
     <bean id="arkPermissionEvaluator" class="com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator">

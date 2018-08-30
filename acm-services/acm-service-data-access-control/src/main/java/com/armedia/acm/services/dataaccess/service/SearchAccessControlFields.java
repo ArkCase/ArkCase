@@ -29,9 +29,15 @@ package com.armedia.acm.services.dataaccess.service;
 
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
-import com.armedia.acm.services.search.util.AcmSolrUtil;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +46,8 @@ import java.util.stream.Collectors;
 public class SearchAccessControlFields
 {
     private ParticipantAccessChecker participantAccessChecker;
+    private UserDao userDao;
+    private GroupServiceImpl groupService;
 
     public void setAccessControlFields(SolrBaseDocument doc, AcmAssignedObject object)
     {
@@ -52,22 +60,37 @@ public class SearchAccessControlFields
         if (!publicDoc)
         {
             List<String> readers = getParticipantAccessChecker().getReaders(object);
+            Map<String, Long> readerUserIdMap = getParticipantsToUserIdMap(readers);
+            doc.setAllowUser_ls(new ArrayList<>(readerUserIdMap.values()));
 
-            // due to how Solr works we have to replace any spaces in the participant ids with an unusual character.
-            readers = encode(readers);
-            doc.setAllow_acl_ss(readers);
+            readers.removeAll(readerUserIdMap.keySet());
+            Map<String, Long> readerGroupIdMap = getParticipantsToGroupIdMap(readers);
+            doc.setAllowGroup_ls(new ArrayList<>(readerGroupIdMap.values()));
         }
 
         List<String> denied = getParticipantAccessChecker().getDenied(object);
-        denied = encode(denied);
-        doc.setDeny_acl_ss(denied);
+        Map<String, Long> deniedUserIdMap = getParticipantsToUserIdMap(denied);
+        doc.setDenyUser_ls(new ArrayList<>(deniedUserIdMap.values()));
+
+        denied.removeAll(deniedUserIdMap.keySet());
+        Map<String, Long> deniedGroupId = getParticipantsToGroupIdMap(denied);
+        doc.setDenyGroup_ls(new ArrayList<>(deniedGroupId.values()));
     }
 
-    private List<String> encode(List<String> toBeEncoded)
+    private Map<String, Long> getParticipantsToUserIdMap(List<String> participantsLdapIds)
     {
-        return toBeEncoded.stream()
-                .map(s -> AcmSolrUtil.encodeSpecialCharactersForACL(s))
-                .collect(Collectors.toList());
+        return participantsLdapIds.stream()
+                .map(it -> userDao.findByUserId(it))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(AcmUser::getUserId, AcmUser::getId));
+    }
+
+    private Map<String, Long> getParticipantsToGroupIdMap(List<String> participantsLdapIds)
+    {
+        return participantsLdapIds.stream()
+                .map(it -> groupService.findByName(it))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(AcmGroup::getName, AcmGroup::getId));
     }
 
     public ParticipantAccessChecker getParticipantAccessChecker()
@@ -78,5 +101,25 @@ public class SearchAccessControlFields
     public void setParticipantAccessChecker(ParticipantAccessChecker participantAccessChecker)
     {
         this.participantAccessChecker = participantAccessChecker;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
+    public GroupServiceImpl getGroupService()
+    {
+        return groupService;
+    }
+
+    public void setGroupService(GroupServiceImpl groupService)
+    {
+        this.groupService = groupService;
     }
 }

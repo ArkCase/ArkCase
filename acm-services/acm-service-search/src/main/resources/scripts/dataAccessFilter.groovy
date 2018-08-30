@@ -1,51 +1,52 @@
 import com.armedia.acm.services.search.util.AcmSolrUtil
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.GrantedAuthority
-
 import java.nio.charset.StandardCharsets
+
+Long authenticatedUserId = message.getInboundProperty("acmUser")
+List<Long> authenticatedUserGroupIds = message.getInboundProperty("acm_user_group_ids")
+List<String> authenticatedUserRoles = message.getInboundProperty("acm_user_roles")
 
 // include records with no protected object field
 // include records where protected_object_b is false
 // include records where public_doc_b is true
 String dataAccessFilter = "{!frange l=1}sum(if(exists(protected_object_b), 0, 1), if(protected_object_b, 0, 1), if(public_doc_b, 1, 0)";
-
-Authentication authentication = message.getInboundProperty("acmUser");
-
-String safeUserId = encodeCharacters(authentication.getName());
+String query = message.getInboundProperty('query')
+String rowQueryParametars = message.getInboundProperty('rowQueryParametars')
+String targetType = getObjectType(query, rowQueryParametars)
+String denyAccessFilter = ""
 
 // do not apply data access filters for FILE or FOLDER, when 'enableDocumentACL' is false
-boolean enableDocumentACL = message.getInboundProperty("enableDocumentACL");
-String query = message.getInboundProperty('query');
-String rowQueryParametars = message.getInboundProperty('rowQueryParametars');
-String targetType = getObjectType(query, rowQueryParametars);
-
-String denyAccessFilter = "";
-
-if (!enableDocumentACL && targetType != null && (targetType.equals("FILE") || targetType.equals("FOLDER") || targetType.contentEquals("CONTAINER"))) {
-    dataAccessFilter += ")";
+boolean enableDocumentACL = message.getInboundProperty("enableDocumentACL")
+if (!enableDocumentACL && targetType != null && (targetType.equals("FILE")
+        || targetType.equals("FOLDER") || targetType.contentEquals("CONTAINER"))) {
+    dataAccessFilter += ")"
 } else {
     // include records where current user is directly on allow_acl_ss
-    dataAccessFilter += ", termfreq(allow_acl_ss, " + safeUserId + ")";
+    dataAccessFilter += ", termfreq(allow_user_ls, " + authenticatedUserId + ")"
 
-    for (GrantedAuthority granted : authentication.getAuthorities()) {
-        String authName = granted.getAuthority();
-        String safeAuthName = encodeCharacters(authName);
-        // include records where current user is in a group on allow_acl_ss
-        dataAccessFilter += ", termfreq(allow_acl_ss, " + safeAuthName + ")";
+    for (Long groupId : authenticatedUserGroupIds) {
+        // include records where current user is in a group on allow_group_ls
+        dataAccessFilter += ", termfreq(allow_group_ls, " + groupId + ")"
     }
 
-    dataAccessFilter += ")";
+    for (String role : authenticatedUserRoles) {
+        // include records where current user is in a group on allow_group_ls
+        dataAccessFilter += ", termfreq(allow_roles_ss, " + role + ")"
+    }
+
+    dataAccessFilter += ")"
 }
 
 boolean includeDenyAccessFilter = message.getInboundProperty("includeDenyAccessFilter")
 if (includeDenyAccessFilter) {
     // exclude records where the user is specifically locked out
-    denyAccessFilter = "-deny_acl_ss:" + safeUserId
-    for (GrantedAuthority granted : authentication.getAuthorities()) {
-        String authName = granted.getAuthority()
-        String safeAuthName = encodeCharacters(authName)
+    denyAccessFilter = "-deny_user_ls:" + authenticatedUserId
+    for (Long groupId : authenticatedUserGroupIds) {
         // exclude records where current user is in a locked-out group
-        denyAccessFilter += " AND -deny_acl_ss:" + safeAuthName
+        dataAccessFilter += " AND -deny_group_ls:" + groupId
+    }
+
+    for (String role : authenticatedUserRoles) {
+        dataAccessFilter += " AND -deny_roles_ss:" + role
     }
 }
 
@@ -58,28 +59,33 @@ if (includeDACFilter) {
     message.setInboundProperty("denyAccessFilter", "")
 }
 
-String childObjectDacFilter = "{!join from=id to=parent_ref_s}(not(exists(protected_object_b)) OR ";
-childObjectDacFilter += "protected_object_b:false OR public_doc_b:true ";
+String childObjectDacFilter = "{!join from=id to=parent_ref_s}(not(exists(protected_object_b)) OR "
+childObjectDacFilter += "protected_object_b:false OR public_doc_b:true "
+childObjectDacFilter += " OR allow_user_ls:" + authenticatedUserId
 
-childObjectDacFilter += " OR allow_acl_ss:" + safeUserId;
-
-for (GrantedAuthority granted : authentication.getAuthorities()) {
-    String authName = granted.getAuthority();
-    String safeAuthName = encodeCharacters(authName);
-    // include records where current user is in a group on allow_acl_ss
-    childObjectDacFilter += " OR allow_acl_ss:" + safeAuthName;
+for (Long groupId : authenticatedUserGroupIds) {
+    // include records where current user is in a group on allow_group_ls
+    childObjectDacFilter += " OR allow_group_ls:" + groupId
 }
+
+for (String role : authenticatedUserRoles) {
+    // include records where current user is in a group on allow_group_ls
+    dataAccessFilter += " OR allow_roles_ss:" + role
+}
+
 childObjectDacFilter += " )"
 
 if (includeDenyAccessFilter) {
 // now we have to add the mandatory denies
-    childObjectDacFilter += " AND -deny_acl_ss:" + safeUserId
+    childObjectDacFilter += " AND -deny_user_ls:" + authenticatedUserId
 
-    for (GrantedAuthority granted : authentication.getAuthorities()) {
-        String authName = granted.getAuthority()
-        String safeAuthName = encodeCharacters(authName)
-        // include records where current user is in a group on allow_acl_ss
-        childObjectDacFilter += " AND -deny_acl_ss:" + safeAuthName
+    for (Long groupId : authenticatedUserGroupIds) {
+        // exclude records where current user is in a locked-out group
+        childObjectDacFilter += " AND -deny_group_ls:" + groupId
+    }
+
+    for (String role : authenticatedUserRoles) {
+        childObjectDacFilter += " AND -deny_roles_ss:" + role
     }
 }
 

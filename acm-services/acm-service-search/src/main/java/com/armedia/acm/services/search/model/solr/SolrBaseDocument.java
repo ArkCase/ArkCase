@@ -34,17 +34,23 @@ import java.util.List;
  */
 public interface SolrBaseDocument
 {
-
     String getId();
 
     void setId(String id);
 
-    void setDeny_acl_ss(List<String> deny_acl_ss);
+    void setDenyRole_ss(List<String> deny_role_ss);
 
-    void setAllow_acl_ss(List<String> allow_acl_ss);
+    void setAllowRole_ss(List<String> allow_role_ss);
+
+    void setDenyUser_ls(List<Long> deny_user_ls);
+
+    void setAllowUser_ls(List<Long> allow_user_ls);
+
+    void setDenyGroup_ls(List<Long> deny_group_ls);
+
+    void setAllowGroup_ls(List<Long> allow_group_ls);
 
     void setPublic_doc_b(boolean public_doc_b);
 
     void setProtected_object_b(boolean protected_object_b);
-
 }
