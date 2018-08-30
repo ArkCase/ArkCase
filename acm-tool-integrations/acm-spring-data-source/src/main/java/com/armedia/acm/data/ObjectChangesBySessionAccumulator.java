@@ -51,7 +51,13 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
         try
         {
             String sessionName = event.getSession().getName();
-            getChangesBySession().get(sessionName).getAddedObjects().add(event.getObject());
+            // inherited objects notify listeners for the object and parent object class
+            // we filter out these duplicate events.
+            // See implementation of {@link DescriptorEventManager#notifyListeners(DescriptorEvent)}
+            if (!getChangesBySession().get(sessionName).getAddedObjects().contains(event.getObject()))
+            {
+                getChangesBySession().get(sessionName).getAddedObjects().add(event.getObject());
+            }
         }
         catch (NullPointerException npe)
         {
@@ -97,7 +103,13 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
         try
         {
             String sessionName = event.getSession().getName();
-            getChangesBySession().get(sessionName).getUpdatedObjects().add(event.getObject());
+            // inherited objects notify listeners for the object and parent object class
+            // we filter out these duplicate events.
+            // See implementation of {@link DescriptorEventManager#notifyListeners(DescriptorEvent)}
+            if (!getChangesBySession().get(sessionName).getUpdatedObjects().contains(event.getObject()))
+            {
+                getChangesBySession().get(sessionName).getUpdatedObjects().add(event.getObject());
+            }
         }
         catch (NullPointerException npe)
         {
@@ -144,7 +156,13 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
         try
         {
             String sessionName = event.getSession().getName();
-            getChangesBySession().get(sessionName).getDeletedObjects().add(event.getObject());
+            // inherited objects notify listeners for the object and parent object class
+            // we filter out these duplicate events.
+            // See implementation of {@link DescriptorEventManager#notifyListeners(DescriptorEvent)}
+            if (!getChangesBySession().get(sessionName).getDeletedObjects().contains(event.getObject()))
+            {
+                getChangesBySession().get(sessionName).getDeletedObjects().add(event.getObject());
+            }
         }
         catch (NullPointerException npe)
         {
