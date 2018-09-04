@@ -42,7 +42,7 @@ public interface TimesheetService
     Properties getProperties();
 
     @Transactional
-    AcmTimesheet save(AcmTimesheet timesheet) throws PipelineProcessException;
+    AcmTimesheet save(AcmTimesheet timesheet, Authentication authentication, String submissionName) throws PipelineProcessException;
 
     @Transactional
     AcmTimesheet save(AcmTimesheet timesheet, String submissionName) throws PipelineProcessException;
