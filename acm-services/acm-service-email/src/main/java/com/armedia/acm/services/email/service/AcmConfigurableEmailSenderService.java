@@ -80,8 +80,7 @@ public class AcmConfigurableEmailSenderService
             try {
                 readSenderType();
             } catch (AcmEncryptionException e) {
-                logger.error(e.getMessage(), e);
-                e.printStackTrace();
+                logger.error("Error encrypting/decrypting...Reason[{}]",e.getMessage());
             }
         }
     }
