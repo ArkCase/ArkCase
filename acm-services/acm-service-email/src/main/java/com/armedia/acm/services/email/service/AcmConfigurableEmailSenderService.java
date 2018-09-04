@@ -40,6 +40,8 @@ import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
@@ -63,6 +65,8 @@ public class AcmConfigurableEmailSenderService
 
     private String senderType;
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     /*
      * (non-Javadoc)
      * @see
@@ -76,6 +80,7 @@ public class AcmConfigurableEmailSenderService
             try {
                 readSenderType();
             } catch (AcmEncryptionException e) {
+                logger.error(e.getMessage(), e);
                 e.printStackTrace();
             }
         }
