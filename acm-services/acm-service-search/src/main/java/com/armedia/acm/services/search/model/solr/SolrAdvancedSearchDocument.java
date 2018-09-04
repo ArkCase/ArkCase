@@ -68,9 +68,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private List<Long> deny_user_ls;
     private List<Long> allow_user_ls;
 
-    private List<String> allow_role_ss;
-    private List<String> deny_role_ss;
-
     /////////////////// for complaints, case files, other objects with a title or description ////////////
     private String title_parseable;
     private String description_parseable;
@@ -920,28 +917,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         this.allow_user_ls = allow_user_ls;
     }
 
-    public List<String> getAllowRole_ss()
-    {
-        return allow_role_ss;
-    }
-
-    @Override
-    public void setAllowRole_ss(List<String> allow_role_ss)
-    {
-        this.allow_role_ss = allow_role_ss;
-    }
-
-    public List<String> getDenyRole_ss()
-    {
-        return deny_role_ss;
-    }
-
-    @Override
-    public void setDenyRole_ss(List<String> deny_role_ss)
-    {
-        this.deny_role_ss = deny_role_ss;
-    }
-
     @Override
     public String toString()
     {
@@ -963,8 +938,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
                 + ", allow_group_ls=" + allow_group_ls
                 + ", deny_user_ls=" + deny_user_ls
                 + ", allow_user_ls=" + allow_user_ls
-                + ", allow_role_ss=" + allow_role_ss
-                + ", deny_role_ss=" + deny_role_ss
                 + ", title_parseable='" + title_parseable + '\''
                 + ", description_parseable='" + description_parseable + '\''
                 + ", title_parseable_lcs='" + title_parseable_lcs + '\''
