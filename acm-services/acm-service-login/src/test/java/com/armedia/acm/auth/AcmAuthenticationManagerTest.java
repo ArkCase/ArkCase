@@ -106,15 +106,18 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
 
         Map<String, AuthenticationProvider> providers = getAuthenticationProviderMap();
 
-        Set<AcmGrantedAuthority> authsFromProvider = new HashSet<>(Arrays.asList(new AcmGrantedAuthority("LDAP_INVESTIGATOR")));
+        Set<AcmGrantedAuthority> authsFromProvider = new HashSet<>(Arrays.asList(
+                new AcmGrantedGroupAuthority("LDAP_INVESTIGATOR", 1L)));
 
-        Set<AcmGrantedAuthority> authsFromMapper = new HashSet<>(Arrays.asList(new AcmGrantedAuthority("INVESTIGATOR")));
+        Set<AcmGrantedAuthority> authsFromMapper = new HashSet<>(Arrays.asList(
+                new AcmGrantedAuthority("INVESTIGATOR")));
 
         AcmAuthentication successAuthentication = new AcmAuthentication(authsFromProvider, null, null,
-                true, user.getUserId());
+                true, user.getUserId(), user.getId());
 
-        Set<AcmGrantedAuthority> authsGroups = new HashSet<>(Arrays.asList(new AcmGrantedAuthority("ADHOC_ADMINISTRATOR"),
-                new AcmGrantedAuthority("LDAP_ADMINISTRATOR")));
+        Set<AcmGrantedAuthority> authsGroups = new HashSet<>(Arrays.asList(
+                new AcmGrantedGroupAuthority("ADHOC_ADMINISTRATOR", 1L),
+                new AcmGrantedGroupAuthority("LDAP_ADMINISTRATOR", 2L)));
 
         AcmGroup ldapGroup = new AcmGroup();
         ldapGroup.setName("LDAP_ADMINISTRATOR");
@@ -136,7 +139,7 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
 
         replayAll();
 
-        Authentication found = unit.authenticate(mockAuthentication);
+       Authentication found = unit.authenticate(mockAuthentication);
 
         verifyAll();
 

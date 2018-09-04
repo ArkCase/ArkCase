@@ -42,11 +42,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -73,7 +75,9 @@ public class AcmGroup implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = -2729731595684630823L;
 
-    private Long id;
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, fetch = FetchType.LAZY)
+    @JoinColumn(name = "cm_identity", referencedColumnName = "cm_id", nullable = false)
+    private AcmGroupIdentity identity = new AcmGroupIdentity();
 
     @Id
     @Column(name = "cm_group_name")
@@ -244,12 +248,7 @@ public class AcmGroup implements Serializable, AcmEntity
     @JsonIgnore
     public Long getId()
     {
-        return id;
-    }
-
-    public void setId(Long id)
-    {
-        this.id = id;
+        return identity.getId();
     }
 
     public String getName()

@@ -169,7 +169,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         acmAuths.add(new AcmGrantedAuthority(OktaAPIConstants.ROLE_PRE_AUTHENTICATED));
 
         return new AcmAuthentication(acmAuths, providerAuthentication.getCredentials(), providerAuthentication.getDetails(),
-                providerAuthentication.isAuthenticated(), user.getUserId());
+                providerAuthentication.isAuthenticated(), user.getUserId(), user.getId());
     }
 
     protected Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)
@@ -177,13 +177,13 @@ public class AcmAuthenticationManager implements AuthenticationManager
         // All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
         List<AcmGroup> groups = getGroupService().findByUserMember(user);
 
-        Stream<AcmGrantedAuthority> authorityGroups = groups.stream()
-                .map(AcmGroup::getName)
-                .map(AcmGrantedAuthority::new);
+        Stream<AcmGrantedGroupAuthority> authorityGroups = groups.stream()
+                .map(authority -> new AcmGrantedGroupAuthority(authority.getName(), authority.getId()));
 
-        Stream<AcmGrantedAuthority> authorityAscendantsGroups = groups.stream()
+        Stream<AcmGrantedGroupAuthority> authorityAscendantsGroups = groups.stream()
                 .flatMap(AcmGroup::getAscendantsStream)
-                .map(AcmGrantedAuthority::new);
+                .map(it -> groupService.findByName(it))
+                .map(authority -> new AcmGrantedGroupAuthority(authority.getName(), authority.getId()));
 
         return Stream.concat(authorityGroups, authorityAscendantsGroups)
                 .collect(Collectors.toSet());

@@ -27,6 +27,7 @@ package com.armedia.acm.services.search.service;
  * #L%
  */
 
+import com.armedia.acm.core.AcmUserAuthorityContext;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -41,10 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpSession;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -383,59 +380,17 @@ public class ExecuteSolrQuery
      * @throws MuleException
      */
     public String getResultsByPredefinedQuery(Authentication authentication, SolrCore core, String solrQuery, int firstRow, int maxRows,
-            String sort,
-            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents,
-            String defaultField, boolean includeDACFilter)
-            throws MuleException
+            String sort, boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents,
+            String defaultField, boolean includeDACFilter) throws MuleException
     {
-        return getResultsByPredefinedQuery(core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, filterParentRef,
-                filterSubscriptionEvents, defaultField, includeDACFilter);
-    }
-
-    /**
-     * Executes solr queries and returns results as String
-     *
-     * @param core
-     *            SolrCore could be quick or advanced search
-     * @param solrQuery
-     *            actual query
-     * @param firstRow
-     *            starting row
-     * @param maxRows
-     *            how many rows to return
-     * @param sort
-     *            sort by which field
-     * @param indent
-     *            boolean whether results should be indented
-     * @param rowQueryParameters
-     *            row query parameters
-     * @param filterParentRef
-     *            filterParentRef
-     * @param filterSubscriptionEvents
-     *            boolean whether should filter subscription events
-     * @param defaultField
-     *            which default filed to be set. Can be null(than default field defined in solrconfig.xml is used)
-     * @param includeDACFilter
-     *            boolean whether should add acl filters on solr query
-     * @return results as String
-     * @throws MuleException
-     */
-    public String getResultsByPredefinedQuery(SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents,
-            String defaultField, boolean includeDACFilter)
-            throws MuleException
-    {
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpSession session = attr.getRequest().getSession(false);
-
+        AcmUserAuthorityContext authorityContext = (AcmUserAuthorityContext) authentication;
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", solrQuery);
         headers.put("firstRow", firstRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
-        headers.put("acmUser", session.getAttribute("acm_user_id"));
-        headers.put("acmUserRoles", session.getAttribute("acm_user_roles"));
-        headers.put("acmUserGroupIds", session.getAttribute("acm_user_group_ids"));
+        headers.put("acmUser", authorityContext.getUserIdentity());
+        headers.put("acmUserGroupIds", authorityContext.getGroupAuthorities());
         headers.put("filterParentRef", filterParentRef);
         headers.put("filterSubscriptionEvents", filterSubscriptionEvents);
         headers.put("rowQueryParametars", rowQueryParameters);
