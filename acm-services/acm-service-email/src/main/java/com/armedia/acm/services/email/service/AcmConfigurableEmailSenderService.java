@@ -27,6 +27,7 @@ package com.armedia.acm.services.email.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
@@ -72,7 +73,11 @@ public class AcmConfigurableEmailSenderService
     {
         if (event instanceof ConfigurationFileChangedEvent && event.getConfigFile().getName().equals("acmEmailSender.properties"))
         {
-            readSenderType();
+            try {
+                readSenderType();
+            } catch (AcmEncryptionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -89,7 +94,7 @@ public class AcmConfigurableEmailSenderService
     /**
      *
      */
-    private void readSenderType()
+    private void readSenderType() throws AcmEncryptionException
     {
         EmailSenderConfiguration senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
         senderType = senderConfigurationUpdated.getType();
