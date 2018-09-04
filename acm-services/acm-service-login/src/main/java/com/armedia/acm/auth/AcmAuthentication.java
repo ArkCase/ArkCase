@@ -27,16 +27,21 @@ package com.armedia.acm.auth;
  * #L%
  */
 
+import com.armedia.acm.core.AcmUserAuthorityContext;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-public class AcmAuthentication implements Authentication
+public class AcmAuthentication implements Authentication, AcmUserAuthorityContext
 {
     private final Collection<AcmGrantedAuthority> authorities;
     private final Object credentials;
     private final Object principal;
+    private final Long userId;
     private final String name;
     private Object details;
     private boolean authenticated;
@@ -45,14 +50,15 @@ public class AcmAuthentication implements Authentication
             Object credentials,
             Object details,
             boolean authenticated,
-            String userId)
+            String principal, Long userId)
     {
         this.authorities = authorities;
         this.credentials = credentials;
         this.details = details;
-        this.principal = userId;
+        this.principal = principal;
         this.authenticated = authenticated;
-        this.name = userId;
+        this.name = principal;
+        this.userId = userId;
     }
 
     @Override
@@ -100,5 +106,25 @@ public class AcmAuthentication implements Authentication
     public String getName()
     {
         return name;
+    }
+
+    public Long getUserId()
+    {
+        return userId;
+    }
+
+    @Override
+    public Set<Long> getGroupAuthorities()
+    {
+        return authorities.stream()
+                .filter(it -> it instanceof AcmGrantedGroupAuthority)
+                .map(it -> ((AcmGrantedGroupAuthority) it).getGroupId())
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Long getUserIdentity()
+    {
+        return getUserId();
     }
 }

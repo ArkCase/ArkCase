@@ -39,8 +39,11 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -62,7 +65,9 @@ public class AcmUser implements Serializable
 {
     private static final long serialVersionUID = 3399640646540732944L;
 
-    private Long id;
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, fetch = FetchType.LAZY)
+    @JoinColumn(name = "cm_identity", referencedColumnName = "cm_id", nullable = false)
+    private AcmUserIdentity identity = new AcmUserIdentity();
 
     @Id
     @Column(name = "cm_user_id")
@@ -191,12 +196,7 @@ public class AcmUser implements Serializable
     @JsonIgnore
     public Long getId()
     {
-        return id;
-    }
-
-    public void setId(Long id)
-    {
-        this.id = id;
+        return identity.getId();
     }
 
     public String getFullName()

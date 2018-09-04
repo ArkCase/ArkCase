@@ -2,8 +2,7 @@ import com.armedia.acm.services.search.util.AcmSolrUtil
 import java.nio.charset.StandardCharsets
 
 Long authenticatedUserId = message.getInboundProperty("acmUser")
-List<Long> authenticatedUserGroupIds = message.getInboundProperty("acm_user_group_ids")
-List<String> authenticatedUserRoles = message.getInboundProperty("acm_user_roles")
+def authenticatedUserGroupIds = message.getInboundProperty("acmUserGroupIds")
 
 // include records with no protected object field
 // include records where protected_object_b is false
@@ -28,11 +27,6 @@ if (!enableDocumentACL && targetType != null && (targetType.equals("FILE")
         dataAccessFilter += ", termfreq(allow_group_ls, " + groupId + ")"
     }
 
-    for (String role : authenticatedUserRoles) {
-        // include records where current user is in a group on allow_group_ls
-        dataAccessFilter += ", termfreq(allow_roles_ss, " + role + ")"
-    }
-
     dataAccessFilter += ")"
 }
 
@@ -42,11 +36,7 @@ if (includeDenyAccessFilter) {
     denyAccessFilter = "-deny_user_ls:" + authenticatedUserId
     for (Long groupId : authenticatedUserGroupIds) {
         // exclude records where current user is in a locked-out group
-        dataAccessFilter += " AND -deny_group_ls:" + groupId
-    }
-
-    for (String role : authenticatedUserRoles) {
-        dataAccessFilter += " AND -deny_roles_ss:" + role
+        denyAccessFilter += " AND -deny_group_ls:" + groupId
     }
 }
 
@@ -68,11 +58,6 @@ for (Long groupId : authenticatedUserGroupIds) {
     childObjectDacFilter += " OR allow_group_ls:" + groupId
 }
 
-for (String role : authenticatedUserRoles) {
-    // include records where current user is in a group on allow_group_ls
-    dataAccessFilter += " OR allow_roles_ss:" + role
-}
-
 childObjectDacFilter += " )"
 
 if (includeDenyAccessFilter) {
@@ -82,10 +67,6 @@ if (includeDenyAccessFilter) {
     for (Long groupId : authenticatedUserGroupIds) {
         // exclude records where current user is in a locked-out group
         childObjectDacFilter += " AND -deny_group_ls:" + groupId
-    }
-
-    for (String role : authenticatedUserRoles) {
-        childObjectDacFilter += " AND -deny_roles_ss:" + role
     }
 }
 
