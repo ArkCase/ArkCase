@@ -118,7 +118,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
 
         if (!Long.class.isAssignableFrom(targetId.getClass()) && !List.class.isAssignableFrom(targetId.getClass()))
         {
-            log.error("The id type [] is not a List - denying access", targetId.getClass().getName());
+            log.error("The id type [{}] is not a List - denying access", targetId.getClass().getName());
             return false;
         }
 
@@ -341,10 +341,15 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
         try
         {
             boolean shouldIncludeACLFilter = isAssignedObjectType(objectType);
+            boolean filterParent = true;
+            boolean filterSubscriptionEvents = false;
+            boolean indent = true;
+
             // if the Solr search returns the object, the user has read access to it.
             String result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
-                    0, 1, "id asc", true, objectType, true,
-                    false, SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter);
+                    0, 1, "id asc", indent, objectType, filterParent,
+                    filterSubscriptionEvents, SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter);
+
             if (result.contains("numFound\":0"))
             {
                 result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0,
