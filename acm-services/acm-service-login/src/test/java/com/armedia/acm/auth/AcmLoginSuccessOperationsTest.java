@@ -94,7 +94,7 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
     }
 
     @Test
-    public void addAcmApplicationObjectToSession() throws Exception
+    public void addAcmApplicationObjectToSession()
     {
         AcmApplication app = new AcmApplication();
         unit.setAcmApplication(app);
@@ -112,7 +112,7 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
     }
 
     @Test
-    public void addUserIdToSession() throws Exception
+    public void addUserIdToSession()
     {
         String userId = "userId";
 
@@ -121,13 +121,13 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
 
         replayAll();
 
-        unit.addUserNameToSession(mockRequest, userId);
+        unit.addUserIdToSession(mockRequest, userId);
 
         verifyAll();
     }
 
     @Test
-    public void addUserPrivilegesToSession() throws Exception
+    public void addUserPrivilegesToSession()
     {
         String roleAdd = "ROLE_ADD";
         String privilege = "privilege";
@@ -154,7 +154,7 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
     }
 
     @Test
-    public void addUserLoginMessageToSessionTest() throws Exception
+    public void addUserLoginMessageToSessionTest()
     {
         AcmUser mockUser = new AcmUser();
         mockUser.setPasswordExpirationDate(LocalDate.now().plusDays(3));
