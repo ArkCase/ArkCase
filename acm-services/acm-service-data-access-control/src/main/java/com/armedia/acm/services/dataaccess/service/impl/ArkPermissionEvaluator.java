@@ -353,7 +353,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
             if (result.contains("numFound\":0"))
             {
                 result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0,
-                        1, "id asc", true, objectType, true, false,
+                        1, "id asc", indent, objectType, filterParent, filterSubscriptionEvents,
                         SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter);
             }
             return result;
