@@ -33,6 +33,8 @@ import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
 import java.util.Map;
@@ -42,6 +44,7 @@ public class NotificationSenderFactory implements ApplicationListener<AbstractCo
     String flowType = "smtp";
     private Map<String, NotificationSender> notificationSenderMap;
     private EmailSenderConfigurationServiceImpl emailSenderConfigurationService;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public NotificationSender getNotificationSender()
     {
@@ -58,6 +61,7 @@ public class NotificationSenderFactory implements ApplicationListener<AbstractCo
             try {
                 senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
             } catch (AcmEncryptionException e) {
+                logger.error(e.getMessage(), e);
                 e.printStackTrace();
             }
             flowType = senderConfigurationUpdated.getType();
