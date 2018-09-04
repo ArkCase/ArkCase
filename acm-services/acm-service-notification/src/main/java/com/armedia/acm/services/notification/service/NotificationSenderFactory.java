@@ -27,6 +27,7 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
@@ -53,7 +54,12 @@ public class NotificationSenderFactory implements ApplicationListener<AbstractCo
 
         if (event instanceof ConfigurationFileChangedEvent && event.getConfigFile().getName().equals("acmEmailSender.properties"))
         {
-            EmailSenderConfiguration senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
+            EmailSenderConfiguration senderConfigurationUpdated = null;
+            try {
+                senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
+            } catch (AcmEncryptionException e) {
+                e.printStackTrace();
+            }
             flowType = senderConfigurationUpdated.getType();
         }
 

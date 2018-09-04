@@ -27,6 +27,7 @@ package com.armedia.acm.services.email.sender.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 
 import org.springframework.security.core.Authentication;
@@ -37,7 +38,7 @@ import org.springframework.security.core.Authentication;
  */
 public interface EmailSenderConfigurationService
 {
-    void writeConfiguration(EmailSenderConfiguration configuration, Authentication auth);
+    void writeConfiguration(EmailSenderConfiguration configuration, Authentication auth) throws AcmEncryptionException;
 
-    EmailSenderConfiguration readConfiguration();
+    EmailSenderConfiguration readConfiguration() throws AcmEncryptionException;
 }
