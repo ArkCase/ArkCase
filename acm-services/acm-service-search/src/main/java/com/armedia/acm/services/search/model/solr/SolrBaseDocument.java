@@ -38,10 +38,6 @@ public interface SolrBaseDocument
 
     void setId(String id);
 
-    void setDenyRole_ss(List<String> deny_role_ss);
-
-    void setAllowRole_ss(List<String> allow_role_ss);
-
     void setDenyUser_ls(List<Long> deny_user_ls);
 
     void setAllowUser_ls(List<Long> allow_user_ls);

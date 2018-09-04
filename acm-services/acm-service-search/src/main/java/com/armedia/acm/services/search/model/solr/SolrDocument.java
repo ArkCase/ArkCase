@@ -74,8 +74,6 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
     private String description_no_html_tags_parseable;
     private String notes_no_html_tags_parseable;
 
-    private List<String> deny_role_ss;
-    private List<String> allow_role_ss;
     private List<Long> allow_user_ls;
     private List<Long> deny_user_ls;
     private List<Long> allow_group_ls;
@@ -626,28 +624,6 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.ext_s = ext_s;
     }
 
-    public List<String> getDenyRole_ss()
-    {
-        return deny_role_ss;
-    }
-
-    @Override
-    public void setDenyRole_ss(List<String> deny_role_ss)
-    {
-        this.deny_role_ss = deny_role_ss;
-    }
-
-    public List<String> getAllowRole_ss()
-    {
-        return allow_role_ss;
-    }
-
-    @Override
-    public void setAllowRole_ss(List<String> allow_role_ss)
-    {
-        this.allow_role_ss = allow_role_ss;
-    }
-
     public List<Long> getAllowUser_ls()
     {
         return allow_user_ls;
@@ -722,8 +698,6 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
                 + ", description_parseable='" + description_parseable + '\''
                 + ", description_no_html_tags_parseable='" + description_no_html_tags_parseable + '\''
                 + ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\''
-                + ", deny_role_ss=" + deny_role_ss
-                + ", allow_role_ss=" + allow_role_ss
                 + ", allow_user_ls=" + allow_user_ls
                 + ", deny_user_ls=" + deny_user_ls
                 + ", allow_group_ls=" + allow_group_ls

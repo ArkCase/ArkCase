@@ -71,8 +71,6 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
         listToUrlValues(values, getDenyGroup_ls(), "deny_group_ls");
         listToUrlValues(values, getAllowUser_ls(), "allow_user_ls");
         listToUrlValues(values, getDenyUser_ls(), "deny_user_ls");
-        listToUrlValues(values, getAllowRole_ss(), "allow_role_ss");
-        listToUrlValues(values, getDenyRole_ss(), "deny_role_ss");
 
         values.put("literal.hidden_b", isHidden_b());
         values.put("literal.parent_ref_s", getParent_ref_s());
@@ -118,16 +116,16 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
      */
     public String buildUrlTemplate()
     {
-        final List<String> multivalueProperties = Arrays.asList("literal.allow_acl_ss", "literal.deny_acl_ss");
+        final List<String> multiValueProperties = Arrays.asList("literal.allow_user_ls", "literal.deny_user_ls",
+                "literal.allow_group_ls", "literal.deny_group_ls");
         return buildUrlValues().keySet().stream().
-        // Solr multivalued elements are represented in the buildUrlValues map as e.g. "literal.allow_acl_ss.0",
-        // "literal.deny_acl_ss.1".
-        // We want the URL template to be e.g. "literal.allow_acl_ss={literal.allow_acl_ss.0}",
-        // "literal.deny_acl_ss={literal.deny_acl_ss.1"
+        // Solr multivalued elements are represented in the buildUrlValues map as e.g. "literal.allow_group_ls.0",
+        // "literal.deny_group_ls.1".
+        // We want the URL template to be e.g. "literal.allow_group_ls={literal.allow_group_ls.0}",
+        // "literal.deny_group_ls={literal.deny_group_ls.1}"
                 map(k -> String.format("%s={%s}",
-                        multivalueProperties.contains(StringUtils.substringBeforeLast(k, ".")) ? StringUtils.substringBeforeLast(k, ".")
-                                : k,
-                        k))
+                        multiValueProperties.contains(StringUtils.substringBeforeLast(k, ".")) ?
+                                StringUtils.substringBeforeLast(k, ".") : k, k))
                 .collect(Collectors.joining("&"));
     }
 
@@ -141,18 +139,18 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
     public String getUrl()
     {
         StringBuilder url = new StringBuilder(
-                "literal.allow_role_ss="
-                        + (getAllowRole_ss() == null ? null : String.join("&literal.allow_role_ss=", getAllowRole_ss()))
-                        + "&literal.deny_role_ss="
-                        + (getDenyRole_ss() == null ? null : String.join("&literal.deny_role_ss=", getDenyRole_ss()))
-                        + "&literal.allow_user_ls="
-                        + (getAllowUser_ls() == null ? null: getAllowUser_ls().stream().map(Object::toString).collect(Collectors.joining("&literal.allow_user_ls=")))
+                         "&literal.allow_user_ls="
+                        + (getAllowUser_ls() == null ? null: getAllowUser_ls().stream().map(Object::toString)
+                                 .collect(Collectors.joining("&literal.allow_user_ls=")))
                         +"&literal.deny_user_ls="
-                        +(getDenyUser_ls() == null ? null : getDenyUser_ls().stream().map(Object::toString).collect(Collectors.joining("&literal.deny_user_ls=")))
+                        +(getDenyUser_ls() == null ? null : getDenyUser_ls().stream().map(Object::toString)
+                                 .collect(Collectors.joining("&literal.deny_user_ls=")))
                         +"&literal.allow_group_ls="
-                        +(getAllowGroup_ls() == null ? null : getAllowGroup_ls().stream().map(Object::toString).collect(Collectors.joining("&literal.allow_group_ls")))
+                        +(getAllowGroup_ls() == null ? null : getAllowGroup_ls().stream().map(Object::toString)
+                                 .collect(Collectors.joining("&literal.allow_group_ls")))
                         +"&literal.deny_group_ls="
-                        + (getDenyGroup_ls() == null ? null : getDenyGroup_ls().stream().map(Object::toString).collect(Collectors.joining("&literal.deny_group_ls")))
+                        + (getDenyGroup_ls() == null ? null : getDenyGroup_ls().stream().map(Object::toString)
+                                 .collect(Collectors.joining("&literal.deny_group_ls")))
                         +
                         "&literal.hidden_b=" + isHidden_b() +
                         "&literal.parent_ref_s=" + encode(getParent_ref_s()) +
