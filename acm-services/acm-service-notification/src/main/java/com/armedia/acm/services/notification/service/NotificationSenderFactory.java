@@ -61,8 +61,7 @@ public class NotificationSenderFactory implements ApplicationListener<AbstractCo
             try {
                 senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
             } catch (AcmEncryptionException e) {
-                logger.error(e.getMessage(), e);
-                e.printStackTrace();
+                logger.error("Error encrypting/decrypting...Reason[{}]",e.getMessage());
             }
             flowType = senderConfigurationUpdated.getType();
         }
