@@ -152,6 +152,39 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return file;
     }
 
+    public EcmFile findByParentObjectAndFolderCmisIdAndFileType(String parentObjectType, Long parentObjectId, String targetFolderCmisId,
+            String fileType)
+    {
+
+        String jpql = "SELECT e FROM EcmFile e " +
+                "WHERE e.container.containerObjectType = :parentObjectType " +
+                "AND e.container.containerObjectId = :parentObjectId " +
+                "AND e.folder.cmisFolderId = :targetFolderCmisId " +
+                "AND e.fileType = :fileType";
+
+        TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
+
+        query.setParameter("parentObjectType", parentObjectType);
+        query.setParameter("parentObjectId", parentObjectId);
+        query.setParameter("targetFolderCmisId", targetFolderCmisId);
+        query.setParameter("fileType", fileType);
+
+        EcmFile file = null;
+
+        try
+        {
+            file = query.getSingleResult();
+        }
+        catch (Exception e)
+        {
+            LOG.debug(
+                    "Cannot find single EcmFile for containerObjectType=[{}], containerObjectId=[{}], cmisRepositoryId=[{}] and fileType=[{}]",
+                    parentObjectType, parentObjectId, targetFolderCmisId, fileType, e);
+        }
+
+        return file;
+    }
+
     public List<EcmFile> findByCmisFileId(String cmisFileId)
     {
         String jpql = "SELECT e FROM EcmFile e WHERE e.versionSeriesId = :cmisFileId";
