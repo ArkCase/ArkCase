@@ -152,7 +152,23 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return file;
     }
 
-    public EcmFile findByParentObjectAndFolderCmisIdAndFileType(String parentObjectType, Long parentObjectId, String targetFolderCmisId,
+    /**
+     * Returns the single EcmFile that exist in selected folder. If none or more than one file exists, null value is
+     * returned.
+     *
+     * @param parentObjectType
+     *            type of parent object (ex. CASE_FILE)
+     * @param parentObjectId
+     *            id of parent object (ex. 101)
+     * @param targetFolderCmisId
+     *            cmisId string of selected or targeted folder (ex.
+     *            workspace://SpacesStore/a9715212-d6df-4dbf-933c-111cf31a5c8c)
+     * @param fileType
+     *            type of template file used for correspondence (ex. Denial Letter, Request Form, etc.)
+     * @return returns the file for selected criteria
+     */
+    public EcmFile findSingleFileByParentObjectAndFolderCmisIdAndFileType(String parentObjectType, Long parentObjectId,
+            String targetFolderCmisId,
             String fileType)
     {
 
