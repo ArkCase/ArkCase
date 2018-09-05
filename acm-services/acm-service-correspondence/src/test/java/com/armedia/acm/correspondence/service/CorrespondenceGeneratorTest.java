@@ -37,6 +37,7 @@ import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.QueryType;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -80,6 +81,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     private InputStream mockInputStream;
     private Authentication mockAuthentication;
     private EcmFileService mockEcmFileService;
+    private EcmFileDao mockEcmFileDao;
     private SpringContextHolder mockSpringContextHolder;
     private CorrespondenceService mockCorrespondenceService;
 
@@ -105,6 +107,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         mockInputStream = createMock(InputStream.class);
         mockAuthentication = createMock(Authentication.class);
         mockEcmFileService = createMock(EcmFileService.class);
+        mockEcmFileDao = createMock(EcmFileDao.class);
         mockSpringContextHolder = createMock(SpringContextHolder.class);
         mockCorrespondenceService = createMock(CorrespondenceService.class);
 
@@ -112,6 +115,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         unit.setEntityManager(mockEntityManager);
         unit.setWordGenerator(mockWordGenerator);
         unit.setEcmFileService(mockEcmFileService);
+        unit.setEcmFileDao(mockEcmFileDao);
         unit.setCorrespondenceFolderName(correspondenceFolder);
         unit.setSpringContextHolder(mockSpringContextHolder);
         unit.setCorrespondenceService(mockCorrespondenceService);
@@ -226,6 +230,9 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         expect(mockCorrespondenceService.getActiveVersionMergeFieldsByType(correspondenceTemplate.getObjectType())).andReturn(mergeFields);
 
         mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(substitutions));
+
+        expect(mockEcmFileDao.findByParentObjectAndFolderCmisIdAndFileType(eq("CASE_FILE"), eq(500L), eq(targetFolderCmisId),
+                eq(correspondenceTemplate.getDocumentType()))).andReturn(null);
 
         expect(mockEcmFileService.upload(eq(correspondenceTemplate.getDocumentType() + ".docx"),
                 eq(correspondenceTemplate.getDocumentType()), eq(CorrespondenceGenerator.CORRESPONDENCE_CATEGORY), eq(mockInputStream),
