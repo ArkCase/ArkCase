@@ -8,6 +8,7 @@ import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrAbstractDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -117,7 +118,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
 
         if (!Long.class.isAssignableFrom(targetId.getClass()) && !List.class.isAssignableFrom(targetId.getClass()))
         {
-            log.error("The id type [{}] is not a List - denying access", targetId.getClass().getName());
+            log.error("The id type [] is not a List - denying access", targetId.getClass().getName());
             return false;
         }
 
@@ -135,7 +136,6 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
         // checking access to a single object
         if (Long.class.isAssignableFrom(targetId.getClass()))
         {
-
             return checkAccessForSingleObject(authentication, (Long) targetId, targetType, permission);
         }
 
@@ -150,11 +150,6 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
             }
         }
         return true;
-    }
-
-    protected boolean isAssignedObjectType(String objectType)
-    {
-        return assignedObjectTypes.contains(objectType);
     }
 
     protected <T> AcmObjectToSolrDocTransformer<T> findTransformerForEntity(Class<T> entityClass)
@@ -189,25 +184,22 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
 
         log.trace("Checking [{}] for [{}] on object of type [{}] with id [{}]", permission, authentication.getName(), targetType, id);
 
-        if (isAssignedObjectType(targetType))
+        String solrDocument = getSolrDocument(authentication, id, targetType);
+
+        if (solrDocument == null || !checkForReadAccess(solrDocument))
         {
-            String solrDocument = getSolrDocument(authentication, id, targetType);
-
-            if (solrDocument == null || !checkForReadAccess(solrDocument))
+            solrDocument = lookupAndConvertObjectFromDatabase(targetType, id);
+            if (solrDocument == null)
             {
-                solrDocument = lookupAndConvertObjectFromDatabase(targetType, id);
-                if (solrDocument == null)
-                {
-                    // there really is no such object, or else no DAO or no transformer
-                    return false;
-                }
+                // there really is no such object, or else no DAO or no transformer
+                return false;
             }
+        }
 
-            // break here and return true if any of AC rules match (see SBI-956)
-            if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission, solrDocument))
-            {
-                return true;
-            }
+        // break here and return true if any of AC rules match (see SBI-956)
+        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission, solrDocument))
+        {
+            return true;
         }
 
         return evaluateAccess(authentication, id, targetType, Arrays.asList(((String) permission).split("\\|")));
@@ -348,12 +340,17 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
 
         try
         {
+            boolean shouldIncludeACLFilter = isAssignedObjectType(objectType);
             // if the Solr search returns the object, the user has read access to it.
-            String result = getExecuteSolrQuery()
-                    .getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1, "id asc", objectType);
+            String result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
+                    0, 1, "id asc", true, objectType, true,
+                    false, SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter);
             if (result.contains("numFound\":0"))
-                result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0, 1, "id asc",
-                        objectType);
+            {
+                result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0,
+                        1, "id asc", true, objectType, true, false,
+                        SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter);
+            }
             return result;
         }
         catch (MuleException e)
@@ -367,6 +364,11 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
     {
         int numFound = getSearchResults().getNumFound(solrResponse);
         return numFound > 0;
+    }
+
+    protected boolean isAssignedObjectType(String objectType)
+    {
+        return assignedObjectTypes.contains(objectType);
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()

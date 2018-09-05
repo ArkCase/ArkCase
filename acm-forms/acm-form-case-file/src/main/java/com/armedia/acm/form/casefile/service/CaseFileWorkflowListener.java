@@ -28,7 +28,7 @@ package com.armedia.acm.form.casefile.service;
  */
 
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
@@ -53,7 +53,7 @@ public class CaseFileWorkflowListener
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public void handleNewCaseFile(CaseFile caseFile, FrevvoUploadedFiles files, RuntimeService activitiRuntimeService,
+    public void handleNewCaseFile(CaseFile caseFile, UploadedFiles files, RuntimeService activitiRuntimeService,
             FileWorkflowBusinessRule fileWorkflowBusinessRule,
             FrevvoFormAbstractService formService)
     {

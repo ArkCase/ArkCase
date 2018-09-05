@@ -472,7 +472,6 @@ function getCssClassDivided(element) {
     var cssClass = getCssClass(element);
     if (cssClass != null) {
         var cssClassArray = cssClass.split('_');
-
         if (cssClassArray && cssClassArray.length === 3) {
             return cssClassArray[0] + '_' + cssClassArray[1];
         }

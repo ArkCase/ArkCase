@@ -49,7 +49,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -62,6 +67,15 @@ public class AcmDiffServiceTest
     @Autowired
     private AcmDiffService diffService;
 
+    private Date oldDateOfBirth = Date.from(Instant.parse("2000-01-01T00:10:00.00Z"));
+    private Date newDateOfBirth = Date.from(Instant.parse("2010-01-01T00:10:00.00Z"));
+    private LocalDate oldEmploymentDate = LocalDate.of(2000, 1, 1);
+    private LocalDate newEmploymentDate = LocalDate.of(2010, 1, 1);
+    private LocalDateTime oldCompleted = LocalDateTime.of(2000, 1, 1, 0, 0);
+    private LocalDateTime newCompleted = LocalDateTime.of(2010, 1, 1, 0, 0);
+    private LocalTime oldAlarmTime = LocalTime.of(6, 30);
+    private LocalTime newAlarmTime = LocalTime.of(7, 30);
+
     @Before
     public void setUp()
     {
@@ -73,6 +87,10 @@ public class AcmDiffServiceTest
         oldPerson.setLastName("Doe");
         oldPerson.setName("John");
         oldPerson.setToBeIgnored("This field is ignored");
+        oldPerson.setDateOfBirth(oldDateOfBirth);
+        oldPerson.setEmploymentDate(oldEmploymentDate);
+        oldPerson.setCompleted(oldCompleted);
+        oldPerson.setAlarmTime(oldAlarmTime);
 
         List<TestAttribute> attributeList = new ArrayList<>();
         // first attribute
@@ -154,9 +172,17 @@ public class AcmDiffServiceTest
         newPerson.setLastName("Doe1");
         // change 3 but should be ignored
         newPerson.setToBeIgnored(null);
+        // change 4
+        newPerson.setDateOfBirth(newDateOfBirth);
+        // change 5
+        newPerson.setEmploymentDate(newEmploymentDate);
+        // change 5
+        newPerson.setCompleted(newCompleted);
+        // change 6
+        newPerson.setAlarmTime(newAlarmTime);
 
         AcmDiff diff = diffService.compareObjects(oldPerson, newPerson);
-        assertEquals(2, diff.getChangesAsList().size());
+        assertEquals(6, diff.getChangesAsList().size());
 
         for (AcmChange change : diff.getChangesAsList())
         {
@@ -173,6 +199,34 @@ public class AcmDiffServiceTest
                 AcmValueChanged valueChanged = (AcmValueChanged) change;
                 assertEquals("Doe", valueChanged.getOldValue());
                 assertEquals("Doe1", valueChanged.getNewValue());
+            }
+            else if ("person.dateOfBirth".equals(change.getPath()))
+            {
+                assertTrue(change instanceof AcmValueChanged);
+                AcmValueChanged valueChanged = (AcmValueChanged) change;
+                assertEquals(oldDateOfBirth.toString(), valueChanged.getOldValue());
+                assertEquals(newDateOfBirth.toString(), valueChanged.getNewValue());
+            }
+            else if ("person.employmentDate".equals(change.getPath()))
+            {
+                assertTrue(change instanceof AcmValueChanged);
+                AcmValueChanged valueChanged = (AcmValueChanged) change;
+                assertEquals(oldEmploymentDate.toString(), valueChanged.getOldValue());
+                assertEquals(newEmploymentDate.toString(), valueChanged.getNewValue());
+            }
+            else if ("person.completed".equals(change.getPath()))
+            {
+                assertTrue(change instanceof AcmValueChanged);
+                AcmValueChanged valueChanged = (AcmValueChanged) change;
+                assertEquals(oldCompleted.toString(), valueChanged.getOldValue());
+                assertEquals(newCompleted.toString(), valueChanged.getNewValue());
+            }
+            else if ("person.alarmTime".equals(change.getPath()))
+            {
+                assertTrue(change instanceof AcmValueChanged);
+                AcmValueChanged valueChanged = (AcmValueChanged) change;
+                assertEquals(oldAlarmTime.toString(), valueChanged.getOldValue());
+                assertEquals(newAlarmTime.toString(), valueChanged.getNewValue());
             }
         }
     }

@@ -167,6 +167,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
         return result;
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public CaseFile findByCaseNumber(String caseNumber)
     {
         CaseFile result = null;

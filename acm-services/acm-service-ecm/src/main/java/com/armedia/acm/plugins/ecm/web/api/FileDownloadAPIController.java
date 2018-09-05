@@ -107,7 +107,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         }
         else
         {
-            fileNotFound();
+            fileNotFound(fileId);
         }
     }
 
@@ -125,7 +125,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         }
         else
         {
-            fileNotFound();
+            fileNotFound(ecmFile.getId());
         }
 
     }
@@ -222,9 +222,9 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     }
 
     // called when the file was not found.
-    private void fileNotFound() throws AcmObjectNotFoundException
+    private void fileNotFound(Long fileId) throws AcmObjectNotFoundException
     {
-        throw new AcmObjectNotFoundException(null, null, "File not found", null);
+        throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, String.format("File %d not found", fileId), null);
     }
 
     public MuleContextManager getMuleContextManager()

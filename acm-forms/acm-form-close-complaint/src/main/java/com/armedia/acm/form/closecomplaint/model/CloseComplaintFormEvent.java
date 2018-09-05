@@ -28,7 +28,7 @@ package com.armedia.acm.form.closecomplaint.model;
  */
 
 import com.armedia.acm.core.model.AcmEvent;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 
 import java.util.Date;
@@ -39,13 +39,13 @@ import java.util.Date;
 public class CloseComplaintFormEvent extends AcmEvent
 {
     private CloseComplaintRequest request;
-    private FrevvoUploadedFiles frevvoUploadedFiles;
+    private UploadedFiles uploadedFiles;
     private String complaintNumber;
     private Long complaintId;
     private String mode;
 
     public CloseComplaintFormEvent(String complaintNumber, Long complaintId, CloseComplaintRequest source,
-            FrevvoUploadedFiles files, String mode, String user, String ipAddress,
+            UploadedFiles files, String mode, String user, String ipAddress,
             boolean succeeded)
     {
         super(source);
@@ -64,7 +64,7 @@ public class CloseComplaintFormEvent extends AcmEvent
         setSucceeded(succeeded);
 
         setRequest(source);
-        setFrevvoUploadedFiles(files);
+        setUploadedFiles(files);
 
         setComplaintNumber(complaintNumber);
         setComplaintId(complaintId);
@@ -80,14 +80,14 @@ public class CloseComplaintFormEvent extends AcmEvent
         this.request = request;
     }
 
-    public FrevvoUploadedFiles getFrevvoUploadedFiles()
+    public UploadedFiles getUploadedFiles()
     {
-        return frevvoUploadedFiles;
+        return uploadedFiles;
     }
 
-    public void setFrevvoUploadedFiles(FrevvoUploadedFiles frevvoUploadedFiles)
+    public void setUploadedFiles(UploadedFiles uploadedFiles)
     {
-        this.frevvoUploadedFiles = frevvoUploadedFiles;
+        this.uploadedFiles = uploadedFiles;
     }
 
     public String getComplaintNumber()

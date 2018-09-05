@@ -1,8 +1,8 @@
-package com.armedia.acm.frevvo.model;
+package com.armedia.acm.plugins.complaint.service;
 
 /*-
  * #%L
- * ACM Service: Form Configuration
+ * ACM Default Plugin: Complaints
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,47 +27,13 @@ package com.armedia.acm.frevvo.model;
  * #L%
  */
 
-import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Created by armdev on 11/4/14.
- */
-public class FrevvoUploadedFiles
+public interface CloseComplaintService
 {
-    private EcmFile pdfRendition;
-    private EcmFile formXml;
-    private List<EcmFile> uploadedFiles = new ArrayList<>();
-
-    public EcmFile getPdfRendition()
-    {
-        return pdfRendition;
-    }
-
-    public void setPdfRendition(EcmFile pdfRendition)
-    {
-        this.pdfRendition = pdfRendition;
-    }
-
-    public EcmFile getFormXml()
-    {
-        return formXml;
-    }
-
-    public void setFormXml(EcmFile formXml)
-    {
-        this.formXml = formXml;
-    }
-
-    public List<EcmFile> getUploadedFiles()
-    {
-        return uploadedFiles;
-    }
-
-    public void setUploadedFiles(List<EcmFile> uploadedFiles)
-    {
-        this.uploadedFiles = uploadedFiles;
-    }
+    @Transactional
+    void save(CloseComplaintRequest form, Authentication auth, String mode) throws Exception;
 }

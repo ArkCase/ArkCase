@@ -108,7 +108,8 @@
                 "witnessInterview2%": "Свидетельство о проведении собеседований-2.0"
             }
         },
-        "newTask": "Новое задание"
+        "newTask": "Новое задание",
+        "addDocument": "Выберите документ для добавления."
     },
     "cases.comp.people": {
         "title": "Люди",
@@ -359,6 +360,34 @@
             "approverId": "Утверждающий",
             "approverFullName": "Утверждающий",
             "approverDecision": "Принятие решения"
+        }
+    },
+    "cases.comp.change.status": {
+        "title": "ru_Change Case Status",
+        "information": {
+            "title": "ru_Change Case Status Information",
+            "date": "ru_Change Date",
+            "case.number": "ru_Case Number",
+            "status": {
+                "title": "ru_Status",
+                "resolution": {
+                    "title": "ru_Case Resolution",
+                    "denied": "ru_Denied",
+                    "full": "ru_Full",
+                    "partial": "ru_Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "ru_Select Approver",
+            "label": "ru_Select Approver",
+            "addAnother": "ru_Add another",
+            "remove": "ru_Remove Approver",
+            "pickerModal.header": "ru_Choose Approver"
+        },
+        "button": {
+            "cancel": "ru_Cancel",
+            "save": "ru_Save"
         }
     },
     "cases.comp.newCase": {

@@ -34,6 +34,8 @@ import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.costsheet.pipeline.CostsheetPipelineContext;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.pipeline.AbstractPipelineContext;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
@@ -50,7 +52,7 @@ public class PDFCostsheetDocumentGenerator<D extends AcmAbstractDao, T extends A
 {
     private D dao;
 
-    public void generatePdf(Long costsheetId, CostsheetPipelineContext ctx) throws ParserConfigurationException
+    public void generatePdf(Long costsheetId, CostsheetPipelineContext ctx) throws ParserConfigurationException, PipelineProcessException
     {
         String objectType = CostsheetConstants.OBJECT_TYPE;
         if (getDao().getSupportedObjectType().equals(objectType))
@@ -63,7 +65,7 @@ public class PDFCostsheetDocumentGenerator<D extends AcmAbstractDao, T extends A
     }
 
     @Override
-    public Document buildXmlForPdfDocument(Object businessObject) throws ParserConfigurationException
+    public Document buildXmlForPdfDocument(Object businessObject, AbstractPipelineContext ctx) throws ParserConfigurationException
     {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();

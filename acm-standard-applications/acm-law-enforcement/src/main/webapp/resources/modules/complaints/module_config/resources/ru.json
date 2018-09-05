@@ -63,7 +63,8 @@
                 "witnessInterview2%": "Свидетельство о проведении собеседований-2.0"
             }
         },
-        "newTask": "Новое задание"
+        "newTask": "Новое задание",
+        "addDocument": "Выберите документ для добавления."
     },
     "complaints.comp.people": {
         "title": "Люди",
@@ -315,6 +316,48 @@
             "approverFullName": "Утверждающий",
             "approverDecision": "Решение об утверждении"
         }
+    },
+    "complaints.comp.closeComplaint": {
+        "title": "ru_Close Complaint",
+        "info": "ru_Incident Information",
+        "infoMessage": "ru_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "ru_Complaint Title",
+        "information": {
+            "title": "ru_Close Complaint Information",
+            "close.date": "ru_Complaint Close Date",
+            "complaint.number": "ru_Complaint Number",
+            "complaint.disposition": "ru_Complaint Disposition"
+        },
+        "add.existing.case": {
+            "title": "ru_Add Existing Case",
+            "search": "ru_Search",
+            "case": {
+                "number": "ru_Enter Case Number",
+                "title": "ru_Case Title",
+                "date": "ru_Case Creation Date",
+                "priority": "ru_Case Priority"
+            }
+        },
+        "refer.external": {
+            "title": "ru_Refer External",
+            "name": "ru_Name of Agency",
+            "date": "ru_Referral Date",
+            "contact": {
+                "title": "ru_Contact",
+                "name": "ru_Contact Name",
+                "type": "ru_Type",
+                "value": "ru_Value"
+            }
+        },
+        "approver": {
+            "placeholder": "ru_Select Approver",
+            "label": "ru_Select Approver",
+            "addAnother": "ru_Add another",
+            "remove": "ru_Remove Approver",
+            "pickerModal.header": "ru_Choose Approver"
+        },
+        "cancelButton": "ru_Cancel",
+        "saveButton": "ru_Save Complaint"
     },
     "complaints.comp.newComplaint": {
         "title": "ru_New Complaint",

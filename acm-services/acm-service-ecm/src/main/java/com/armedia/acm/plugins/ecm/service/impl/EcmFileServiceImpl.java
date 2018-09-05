@@ -1369,8 +1369,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         boolean removeFileFromDatabase = allVersions || file.getVersions().size() < 2;
-        String versionToRemoveFromEcm = removeFileFromDatabase ?
-            file.getVersionSeriesId() : file.getVersions().get(file.getVersions().size() - 1).getVersionTag();
+        String versionToRemoveFromEcm = removeFileFromDatabase ? file.getVersionSeriesId()
+                : file.getVersions().get(file.getVersions().size() - 1).getVersionTag();
 
         Map<String, Object> props = new HashMap<>();
         props.put(EcmFileConstants.ECM_FILE_ID, versionToRemoveFromEcm);
@@ -1386,7 +1386,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
 
-            if ( removeFileFromDatabase )
+            if (removeFileFromDatabase)
             {
                 getEcmFileDao().deleteFile(objectId);
             }

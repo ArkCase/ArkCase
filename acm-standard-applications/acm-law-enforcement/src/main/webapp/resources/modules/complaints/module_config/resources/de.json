@@ -63,7 +63,8 @@
                 "witnessInterview2%": "Zeugen-Interviewantrag-2.0"
             }
         },
-        "newTask": "Neue Aufgabe"
+        "newTask": "Neue Aufgabe",
+        "addDocument": "Wählen Sie das hinzuzufügende Dokument aus."
     },
     "complaints.comp.people": {
         "title": "Menschen",
@@ -315,6 +316,48 @@
             "approverFullName": "Genehmiger",
             "approverDecision": "Genehmigungsentscheidung"
         }
+    },
+    "complaints.comp.closeComplaint": {
+        "title": "de_Close Complaint",
+        "info": "de_Incident Information",
+        "infoMessage": "de_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "de_Complaint Title",
+        "information": {
+            "title": "de_Close Complaint Information",
+            "close.date": "de_Complaint Close Date",
+            "complaint.number": "de_Complaint Number",
+            "complaint.disposition": "de_Complaint Disposition"
+        },
+        "add.existing.case": {
+            "title": "de_Add Existing Case",
+            "search": "de_Search",
+            "case": {
+                "number": "de_Enter Case Number",
+                "title": "de_Case Title",
+                "date": "de_Case Creation Date",
+                "priority": "de_Case Priority"
+            }
+        },
+        "refer.external": {
+            "title": "de_Refer External",
+            "name": "de_Name of Agency",
+            "date": "de_Referral Date",
+            "contact": {
+                "title": "de_Contact",
+                "name": "de_Contact Name",
+                "type": "de_Type",
+                "value": "de_Value"
+            }
+        },
+        "approver": {
+            "placeholder": "de_Select Approver",
+            "label": "de_Select Approver",
+            "addAnother": "de_Add another",
+            "remove": "de_Remove Approver",
+            "pickerModal.header": "de_Choose Approver"
+        },
+        "cancelButton": "de_Cancel",
+        "saveButton": "de_Save Complaint"
     },
     "complaints.comp.newComplaint": {
         "title": "de_New Complaint",

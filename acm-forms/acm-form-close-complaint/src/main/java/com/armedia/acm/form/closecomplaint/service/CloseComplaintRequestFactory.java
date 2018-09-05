@@ -64,6 +64,8 @@ public class CloseComplaintRequestFactory
 
         populateDisposition(form, auth, req);
 
+        req.setDescription(form.getDescription());
+
         return req;
     }
 
