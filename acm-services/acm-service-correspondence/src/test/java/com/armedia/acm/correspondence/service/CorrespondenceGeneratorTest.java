@@ -38,6 +38,7 @@ import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.QueryType;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -47,6 +48,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -73,6 +75,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
     private CorrespondenceQuery correspondenceQuery;
     private CorrespondenceTemplate correspondenceTemplate;
+    private EcmFile ecmFile;
 
     private EntityManager mockEntityManager;
     private Query mockQuery;
@@ -97,6 +100,75 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
     private String correspondenceFolder = "/correspondenceFolder";
 
+    private Map<String, String> substitutionsData()
+    {
+        Date column1 = new Date();
+        String column2 = "Subject Name";
+        Number column3 = 123456L;
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 30);
+        Date column4 = calendar.getTime();
+
+        SimpleDateFormat sdf = new SimpleDateFormat(correspondenceTemplate.getDateFormatString());
+        String expectedDate = sdf.format(column1);
+        String expectedDate2 = sdf.format(column4);
+
+        NumberFormat nf = new DecimalFormat(correspondenceTemplate.getNumberFormatString());
+        String expectedNumber = nf.format(column3);
+
+        Map<String, String> substitutions = new HashMap<>();
+        substitutions.put(var1, expectedDate);
+        substitutions.put(var2, column2);
+        substitutions.put(var3, expectedNumber);
+        substitutions.put(var4, expectedDate2);
+        return substitutions;
+    }
+
+    private List<CorrespondenceMergeField> mergeFieldsData()
+    {
+        List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
+        CorrespondenceMergeField mergeField = new CorrespondenceMergeField();
+        mergeField.setFieldId(key1);
+        mergeField.setFieldValue(var1);
+        mergeField.setFieldType("CASE_FILE");
+        mergeFields.add(mergeField);
+
+        mergeField = new CorrespondenceMergeField();
+        mergeField.setFieldId(key2);
+        mergeField.setFieldValue(var2);
+        mergeField.setFieldType("CASE_FILE");
+        mergeFields.add(mergeField);
+
+        mergeField = new CorrespondenceMergeField();
+        mergeField.setFieldId(key3);
+        mergeField.setFieldValue(var3);
+        mergeField.setFieldType("CASE_FILE");
+        mergeFields.add(mergeField);
+
+        mergeField = new CorrespondenceMergeField();
+        mergeField.setFieldId(key4);
+        mergeField.setFieldValue(var4);
+        mergeField.setFieldType("CASE_FILE");
+        mergeFields.add(mergeField);
+        return mergeFields;
+    }
+
+    private List<Object[]> resultsData()
+    {
+        List<Object[]> results = new ArrayList<>();
+
+        Date column1 = new Date();
+        String column2 = "Subject Name";
+        Number column3 = 123456L;
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 30);
+        Date column4 = calendar.getTime();
+
+        Object[] row = { column1, column2, column3, column4 };
+        results.add(row);
+        return results;
+    }
+
     @Before
     public void setUp() throws Exception
     {
@@ -110,6 +182,8 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         mockEcmFileDao = createMock(EcmFileDao.class);
         mockSpringContextHolder = createMock(SpringContextHolder.class);
         mockCorrespondenceService = createMock(CorrespondenceService.class);
+
+        SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
 
         unit = new CorrespondenceGenerator();
         unit.setEntityManager(mockEntityManager);
@@ -155,65 +229,18 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         correspondenceTemplate.setObjectType("CASE_FILE");
         correspondenceTemplate.setDateFormatString(dateFormat);
         correspondenceTemplate.setNumberFormatString(numberFormat);
+
+        ecmFile = new EcmFile();
+
     }
 
     @Test
-    public void generate() throws Exception
+    public void generateNewTemplate() throws Exception
     {
         String targetFolderCmisId = "targetFolderCmisId";
         Object[] queryArgs = { 500L };
 
-        List<Object[]> results = new ArrayList<>();
-
-        Date column1 = new Date();
-        String column2 = "Subject Name";
-        Number column3 = 123456L;
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, 30);
-        Date column4 = calendar.getTime();
-
-        Object[] row = { column1, column2, column3, column4 };
-        results.add(row);
-
         Capture<Resource> captureResourceTemplate = new Capture<>();
-
-        SimpleDateFormat sdf = new SimpleDateFormat(correspondenceTemplate.getDateFormatString());
-        String expectedDate = sdf.format(column1);
-        String expectedDate2 = sdf.format(column4);
-
-        NumberFormat nf = new DecimalFormat(correspondenceTemplate.getNumberFormatString());
-        String expectedNumber = nf.format(column3);
-
-        Map<String, String> substitutions = new HashMap<>();
-        substitutions.put(var1, expectedDate);
-        substitutions.put(var2, column2);
-        substitutions.put(var3, expectedNumber);
-        substitutions.put(var4, expectedDate2);
-
-        List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
-        CorrespondenceMergeField mergeField = new CorrespondenceMergeField();
-        mergeField.setFieldId(key1);
-        mergeField.setFieldValue(var1);
-        mergeField.setFieldType("CASE_FILE");
-        mergeFields.add(mergeField);
-
-        mergeField = new CorrespondenceMergeField();
-        mergeField.setFieldId(key2);
-        mergeField.setFieldValue(var2);
-        mergeField.setFieldType("CASE_FILE");
-        mergeFields.add(mergeField);
-
-        mergeField = new CorrespondenceMergeField();
-        mergeField.setFieldId(key3);
-        mergeField.setFieldValue(var3);
-        mergeField.setFieldType("CASE_FILE");
-        mergeFields.add(mergeField);
-
-        mergeField = new CorrespondenceMergeField();
-        mergeField.setFieldId(key4);
-        mergeField.setFieldValue(var4);
-        mergeField.setFieldType("CASE_FILE");
-        mergeFields.add(mergeField);
 
         Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = new HashMap<>();
         correspondenceQueryBeansMap.put("caseFileCorrespondenceQueryBean", correspondenceQuery);
@@ -225,11 +252,12 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
                 .filter(cQuery -> cQuery.getType().toString().equals(correspondenceTemplate.getObjectType())).findFirst().get();
         expect(mockEntityManager.createNativeQuery(correspondenceQuery.getSqlQuery())).andReturn(mockQuery);
         expect(mockQuery.setParameter(1, queryArgs[0])).andReturn(mockQuery);
-        expect(mockQuery.getResultList()).andReturn(results);
+        expect(mockQuery.getResultList()).andReturn(resultsData());
 
-        expect(mockCorrespondenceService.getActiveVersionMergeFieldsByType(correspondenceTemplate.getObjectType())).andReturn(mergeFields);
+        expect(mockCorrespondenceService.getActiveVersionMergeFieldsByType(correspondenceTemplate.getObjectType()))
+                .andReturn(mergeFieldsData());
 
-        mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(substitutions));
+        mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(substitutionsData()));
 
         expect(mockEcmFileDao.findSingleFileByParentObjectAndFolderCmisIdAndFileType(eq("CASE_FILE"), eq(500L), eq(targetFolderCmisId),
                 eq(correspondenceTemplate.getDocumentType()))).andReturn(null);
@@ -238,6 +266,49 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
                 eq(correspondenceTemplate.getDocumentType()), eq(CorrespondenceGenerator.CORRESPONDENCE_CATEGORY), eq(mockInputStream),
                 eq(CorrespondenceGenerator.WORD_MIME_TYPE), capture(filename), eq(mockAuthentication), eq(targetFolderCmisId),
                 eq("CASE_FILE"), eq(500L))).andReturn(null);
+
+        replayAll();
+
+        unit.generateCorrespondence(mockAuthentication, "CASE_FILE", 500L, targetFolderCmisId, correspondenceTemplate, queryArgs,
+                mockOutputStream, mockInputStream);
+
+        verifyAll();
+
+        Resource capturedResource = captureResourceTemplate.getValue();
+
+        assertEquals(correspondenceTemplate.getTemplateFilename(), capturedResource.getFilename());
+
+    }
+
+    @Test
+    public void generateUpdatedTemplate() throws Exception
+    {
+        String targetFolderCmisId = "targetFolderCmisId";
+        Object[] queryArgs = { 500L };
+
+        Capture<Resource> captureResourceTemplate = new Capture<>();
+
+        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = new HashMap<>();
+        correspondenceQueryBeansMap.put("caseFileCorrespondenceQueryBean", correspondenceQuery);
+
+        Capture<String> filename = new Capture<>();
+
+        expect(mockSpringContextHolder.getAllBeansOfType(CorrespondenceQuery.class)).andReturn(correspondenceQueryBeansMap);
+        correspondenceQueryBeansMap.values().stream()
+                .filter(cQuery -> cQuery.getType().toString().equals(correspondenceTemplate.getObjectType())).findFirst().get();
+        expect(mockEntityManager.createNativeQuery(correspondenceQuery.getSqlQuery())).andReturn(mockQuery);
+        expect(mockQuery.setParameter(1, queryArgs[0])).andReturn(mockQuery);
+        expect(mockQuery.getResultList()).andReturn(resultsData());
+
+        expect(mockCorrespondenceService.getActiveVersionMergeFieldsByType(correspondenceTemplate.getObjectType()))
+                .andReturn(mergeFieldsData());
+
+        mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(substitutionsData()));
+
+        expect(mockEcmFileDao.findSingleFileByParentObjectAndFolderCmisIdAndFileType(eq("CASE_FILE"), eq(500L), eq(targetFolderCmisId),
+                eq(correspondenceTemplate.getDocumentType()))).andReturn(ecmFile);
+
+        expect(mockEcmFileService.update(ecmFile, mockInputStream, mockAuthentication)).andReturn(null);
 
         replayAll();
 
