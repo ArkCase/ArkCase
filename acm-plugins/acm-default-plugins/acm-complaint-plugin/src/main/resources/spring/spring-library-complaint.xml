@@ -78,7 +78,8 @@
         <constructor-arg value="&lt;p/&gt;Complaint '%s' had these details:&lt;p/&gt;%s"/>
     </bean>
 
-    <bean id="closeComplaintRequestService" class="com.armedia.acm.plugins.complaint.service.CloseComplaintRequestService">
+    <bean id="closeComplaintRequestService"
+        class="com.armedia.acm.plugins.complaint.service.CloseComplaintRequestService">
         <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
         <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
@@ -120,8 +121,10 @@
     <bean id="closeComplaintRequestDao" class="com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao"/>
 
     <!-- pre-save handlers -->
-    <bean id="complaintSetCreatorHandler" class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintSetCreatorHandler"/>
-    <bean id="complaintContainerHandler" class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintContainerHandler">
+    <bean id="complaintSetCreatorHandler"
+        class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintSetCreatorHandler"/>
+    <bean id="complaintContainerHandler"
+        class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintContainerHandler">
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
@@ -129,15 +132,18 @@
     <bean id="complaintRulesHandler" class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintRulesHandler">
         <property name="saveRule" ref="saveComplaintBusinessRule"/>
     </bean>
-    <bean id="complaintEcmFolderHandler" class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintEcmFolderHandler">
+    <bean id="complaintEcmFolderHandler"
+        class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintEcmFolderHandler">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
-    <bean id="complaintOutlookHandler" class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintOutlookHandler">
+    <bean id="complaintOutlookHandler"
+        class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintOutlookHandler">
         <property name="autoCreateFolderForComplaint" value="${complaint.auto_create_calendar_folder}"/>
         <property name="outlookContainerCalendarService" ref="outlookContainerService"/>
         <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
     </bean>
-    <bean id="complaintDocumentHandler" class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintDocumentHandler"
+    <bean id="complaintDocumentHandler"
+        class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintDocumentHandler"
         parent="pdfComplaintDocumentGenerator">
         <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
         <property name="dao" ref="acmComplaintDao"/>
@@ -160,7 +166,8 @@
         </property>
     </bean>
 
-    <bean id="pdfComplaintDocumentGenerator" class="com.armedia.acm.plugins.complaint.service.PDFComplaintDocumentGenerator"
+    <bean id="pdfComplaintDocumentGenerator"
+        class="com.armedia.acm.plugins.complaint.service.PDFComplaintDocumentGenerator"
         parent="pdfDocumentGenerator">
     </bean>
 
@@ -188,6 +195,7 @@
     <bean id="complaintEventPublisher" class="com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher">
         <property name="acmDiffService" ref="acmDiffService"/>
     </bean>
+
     <bean id="saveComplaintBusinessRule" class="com.armedia.acm.plugins.complaint.service.SaveComplaintBusinessRule"
         parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-complaint-number-rules.xlsx"/>
@@ -202,7 +210,8 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
-    <bean id="complaintService" class="com.armedia.acm.plugins.complaint.service.ComplaintService" parent="frevvoFormService"
+    <bean id="complaintService" class="com.armedia.acm.plugins.complaint.service.ComplaintService"
+        parent="frevvoFormService"
         scope="prototype">
         <property name="complaintFactory" ref="complaintFactory"/>
         <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
@@ -229,11 +238,13 @@
         <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
     </bean>
 
-    <bean id="complaintDataAccessUpdateLocator" class="com.armedia.acm.plugins.complaint.service.ComplaintDataAccessUpdateLocator">
+    <bean id="complaintDataAccessUpdateLocator"
+        class="com.armedia.acm.plugins.complaint.service.ComplaintDataAccessUpdateLocator">
         <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
 
-    <bean id="complaintCaptureFileEventListener" class="com.armedia.acm.plugins.complaint.service.ComplaintCaptureFileEventListener">
+    <bean id="complaintCaptureFileEventListener"
+        class="com.armedia.acm.plugins.complaint.service.ComplaintCaptureFileEventListener">
         <property name="watchFolder" ref="captureFolder"/>
         <property name="workingFolder" ref="workingFolder"/>
         <property name="completedFolder" ref="completedFolder"/>
@@ -245,4 +256,64 @@
         <property name="OXMFilePath" value="${user.home}/.arkcase/acm${capture.oxm.file.path}"/>
     </bean>
 
+    <bean id="closeComplaintTaskName" class="java.lang.String">
+        <constructor-arg>
+            <value>Request to Close Complaint '%s'</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="pdfCloseComplaintDocumentGenerator"
+        class="com.armedia.acm.plugins.complaint.service.PDFCloseComplaintDocumentGenerator"
+        parent="pdfDocumentGenerator">
+        <property name="dao" ref="acmComplaintDao"/>
+        <property name="caseFileDao" ref="caseFileDao"/>
+    </bean>
+
+    <bean id="complaintCloseWorkflowListener"
+        class="com.armedia.acm.plugins.complaint.service.CloseComplaintWorkflowListener">
+        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="closeComplaintTaskName" ref="closeComplaintTaskName"/>
+    </bean>
+
+    <bean id="checkCloseComplaintRequest"
+        class="com.armedia.acm.plugins.complaint.pipeline.presave.CheckCloseComplaintRequest">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+    </bean>
+
+    <bean id="closeComplaintHandler" class="com.armedia.acm.plugins.complaint.pipeline.postsave.CloseComplaintHandler">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+    </bean>
+
+    <bean id="createTaskCloseComplaintHandler"
+        class="com.armedia.acm.plugins.complaint.pipeline.postsave.CreateTaskCloseComplaintHandler">
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
+
+    <bean id="closeComplaintPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+        <property name="preSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="checkCloseComplaintRequest"/>
+            </list>
+        </property>
+        <property name="postSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="pdfCloseComplaintDocumentGeneratorHandler"/>
+                <ref bean="closeComplaintHandler"/>
+                <ref bean="createTaskCloseComplaintHandler"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="closeComplaint" class="com.armedia.acm.plugins.complaint.service.CloseComplaintServiceImpl">
+        <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
+        <property name="pipelineManager" ref="closeComplaintPipelineManager"/>
+    </bean>
+
+    <bean id="pdfCloseComplaintDocumentGeneratorHandler"
+        class="com.armedia.acm.plugins.complaint.pipeline.postsave.PDFCloseComplaintDocumentGeneratorHandler"
+        parent="pdfCloseComplaintDocumentGenerator">
+        <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
+        <property name="dao" ref="acmComplaintDao"/>
+    </bean>
 </beans>

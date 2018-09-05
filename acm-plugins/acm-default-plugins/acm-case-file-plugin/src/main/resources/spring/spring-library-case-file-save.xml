@@ -51,6 +51,12 @@
         <property name="startBusinessProcessBusinessRule" ref="caseFileStartBusinessProcessBusinessRule"/>
         <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
     </bean>
+
+    <bean id="pdfCasefileDocumentGenerator"
+        class="com.armedia.acm.plugins.casefile.service.PDFCasefileDocumentGenerator"
+        parent="pdfDocumentGenerator">
+    </bean>
+
     <bean id="casefileDocumentHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CasefileDocumentHandler"
         parent="pdfCasefileDocumentGenerator">
         <property name="formsTypeCheckService" ref="formsTypeCheckService"/>

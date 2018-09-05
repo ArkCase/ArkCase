@@ -18,6 +18,9 @@
         "endDate": {
             "label": "To"
         },
+        "fiscalYear": {
+            "label": "Fiscal year"
+        },
         "dropdown": {
             "__comment__": "__ This 'dropdown' seems not in use, do we still need this? __",
             "turnaround": "Turnaround Time by Requester",

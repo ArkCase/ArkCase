@@ -35,13 +35,17 @@ public class CaseFileNextPossibleQueuesResponse
 
     private final String defaultReturnQueue;
 
+    private final String defaultDenyQueue;
+
     private final List<String> nextPossibleQueues;
 
-    public CaseFileNextPossibleQueuesResponse(String defaultNextQueue, String defaultReturnQueue, List<String> nextPossibleQueues)
+    public CaseFileNextPossibleQueuesResponse(String defaultNextQueue, String defaultReturnQueue, String defaultDenyQueue,
+            List<String> nextPossibleQueues)
     {
         this.defaultNextQueue = defaultNextQueue;
         this.defaultReturnQueue = defaultReturnQueue;
         this.nextPossibleQueues = nextPossibleQueues;
+        this.defaultDenyQueue = defaultDenyQueue;
     }
 
     public String getDefaultNextQueue()
@@ -52,6 +56,14 @@ public class CaseFileNextPossibleQueuesResponse
     public String getDefaultReturnQueue()
     {
         return defaultReturnQueue;
+    }
+
+    /**
+     * @return the defaultDenyQueue
+     */
+    public String getDefaultDenyQueue()
+    {
+        return defaultDenyQueue;
     }
 
     public List<String> getNextPossibleQueues()

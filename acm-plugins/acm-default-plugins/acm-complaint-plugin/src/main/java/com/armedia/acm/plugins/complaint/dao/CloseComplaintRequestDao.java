@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.complaint.dao;
  */
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.plugins.complaint.model.CloseComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
@@ -113,5 +114,11 @@ public class CloseComplaintRequestDao extends AcmAbstractDao<CloseComplaintReque
         Query query = getEm().createQuery(delete);
 
         return query.executeUpdate();
+    }
+
+    @Override
+    public String getSupportedObjectType()
+    {
+        return CloseComplaintConstants.CLOSE_COMPLAINT_REQUEST;
     }
 }

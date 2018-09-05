@@ -8,7 +8,8 @@
         </constructor-arg>
     </bean>
 
-    <bean id="changeCaseStatusWorkflowListener" class="com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusWorkflowListener">
+    <bean id="changeCaseStatusWorkflowListener"
+        class="com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusWorkflowListener">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="changeCaseStatusTaskName" ref="changeCaseStatusTaskName"/>

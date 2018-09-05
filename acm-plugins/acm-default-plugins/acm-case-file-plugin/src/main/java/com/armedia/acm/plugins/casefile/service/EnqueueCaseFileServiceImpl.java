@@ -79,9 +79,21 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
     @Transactional
     public CaseFileEnqueueResponse enqueueCaseFile(Long caseId, String nextQueue, CaseFilePipelineContext context)
     {
+        return enqueueCaseFile(caseId, nextQueue, null, context);
+    }
+
+    @Override
+    @Transactional
+    public CaseFileEnqueueResponse enqueueCaseFile(Long caseId, String nextQueue, String nextQueueAction, CaseFilePipelineContext context)
+    {
         // since we will make changes to this CaseFile, we should not detach it; the caseFileDao detaches
         // the object, so we won't use the dao.find() method here.
         CaseFile caseFile = getCaseFileDao().getEm().find(CaseFile.class, caseId);
+
+        if (nextQueueAction != null && nextQueueAction.equals("Deny"))
+        {
+            caseFile.setDeniedFlag(true);
+        }
 
         context.setNewCase(false);
         context.setEnqueueName(nextQueue);

@@ -55,6 +55,7 @@ import java.util.List;
 public class TikaMetadataIT
 {
     private transient final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     private EcmTikaFileService ecmTikaFileService;
 
@@ -64,96 +65,114 @@ public class TikaMetadataIT
         // see the loop below to understand each of the values in the below arrays. One array per test file.
 
         Object[][] testData = {
-                {
-                        "Video (ArkCase FOIA)",
-                        "media-files/ArkCase _ FOIA.MP4",
-                        "video/mp4",
-                        ".mp4",
-                        null,
-                        null,
-                        null,
-                        null,
-                        224,
-                        398,
-                        0.0,
-                        0.0,
-                        131.88,
-                        0,
-                        0,
-                        0
-                },
-                {
-                        "Video (Police body camera)",
-                        "media-files/Police Bodycam.mp4",
-                        "video/mp4",
-                        ".mp4",
-                        null,
-                        null,
-                        null,
-                        null,
-                        360,
-                        640,
-                        0.0,
-                        0.0,
-                        44.0,
-                        2016,
-                        Calendar.OCTOBER,
-                        22
-                },
-                {
-                        "Video (Evidence)",
-                        "media-files/Evidence Video.mp4",
-                        "video/mp4",
-                        ".mp4",
-                        null,
-                        null,
-                        null,
-                        null,
-                        480,
-                        854,
-                        0.0,
-                        0.0,
-                        60.6,
-                        2017,
-                        Calendar.JULY,
-                        25
-                },
-                {
-                        "Video (Camera)",
-                        "media-files/VID_20170721_130803497.mp4",
-                        "video/mp4",
-                        ".mp4",
-                        "39°18'00\"N 77°48'55\"W",
-                        "+39.30010-077.81540/",
-                        null,
-                        null,
-                        1080,
-                        1920,
-                        39.3001,
-                        -77.8154,
-                        4.86,
-                        2017,
-                        Calendar.JULY,
-                        21
-                },
-                {
-                        "Picture (Camera)",
-                        "media-files/IMG_20170721_125157844.jpg",
-                        "image/jpeg",
-                        ".jpg",
-                        "39°18'00\"N 77°48'56\"W",
-                        "+39.30007-077.81552/",
-                        "Motorola",
-                        "XT1254",
-                        5248,
-                        2952,
-                        39.300068,
-                        -77.815521,
-                        0.0,
-                        2017,
-                        Calendar.JULY,
-                        21
-                }
+            {
+                "Video (animated bear)",
+                "media-files/SampleVideo_1280x720_1mb.mp4",
+                "video/mp4",
+                ".mp4",
+                null,
+                null,
+                null,
+                null,
+                720,
+                1280,
+                0.0,
+                0.0,
+                5.31,
+                0,
+                0,
+                0
+            },
+            {
+                "Video (ArkCase FOIA)",
+                "media-files/ArkCase _ FOIA.MP4",
+                "video/mp4",
+                ".mp4",
+                null,
+                null,
+                null,
+                null,
+                224,
+                398,
+                0.0,
+                0.0,
+                131.88,
+                0,
+                0,
+                0
+            },
+            {
+                "Video (Police body camera)",
+                "media-files/Police Bodycam.mp4",
+                "video/mp4",
+                ".mp4",
+                null,
+                null,
+                null,
+                null,
+                360,
+                640,
+                0.0,
+                0.0,
+                44.0,
+                2016,
+                Calendar.OCTOBER,
+                22
+            },
+            {
+                "Video (Evidence)",
+                "media-files/Evidence Video.mp4",
+                "video/mp4",
+                ".mp4",
+                null,
+                null,
+                null,
+                null,
+                480,
+                854,
+                0.0,
+                0.0,
+                60.6,
+                2017,
+                Calendar.JULY,
+                25
+            },
+            {
+                "Video (Camera)",
+                "media-files/VID_20170721_130803497.mp4",
+                "video/mp4",
+                ".mp4",
+                "39°18'00\"N 77°48'55\"W",
+                "+39.30010-077.81540/",
+                null,
+                null,
+                1080,
+                1920,
+                39.3001,
+                -77.8154,
+                4.86,
+                2017,
+                Calendar.JULY,
+                21
+            },
+            {
+                "Picture (Camera)",
+                "media-files/IMG_20170721_125157844.jpg",
+                "image/jpeg",
+                ".jpg",
+                "39°18'00\"N 77°48'56\"W",
+                "+39.30007-077.81552/",
+                "Motorola",
+                "XT1254",
+                5248,
+                2952,
+                39.300068,
+                -77.815521,
+                0.0,
+                2017,
+                Calendar.JULY,
+                21
+            }
         };
 
         for (Object[] test : testData)
@@ -207,6 +226,8 @@ public class TikaMetadataIT
             }
 
             logger.info(multimedia.toString());
+
+            logger.info(" DONE ---------------- {} ------------------------", testType);
         }
 
     }
