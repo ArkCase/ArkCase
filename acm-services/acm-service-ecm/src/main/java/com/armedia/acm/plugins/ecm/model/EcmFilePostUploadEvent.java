@@ -28,7 +28,6 @@ package com.armedia.acm.plugins.ecm.model;
  */
 
 import org.springframework.context.ApplicationEvent;
-import org.springframework.security.core.Authentication;
 
 /**
  * Notify interested parties <strong>after</strong> a file
@@ -45,14 +44,14 @@ public class EcmFilePostUploadEvent extends ApplicationEvent
 {
     private EcmFile file;
 
-    private Authentication auth;
+    private String username;
 
-    public EcmFilePostUploadEvent(EcmFile uploaded, Authentication auth)
+    public EcmFilePostUploadEvent(EcmFile uploaded, String username)
     {
         super(uploaded);
 
         file = uploaded;
-        this.auth = auth;
+        this.username = username;
     }
 
     public EcmFile getFile()
@@ -61,11 +60,11 @@ public class EcmFilePostUploadEvent extends ApplicationEvent
     }
 
     /**
-     * @return the auth
+     * @return the username
      */
-    public Authentication getAuth()
+    public String getUsername()
     {
-        return auth;
+        return username;
     }
 
 }

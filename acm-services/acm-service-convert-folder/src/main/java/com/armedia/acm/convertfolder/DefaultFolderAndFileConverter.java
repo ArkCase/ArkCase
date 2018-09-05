@@ -38,7 +38,6 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,7 +79,7 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
      * @see com.armedia.acm.convertfolder.FolderConverter#convertFolder(java.lang.Long)
      */
     @Override
-    public void convertFolder(Long folderId, Authentication auth) throws ConversionException
+    public void convertFolder(Long folderId, String username) throws ConversionException
     {
         log.debug("Converting folder with id: [{}].", folderId);
         AcmFolder folder = Optional.ofNullable(folderService.findById(folderId))
@@ -100,11 +99,11 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
                     // if child object is a folder, convert it's contents
                     if (OBJECT_FOLDER_TYPE.equals(objectType))
                     {
-                        convertFolder(obj.getId(), auth);
+                        convertFolder(obj.getId(), username);
                     }
                     else
                     {
-                        convert(EcmFile.class.cast(obj), auth);
+                        convert(EcmFile.class.cast(obj), username);
                     }
                 }
                 catch (ConversionException ce)
@@ -132,12 +131,12 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
     }
 
     /**
-     * @param auth
+     * @param username
      * @param id
      * @throws ConversionException
      */
     @Override
-    public void convert(EcmFile file, Authentication auth) throws ConversionException
+    public void convert(EcmFile file, String username) throws ConversionException
     {
         List<FileConverter> converters = convertersByType.get(file.getFileExtension().toLowerCase());
         if (converters == null)
@@ -153,7 +152,7 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
             {
                 log.debug("Using converter of type [{}] to convert file [{}] of type [{}].", converter.getClass().getName(),
                         file.getFileName() + "." + file.getFileExtension(), file.getFileExtension());
-                converter.convert(file, auth);
+                converter.convert(file, username);
             }
             catch (ConversionException ce)
             {
