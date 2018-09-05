@@ -148,8 +148,6 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
     {
 
-        session.getAttribute("acm_ip_address");
-
         // for multiple files
         MultiValueMap<String, MultipartFile> attachments = request.getMultiFileMap();
 
@@ -173,7 +171,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
                                 folderCmisId, parentObjectType, parentObjectId);
                         uploadedFiles.add(temp);
 
-                        applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication));
+                        applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
                     }
                 }
             }

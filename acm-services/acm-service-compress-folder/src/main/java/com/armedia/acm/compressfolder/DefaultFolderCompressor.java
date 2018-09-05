@@ -28,6 +28,7 @@ package com.armedia.acm.compressfolder;
  */
 
 import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FILE_TYPE;
+import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FOLDER_TYPE;
 import static org.apache.commons.io.IOUtils.copy;
 
 import com.armedia.acm.compressfolder.model.CompressNode;
@@ -55,7 +56,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -202,13 +202,10 @@ public class DefaultFolderCompressor implements FolderCompressor
         List<String> fileFolderList = new ArrayList<>();
         DateFormat format = new SimpleDateFormat("yyyy_M_d_k_m_s", Locale.ENGLISH);
 
-        Map<Boolean, List<AcmObject>> partitions = folderChildren.stream()
-                .collect(Collectors.partitioningBy(c -> OBJECT_FILE_TYPE.equals(c.getObjectType().toUpperCase())));
-
         // all child objects of OBJECT_FILE_TYPE
-        List<AcmObject> files = partitions.get(true);
+        List<AcmObject> files = folderChildren.stream().filter(c -> OBJECT_FILE_TYPE.equals(c.getObjectType().toUpperCase()))
+                .collect(Collectors.toList());
         files.forEach(c -> {
-            c.getObjectType().toUpperCase();
             try
             {
                 EcmFile file = EcmFile.class.cast(c);
@@ -237,7 +234,8 @@ public class DefaultFolderCompressor implements FolderCompressor
         });
 
         // all child objects of OBJECT_FOLDER_TYPE
-        List<AcmObject> folders = partitions.get(false);
+        List<AcmObject> folders = folderChildren.stream().filter(c -> OBJECT_FOLDER_TYPE.equals(c.getObjectType().toUpperCase()))
+                .collect(Collectors.toList());
         folders.forEach(c -> {
             try
             {
@@ -327,6 +325,8 @@ public class DefaultFolderCompressor implements FolderCompressor
      */
     private boolean isConverted(EcmFile file, List<AcmObject> files)
     {
+        // TODO: Currently, base file name is used to link the original file with the PDF rendition. We should devise a
+        // way to associate the rendition with the original file trough means other than base file name.
         if (".pdf".equalsIgnoreCase(file.getFileActiveVersionNameExtension()))
         {
             return false;

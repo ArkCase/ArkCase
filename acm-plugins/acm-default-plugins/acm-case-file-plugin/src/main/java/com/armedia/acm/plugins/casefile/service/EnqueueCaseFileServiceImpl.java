@@ -187,7 +187,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
             processVariables.put("ASSIGNEES", onEnterModel.getTaskAssignees());
             processVariables.put("TASK_NAME", onEnterModel.getTaskName());
             processVariables.put("TASK_OWNING_GROUP", onEnterModel.getTaskOwningGroup());
-            processVariables.put("AUTHENTICATION", context.getAuthentication());
+            processVariables.put("USERNAME", context.getAuthentication().getName());
             getStartBusinessProcessService().startBusinessProcess(enterProcessName, processVariables);
 
             getCaseFileDao().getEm().flush();
