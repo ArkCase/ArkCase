@@ -231,7 +231,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(substitutions));
 
-        expect(mockEcmFileDao.findByParentObjectAndFolderCmisIdAndFileType(eq("CASE_FILE"), eq(500L), eq(targetFolderCmisId),
+        expect(mockEcmFileDao.findSingleFileByParentObjectAndFolderCmisIdAndFileType(eq("CASE_FILE"), eq(500L), eq(targetFolderCmisId),
                 eq(correspondenceTemplate.getDocumentType()))).andReturn(null);
 
         expect(mockEcmFileService.upload(eq(correspondenceTemplate.getDocumentType() + ".docx"),
