@@ -132,6 +132,8 @@ public class CorrespondenceGenerator
 
         EcmFile retval = null;
 
+        // Check for existing correspondence template in same folder. If so, update the ecm file (new version) instead
+        // of creating new ecm file.
         EcmFile existing = ecmFileDao.findByParentObjectAndFolderCmisIdAndFileType(parentObjectType, parentObjectId, targetFolderCmisId,
                 template.getDocumentType());
 
