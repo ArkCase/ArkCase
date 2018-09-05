@@ -118,10 +118,10 @@ angular.module('cases').controller(
                                     var selectedUser = selection.masterSelectedItem;
                                     var selectedGroup = selection.detailSelectedItems;
 
-                                    $scope.assignee = selectedUser.name;
+                                    $scope.assignee = selectedUser.object_id_s;
                                     $scope.updateAssignee();
                                     if (selectedGroup) {
-                                        $scope.owningGroup = selectedGroup.name;
+                                        $scope.owningGroup = selectedGroup.object_id_s;
                                         $scope.updateOwningGroup();
 
                                     }
@@ -131,10 +131,10 @@ angular.module('cases').controller(
                                     var selectedUser = selection.detailSelectedItems;
                                     var selectedGroup = selection.masterSelectedItem;
                                     if (selectedUser) {
-                                        $scope.assignee = selectedUser.name;
+                                        $scope.assignee = selectedUser.object_id_s;
                                         $scope.updateAssignee();
                                     }
-                                    $scope.owningGroup = selectedGroup.name;
+                                    $scope.owningGroup = selectedGroup.object_id_s;
                                     $scope.updateOwningGroup();
 
                                     return;
