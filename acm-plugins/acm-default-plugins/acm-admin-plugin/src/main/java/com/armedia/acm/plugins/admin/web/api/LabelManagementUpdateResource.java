@@ -31,6 +31,7 @@ import com.armedia.acm.plugins.admin.exception.AcmLabelConfigurationException;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 
+import org.apache.commons.lang.LocaleUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -46,7 +47,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by sergey on 2/14/16.
@@ -59,37 +64,38 @@ public class LabelManagementUpdateResource
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private LabelManagementService labelManagementService;
+    private static final Set<String> ISO_LANGUAGES = new HashSet<String>(Arrays.asList(Locale.getISOLanguages()));
 
     @RequestMapping(value = "/labelmanagement/admin-resource", method = RequestMethod.PUT, produces = {
             MediaType.APPLICATION_JSON_UTF8_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public String updateResource(@RequestParam("lang") String lang, @RequestParam("ns") String ns, @RequestBody String resource,
-            HttpServletResponse response) throws IOException, AcmLabelConfigurationException, AcmLabelManagementException
-    {
+            HttpServletResponse response) throws IOException, AcmLabelConfigurationException, AcmLabelManagementException {
+        if(ISO_LANGUAGES.contains(lang)) {
+            try {
 
-        try
-        {
-            JSONObject value = new JSONObject(resource);
-            JSONObject updatedRes = labelManagementService.updateCustomResource(ns, lang, value);
-            JSONArray jsonResourceArray = new JSONArray();
-            // Convert json object to the array
-            Iterator<String> keys = updatedRes.keys();
-            while (keys.hasNext())
-            {
-                String key = keys.next();
-                JSONObject node = (JSONObject) updatedRes.get(key);
-                node.put("id", key);
-                jsonResourceArray.put(node);
+                JSONObject value = new JSONObject(resource);
+                JSONObject updatedRes = labelManagementService.updateCustomResource(ns, lang, value);
+                JSONArray jsonResourceArray = new JSONArray();
+                // Convert json object to the array
+                Iterator<String> keys = updatedRes.keys();
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    JSONObject node = (JSONObject) updatedRes.get(key);
+                    node.put("id", key);
+                    jsonResourceArray.put(node);
+                }
+                return jsonResourceArray.toString();
+            } catch (Exception e) {
+                String msg = String.format("Can't update resource %s:%s", lang, ns);
+                log.error(msg, e);
+                throw new AcmLabelManagementException(msg, e);
             }
-            return jsonResourceArray.toString();
+        }else{
+            throw new AcmLabelManagementException("Language parameter is not valid");
         }
-        catch (Exception e)
-        {
-            String msg = String.format("Can't update resource %s:%s", lang, ns);
-            log.error(msg, e);
-            throw new AcmLabelManagementException(msg, e);
-        }
+
     }
 
     public void setLabelManagementService(LabelManagementService labelManagementService)
