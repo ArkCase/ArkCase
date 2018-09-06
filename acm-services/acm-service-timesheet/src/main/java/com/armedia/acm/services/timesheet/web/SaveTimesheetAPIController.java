@@ -61,7 +61,7 @@ public class SaveTimesheetAPIController
 
     @RequestMapping(value = "/{submissionName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmTimesheet getTimesheet(@RequestBody AcmTimesheet timesheet, @PathVariable("submissionName") String submissionName,
+    public AcmTimesheet saveTimesheet(@RequestBody AcmTimesheet timesheet, @PathVariable("submissionName") String submissionName,
             Authentication auth) throws AcmCreateObjectFailedException
     {
         if (LOG.isInfoEnabled())
