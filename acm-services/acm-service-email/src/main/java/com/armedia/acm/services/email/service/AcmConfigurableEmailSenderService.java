@@ -30,6 +30,7 @@ package com.armedia.acm.services.email.service;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
+
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
@@ -77,10 +78,13 @@ public class AcmConfigurableEmailSenderService
     {
         if (event instanceof ConfigurationFileChangedEvent && event.getConfigFile().getName().equals("acmEmailSender.properties"))
         {
-            try {
+            try
+            {
                 readSenderType();
-            } catch (AcmEncryptionException e) {
-                logger.error("Error encrypting/decrypting...Reason[{}]",e.getMessage());
+            }
+            catch (AcmEncryptionException e)
+            {
+                logger.error("Error encrypting/decrypting...Reason[{}]", e.getMessage(), e);
             }
         }
     }
@@ -155,7 +159,7 @@ public class AcmConfigurableEmailSenderService
      */
     @Override
     public void sendEmailWithAttachmentsAndLinks(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO,
-            Authentication authentication, AcmUser user) throws Exception
+                                                 Authentication authentication, AcmUser user) throws Exception
     {
         AcmEmailSenderService service = getSender();
         service.sendEmailWithAttachmentsAndLinks(emailWithAttachmentsAndLinksDTO, authentication, user);
@@ -184,7 +188,7 @@ public class AcmConfigurableEmailSenderService
      */
     @Override
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO emailDTO,
-            Authentication authentication, AcmUser user) throws Exception
+                                                                            Authentication authentication, AcmUser user) throws Exception
     {
         AcmEmailSenderService service = getSender();
         return service.sendEmailWithEmbeddedLinks(emailDTO, authentication, user);

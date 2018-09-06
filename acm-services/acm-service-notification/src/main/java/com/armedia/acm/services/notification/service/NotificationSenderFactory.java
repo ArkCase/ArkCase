@@ -58,11 +58,7 @@ public class NotificationSenderFactory implements ApplicationListener<AbstractCo
         if (event instanceof ConfigurationFileChangedEvent && event.getConfigFile().getName().equals("acmEmailSender.properties"))
         {
             EmailSenderConfiguration senderConfigurationUpdated = null;
-            try {
-                senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
-            } catch (AcmEncryptionException e) {
-                logger.error("Error encrypting/decrypting...Reason[{}]",e.getMessage());
-            }
+            senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
             flowType = senderConfigurationUpdated.getType();
         }
 
