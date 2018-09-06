@@ -36,12 +36,12 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 @Entity
-@Table(name = "acm_user_identity")
-public class AcmUserIdentity
+@Table(name = "acm_user_identifier")
+public class AcmUserIdentifier
 {
     @Id
-    @TableGenerator(name = "user_identity_generator", table = "acm_user_identity_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_user_identity", initialValue = 100, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "user_identity_generator")
+    @TableGenerator(name = "user_identifier_generator", table = "acm_user_identifier_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_user_identifier", initialValue = 100, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "user_identifier_generator")
     @Column(name = "cm_id", nullable = false, updatable = false)
     private Long id;
 

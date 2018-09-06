@@ -76,8 +76,8 @@ public class AcmGroup implements Serializable, AcmEntity
     private static final long serialVersionUID = -2729731595684630823L;
 
     @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, fetch = FetchType.LAZY)
-    @JoinColumn(name = "cm_identity", referencedColumnName = "cm_id", nullable = false)
-    private AcmGroupIdentity identity = new AcmGroupIdentity();
+    @JoinColumn(name = "cm_identifier", referencedColumnName = "cm_id", nullable = false)
+    private AcmGroupIdentifier identifier = new AcmGroupIdentifier();
 
     @Id
     @Column(name = "cm_group_name")
@@ -246,9 +246,9 @@ public class AcmGroup implements Serializable, AcmEntity
     }
 
     @JsonIgnore
-    public Long getId()
+    public Long getIdentifier()
     {
-        return identity.getId();
+        return identifier.getId();
     }
 
     public String getName()

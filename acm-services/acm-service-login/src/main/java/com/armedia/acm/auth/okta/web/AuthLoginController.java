@@ -179,7 +179,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             OktaAuthenticationDetails oktaAuthenticationDetails = new OktaAuthenticationDetails(user, request);
             AcmAuthentication acmAuthentication = new AcmAuthentication((Collection<AcmGrantedAuthority>) authentication.getAuthorities(),
                     authentication.getCredentials(), oktaAuthenticationDetails, authentication.isAuthenticated(),
-                    authentication.getName(), dbUser.getId());
+                    authentication.getName(), dbUser.getIdentifier());
             SecurityContextHolder.getContext().setAuthentication(acmAuthentication);
 
             return new ModelAndView(getMultiFactorConfig().getSelectMethodTargetUrl(), model.asMap());
@@ -491,7 +491,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
 
         AcmUser dbUser = userDao.findByUserId(contextAuth.getName());
         AcmAuthentication acmAuthentication = new AcmAuthentication(newAuthorities, contextAuth.getCredentials(), contextAuth.getDetails(),
-                contextAuth.isAuthenticated(), contextAuth.getName(), dbUser.getId());
+                contextAuth.isAuthenticated(), contextAuth.getName(), dbUser.getIdentifier());
         SecurityContextHolder.getContext().setAuthentication(acmAuthentication);
         // Publish login event on second factor auth success
         LoginEvent event = new LoginEvent(acmAuthentication);

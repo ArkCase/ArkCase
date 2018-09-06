@@ -491,77 +491,135 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="32-add-user-identity-column" author="ncuculova">
+    <changeSet id="32-add-user-identifier-column" author="ncuculova">
         <addColumn tableName="acm_user">
-            <column name="cm_identity" type="${fkIdType}"/>
+            <column name="cm_identifier" type="${fkIdType}"/>
         </addColumn>
-        <sql>
-            SELECT @i:=100;
-            UPDATE acm_user SET cm_identity = @i:=@i+1;
-        </sql>
-        <addNotNullConstraint tableName="acm_user" columnName="cm_identity" columnDataType="${fkIdType}"/>
     </changeSet>
 
-    <changeSet id="33-add-user-identity-table" author="ncuculova">
-        <createTable tableName="acm_user_identity">
+    <changeSet id="33-populate-user-identifier-column" author="ncuculova" dbms="mysql">
+        <sql>
+            SELECT @i:=100;
+            UPDATE acm_user SET cm_identifier = @i:=@i+1;
+        </sql>
+    </changeSet>
+
+    <changeSet id="33-populate-user-identifier-column" author="ncuculova" dbms="postgresql">
+        <sql>
+            UPDATE acm_user au SET cm_identifier = (r.num + 100) from
+            (SELECT r.*, row_number() over () AS num FROM acm_user r) r
+            where r.cm_user_id = au.cm_user_id;
+        </sql>
+    </changeSet>
+
+    <changeSet id="33-populate-user-identifier-column" author="ncuculova" dbms="oracle">
+        <sql>
+            UPDATE acm_user set cm_identifier = rownum + 100;
+        </sql>
+    </changeSet>
+
+    <changeSet id="33-populate-user-identifier-column" author="ncuculova" dbms="mssql">
+        <sql>
+            DECLARE @i INT
+            SET @i=100
+            UPDATE acm_user SET @i = cm_identifier = @i + 1
+            GO
+        </sql>
+    </changeSet>
+
+    <changeSet id="34-set-not-null-user-identifier-column" author="ncuculova">
+        <addNotNullConstraint tableName="acm_user" columnName="cm_identifier" columnDataType="${fkIdType}"/>
+    </changeSet>
+
+    <changeSet id="35-add-user-identifier-table" author="ncuculova">
+        <createTable tableName="acm_user_identifier">
             <column name="cm_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk-user-id"/>
             </column>
         </createTable>
         <sql>
-            INSERT INTO acm_user_identity (cm_id)
-            SELECT cm_identity FROM acm_user;
+            INSERT INTO acm_user_identifier (cm_id)
+            SELECT cm_identifier FROM acm_user;
         </sql>
     </changeSet>
 
-    <changeSet id="34-add-group-identity-column" author="ncuculova">
+    <changeSet id="36-add-group-identifier-column" author="ncuculova">
         <addColumn tableName="acm_group">
-            <column name="cm_identity" type="${fkIdType}"/>
+            <column name="cm_identifier" type="${fkIdType}"/>
         </addColumn>
+    </changeSet>
+
+    <changeSet id="37-populate-user-identifier-column" author="ncuculova" dbms="mysql">
         <sql>
             SELECT @i:=100;
-            UPDATE acm_group SET cm_identity = @i:=@i+1;
+            UPDATE acm_group SET cm_identifier = @i:=@i+1;
         </sql>
-        <addNotNullConstraint tableName="acm_group" columnName="cm_identity" columnDataType="${fkIdType}"/>
     </changeSet>
 
-    <changeSet id="35-add-group-identity-table" author="ncuculova">
-        <createTable tableName="acm_group_identity">
+    <changeSet id="37-populate-group-identifier-column" author="ncuculova" dbms="postgresql">
+        <sql>
+            UPDATE acm_group ag SET cm_identifier = (r.num + 100) from
+            (SELECT r.*, row_number() over () AS num FROM acm_group r) r
+            where r.cm_group_name = au.cm_group_name;
+        </sql>
+    </changeSet>
+
+    <changeSet id="37-populate-group-identifier-column" author="ncuculova" dbms="oracle">
+        <sql>
+            UPDATE acm_group set cm_identifier = rownum + 100;
+        </sql>
+    </changeSet>
+
+    <changeSet id="37-populate-group-identifier-column" author="ncuculova" dbms="mssql">
+        <sql>
+            DECLARE @i INT
+            SET @i=100
+            UPDATE acm_group SET @i = cm_identifier = @i + 1
+            GO
+        </sql>
+    </changeSet>
+
+    <changeSet id="38-set-not-null-group-identifier-column" author="ncuculova">
+        <addNotNullConstraint tableName="acm_group" columnName="cm_identifier" columnDataType="${fkIdType}"/>
+    </changeSet>
+
+    <changeSet id="39-add-group-identifier-table" author="ncuculova">
+        <createTable tableName="acm_group_identifier">
             <column name="cm_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk-group-id"/>
             </column>
         </createTable>
         <sql>
-            INSERT INTO acm_group_identity (cm_id)
-            SELECT cm_identity FROM acm_group;
+            INSERT INTO acm_group_identifier (cm_id)
+            SELECT cm_identifier FROM acm_group;
         </sql>
     </changeSet>
 
-    <changeSet id="36-add-user-identity-sec-table" author="ncuculova">
-        <createTable tableName="acm_user_identity_id">
+    <changeSet id="36-add-user-identifier-sec-table" author="ncuculova">
+        <createTable tableName="acm_user_identifier_id">
             <column name="cm_seq_num" type="${idType}"/>
             <column name="cm_seq_name" type="VARCHAR(255)"/>
         </createTable>
-        <insert tableName="acm_user_identity_id">
+        <insert tableName="acm_user_identifier_id">
             <column name="cm_seq_num" value="100"/>
-            <column name="cm_seq_name" value="acm_user_identity"/>
+            <column name="cm_seq_name" value="acm_user_identifier"/>
         </insert>
         <sql>
-            UPDATE acm_user_identity_id SET cm_seq_num = (SELECT max(cm_id) FROM acm_user_identity);
+            UPDATE acm_user_identifier_id SET cm_seq_num = (SELECT max(cm_id) FROM acm_user_identifier);
         </sql>
     </changeSet>
 
-    <changeSet id="37-add-group-identity-sec-table" author="ncuculova">
-        <createTable tableName="acm_group_identity_id">
+    <changeSet id="37-add-group-identifier-sec-table" author="ncuculova">
+        <createTable tableName="acm_group_identifier_id">
             <column name="cm_seq_num" type="${idType}"/>
             <column name="cm_seq_name" type="VARCHAR(255)"/>
         </createTable>
-        <insert tableName="acm_group_identity_id">
+        <insert tableName="acm_group_identifier_id">
             <column name="cm_seq_num" value="100"/>
-            <column name="cm_seq_name" value="acm_group_identity"/>
+            <column name="cm_seq_name" value="acm_group_identifier"/>
         </insert>
         <sql>
-            UPDATE acm_group_identity_id SET cm_seq_num = (SELECT max(cm_id) FROM acm_group_identity);
+            UPDATE acm_group_identifier_id SET cm_seq_num = (SELECT max(cm_id) FROM acm_group_identifier);
         </sql>
     </changeSet>
 

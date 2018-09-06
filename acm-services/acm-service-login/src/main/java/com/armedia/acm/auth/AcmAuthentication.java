@@ -41,7 +41,7 @@ public class AcmAuthentication implements Authentication, AcmUserAuthorityContex
     private final Collection<AcmGrantedAuthority> authorities;
     private final Object credentials;
     private final Object principal;
-    private final Long userId;
+    private final Long userIdentifier;
     private final String name;
     private Object details;
     private boolean authenticated;
@@ -58,7 +58,22 @@ public class AcmAuthentication implements Authentication, AcmUserAuthorityContex
         this.principal = principal;
         this.authenticated = authenticated;
         this.name = principal;
-        this.userId = userId;
+        this.userIdentifier = userId;
+    }
+
+    public AcmAuthentication(Collection<AcmGrantedAuthority> authorities,
+            Object credentials,
+            Object details,
+            boolean authenticated,
+            String principal)
+    {
+        this.authorities = authorities;
+        this.credentials = credentials;
+        this.details = details;
+        this.principal = principal;
+        this.authenticated = authenticated;
+        this.name = principal;
+        this.userIdentifier = 0L;
     }
 
     @Override
@@ -108,9 +123,9 @@ public class AcmAuthentication implements Authentication, AcmUserAuthorityContex
         return name;
     }
 
-    public Long getUserId()
+    public Long getUserIdentifier()
     {
-        return userId;
+        return userIdentifier;
     }
 
     @Override
@@ -125,6 +140,6 @@ public class AcmAuthentication implements Authentication, AcmUserAuthorityContex
     @Override
     public Long getUserIdentity()
     {
-        return getUserId();
+        return getUserIdentifier();
     }
 }

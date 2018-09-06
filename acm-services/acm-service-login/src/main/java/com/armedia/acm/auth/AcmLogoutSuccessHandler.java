@@ -56,7 +56,7 @@ public class AcmLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler imple
 
             AcmAuthenticationDetails details = getAuthenticationDetailsFactory().buildDetails(httpServletRequest);
             AcmAuthentication auth = new AcmAuthentication(null, authentication.getCredentials(),
-                    details, authentication.isAuthenticated(), authentication.getName(), 0L);
+                    details, authentication.isAuthenticated(), authentication.getName());
             getApplicationEventPublisher().publishEvent(new LogoutEvent(auth));
         }
 

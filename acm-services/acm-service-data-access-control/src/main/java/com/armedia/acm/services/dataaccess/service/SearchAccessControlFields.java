@@ -82,7 +82,7 @@ public class SearchAccessControlFields
         return participantsLdapIds.stream()
                 .map(it -> userDao.findByUserId(it))
                 .filter(Objects::nonNull)
-                .collect(Collectors.toMap(AcmUser::getUserId, AcmUser::getId));
+                .collect(Collectors.toMap(AcmUser::getUserId, AcmUser::getIdentifier));
     }
 
     private Map<String, Long> getParticipantsToGroupIdMap(List<String> participantsLdapIds)
@@ -90,7 +90,7 @@ public class SearchAccessControlFields
         return participantsLdapIds.stream()
                 .map(it -> groupService.findByName(it))
                 .filter(Objects::nonNull)
-                .collect(Collectors.toMap(AcmGroup::getName, AcmGroup::getId));
+                .collect(Collectors.toMap(AcmGroup::getName, AcmGroup::getIdentifier));
     }
 
     public ParticipantAccessChecker getParticipantAccessChecker()

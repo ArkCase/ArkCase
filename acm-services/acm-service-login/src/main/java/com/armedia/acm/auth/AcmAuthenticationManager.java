@@ -169,7 +169,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         acmAuths.add(new AcmGrantedAuthority(OktaAPIConstants.ROLE_PRE_AUTHENTICATED));
 
         return new AcmAuthentication(acmAuths, providerAuthentication.getCredentials(), providerAuthentication.getDetails(),
-                providerAuthentication.isAuthenticated(), user.getUserId(), user.getId());
+                providerAuthentication.isAuthenticated(), user.getUserId(), user.getIdentifier());
     }
 
     protected Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)
@@ -178,12 +178,12 @@ public class AcmAuthenticationManager implements AuthenticationManager
         List<AcmGroup> groups = getGroupService().findByUserMember(user);
 
         Stream<AcmGrantedGroupAuthority> authorityGroups = groups.stream()
-                .map(authority -> new AcmGrantedGroupAuthority(authority.getName(), authority.getId()));
+                .map(authority -> new AcmGrantedGroupAuthority(authority.getName(), authority.getIdentifier()));
 
         Stream<AcmGrantedGroupAuthority> authorityAscendantsGroups = groups.stream()
                 .flatMap(AcmGroup::getAscendantsStream)
                 .map(it -> groupService.findByName(it))
-                .map(authority -> new AcmGrantedGroupAuthority(authority.getName(), authority.getId()));
+                .map(authority -> new AcmGrantedGroupAuthority(authority.getName(), authority.getIdentifier()));
 
         return Stream.concat(authorityGroups, authorityAscendantsGroups)
                 .collect(Collectors.toSet());
