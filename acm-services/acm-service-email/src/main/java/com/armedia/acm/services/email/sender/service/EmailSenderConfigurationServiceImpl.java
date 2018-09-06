@@ -27,11 +27,12 @@ package com.armedia.acm.services.email.sender.service;
  * #L%
  */
 
+
+
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtilsImpl;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
-
 import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
 import org.apache.commons.net.smtp.SMTPClient;
 import org.apache.commons.net.smtp.SMTPReply;
@@ -67,7 +68,7 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
     @Override
     public void writeConfiguration(EmailSenderConfiguration configuration, Authentication auth) throws AcmEncryptionException
     {
-
+        EmailSenderConfiguration config = readConfiguration();
         Properties emailSenderProperties = new Properties();
 
         emailSenderProperties.put(EmailSenderConfigurationConstants.HOST, configuration.getHost());
@@ -75,7 +76,16 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
         emailSenderProperties.put(EmailSenderConfigurationConstants.ENCRYPTION, configuration.getEncryption());
         emailSenderProperties.put(EmailSenderConfigurationConstants.TYPE, configuration.getType());
         emailSenderProperties.put(EmailSenderConfigurationConstants.USERNAME, configuration.getUsername());
-        emailSenderProperties.put(EmailSenderConfigurationConstants.PASSWORD, acmEncryptablePropertyUtils.encryptPropertyValue(configuration.getPassword()));
+        if (configuration.getPassword() == null)
+        {
+            emailSenderProperties.put(EmailSenderConfigurationConstants.PASSWORD,
+                    acmEncryptablePropertyUtils.encryptPropertyValue(config.getPassword()));
+        }
+        else
+        {
+            emailSenderProperties.put(EmailSenderConfigurationConstants.PASSWORD,
+                    acmEncryptablePropertyUtils.encryptPropertyValue(configuration.getPassword()));
+        }
         emailSenderProperties.put(EmailSenderConfigurationConstants.USER_FROM, configuration.getUserFrom());
         emailSenderProperties.put(EmailSenderConfigurationConstants.ALLOW_DOCUMENTS, Boolean.toString(configuration.isAllowDocuments()));
         emailSenderProperties.put(EmailSenderConfigurationConstants.ALLOW_ATTACHMENTS,
@@ -100,7 +110,7 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
     }
 
     @Override
-    public EmailSenderConfiguration readConfiguration() throws AcmEncryptionException
+    public EmailSenderConfiguration readConfiguration()
     {
         EmailSenderConfiguration emailSenderConfiguration = new EmailSenderConfiguration();
 
@@ -236,7 +246,6 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
 
         return validation;
     }
-
 
     private boolean isPositiveReply(SMTPClient smtpClient)
     {
