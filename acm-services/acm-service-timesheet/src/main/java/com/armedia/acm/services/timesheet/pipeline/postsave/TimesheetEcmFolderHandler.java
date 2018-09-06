@@ -56,7 +56,7 @@ public class TimesheetEcmFolderHandler implements PipelineHandler<AcmTimesheet, 
             }
 
         } else {
-            log.info("There is no need to create folder");
+            log.trace("There is no need to create folder for timesheet [{}]", entity.getId());
         }
         log.trace("Timesheet with id [{}] and title [{}] exiting TimesheetEcmFolderHandler", entity.getId(), entity.getTitle());
     }

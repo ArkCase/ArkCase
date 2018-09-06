@@ -47,8 +47,8 @@ angular.module('time-tracking').controller(
                         participants: [{}]
                     };
 
-                    $scope.choosedDate = new Date();
-                    $scope.choosedWeek = updateChoosedWeekText($scope.choosedDate);
+                    $scope.selectedDate = new Date();
+                    $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
 
                     $scope.timesForms = [{
                         totalWeekHours: 0,
@@ -76,11 +76,32 @@ angular.module('time-tracking').controller(
                 return moduleConfig;
             });
 
+            // ----------------------------- total ----------------------------------------------------------
+
+            $scope.updateTotalWeekHours = function (timesForm) {
+                timesForm.totalWeekHours = 0;
+                _.forEach(timesForm.dayHours, function (hour) {
+                    if (!Util.isEmpty(hour) && hour != 0) {
+                        timesForm.totalWeekHours += parseFloat(hour);
+                        if (Util.isEmpty(hour))
+                            timesForm.totalWeekHours = 0;
+                    }
+                });
+
+                $scope.updateTotalCost(timesForm);
+            };
+
+            $scope.updateTotalCost = function (timesForm) {
+                if (!Util.isEmpty(timesForm.chargeRole)) {
+                    timesForm.totalCost = fillTotalCost(timesForm.totalWeekHours, timesForm.chargeRole);
+                }
+            };
+
+            // ------------------------------------------ edit ----------------------------------------------
             if ($scope.isEdit) {
                 $scope.isTypeSelected = true;
                 $scope.objectInfo = $scope.modalParams.timesheet;
                 var tmpTimesheet = $scope.modalParams.timesheet;
-                // $scope.updateBalance($scope.objectInfo.costs);
 
                 if (tmpTimesheet.participants != undefined) {
                     if (!Util.isArrayEmpty(tmpTimesheet.participants)) {
@@ -97,17 +118,58 @@ angular.module('time-tracking').controller(
                 if (tmpTimesheet.times != undefined) {
                     if (!Util.isArrayEmpty(tmpTimesheet.times)) {
                         $scope.timesForms = [];
-                        _.forEach(tmpTimesheet.times, function (time) {
+
+                        var arrayOfArrays = [];
+                        //put every AcmTime with same code and chargeRole in same array
+                        var times = tmpTimesheet.times.slice(0);
+                        for (var i = 0; i < times.length;) {
+                            var pom = [];
+                            for (var j = i + 1; j < times.length; j++) {
+                                if (times[i].code == times[j].code && times[i].chargeRole == times[j].chargeRole && times[i].type == times[j].type) {
+                                    pom.push(times[j]);
+                                }
+                            }
+                            pom.push(times[i]);
+
+                            _.forEach(pom, function (groupedTime) {
+                                _.forEach(times, function (time, i) {
+                                    if (Util.compare(groupedTime, time)) {
+                                        times.splice(i, 1);
+                                    }
+                                });
+                            });
+                            pom.sort(function (a, b) {
+                                return a.date > b.date;
+                            });
+                            arrayOfArrays.push(pom);
+                        }
+
+                        _.forEach(arrayOfArrays, function (timeArray) {
                             var dayHours = [];
+                            var startDate = moment(tmpTimesheet.startDate);
+                            var endDate = moment(tmpTimesheet.endDate);
+                            while (startDate <= endDate) {
+                                var hasTimeForDate = false;
+                                _.forEach(timeArray, function (time) {
+                                    if (startDate.format("YYYY-MM-DD") == moment(time.date).format("YYYY-MM-DD")) {
+                                        dayHours.push(time.value);
+                                        hasTimeForDate = true;
+                                    }
+                                });
+                                if (!hasTimeForDate) dayHours.push(0);
+                                startDate = addOneDay(startDate);
+                            }
 
                             var timesForm = {
-                                type: time.type,
-                                code: time.code,
-                                chargeRole: time.chargeRole,
-                                dayHours: dayHours
+                                type: timeArray[0].type,
+                                code: timeArray[0].code,
+                                chargeRole: timeArray[0].chargeRole,
+                                dayHours: dayHours,
                             };
+                            $scope.updateTotalWeekHours(timesForm);
                             $scope.timesForms.push(timesForm);
                         });
+
                     } else {
                         $scope.timesForms = [{}];
                     }
@@ -124,10 +186,8 @@ angular.module('time-tracking').controller(
                     participants: tmpTimesheet.participants
                 };
 
-                // setWeekDatesInCalendar(moment($scope.objectInfo.startDate), moment($scope.objectInfo.endDate));
-
-                $scope.choosedDate = new Date($scope.objectInfo.created);
-                $scope.choosedWeek = updateChoosedWeekText($scope.choosedDate);
+                $scope.selectedDate = new Date($scope.objectInfo.startDate);
+                $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
             }
 
             ObjectLookupService.getTimesheetTypes().then(function (timesheetTypes) {
@@ -145,21 +205,21 @@ angular.module('time-tracking').controller(
                 $scope.timesheet.user = infoData;
             });
 
-            //------------------------------------- choosedWeek ----------------------------------------------
+            //------------------------------------- selectedWeek ----------------------------------------------
             $scope.isDateBeforeTodaysDate = false;
 
             $scope.prevWeek = function () {
-                var utcDate = moment.utc(UtilDateService.dateToIso($scope.choosedDate)).format();
-                $scope.choosedDate = moment(utcDate).subtract(7, 'day').toDate();
-                $scope.choosedWeek = updateChoosedWeekText($scope.choosedDate);
-                $scope.isDateBeforeTodaysDate = moment(moment($scope.choosedDate).format("DD MMMM YYYY"), "DD MMMM YYYY").toDate() < moment(moment(new Date()).format("DD MMMM YYYY"), "DD MMMM YYYY").toDate();
+                var utcDate = moment.utc(UtilDateService.dateToIso($scope.selectedDate)).format();
+                $scope.selectedDate = moment(utcDate).subtract(7, 'day').toDate();
+                $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
+                $scope.isDateBeforeTodaysDate = moment(moment($scope.selectedDate).format("DD MMMM YYYY"), "DD MMMM YYYY").toDate() < moment(moment(new Date()).format("DD MMMM YYYY"), "DD MMMM YYYY").toDate();
             };
 
             $scope.nextWeek = function () {
-                var utcDate = moment.utc(UtilDateService.dateToIso($scope.choosedDate)).format();
-                $scope.choosedDate = moment(utcDate).add(7, 'day').toDate();
-                $scope.choosedWeek = updateChoosedWeekText($scope.choosedDate);
-                $scope.isDateBeforeTodaysDate = moment(moment($scope.choosedDate).format("DD MMMM YYYY"), "DD MMMM YYYY").toDate() < moment(moment(new Date()).format("DD MMMM YYYY"), "DD MMMM YYYY").toDate();
+                var utcDate = moment.utc(UtilDateService.dateToIso($scope.selectedDate)).format();
+                $scope.selectedDate = moment(utcDate).add(7, 'day').toDate();
+                $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
+                $scope.isDateBeforeTodaysDate = moment(moment($scope.selectedDate).format("DD MMMM YYYY"), "DD MMMM YYYY").toDate() < moment(moment(new Date()).format("DD MMMM YYYY"), "DD MMMM YYYY").toDate();
             };
 
             function addOneDay(date) {
@@ -179,8 +239,8 @@ angular.module('time-tracking').controller(
                 }
             }
 
-            function updateChoosedWeekText(choosedDate) {
-                var correctedChoosedPeriod = UtilDateService.convertToCurrentTime(choosedDate);
+            function updateChoosedWeekText(selectedDate) {
+                var correctedChoosedPeriod = UtilDateService.convertToCurrentTime(selectedDate);
                 var utcDate = moment.utc(UtilDateService.dateToIso(correctedChoosedPeriod)).format();
                 var startOfWeek = moment(utcDate).startOf('week');
                 var endOfWeek = moment(utcDate).endOf('week');
@@ -310,11 +370,6 @@ angular.module('time-tracking').controller(
 
 
             // -------------------------- time ----------------------------------------
-            // $scope.timesForms = [{
-            //     totalWeekHours: 0,
-            //     totalCost: 0,
-            //     dayHours: [0, 0, 0, 0, 0, 0, 0]
-            // }];
 
             $scope.addTimeRow = function () {
                 $timeout(function () {
@@ -361,30 +416,6 @@ angular.module('time-tracking').controller(
                     });
                 });
             }
-
-            // ----------------------------- total ----------------------------------------------------------
-
-            $scope.updateTotalWeekHours = function (timesForm) {
-                timesForm.totalWeekHours = 0;
-                _.forEach(timesForm.dayHours, function (hour) {
-                    if (!Util.isEmpty(hour) && hour != 0) {
-                        timesForm.totalWeekHours += parseFloat(hour);
-                        if (Util.isEmpty(hour))
-                            timesForm.totalWeekHours = 0;
-                    }
-                });
-
-                $scope.updateTotalCost(timesForm);
-            };
-
-            $scope.updateTotalCost = function (timesForm) {
-                if (!Util.isEmpty(timesForm.chargeRole)) {
-                    if (timesForm.chargeRole == "INVESTIGATOR")
-                        timesForm.totalCost = 300 * timesForm.totalWeekHours;
-                    else
-                        timesForm.totalCost = 100 * timesForm.totalWeekHours;
-                }
-            };
 
             // ---------------------------            approver         --------------------------------------
             var participantType = 'approver';
@@ -476,6 +507,7 @@ angular.module('time-tracking').controller(
                     $scope.loading = true;
                     $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                     var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+                    fillTimes();
                     checkForChanges($scope.objectInfo);
                     if (TimeTrackingInfoService.validateTimesheet($scope.objectInfo)) {
                         var objectInfo = Util.omitNg($scope.objectInfo);
@@ -507,13 +539,12 @@ angular.module('time-tracking').controller(
             };
 
             function checkForChanges(objectInfo) {
-                // if (objectInfo.parentType != $scope.timesheet.parentType) {
-                //     objectInfo.parentType = $scope.timesheet.parentType;
-                // }
-                // if (objectInfo.parentNumber != $scope.timesheet.parentNumber) {
-                //     objectInfo.parentNumber = $scope.timesheet.parentNumber;
-                //     objectInfo.parentId = $scope.timesheet.parentId;
-                // }
+                if (moment(objectInfo.startDate).format("YYYY-MM-DD") != moment($scope.timesheet.startDate).format("YYYY-MM-DD")) {
+                    objectInfo.startDate = $scope.timesheet.startDate;
+                }
+                if (moment(objectInfo.endDate).format("YYYY-MM-DD") != moment($scope.timesheet.endDate).format("YYYY-MM-DD")) {
+                    objectInfo.endDate = $scope.timesheet.endDate;
+                }
                 if (objectInfo.details != $scope.timesheet.details) {
                     objectInfo.details = $scope.timesheet.details;
                 }

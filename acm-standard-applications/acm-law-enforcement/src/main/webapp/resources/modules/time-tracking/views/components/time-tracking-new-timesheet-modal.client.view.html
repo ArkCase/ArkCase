@@ -28,7 +28,7 @@
             <div class="row" style="padding: 0px 15px;">
                 <div class="col-sm-4 form-group">
                     <label style="font-size: 16px;">&nbsp;</label><br />
-                    <label style="text-align: center; padding-top: 15px;">{{choosedWeek}}</label>
+                    <label style="text-align: center; padding-top: 15px;">{{selectedWeek}}</label>
                 </div>
                 <div class="col-sm-2 form-group">
                     <label style="font-size: 16px;">&nbsp;</label><br />
@@ -44,7 +44,7 @@
                         <input type="text" class="form-control"
                                 placeholder="{{'timeTracking.comp.newTimesheet.time.date.placeholder' | translate}}"
                                 datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" datepicker-append-to-body="false"
-                                ng-model="choosedDate" is-open="defaultOpened" close-on-date-selection="true" show-button-bar="true"
+                                ng-model="selectedDate" is-open="defaultOpened" close-on-date-selection="true" show-button-bar="true"
                                 on-open-focus="false" close-text="{{'timeTracking.comp.newTimesheet.time.date.close.button' | translate}}"
                                 required />
                         <span class="input-group-btn">

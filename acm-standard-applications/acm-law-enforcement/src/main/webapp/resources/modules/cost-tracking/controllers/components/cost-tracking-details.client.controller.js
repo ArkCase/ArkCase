@@ -20,7 +20,7 @@ angular.module('cost-tracking').controller('CostTracking.DetailsController',
 
             $scope.saveDetails = function() {
                 var costsheetInfo = Util.omitNg($scope.objectInfo);
-                CostTrackingInfoService.saveCostsheetInfo(costsheetInfo).then(function(costsheetInfo) {
+                CostTrackingInfoService.saveCostsheetInfo(costsheetInfo, "Save").then(function(costsheetInfo) {
                     MessageService.info($translate.instant("costTracking.comp.details.informSaved"));
                     return costsheetInfo;
                 })
