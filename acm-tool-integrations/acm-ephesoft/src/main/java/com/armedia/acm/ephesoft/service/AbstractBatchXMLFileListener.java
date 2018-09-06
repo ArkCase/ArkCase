@@ -260,7 +260,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             // EcmFileService - we need userID which in this case is set to FileConstants.XML_BATCH_USER value)
             String contentType = mimetypesFileTypeMap.getContentType(docObject.getDocument());
             Authentication auth = new AcmAuthentication(null, null, null, true,
-                    FileConstants.XML_BATCH_USER, 0L);
+                    FileConstants.XML_BATCH_USER);
 
             // Create multipart file object - used "upload" service require it and using this service method is the best
             // way to upload file for given object - it creates AcmContainer object that we need for uploading

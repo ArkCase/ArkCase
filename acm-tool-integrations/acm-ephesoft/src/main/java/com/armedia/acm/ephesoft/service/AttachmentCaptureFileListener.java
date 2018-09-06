@@ -244,7 +244,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
             // EcmFileService - we need userID which in this case is set to CaptureConstants.XML_BATCH_USER value)
             String contentType = mimetypesFileTypeMap.getContentType(toBeUploaded);
             Authentication auth = new AcmAuthentication(null, null, null, true,
-                    CaptureConstants.PROCESS_ATTACHMENTS_USER, 0L);
+                    CaptureConstants.PROCESS_ATTACHMENTS_USER);
 
             // Create multipart file object - used "upload" service require it and using this service method is the best
             // way to upload file for given object - it creates AcmContainer object that we need for uploading

@@ -66,8 +66,8 @@ public class AcmUser implements Serializable
     private static final long serialVersionUID = 3399640646540732944L;
 
     @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, fetch = FetchType.LAZY)
-    @JoinColumn(name = "cm_identity", referencedColumnName = "cm_id", nullable = false)
-    private AcmUserIdentity identity = new AcmUserIdentity();
+    @JoinColumn(name = "cm_identifier", referencedColumnName = "cm_id", nullable = false)
+    private AcmUserIdentifier identifier = new AcmUserIdentifier();
 
     @Id
     @Column(name = "cm_user_id")
@@ -194,9 +194,9 @@ public class AcmUser implements Serializable
     }
 
     @JsonIgnore
-    public Long getId()
+    public Long getIdentifier()
     {
-        return identity.getId();
+        return identifier.getId();
     }
 
     public String getFullName()
