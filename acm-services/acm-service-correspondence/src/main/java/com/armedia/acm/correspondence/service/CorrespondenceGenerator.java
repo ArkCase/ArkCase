@@ -6,6 +6,7 @@ import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -73,6 +75,7 @@ public class CorrespondenceGenerator
     private EntityManager entityManager;
     private PoiWordGenerator wordGenerator;
     private EcmFileService ecmFileService;
+    private EcmFileDao ecmFileDao;
     private String correspondenceFolderName;
     private SpringContextHolder springContextHolder;
     private CorrespondenceService correspondenceService;
@@ -127,9 +130,25 @@ public class CorrespondenceGenerator
 
         getWordGenerator().generate(templateFile, correspondenceOutputStream, substitutions);
 
-        String fileName = generateUniqueFilename(template);
-        EcmFile retval = ecmFileService.upload(template.getDocumentType() + ".docx", template.getDocumentType(), CORRESPONDENCE_CATEGORY,
-                correspondenceInputStream, WORD_MIME_TYPE, fileName, user, targetFolderCmisId, parentObjectType, parentObjectId);
+        EcmFile retval = null;
+
+        // Check for existing correspondence template in same folder. If so, update the ecm file (new version) instead
+        // of creating new ecm file.
+        EcmFile existing = ecmFileDao.findSingleFileByParentObjectAndFolderCmisIdAndFileType(parentObjectType, parentObjectId,
+                targetFolderCmisId,
+                template.getDocumentType());
+
+        if (existing == null)
+        {
+            String fileName = generateUniqueFilename(template);
+            retval = ecmFileService.upload(template.getDocumentType() + ".docx", template.getDocumentType(),
+                    CORRESPONDENCE_CATEGORY,
+                    correspondenceInputStream, WORD_MIME_TYPE, fileName, user, targetFolderCmisId, parentObjectType, parentObjectId);
+        }
+        else
+        {
+            retval = ecmFileService.update(existing, correspondenceInputStream, SecurityContextHolder.getContext().getAuthentication());
+        }
 
         return retval;
     }
@@ -295,6 +314,23 @@ public class CorrespondenceGenerator
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
+    }
+
+    /**
+     * @return the ecmFileDao
+     */
+    public EcmFileDao getEcmFileDao()
+    {
+        return ecmFileDao;
+    }
+
+    /**
+     * @param ecmFileDao
+     *            the ecmFileDao to set
+     */
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
+        this.ecmFileDao = ecmFileDao;
     }
 
     public String getCorrespondenceFolderName()
