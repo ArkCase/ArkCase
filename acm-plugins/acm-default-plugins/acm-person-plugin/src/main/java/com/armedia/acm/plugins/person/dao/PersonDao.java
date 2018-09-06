@@ -60,6 +60,12 @@ public class PersonDao extends AcmAbstractDao<Person>
         return Person.class;
     }
 
+    @Override
+    public String getSupportedObjectType()
+    {
+        return "PERSON";
+    }
+
     @Transactional
     public void deletePersonById(Long id)
     {
