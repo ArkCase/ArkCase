@@ -4,10 +4,6 @@ import org.springframework.security.core.GrantedAuthority
 
 import java.nio.charset.StandardCharsets
 
-// include records with no protected object field
-// include records where protected_object_b is false
-// include records where public_doc_b is true
-String dataAccessFilter = "{!frange l=1}sum(if(exists(protected_object_b), 0, 1), if(protected_object_b, 0, 1), if(public_doc_b, 1, 0)";
 
 Authentication authentication = message.getInboundProperty("acmUser");
 
@@ -20,10 +16,16 @@ String rowQueryParametars = message.getInboundProperty('rowQueryParametars');
 String targetType = getObjectType(query, rowQueryParametars);
 
 String denyAccessFilter = "";
+String dataAccessFilter = "";
 
-if (!enableDocumentACL && targetType != null && (targetType.equals("FILE") || targetType.equals("FOLDER") || targetType.contentEquals("CONTAINER"))) {
-    dataAccessFilter += ")";
-} else {
+Boolean excludeDAC = !enableDocumentACL && targetType != null && (targetType.equals("FILE") || targetType.equals("FOLDER") || targetType.equals("CONTAINER"));
+
+if (!excludeDAC) {
+    // include records with no protected object field
+    // include records where protected_object_b is false
+    // include records where public_doc_b is true
+    dataAccessFilter = "{!frange l=1}sum(if(exists(protected_object_b), 0, 1), if(protected_object_b, 0, 1), if(public_doc_b, 1, 0)";
+
     // include records where current user is directly on allow_acl_ss
     dataAccessFilter += ", termfreq(allow_acl_ss, " + safeUserId + ")";
 
