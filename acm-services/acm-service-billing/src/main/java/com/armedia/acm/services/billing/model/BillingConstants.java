@@ -44,4 +44,10 @@ public interface BillingConstants
     String INVOICE_DOCUMENT_MIME_TYPE_PDF = "application/pdf";
 
     String BILLING_SYSTEM_USER = "BILLING_SERVICE";
+
+    String BILLING_CURRENCY_FORMAT = "$%,.2f";
+    String BILLING_EMAIL_SUBJECT = "FOIA Billing Invoice - %s";
+    String BILLING_EMAIL_HEADER = "Dear %s";
+    String BILLING_EMAIL_BODY = "Please review your request invoice attached and make payment. If you have any questions, please email or call the FOIA Office.";
+    String BILLING_EMAIL_FOOTER = "FOIA Office Staff";
 }
