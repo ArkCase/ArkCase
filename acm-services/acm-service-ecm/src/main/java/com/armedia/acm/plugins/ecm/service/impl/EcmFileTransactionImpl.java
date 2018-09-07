@@ -106,38 +106,47 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             {
                 log.error("Could not extract metadata with Tika: [{}]", e.getMessage(), e);
             }
-
-            Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
-                    metadata.getFileActiveVersionMimeType());
-            String finalMimeType = mimeTypeAndExtension.getLeft();
-            String finalExtension = mimeTypeAndExtension.getRight();
-
-            ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
-
-            EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
-                    tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
-                    detectedMetadata, ecmUniqueFilename);
-
-            String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
-            metadata.setFileName(fileName);
-            metadata.setFileActiveVersionMimeType(finalMimeType);
-            metadata.setFileActiveVersionNameExtension(finalExtension);
-
-            try
+            if ((!metadata.getFileType().equals("user_profile"))
+                    || (detectedMetadata.getContentType().equals(metadata.getFileActiveVersionMimeType())
+                            && metadata.getFileType().equals("user_profile")))
             {
-                log.debug("Calling pipeline manager handlers");
-                getEcmFileUploadPipelineManager().executeOperation(metadata, pipelineContext, () -> metadata);
-            }
-            catch (Exception e)
-            {
-                log.error("pipeline handler call failed: {}", e.getMessage(), e);
-                if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass()))
+
+                Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
+                        metadata.getFileActiveVersionMimeType());
+                String finalMimeType = mimeTypeAndExtension.getLeft();
+                String finalExtension = mimeTypeAndExtension.getRight();
+
+                ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
+
+                EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
+                        tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
+                        detectedMetadata, ecmUniqueFilename);
+
+                String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
+                metadata.setFileName(fileName);
+                metadata.setFileActiveVersionMimeType(finalMimeType);
+                metadata.setFileActiveVersionNameExtension(finalExtension);
+
+                try
                 {
-                    throw (MuleException) e.getCause();
+                    log.debug("Calling pipeline manager handlers");
+                    getEcmFileUploadPipelineManager().executeOperation(metadata, pipelineContext, () -> metadata);
                 }
+                catch (Exception e)
+                {
+                    log.error("pipeline handler call failed: {}", e.getMessage(), e);
+                    if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass()))
+                    {
+                        throw (MuleException) e.getCause();
+                    }
+                }
+                log.debug("Returning from addFileTransaction method");
+                return pipelineContext.getEcmFile();
             }
-            log.debug("Returning from addFileTransaction method");
-            return pipelineContext.getEcmFile();
+            else
+            {
+                throw new IOException("Uploaded file's MIME type is not compatible");
+            }
         }
         finally
         {
