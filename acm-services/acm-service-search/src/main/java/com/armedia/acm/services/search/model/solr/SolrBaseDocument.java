@@ -38,7 +38,13 @@ public interface SolrBaseDocument
 
     void setId(String id);
 
-    void setDenyUser_ls(List<Long> deny_user_ls);
+    void setDeny_user_ls(List<Long> deny_user_ls);
+
+    void setAllow_user_ls(List<Long> allow_user_ls);
+
+    void setDeny_group_ls(List<Long> deny_group_ls);
+
+    void setAllow_group_ls(List<Long> allow_group_ls);
 
     void setAllowUser_ls(List<Long> allow_user_ls);
 

@@ -67,10 +67,10 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
     {
         Map<String, Object> values = new HashMap<>();
 
-        listToUrlValues(values, getAllowGroup_ls(), "allow_group_ls");
-        listToUrlValues(values, getDenyGroup_ls(), "deny_group_ls");
-        listToUrlValues(values, getAllowUser_ls(), "allow_user_ls");
-        listToUrlValues(values, getDenyUser_ls(), "deny_user_ls");
+        listToUrlValues(values, getAllow_group_ls(), "allow_group_ls");
+        listToUrlValues(values, getDeny_group_ls(), "deny_group_ls");
+        listToUrlValues(values, getAllow_user_ls(), "allow_user_ls");
+        listToUrlValues(values, getDeny_user_ls(), "deny_user_ls");
 
         values.put("literal.hidden_b", isHidden_b());
         values.put("literal.parent_ref_s", getParent_ref_s());
@@ -140,16 +140,16 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
     {
         StringBuilder url = new StringBuilder(
                          "&literal.allow_user_ls="
-                        + (getAllowUser_ls() == null ? null: getAllowUser_ls().stream().map(Object::toString)
+                        + (getAllow_user_ls() == null ? null: getAllow_user_ls().stream().map(Object::toString)
                                  .collect(Collectors.joining("&literal.allow_user_ls=")))
                         +"&literal.deny_user_ls="
-                        +(getDenyUser_ls() == null ? null : getDenyUser_ls().stream().map(Object::toString)
+                        +(getDeny_user_ls() == null ? null : getDeny_user_ls().stream().map(Object::toString)
                                  .collect(Collectors.joining("&literal.deny_user_ls=")))
                         +"&literal.allow_group_ls="
-                        +(getAllowGroup_ls() == null ? null : getAllowGroup_ls().stream().map(Object::toString)
+                        +(getAllow_group_ls() == null ? null : getAllow_group_ls().stream().map(Object::toString)
                                  .collect(Collectors.joining("&literal.allow_group_ls")))
                         +"&literal.deny_group_ls="
-                        + (getDenyGroup_ls() == null ? null : getDenyGroup_ls().stream().map(Object::toString)
+                        + (getDeny_group_ls() == null ? null : getDeny_group_ls().stream().map(Object::toString)
                                  .collect(Collectors.joining("&literal.deny_group_ls")))
                         +
                         "&literal.hidden_b=" + isHidden_b() +

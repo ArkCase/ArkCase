@@ -61,20 +61,20 @@ public class SearchAccessControlFields
         {
             List<String> readers = getParticipantAccessChecker().getReaders(object);
             Map<String, Long> readerUserIdMap = getParticipantsToUserIdMap(readers);
-            doc.setAllowUser_ls(new ArrayList<>(readerUserIdMap.values()));
+            doc.setAllow_user_ls(new ArrayList<>(readerUserIdMap.values()));
 
             readers.removeAll(readerUserIdMap.keySet());
             Map<String, Long> readerGroupIdMap = getParticipantsToGroupIdMap(readers);
-            doc.setAllowGroup_ls(new ArrayList<>(readerGroupIdMap.values()));
+            doc.setAllow_group_ls(new ArrayList<>(readerGroupIdMap.values()));
         }
 
         List<String> denied = getParticipantAccessChecker().getDenied(object);
         Map<String, Long> deniedUserIdMap = getParticipantsToUserIdMap(denied);
-        doc.setDenyUser_ls(new ArrayList<>(deniedUserIdMap.values()));
+        doc.setDeny_user_ls(new ArrayList<>(deniedUserIdMap.values()));
 
         denied.removeAll(deniedUserIdMap.keySet());
         Map<String, Long> deniedGroupId = getParticipantsToGroupIdMap(denied);
-        doc.setDenyGroup_ls(new ArrayList<>(deniedGroupId.values()));
+        doc.setDeny_group_ls(new ArrayList<>(deniedGroupId.values()));
     }
 
     private Map<String, Long> getParticipantsToUserIdMap(List<String> participantsLdapIds)

@@ -45,12 +45,12 @@ public class SolrContentDocumentTest
     public void listsToSolrMultivaluedElements()
     {
         SolrContentDocument scd = new SolrContentDocument();
-        scd.setAllowUser_ls(Arrays.asList(100L, 101L, 102L));
+        scd.setAllow_user_ls(Arrays.asList(100L, 101L, 102L));
 
         String urlTemplate = scd.buildUrlTemplate();
 
         // we should have "allow_user_ls={allow_user_ls.1},allow_user_ls={allow_user_ls.2},allow_user_ls={allow_user_ls.3}"
-        assertEquals(scd.getAllowUser_ls().size(), occurrencesOfStringInString(urlTemplate, "literal.allow_user_ls="));
+        assertEquals(scd.getAllow_user_ls().size(), occurrencesOfStringInString(urlTemplate, "literal.allow_user_ls="));
 
         assertTrue(urlTemplate.contains("literal.allow_user_ls={literal.allow_user_ls.0}"));
         assertTrue(urlTemplate.contains("literal.allow_user_ls={literal.allow_user_ls.1}"));
@@ -58,9 +58,9 @@ public class SolrContentDocumentTest
 
         Map<String, Object> urlValues = scd.buildUrlValues();
 
-        assertEquals(urlValues.get("literal.allow_user_ls.0"), scd.getAllowUser_ls().get(0));
-        assertEquals(urlValues.get("literal.allow_user_ls.1"), scd.getAllowUser_ls().get(1));
-        assertEquals(urlValues.get("literal.allow_user_ls.2"), scd.getAllowUser_ls().get(2));
+        assertEquals(urlValues.get("literal.allow_user_ls.0"), scd.getAllow_user_ls().get(0));
+        assertEquals(urlValues.get("literal.allow_user_ls.1"), scd.getAllow_user_ls().get(1));
+        assertEquals(urlValues.get("literal.allow_user_ls.2"), scd.getAllow_user_ls().get(2));
 
     }
 
