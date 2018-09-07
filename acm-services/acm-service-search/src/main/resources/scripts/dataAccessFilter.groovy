@@ -1,51 +1,44 @@
-import com.armedia.acm.services.search.util.AcmSolrUtil
 import java.nio.charset.StandardCharsets
 
 Long authenticatedUserId = message.getInboundProperty("acmUser")
 def authenticatedUserGroupIds = message.getInboundProperty("acmUserGroupIds")
-
-// include records with no protected object field
-// include records where protected_object_b is false
-// include records where public_doc_b is true
-String dataAccessFilter = "{!frange l=1}sum(if(exists(protected_object_b), 0, 1), if(protected_object_b, 0, 1), if(public_doc_b, 1, 0)";
 String query = message.getInboundProperty('query')
 String rowQueryParametars = message.getInboundProperty('rowQueryParametars')
-String targetType = getObjectType(query, rowQueryParametars)
-String denyAccessFilter = ""
 
+boolean includeDACFilter = message.getInboundProperty("includeDACFilter")
 // do not apply data access filters for FILE or FOLDER, when 'enableDocumentACL' is false
 boolean enableDocumentACL = message.getInboundProperty("enableDocumentACL")
-if (!enableDocumentACL && targetType != null && (targetType.equals("FILE")
-        || targetType.equals("FOLDER") || targetType.contentEquals("CONTAINER"))) {
-    dataAccessFilter += ")"
-} else {
-    // include records where current user is directly on allow_acl_ss
-    dataAccessFilter += ", termfreq(allow_user_ls, " + authenticatedUserId + ")"
+String targetType = getObjectType(query, rowQueryParametars)
 
-    for (Long groupId : authenticatedUserGroupIds) {
-        // include records where current user is in a group on allow_group_ls
-        dataAccessFilter += ", termfreq(allow_group_ls, " + groupId + ")"
+if (includeDACFilter) {
+    if (!enableDocumentACL && targetType != null && (targetType.equals("FILE")
+            || targetType.equals("FOLDER") || targetType.contentEquals("CONTAINER"))) {
+        message.setInboundProperty("dataAccessFilter", "")
+    } else {
+        String dataAccessFilter = "public_doc_b:true OR protected_object_b:false OR (protected_object_b:true AND (allow_user_ls:" + authenticatedUserId
+
+        for (Long groupId : authenticatedUserGroupIds) {
+            // include records where current user is in a group on allow_group_ls
+            dataAccessFilter += " OR allow_group_ls:" + groupId
+        }
+
+        dataAccessFilter += "))"
+        message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter, StandardCharsets.UTF_8.displayName()))
     }
-
-    dataAccessFilter += ")"
+} else {
+    message.setInboundProperty("dataAccessFilter", "")
 }
 
 boolean includeDenyAccessFilter = message.getInboundProperty("includeDenyAccessFilter")
 if (includeDenyAccessFilter) {
     // exclude records where the user is specifically locked out
-    denyAccessFilter = "-deny_user_ls:" + authenticatedUserId
+    String denyAccessFilter = "-deny_user_ls:" + authenticatedUserId
     for (Long groupId : authenticatedUserGroupIds) {
         // exclude records where current user is in a locked-out group
         denyAccessFilter += " AND -deny_group_ls:" + groupId
     }
-}
-
-boolean includeDACFilter = message.getInboundProperty("includeDACFilter")
-if (includeDACFilter) {
-    message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter, StandardCharsets.UTF_8.displayName()))
     message.setInboundProperty("denyAccessFilter", URLEncoder.encode(denyAccessFilter, StandardCharsets.UTF_8.displayName()))
 } else {
-    message.setInboundProperty("dataAccessFilter", "")
     message.setInboundProperty("denyAccessFilter", "")
 }
 
@@ -73,9 +66,9 @@ if (includeDenyAccessFilter) {
 // Solr 7.2.1
 // Conditionals in {!func}sum are no longer correctly evaluated, change to conditional
 // Functions in fq clauses only work if they are wrapped in {!frange}.
-String childObjectFilterQuery = "{!frange l=1}if(not(exists(parent_ref_s)), 1, \$dac)";
+String childObjectFilterQuery = "{!frange l=1}if(not(exists(parent_ref_s)), 1, \$dac)"
 
-boolean filterParentRef = message.getInboundProperty("filterParentRef");
+boolean filterParentRef = message.getInboundProperty("filterParentRef")
 
 if (filterParentRef && includeDACFilter) {
     message.setInboundProperty("childObjectDacFilter", URLEncoder.encode(childObjectDacFilter, StandardCharsets.UTF_8.displayName()));
@@ -94,9 +87,6 @@ if (filterSubscriptionEvents) {
     message.setInboundProperty("isSubscribed", "");
 }
 
-def encodeCharacters(toBeEscaped) {
-    return AcmSolrUtil.encodeSpecialCharactersForACL(toBeEscaped)
-}
 
 def getObjectType(query, rowQueryParametars) {
     // find object type from query or rowQueryParameters that looks like "...object_type_s:FILE..."

@@ -624,46 +624,46 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.ext_s = ext_s;
     }
 
-    public List<Long> getAllowUser_ls()
+    public List<Long> getAllow_user_ls()
     {
         return allow_user_ls;
     }
 
     @Override
-    public void setAllowUser_ls(List<Long> allow_user_ls)
+    public void setAllow_user_ls(List<Long> allow_user_ls)
     {
         this.allow_user_ls = allow_user_ls;
     }
 
-    public List<Long> getDenyUser_ls()
+    public List<Long> getDeny_user_ls()
     {
         return deny_user_ls;
     }
 
     @Override
-    public void setDenyUser_ls(List<Long> deny_user_ls)
+    public void setDeny_user_ls(List<Long> deny_user_ls)
     {
         this.deny_user_ls = deny_user_ls;
     }
 
-    public List<Long> getAllowGroup_ls()
+    public List<Long> getAllow_group_ls()
     {
         return allow_group_ls;
     }
 
     @Override
-    public void setAllowGroup_ls(List<Long> allow_group_ls)
+    public void setAllow_group_ls(List<Long> allow_group_ls)
     {
         this.allow_group_ls = allow_group_ls;
     }
 
-    public List<Long> getDenyGroup_ls()
+    public List<Long> getDeny_group_ls()
     {
         return deny_group_ls;
     }
 
     @Override
-    public void setDenyGroup_ls(List<Long> deny_group_ls)
+    public void setDeny_group_ls(List<Long> deny_group_ls)
     {
         this.deny_group_ls = deny_group_ls;
     }
