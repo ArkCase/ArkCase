@@ -55,16 +55,7 @@ public class CaseFileAssignmentHandler implements PipelineHandler<CaseFile, Case
     @Override
     public void rollback(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
-        try
-        {
-            AcmAssignment acmAssignment = getAcmAssignmentDao().findByObjectIdAndType(entity.getId(), entity.getObjectType());
-            getAcmAssignmentDao().delete(acmAssignment);
-        }
-        catch (Exception e)
-        {
-            log.trace("Unable to delete AcmAssignment for objectId [{}] and objectType [{}]", entity.getId(), entity.getObjectType());
-            throw new PipelineProcessException(e);
-        }
+        // nothing to do here, there is no rollback action to be executed
     }
 
     private AcmAssignment createAcmAssignment(CaseFile entity, String assigneeId)
