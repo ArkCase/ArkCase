@@ -33,10 +33,6 @@ package com.armedia.acm.service.objecthistory.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.TypedQuery;
-
 /**
  * @author riste.tutureski
  *
@@ -48,28 +44,6 @@ public class AcmAssignmentDao extends AcmAbstractDao<AcmAssignment>
     protected Class<AcmAssignment> getPersistenceClass()
     {
         return AcmAssignment.class;
-    }
-
-    public AcmAssignment findByObjectIdAndType(Long objectId, String objectType)
-    {
-
-        String queryText = "SELECT acmAssignment " +
-                "FROM AcmAssignment acmAssignment " +
-                "WHERE acmAssignment.objectId = :objectId " +
-                "AND acmAssignment.objectType = :objectType";
-
-        TypedQuery<AcmAssignment> query = getEm().createQuery(queryText, AcmAssignment.class);
-
-        query.setParameter("objectId", objectId);
-        query.setParameter("objectType", objectType.toUpperCase());
-
-        return query.getSingleResult();
-    }
-
-    @Transactional
-    public void delete(AcmAssignment acmAssignment)
-    {
-        getEm().remove(acmAssignment);
     }
 
 }
