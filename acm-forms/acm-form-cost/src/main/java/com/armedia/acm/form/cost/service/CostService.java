@@ -143,7 +143,7 @@ public class CostService extends FrevvoFormChargeAbstractService
         costsheet.setContainer(container);
         costsheet.setTitle(folderName);
 
-        AcmCostsheet saved = getCostsheetService().save(costsheet, submissionName);
+        AcmCostsheet saved = getCostsheetService().save(costsheet, getAuthentication(), submissionName);
 
         form = getCostFactory().asFrevvoCostForm(saved);
 
