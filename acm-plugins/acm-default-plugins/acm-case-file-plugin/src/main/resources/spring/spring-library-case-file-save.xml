@@ -23,6 +23,7 @@
                 <ref bean="caseFileFolderStructureHandler"/>
                 <ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
                 <ref bean="casefileDocumentHandler"/>
+                <ref bean="caseFileAssignmentHandler"/>
             </list>
         </property>
     </bean>
