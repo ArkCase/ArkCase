@@ -51,6 +51,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import javax.persistence.FlushModeType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -70,6 +71,12 @@ public class GroupServiceImpl implements GroupService
     public AcmGroup findByName(String name)
     {
         return groupDao.findByName(name);
+    }
+
+    @Override
+    public AcmGroup findByName(String name, FlushModeType flushModeType)
+    {
+        return groupDao.findByName(name, flushModeType);
     }
 
     @Override

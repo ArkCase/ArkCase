@@ -205,6 +205,7 @@
         <property name="enableContentFileIndexing" value="${solr.enableContentFileIndexing}"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+        <property name="acmDataService" ref="acmDataService"/>
     </bean>
 
     <bean id="acmContainerToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmContainerToSolrTransformer">

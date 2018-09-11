@@ -27,24 +27,36 @@ package com.armedia.acm.services.dataaccess.service.impl;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.data.AcmBeforeInsertListener;
 import com.armedia.acm.data.AcmBeforeUpdateListener;
 import com.armedia.acm.services.dataaccess.service.EntityParticipantsChangedEventPublisher;
+import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
 import com.armedia.acm.services.participants.model.CheckParticipantListModel;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.participants.service.ParticipantsBusinessRule;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.search.service.SendDocumentsToSolr;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.FlushModeType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by armdev on 1/6/15.
@@ -58,6 +70,10 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
     private AcmParticipantService participantService;
     private EntityParticipantsChangedEventPublisher entityParticipantsChangedEventPublisher;
     private boolean documentACLEnabled;
+    private ExecuteSolrQuery executeSolrQuery;
+    private SearchResults searchResults;
+    private SendDocumentsToSolr solrSender;
+    private SearchAccessControlFields searchAccessControlFields;
 
     @Override
     public void beforeInsert(Object object) throws AcmAccessControlException
@@ -94,6 +110,7 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
             {
                 handleParticipantsChanged(assignedObject);
             }
+            setParentAclIndex(assignedObject);
         }
     }
 
@@ -151,6 +168,41 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
 
         // remove inherit participants flag
         assignedObject.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(false));
+    }
+
+    private void setParentAclIndex(AcmAssignedObject assignedObject)
+    {
+        String query = String.format("parent_ref_s:%d-%s", assignedObject.getId(), assignedObject.getObjectType());
+        AcmAuthentication authentication = (AcmAuthentication) SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null)
+        {
+            try
+            {
+                String result = executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
+                        0, 1000, "id asc", true);
+                JSONArray documents = searchResults.getDocuments(result);
+                Set<String> childObjects = new HashSet<>();
+                for (int i = 0; i < documents.length(); i++)
+                {
+                    JSONObject doc = documents.getJSONObject(i);
+                    String objectId = searchResults.extractString(doc, "id");
+                    childObjects.add(objectId);
+                }
+                JSONArray docUpdates = new JSONArray();
+                childObjects.forEach(objId -> {
+                    JSONObject docUpdate = new JSONObject();
+                    docUpdate.put("id", objId);
+                    searchAccessControlFields.setParentAccessControlFields(docUpdate, assignedObject);
+                    docUpdates.put(docUpdate);
+                });
+                solrSender.sendSolrDocuments("solrQuickSearch.in", docUpdates.toString());
+                solrSender.sendSolrDocuments("solrAdvancedSearch.in", docUpdates.toString());
+            }
+            catch (MuleException e)
+            {
+                log.error("Parent access control list failed to be index", e);
+            }
+        }
     }
 
     private void validateParticipantAssignmentRules(AcmAssignedObject assignedObject) throws AcmAccessControlException
@@ -255,5 +307,45 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
     public void setDocumentACLEnabled(boolean documentACLEnabled)
     {
         this.documentACLEnabled = documentACLEnabled;
+    }
+
+    public ExecuteSolrQuery getExecuteSolrQuery()
+    {
+        return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public SearchResults getSearchResults()
+    {
+        return searchResults;
+    }
+
+    public void setSearchResults(SearchResults searchResults)
+    {
+        this.searchResults = searchResults;
+    }
+
+    public SendDocumentsToSolr getSolrSender()
+    {
+        return solrSender;
+    }
+
+    public void setSolrSender(SendDocumentsToSolr solrSender)
+    {
+        this.solrSender = solrSender;
+    }
+
+    public SearchAccessControlFields getSearchAccessControlFields()
+    {
+        return searchAccessControlFields;
+    }
+
+    public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields)
+    {
+        this.searchAccessControlFields = searchAccessControlFields;
     }
 }

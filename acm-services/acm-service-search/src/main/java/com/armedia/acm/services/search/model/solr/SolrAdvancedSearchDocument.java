@@ -68,6 +68,12 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private List<Long> deny_user_ls;
     private List<Long> allow_user_ls;
 
+    private List<Long> parent_deny_group_ls;
+    private List<Long> parent_allow_group_ls;
+
+    private List<Long> parent_deny_user_ls;
+    private List<Long> parent_allow_user_ls;
+
     /////////////////// for complaints, case files, other objects with a title or description ////////////
     private String title_parseable;
     private String description_parseable;
@@ -917,6 +923,50 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         this.allow_user_ls = allow_user_ls;
     }
 
+    public List<Long> getParentDenyGroup_ls()
+    {
+        return parent_deny_group_ls;
+    }
+
+    @Override
+    public void setParent_deny_group_ls(List<Long> parent_deny_group_ls)
+    {
+        this.parent_deny_group_ls = parent_deny_group_ls;
+    }
+
+    public List<Long> getParent_allow_group_ls()
+    {
+        return parent_allow_group_ls;
+    }
+
+    @Override
+    public void setParent_allow_group_ls(List<Long> parent_allow_group_ls)
+    {
+        this.parent_allow_group_ls = parent_allow_group_ls;
+    }
+
+    public List<Long> getParent_deny_user_ls()
+    {
+        return parent_deny_user_ls;
+    }
+
+    @Override
+    public void setParent_deny_user_ls(List<Long> parent_deny_user_ls)
+    {
+        this.parent_deny_user_ls = parent_deny_user_ls;
+    }
+
+    public List<Long> getParent_allow_user_ls()
+    {
+        return parent_allow_user_ls;
+    }
+
+    @Override
+    public void setParent_allow_user_ls(List<Long> parent_allow_user_ls)
+    {
+        this.parent_allow_user_ls = parent_allow_user_ls;
+    }
+
     @Override
     public String toString()
     {
@@ -938,6 +988,10 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
                 + ", allow_group_ls=" + allow_group_ls
                 + ", deny_user_ls=" + deny_user_ls
                 + ", allow_user_ls=" + allow_user_ls
+                + ", parent_deny_group_ls=" + parent_deny_group_ls
+                + ", parent_allow_group_ls=" + parent_allow_group_ls
+                + ", parent_deny_user_ls=" + parent_deny_user_ls
+                + ", parent_allow_user_ls=" + parent_allow_user_ls
                 + ", title_parseable='" + title_parseable + '\''
                 + ", description_parseable='" + description_parseable + '\''
                 + ", title_parseable_lcs='" + title_parseable_lcs + '\''
