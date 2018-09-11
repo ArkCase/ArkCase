@@ -88,8 +88,8 @@ angular.module('cases').controller(
                         };
                         var modalInstance = $modal.open({
                             animation: $scope.animationsEnabled,
-                            templateUrl: 'modules/cases/views/components/case-user-group-picker-modal.client.view.html',
-                            controller: 'Cases.UserGroupPickerController',
+                            templateUrl: 'modules/common/views/user-group-picker-modal.client.view.html',
+                            controller: 'Common.UserGroupPickerController',
                             size: 'lg',
                             resolve: {
                                 $filter: function() {
