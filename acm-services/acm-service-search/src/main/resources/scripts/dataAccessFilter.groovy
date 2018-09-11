@@ -21,7 +21,6 @@ if (includeDACFilter) {
             // include records where current user is in a group on allow_group_ls
             dataAccessFilter += " OR allow_group_ls:" + groupId
         }
-
         dataAccessFilter += "))"
         message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter, StandardCharsets.UTF_8.displayName()))
     }
@@ -78,13 +77,13 @@ if (filterParentRef && includeDACFilter) {
     message.setInboundProperty("childObjectFilterQuery", "")
 }
 
-String subscribedFilter = "{!join from=id to=related_subscription_ref_s}object_type_s:SUBSCRIPTION";
-boolean filterSubscriptionEvents = message.getInboundProperty("filterSubscriptionEvents");
+String subscribedFilter = "{!join from=id to=related_subscription_ref_s}object_type_s:SUBSCRIPTION"
+boolean filterSubscriptionEvents = message.getInboundProperty("filterSubscriptionEvents")
 
 if (filterSubscriptionEvents) {
-    message.setInboundProperty("isSubscribed", subscribedFilter);
+    message.setInboundProperty("isSubscribed", subscribedFilter)
 } else {
-    message.setInboundProperty("isSubscribed", "");
+    message.setInboundProperty("isSubscribed", "")
 }
 
 
