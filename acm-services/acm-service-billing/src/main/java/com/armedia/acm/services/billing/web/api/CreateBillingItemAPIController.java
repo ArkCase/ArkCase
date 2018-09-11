@@ -5,6 +5,7 @@ import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +46,7 @@ import javax.servlet.http.HttpSession;
  *
  */
 @Controller
+@PreAuthorize("hasPermission(#billingItem.parentObjectId, #billingItem.parentObjectType, 'createBillingItem')")
 @RequestMapping({ "/api/v1/plugin/billing", "/api/latest/plugin/billing" })
 public class CreateBillingItemAPIController
 {
