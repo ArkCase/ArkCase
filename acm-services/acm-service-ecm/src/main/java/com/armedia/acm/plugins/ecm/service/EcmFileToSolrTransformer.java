@@ -27,18 +27,24 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
+import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +67,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     private ArkCaseBeanUtils arkCaseBeanUtils = new ArkCaseBeanUtils();
     // whether to index file contents or just store document-related metadata
     private Boolean enableContentFileIndexing;
+    private AcmDataService acmDataService;
 
     @Override
     public List<EcmFile> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -98,6 +105,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         SolrDocument doc = new SolrDocument();
 
         getSearchAccessControlFields().setAccessControlFields(doc, in);
+
+        mapParentAclProperties(doc, in);
 
         doc.setAuthor_s(in.getCreator());
         doc.setAuthor(in.getCreator());
@@ -141,8 +150,17 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         doc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
-
         return doc;
+    }
+
+    private void mapParentAclProperties(SolrBaseDocument doc, EcmFile in)
+    {
+        AcmAbstractDao<AcmObject> parentDAO = acmDataService.getDaoByObjectType(in.getParentObjectType());
+        AcmObject parent = parentDAO.find(in.getParentObjectId());
+        if (parent instanceof AcmAssignedObject)
+        {
+            getSearchAccessControlFields().setParentAccessControlFields(doc, (AcmAssignedObject) parent);
+        }
     }
 
     private SolrContentDocument mapContentDocumentProperties(EcmFile in)
@@ -181,6 +199,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
         getSearchAccessControlFields().setAccessControlFields(solr, in);
+
+        mapParentAclProperties(solr, in);
 
         solr.setId(in.getId() + "-" + in.getObjectType());
         solr.setObject_id_s(in.getId() + "");
@@ -348,5 +368,15 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     public ArkCaseBeanUtils getArkCaseBeanUtils()
     {
         return arkCaseBeanUtils;
+    }
+
+    public AcmDataService getAcmDataService()
+    {
+        return acmDataService;
+    }
+
+    public void setAcmDataService(AcmDataService acmDataService)
+    {
+        this.acmDataService = acmDataService;
     }
 }

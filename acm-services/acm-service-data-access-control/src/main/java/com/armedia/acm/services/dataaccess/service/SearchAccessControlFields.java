@@ -34,6 +34,10 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 
+import org.json.JSONObject;
+
+import javax.persistence.FlushModeType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +81,62 @@ public class SearchAccessControlFields
         doc.setDeny_group_ls(new ArrayList<>(deniedGroupId.values()));
     }
 
+    public void setParentAccessControlFields(SolrBaseDocument doc, AcmAssignedObject object)
+    {
+        boolean publicDoc = getParticipantAccessChecker().defaultUserHasRead(object);
+
+        if (!publicDoc)
+        {
+            List<String> readers = getParticipantAccessChecker().getReaders(object);
+            Map<String, Long> readerUserIdMap = getParticipantsToUserIdMap(readers);
+            doc.setParent_allow_user_ls(new ArrayList<>(readerUserIdMap.values()));
+
+            readers.removeAll(readerUserIdMap.keySet());
+            Map<String, Long> readerGroupIdMap = getParticipantsToGroupIdMap(readers);
+            doc.setParent_allow_group_ls(new ArrayList<>(readerGroupIdMap.values()));
+        }
+
+        List<String> denied = getParticipantAccessChecker().getDenied(object);
+        Map<String, Long> deniedUserIdMap = getParticipantsToUserIdMap(denied);
+        doc.setParent_deny_user_ls(new ArrayList<>(deniedUserIdMap.values()));
+
+        denied.removeAll(deniedUserIdMap.keySet());
+        Map<String, Long> deniedGroupId = getParticipantsToGroupIdMap(denied);
+        doc.setParent_deny_group_ls(new ArrayList<>(deniedGroupId.values()));
+    }
+
+    public void setParentAccessControlFields(JSONObject doc, AcmAssignedObject object)
+    {
+        boolean publicDoc = getParticipantAccessChecker().defaultUserHasRead(object);
+
+        if (!publicDoc)
+        {
+            List<String> readers = getParticipantAccessChecker().getReaders(object);
+            Map<String, Long> readerUserIdMap = getParticipantsToUserIdMap(readers);
+            JSONObject allowUser = new JSONObject();
+            allowUser.put("set", readerUserIdMap.values());
+            doc.put("parent_allow_user_ls", allowUser);
+
+            readers.removeAll(readerUserIdMap.keySet());
+            Map<String, Long> readerGroupIdMap = getParticipantsToGroupIdMap(readers);
+            JSONObject allowGroup = new JSONObject();
+            allowGroup.put("set", readerGroupIdMap.values());
+            doc.put("parent_allow_group_ls", allowGroup);
+        }
+
+        List<String> denied = getParticipantAccessChecker().getDenied(object);
+        Map<String, Long> deniedUserIdMap = getParticipantsToUserIdMap(denied);
+        JSONObject denyUser = new JSONObject();
+        denyUser.put("set", deniedUserIdMap.values());
+        doc.put("parent_deny_user_ls", denyUser);
+
+        denied.removeAll(deniedUserIdMap.keySet());
+        Map<String, Long> deniedGroupId = getParticipantsToGroupIdMap(denied);
+        JSONObject denyGroup = new JSONObject();
+        denyGroup.put("set", deniedGroupId.values());
+        doc.put("parent_deny_group_ls", denyGroup);
+    }
+
     private Map<String, Long> getParticipantsToUserIdMap(List<String> participantsLdapIds)
     {
         return participantsLdapIds.stream()
@@ -89,7 +149,7 @@ public class SearchAccessControlFields
     private Map<String, Long> getParticipantsToGroupIdMap(List<String> participantsLdapIds)
     {
         return participantsLdapIds.stream()
-                .map(it -> groupService.findByName(it))
+                .map(it -> groupService.findByName(it, FlushModeType.COMMIT))
                 .filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toMap(AcmGroup::getName, AcmGroup::getIdentifier));

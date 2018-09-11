@@ -45,6 +45,10 @@
         <property name="participantService" ref="acmParticipantService"/>
         <property name="entityParticipantsChangedEventPublisher" ref="entityParticipantsChangedEventPublisher"/>
         <property name="documentACLEnabled" value="${dac.enableDocumentACL}"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+        <property name="searchResults" ref="searchResults"/>
+        <property name="solrSender" ref="sendDocumentsToSolr"/>
     </bean>
 
     <bean id="participantAccessChecker" class="com.armedia.acm.services.dataaccess.service.ParticipantAccessChecker"/>

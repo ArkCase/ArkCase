@@ -38,6 +38,7 @@ import org.mule.api.MuleException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import javax.persistence.FlushModeType;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,8 @@ import java.util.Optional;
 public interface GroupService
 {
     AcmGroup findByName(String name);
+
+    AcmGroup findByName(String name, FlushModeType flushModeType);
 
     AcmGroup save(AcmGroup group);
 
