@@ -27,6 +27,7 @@ package com.armedia.acm.services.costsheet.pipeline.postsave;
  * #L%
  */
 
+import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -47,27 +48,31 @@ public class CostsheetEventHandler implements PipelineHandler<AcmCostsheet, Cost
     private CostsheetEventPublisher costsheetEventPublisher;
     private CostsheetService costsheetService;
     private EcmFileDao ecmFileDao;
+    private FormsTypeCheckService formsTypeCheckService;
 
     @Override
     public void execute(AcmCostsheet costsheet, CostsheetPipelineContext ctx) throws PipelineProcessException
     {
-        log.info("Costsheet with id [{}] and title [{}] entering CostsheetEventHandler", costsheet.getId(), costsheet.getTitle());
+        if (!formsTypeCheckService.getTypeOfForm().equals("frevvo"))
+        {
+            log.info("Costsheet with id [{}] and title [{}] entering CostsheetEventHandler", costsheet.getId(), costsheet.getTitle());
 
-        String submissionName = ctx.getSubmissonName(); // "Save" or "Submit"
-        UploadedFiles uploadedFiles = new UploadedFiles();
+            String submissionName = ctx.getSubmissonName(); // "Save" or "Submit"
+            UploadedFiles uploadedFiles = new UploadedFiles();
 
-        EcmFile existing = getEcmFileDao().findForContainerAttachmentFolderAndFileType(costsheet.getContainer().getId(),
-                costsheet.getContainer().getAttachmentFolder().getId(), CostsheetConstants.COSTSHEET_DOCUMENT);
-        uploadedFiles.setPdfRendition(existing);
+            EcmFile existing = getEcmFileDao().findForContainerAttachmentFolderAndFileType(costsheet.getContainer().getId(),
+                    costsheet.getContainer().getAttachmentFolder().getId(), CostsheetConstants.COSTSHEET_DOCUMENT);
+            uploadedFiles.setPdfRendition(existing);
 
-        boolean startWorkflow = getCostsheetService()
-                .checkWorkflowStartup(CostsheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
+            boolean startWorkflow = getCostsheetService()
+                    .checkWorkflowStartup(CostsheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
 
-        getCostsheetEventPublisher().publishEvent(costsheet, ctx.getAuthentication().getName(), ctx.getIpAddress(), true,
-                submissionName.toLowerCase(), uploadedFiles,
-                startWorkflow);
+            getCostsheetEventPublisher().publishEvent(costsheet, ctx.getAuthentication().getName(), ctx.getIpAddress(), true,
+                    submissionName.toLowerCase(), uploadedFiles,
+                    startWorkflow);
 
-        log.info("Costsheet with id [{}] and title [{}] exiting CostsheetEventHandler", costsheet.getId(), costsheet.getTitle());
+            log.info("Costsheet with id [{}] and title [{}] exiting CostsheetEventHandler", costsheet.getId(), costsheet.getTitle());
+        }
     }
 
     @Override
@@ -104,5 +109,15 @@ public class CostsheetEventHandler implements PipelineHandler<AcmCostsheet, Cost
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public FormsTypeCheckService getFormsTypeCheckService()
+    {
+        return formsTypeCheckService;
+    }
+
+    public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService)
+    {
+        this.formsTypeCheckService = formsTypeCheckService;
     }
 }
