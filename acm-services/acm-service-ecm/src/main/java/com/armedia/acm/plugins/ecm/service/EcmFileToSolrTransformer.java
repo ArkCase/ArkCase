@@ -155,11 +155,14 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
     private void mapParentAclProperties(SolrBaseDocument doc, EcmFile in)
     {
-        AcmAbstractDao<AcmObject> parentDAO = acmDataService.getDaoByObjectType(in.getParentObjectType());
-        AcmObject parent = parentDAO.find(in.getParentObjectId());
-        if (parent instanceof AcmAssignedObject)
+        if (in.getParentObjectType() != null)
         {
-            getSearchAccessControlFields().setParentAccessControlFields(doc, (AcmAssignedObject) parent);
+            AcmAbstractDao<AcmObject> parentDAO = acmDataService.getDaoByObjectType(in.getParentObjectType());
+            AcmObject parent = parentDAO.find(in.getParentObjectId());
+            if (parent instanceof AcmAssignedObject)
+            {
+                getSearchAccessControlFields().setParentAccessControlFields(doc, (AcmAssignedObject) parent);
+            }
         }
     }
 

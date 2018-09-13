@@ -179,6 +179,7 @@
     <bean id="complaintToSolrTransformer" class="com.armedia.acm.plugins.complaint.service.ComplaintToSolrTransformer">
         <property name="userDao" ref="userJpaDao"/>
         <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="fileDao" ref="ecmFileDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
 

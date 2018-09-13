@@ -81,22 +81,17 @@ public class SearchAccessControlFields
         doc.setDeny_group_ls(new ArrayList<>(deniedGroupId.values()));
     }
 
-    public void setParentAccessControlFields(SolrBaseDocument doc, AcmAssignedObject object)
+    public void setParentAccessControlFields(SolrBaseDocument doc, AcmAssignedObject parentObject)
     {
-        boolean publicDoc = getParticipantAccessChecker().defaultUserHasRead(object);
+        List<String> readers = getParticipantAccessChecker().getReaders(parentObject);
+        Map<String, Long> readerUserIdMap = getParticipantsToUserIdMap(readers);
+        doc.setParent_allow_user_ls(new ArrayList<>(readerUserIdMap.values()));
 
-        if (!publicDoc)
-        {
-            List<String> readers = getParticipantAccessChecker().getReaders(object);
-            Map<String, Long> readerUserIdMap = getParticipantsToUserIdMap(readers);
-            doc.setParent_allow_user_ls(new ArrayList<>(readerUserIdMap.values()));
+        readers.removeAll(readerUserIdMap.keySet());
+        Map<String, Long> readerGroupIdMap = getParticipantsToGroupIdMap(readers);
+        doc.setParent_allow_group_ls(new ArrayList<>(readerGroupIdMap.values()));
 
-            readers.removeAll(readerUserIdMap.keySet());
-            Map<String, Long> readerGroupIdMap = getParticipantsToGroupIdMap(readers);
-            doc.setParent_allow_group_ls(new ArrayList<>(readerGroupIdMap.values()));
-        }
-
-        List<String> denied = getParticipantAccessChecker().getDenied(object);
+        List<String> denied = getParticipantAccessChecker().getDenied(parentObject);
         Map<String, Long> deniedUserIdMap = getParticipantsToUserIdMap(denied);
         doc.setParent_deny_user_ls(new ArrayList<>(deniedUserIdMap.values()));
 
@@ -105,26 +100,24 @@ public class SearchAccessControlFields
         doc.setParent_deny_group_ls(new ArrayList<>(deniedGroupId.values()));
     }
 
-    public void setParentAccessControlFields(JSONObject doc, AcmAssignedObject object)
+    public JSONObject buildParentAccessControlFieldsUpdate(AcmAssignedObject parentObject, String docId)
     {
-        boolean publicDoc = getParticipantAccessChecker().defaultUserHasRead(object);
+        JSONObject doc = new JSONObject();
+        doc.put("id", docId);
 
-        if (!publicDoc)
-        {
-            List<String> readers = getParticipantAccessChecker().getReaders(object);
-            Map<String, Long> readerUserIdMap = getParticipantsToUserIdMap(readers);
-            JSONObject allowUser = new JSONObject();
-            allowUser.put("set", readerUserIdMap.values());
-            doc.put("parent_allow_user_ls", allowUser);
+        List<String> readers = getParticipantAccessChecker().getReaders(parentObject);
+        Map<String, Long> readerUserIdMap = getParticipantsToUserIdMap(readers);
+        JSONObject allowUser = new JSONObject();
+        allowUser.put("set", readerUserIdMap.values());
+        doc.put("parent_allow_user_ls", allowUser);
 
-            readers.removeAll(readerUserIdMap.keySet());
-            Map<String, Long> readerGroupIdMap = getParticipantsToGroupIdMap(readers);
-            JSONObject allowGroup = new JSONObject();
-            allowGroup.put("set", readerGroupIdMap.values());
-            doc.put("parent_allow_group_ls", allowGroup);
-        }
+        readers.removeAll(readerUserIdMap.keySet());
+        Map<String, Long> readerGroupIdMap = getParticipantsToGroupIdMap(readers);
+        JSONObject allowGroup = new JSONObject();
+        allowGroup.put("set", readerGroupIdMap.values());
+        doc.put("parent_allow_group_ls", allowGroup);
 
-        List<String> denied = getParticipantAccessChecker().getDenied(object);
+        List<String> denied = getParticipantAccessChecker().getDenied(parentObject);
         Map<String, Long> deniedUserIdMap = getParticipantsToUserIdMap(denied);
         JSONObject denyUser = new JSONObject();
         denyUser.put("set", deniedUserIdMap.values());
@@ -135,6 +128,7 @@ public class SearchAccessControlFields
         JSONObject denyGroup = new JSONObject();
         denyGroup.put("set", deniedGroupId.values());
         doc.put("parent_deny_group_ls", denyGroup);
+        return doc;
     }
 
     private Map<String, Long> getParticipantsToUserIdMap(List<String> participantsLdapIds)

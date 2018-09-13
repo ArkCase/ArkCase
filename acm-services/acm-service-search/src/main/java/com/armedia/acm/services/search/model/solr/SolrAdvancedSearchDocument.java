@@ -923,7 +923,7 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         this.allow_user_ls = allow_user_ls;
     }
 
-    public List<Long> getParentDenyGroup_ls()
+    public List<Long> getParent_deny_group_ls()
     {
         return parent_deny_group_ls;
     }

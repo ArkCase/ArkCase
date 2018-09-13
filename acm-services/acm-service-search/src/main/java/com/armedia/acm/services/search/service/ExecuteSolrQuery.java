@@ -391,7 +391,6 @@ public class ExecuteSolrQuery
         headers.put("sort", sort);
         headers.put("acmUser", authorityContext.getUserIdentity());
         headers.put("acmUserGroupIds", authorityContext.getGroupAuthorities());
-        headers.put("filterParentRef", filterParentRef);
         headers.put("filterSubscriptionEvents", filterSubscriptionEvents);
         headers.put("rowQueryParametars", rowQueryParameters);
         headers.put("enableDocumentACL", isEnableDocumentACL());

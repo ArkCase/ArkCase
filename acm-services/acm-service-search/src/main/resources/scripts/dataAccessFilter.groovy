@@ -10,25 +10,33 @@ boolean includeDACFilter = message.getInboundProperty("includeDACFilter")
 boolean enableDocumentACL = message.getInboundProperty("enableDocumentACL")
 String targetType = getObjectType(query, rowQueryParametars)
 
+boolean includeDenyAccessFilter = message.getInboundProperty("includeDenyAccessFilter")
+
 if (includeDACFilter) {
     if (!enableDocumentACL && targetType != null && (targetType.equals("FILE")
             || targetType.equals("FOLDER") || targetType.contentEquals("CONTAINER"))) {
         message.setInboundProperty("dataAccessFilter", "")
     } else {
-        String dataAccessFilter = "public_doc_b:true OR protected_object_b:false OR (protected_object_b:true AND (allow_user_ls:" + authenticatedUserId
+        String dataAccessFilter = "(protected_object_b:true AND (allow_user_ls:" + authenticatedUserId
 
         for (Long groupId : authenticatedUserGroupIds) {
             // include records where current user is in a group on allow_group_ls
             dataAccessFilter += " OR allow_group_ls:" + groupId
         }
-        dataAccessFilter += "))"
+        dataAccessFilter += ")) OR (public_doc_b:true OR protected_object_b:false OR not(exists(protected_object_b)) " +
+                "OR parent_allow_user_ls:" + authenticatedUserId
+
+        for (Long groupId : authenticatedUserGroupIds) {
+            // include records where current user is in a group on parent_allow_group_ls
+            dataAccessFilter += " OR parent_allow_group_ls:" + groupId
+        }
+        dataAccessFilter += ")"
         message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter, StandardCharsets.UTF_8.displayName()))
     }
 } else {
     message.setInboundProperty("dataAccessFilter", "")
 }
 
-boolean includeDenyAccessFilter = message.getInboundProperty("includeDenyAccessFilter")
 if (includeDenyAccessFilter) {
     // exclude records where the user is specifically locked out
     String denyAccessFilter = "-deny_user_ls:" + authenticatedUserId
@@ -36,36 +44,17 @@ if (includeDenyAccessFilter) {
         // exclude records where current user is in a locked-out group
         denyAccessFilter += " AND -deny_group_ls:" + groupId
     }
+    denyAccessFilter += " AND -deny_parent_user_ls:" + authenticatedUserId
+
+    for (Long groupId : authenticatedUserGroupIds) {
+        // exclude records where current user is in a locked-out group
+        denyAccessFilter += " AND -deny_parent_group_ls:" + groupId
+    }
     message.setInboundProperty("denyAccessFilter", URLEncoder.encode(denyAccessFilter, StandardCharsets.UTF_8.displayName()))
 } else {
     message.setInboundProperty("denyAccessFilter", "")
 }
 
-String childObjectDacFilter = "{!join from=id to=parent_ref_s}(not(exists(protected_object_b)) OR "
-childObjectDacFilter += "protected_object_b:false OR public_doc_b:true "
-childObjectDacFilter += " OR allow_user_ls:" + authenticatedUserId
-
-for (Long groupId : authenticatedUserGroupIds) {
-    // include records where current user is in a group on allow_group_ls
-    childObjectDacFilter += " OR allow_group_ls:" + groupId
-}
-
-childObjectDacFilter += " )"
-
-if (includeDenyAccessFilter) {
-// now we have to add the mandatory denies
-    childObjectDacFilter += " AND -deny_user_ls:" + authenticatedUserId
-
-    for (Long groupId : authenticatedUserGroupIds) {
-        // exclude records where current user is in a locked-out group
-        childObjectDacFilter += " AND -deny_group_ls:" + groupId
-    }
-}
-
-// Solr 7.2.1
-// Conditionals in {!func}sum are no longer correctly evaluated, change to conditional
-// Functions in fq clauses only work if they are wrapped in {!frange}.
-String childObjectFilterQuery = "{!frange l=1}if(not(exists(parent_ref_s)), 1, \$dac)"
 
 boolean filterParentRef = message.getInboundProperty("filterParentRef")
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
 
             http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
@@ -26,17 +26,17 @@
     </bean>
 
     <bean id="acmAssignmentBusinessRule" class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule"
-        parent="simpleStatelessSingleObjectRuleManager">
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-assignment-rules.xlsx"/>
     </bean>
 
     <bean id="acmDataAccessControlBusinessRule" class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule"
-        parent="simpleStatelessSingleObjectRuleManager">
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-access-control-rules.xlsx"/>
     </bean>
 
     <bean id="entityParticipantsChangedEventPublisher"
-        class="com.armedia.acm.services.dataaccess.service.EntityParticipantsChangedEventPublisher"/>
+          class="com.armedia.acm.services.dataaccess.service.EntityParticipantsChangedEventPublisher"/>
 
     <bean id="dataAccessPrivilegeListener" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener">
         <property name="assignmentBusinessRule" ref="acmAssignmentBusinessRule"/>
@@ -45,10 +45,6 @@
         <property name="participantService" ref="acmParticipantService"/>
         <property name="entityParticipantsChangedEventPublisher" ref="entityParticipantsChangedEventPublisher"/>
         <property name="documentACLEnabled" value="${dac.enableDocumentACL}"/>
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
-        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
-        <property name="searchResults" ref="searchResults"/>
-        <property name="solrSender" ref="sendDocumentsToSolr"/>
     </bean>
 
     <bean id="participantAccessChecker" class="com.armedia.acm.services.dataaccess.service.ParticipantAccessChecker"/>
@@ -79,11 +75,11 @@
     <task:scheduler id="dataAccessControlTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="dataAccessControlTaskScheduler">
         <task:scheduled ref="acmDataAccessBatchPolicyUpdateService" method="batchPolicyUpdate"
-            fixed-delay="${dac.batchUpdateFrequencyInMilliseconds}"/>
+                        fixed-delay="${dac.batchUpdateFrequencyInMilliseconds}"/>
     </task:scheduled-tasks>
 
     <bean id="acmDataAccessBatchPolicyUpdateService"
-        class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchPolicyUpdateService">
+          class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchPolicyUpdateService">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="dataAccessBatchUpdater" ref="acmDataAccessBatchUpdater"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
@@ -99,7 +95,7 @@
     <bean id="spelExpressionParser" class="org.springframework.expression.spel.standard.SpelExpressionParser"/>
 
     <bean id="accessControlRuleChecker" class="com.armedia.acm.services.dataaccess.service.impl.AccessControlRuleCheckerImpl"
-        init-method="postConstruct">
+          init-method="postConstruct">
         <property name="configurationFile" ref="rulesConfigurationFile"/>
         <property name="getObjectExpression" value="${dac.fallbackExpression.getObject}"/>
         <property name="editObjectExpression" value="${dac.fallbackExpression.editObject}"/>
