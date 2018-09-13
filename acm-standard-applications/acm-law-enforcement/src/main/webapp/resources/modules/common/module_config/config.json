@@ -605,7 +605,11 @@
       "paginationPageSize": 10,
       "start": 0
     },
-    "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$"
+    "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$",
+    "disabledFileCommandsOnLock": {
+      "WRITE":["editWithWebDAV","checkout","checkin","cancelEditing","cut","copy","paste","rename","remove","replace","declare","co-edit","collaborate"],
+      "SHARED_WRITE": ["checkout","checkin","cancelEditing","cut","copy","paste","rename","remove","replace","declare"]
+    }
   },
   "coreCalendar": {
     "chooseEventAttendeesDialog": {
