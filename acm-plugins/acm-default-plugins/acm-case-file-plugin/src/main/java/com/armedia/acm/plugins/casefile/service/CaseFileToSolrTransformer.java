@@ -29,6 +29,8 @@ package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
@@ -37,6 +39,11 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import javax.persistence.FlushModeType;
 
 import java.util.Date;
 import java.util.List;
@@ -49,6 +56,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
     private UserDao userDao;
     private CaseFileDao caseFileDao;
+    private EcmFileDao fileDao;
     private SearchAccessControlFields searchAccessControlFields;
 
     @Override
@@ -154,6 +162,19 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         return solr;
     }
 
+    @Override
+    public JSONArray childrenUpdatesToSolr(CaseFile in)
+    {
+        List<EcmFile> filesPerContainer = fileDao.findForContainer(in.getContainer().getId(), FlushModeType.COMMIT);
+        JSONArray updates = new JSONArray();
+        filesPerContainer.forEach(it -> {
+            JSONObject doc = searchAccessControlFields.buildParentAccessControlFieldsUpdate(in,
+                    String.format("%s-%s", it.getId(), it.getObjectType()));
+            updates.put(doc);
+        });
+        return updates;
+    }
+
     private String findAssigneeUserId(CaseFile in)
     {
         if (in.getParticipants() != null)
@@ -211,4 +232,15 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     {
         return CaseFile.class;
     }
+
+    public EcmFileDao getFileDao()
+    {
+        return fileDao;
+    }
+
+    public void setFileDao(EcmFileDao fileDao)
+    {
+        this.fileDao = fileDao;
+    }
+
 }

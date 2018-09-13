@@ -29,6 +29,8 @@ package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
@@ -37,6 +39,11 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import javax.persistence.FlushModeType;
 
 import java.util.Date;
 import java.util.List;
@@ -48,6 +55,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
 {
     private UserDao userDao;
     private ComplaintDao complaintDao;
+    private EcmFileDao fileDao;
     private SearchAccessControlFields searchAccessControlFields;
 
     @Override
@@ -173,6 +181,19 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     }
 
     @Override
+    public JSONArray childrenUpdatesToSolr(Complaint in)
+    {
+        List<EcmFile> filesPerContainer = fileDao.findForContainer(in.getContainer().getId(), FlushModeType.COMMIT);
+        JSONArray updates = new JSONArray();
+        filesPerContainer.forEach(it -> {
+            JSONObject doc = searchAccessControlFields.buildParentAccessControlFieldsUpdate(in,
+                    String.format("%s-%s", it.getId(), it.getObjectType()));
+            updates.put(doc);
+        });
+        return updates;
+    }
+
+    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return Complaint.class.equals(acmObjectType);
@@ -213,4 +234,15 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     {
         return Complaint.class;
     }
+
+    public EcmFileDao getFileDao()
+    {
+        return fileDao;
+    }
+
+    public void setFileDao(EcmFileDao fileDao)
+    {
+        this.fileDao = fileDao;
+    }
+
 }
