@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
 import com.armedia.acm.plugins.onlyoffice.service.CallbackService;
 import com.armedia.acm.plugins.onlyoffice.service.ConfigService;
 import com.armedia.acm.plugins.onlyoffice.service.DocumentHistoryManager;
+import com.armedia.acm.plugins.onlyoffice.service.JWTSigningService;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -50,14 +51,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,6 +73,7 @@ public class OnlyOfficeController
     private DocumentHistoryManager documentHistoryManager;
     private AuthenticationTokenService authenticationTokenService;
     private AcmObjectLockingManager objectLockingManager;
+    private JWTSigningService JWTSigningService;
     private ObjectMapper objectMapper;
 
     @RequestMapping(value = "/editor", method = RequestMethod.GET)
@@ -88,8 +89,13 @@ public class OnlyOfficeController
                     FileLockType.SHARED_WRITE.name(), null, false, auth.getName());
             String authTicket = authenticationTokenService.getTokenForAuthentication(auth);
 
-            mav.addObject("config", objectMapper.writeValueAsString(configService.getConfig(fileId, auth)));
+            String configJsonString = objectMapper.writeValueAsString(configService.getConfig(fileId, "edit", "en-US", auth));
+            mav.addObject("config", configJsonString);
             mav.addObject("docserviceApiUrl", configService.getDocumentServerUrlApi());
+            if (configService.isOutboundSignEnabled())
+            {
+                mav.addObject("token", JWTSigningService.signJsonPayload(configJsonString));
+            }
             mav.addObject("fileId", fileId);
             mav.addObject("ticket", authTicket);
             mav.addObject("arkcaseBaseUrl", configService.getArkcaseBaseUrl());
@@ -107,10 +113,12 @@ public class OnlyOfficeController
 
     @RequestMapping(value = "/callback", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public @ResponseBody CallbackResponse callbackHandler(@RequestBody CallBackData callBackData,
-            Authentication auth, HttpServletRequest request)
+    public @ResponseBody CallbackResponse callbackHandler(@RequestBody String callBackDataString,
+            Authentication auth, @RequestHeader(required = false, name = "Authorization") String token) throws IOException
     {
-        logger.info("got Callback [{}]", callBackData);
+        logger.info("got Callback [{}]", callBackDataString);
+        CallBackData callBackData = objectMapper.readValue(callBackDataString, CallBackData.class);
+
         return callbackService.handleCallback(callBackData, auth);
     }
 
@@ -158,6 +166,11 @@ public class OnlyOfficeController
     public void setObjectLockingManager(AcmObjectLockingManager objectLockingManager)
     {
         this.objectLockingManager = objectLockingManager;
+    }
+
+    public void setJWTSigningService(JWTSigningService JWTSigningService)
+    {
+        this.JWTSigningService = JWTSigningService;
     }
 
     public void setDocumentHistoryManager(DocumentHistoryManager documentHistoryManager)

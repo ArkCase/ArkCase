@@ -48,6 +48,7 @@ import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
@@ -59,6 +60,8 @@ public class CallbackServiceImpl implements CallbackService
     private EcmFileService ecmFileService;
     private AcmObjectLockService objectLockService;
     private OnlyOfficeEventPublisher onlyOfficeEventPublisher;
+    private JWTSigningService jwtSigningService;
+    private boolean inboundVerifyEnabled;
     private DocumentHistoryManager documentHistoryManager;
 
     @Override
@@ -66,6 +69,12 @@ public class CallbackServiceImpl implements CallbackService
     {
         Objects.requireNonNull(callBackData, "Callback data must not be null.");
         logger.debug("handle callback data [{}]", callBackData);
+
+        if (inboundVerifyEnabled)
+        {
+            // TODO verify callback data in token are equal as provided
+        }
+
         switch (StatusType.from(callBackData.getStatus()))
         {
         case NO_DOCUMENT_WITH_ID_FOUND:
@@ -127,11 +136,11 @@ public class CallbackServiceImpl implements CallbackService
     private CallbackResponse handleReadyForSaving(CallBackData callBackData, Authentication authentication)
     {
         logger.debug("handleReadyForSaving.");
-        java.net.HttpURLConnection connection;
+        HttpURLConnection connection;
         try
         {
             URL url = new URL(callBackData.getUrl());
-            connection = (java.net.HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
         }
         catch (IOException e)
         {
@@ -238,6 +247,16 @@ public class CallbackServiceImpl implements CallbackService
     public void setObjectLockService(AcmObjectLockService objectLockService)
     {
         this.objectLockService = objectLockService;
+    }
+
+    public void setInboundVerifyEnabled(boolean inboundVerifyEnabled)
+    {
+        this.inboundVerifyEnabled = inboundVerifyEnabled;
+    }
+
+    public void setJwtSigningService(JWTSigningService jwtSigningService)
+    {
+        this.jwtSigningService = jwtSigningService;
     }
 
     public void setDocumentHistoryManager(DocumentHistoryManager documentHistoryManager)

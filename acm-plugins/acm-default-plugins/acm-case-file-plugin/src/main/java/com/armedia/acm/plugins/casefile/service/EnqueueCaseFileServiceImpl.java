@@ -90,6 +90,8 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         // the object, so we won't use the dao.find() method here.
         CaseFile caseFile = getCaseFileDao().getEm().find(CaseFile.class, caseId);
 
+        Boolean oldDeniedFlag = caseFile.getDeniedFlag();
+
         if (nextQueueAction != null && nextQueueAction.equals("Deny"))
         {
             caseFile.setDeniedFlag(true);
@@ -101,6 +103,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         List<String> cannotLeaveReasons = verifyLeaveConditions(context, caseFile);
         if (!cannotLeaveReasons.isEmpty())
         {
+            caseFile.setDeniedFlag(oldDeniedFlag);
             return new CaseFileEnqueueResponse(ErrorReason.LEAVE, cannotLeaveReasons, nextQueue, caseFile);
         }
 
@@ -117,12 +120,14 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
                 errorList = Arrays.asList(
                         String.format("From the %s queue, it is not possible to move to the %s queue.", nextQueue, nextPossibleQueues));
             }
+            caseFile.setDeniedFlag(oldDeniedFlag);
             return new CaseFileEnqueueResponse(ErrorReason.NEXT_POSSIBLE, errorList, nextQueue, caseFile);
         }
 
         List<String> cannotEnterReasons = verifyNextConditions(context, caseFile);
         if (!cannotEnterReasons.isEmpty())
         {
+            caseFile.setDeniedFlag(oldDeniedFlag);
             return new CaseFileEnqueueResponse(ErrorReason.ENTER, cannotEnterReasons, nextQueue, caseFile);
         }
 
