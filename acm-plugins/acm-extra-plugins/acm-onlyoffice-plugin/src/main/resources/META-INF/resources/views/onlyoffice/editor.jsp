@@ -127,6 +127,7 @@
                 "onRequestHistoryData": onRequestHistoryData,
                 "onWarning": onWarning
             };
+            config.token = "${token}";
             
             docEditor = new DocsAPI.DocEditor("iframeEditor", config);
         };

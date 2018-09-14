@@ -6,6 +6,7 @@
         class="com.armedia.acm.plugins.onlyoffice.web.controllers.OnlyOfficeController">
         <property name="configService" ref="onlyOfficeConfigService"/>
         <property name="callbackService" ref="onlyOfficeCallbackService"/>
+        <property name="JWTSigningService" ref="signingServiceImpl"/>
         <property name="objectMapper" ref="sourceObjectMapper"/>
         <property name="objectLockingManager" ref="acmObjectLockingManager"/>
     </bean>
