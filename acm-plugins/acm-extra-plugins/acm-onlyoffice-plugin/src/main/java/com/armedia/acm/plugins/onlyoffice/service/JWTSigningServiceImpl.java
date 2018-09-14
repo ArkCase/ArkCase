@@ -1,12 +1,14 @@
 package com.armedia.acm.plugins.onlyoffice.service;
 
 import com.armedia.acm.plugins.onlyoffice.exceptions.OnlyOfficeException;
-import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.jose.*;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
-import org.apache.commons.beanutils.BeanUtils;
 
 public class JWTSigningServiceImpl implements JWTSigningService {
     private String jwtOutboundAlgorithm;
@@ -16,25 +18,10 @@ public class JWTSigningServiceImpl implements JWTSigningService {
 
     private String jwtInboundKey;
     private String jwtInboundTrustStore;
-    private ObjectMapper mapper;
 
     @Override
-    public boolean verifyToken(String callBackData, String token) {
-        try {
-            JWSVerifier verifier = new MACVerifier(getKey(jwtInboundKey));
-
-            JWSObject jwsObject = JWSObject.parse(token);
-            System.out.println(jwsObject.getPayload().toString());
-
-            CallBackData callBackDataFromToken = mapper.readValue(jwsObject.getPayload().toString(), CallBackData.class);
-            CallBackData callBackDataOriginal = mapper.readValue(callBackData, CallBackData.class);
-            callBackDataOriginal.
-        } catch (Exception e) {
-            throw new OnlyOfficeException("Can't verify payload. Reason: " + e.getMessage(), e);
-        }
-    }
-
-    private boolean verifyToken(String token) {
+    public boolean verifyToken(String token)
+    {
         try {
             JWSVerifier verifier = new MACVerifier(getKey(jwtInboundKey));
 
@@ -45,7 +32,6 @@ public class JWTSigningServiceImpl implements JWTSigningService {
             throw new OnlyOfficeException("Can't verify payload. Reason: " + e.getMessage(), e);
         }
     }
-
 
     @Override
     public String signJsonPayload(String jsonString) {
