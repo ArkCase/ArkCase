@@ -27,7 +27,6 @@ package com.armedia.acm.plugins.onlyoffice.model.callback;
  * #L%
  */
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -210,7 +209,8 @@ public class CallBackData
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "CallBackData{" +
                 "actions=" + actions +
                 ", changesHistory=" + changesHistory +

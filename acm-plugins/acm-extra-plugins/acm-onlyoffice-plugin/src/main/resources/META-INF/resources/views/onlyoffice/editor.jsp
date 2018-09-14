@@ -30,119 +30,128 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>ONLYOFFICE</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
-    <link rel="stylesheet" type="text/css"
-          href="${pageContext.servletContext.contextPath}/custom_assets/css/editor.css"/>
+<script src="${pageContext.servletContext.contextPath}/custom_assets/js/jquery-3.3.1.min.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ONLYOFFICE</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" href="${pageContext.servletContext.contextPath}/custom_assets/css/editor.css" />
 
-    <script type="text/javascript" src="${docserviceApiUrl}"></script>
-    <script type="text/javascript" language="javascript">
+<script type="text/javascript" src="${docserviceApiUrl}"></script>
+<script type="text/javascript" language="javascript">
 
-        var docEditor;
+    var docEditor;
 
-        var innerAlert = function (message) {
-            if (console && console.log)
-                console.log(message);
+    var innerAlert = function (message) {
+        if (console && console.log)
+            console.log(message);
+    };
+
+    var onAppReady = function () {
+        innerAlert("Document editorConfig ready");
+    };
+
+    var onDocumentStateChange = function (event) {
+        var title = document.title.replace(/\*$/g, "");
+        document.title = title + (event.data ? "*" : "");
+    };
+
+    var onRequestEditRights = function () {
+        location.href = location.href.replace(RegExp("action=view\&?", "i"), "");
+    };
+
+    var onError = function (event) {
+        console.log("onError");
+        console.log(event);
+        if (event)
+            innerAlert(event.data);
+    };
+
+    var onOutdatedVersion = function (event) {
+        location.reload(true);
+    };
+
+    var onCollaborativeChanges = function (event) {
+        console.log("onCollaborativeChanges");
+        console.log(event);
+    };
+
+    var onDocumentReady = function (event) {
+        console.log("onDocumentReady");
+        console.log(event);
+    };
+
+    var onDownloadAs = function (event) {
+        console.log("onDownloadAs");
+        console.log(event);
+    };
+
+    var onRequestClose = function (event) {
+        console.log("onRequestClose");
+        console.log(event);
+    };
+
+    var onRequestHistory = function (event) {
+        $.getJSON("history/${fileId}", function (response) {
+            docEditor.refreshHistory(response);
+        }, function (errorResponse) {
+            docEditor.refreshHistory({"error": errorResponse});
+        });
+    };
+
+    var onRequestHistoryClose = function (event) {
+        document.location.reload();
+    };
+
+    var onRequestHistoryData = function (event) {
+        var version = event.data;
+        docEditor.setHistoryData({
+            "key": "${fileId}-" + version,
+            "changesUrl": "${arkcaseBaseUrl}/onlyoffice/history/${fileId}-" + version + "/changes?acm_ticket=${ticket}",
+            "url": "${arkcaseBaseUrl}/api/v1/plugin/ecm/download?ecmFileId=${fileId}&version=" + version + "&acm_ticket=${ticket}",
+            "version": version
+        });
+    };
+
+    var onWarning = function (event) {
+        console.log("onWarning");
+        console.log(event);
+    };
+
+
+    var сonnectEditor = function () {
+
+        var config = ${config};
+        config.events = {
+            "onAppReady": onAppReady,
+            "onDocumentStateChange": onDocumentStateChange,
+            'onRequestEditRights': onRequestEditRights,
+            "onError": onError,
+            "onOutdatedVersion": onOutdatedVersion,
+            "onCollaborativeChanges": onCollaborativeChanges,
+            "onDocumentReady": onDocumentReady,
+            "onDownloadAs": onDownloadAs,
+            "onRequestClose": onRequestClose,
+            "onRequestHistory": onRequestHistory,
+            "onRequestHistoryClose": onRequestHistoryClose,
+            "onRequestHistoryData": onRequestHistoryData,
+            "onWarning": onWarning
         };
+        config.token = "${token}";
 
-        var onAppReady = function () {
-            innerAlert("Document editorConfig ready");
-        };
+        docEditor = new DocsAPI.DocEditor("iframeEditor", config);
+    };
 
-        var onDocumentStateChange = function (event) {
-            var title = document.title.replace(/\*$/g, "");
-            document.title = title + (event.data ? "*" : "");
-        };
-
-        var onRequestEditRights = function () {
-            location.href = location.href.replace(RegExp("action=view\&?", "i"), "");
-        };
-
-        var onError = function (event) {
-            if (event)
-                innerAlert(event.data);
-        };
-
-        var onOutdatedVersion = function (event) {
-            location.reload(true);
-        };
-
-        var onCollaborativeChanges = function (event) {
-            console.log("onCollaborativeChanges");
-            console.log(event);
-        };
-
-        var onDocumentReady = function (event) {
-            console.log("onDocumentReady");
-            console.log(event);
-        };
-
-        var onDownloadAs = function (event) {
-            console.log("onDownloadAs");
-            console.log(event);
-        };
-
-        var onRequestClose = function (event) {
-            console.log("onRequestClose");
-            console.log(event);
-        };
-
-        var onRequestHistory = function (event) {
-            console.log("onRequestHistory");
-            console.log(event);
-        };
-
-        var onRequestHistoryClose = function (event) {
-            console.log("onRequestHistoryClose");
-            console.log(event);
-        };
-
-        var onRequestHistoryData = function (event) {
-            console.log("onRequestHistoryData");
-            console.log(event);
-        };
-
-        var onWarning = function (event) {
-            console.log("onWarning");
-            console.log(event);
-        };
-
-
-        var сonnectEditor = function () {
-
-            var config = ${config};
-            config.events = {
-                "onAppReady": onAppReady,
-                "onDocumentStateChange": onDocumentStateChange,
-                'onRequestEditRights': onRequestEditRights,
-                "onError": onError,
-                "onOutdatedVersion": onOutdatedVersion,
-                "onCollaborativeChanges": onCollaborativeChanges,
-                "onDocumentReady": onDocumentReady,
-                "onDownloadAs": onDownloadAs,
-                "onRequestClose": onRequestClose,
-                "onRequestHistory": onRequestHistory,
-                "onRequestHistoryClose": onRequestHistoryClose,
-                "onRequestHistoryData": onRequestHistoryData,
-                "onWarning": onWarning
-            };
-            config.token = "${token}";
-            
-            docEditor = new DocsAPI.DocEditor("iframeEditor", config);
-        };
-
-        if (window.addEventListener) {
-            window.addEventListener("load", сonnectEditor);
-        } else if (window.attachEvent) {
-            window.attachEvent("load", сonnectEditor);
-        }
-    </script>
+    if (window.addEventListener) {
+        window.addEventListener("load", сonnectEditor);
+    } else if (window.attachEvent) {
+        window.attachEvent("load", сonnectEditor);
+    }
+</script>
 
 </head>
 <body>
-<div class="form">
-    <div id="iframeEditor"></div>
-</div>
+    <div class="form">
+        <div id="iframeEditor"></div>
+    </div>
 </body>
 </html>
