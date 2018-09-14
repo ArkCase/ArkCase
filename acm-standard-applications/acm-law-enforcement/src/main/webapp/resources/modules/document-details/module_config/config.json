@@ -155,7 +155,7 @@
                     "enableCellEdit": false,
                     "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
                     "lookup": "participantTypes",
-                    "width": 150
+                    "width": 400
                 },
                 {
                     "name": "participantLdapId",
@@ -163,7 +163,7 @@
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "lookup": "participantNames",
-                    "width": 150
+                    "width": 400
                 }
             ],
             "dialogUserPicker": {

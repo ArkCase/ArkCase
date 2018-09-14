@@ -38,6 +38,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                                 if (config.method == 'GET') {
                                     if (config.cache === false) {
                                         config.headers["Cache-Control"] = 'no-cache';
+                                        config.headers["Pragma"] = 'no-cache';
                                     }
                                 }
                                 return config;
