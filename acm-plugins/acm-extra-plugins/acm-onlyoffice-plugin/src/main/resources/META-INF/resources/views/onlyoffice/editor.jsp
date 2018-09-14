@@ -30,8 +30,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="${pageContext.servletContext.contextPath}/custom_assets/js/jquery-3.3.1.min.js"
-        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="${pageContext.servletContext.contextPath}/custom_assets/js/jquery-3.3.1.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>ONLYOFFICE</title>
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
@@ -92,7 +91,7 @@
     };
 
     var onRequestHistory = function (event) {
-        $.getJSON("${arkcaseBaseUrl}/onlyoffice/history/${fileId}?acm_ticket=${ticket}", function (response) {
+        $.getJSON("history/${fileId}", function (response) {
             docEditor.refreshHistory(response);
         }, function (errorResponse) {
             docEditor.refreshHistory({"error": errorResponse});
