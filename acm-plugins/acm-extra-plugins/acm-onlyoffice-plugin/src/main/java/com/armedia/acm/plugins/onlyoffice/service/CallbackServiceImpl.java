@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.onlyoffice.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -59,6 +59,7 @@ public class CallbackServiceImpl implements CallbackService
     private EcmFileService ecmFileService;
     private AcmObjectLockService objectLockService;
     private OnlyOfficeEventPublisher onlyOfficeEventPublisher;
+    private DocumentHistoryManager documentHistoryManager;
 
     @Override
     public CallbackResponse handleCallback(CallBackData callBackData, Authentication authentication)
@@ -145,7 +146,7 @@ public class CallbackServiceImpl implements CallbackService
                 Long fileId = parseFileId(key);
                 EcmFile ecmFile = ecmFileDao.find(fileId);
 
-                ecmFileService.update(ecmFile, stream, authentication);
+                EcmFile updatedFile = ecmFileService.update(ecmFile, stream, authentication);
                 stream.close();
                 logger.debug("Document with key [{}] successfully saved to Arkcase.", key);
                 // handle actions
@@ -153,6 +154,9 @@ public class CallbackServiceImpl implements CallbackService
                 {
                     handleActions(callBackData.getActions(), ecmFile);
                 }
+                // save changes
+                documentHistoryManager.saveHistoryChanges(callBackData.getHistory(), callBackData.getChangesUrl(), updatedFile);
+                // remove lock
                 objectLockService.removeLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE, FileLockType.SHARED_WRITE.name(), authentication);
                 onlyOfficeEventPublisher.publishDocumentCoEditSavedEvent(ecmFile, authentication.getName());
             }
@@ -178,7 +182,7 @@ public class CallbackServiceImpl implements CallbackService
 
     /**
      * this method is being called when user opens/closes document for/from editing
-     * 
+     *
      * @param callBackData
      * @return CallbackResponseSuccess
      */
@@ -234,5 +238,10 @@ public class CallbackServiceImpl implements CallbackService
     public void setObjectLockService(AcmObjectLockService objectLockService)
     {
         this.objectLockService = objectLockService;
+    }
+
+    public void setDocumentHistoryManager(DocumentHistoryManager documentHistoryManager)
+    {
+        this.documentHistoryManager = documentHistoryManager;
     }
 }
