@@ -26,6 +26,7 @@ package com.armedia.acm.plugins.onlyoffice.web.controllers;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -37,6 +38,7 @@ import com.armedia.acm.plugins.onlyoffice.model.callback.Action;
 import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
 import com.armedia.acm.plugins.onlyoffice.model.callback.History;
 import com.armedia.acm.plugins.onlyoffice.service.CallbackService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.io.IOUtils;
 import org.easymock.Capture;
@@ -81,10 +83,12 @@ public class OnlyOfficeControllerTest extends EasyMockSupport
     @Before
     public void setUp()
     {
+        ObjectMapper mapper = new ObjectMapper();
         mockAuthentication = createMock(Authentication.class);
         mockCallbackService = createMock(CallbackService.class);
         mockHttpSession = new MockHttpSession();
         onlyOfficeController.setCallbackService(mockCallbackService);
+        onlyOfficeController.setObjectMapper(mapper);
         mockMvc = MockMvcBuilders.standaloneSetup(onlyOfficeController).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
