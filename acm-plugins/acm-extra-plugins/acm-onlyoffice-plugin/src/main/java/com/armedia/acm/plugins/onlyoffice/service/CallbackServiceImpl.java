@@ -40,7 +40,9 @@ import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseSuccess;
 import com.armedia.acm.plugins.onlyoffice.model.StatusType;
 import com.armedia.acm.plugins.onlyoffice.model.callback.Action;
 import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +65,7 @@ public class CallbackServiceImpl implements CallbackService
     private JWTSigningService jwtSigningService;
     private boolean inboundVerifyEnabled;
     private DocumentHistoryManager documentHistoryManager;
+    private AcmObjectLockingManager acmObjectLockingManager;
 
     @Override
     public CallbackResponse handleCallback(CallBackData callBackData, Authentication authentication)
@@ -155,6 +158,8 @@ public class CallbackServiceImpl implements CallbackService
                 Long fileId = parseFileId(key);
                 EcmFile ecmFile = ecmFileDao.find(fileId);
 
+                AcmObjectLock existingLock = objectLockService.findLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE);
+
                 EcmFile updatedFile = ecmFileService.update(ecmFile, stream, authentication);
                 stream.close();
                 logger.debug("Document with key [{}] successfully saved to Arkcase.", key);
@@ -166,7 +171,9 @@ public class CallbackServiceImpl implements CallbackService
                 // save changes
                 documentHistoryManager.saveHistoryChanges(callBackData.getHistory(), callBackData.getChangesUrl(), updatedFile);
                 // remove lock
-                objectLockService.removeLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE, FileLockType.SHARED_WRITE.name(), authentication);
+
+                acmObjectLockingManager.releaseObjectLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE, FileLockType.SHARED_WRITE.name(),
+                        false, authentication.getName(), existingLock.getId());
                 onlyOfficeEventPublisher.publishDocumentCoEditSavedEvent(ecmFile, authentication.getName());
             }
             else
@@ -262,5 +269,10 @@ public class CallbackServiceImpl implements CallbackService
     public void setDocumentHistoryManager(DocumentHistoryManager documentHistoryManager)
     {
         this.documentHistoryManager = documentHistoryManager;
+    }
+
+    public void setAcmObjectLockingManager(AcmObjectLockingManager acmObjectLockingManager)
+    {
+        this.acmObjectLockingManager = acmObjectLockingManager;
     }
 }
