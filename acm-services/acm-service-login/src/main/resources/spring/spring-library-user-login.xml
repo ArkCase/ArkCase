@@ -71,6 +71,7 @@
                 <value>/VirtualViewerJavaHTML5</value>
                 <value>/pentaho</value>
                 <value>/frevvo</value>
+                <value>/modules/core/img/brand/favicon.png</value>
             </list>
         </property>
     </bean>

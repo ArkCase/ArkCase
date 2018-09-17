@@ -29,8 +29,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Arkcase OnlyOffice Editor</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Arkcase OnlyOffice Editor</title>
 </head>
 <body>
     <h2>There was an error.</h2>

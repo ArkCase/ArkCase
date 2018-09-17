@@ -1990,6 +1990,20 @@ angular
                                     newFolderMenu.disabledExpression = disabled || DocTree.readOnly;
                                     newFileMenu.disabledExpression = disabled || DocTree.readOnly;
                                 }
+
+                                var currentNode = nodes[0];
+                                var lock = currentNode.data.lock;
+                                if(lock && DocTree.treeConfig.disabledFileCommandsOnLock){
+                                    var disableCommands = DocTree.treeConfig.disabledFileCommandsOnLock[lock.lockType];
+                                    _.each(disableCommands, function(dc) {
+                                        var cmdMenu = _.find(menu, {
+                                           cmd: dc
+                                        });
+                                        if (cmdMenu){
+                                            cmdMenu.disabledExpression = true;
+                                        }
+                                    });
+                                }
                                 //} else {
                                 //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
                                 //    menu = [{
