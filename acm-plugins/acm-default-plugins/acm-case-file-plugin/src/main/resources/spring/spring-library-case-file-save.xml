@@ -23,6 +23,7 @@
                 <ref bean="caseFileFolderStructureHandler"/>
                 <ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
                 <ref bean="casefileDocumentHandler"/>
+                <ref bean="caseFileAssignmentHandler"/>
             </list>
         </property>
     </bean>
@@ -61,5 +62,9 @@
         parent="pdfCasefileDocumentGenerator">
         <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
         <property name="dao" ref="caseFileDao"/>
+    </bean>
+    
+    <bean id="caseFileAssignmentHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileAssignmentHandler">
+        <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
     </bean>
 </beans>
