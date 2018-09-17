@@ -84,6 +84,14 @@ public class TimesheetServiceImpl implements TimesheetService
 
     @Override
     @Transactional
+    public AcmTimesheet save(AcmTimesheet timesheet) throws PipelineProcessException
+    {
+        TimesheetPipelineContext pipelineContext = new TimesheetPipelineContext();
+        return pipelineManager.executeOperation(timesheet, pipelineContext, () -> getAcmTimesheetDao().save(timesheet));
+    }
+
+    @Override
+    @Transactional
     public AcmTimesheet save(AcmTimesheet timesheet, Authentication authentication, String submissionName) throws PipelineProcessException
     {
         TimesheetPipelineContext pipelineContext = new TimesheetPipelineContext();

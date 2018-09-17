@@ -777,7 +777,7 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
-     * @name getTimesheetStatuses
+     * @name getTimesheetChargeRoles
      * @methodOf services:Object.LookupService
      *
      * @description
