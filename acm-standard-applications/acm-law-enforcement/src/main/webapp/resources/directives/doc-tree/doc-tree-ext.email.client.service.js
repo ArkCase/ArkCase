@@ -10,249 +10,248 @@
  *
  * DocTree extensions for email functions.
  */
-angular.module('services').factory(
-        'DocTreeExt.Email',
-        [ '$q', '$modal', '$translate', '$browser', 'UtilService', 'LookupService', 'Ecm.EmailService', 'ObjectService', 'Object.InfoService', 'Person.InfoService', 'DocumentRepository.InfoService',
-                function($q, $modal, $translate, $browser, Util, LookupService, EcmEmailService, ObjectService, ObjectInfoService, PersonInfoService, DocumentRepositoryInfoService) {
+angular.module('services').factory('DocTreeExt.Email',
+        [ '$q', '$modal', '$translate', '$browser', 'UtilService', 'LookupService', 'Ecm.EmailService', 'ObjectService', 'Object.InfoService', 'Person.InfoService','DocumentRepository.InfoService', function($q, $modal, $translate, $browser, Util, LookupService, EcmEmailService, ObjectService, ObjectInfoService, PersonInfoService,DocumentRepositoryInfoService) {
 
-                    LookupService.getConfig("notification").then(function(data) {
-                        Email.arkcaseUrl = Util.goodValue(data["arkcase.url"]);
-                        Email.arkcasePort = Util.goodValue(data["arkcase.port"]);
-                    });
+            LookupService.getConfig("notification").then(function(data) {
+                Email.arkcaseUrl = Util.goodValue(data["arkcase.url"]);
+                Email.arkcasePort = Util.goodValue(data["arkcase.port"]);
+            });
 
-                    function checkForOriginatorEmail(DocTree) {
-                        var objectId = DocTree._objId;
-                        var objectType = DocTree._objType;
-                        var objectTypeInEndpoint = ObjectService.ObjectTypesInEndpoints[objectType];
-                        var deferred = $q.defer();
-                        if (objectType == ObjectService.ObjectTypes.DOC_REPO) {
-                            DocumentRepositoryInfoService.getDocumentRepositoryInfo(objectId).then(function(data) {
-                                var originator = data.originator;
-                                var emailOfOriginator = "";
-                                if (originator != undefined && !Util.isArrayEmpty(originator.person.contactMethods)) {
-                                    var i, emails = [];
-                                    var contactMethods = originator.person.contactMethods;
-                                    for (i in contactMethods) {
-                                        if (contactMethods[i].type.toLowerCase() == "email") {
-                                            emails.push(contactMethods[i]);
-                                        }
-                                    }
-
-                                    if (!Util.isArrayEmpty(emails)) {
-                                        PersonInfoService.getPersonInfo(originator.person.id).then(function(person) {
-                                            if (person.defaultEmail != null) {
-                                                emailOfOriginator = person.defaultEmail.value;
-                                            } else {
-                                                emailOfOriginator = emails[0].value;
-                                            }
-
-                                            deferred.resolve(emailOfOriginator);
-                                        });
-                                    } else {
-                                        deferred.resolve(emailOfOriginator);
-                                    }
-                                } else {
-                                    deferred.resolve(emailOfOriginator);
+            function checkForOriginatorEmail(DocTree) {
+                var objectId = DocTree._objId;
+                var objectType = DocTree._objType;
+                var objectTypeInEndpoint = ObjectService.ObjectTypesInEndpoints[objectType];
+                var deferred = $q.defer();
+                if(objectType == ObjectService.ObjectTypes.DOC_REPO){
+                    DocumentRepositoryInfoService.getDocumentRepositoryInfo(objectId).then(function(data) {
+                        var originator = data.originator;
+                        var emailOfOriginator = "";
+                        if (originator != undefined && !Util.isArrayEmpty(originator.person.contactMethods)) {
+                            var i, emails = [];
+                            var contactMethods = originator.person.contactMethods;
+                            for (i in contactMethods) {
+                                if (contactMethods[i].type.toLowerCase() == "email") {
+                                    emails.push(contactMethods[i]);
                                 }
-                            });
+                            }
+
+                            if (!Util.isArrayEmpty(emails)) {
+                                PersonInfoService.getPersonInfo(originator.person.id).then(function(person) {
+                                    if (person.defaultEmail != null) {
+                                        emailOfOriginator = person.defaultEmail.value;
+                                    } else {
+                                        emailOfOriginator = emails[0].value;
+                                    }
+
+                                    deferred.resolve(emailOfOriginator);
+                                });
+                            } else {
+                                deferred.resolve(emailOfOriginator);
+                            }
                         } else {
-                            ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
-                                var originator = data.originator;
-                                var emailOfOriginator = "";
-                                if (originator != undefined && !Util.isArrayEmpty(originator.person.contactMethods)) {
-                                    var i, emails = [];
-                                    var contactMethods = originator.person.contactMethods;
-                                    for (i in contactMethods) {
-                                        if (contactMethods[i].type.toLowerCase() == "email") {
-                                            emails.push(contactMethods[i]);
-                                        }
-                                    }
-
-                                    if (!Util.isArrayEmpty(emails)) {
-                                        PersonInfoService.getPersonInfo(originator.person.id).then(function(person) {
-                                            if (person.defaultEmail != null) {
-                                                emailOfOriginator = person.defaultEmail.value;
-                                            } else {
-                                                emailOfOriginator = emails[0].value;
-                                            }
-
-                                            deferred.resolve(emailOfOriginator);
-                                        });
-                                    } else {
-                                        deferred.resolve(emailOfOriginator);
-                                    }
-                                } else {
-                                    deferred.resolve(emailOfOriginator);
-                                }
-                            });
+                            deferred.resolve(emailOfOriginator);
                         }
-                        return deferred.promise;
+                    });
+                }
+                if (objectType == ObjectService.ObjectTypes.CASE_FILE || objectType == ObjectService.ObjectTypes.COMPLAINT || objectType == ObjectService.ObjectTypes.TASK) {
+                    ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
+                        var originator = data.originator;
+                        var emailOfOriginator = "";
+                        if (originator != undefined && !Util.isArrayEmpty(originator.person.contactMethods)) {
+                            var i, emails = [];
+                            var contactMethods = originator.person.contactMethods;
+                            for (i in contactMethods) {
+                                if (contactMethods[i].type.toLowerCase() == "email") {
+                                    emails.push(contactMethods[i]);
+                                }
+                            }
+
+                            if (!Util.isArrayEmpty(emails)) {
+                                PersonInfoService.getPersonInfo(originator.person.id).then(function(person) {
+                                    if (person.defaultEmail != null) {
+                                        emailOfOriginator = person.defaultEmail.value;
+                                    } else {
+                                        emailOfOriginator = emails[0].value;
+                                    }
+
+                                    deferred.resolve(emailOfOriginator);
+                                });
+                            } else {
+                                deferred.resolve(emailOfOriginator);
+                            }
+                        } else {
+                            deferred.resolve(emailOfOriginator);
+                        }
+                    });
+                }
+                return deferred.promise;
+            }
+
+            var Email = {
+
+                /**
+                 * @ngdoc method
+                 * @name getColumnRenderers
+                 * @methodOf services:DocTreeExt.Email
+                 *
+                 * @description
+                 * No renderer is needed; return empty list of renderers.
+                 *
+                 * @param {Object} DocTree  DocTree object defined in doc-tree directive
+                 *
+                 */
+                getColumnRenderers: function(DocTree) {
+                    return [];
+                }
+
+                /**
+                 * @ngdoc method
+                 * @name getCommandHandlers
+                 * @methodOf services:DocTreeExt.Email
+                 *
+                 * @description
+                 * Return list of command handlers this extension provides. This function is required for a docTree extension
+                 *
+                 * @param {Object} DocTree  DocTree object defined in doc-tree directive
+                 *
+                 */
+                ,
+                getCommandHandlers: function(DocTree) {
+                    return [ {
+                        name: "email",
+                        execute: function(nodes, args) {
+                            Email.openModal(DocTree, nodes);
+                        }
+                    } ];
+                }
+
+                ,
+                arkcaseUrl: "localhost",
+                arkcasePort: "",
+                allowMailFilesAsAttachments: true,
+                allowMailFilesToExternalAddresses: true,
+                API_DOWNLOAD_DOCUMENT: "/api/v1/plugin/ecm/download?ecmFileId="
+
+                ,
+                openModal: function(DocTree, nodes) {
+                    var modalInstance;
+                    checkForOriginatorEmail(DocTree).then(function(emailOfOriginator) {
+                        var params = {
+                            config: Util.goodMapValue(DocTree.treeConfig, "emailDialog", {}),
+                            nodes: nodes,
+                            emailSendConfiguration: DocTree.treeConfig.emailSendConfiguration,
+                            DocTree: DocTree,
+                            emailOfOriginator: emailOfOriginator
+                        };
+
+                        modalInstance = $modal.open({
+                            templateUrl: "directives/doc-tree/doc-tree-ext.email.dialog.html",
+                            controller: 'directives.DocTreeEmailDialogController',
+                            animation: true,
+                            size: 'lg',
+                            resolve: {
+                                params: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(res) {
+                            var emailData = {};
+                            if (res.action === 'SEND_ATTACHMENTS') {
+                                emailData = Email._makeEmailDataForEmailWithAttachments(DocTree, res);
+                                EcmEmailService.sendEmailWithAttachments(emailData, DocTree.getObjType());
+                            } else if (res.action === 'SEND_HYPERLINKS') {
+                                emailData = Email._makeEmailDataForEmailWithLinks(DocTree, res);
+                                EcmEmailService.sendEmail(emailData, DocTree.getObjType());
+                            } else if (res.action === 'SEND_ATTACHMENTS_AND_HYPERLINKS') {
+                                emailData = Email._makeEmailDataForEmailWithAttachmentsAndLinks(DocTree, res);
+                                EcmEmailService.sendEmailWithAttachmentsAndLinks(emailData, DocTree.getObjType());
+                            } else {
+                                emailData = Email._makeEmailDataForPlainEmail(DocTree, res);
+                                EcmEmailService.sendEmail(emailData, DocTree.getObjType());
+                            }
+                        });
+                    });
+                }
+
+                ,
+                _buildSubject: function(DocTree) {
+                    var subject = Util.goodMapValue(DocTree, "treeConfig.email.emailSubject");
+                    var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.email.subjectRegex"));
+                    var match = subject.match(regex);
+                    if (match) {
+                        var objectType = match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")];
+                        var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
+                        if (objectType && objectNumber) {
+                            return objectType + DocTree.objectInfo[objectNumber];
+                        }
                     }
 
-                    var Email = {
-
-                        /**
-                         * @ngdoc method
-                         * @name getColumnRenderers
-                         * @methodOf services:DocTreeExt.Email
-                         *
-                         * @description
-                         * No renderer is needed; return empty list of renderers.
-                         *
-                         * @param {Object} DocTree  DocTree object defined in doc-tree directive
-                         *
-                         */
-                        getColumnRenderers: function(DocTree) {
-                            return [];
+                    return "";
+                },
+                _makeEmailDataForEmailWithLinks: function(DocTree, emailModel) {
+                    var emailData = {};
+                    emailData.subject = emailModel.subject;
+                    emailData.body = emailModel.body;
+                    emailData.footer = '\n\n' + emailModel.footer;
+                    emailData.emailAddresses = emailModel.recipients;
+                    emailData.fileIds = emailModel.selectedFilesToEmail;
+                    emailData.baseUrl = Email._makeBaseUrl();
+                    return emailData;
+                },
+                _makeEmailDataForEmailWithAttachmentsAndLinks: function(DocTree, emailModel) {
+                    var emailData = {};
+                    emailData.subject = emailModel.subject;
+                    emailData.body = emailModel.body;
+                    emailData.footer = '\n\n' + emailModel.footer;
+                    emailData.emailAddresses = emailModel.recipients;
+                    emailData.fileIds = emailModel.selectedFilesToEmail;
+                    emailData.attachmentIds = emailModel.selectedFilesToEmail;
+                    emailData.baseUrl = Email._makeBaseUrl();
+                    return emailData;
+                },
+                _makeEmailDataForEmailWithAttachments: function(DocTree, emailModel) {
+                    var emailData = {};
+                    emailData.subject = emailModel.subject;
+                    emailData.body = emailModel.body;
+                    emailData.footer = '\n\n' + emailModel.footer;
+                    emailData.emailAddresses = emailModel.recipients;
+                    emailData.attachmentIds = emailModel.selectedFilesToEmail;
+                    return emailData;
+                },
+                _makeEmailDataForPlainEmail: function(DocTree, emailModel) {
+                    var emailData = {};
+                    emailData.subject = emailModel.subject;
+                    emailData.body = emailModel.body;
+                    emailData.footer = '\n\n' + emailModel.footer;
+                    emailData.emailAddresses = emailModel.recipients;
+                    return emailData;
+                },
+                _extractFileIds: function(nodes) {
+                    var fileIds = [];
+                    if (Util.isArray(nodes)) {
+                        for (var i = 0; i < nodes.length; i++) {
+                            fileIds.push(Util.goodMapValue(nodes[i], "data.objectId"));
                         }
+                    }
+                    return fileIds;
+                },
+                _makeBaseUrl: function() {
+                    var url = Util.goodValue(Email.arkcaseUrl);
+                    if (!Util.isEmpty(Email.arkcasePort)) {
+                        url += ":" + Util.goodValue(Email.arkcasePort);
+                    }
+                    var baseHref = $browser.baseHref().slice(0, -1);
+                    url += baseHref + Email.API_DOWNLOAD_DOCUMENT;
+                    return url;
+                }
 
-                        /**
-                         * @ngdoc method
-                         * @name getCommandHandlers
-                         * @methodOf services:DocTreeExt.Email
-                         *
-                         * @description
-                         * Return list of command handlers this extension provides. This function is required for a docTree extension
-                         *
-                         * @param {Object} DocTree  DocTree object defined in doc-tree directive
-                         *
-                         */
-                        ,
-                        getCommandHandlers: function(DocTree) {
-                            return [ {
-                                name: "email",
-                                execute: function(nodes, args) {
-                                    Email.openModal(DocTree, nodes);
-                                }
-                            } ];
-                        }
+            }; // end Email
 
-                        ,
-                        arkcaseUrl: "localhost",
-                        arkcasePort: "",
-                        allowMailFilesAsAttachments: true,
-                        allowMailFilesToExternalAddresses: true,
-                        API_DOWNLOAD_DOCUMENT: "/api/v1/plugin/ecm/download?ecmFileId="
-
-                        ,
-                        openModal: function(DocTree, nodes) {
-                            var modalInstance;
-                            checkForOriginatorEmail(DocTree).then(function(emailOfOriginator) {
-                                var params = {
-                                    config: Util.goodMapValue(DocTree.treeConfig, "emailDialog", {}),
-                                    nodes: nodes,
-                                    emailSendConfiguration: DocTree.treeConfig.emailSendConfiguration,
-                                    DocTree: DocTree,
-                                    emailOfOriginator: emailOfOriginator
-                                };
-
-                                modalInstance = $modal.open({
-                                    templateUrl: "directives/doc-tree/doc-tree-ext.email.dialog.html",
-                                    controller: 'directives.DocTreeEmailDialogController',
-                                    animation: true,
-                                    size: 'lg',
-                                    resolve: {
-                                        params: function() {
-                                            return params;
-                                        }
-                                    }
-                                });
-
-                                modalInstance.result.then(function(res) {
-                                    var emailData = {};
-                                    if (res.action === 'SEND_ATTACHMENTS') {
-                                        emailData = Email._makeEmailDataForEmailWithAttachments(DocTree, res);
-                                        EcmEmailService.sendEmailWithAttachments(emailData, DocTree.getObjType());
-                                    } else if (res.action === 'SEND_HYPERLINKS') {
-                                        emailData = Email._makeEmailDataForEmailWithLinks(DocTree, res);
-                                        EcmEmailService.sendEmail(emailData, DocTree.getObjType());
-                                    } else if (res.action === 'SEND_ATTACHMENTS_AND_HYPERLINKS') {
-                                        emailData = Email._makeEmailDataForEmailWithAttachmentsAndLinks(DocTree, res);
-                                        EcmEmailService.sendEmailWithAttachmentsAndLinks(emailData, DocTree.getObjType());
-                                    } else {
-                                        emailData = Email._makeEmailDataForPlainEmail(DocTree, res);
-                                        EcmEmailService.sendEmail(emailData, DocTree.getObjType());
-                                    }
-                                });
-                            });
-                        }
-
-                        ,
-                        _buildSubject: function(DocTree) {
-                            var subject = Util.goodMapValue(DocTree, "treeConfig.email.emailSubject");
-                            var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.email.subjectRegex"));
-                            var match = subject.match(regex);
-                            if (match) {
-                                var objectType = match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")];
-                                var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
-                                if (objectType && objectNumber) {
-                                    return objectType + DocTree.objectInfo[objectNumber];
-                                }
-                            }
-
-                            return "";
-                        },
-                        _makeEmailDataForEmailWithLinks: function(DocTree, emailModel) {
-                            var emailData = {};
-                            emailData.subject = emailModel.subject;
-                            emailData.body = emailModel.body;
-                            emailData.footer = '\n\n' + emailModel.footer;
-                            emailData.emailAddresses = emailModel.recipients;
-                            emailData.fileIds = emailModel.selectedFilesToEmail;
-                            emailData.baseUrl = Email._makeBaseUrl();
-                            return emailData;
-                        },
-                        _makeEmailDataForEmailWithAttachmentsAndLinks: function(DocTree, emailModel) {
-                            var emailData = {};
-                            emailData.subject = emailModel.subject;
-                            emailData.body = emailModel.body;
-                            emailData.footer = '\n\n' + emailModel.footer;
-                            emailData.emailAddresses = emailModel.recipients;
-                            emailData.fileIds = emailModel.selectedFilesToEmail;
-                            emailData.attachmentIds = emailModel.selectedFilesToEmail;
-                            emailData.baseUrl = Email._makeBaseUrl();
-                            return emailData;
-                        },
-                        _makeEmailDataForEmailWithAttachments: function(DocTree, emailModel) {
-                            var emailData = {};
-                            emailData.subject = emailModel.subject;
-                            emailData.body = emailModel.body;
-                            emailData.footer = '\n\n' + emailModel.footer;
-                            emailData.emailAddresses = emailModel.recipients;
-                            emailData.attachmentIds = emailModel.selectedFilesToEmail;
-                            return emailData;
-                        },
-                        _makeEmailDataForPlainEmail: function(DocTree, emailModel) {
-                            var emailData = {};
-                            emailData.subject = emailModel.subject;
-                            emailData.body = emailModel.body;
-                            emailData.footer = '\n\n' + emailModel.footer;
-                            emailData.emailAddresses = emailModel.recipients;
-                            return emailData;
-                        },
-                        _extractFileIds: function(nodes) {
-                            var fileIds = [];
-                            if (Util.isArray(nodes)) {
-                                for (var i = 0; i < nodes.length; i++) {
-                                    fileIds.push(Util.goodMapValue(nodes[i], "data.objectId"));
-                                }
-                            }
-                            return fileIds;
-                        },
-                        _makeBaseUrl: function() {
-                            var url = Util.goodValue(Email.arkcaseUrl);
-                            if (!Util.isEmpty(Email.arkcasePort)) {
-                                url += ":" + Util.goodValue(Email.arkcasePort);
-                            }
-                            var baseHref = $browser.baseHref().slice(0, -1);
-                            url += baseHref + Email.API_DOWNLOAD_DOCUMENT;
-                            return url;
-                        }
-
-                    }; // end Email
-
-                    return Email;
-                } ]);
+            return Email;
+        } ]);
 
 angular.module('directives').controller('directives.DocTreeEmailDialogController', [ '$scope', '$modalInstance', 'UtilService', 'params', 'DocTreeExt.Email', '$modal', '$translate', function($scope, $modalInstance, Util, params, DocTreeExtEmail, $modal, $translate) {
     $scope.modalInstance = $modalInstance;
