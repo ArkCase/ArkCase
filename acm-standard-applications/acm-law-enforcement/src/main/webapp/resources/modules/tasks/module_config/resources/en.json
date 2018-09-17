@@ -150,7 +150,7 @@
             "signedBy": "Signed By"
         }
     },
-    "tasks.comp.docsreview": {
+    "tasks.comp.documentsunderreview": {
         "title": "Documents Under Review",
         "table.columns": {
             "fileId": "ID",
@@ -158,7 +158,11 @@
             "created": "Created",
             "creator": "Author",
             "status": "Status"
-        }
+        },
+        "searchInputPlaceholder": "Search",
+        "sendEmail": "Send Email",
+        "noDocsMessage": "No Documents for review",
+        "filterInputPlaceholder": "Filter"
     },
     "tasks.comp.history": {
         "title": "History",
@@ -356,7 +360,7 @@
         "nodeTypes": {
             "details.label": "Details",
             "reworkDetails.label": "Rework Details",
-            "docReview.label": "Documents Under Review",
+            "docsUnderReview.label": "Documents Under Review",
             "parentDoc.label": "Parent Documents",
             "attachments.label": "Attachments",
             "references.label": "References",

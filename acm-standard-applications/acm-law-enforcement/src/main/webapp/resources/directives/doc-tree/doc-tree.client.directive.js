@@ -1950,7 +1950,7 @@ angular
                             var menu;
                             if (menuResource) {
                                 menu = Util.goodMapValue(DocTree.treeConfig, menuResource, []);
-                                if (menuResource === "menu.basic.root" && DocTree.treeConfig.hideMenu) {
+                                if (menuResource === "menu.basic.root" && DocTree.treeConfig.hideMenu || menuResource === "menu.basic.file" && DocTree.treeConfig.hideMenu) {
                                     return emptyArray;
                                 }
                                 menu = _.clone(menu);
@@ -2298,12 +2298,13 @@ angular
                     Op : {
                         retrieveFolderList : function(folderNode, callbackSuccess) {
                             var dfd = $.Deferred();
-                            var fetchData = Ecm.retrieveFolderList;
+                            var fetchData = Util.isEmpty(DocTree.treeConfig.ecmAPIName) ? Ecm.retrieveFolderList : Ecm[DocTree.treeConfig.ecmAPIName];
                             if (!DocTree.isFolderNode(folderNode)) {
                                 dfd.reject();
 
                             } else {
                                 var param = {};
+                                param.filter = DocTree.treeConfig.fqFilter;
                                 param.objType = DocTree.getObjType();
                                 param.objId = DocTree.getObjId();
                                 var folderId = Util.goodValue(folderNode.data.objectId, 0);
@@ -2324,7 +2325,7 @@ angular
                                 }
                                 if (setting.search.enabled) {
                                     if (setting.search.searchFilter.trim() !== "") {
-                                        fetchData = Ecm.retrieveFlatSearchResultList;
+                                        fetchData = Util.isEmpty(DocTree.treeConfig.ecmAPIName) ? Ecm.retrieveFlatSearchResultList : Ecm[DocTree.treeConfig.ecmAPIName];
                                         param.filter = setting.search.searchFilter;
                                     } else {
                                         setting.search.enabled = false;

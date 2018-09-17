@@ -63,7 +63,7 @@
             "allowedWidgets": [
                 "details",
                 "reworkDetails",
-                "docReview",
+                "docsUnderReview",
                 "parentDocs",
                 "documents",
                 "notes",

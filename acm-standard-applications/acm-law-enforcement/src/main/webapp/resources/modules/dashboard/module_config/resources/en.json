@@ -279,7 +279,7 @@
                 "description": "Shows most recent rework details",
                 "noDataMessage": "Currently there no are no rework details to display"
             },
-            "docReview": {
+            "docsUnderReview": {
                 "title": "Documents Under Review",
                 "description": "Shows documents under review",
                 "noDataMessage": "Currently there no are no documents under review to display"
