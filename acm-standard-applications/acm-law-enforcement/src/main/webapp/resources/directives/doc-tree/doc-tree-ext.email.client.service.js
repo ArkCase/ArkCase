@@ -53,8 +53,7 @@ angular.module('services').factory('DocTreeExt.Email',
                             deferred.resolve(emailOfOriginator);
                         }
                     });
-                }
-                if (objectType == ObjectService.ObjectTypes.CASE_FILE || objectType == ObjectService.ObjectTypes.COMPLAINT || objectType == ObjectService.ObjectTypes.TASK) {
+                } else {
                     ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
                         var originator = data.originator;
                         var emailOfOriginator = "";
