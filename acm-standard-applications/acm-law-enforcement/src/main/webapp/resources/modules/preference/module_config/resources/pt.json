@@ -32,7 +32,7 @@
             "details": {
                 "title": "Details"
             },
-            "docReview": {
+            "docsUnderReview": {
                 "title": "Documents Under Review"
             },
             "documents": {

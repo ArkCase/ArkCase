@@ -150,7 +150,7 @@
             "signedBy": "Signé par"
         }
     },
-    "tasks.comp.docsreview": {
+    "tasks.comp.documentsunderreview": {
         "title": "Documents en cours d'examen",
         "table.columns": {
             "fileId": "ID",
@@ -158,7 +158,11 @@
             "created": "Créé",
             "creator": "Auteur",
             "status": "Statut"
-        }
+        },
+        "searchInputPlaceholder": "Search",
+        "sendEmail": "Send Email",
+        "noDocsMessage": "No Documents for review",
+        "filterInputPlaceholder": "Filter"
     },
     "tasks.comp.history": {
         "title": "Histoire",

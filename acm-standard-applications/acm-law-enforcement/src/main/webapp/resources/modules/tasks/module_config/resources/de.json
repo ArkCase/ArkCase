@@ -150,7 +150,7 @@
             "signedBy": "Unterzeichnet von"
         }
     },
-    "tasks.comp.docsreview": {
+    "tasks.comp.documentsunderreview": {
         "title": "Dokumente unter Überprüfung",
         "table.columns": {
             "fileId": "ID",
@@ -158,7 +158,11 @@
             "created": "Erstellt",
             "creator": "Autor",
             "status": "Status"
-        }
+        },
+        "searchInputPlaceholder": "Search",
+        "sendEmail": "Send Email",
+        "noDocsMessage": "No Documents for review",
+        "filterInputPlaceholder": "Filter"
     },
     "tasks.comp.history": {
         "title": "Geschichte",
@@ -356,7 +360,7 @@
         "nodeTypes": {
             "details.label": "Einzelheiten",
             "reworkDetails.label": "Wiederholen Arbeit",
-            "docReview.label": "Dokumente unter Überprüfung",
+            "docsUnderReview.label": "Dokumente unter Überprüfung",
             "parentDoc.label": "Übergeordnete Dokumente",
             "attachments.label": "Anhänge",
             "references.label": "Referenzen",
