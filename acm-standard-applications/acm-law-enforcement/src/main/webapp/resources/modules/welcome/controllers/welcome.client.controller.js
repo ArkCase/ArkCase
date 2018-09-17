@@ -2,7 +2,7 @@
 
 angular.module('welcome').controller('WelcomeController', [ '$state', '$window', '$translate', 'UtilService', 'Acm.LoginService', 'Acm.AppService', 'Config.LocaleService', function($state, $window, $translate, Util, AcmLoginService, AcmAppService, LocaleService) {
 
-    var redirectState = angular.copy(angular.fromJson(sessionStorage.redirectState));
+    var redirectState = angular.fromJson(sessionStorage.redirectState);
     var redirectURL = angular.copy(sessionStorage.redirectURL);
     sessionStorage.clear();
 
@@ -21,7 +21,7 @@ angular.module('welcome').controller('WelcomeController', [ '$state', '$window',
             $state.go("dashboard");
         } else {
             sessionStorage.removeItem("redirectState");
-            $state.go(redirectState.hash.split('/')[1]);
+            $state.go(redirectState.hash.split('#!/')[1]);
         }
     } else if (redirectURL) {
         // redirect to hash passed in the URL of the login page
