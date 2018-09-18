@@ -23,67 +23,45 @@ angular.module('services').factory('DocTreeExt.Email',
                 var objectType = DocTree._objType;
                 var objectTypeInEndpoint = ObjectService.ObjectTypesInEndpoints[objectType];
                 var deferred = $q.defer();
-                if(objectType == ObjectService.ObjectTypes.DOC_REPO){
-                    DocumentRepositoryInfoService.getDocumentRepositoryInfo(objectId).then(function(data) {
-                        var originator = data.originator;
-                        var emailOfOriginator = "";
-                        if (originator != undefined && !Util.isArrayEmpty(originator.person.contactMethods)) {
-                            var i, emails = [];
-                            var contactMethods = originator.person.contactMethods;
-                            for (i in contactMethods) {
-                                if (contactMethods[i].type.toLowerCase() == "email") {
-                                    emails.push(contactMethods[i]);
-                                }
-                            }
-
-                            if (!Util.isArrayEmpty(emails)) {
-                                PersonInfoService.getPersonInfo(originator.person.id).then(function(person) {
-                                    if (person.defaultEmail != null) {
-                                        emailOfOriginator = person.defaultEmail.value;
-                                    } else {
-                                        emailOfOriginator = emails[0].value;
-                                    }
-
-                                    deferred.resolve(emailOfOriginator);
-                                });
-                            } else {
-                                deferred.resolve(emailOfOriginator);
-                            }
-                        } else {
-                            deferred.resolve(emailOfOriginator);
-                        }
+                if(objectType == ObjectService.ObjectTypes.DOC_REPO) {
+                   DocumentRepositoryInfoService.getDocumentRepositoryInfo(objectId).then(function(data) {
+                       getOriginatorEmail(data);
                     });
-                } else {
-                    ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
-                        var originator = data.originator;
-                        var emailOfOriginator = "";
-                        if (originator != undefined && !Util.isArrayEmpty(originator.person.contactMethods)) {
-                            var i, emails = [];
-                            var contactMethods = originator.person.contactMethods;
-                            for (i in contactMethods) {
-                                if (contactMethods[i].type.toLowerCase() == "email") {
-                                    emails.push(contactMethods[i]);
-                                }
-                            }
-
-                            if (!Util.isArrayEmpty(emails)) {
-                                PersonInfoService.getPersonInfo(originator.person.id).then(function(person) {
-                                    if (person.defaultEmail != null) {
-                                        emailOfOriginator = person.defaultEmail.value;
-                                    } else {
-                                        emailOfOriginator = emails[0].value;
-                                    }
-
-                                    deferred.resolve(emailOfOriginator);
-                                });
-                            } else {
-                                deferred.resolve(emailOfOriginator);
-                            }
-                        } else {
-                            deferred.resolve(emailOfOriginator);
-                        }
+                }else {
+                   ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
+                       getOriginatorEmail(data);
                     });
                 }
+                function getOriginatorEmail(data) {
+                        var originator = data.originator;
+                        var emailOfOriginator = "";
+                        if (originator != undefined && !Util.isArrayEmpty(originator.person.contactMethods)) {
+                            var i, emails = [];
+                            var contactMethods = originator.person.contactMethods;
+                            for (i in contactMethods) {
+                                if (contactMethods[i].type.toLowerCase() == "email") {
+                                    emails.push(contactMethods[i]);
+                                }
+                            }
+
+                            if (!Util.isArrayEmpty(emails)) {
+                                PersonInfoService.getPersonInfo(originator.person.id).then(function(person) {
+                                    if (person.defaultEmail != null) {
+                                        emailOfOriginator = person.defaultEmail.value;
+                                    } else {
+                                        emailOfOriginator = emails[0].value;
+                                    }
+
+                                    deferred.resolve(emailOfOriginator);
+                                });
+                            } else {
+                                deferred.resolve(emailOfOriginator);
+                            }
+                        } else {
+                            deferred.resolve(emailOfOriginator);
+                        }
+                    };
+
                 return deferred.promise;
             }
 
