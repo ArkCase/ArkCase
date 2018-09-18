@@ -434,6 +434,15 @@
             "username": "Username"
         }
     },
+    "cases.dialogObjectPicker": {
+        "header": "Search for document",
+        "table.columns": {
+            "name": "Name",
+            "type": "Type",
+            "title": "Title",
+            "id": "ID"
+        }
+    },
     "cases.tree": {
         "nodeTypes": {
             "details.label": "Details",
