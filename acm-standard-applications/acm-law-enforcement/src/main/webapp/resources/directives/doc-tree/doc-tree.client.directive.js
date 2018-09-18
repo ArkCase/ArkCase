@@ -1950,7 +1950,7 @@ angular
                             var menu;
                             if (menuResource) {
                                 menu = Util.goodMapValue(DocTree.treeConfig, menuResource, []);
-                                if (menuResource === "menu.basic.root" && DocTree.treeConfig.hideMenu || menuResource === "menu.basic.file" && DocTree.treeConfig.hideMenu) {
+                                if ((menuResource === "menu.basic.root" && DocTree.treeConfig.hideMenu) || (menuResource === "menu.basic.file" && DocTree.treeConfig.hideMenu)) {
                                     return emptyArray;
                                 }
                                 menu = _.clone(menu);
