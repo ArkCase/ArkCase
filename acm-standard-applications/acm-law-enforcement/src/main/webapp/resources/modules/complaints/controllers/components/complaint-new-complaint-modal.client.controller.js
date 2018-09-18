@@ -343,7 +343,7 @@ angular.module('complaints').controller(
                         var modalInstance = $modal.open({
                             scope: modalScope,
                             animation: true,
-                            templateUrl: "directives/core-participants/core-participants-modal.client.view.html",
+                            templateUrl: "directives/core-participants/new-complaint-case-core-participants-modal.client.view.html",
                             controller: "Directives.NewComplaintCaseCoreParticipantsModalController",
                             size: 'lg',
                             backdrop: 'static',
