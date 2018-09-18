@@ -143,7 +143,7 @@
             },
             {
                 "type": "p/TASK/documentsunderrev",
-                "label": "tasks.tree.nodeTypes.docsUnderReview.label",
+                "label": "tasks.tree.nodeTypes.docReview.label",
                 "icon": "fa fa-search-plus",
                 "components": [
                     "documentsunderreview"

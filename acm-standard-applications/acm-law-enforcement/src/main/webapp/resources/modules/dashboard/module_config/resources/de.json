@@ -279,7 +279,7 @@
                 "description": "Zeigt die letzten Rework-Details",
                 "noDataMessage": "Derzeit gibt es keine Rework-Details zum Anzeigen"
             },
-            "docsUnderReview": {
+            "docReview": {
                 "title": "Dokumente unter Überprüfung",
                 "description": "Zeigt Dokumente zur Überprüfung",
                 "noDataMessage": "Derzeit gibt es keine Unterlagen zur Überprüfung"

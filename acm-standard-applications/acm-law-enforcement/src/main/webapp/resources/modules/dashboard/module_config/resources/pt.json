@@ -279,7 +279,7 @@
                 "description": "Mostra detalhes de retrabalho mais recentes",
                 "noDataMessage": "Atualmente não há detalhes de retrabalho para exibir"
             },
-            "docsUnderReview": {
+            "docReview": {
                 "title": "Documentos sob revisão",
                 "description": "Mostra os documentos sob revisão",
                 "noDataMessage": "Atualmente não há nenhum documento em análise para exibir"

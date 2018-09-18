@@ -709,7 +709,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public AcmCmisObjectList listFlatSearchResultsAdvanced(Authentication auth, AcmContainer container, String category, String sortBy,
            String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException
     {
-        String query = String.format("(object_type_s:FILE)",
+        String query = String.format("(object_type_s:FILE AND parent_object_type_s:%s)",
                 container.getContainerObjectType());
 
         String fq = String.format("fq=(%s) AND hidden_b:false", searchFilter);

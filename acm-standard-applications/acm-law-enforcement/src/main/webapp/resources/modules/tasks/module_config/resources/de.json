@@ -360,7 +360,7 @@
         "nodeTypes": {
             "details.label": "Einzelheiten",
             "reworkDetails.label": "Wiederholen Arbeit",
-            "docsUnderReview.label": "Dokumente unter Überprüfung",
+            "docReview.label": "Dokumente unter Überprüfung",
             "parentDoc.label": "Übergeordnete Dokumente",
             "attachments.label": "Anhänge",
             "references.label": "Referenzen",

@@ -360,7 +360,7 @@
         "nodeTypes": {
             "details.label": "Details",
             "reworkDetails.label": "Rework Details",
-            "docsUnderReview.label": "Documents Under Review",
+            "docReview.label": "Documents Under Review",
             "parentDoc.label": "Parent Documents",
             "attachments.label": "Attachments",
             "references.label": "References",

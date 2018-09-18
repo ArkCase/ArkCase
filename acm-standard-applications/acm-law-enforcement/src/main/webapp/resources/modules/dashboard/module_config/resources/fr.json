@@ -279,7 +279,7 @@
                 "description": "Affiche les détails de retraitement les plus récents",
                 "noDataMessage": "Actuellement, il n'y a pas de détails de retravailler à afficher"
             },
-            "docsUnderReview": {
+            "docReview": {
                 "title": "Documents sous revue",
                 "description": "Montre les documents à l'étude",
                 "noDataMessage": "Actuellement, aucun document n'a été examiné pour afficher"

@@ -279,7 +279,7 @@
                 "description": "显示最近的返工细节",
                 "noDataMessage": "目前没有返工信息可以显示"
             },
-            "docsUnderReview": {
+            "docReview": {
                 "title": "审查文件",
                 "description": "显示正在审核的文件",
                 "noDataMessage": "目前没有审查文件信息可以显示"

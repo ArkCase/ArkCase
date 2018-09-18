@@ -279,7 +279,7 @@
                 "description": "Muestra los detalles de retoques más recientes",
                 "noDataMessage": "Actualmente no hay ningún detalle de retoque para mostrar"
             },
-            "docsUnderReview": {
+            "docReview": {
                 "title": "Documentos bajo revisión",
                 "description": "Muestra documentos en revisión",
                 "noDataMessage": "Actualmente no hay documentos en revisión para mostrar"
