@@ -72,7 +72,6 @@ angular.module('tasks').controller(
                         $scope.objectId = objectInfo.taskId;
                         $scope.parentObjectId = objectInfo.parentObjectId;
                         $scope.parentObjectType = objectInfo.parentObjectType;
-                        //$scope.docsObjType = "TEST";
                         var documentsUnderReview = [];
                         if (Util.isArray($scope.objectInfo.documentUnderReview) && !Util.isArrayEmpty($scope.objectInfo.documentUnderReview)) {
                             documentsUnderReview = $scope.objectInfo.documentUnderReview;
