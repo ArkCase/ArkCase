@@ -32,17 +32,23 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
 import com.armedia.acm.services.timesheet.service.SaveTimesheetBusinessRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TimesheetRuleHandler implements PipelineHandler<AcmTimesheet, TimesheetPipelineContext>
 {
-
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private SaveTimesheetBusinessRule timesheetBusinessRule;
 
     @Override
     public void execute(AcmTimesheet entity, TimesheetPipelineContext pipelineContext) throws PipelineProcessException
     {
         // apply timesheet business rules after save
+        log.info("Timesheet with id [{}] and title [{}] entering TimesheetRuleHandler", entity.getId(), entity.getTitle());
+
         getTimesheetBusinessRule().applyRules(entity);
+
+        log.info("Timesheet with id [{}] and title [{}] exiting TimesheetRuleHandler", entity.getId(), entity.getTitle());
     }
 
     @Override
