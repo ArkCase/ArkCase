@@ -173,6 +173,8 @@ public class SmtpServiceTest
 
         when(mockAcmUser.getUserId()).thenReturn("ann-acm");
 
+        when(mockEcmFileService.findById(fileIds.get(0))).thenReturn(mockEcmFile);
+
         // when
         List<EmailWithEmbeddedLinksResultDTO> results = service.sendEmailWithEmbeddedLinks(inputDTO, mockAuthentication, mockAcmUser);
 
@@ -182,7 +184,7 @@ public class SmtpServiceTest
         EmailWithEmbeddedLinksResultDTO resultDTO = results.get(0);
         assertThat(resultDTO.isState(), is(true));
         assertThat(resultDTO.getEmailAddress(), is(email));
-        verify(mockApplicationEventPublisher).publishEvent(any(SmtpEventSentEvent.class));
+        verify(mockApplicationEventPublisher).publishEvent(any(SmtpSentEventHyperlink.class));
 
     }
 
@@ -224,6 +226,8 @@ public class SmtpServiceTest
 
         when(mockAcmUser.getUserId()).thenReturn("ann-acm");
 
+        when(mockEcmFileService.findById(fileIds.get(0))).thenReturn(mockEcmFile);
+
         // when
         List<EmailWithEmbeddedLinksResultDTO> results = service.sendEmailWithEmbeddedLinks(inputDTO, mockAuthentication, mockAcmUser);
 
@@ -233,7 +237,7 @@ public class SmtpServiceTest
         EmailWithEmbeddedLinksResultDTO resultDTO = results.get(0);
         assertThat(resultDTO.isState(), is(true));
         assertThat(resultDTO.getEmailAddress(), is(email));
-        verify(mockApplicationEventPublisher).publishEvent(any(SmtpEventSentEvent.class));
+        verify(mockApplicationEventPublisher).publishEvent(any(SmtpSentEventHyperlink.class));
         assertThat(messagePropsCaptor.getValue().get("encryption"), is("starttls"));
 
     }
