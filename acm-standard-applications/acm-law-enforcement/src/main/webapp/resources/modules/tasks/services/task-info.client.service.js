@@ -10,7 +10,7 @@
  *
  * Task.InfoService provides functions for Task database data
  */
-angular.module('tasks').factory('Task.InfoService', [ '$resource', '$translate', 'UtilService', 'CacheFactory', 'ObjectService', function($resource, $translate, Util, CacheFactory, ObjectService) {
+angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 'UtilService', 'CacheFactory', 'ObjectService', function ($resource, $translate, Util, CacheFactory, ObjectService) {
     var taskCache = CacheFactory(ObjectService.ObjectTypes.TASK, {
         maxAge: 1 * 60 * 1000, // Items added to this cache expire after 1 minute
         cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
@@ -73,8 +73,9 @@ angular.module('tasks').factory('Task.InfoService', [ '$resource', '$translate',
      *
      * @returns None
      */
-    Service.resetTaskInfo = function(taskInfo) {
-        if (!Util.isEmptyObject(taskInfo) && !Util.isEmpty(taskInfo.taskId)) {
+    Service.resetTaskInfo = function (taskInfo) {
+
+        if (!Util.isObjectEmpty(taskInfo) && !Util.isEmpty(taskInfo.taskId)) {
             taskCache.remove(taskGetUrl + taskInfo.taskId);
         }
     };
@@ -89,7 +90,7 @@ angular.module('tasks').factory('Task.InfoService', [ '$resource', '$translate',
      *
      * @param taskId id of task to clear cache for
      */
-    Service.resetTaskCacheById = function(taskId) {
+    Service.resetTaskCacheById = function (taskId) {
         if (taskId) {
             taskCache.remove(taskGetUrl + taskId);
         }
@@ -107,7 +108,7 @@ angular.module('tasks').factory('Task.InfoService', [ '$resource', '$translate',
      *
      * @returns {Object} Promise
      */
-    Service.updateTaskInfo = function(taskInfo) {
+    Service.updateTaskInfo = function (taskInfo) {
         //TODO remove this method
     };
 
@@ -123,13 +124,13 @@ angular.module('tasks').factory('Task.InfoService', [ '$resource', '$translate',
      *
      * @returns {Object} Promise
      */
-    Service.getTaskInfo = function(id) {
+    Service.getTaskInfo = function (id) {
         return Util.serviceCall({
             service: Service.get,
             param: {
                 id: id
             },
-            onSuccess: function(data) {
+            onSuccess: function (data) {
                 if (Service.validateTaskInfo(data)) {
                     return data;
                 }
@@ -149,7 +150,7 @@ angular.module('tasks').factory('Task.InfoService', [ '$resource', '$translate',
      *
      * @returns {Object} Promise
      */
-    Service.saveTaskInfo = function(taskInfo) {
+    Service.saveTaskInfo = function (taskInfo) {
         if (!Service.validateTaskInfo(taskInfo)) {
             return Util.errorPromise($translate.instant("common.service.error.invalidData"));
         }
@@ -159,7 +160,7 @@ angular.module('tasks').factory('Task.InfoService', [ '$resource', '$translate',
                 id: taskInfo.taskId
             },
             data: taskInfo,
-            onSuccess: function(data) {
+            onSuccess: function (data) {
                 if (Service.validateTaskInfo(data)) {
                     var taskInfo = data;
                     taskCache.put(taskGetUrl + taskInfo.taskId, data);
@@ -181,7 +182,7 @@ angular.module('tasks').factory('Task.InfoService', [ '$resource', '$translate',
      *
      * @returns {Boolean} Return true if data is valid
      */
-    Service.validateTaskInfo = function(data) {
+    Service.validateTaskInfo = function (data) {
         if (Util.isEmpty(data)) {
             return false;
         }
@@ -192,4 +193,4 @@ angular.module('tasks').factory('Task.InfoService', [ '$resource', '$translate',
     };
 
     return Service;
-} ]);
+}]);

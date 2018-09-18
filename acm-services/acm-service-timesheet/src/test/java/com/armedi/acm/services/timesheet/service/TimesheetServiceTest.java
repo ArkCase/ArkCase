@@ -135,7 +135,7 @@ public class TimesheetServiceTest extends EasyMockSupport
                 anyObject(PipelineManager.PipelineManagerOperation.class))).andAnswer(() -> mockAcmTimesheetDao.save(timesheet));
         replayAll();
 
-        AcmTimesheet saved = timesheetService.save(timesheet);
+        AcmTimesheet saved = timesheetService.save(timesheet, mockAuthentication, "Save");
 
         verifyAll();
 

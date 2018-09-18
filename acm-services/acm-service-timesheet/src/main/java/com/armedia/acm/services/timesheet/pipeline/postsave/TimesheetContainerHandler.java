@@ -27,25 +27,53 @@ package com.armedia.acm.services.timesheet.pipeline.postsave;
  * #L%
  */
 
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TimesheetContainerHandler implements PipelineHandler<AcmTimesheet, TimesheetPipelineContext>
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    private EcmFileParticipantService fileParticipantService;
+
     @Override
     public void execute(AcmTimesheet entity, TimesheetPipelineContext pipelineContext) throws PipelineProcessException
     {
+        log.trace("Timesheet with id [{}] and title [{}] entering TimesheetContainerHandler ", entity.getId(), entity.getTitle());
         if (entity.getContainer().getContainerObjectTitle() == null)
         {
             entity.getContainer().setContainerObjectTitle(entity.getTimesheetNumber());
+        }
+
+        if (entity.getContainer().getFolder() == null)
+        {
+            AcmFolder folder = new AcmFolder();
+            folder.setName("ROOT");
+            folder.setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(entity.getParticipants()));
+
+            entity.getContainer().setFolder(folder);
+            entity.getContainer().setAttachmentFolder(folder);
         }
     }
 
     @Override
     public void rollback(AcmTimesheet entity, TimesheetPipelineContext pipelineContext) throws PipelineProcessException
     {
+        // nothing to execute on rollback
+    }
 
+    public EcmFileParticipantService getFileParticipantService()
+    {
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
+    {
+        this.fileParticipantService = fileParticipantService;
     }
 }

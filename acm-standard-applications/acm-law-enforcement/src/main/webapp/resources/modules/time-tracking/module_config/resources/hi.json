@@ -85,6 +85,61 @@
             "status": "स्थिति"
         }
     },
+    "timeTracking.comp.newTimesheet": {
+        "title": "hi_Time Tracking",
+        "editCase.title": "hi_Edit Time Tracking",
+        "user": "hi_User",
+        "status": "hi_Status",
+        "objectPicker": {
+            "title": "hi_Search for object",
+            "table.columns": {
+                "name": "hi_Name",
+                "type": "hi_Type",
+                "title": "hi_Title",
+                "id": "hi_ID",
+                "username": "hi_Username"
+            }
+        },
+        "otherChargeCodePicker":{
+            "title": "hi_Search charge code",
+            "table.columns": {
+                "name": "hi_Name",
+                "type": "hi_Type"
+            },
+            "buttons":{
+                "cancel":"hi_Cancel",
+                "ok": "hi_OK"
+            }
+        },
+        "time": {
+            "title": "hi_Timesheet",
+            "date": "hi_Period",
+            "date.placeholder": "hi_Select week",
+            "date.close.button": "hi_Close",
+            "prevWeekBtn": "hi_Prev Week",
+            "nextWeekBtn": "hi_Next Week",
+            "type": "hi_Type",
+            "selectTypeMessage": "hi_You have to select 'Type', so that you can choose a 'Charge Code'.",
+            "chargeCode": "hi_Charge Code",
+            "chargeRole": "hi_Charge Role",
+            "total": "hi_Total",
+            "totalCost": "hi_Total Cost",
+            "removeBtn": "hi_Remove",
+            "addBtn": "hi_Add"
+        },
+        "userSearch.title": "hi_Search for User",
+        "details": "hi_Details",
+        "approver": {
+            "title": "hi_Approver",
+            "placeholder": "hi_Select Approver",
+            "removeBtn": "hi_Remove Approver",
+            "addBtn": "hi_Add Another Approver"
+        },
+        "cancelButton": "hi_Cancel",
+        "saveButton": "hi_Save",
+        "updateButton": "hi_Update",
+        "sendForApproval": "hi_Send for Approval"
+    },
     "timeTracking.tree": {
         "nodeTypes": {
             "details.label": "विवरण",
