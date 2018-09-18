@@ -11,21 +11,22 @@ angular.module('welcome').controller('WelcomeController', [ '$state', '$window',
 
     LocaleService.getLatestSettings();
 
-    if (redirectURL) {
-        // redirect to hash passed in the URL of the login page
-        sessionStorage.removeItem("redirectUrl");
-        $window.location.href = AcmAppService.getAppUrl('home.html' + redirectURL);
-    } else if (redirectState) {
+    if (redirectState) {
         // redirect to the last remembered state
         //because of redirect bug where we are stuck in goodbye state
         //here is the fix
         var index = redirectState.hash.indexOf('goodbye');
-        sessionStorage.removeItem("redirectState");
         if (index >= 0) {
+            sessionStorage.removeItem("redirectState");
             $state.go("dashboard");
         } else {
-            $window.location.href = AcmAppService.getAppUrl('home.html' + redirectState.hash);
+            sessionStorage.removeItem("redirectState");
+            $state.go(redirectState.hash.split('#!/')[1]);
         }
+    } else if (redirectURL) {
+        // redirect to hash passed in the URL of the login page
+        sessionStorage.removeItem("redirectUrl");
+        $window.location.href = AcmAppService.getAppUrl('home.html' + redirectURL);
     } else {
         $state.go("dashboard");
     }
