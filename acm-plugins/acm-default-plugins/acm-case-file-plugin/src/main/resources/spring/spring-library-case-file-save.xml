@@ -66,5 +66,6 @@
     
     <bean id="caseFileAssignmentHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileAssignmentHandler">
         <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
+        <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
     </bean>
 </beans>
