@@ -30,6 +30,7 @@ package com.armedia.acm.services.email.service;
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
+import com.armedia.acm.services.email.model.MessageBodyFactory;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
@@ -53,6 +54,7 @@ public class ResetPasswordService
      */
     private String passwordResetEmailBodyTemplate;
     private String passwordResetEmailSubject;
+    private String passwordResetTemplateContent;
     /**
      * Formatting string to be used for constructing the password reset link. The formatting
      * string accepts two parameters: base url and reset password token.
@@ -65,7 +67,8 @@ public class ResetPasswordService
     };
     private EmailBodyBuilder<AcmUser> emailBodyBuilder = (user) -> {
         String link = String.format(passwordResetLink, acmAppConfiguration.getBaseUrl(), user.getPasswordResetToken().getToken());
-        return String.format(passwordResetEmailBodyTemplate, link, link);
+        String messageBody = String.format(passwordResetEmailBodyTemplate, user.getUserId(), link, link);
+        return new MessageBodyFactory(passwordResetTemplateContent).buildMessageBodyFromTemplate(messageBody, "", "");
     };
 
     @Async
@@ -114,6 +117,17 @@ public class ResetPasswordService
     public void setPasswordResetEmailBodyTemplate(String passwordResetEmailBodyTemplate)
     {
         this.passwordResetEmailBodyTemplate = passwordResetEmailBodyTemplate;
+    }
+
+    public String getPasswordResetTemplateContent()
+    {
+
+        return passwordResetTemplateContent;
+    }
+
+    public void setPasswordResetTemplateContent(String passwordResetTemplateContent)
+    {
+        this.passwordResetTemplateContent = passwordResetTemplateContent;
     }
 
     public void setPasswordResetEmailSubject(String passwordResetEmailSubject)
