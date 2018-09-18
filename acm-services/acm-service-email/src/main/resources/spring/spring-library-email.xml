@@ -64,6 +64,10 @@
         <property name="passwordResetEmailBodyTemplate" value="${upcoming.password.notification.body.template}"/>
         <property name="passwordResetEmailSubject" value="${upcoming.password.notification.subject}"/>
         <property name="passwordResetLink" value="${upcoming.password.notification.resetPasswordLink}"/>
+        <property name="passwordResetTemplateContent" ref="passwordResetTemplateContent"/>
     </bean>
 
+    <bean id="passwordResetTemplateContent" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg value="file:${upcoming.password.notification.template.path}" type="java.io.InputStream" />
+    </bean>
 </beans>
