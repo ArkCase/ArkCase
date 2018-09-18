@@ -27,12 +27,14 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,7 +57,7 @@ public class EmailSenderConfigurationAPIController
 
     @RequestMapping(value = "/email/configuration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EmailSenderConfiguration getConfiguration()
+    public EmailSenderConfiguration getConfiguration() throws AcmEncryptionException
     {
         return emailSenderConfigurationService.readConfiguration();
 
@@ -63,7 +65,7 @@ public class EmailSenderConfigurationAPIController
 
     @RequestMapping(value = "/email/configuration", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void updateConfiguration(@RequestBody EmailSenderConfiguration configuration, Authentication auth)
+    public void updateConfiguration(@RequestBody EmailSenderConfiguration configuration, Authentication auth) throws AcmEncryptionException
     {
         emailSenderConfigurationService.writeConfiguration(configuration, auth);
     }

@@ -9,6 +9,7 @@
 
     <bean id="emailSenderConfigurationService" class="com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl">
         <property name="emailSenderPropertiesResource" value="file:${user.home}/.arkcase/acm/acmEmailSender.properties"/>
+        <property name="acmEncryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
     </bean>
 
     <bean id="emailSenderPropertyFileLocation" class="java.lang.String">
