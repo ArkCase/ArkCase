@@ -28,6 +28,8 @@ package com.armedia.acm.services.email.sender.model;
  */
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 /**
@@ -48,6 +50,7 @@ public class EmailSenderConfiguration
 
     private String username;
 
+    @JsonIgnore
     private String password;
 
     private String userFrom;
@@ -146,6 +149,7 @@ public class EmailSenderConfiguration
     /**
      * @return the password
      */
+    @JsonIgnore
     public String getPassword()
     {
         return password;
@@ -155,6 +159,7 @@ public class EmailSenderConfiguration
      * @param password
      *            the password to set
      */
+    @JsonProperty
     public void setPassword(String password)
     {
         this.password = password;
