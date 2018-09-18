@@ -655,7 +655,7 @@
                     "name": "location",
                     "displayName": "cases.comp.people.table.columns.location",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultAddress ? row.entity.person.defaultAddress.city + ',' + row.entity.person.defaultAddress.state : ''}}</div>"
+                    "cellTemplate": "<div class='ui-grid-ceconfig.jsonll-contents'>{{row.entity.person.defaultAddress ? row.entity.person.defaultAddress.city + ',' + row.entity.person.defaultAddress.state : ''}}</div>"
                 }
             ]
         },
