@@ -1,10 +1,12 @@
 package com.armedia.acm.plugins.casefile.pipeline.postsave;
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
+import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
@@ -20,6 +22,7 @@ public class CaseFileAssignmentHandler implements PipelineHandler<CaseFile, Case
 {
 
     private AcmAssignmentDao acmAssignmentDao;
+    private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
 
     /**
      * Logger instance.
@@ -41,7 +44,9 @@ public class CaseFileAssignmentHandler implements PipelineHandler<CaseFile, Case
             if (assigneeId != null && !assigneeId.equals(""))
             {
                 AcmAssignment acmAssignment = createAcmAssignment(entity, assigneeId);
-                getAcmAssignmentDao().save(acmAssignment);
+                AcmAssignment saved = getAcmAssignmentDao().save(acmAssignment);
+                getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(saved, AuthenticationUtils.getUsername(),
+                        AuthenticationUtils.getUserIpAddress());
             }
         }
         log.trace("CaseFile exiting CaseFileAssignmentHandler : [{}]", entity);
@@ -85,6 +90,23 @@ public class CaseFileAssignmentHandler implements PipelineHandler<CaseFile, Case
     public void setAcmAssignmentDao(AcmAssignmentDao acmAssignmentDao)
     {
         this.acmAssignmentDao = acmAssignmentDao;
+    }
+
+    /**
+     * @return the acmObjectHistoryEventPublisher
+     */
+    public AcmObjectHistoryEventPublisher getAcmObjectHistoryEventPublisher()
+    {
+        return acmObjectHistoryEventPublisher;
+    }
+
+    /**
+     * @param acmObjectHistoryEventPublisher
+     *            the acmObjectHistoryEventPublisher to set
+     */
+    public void setAcmObjectHistoryEventPublisher(AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher)
+    {
+        this.acmObjectHistoryEventPublisher = acmObjectHistoryEventPublisher;
     }
 
 }
