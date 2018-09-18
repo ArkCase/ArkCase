@@ -1,14 +1,14 @@
 'use strict';
 
-angular.module('dashboard.docsUnderReview', [ 'adf.provider' ]).config(function(dashboardProvider) {
-    dashboardProvider.widget('docsUnderReview', {
-        title: 'preference.overviewWidgets.docsUnderReview.title',
-        description: 'dashboard.widgets.docsUnderReview.description',
+angular.module('dashboard.docReview', [ 'adf.provider' ]).config(function(dashboardProvider) {
+    dashboardProvider.widget('docReview', {
+        title: 'preference.overviewWidgets.docReview.title',
+        description: 'dashboard.widgets.docReview.description',
         controller: 'Dashboard.DocsUnderReviewController',
-        controllerAs: 'docsUnderReview',
+        controllerAs: 'docReview',
         reload: true,
         templateUrl: 'modules/dashboard/views/components/docs-under-review-widget.client.view.html',
-        commonName: 'docsUnderReview'
+        commonName: 'docReview'
     });
 }).controller(
     'Dashboard.DocsUnderReviewController',
@@ -59,7 +59,7 @@ angular.module('dashboard.docsUnderReview', [ 'adf.provider' ]).config(function(
                     vm.showChart = chartData.length > 0;
                     vm.data = [ chartData ];
                     vm.labels = labels;
-                    vm.series = [ $translate.instant("dashboard.widgets.docsUnderReview.title") ];
+                    vm.series = [ $translate.instant("dashboard.widgets.docReview.title") ];
                 }, function(error) {
 
                 });

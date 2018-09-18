@@ -279,7 +279,7 @@
                 "description": "最新のリワークの詳細を表示",
                 "noDataMessage": "現在、表示するリワークの詳細はありません"
             },
-            "docsUnderReview": {
+            "docReview": {
                 "title": "レビュー中の文書",
                 "description": "レビュー中の文書を表示する",
                 "noDataMessage": "現在、表示するレビュー中の文書はありません"

@@ -1,16 +1,16 @@
 <div>
-    <div ng-if="docsUnderReview.showChart">
+    <div ng-if="docReview.showChart">
         <div class="panel-body">
             </br>
             <div class="chart-container">
-                <canvas id="bar" class="chart chart-bar" chart-data="docsUnderReview.data" chart-labels="docsUnderReview.labels"
-                        chart-series="docsUnderReview.series" chart-responsive="true" chart-legend="true"></canvas>
+                <canvas id="bar" class="chart chart-bar" chart-data="docReview.data" chart-labels="docReview.labels"
+                        chart-series="docReview.series" chart-responsive="true" chart-legend="true"></canvas>
             </div>
         </div>
     </div>
-    <div class="alert" ng-if="!docsUnderReview.showChart">
+    <div class="alert" ng-if="!docReview.showChart">
         <p class="text-center">
-            <span translate>dashboard.widgets.docsUnderReview.noDataMessage</span>
+            <span translate>dashboard.widgets.docReview.noDataMessage</span>
         </p>
     </div>
 </div>
