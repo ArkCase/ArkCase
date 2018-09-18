@@ -78,21 +78,18 @@ angular.module('cases').controller(
                         return caseStatuses;
                     });
 
-
-
                     $scope.userOrGroupSearch = function() {
-                        var assigneUserName = _.find($scope.userFullNames, function (user)
-                         {
-                             return user.name === $scope.assignee
+                        var assigneUserName = _.find($scope.userFullNames, function(user) {
+                            return user.name === $scope.assignee
                         });
                         var params = {
-                          owningGroup: $scope.owningGroup,
-                          assignee: assigneUserName
+                            owningGroup: $scope.owningGroup,
+                            assignee: assigneUserName
                         };
                         var modalInstance = $modal.open({
                             animation: $scope.animationsEnabled,
-                            templateUrl: 'modules/cases/views/components/case-user-group-picker-modal.client.view.html',
-                            controller: 'Cases.UserGroupPickerController',
+                            templateUrl: 'modules/common/views/user-group-picker-modal.client.view.html',
+                            controller: 'Common.UserGroupPickerController',
                             size: 'lg',
                             resolve: {
                                 $filter: function() {
@@ -104,7 +101,7 @@ angular.module('cases').controller(
                                 $config: function() {
                                     return $scope.userOrGroupSearchConfig;
                                 },
-                                $params: function () {
+                                $params: function() {
                                     return params;
                                 }
                             }
@@ -118,24 +115,29 @@ angular.module('cases').controller(
                                     var selectedUser = selection.masterSelectedItem;
                                     var selectedGroup = selection.detailSelectedItems;
 
-                                    $scope.assignee = selectedUser.name;
+                                    $scope.assignee = selectedUser.object_id_s;
                                     $scope.updateAssignee();
                                     if (selectedGroup) {
-                                        $scope.owningGroup = selectedGroup.name;
+                                        $scope.owningGroup = selectedGroup.object_id_s;
                                         $scope.updateOwningGroup();
+                                        $scope.saveCase();
 
+                                    } else {
+                                        $scope.saveCase();
                                     }
 
                                     return;
                                 } else if (selectedObjectType === 'GROUP') { // Selected group
                                     var selectedUser = selection.detailSelectedItems;
                                     var selectedGroup = selection.masterSelectedItem;
-                                    if (selectedUser) {
-                                        $scope.assignee = selectedUser.name;
-                                        $scope.updateAssignee();
-                                    }
-                                    $scope.owningGroup = selectedGroup.name;
+                                    $scope.owningGroup = selectedGroup.object_id_s;
                                     $scope.updateOwningGroup();
+                                    if (selectedUser) {
+                                        $scope.assignee = selectedUser.object_id_s;
+                                        $scope.updateAssignee();
+                                    } else {
+                                        $scope.saveCase();
+                                    }
 
                                     return;
                                 }
@@ -147,7 +149,6 @@ angular.module('cases').controller(
                         });
 
                     };
-
 
                     var onObjectInfoRetrieved = function(data) {
                         $scope.dateInfo = $scope.dateInfo || {};
@@ -168,8 +169,6 @@ angular.module('cases').controller(
                         });
                     };
 
-
-
                     // Updates the ArkCase database when the user changes a case attribute
                     // in a case top bar menu item and clicks the save check button
                     $scope.saveCase = function() {
@@ -189,11 +188,9 @@ angular.module('cases').controller(
                     };
                     $scope.updateOwningGroup = function() {
                         ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
-                        $scope.saveCase();
                     };
                     $scope.updateAssignee = function() {
                         ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
-                        $scope.saveCase();
                     };
                     $scope.updateDueDate = function() {
                         var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);

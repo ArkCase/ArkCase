@@ -27,8 +27,10 @@ package com.armedia.acm.services.email.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
+
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
@@ -39,6 +41,8 @@ import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
@@ -62,6 +66,8 @@ public class AcmConfigurableEmailSenderService
 
     private String senderType;
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     /*
      * (non-Javadoc)
      * @see
@@ -72,7 +78,14 @@ public class AcmConfigurableEmailSenderService
     {
         if (event instanceof ConfigurationFileChangedEvent && event.getConfigFile().getName().equals("acmEmailSender.properties"))
         {
-            readSenderType();
+            try
+            {
+                readSenderType();
+            }
+            catch (AcmEncryptionException e)
+            {
+                logger.error("Error encrypting/decrypting...Reason[{}]", e.getMessage(), e);
+            }
         }
     }
 
@@ -89,7 +102,7 @@ public class AcmConfigurableEmailSenderService
     /**
      *
      */
-    private void readSenderType()
+    private void readSenderType() throws AcmEncryptionException
     {
         EmailSenderConfiguration senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
         senderType = senderConfigurationUpdated.getType();
@@ -146,7 +159,7 @@ public class AcmConfigurableEmailSenderService
      */
     @Override
     public void sendEmailWithAttachmentsAndLinks(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO,
-            Authentication authentication, AcmUser user) throws Exception
+                                                 Authentication authentication, AcmUser user) throws Exception
     {
         AcmEmailSenderService service = getSender();
         service.sendEmailWithAttachmentsAndLinks(emailWithAttachmentsAndLinksDTO, authentication, user);
@@ -175,7 +188,7 @@ public class AcmConfigurableEmailSenderService
      */
     @Override
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO emailDTO,
-            Authentication authentication, AcmUser user) throws Exception
+                                                                            Authentication authentication, AcmUser user) throws Exception
     {
         AcmEmailSenderService service = getSender();
         return service.sendEmailWithEmbeddedLinks(emailDTO, authentication, user);

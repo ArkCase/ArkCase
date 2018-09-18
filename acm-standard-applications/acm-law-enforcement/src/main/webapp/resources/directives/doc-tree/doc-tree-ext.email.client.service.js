@@ -239,11 +239,11 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
     $scope.emailDataModel.deliveryMethod = 'SEND_ATTACHMENTS';
 
     $scope.recipients = [];
-    $scope.recipientsStr = [];
+    $scope.recipientsStr = "";
 
     if (!Util.isEmpty(params.emailOfOriginator)) {
         $scope.recipients.push(params.emailOfOriginator);
-        $scope.recipientsStr.push(params.emailOfOriginator);
+        $scope.recipientsStr = params.emailOfOriginator;
     }
 
     var processDeliveryMethods = function() {
