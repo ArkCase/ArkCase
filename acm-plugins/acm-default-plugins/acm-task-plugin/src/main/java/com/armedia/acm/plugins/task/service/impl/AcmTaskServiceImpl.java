@@ -294,6 +294,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
             task.setParticipants(new ArrayList<>());
             task.setDueDate(dueDate);
 
+            taskDao.ensureCorrectAssigneeInParticipants(task);
+
             try
             {
 
