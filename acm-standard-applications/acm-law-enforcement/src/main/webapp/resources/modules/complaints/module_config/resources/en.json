@@ -455,6 +455,15 @@
             "username": "Username"
         }
     },
+    "complaints.dialogObjectPicker": {
+        "header": "Search for document",
+        "table.columns": {
+            "name": "Name",
+            "type": "Type",
+            "title": "Title",
+            "id": "ID"
+        }
+    },
     "complaints.tree": {
         "nodeTypes": {
             "details.label": "Details",

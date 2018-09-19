@@ -23,6 +23,22 @@
         "defaultDateUIFormat": "एमएम / डीडी / वाई वाई वाई वाई",
         "defaultDateTimeUIFormat": "एमएम / डीडी / वाई वाई वाई वाई एचएच: मिमी"
     },
+    "common.userOrGroupSearch": {
+        "id": "hi_userSearch",
+        "title": "hi_User/Group Search",
+        "search": {
+            "btn": "hi_Search",
+            "placeholder": "hi_Search for the user or group."
+        },
+        "cancelButton": "hi_Cancel",
+        "confirmButton": "hi_Confirm",
+        "assigneeGridColumns": {
+            "name": "hi_Name",
+            "type": "hi_Type",
+            "title": "hi_Title",
+            "username": "hi_Username"
+        }
+    },
     "common.frevvo": {
         "defaultDateFormat": "वाई वाई वाई वाई-एमएम -डीडी"
     },
@@ -203,7 +219,6 @@
         "selectedItemsGrid.label": "चयनित प्रविष्टियां",
         "notValidUser": "hi_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
         "notValidGroup": "hi_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
-
     },
     "common.directive.search": {
         "showMore.button.text": "अधिक मूल्य दिखाएं",

@@ -32,6 +32,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class User
 {
+    public User()
+    {
+    }
+
+    public User(String id, String name)
+    {
+        this.id = id;
+        this.name = name;
+    }
+
     /**
      * the first name of the user. Deprecated since version 4.2, please use name instead
      */

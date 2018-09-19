@@ -561,6 +561,42 @@
                     "subMenuForms": "cases.comp.documents.menu.forms",
                     "subMenuCorrespondences": "cases.comp.documents.menu.correspondences"
                 }
+            },
+            "dialogObjectPicker": {
+                "enableFiltering": false,
+                "multiSelect": false,
+                "showFacets": false,
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "cases.dialogObjectPicker.table.columns.name",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_type_s",
+                        "displayName": "cases.dialogObjectPicker.table.columns.type",
+                        "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "title_parseable",
+                        "displayName": "cases.dialogObjectPicker.table.columns.title",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_id_s",
+                        "displayName": "cases.dialogObjectPicker.table.columns.id",
+                        "headerCellFilter": "translate"
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 10,
+                "start": 0
             }
         },
         {
@@ -1408,48 +1444,6 @@
             ],
             "paginationPageSize": 10,
             "start": 0
-        },
-        {
-            "id": "userOrGroupSearch",
-            "title": "tasks.userOrGroupSearch.title",
-            "enableFiltering": false,
-            "configurable": true,
-            "multiSelect": false,
-            "showFacets": false,
-            "columnDefs": [
-                {
-                    "name": "name",
-                    "displayName": "cases.userOrGroupSearch.assigneeGridColumns.name",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "object_type_s",
-                    "displayName": "cases.userOrGroupSearch.assigneeGridColumns.type",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "title",
-                    "displayName": "cases.userOrGroupSearch.assigneeGridColumns.title",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "object_id_s",
-                    "displayName": "cases.userOrGroupSearch.assigneeGridColumns.username",
-                    "headerCellFilter": "translate"
-                }
-            ],
-            "paginationPageSizes": [
-                5,
-                10,
-                20,
-                50
-            ],
-            "paginationPageSize": 10,
-            "start": 0,
-            "userOrGroupSearchFilters": {
-                "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
-                "userOrGroupFacetExtraFilter": "&fq=\"name\": "
-            }
         }
     ]
 }

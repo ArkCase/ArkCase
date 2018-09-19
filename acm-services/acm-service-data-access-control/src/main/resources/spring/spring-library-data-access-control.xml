@@ -66,6 +66,7 @@
         <property name="acmDataService" ref="acmDataService"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="jsonMarshaller" ref="jsonMarshaller"/>
+        <property name="packagesToScan" value="${jpa.model.packages}"/>
     </bean>
 
     <bean id="acmDataAccessBatchUpdater" class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchUpdater">

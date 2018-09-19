@@ -549,7 +549,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="37-populate-user-identifier-column" author="ncuculova" dbms="mysql">
+    <changeSet id="37-populate-group-identifier-column" author="ncuculova" dbms="mysql">
         <sql>
             SELECT @i:=100;
             UPDATE acm_group SET cm_identifier = @i:=@i+1;
