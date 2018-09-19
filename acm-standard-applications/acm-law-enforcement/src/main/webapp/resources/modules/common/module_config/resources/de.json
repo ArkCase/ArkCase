@@ -640,7 +640,7 @@
             "error.ownerUnique": "Nur ein Besitzer ist erlaubt."
         }
     },
-    "common.directive.coreParticipantsNewComplaintCase.modal": {
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
         "addParticipant.label": "Teilnehmer hinzufügen",
         "editParticipant.label": "Datensatz bearbeiten",
         "participantType.label": "Teilnehmertyp",

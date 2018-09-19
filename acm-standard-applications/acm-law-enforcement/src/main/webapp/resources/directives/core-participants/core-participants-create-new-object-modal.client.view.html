@@ -1,10 +1,10 @@
 <div class="modal-header">
     <h3 ng-hide="isEdit">
-        <span translate>common.directive.coreParticipantsNewComplaintCase.modal.addParticipant.label</span>
+        <span translate>common.directive.coreParticipantsCreateNewObjectForm.modal.addParticipant.label</span>
     </h3>
 
     <h3 ng-show="isEdit">
-        <span translate>common.directive.coreParticipantsNewComplaintCase.modal.editParticipant.label</span>
+        <span translate>common.directive.coreParticipantsCreateNewObjectForm.modal.editParticipant.label</span>
     </h3>
 
 </div>
@@ -12,7 +12,7 @@
     <form name="participantsForm">
         <div>
             <label for="participantType"><span
-                    translate>common.directive.coreParticipantsNewComplaintCase.modal.participantType.label</span><span
+                    translate>common.directive.coreParticipantsCreateNewObjectForm.modal.participantType.label</span><span
                     class="required-asterisk">*</span></label>
             <select id="participantType" class="form-control" ng-model="participant.participantType"
                     ng-disabled="participant.editableType === false" required
@@ -20,7 +20,7 @@
         </div>
         <div>
             <label for="participantName"><span
-                    translate>common.directive.coreParticipantsNewComplaintCase.modal.participantName.label</span>
+                    translate>common.directive.coreParticipantsCreateNewObjectForm.modal.participantName.label</span>
                 <span class="required-asterisk">*</span></label>
             <input id="participantName" class="form-control" type="text" ng-model="participant.participantLdapId"
                     ng-disabled="participant.editableUser === false"
@@ -32,7 +32,7 @@
             <input id="replaceChildrenParticipant" type="checkbox" ng-model="participant.replaceChildrenParticipant"
                     ng-true-value="true">
             <label for="replaceChildrenParticipant">
-                <span translate>common.directive.coreParticipantsNewComplaintCase.modal.replaceChildrenParticipant</span>
+                <span translate>common.directive.coreParticipantsCreateNewObjectForm.modal.replaceChildrenParticipant</span>
             </label>
             <br/>
         </div>
@@ -40,9 +40,9 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" ng-click="onClickCancel()">
-        <span translate>common.directive.coreParticipantsNewComplaintCase.modal.btnCancel.text</span>
+        <span translate>common.directive.coreParticipantsCreateNewObjectForm.modal.btnCancel.text</span>
     </button>
     <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="participantsForm.$invalid">
-        <span translate>common.directive.coreParticipantsNewComplaintCase.modal.btnOk.text</span>
+        <span translate>common.directive.coreParticipantsCreateNewObjectForm...modal.btnOk.text</span>
     </button>
 </div>

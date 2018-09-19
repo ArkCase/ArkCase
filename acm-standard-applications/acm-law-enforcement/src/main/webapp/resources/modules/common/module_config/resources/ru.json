@@ -639,7 +639,7 @@
             "error.ownerUnique": "Разрешен только один владелец."
         }
     },
-    "common.directive.coreParticipantsNewComplaintCase.modal": {
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
         "addParticipant.label": "Добавить участника",
         "editParticipant.label": "Изменить запись",
         "participantType.label": "Тип участника",

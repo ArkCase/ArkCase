@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('directives').controller('Directives.NewComplaintCaseCoreParticipantsModalController', [ '$scope', '$modal', '$modalInstance', '$translate', 'UtilService', 'params', function($scope, $modal, $modalInstance, $translate, Util, paramsOwn) {
+angular.module('directives').controller('Directives.CoreParticipantsCreateNewObjectFormModalController', [ '$scope', '$modal', '$modalInstance', '$translate', 'UtilService', 'params', function($scope, $modal, $modalInstance, $translate, Util, paramsOwn) {
 
     $scope.onClickOk = function() {
         $modalInstance.close({
@@ -17,7 +17,7 @@ angular.module('directives').controller('Directives.NewComplaintCaseCoreParticip
 
         var params = {};
 
-        params.header = $translate.instant("common.directive.coreParticipantsNewComplaintCase.modal.dialogUserGroupPicker.header");
+        params.header = $translate.instant("common.directive.coreParticipantsCreateNewObjectForm.modal.dialogUserGroupPicker.header");
         params.filter = "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)";
         params.extraFilter = "&fq=\"name\": ";
         params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
