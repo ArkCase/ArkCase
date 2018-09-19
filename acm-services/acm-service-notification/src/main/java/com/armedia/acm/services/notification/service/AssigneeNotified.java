@@ -55,6 +55,7 @@ public class AssigneeNotified implements UsersNotified
         customNotification.setRelatedObjectId((Long) notification[7]);
         customNotification.setRelatedObjectType((String) notification[8]);
         customNotification.setActionDate((Date) notification[9]);
+        customNotification.setUser(getUserId((String) notification[10]));
         customNotification.setUserEmail(getEmailForUser((String) notification[10]));
         customNotification.setStatus(NotificationConstants.STATUS_NEW);
         customNotification.setAction(NotificationConstants.ACTION_DEFAULT);
@@ -67,6 +68,12 @@ public class AssigneeNotified implements UsersNotified
     {
         String userEmail = getUserDao().findByUserId(user).getMail();
         return !userEmail.isEmpty() ? userEmail : "";
+    }
+
+    private String getUserId(String user)
+    {
+        String userId = getUserDao().findByUserId(user).getUserId();
+        return !userId.isEmpty() ? userId : "";
     }
 
     public UserDao getUserDao()

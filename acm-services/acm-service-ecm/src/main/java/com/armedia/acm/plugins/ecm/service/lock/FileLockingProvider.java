@@ -210,7 +210,7 @@ public class FileLockingProvider implements ObjectLockingProvider
                 if (existingLock.getLockType().equals(FileLockType.SHARED_WRITE.name()) && !existingLock.getId().equals(lockId))
                 {
                     throw new AcmObjectLockException(String.format(
-                            "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object lockId mismatch!",
+                            "[%s] not able to release object lock[objectId=%s, objectType=%s, lockType=%s]. Reason: Object lockId mismatch!",
                             userId, objectId, objectType, lockType, existingLock.getLockType()));
                 }
                 if (existingLock.getLockType().equals(FileLockType.SHARED_WRITE.name()))
@@ -238,7 +238,7 @@ public class FileLockingProvider implements ObjectLockingProvider
                 && (errorOnSameExistingLockType || !existingLock.getLockType().equals(lockType)))
         {
             throw new AcmObjectLockException(String.format(
-                    "[{}] not able to acquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
+                    "[%s] not able to acquire object lock[objectId=%s, objectType=%s, lockType=%s]. Reason: Object already has a lock of type %s by user: [%s]",
                     userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
         }
     }
