@@ -35,7 +35,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,7 +69,7 @@ public abstract class PdfConverterBase implements FileConverter
      * org.springframework.security.core.Authentication)
      */
     @Override
-    public void convert(EcmFile file, Authentication auth) throws ConversionException
+    public void convert(EcmFile file, String username) throws ConversionException
     {
         String tempUploadFolderPath = FileUtils.getTempDirectoryPath();
         String fileName = file.getFileName() + "." + file.getFileExtension();
@@ -101,7 +101,8 @@ public abstract class PdfConverterBase implements FileConverter
             metadata.setCmisRepositoryId(file.getCmisRepositoryId());
             metadata.setFileActiveVersionMimeType(APPLICATION_PDF);
 
-            fileService.upload(auth, file.getParentObjectType(), file.getParentObjectId(), file.getFolder().getCmisFolderId(),
+            fileService.upload(new UsernamePasswordAuthenticationToken(username, username), file.getParentObjectType(),
+                    file.getParentObjectId(), file.getFolder().getCmisFolderId(),
                     file.getFileName(), fis, metadata);
         }
         catch (IOException | AcmCreateObjectFailedException | AcmUserActionFailedException e)

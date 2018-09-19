@@ -129,6 +129,13 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
     @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
 
+    /**
+     * This field is only used when the time sheet is created. Usually it will be null. Use the container to get the
+     * CMIS object ID of the time sheet folder.
+     */
+    @Transient
+    private String ecmFolderPath;
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -354,5 +361,15 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
     public void setClassName(String className)
     {
         this.className = className;
+    }
+
+    public String getEcmFolderPath()
+    {
+        return ecmFolderPath;
+    }
+
+    public void setEcmFolderPath(String ecmFolderPath)
+    {
+        this.ecmFolderPath = ecmFolderPath;
     }
 }
