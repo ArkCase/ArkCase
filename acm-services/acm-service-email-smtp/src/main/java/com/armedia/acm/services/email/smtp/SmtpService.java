@@ -317,10 +317,19 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         }
 
-        EcmFile ecmFile = ecmFileService.findById(in.getFileIds().get(0));
+        EcmFile ecmFile = null;
+        List<String> fileNames = new ArrayList<String>();
 
-        SmtpSentEventHyperlink event = new SmtpSentEventHyperlink(in, user.getUserId(), ecmFile.getParentObjectId(),
-                ecmFile.getParentObjectType());
+        for (int i = 0; i < in.getFileIds().size(); i++)
+        {
+            ecmFile = ecmFileService.findById(in.getFileIds().get(i));
+            fileNames.add(ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension());
+        }
+        in.setFileNames(fileNames);
+
+        SmtpSentEventHyperlink event = new SmtpSentEventHyperlink(in, user.getUserId(),
+                ecmFile != null ? ecmFile.getParentObjectId() : null,
+                ecmFile != null ? ecmFile.getParentObjectType() : null);
         boolean success = (exception == null);
         event.setSucceeded(success);
         eventPublisher.publishEvent(event);
