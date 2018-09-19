@@ -639,7 +639,7 @@
             "error.ownerUnique": "Un seul propriétaire est autorisé."
         }
     },
-    "common.directive.coreParticipantsNewComplaintCase.modal": {
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
         "addParticipant.label": "Ajouter un participant",
         "editParticipant.label": "Modifier l'enregistrement",
         "participantType.label": "Type de participant",

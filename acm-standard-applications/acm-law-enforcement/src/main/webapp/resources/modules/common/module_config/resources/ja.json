@@ -639,7 +639,7 @@
             "error.ownerUnique": "所有者は1人だけです。"
         }
     },
-    "common.directive.coreParticipantsNewComplaintCase.modal": {
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
         "addParticipant.label": "参加者を追加",
         "editParticipant.label": "レコードの編集",
         "participantType.label": "参加者タイプ",
