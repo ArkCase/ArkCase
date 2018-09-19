@@ -642,6 +642,16 @@
             "error.ownerUnique": "Only one owner is allowed."
         }
     },
+    "common.directive.coreParticipantsNewComplaintCase.modal": {
+        "addParticipant.label": "Add Participant",
+        "editParticipant.label": "Edit Record",
+        "participantType.label": "Participant Type",
+        "participantName.label": "Participant Name",
+        "btnOk.text": "Save",
+        "btnCancel.text": "Cancel",
+        "dialogUserGroupPicker.header": "Search User/Group",
+        "replaceChildrenParticipant": "replace children participant"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "% Complete"
     },

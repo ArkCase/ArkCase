@@ -639,6 +639,16 @@
             "error.ownerUnique": "Разрешен только один владелец."
         }
     },
+    "common.directive.coreParticipantsNewComplaintCase.modal": {
+        "addParticipant.label": "Добавить участника",
+        "editParticipant.label": "Изменить запись",
+        "participantType.label": "Тип участника",
+        "participantName.label": "Имя участника",
+        "btnOk.text": "Сохранить",
+        "btnCancel.text": "Отмена",
+        "dialogUserGroupPicker.header": "ru_Search User/Group",
+        "replaceChildrenParticipant": "Заменить детей-участниц"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "Процент завершен"
     },

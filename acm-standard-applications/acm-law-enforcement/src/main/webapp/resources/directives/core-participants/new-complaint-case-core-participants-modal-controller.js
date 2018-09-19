@@ -17,7 +17,7 @@ angular.module('directives').controller('Directives.NewComplaintCaseCoreParticip
 
         var params = {};
 
-        params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserGroupPicker.header");
+        params.header = $translate.instant("common.directive.coreParticipantsNewComplaintCase.modal.dialogUserGroupPicker.header");
         params.filter = "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)";
         params.extraFilter = "&fq=\"name\": ";
         params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
