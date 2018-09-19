@@ -88,6 +88,7 @@
 
     <bean id="solrReindexAssignedObjectsExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexAssignedObjectsExecutor">
         <property name="solrReindexService" ref="solrReindexService"/>
+        <property name="packages" value="${jpa.model.packages}"/>
     </bean>
 
 </beans>

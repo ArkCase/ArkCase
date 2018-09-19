@@ -20,16 +20,14 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.metamodel.EntityType;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -104,8 +102,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
     private SpringContextHolder springContextHolder;
     private JSONMarshaller jsonMarshaller;
     private Set<String> assignedObjectTypes;
-    @PersistenceContext
-    private EntityManager entityManager;
+    private String packagesToScan;
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission)
@@ -481,22 +478,38 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
         return assignedObjectTypes;
     }
 
+    public String getPackagesToScan()
+    {
+        return packagesToScan;
+    }
+
+    public void setPackagesToScan(String packagesToScan)
+    {
+        this.packagesToScan = packagesToScan;
+    }
+
     @Override
     public void afterPropertiesSet()
     {
-        Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
+        String[] packages = packagesToScan.split(",");
 
-        assignedObjectTypes = entities.stream()
-                .filter(entityType -> AcmAssignedObject.class.isAssignableFrom(entityType.getJavaType()))
-                .peek(entityType -> log.debug("Found entity [{}]", entityType.getJavaType().getSimpleName()))
+        Set<Class<? extends AcmAssignedObject>> acmObjects = Arrays.stream(packages)
+                .map(it -> StringUtils.substringBeforeLast(it, ".*"))
+                .flatMap(it -> {
+                    Reflections reflections = new Reflections(it);
+                    return reflections.getSubTypesOf(AcmAssignedObject.class).stream();
+                }).collect(Collectors.toSet());
+
+        assignedObjectTypes = acmObjects.stream()
+                .peek(it -> log.debug("Found assigned object [{}]", it.getSimpleName()))
                 .map(it -> {
                     try
                     {
-                        return ((AcmObject) it.getJavaType().newInstance()).getObjectType();
+                        return it.newInstance().getObjectType();
                     }
                     catch (InstantiationException | IllegalAccessException e)
                     {
-                        log.warn("Can not determine object type for class [{}]", it.getJavaType().getSimpleName());
+                        log.warn("Can not determine object type for class [{}]", it.getSimpleName());
                     }
                     return null;
                 }).filter(Objects::nonNull)
