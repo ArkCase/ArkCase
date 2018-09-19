@@ -67,7 +67,7 @@ public class ResetPasswordService
     };
     private EmailBodyBuilder<AcmUser> emailBodyBuilder = (user) -> {
         String link = String.format(passwordResetLink, acmAppConfiguration.getBaseUrl(), user.getPasswordResetToken().getToken());
-        String messageBody = String.format(passwordResetEmailBodyTemplate, user.getUserId(), link, link);
+        String messageBody = String.format(passwordResetEmailBodyTemplate, user.getUserId(), link);
         return new MessageBodyFactory(passwordResetTemplateContent).buildMessageBodyFromTemplate(messageBody, "", "");
     };
 
