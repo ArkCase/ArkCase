@@ -1,11 +1,19 @@
 <div ng-controller="TimeTracking.ActionsController">
     <div class="pull-right">
         <div class="btn-group">
-            <a class="btn btn-sm btn-default" ui-sref="frevvo.new-timesheet()">
+            <a class="btn btn-sm btn-default" ui-sref="frevvo.new-timesheet()" ng-show="isFrevvoFormType">
                 <i class="fa fa-edit"></i>
                 <span translate>timeTracking.comp.actions.new.button</span>
             </a>
-            <a class="btn btn-sm btn-default" ng-show="isVisible()" ui-sref="frevvo.edit-timesheet(editTimesheetParams)">
+            <a class="btn btn-sm btn-default" ng-click="newTimesheet()" ng-show="isAngularFormType">
+                <i class="fa fa-edit"></i>
+                <span translate>timeTracking.comp.actions.new.button</span>
+            </a>
+            <a class="btn btn-sm btn-default" ng-show="isVisible() && isFrevvoFormType" ui-sref="frevvo.edit-timesheet(editTimesheetParams)">
+                <i class="fa fa-edit"></i>
+                <span translate>timeTracking.comp.actions.edit.button</span>
+            </a>
+            <a class="btn btn-sm btn-default" ng-show="isVisible() && isAngularFormType" ng-click="editTimesheet()">
                 <i class="fa fa-edit"></i>
                 <span translate>timeTracking.comp.actions.edit.button</span>
             </a>

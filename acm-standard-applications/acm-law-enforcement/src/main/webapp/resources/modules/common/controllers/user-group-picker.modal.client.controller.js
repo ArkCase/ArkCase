@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('Cases.UserGroupPickerController', [ '$scope', '$modalInstance', '$config', '$filter', '$extraFilter', '$params', function($scope, $modalInstance, $config, $filter, $extraFilter, $params) {
+angular.module('common').controller('Common.UserGroupPickerController', [ '$scope', '$modalInstance', '$config', '$filter', '$extraFilter', '$params', function($scope, $modalInstance, $config, $filter, $extraFilter, $params) {
     $scope.filter = $filter;
     $scope.extraFilter = $extraFilter;
     $scope.modalInstance = $modalInstance;

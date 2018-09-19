@@ -20,7 +20,7 @@ angular.module('time-tracking').controller('TimeTracking.DetailsController',
 
             $scope.saveDetails = function() {
                 var timesheetInfo = Util.omitNg($scope.objectInfo);
-                TimeTrackingInfoService.saveTimesheetInfo(timesheetInfo).then(function(timesheetInfo) {
+                TimeTrackingInfoService.saveTimesheetInfo(timesheetInfo, "Save").then(function(timesheetInfo) {
                     MessageService.info($translate.instant("timeTracking.comp.details.informSaved"));
                     return timesheetInfo;
                 });

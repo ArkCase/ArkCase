@@ -33,9 +33,11 @@ import org.springframework.security.core.Authentication;
 
 public interface ConfigService
 {
-    Config getConfig(Long fileId, Authentication auth);
+    Config getConfig(Long fileId, String mode, String lang, Authentication auth);
 
     String getDocumentServerUrlApi();
 
     String getArkcaseBaseUrl();
+
+    boolean isOutboundSignEnabled();
 }

@@ -23,6 +23,22 @@
         "defaultDateUIFormat": "MM/dd/aaaa",
         "defaultDateTimeUIFormat": "MM/dd/aaaa HH:mm"
     },
+    "common.userOrGroupSearch": {
+        "id": "pt_userSearch",
+        "title": "pt_User/Group Search",
+        "search": {
+            "btn": "pt_Search",
+            "placeholder": "pt_Search for the user or group."
+        },
+        "cancelButton": "pt_Cancel",
+        "confirmButton": "pt_Confirm",
+        "assigneeGridColumns": {
+            "name": "pt_Name",
+            "type": "pt_Type",
+            "title": "pt_Title",
+            "username": "pt_Username"
+        }
+    },
     "common.frevvo": {
         "defaultDateFormat": "AAAA-MM-DD"
     },
@@ -203,7 +219,6 @@
         "selectedItemsGrid.label": "Entradas selecionadas",
         "notValidUser": "pt_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
         "notValidGroup": "pt_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
-
     },
     "common.directive.search": {
         "showMore.button.text": "Mostrar mais valores",
