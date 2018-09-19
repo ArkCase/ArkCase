@@ -29,23 +29,19 @@ package com.armedia.acm.services.dataupdate.service;
 
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 
+import org.apache.commons.lang3.StringUtils;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Type;
-
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SolrReindexAssignedObjectsExecutor implements AcmDataUpdateExecutor
 {
-    @PersistenceContext
-    private EntityManager entityManager;
     private SolrReindexService solrReindexService;
+    private String packages;
     private static final Logger log = LoggerFactory.getLogger(SolrReindexAssignedObjectsExecutor.class);
 
     @Override
@@ -57,10 +53,12 @@ public class SolrReindexAssignedObjectsExecutor implements AcmDataUpdateExecutor
     @Override
     public void execute()
     {
-        Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
-        List<Class> assignedObjects = entities.stream()
-                .filter(entityType -> AcmAssignedObject.class.isAssignableFrom(entityType.getJavaType()))
-                .map(Type::getJavaType)
+        List<Class> assignedObjects = Arrays.stream(packages.split(","))
+                .map(it -> StringUtils.substringBeforeLast(it, ".*"))
+                .flatMap(it -> {
+                    Reflections reflections = new Reflections(it);
+                    return reflections.getSubTypesOf(AcmAssignedObject.class).stream();
+                })
                 .peek(it -> log.debug("Found entity [{}] for solr reindex", it.getSimpleName()))
                 .collect(Collectors.toList());
         solrReindexService.reindex(assignedObjects);
@@ -74,5 +72,15 @@ public class SolrReindexAssignedObjectsExecutor implements AcmDataUpdateExecutor
     public void setSolrReindexService(SolrReindexService solrReindexService)
     {
         this.solrReindexService = solrReindexService;
+    }
+
+    public String getPackages()
+    {
+        return packages;
+    }
+
+    public void setPackages(String packages)
+    {
+        this.packages = packages;
     }
 }
