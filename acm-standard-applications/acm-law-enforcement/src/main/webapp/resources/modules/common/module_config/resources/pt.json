@@ -639,6 +639,16 @@
             "error.ownerUnique": "Apenas um proprietário é permitido."
         }
     },
+    "common.directive.coreParticipantsNewComplaintCase.modal": {
+        "addParticipant.label": "Adicionar participante",
+        "editParticipant.label": "Editar registro",
+        "participantType.label": "Tipo de participante",
+        "participantName.label": "Nome do participante",
+        "btnOk.text": "Salve ",
+        "btnCancel.text": "Cancelar",
+        "dialogUserGroupPicker.header": "pt_Search User/Group",
+        "replaceChildrenParticipant": "substitua os participantes das crianças"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "% Completo"
     },

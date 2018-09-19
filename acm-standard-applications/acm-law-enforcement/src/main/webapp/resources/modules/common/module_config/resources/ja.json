@@ -639,6 +639,16 @@
             "error.ownerUnique": "所有者は1人だけです。"
         }
     },
+    "common.directive.coreParticipantsNewComplaintCase.modal": {
+        "addParticipant.label": "参加者を追加",
+        "editParticipant.label": "レコードの編集",
+        "participantType.label": "参加者タイプ",
+        "participantName.label": "参加者名",
+        "btnOk.text": "セーブ",
+        "btnCancel.text": "キャンセル",
+        "dialogUserGroupPicker.header": "ja_Search User/Group",
+        "replaceChildrenParticipant": "子供の参加者を交換する"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "％完了"
     },
