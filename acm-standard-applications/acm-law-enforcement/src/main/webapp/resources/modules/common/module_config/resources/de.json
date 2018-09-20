@@ -640,6 +640,16 @@
             "error.ownerUnique": "Nur ein Besitzer ist erlaubt."
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "Teilnehmer hinzufügen",
+        "editParticipant.label": "Datensatz bearbeiten",
+        "participantType.label": "Teilnehmertyp",
+        "participantName.label": "Teilnehmer name",
+        "btnOk.text": "Sparen",
+        "btnCancel.text": "Stornieren",
+        "dialogUserGroupPicker.header": "de_Search User/Group",
+        "replaceChildrenParticipant": "Ersetzen Kinder Teilnehmer"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "% Abgeschlossen"
     },
