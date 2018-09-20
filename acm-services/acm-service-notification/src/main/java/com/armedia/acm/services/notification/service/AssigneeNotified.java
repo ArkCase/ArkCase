@@ -72,8 +72,8 @@ public class AssigneeNotified implements UsersNotified
 
     private String getUserId(String user)
     {
-        String userEmail = getUserDao().findByUserId(user).getUserId();
-        return !userEmail.isEmpty() ? userEmail : "";
+        String userId = getUserDao().findByUserId(user).getUserId();
+        return !userId.isEmpty() ? userId : "";
     }
 
     public UserDao getUserDao()
