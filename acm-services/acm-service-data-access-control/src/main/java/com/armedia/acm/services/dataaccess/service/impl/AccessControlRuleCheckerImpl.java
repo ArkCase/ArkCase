@@ -276,6 +276,8 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     {
         return IntStream.range(0, participants.length()).mapToObj(participants::getJSONObject)
                 .filter(jsonObject -> userIsParticipantTypeAny.contains(jsonObject.getString("type")))
+                .peek(it -> log.debug("Participant [{}:{}] is in required participant any list",
+                        it.getString("type"), it.getString("ldapId")))
                 .map(jsonObject -> jsonObject.getString("ldapId")).collect(Collectors.toSet());
     }
 
