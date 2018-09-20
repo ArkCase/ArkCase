@@ -63,7 +63,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -83,11 +85,45 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private CmisConfigUtils cmisConfigUtils;
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    public static List<String> getAllTikaMimeTypesForFile(HashMap<String, List<String>> mimeTypesTika, String value)
+    {
+        List<String> keys = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : mimeTypesTika.entrySet())
+        {
+            if (entry.getValue().contains(value))
+            {
+                keys.add(entry.getKey());
+            }
+        }
+        return keys;
+    }
+
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
             Document existingCmisDocument) throws MuleException, IOException
     {
+        HashMap<String, List<String>> mimeTypesByTika = new HashMap<>();
+
+        mimeTypesByTika.computeIfAbsent("text/plain", k -> new ArrayList<>()).add("application/octet-stream");
+        mimeTypesByTika.computeIfAbsent("application/xml", k -> new ArrayList<>()).add("text/xml");
+        mimeTypesByTika.computeIfAbsent("application/xml", k -> new ArrayList<>()).add("application/octet-stream");
+        mimeTypesByTika.computeIfAbsent("application/xslt+xml", k -> new ArrayList<>()).add("text/xml");
+        mimeTypesByTika.computeIfAbsent("application/x-dosexec", k -> new ArrayList<>()).add("application/x-msdownload");
+        mimeTypesByTika.computeIfAbsent("video/x-msvideo", k -> new ArrayList<>()).add("video/avi");
+        mimeTypesByTika.computeIfAbsent("video/x-m4v", k -> new ArrayList<>()).add("video/mp4");
+        mimeTypesByTika.computeIfAbsent("model/vnd.mts", k -> new ArrayList<>()).add("video/vnd.dlna.mpeg-tts");
+        mimeTypesByTika.computeIfAbsent("audio/mpeg", k -> new ArrayList<>()).add("audio/mp3");
+        mimeTypesByTika.computeIfAbsent("audio/x-aac", k -> new ArrayList<>()).add("audio/vnd.dlna.adts");
+        mimeTypesByTika.computeIfAbsent("audio/x-flac", k -> new ArrayList<>()).add("audio/flac");
+        mimeTypesByTika.computeIfAbsent("audio/midi", k -> new ArrayList<>()).add("audio/mid");
+        mimeTypesByTika.computeIfAbsent("application/octet-stream", k -> new ArrayList<>()).add("audio/vnd.dolby.dd-raw");
+        mimeTypesByTika.computeIfAbsent("audio/x-oggflac", k -> new ArrayList<>()).add("audio/ogg");
+        mimeTypesByTika.computeIfAbsent("audio/mp4", k -> new ArrayList<>()).add("audio/x-m4a");
+        mimeTypesByTika.computeIfAbsent("audio/amr-wb", k -> new ArrayList<>()).add("application/octet-stream");
+        mimeTypesByTika.computeIfAbsent("audio/x-aiff", k -> new ArrayList<>()).add("audio/aiff");
+        mimeTypesByTika.computeIfAbsent("application/vnd.rn-realmedia", k -> new ArrayList<>()).add("application/octet-stream");
+
         log.debug("Creating ecm file pipeline context");
 
         File tempFileContents = null;
@@ -106,9 +142,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             {
                 log.error("Could not extract metadata with Tika: [{}]", e.getMessage(), e);
             }
-            if ((!metadata.getFileType().equals("user_profile"))
-                    || (detectedMetadata.getContentType().equals(metadata.getFileActiveVersionMimeType())
-                            && metadata.getFileType().equals("user_profile")))
+
+            if ((detectedMetadata.getContentType().equals(metadata.getFileActiveVersionMimeType())) ||
+                    (getAllTikaMimeTypesForFile(mimeTypesByTika, metadata.getFileActiveVersionMimeType())
+                            .contains(detectedMetadata.getContentType())))
             {
 
                 Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
@@ -145,7 +182,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             }
             else
             {
-                throw new IOException("Uploaded file's MIME type is not compatible");
+                log.error("Uploaded file with name [{}] - MIME type [{}] is not compatible with advertised type [{}]",
+                        metadata.getFileName(), metadata.getFileType(), metadata.getFileActiveVersionMimeType());
+                throw new IOException("Uploaded file's " + metadata.getFileName() + " MIME type " + metadata.getFileActiveVersionMimeType()
+                        + " is not compatible. " + metadata.getFileType());
             }
         }
         finally
@@ -590,4 +630,5 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
         this.cmisConfigUtils = cmisConfigUtils;
     }
+
 }
