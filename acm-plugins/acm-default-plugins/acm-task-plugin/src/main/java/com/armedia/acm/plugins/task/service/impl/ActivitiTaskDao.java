@@ -1388,6 +1388,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", acmTask.getTaskId());
         acmTask.setParticipants(participants);
 
+        ensureCorrectAssigneeInParticipants(acmTask);
+
         return acmTask;
     }
 
