@@ -309,7 +309,7 @@ public class SmtpServiceTest
 
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
-        assertThat(capturedAttachments.getValue().get("fileName.extension"), notNullValue());
+        assertThat(capturedAttachments.getValue().get("fileName"), notNullValue());
         assertThat(capturedAttachments.getValue().get("temp.zip"), notNullValue());
         mockApplicationEventPublisher.publishEvent(any(SmtpEventSentEvent.class));
     }
@@ -381,7 +381,7 @@ public class SmtpServiceTest
 
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
-        assertThat(capturedAttachments.getValue().get("fileName.extension"), notNullValue());
+        assertThat(capturedAttachments.getValue().get("fileName"), notNullValue());
         assertThat(capturedAttachments.getValue().get("temp.zip"), notNullValue());
         mockApplicationEventPublisher.publishEvent(any(SmtpEventSentEvent.class));
         assertThat(messagePropsCaptor.getValue().get("encryption"), is("starttls"));
@@ -462,7 +462,7 @@ public class SmtpServiceTest
 
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
-        assertThat(capturedAttachments.getValue().get("fileName.extension"), notNullValue());
+        assertThat(capturedAttachments.getValue().get("fileName"), notNullValue());
         assertThat(capturedAttachments.getValue().get("temp.zip"), notNullValue());
         mockApplicationEventPublisher.publishEvent(any(SmtpEventSentEvent.class));
     }
@@ -542,7 +542,7 @@ public class SmtpServiceTest
 
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
-        assertThat(capturedAttachments.getValue().get("fileName.extension"), notNullValue());
+        assertThat(capturedAttachments.getValue().get("fileName"), notNullValue());
         assertThat(capturedAttachments.getValue().get("temp.zip"), notNullValue());
         mockApplicationEventPublisher.publishEvent(any(SmtpEventSentEvent.class));
         assertThat(messagePropsCaptor.getValue().get("encryption"), is("starttls"));
