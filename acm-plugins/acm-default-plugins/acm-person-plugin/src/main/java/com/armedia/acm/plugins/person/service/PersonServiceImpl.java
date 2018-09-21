@@ -257,9 +257,9 @@ public class PersonServiceImpl implements PersonService
     {
         Objects.requireNonNull(person, "Person not found.");
         if (person.getContainer() == null)
-    {
-        person = createContainerAndPictureFolder(person, auth);
-    }
+        {
+            person = createContainerAndPictureFolder(person, auth);
+        }
         AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
         Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
 
