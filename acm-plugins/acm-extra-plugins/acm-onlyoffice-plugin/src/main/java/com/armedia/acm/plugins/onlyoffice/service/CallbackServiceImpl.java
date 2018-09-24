@@ -170,8 +170,8 @@ public class CallbackServiceImpl implements CallbackService
                 }
                 // save changes
                 documentHistoryManager.saveHistoryChanges(callBackData.getHistory(), callBackData.getChangesUrl(), updatedFile);
-                // remove lock
 
+                // remove lock
                 acmObjectLockingManager.releaseObjectLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE, FileLockType.SHARED_WRITE.name(),
                         false, authentication.getName(), existingLock.getId());
                 onlyOfficeEventPublisher.publishDocumentCoEditSavedEvent(ecmFile, authentication.getName());
