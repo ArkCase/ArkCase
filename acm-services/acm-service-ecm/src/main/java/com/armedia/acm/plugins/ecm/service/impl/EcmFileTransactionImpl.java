@@ -91,10 +91,15 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         List<String> keys = new ArrayList<>();
         for (Map.Entry<String, List<String>> entry : mimeTypesByTika.entrySet())
         {
+            if(value.contains(";"))
+            {
+                value = value.split(";")[0];
+            }
             if (entry.getValue().contains(value))
             {
                 keys.add(entry.getKey());
             }
+
         }
         return keys;
     }

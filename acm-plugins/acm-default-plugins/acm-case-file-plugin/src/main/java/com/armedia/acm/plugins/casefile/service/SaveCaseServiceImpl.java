@@ -99,7 +99,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
 
                     log.debug("Uploading document for FOIA Request [{}] as [{}]", saved.getId(), file.getOriginalFilename());
 
-                    getEcmFileService().upload(file.getOriginalFilename(), "other", "Document", file.getInputStream(), "",
+                    getEcmFileService().upload(file.getOriginalFilename(), "other", "Document", file.getInputStream(), file.getContentType(),
                             file.getOriginalFilename(), authentication,
                             folderId, saved.getObjectType(), saved.getId());
                 }
