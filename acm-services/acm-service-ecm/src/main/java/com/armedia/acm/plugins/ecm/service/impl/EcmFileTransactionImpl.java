@@ -99,7 +99,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             {
                 keys.add(entry.getKey());
             }
-
         }
         return keys;
     }
