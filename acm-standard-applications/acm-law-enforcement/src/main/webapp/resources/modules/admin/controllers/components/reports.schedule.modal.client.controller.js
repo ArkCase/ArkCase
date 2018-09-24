@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('admin').controller('Admin.ReportsScheduleModalController',
-        [ '$scope', '$modalInstance', '$q', '$translate', 'LookupService', 'Admin.ScheduleReportService', 'MessageService', 'Util.DateService', 'UtilService', function($scope, $modalInstance, $q, $translate, LookupService, ScheduleReportService, MessageService, UtilDateService, Util) {
+        [ '$scope', '$modalInstance', '$q', '$translate', 'LookupService', 'Admin.ScheduleReportService', 'MessageService', 'Util.DateService', 'UtilService', 'Admin.ReportsConfigService', function($scope, $modalInstance, $q, $translate, LookupService, ScheduleReportService, MessageService, UtilDateService, Util, ReportsConfigService) {
 
             $scope.reportSchedule = {
                 reportFile: '',
@@ -17,17 +17,29 @@ angular.module('admin').controller('Admin.ReportsScheduleModalController',
             // instantiate the promise to pull from acm-reports-server.config.properties
             var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
 
+            var tempReportsPentahoPromise = ReportsConfigService.getReportsPaged({});
+
             // Containers for dropdown/select options
             $scope.reportTypes = [];
             $scope.reportRecurrence = [];
             $scope.outputTypes = [];
 
             // wait for promises to resolve
-            $q.all([ promiseServerConfig ]).then(function(payload) {
+            $q.all([ promiseServerConfig,  tempReportsPentahoPromise ]).then(function(payload) {
                 // configure the dropdown/select options
                 var allProperties = payload[0];
                 // value/label pairs are parsed in angular using format "item.label as item.value for item in {list}"
-                $scope.reportTypesList = addProperties($scope.reportTypes, allProperties['REPORT_TYPES']);
+                $scope.reportTypesList = [];
+                _.forEach(payload[1].data, function(report) {
+
+                        var element = new Object;
+                        element.label = report["title"];
+                        element.value = report["propertyName"];
+
+                    $scope.reportTypesList.push(element);
+
+                })
+
                 $scope.reportRecurrenceList = addProperties($scope.reportRecurrence, allProperties['REPORT_RECURRENCE']);
                 $scope.outputTypesList = addProperties($scope.outputTypes, allProperties['REPORT_OUTPUT_TYPES']);
 
