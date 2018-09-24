@@ -3049,14 +3049,13 @@ angular
                         },
                         deleteFile : function(node) {
                             var dfd = $.Deferred();
-                            if (!DocTree.isFileNode(node)) {
+                                if (!DocTree.isFileNode(node) || node.data.lock !== "") {
                                 dfd.reject();
 
                             } else {
                                 var parent = node.parent;
                                 if (!Validator.validateNode(parent)) {
                                     dfd.reject();
-
                                 } else {
                                     var cacheKey = DocTree.getCacheKeyByNode(parent);
                                     var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
