@@ -235,16 +235,28 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         Map<String, DataHandler> attachments = new HashMap<>();
         if (in.getAttachmentIds() != null && !in.getAttachmentIds().isEmpty())
         {
+            //add index to make sure the fileKey is unique for AFDP- 5713
+            int idx = 1;
             for (Long attachmentId : in.getAttachmentIds())
             {
                 InputStream contents = ecmFileService.downloadAsInputStream(attachmentId);
                 EcmFile ecmFile = ecmFileService.findById(attachmentId);
                 String fileName = ecmFile.getFileName();
+
+                // add fileKey for AFDP- 5713
+                String fileKey = fileName;
+                if (attachments.containsKey(fileKey))
+                {
+                    fileKey = fileKey + "(" + idx + ")";
+                    idx++;
+                }
+
                 if (ecmFile.getFileActiveVersionNameExtension() != null)
                 {
+
                     fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
                 }
-                attachments.put(fileName, new DataHandler(new InputStreamDataSource(contents, fileName)));
+                attachments.put(fileKey, new DataHandler(new InputStreamDataSource(contents, fileName)));
 
                 sentEvents
                         .add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType()));
@@ -317,7 +329,19 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         }
 
-        SmtpEventSentEvent event = new SmtpEventSentEvent(in, user.getUserId());
+        EcmFile ecmFile = null;
+        List<String> fileNames = new ArrayList<String>();
+
+        for (int i = 0; i < in.getFileIds().size(); i++)
+        {
+            ecmFile = ecmFileService.findById(in.getFileIds().get(i));
+            fileNames.add(ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension());
+        }
+        in.setFileNames(fileNames);
+
+        SmtpSentEventHyperlink event = new SmtpSentEventHyperlink(in, user.getUserId(),
+                ecmFile != null ? ecmFile.getParentObjectId() : null,
+                ecmFile != null ? ecmFile.getParentObjectType() : null);
         boolean success = (exception == null);
         event.setSucceeded(success);
         eventPublisher.publishEvent(event);

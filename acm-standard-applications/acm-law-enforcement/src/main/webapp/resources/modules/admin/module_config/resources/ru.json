@@ -9,6 +9,7 @@
         "security.ldapConfig.addNewMember": "Добавить участника",
         "security.ldapConfig.addMembers": "Добавить участников",
         "security.ldapConfig.addSubgroup": "Добавить подгруппу",
+		"security.ldapConfig.addExistingSubgroup": "Добавить существующую группу",
         "security.ldapConfig.addExistingMembers": "Добавить существующих членов",
         "security.ldapConfig.addLdapSubgroup": "Добавить подгруппу LDAP",
         "security.ldapConfig.deleteLdapGroup": "Удалить группу LDAP",
@@ -18,20 +19,26 @@
         "security.ldapConfig.removeMember": "Удалить участник",
         "security.ldapConfig.table.ldapUrl": "URL-адрес LDAP",
         "security.ldapConfig.table.directoryName": "Название каталога",
+		"security.ldapConfig.table.userAttributesConfig": "Конфигурация пользователя LDAP",
+        "security.ldapConfig.table.groupAttributesConfig": "Конфигурация группы LDAP",
+        "security.ldapConfig.table.action.partialSync": "Запуск частичной синхронизации LDAP",
         "security.ldapConfig.data": {
+		    "sync.dialog.header": "Запустить синхронизацию",
+            "sync.dialog.type.partial": " Дифференциальная синхронизация",
+            "sync.dialog.type.full": "Полная синхронизация",
             "userAttributesTemplate": "Шаблон пользовательских атрибутов Ldap",
             "groupAttributesTemplate": "Шаблон атрибутов группы Ldap",
             "addNewDirectory": "Добавить новый каталог",
             "editRecord": "Изменить запись",
             "id": "ID",
-            "id.validationMessage": "ru_The ID can only consist of letters, numbers or dots.",
+			"id.validationMessage": "Идентификатор может состоять только из букв, цифр или точек.",
             "directoryType": "Выбрать сервер каталогов",
             "ldapUrl": "URL-адрес LDAP",
             "base": "База",
             "directoryName": "Название каталога",
             "authUserDn": "Пользователь Auth Dn",
             "authUserPassword": "Пароль пользователя Auth",
-            "confirmAuthUserPassword": "ru_Confirm Auth User Password",
+			"confirmAuthUserPassword": "Подтвердить пароль пользователя Auth",
             "userSearchBase": "База поиска пользователей",
             "userSearchFilter": "Фильтр пользовательского поиска",
             "allUsersFilter": "Фильтр всех пользователей",
@@ -64,7 +71,7 @@
             "base": "Введите компонент базового домена (например, dc = example, dc = com)",
             "authUserDn": "Введите DN пользователя для аутентификации (например, cn = John Doe, ou = users, dc = example, dc = com)",
             "authUserPassword": "Введите пароль для пользователя аутентификации",
-            "confirmAuthUserPassword": "ru_Confirm password for authentication user",
+			"confirmAuthUserPassword": "Подтвердить пароль для пользователя аутентификации",
             "userSearchBase": "Введите базу поиска пользователей (например, ou = users)",
             "userSearchFilter": "Введите поисковый фильтр для одного пользователя (например, (& (objectClass = person) (uid =% s))",
             "allUsersFilter": "Введите фильтр поиска для всех пользователей (например, (objectClass = person))",
@@ -141,6 +148,7 @@
             },
             "addMembers": {
                 "title": "Добавить участников",
+				"group.title": "Добавить существующую группу в качестве члена",
                 "btn": {
                     "search": "Идти!",
                     "cancel": "Отмена",
@@ -160,7 +168,10 @@
                     "lastName": "Введите фамилию",
                     "email": "Введите адрес электронной почты",
                     "password": "Введите пароль",
-                    "confirmation": "Введите пароль еще раз"
+                    "confirmation": "Введите пароль еще раз",
+					"_1_": "Числовые значения недействительны в файле ресурсов. _УДАЛИТЬ_",
+                    "_2_": "Если требуется «minLengthForPassword», переместите его в config.json",
+                    "_minLengthForPassword": "7"
                 },
                 "editLdapMember": {
                     "title": "Изменить участника Ldap",
@@ -230,11 +241,12 @@
                 }
             },
             "tableColumns": {
-                "name": "ru_Name",
-                "type": "ru_Type",
-                "supervisorName": "ru_Supervisor Name",
-                "actions": "ru_Actions"
-            }
+                "name": "Имя",
+                "type": "Тип",
+                "supervisorName": "Имя супервизора",
+                "actions": "Действия"
+            },
+			"searchFilter.placeholder": "Поиск"
         },
         "security.selectPrivileges": "Создание роли / выбора привилегий",
         "security.selectPrivileges.applicationRole": "Роль приложения",
@@ -254,8 +266,8 @@
             "user": "Пользователь"
         },
         "security.group.management": {
-            "title": "ru_Group Management",
-            "group": "ru_Group"
+            "title": "Управление группой",
+            "group": "Группа"
         },
         "security.calendarConfiguration": {
             "title": "Настройка календаря",
@@ -269,7 +281,7 @@
                 "purge.label": "Чистка",
                 "email.label": "Адрес электронной почты системы",
                 "password.label": "Системный пароль",
-                "password.changeButton": "ru_Change the calendar user password",
+                "password.changeButton": "Изменение пароля пользователя календаря",
                 "purgeDays.label": "Дней",
                 "emailValid": "Системный адрес электронной почты и пароль действительны",
                 "emailNotValid": "Недействительный системный адрес электронной почты или пароль",
@@ -345,7 +357,8 @@
                 "validate.label": "Проверка SMTP",
                 "validate.button": "Утверждать",
                 "smtpValid": "Настройки SMTP действительны",
-                "smtpNotValid": "Недействительные настройки SMTP"
+                "smtpNotValid": "Недействительные настройки SMTP",
+				"errorMsg": "Выберите способ отправки документов"
             }
         },
         "security.emailTemplates": {
@@ -364,29 +377,30 @@
                 "templateName.label": "Имя Шаблона",
                 "templateName.placeholder": "Введите имя шаблона",
                 "emailPattern.label": "Шаблон электронной почты",
+				"emailPattern.description": "emailPattern.description : Использовать '. *' для всех получателей, используйте '+ @ militaryia.com' для получателей вооруженных или других регулярных выражений.Обратите внимание, что точка (.) Должна быть экранирована обратным слэшем!",
                 "emailPattern.placeholder": "Введите шаблон электронной почты",
                 "source.label": "Источник",
                 "objectTypes.label": "Типы объектов",
                 "actions.label": "Действия",
                 "manual.label": "Руководство",
                 "automated.label": "Автоматизированный",
-                "choose.file": "ru_Choose File",
-                "download": "ru_Download",
+                "choose.file": "Выберите файл",
+                "download": "Скачать",
                 "save": "Сохранить",
                 "cancel": "Отмена",
-                "validationResponse": "ru_Email Template already exists with selected parameters",
-                "uploadError": "ru_File upload canceled due to incorrect type of file. You can only upload html file."
+                "validationResponse": "Шаблон электронной почты уже существует с выбранными параметрами",
+                "uploadError": "Загрузка файла отменена из-за неправильного типа файла. Вы можете загружать только html-файл."
             },
             "objectTypes": {
-                "caseFile": "ru_Case File",
-                "complaint": "ru_Complaint",
-                "task": "ru_Task",
-                "document": "ru_Document"
+                "caseFile": "Файл дела",
+                "complaint": "Жалоба",
+                "task": "Задача",
+                "document": "Документ"
             },
             "actions": {
-                "sendAsAttachments": "ru_Send as Attachments",
-                "sendAsLinks": "ru_Send as Links",
-                "sendAsAttachmentsAndLinks": "ru_Send as Attachments and Links"
+                "sendAsAttachments": "Отправить как вложения",
+                "sendAsLinks": "Отправить как ссылку",
+                "sendAsAttachmentsAndLinks": "Отправить как вложения и ссылки"
             }
         },
         "security.exchangeConfiguration": {
@@ -427,6 +441,20 @@
                 }
             }
         },
+        "forms.timesheetConfiguration": {
+            "title": "Конфигурация расписания",
+            "chargeRole": "Роль зарядки",
+            "chargeRole.placeholder": "Введите роль заряда",
+            "rate": "Ставка",
+            "rate.placeholder": "Введите тариф ($)",
+            "active": "Активный / Неактивный",
+            "active.active": "Активный",
+            "active.inactive": "Неактивный",
+            "modal": {
+                "button.save": "Сохранить",
+                "button.cancel": "Отмена"
+            }
+        },
         "dashboard.title": "Панель приборов",
         "dashboard.config": "Конфигурация панели мониторинга",
         "dashboard.widgets": "Виджеты",
@@ -438,41 +466,40 @@
                 "sync": "Синхронизировать"
             },
             "schedule": {
-                "title": "ru_Reports Scheduling",
-                "selectReportType": "ru_Select Report Type",
+                "title": "Планирование отчетов",
+                "selectReportType": "Выберите тип отчета",
                 "emailAddress": {
-                    "title": "ru_Enter Email Addresses",
-                    "placeholder": "ru_Please enter comma (,) separated email addresses"
+                    "title": "Введите адрес электронной почты",
+                    "placeholder": "Введите адреса электронной почты, разделенные запятой (,)"
                 },
                 "table": {
-                    "header": "ru_Existing Schedules",
-                    "startTimeFormat": "ru_hh:mm a",
+                    "header": "Существующие расписания",
+                    "startTimeFormat": "чч: мм a",
                     "columns": {
-                        "jobName": "ru_Schedule Name",
-                        "recurrence": "ru_Recurrence",
-                        "startTime": "ru_Start Time",
-                        "startDate": "ru_Start Date",
-                        "endDate": "ru_End Date",
-                        "emailAddresses": "ru_Email Addresses",
-                        "state": "ru_Status"
+                        "jobName": "Название расписания",
+                        "recurrence": "Рекуррентность",
+                        "startTime": "Время начала",
+                        "startDate": "Дата начала",
+                        "endDate": "Дата окончания",
+                        "emailAddresses": "Адрес электронной почты",
+                        "state": "Положение дел"
                     }
                 },
                 "delete": {
-                    "success": "ru_Schedule deleted successfully",
-                    "error": "ru_Failed to delete schedule"
+                    "success": "График удален успешно удален",
+                    "error": "Не удалось удалить расписание"
                 },
-                "createScheduleSuccess": "ru_Schedule created successfully",
-                "createScheduleFailure": "ru_Failed to create schedule",
-                "enterFutureDate": "ru_Enter a start time in the future",
-                "recurrence": "ru_Recurrence (Enter future time)",
-                "time": "ru_Time",
-                "startDate": "ru_Start Date",
-                "endDate": "ru_End Date",
-                "filterStartDate": "ru_Result Filter Start Date",
-                "filterEndDate": "ru_Result Filter End Date",
-                "outputFormat": "ru_Select Output Format",
-                "submit": "ru_Submit",
-                "cancel": "ru_Cancel"
+                "createScheduleSuccess": "График создан успешно",
+                "createScheduleFailure": "Не удалось создать расписание",
+                "enterFutureDate": "Введите время начала в будущем",
+                "recurrence": "Повторение (Введите будущее время)",
+                "time": "Время",
+                "startDate": "Дата начала",
+                "endDate": "Дата окончания",
+                "filterStartDate": "Дата начала фильтра результатов",
+                "filterEndDate": "Дата окончания фильтра результатов",
+                "outputFormat": "Выберите формат вывода",
+                "submit": "Отправить"
             }
         },
         "forms.title": "Формы",
@@ -497,7 +524,7 @@
             "cancel": "Отмена",
             "activate": "Сделать активным"
         },
-        "workflows.config.noHistory": "ru_There is no history for this workflow.",
+        "workflows.config.noHistory": "Для этого рабочего процесса нет истории.",
         "workflows.config.grid": {
             "businessProcess": "Бизнес-процесс",
             "description": "Описание",
@@ -583,19 +610,22 @@
                     "btnCancel.text": "Отмена",
                     "btnOk.text": "Сохранить запись"
                 },
-                "addLookup": "ru_Add Lookup",
-                "label": "ru_Lookup Type",
-                "lookupName": "ru_Lookup Name",
-                "placeholder": "ru_Enter lookup name",
-                "btnSave.text": "ru_Save",
-                "deleteLookupMsg": "ru_Are you sure you want to delete this lookup?",
-                "deleteEntryMsg": "ru_Are you sure you want to delete this entry?",
-                "delete.success": "ru_Lookup is successfully deleted",
-                "delete.error": "ru_Lookup can't be deleted",
-                "lookupExists.error": "ru_Lookup with this name already exists"
+                "addLookup": "Добавить поиск",
+                "label": "Тип поиска",
+                "lookupName": "Имя поиска",
+                "placeholder": "Введите имя для поиска",
+                "btnSave.text": "Сохранить",
+                "deleteLookupMsg": "Вы действительно хотите удалить этот поиск?",
+                "deleteEntryMsg": "Вы действительно хотите удалить эту запись?",
+                "delete.success": "Поиск успешно удален",
+                "delete.error": "Поиск не может быть удален",
+                "lookupExists.error": "Поиск с таким именем уже существует"
             },
             "module.config": {
-                "title": "Конфигурация модуля"
+                "title": "Конфигурация модуля",
+				"btnDisabled": "Отключено",
+                "btnEnabled": "Включено",
+                "message": "В системе нет модулей"
             },
             "userName.config": {
                 "title": "Конфигурация дисплея пользователя",
@@ -607,13 +637,13 @@
                 "modal.ok": "ОК"
             },
             "formsType.config": {
-                "title": "ru_Forms Type Configuration",
-                "angular.label": "ru_Use Angular Forms",
-                "frevvo.label": "ru_Use Frevvo Forms",
-                "apply": "ru_Apply",
-                "modal.title": "ru_Information",
-                "modal.info": "ru_Settings will take effect after refresh",
-                "modal.ok": "ru_OK"
+                "title": "Конфигурация типа форм",
+                "angular.label": "Использование угловых форм",
+                "frevvo.label": "Использовать формы Frevvo",
+                "apply": "Подать заявление",
+                "modal.title": "Информация",
+                "modal.info": "Настройки вступят в силу после обновления",
+                "modal.ok": "OK"
             },
             "login.config": {
                 "title": "Конфигурация входа",
@@ -628,17 +658,18 @@
                 "apply.label": "Подать заявление"
             },
             "holiday": {
-                "title": "ru_Holiday Schedule",
+                "title": "Расписание праздников",
+                "label": "Включить выходные как рабочие дни",
                 "grid": {
-                    "holidayName": "ru_Name of Holiday",
-                    "holidayDate": "ru_Date of holiday"
+                    "holidayName": "Название праздника",
+                    "holidayDate": "Дата отпуска"
                 },
-                "cancel": "ru_Cancel",
-                "save": "ru_Save",
-                "message": "ru_The holiday you entered is not saved! Date of Holiday already exist!",
+                "cancel": "Отмена",
+                "save": "Сохранить",
+                "message": "Праздник, который вы ввели, не сохраняется! Дата отпуска уже существует!",
                 "placeholder": {
-                    "name": "ru_Enter Name of Holiday",
-                    "date": "ru_Enter Date of Holiday"
+                    "name": "Введите название праздника",
+                    "date": "Введите дату отпуска"
                 }
             }
         },
@@ -680,8 +711,8 @@
                 "creator": "Творец",
                 "modifier": "Модифицирован",
                 "activated": "Положение дел",
-                "statusDeactivated": "ru_Deactivated",
-                "statusActivated": "ru_Activated",
+                "statusDeactivated": "Дезактивированный",
+                "statusActivated": "Активированнаям",
                 "objectType": "Тип объекта",
                 "version": "Версия",
                 "templateVersionActive": "Активный"
@@ -698,7 +729,7 @@
                 }
             },
             "templates.modal": {
-                "objectTypes.selectedFiles": "ru_No File Selected",
+                "objectTypes.selectedFiles": "Файл не выбран",
                 "objectTypes.label": "Типы объектов",
                 "querySelect.label": "Выбор запроса",
                 "label.label": "Отображаемое имя",
@@ -747,7 +778,7 @@
                     "edit": "Изменить конфигурацию CMIS"
                 },
                 "dialog": {
-                    "testConnection": "ru_Test Connection",
+                    "testConnection": "Тестовое соединение",
                     "cancel": "Отмена",
                     "ok": "ОК"
                 },
@@ -825,47 +856,89 @@
                 "insert.success": "Успешно создана новая строка конфигурации.",
                 "insert.error": "Ошибка при создании новой строки конфигурации.",
                 "update.success": "Успешно обновленная строка конфигурации.",
-                "update.error": "Ошибка обновления строки конфигурации."
+                "update.error": "Ошибка обновления строки конфигурации.",
+				"test.conection.success": "Успешно подключено."
+            }
+        },
+        "transcription": {
+            "title": "Услуги транскрипции",
+            "transcriptionManagement": "Управление транскрипцией",
+            "transcriptionConfigForm": {
+                "save.button": "Сохранить",
+                "automation.label": "Aвтоматизация",
+                "enableTranscription.checkbox": "Включить транскрипцию",
+                "automaticTranscription.checkbox": "Автоматическая транскрипция",
+                "overwriteTranscription.checkbox": "Перезаписать оригинальную транскрипцию с новыми версиями",
+                "mediaFileAdded.label": "Когда будет добавлена новая версия медиафайла, система будет:",
+                "generateTranscription.radio": "Создайте новую транскрипцию для новой версии",
+                "copyTranscription.radio": "Скопируйте транскрипцию из активной версии в новую версию",
+                "provider.label": "Поставщик",
+                "numOfFiles.label": "Количество файлов для обработки",
+                "selectProvider": "Выберите поставщика",
+                "wordCount.label": "Количество слов",
+                "costPerSecond.label": "Стоимость в секунду",
+                "confidenceThreshold.label": "Порог доверия",
+				"mediaDurationInSeconds.label": "Предел продолжительности печати в секундах",
+                "silenceBetweenWords.label": "Тишина между словами в секундах",
+                "validation.messages": {
+                    "requiredErrorMsg": "Это поле обязательно к заполнению",
+                    "maxErrorMsg": "Значение должно быть меньше или равно 100",
+                    "minZeroValueErrorMsg": "Значение должно быть больше или равно 0",
+                    "minOneValueErrorMsg": "Значение должно быть больше или равно 1",
+					"minPositiveValueErrorMsg": "Значение должно быть больше 0"
+               }
+            }
+        },
+        "stateOfArkcase": {
+            "title": "Состояние Arkcase",
+            "pickDate": "Выберите дату",
+            "btn.download": "Скачать",
+            "datePicker": {
+                "clear": "Очистить",
+                "current": "Сегодня",
+                "close": "Закрыть"
+            }
+        },
+        "comp": {
+            "securityLdapConfig": {
+                "title": "Безопасность - конфигурация конфигурации Ldap"
+            },
+            "correspondenceManagementMergeFields": {
+                "title": "Сетка объединения полей слияния"
+            },
+            "correspondenceManagementMergeFieldsVersions": {
+                "title": "Сетка слияния полей слияния"
+            },
+            "correspondenceManagementTemplates": {
+                "title": "Сетка шаблонов"
+            },
+            "correspondenceManagementTemplateVersions": {
+                "title": "Коррекция шаблонов шаблонов соответствия"
+            },
+            "labelsConfig": {
+                "title": "Application - Labels Config grid"
+            },
+            "plainFormsConfig": {
+                "title": "Формы - Конфигурация форм"
+            },
+            "workflowsConfig": {
+                "title": "Workflows - Конфигурация сетки рабочих процессов"
+            },
+            "workflowsHistoryDialogConfig": {
+                "title": "Workflows - Workflows Диалоговое окно конфигурации истории конфигурации"
+            },
+            "usersPicker": {
+                "title": "Выберите пользователей"
+            },
+            "orgHierarchy": {
+                "title": "Иерархия организации"
+            },
+            "cmisConfiguration": {
+                "title": "Конфигурационная сетка CMIS"
+            },
+            "emailTemplates": {
+                "title": "Шаблоны электронной почты"
             }
         }
-    },
-    "admin.comp.securityLdapConfig": {
-        "title": "Безопасность - конфигурация конфигурации Ldap"
-    },
-    "admin.comp.correspondenceManagementMergeFields": {
-        "title": "Сетка объединения полей слияния"
-    },
-    "admin.comp.correspondenceManagementMergeFieldsVersions": {
-        "title": "Сетка слияния полей слияния"
-    },
-    "admin.comp.correspondenceManagementTemplates": {
-        "title": "Сетка шаблонов"
-    },
-    "admin.comp.correspondenceManagementTemplateVersions": {
-        "title": "Коррекция шаблонов шаблонов соответствия"
-    },
-    "admin.comp.labelsConfig": {
-        "title": "Приложение - Ярлыки Конфигурация сетки"
-    },
-    "admin.comp.plainFormsConfig": {
-        "title": "Формы - Конфигурация форм"
-    },
-    "admin.comp.workflowsConfig": {
-        "title": "Workflows - Конфигурация сетки рабочих процессов"
-    },
-    "admin.comp.workflowsHistoryDialogConfig": {
-        "title": "Workflows - Workflows Диалоговое окно конфигурации истории конфигурации"
-    },
-    "admin.comp.usersPicker": {
-        "title": "Выберите пользователей"
-    },
-    "admin.comp.orgHierarchy": {
-        "title": "Иерархия организации"
-    },
-    "admin.comp.cmisConfiguration": {
-        "title": "Конфигурационная сетка CMIS"
-    },
-    "admin.comp.emailTemplates": {
-        "title": "Шаблоны электронной почты"
     }
 }
