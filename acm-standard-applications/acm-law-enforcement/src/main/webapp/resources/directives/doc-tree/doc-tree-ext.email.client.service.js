@@ -11,7 +11,7 @@
  * DocTree extensions for email functions.
  */
 angular.module('services').factory('DocTreeExt.Email',
-        [ '$q', '$modal', '$translate', '$browser', 'UtilService', 'LookupService', 'Ecm.EmailService', 'ObjectService', 'Object.InfoService', 'Person.InfoService', function($q, $modal, $translate, $browser, Util, LookupService, EcmEmailService, ObjectService, ObjectInfoService, PersonInfoService) {
+        [ '$q', '$modal', '$translate', '$browser', 'UtilService', 'LookupService', 'Ecm.EmailService', 'ObjectService', 'Object.InfoService', 'Person.InfoService','DocumentRepository.InfoService', function($q, $modal, $translate, $browser, Util, LookupService, EcmEmailService, ObjectService, ObjectInfoService, PersonInfoService,DocumentRepositoryInfoService) {
 
             LookupService.getConfig("notification").then(function(data) {
                 Email.arkcaseUrl = Util.goodValue(data["arkcase.url"]);
@@ -23,8 +23,16 @@ angular.module('services').factory('DocTreeExt.Email',
                 var objectType = DocTree._objType;
                 var objectTypeInEndpoint = ObjectService.ObjectTypesInEndpoints[objectType];
                 var deferred = $q.defer();
-                if (objectType == ObjectService.ObjectTypes.CASE_FILE || objectType == ObjectService.ObjectTypes.COMPLAINT) {
-                    ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
+                if(objectType == ObjectService.ObjectTypes.DOC_REPO) {
+                   DocumentRepositoryInfoService.getDocumentRepositoryInfo(objectId).then(function(data) {
+                       getOriginatorEmail(data);
+                    });
+                }else {
+                   ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
+                       getOriginatorEmail(data);
+                    });
+                }
+                function getOriginatorEmail(data) {
                         var originator = data.originator;
                         var emailOfOriginator = "";
                         if (originator != undefined && !Util.isArrayEmpty(originator.person.contactMethods)) {
@@ -52,8 +60,8 @@ angular.module('services').factory('DocTreeExt.Email',
                         } else {
                             deferred.resolve(emailOfOriginator);
                         }
-                    });
-                }
+                    };
+
                 return deferred.promise;
             }
 

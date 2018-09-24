@@ -1,8 +1,8 @@
-package com.armedia.acm.convertfolder;
+package com.armedia.acm.services.email.smtp;
 
 /*-
  * #%L
- * ACM Service: Folder Converting Service
+ * ACM Service: Email SMTP
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,13 +27,39 @@ package com.armedia.acm.convertfolder;
  * #L%
  */
 
+import com.armedia.acm.core.model.AcmEvent;
+
+import java.util.Date;
+
 /**
- * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 26, 2018
+ * @author sasko.tanaskoski
  *
  */
-public interface FolderConverter
+public class SmtpSentEventHyperlink extends AcmEvent
 {
+    private static final long serialVersionUID = 1814130260773517605L;
+    private static final String EVENT_TYPE = "com.armedia.acm.smtp.event.sent.hyperlink";
 
-    void convertFolder(Long folderId, String username) throws ConversionException;
+    public SmtpSentEventHyperlink(Object source, String userId)
+    {
+        this(source, userId, null, null);
+    }
 
+    public SmtpSentEventHyperlink(Object source, String userId, Long objectId, String objectType)
+    {
+        super(source);
+        setUserId(userId);
+        setEventDate(new Date());
+        if (objectId != null && objectType != null)
+        {
+            setObjectId(objectId);
+            setObjectType(objectType);
+        }
+    }
+
+    @Override
+    public String getEventType()
+    {
+        return EVENT_TYPE;
+    }
 }

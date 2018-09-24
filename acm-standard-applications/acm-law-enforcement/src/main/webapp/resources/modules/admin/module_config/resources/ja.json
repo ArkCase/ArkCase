@@ -9,6 +9,7 @@
         "security.ldapConfig.addNewMember": "新しいメンバーを追加",
         "security.ldapConfig.addMembers": "メンバーを追加",
         "security.ldapConfig.addSubgroup": "サブグループを追加",
+		"security.ldapConfig.addExistingSubgroup": "既存のグループを追加する",
         "security.ldapConfig.addExistingMembers": "既存メンバーの追加",
         "security.ldapConfig.addLdapSubgroup": "LDAPサブグループの追加",
         "security.ldapConfig.deleteLdapGroup": "LDAPグループを削除する",
@@ -18,20 +19,26 @@
         "security.ldapConfig.removeMember": "メンバーを削除",
         "security.ldapConfig.table.ldapUrl": "LDAPのURL",
         "security.ldapConfig.table.directoryName": "ディレクトリ名",
+		"security.ldapConfig.table.userAttributesConfig": "LDAPユーザーの構成",
+        "security.ldapConfig.table.groupAttributesConfig": "LDAPユーザーの構成",
+        "security.ldapConfig.table.action.partialSync": "LDAP部分同期の開始",
         "security.ldapConfig.data": {
+		    "sync.dialog.header": "同期を実行する",
+            "sync.dialog.type.partial": " 差動同期",
+            "sync.dialog.type.full": "完全同期",
             "userAttributesTemplate": "Ldapユーザー属性テンプレート",
             "groupAttributesTemplate": "Ldapグループ属性テンプレート",
             "addNewDirectory": "新しいディレクトリを追加する",
             "editRecord": "レコードの編集",
             "id": "ID",
-            "id.validationMessage": "ja_The ID can only consist of letters, numbers or dots.",
+			"id.validationMessage": "IDは文字、数字またはドットのみで構成できます。.",
             "directoryType": "ディレクトリサーバーを選択",
             "ldapUrl": "LDAPのURL",
             "base": "ベース",
             "directoryName": "ディレクトリ名",
             "authUserDn": "認証ユーザーDn",
             "authUserPassword": "認証ユーザーパスワード",
-            "confirmAuthUserPassword": "ja_Confirm Auth User Password",
+			"confirmAuthUserPassword": "認証ユーザーのパスワードを確認する",
             "userSearchBase": "ユーザー検索ベース",
             "userSearchFilter": "ユーザー検索フィルタ",
             "allUsersFilter": "すべてのユーザーフィルタ",
@@ -64,7 +71,7 @@
             "base": "ベースドメインコンポーネントを入力します（例：dc = example、dc = com）",
             "authUserDn": "認証に使用するユーザーDNを入力します（例：cn = John Doe、ou = users、dc = example、dc = com）",
             "authUserPassword": "認証ユーザーのパスワードを入力してください",
-            "confirmAuthUserPassword": "ja_Confirm password for authentication user",
+			"confirmAuthUserPassword": "認証ユーザーのパスワードを確認する",
             "userSearchBase": "ユーザーの検索ベースを入力します（例：ou =ユーザー）。",
             "userSearchFilter": "シングルユーザーの検索フィルターを入力してください（例：（＆（objectClass = person）（uid =％s））",
             "allUsersFilter": "すべてのユーザーの検索フィルタを入力してください（例：（objectClass = person））",
@@ -141,6 +148,7 @@
             },
             "addMembers": {
                 "title": "メンバーを追加",
+				"group.title": "既存のグループをメンバーとして追加する",
                 "btn": {
                     "search": "始動",
                     "cancel": "キャンセル",
@@ -160,7 +168,10 @@
                     "lastName": "姓を入力",
                     "email": "電子メールを入力してください",
                     "password": "パスワードを入力してください",
-                    "confirmation": "もう一度パスワードを入力してください"
+                    "confirmation": "もう一度パスワードを入力してください",
+					"_1_": "数値はリソースファイルでは無効です。 _は削除されました_",
+                    "_2_": "「minLengthForPassword」が必要な場合は、config.jsonに移動してください",
+                    "_minLengthForPassword": "7"
                 },
                 "editLdapMember": {
                     "title": "Ldapメンバーを編集",
@@ -230,11 +241,12 @@
                 }
             },
             "tableColumns": {
-                "name": "ja_Name",
-                "type": "ja_Type",
-                "supervisorName": "ja_Supervisor Name",
-                "actions": "ja_Actions"
-            }
+                "name": "名",
+                "type": "タイプ",
+                "supervisorName": "監督者名",
+                "actions": "行動"
+            },
+			 "searchFilter.placeholder": "サーチ"
         },
         "security.selectPrivileges": "役割の作成/特権の選択",
         "security.selectPrivileges.applicationRole": "役割の適用",
@@ -254,8 +266,8 @@
             "user": "ユーザー"
         },
         "security.group.management": {
-            "title": "ja_Group Management",
-            "group": "ja_Group"
+            "title": "グループ管理",
+            "group": "グループ"
         },
         "security.calendarConfiguration": {
             "title": "カレンダー設定",
@@ -269,7 +281,7 @@
                 "purge.label": "パージ",
                 "email.label": "システムの電子メールアドレス",
                 "password.label": "システムパスワード",
-                "password.changeButton": "ja_Change the calendar user password",
+                "password.changeButton": "カレンダーのユーザーパスワードを変更する",
                 "purgeDays.label": "日々",
                 "emailValid": "システム電子メールアドレスとパスワードは有効です",
                 "emailNotValid": "システムの電子メールアドレスまたはパスワードが無効です",
@@ -345,7 +357,8 @@
                 "validate.label": "SMTP検証",
                 "validate.button": "検証",
                 "smtpValid": "SMTP設定が有効です",
-                "smtpNotValid": "SMTP設定が無効です"
+                "smtpNotValid": "SMTP設定が無効です",
+				"errorMsg": "書類の送付方法を選択してください"
             }
         },
         "security.emailTemplates": {
@@ -364,6 +377,7 @@
                 "templateName.label": "テンプレート名",
                 "templateName.placeholder": "テンプレート名を入力",
                 "emailPattern.label": "メールパターン",
+				"emailPattern.description": "すべての受信者に「。*」を使用し、armedia.comの受信者またはその他の正規表現に「。+ @ armedia.com」を使用します。 ドット（。）はバックスラッシュでエスケープする必要があることに注意してください。",
                 "emailPattern.placeholder": "メールパターンを入力",
                 "source.label": "ソース",
                 "objectTypes.label": "オブジェクト型",
@@ -374,19 +388,19 @@
                 "download": "ja_Download",
                 "save": "保存する",
                 "cancel": "キャンセル",
-                "validationResponse": "ja_Email Template already exists with selected parameters",
-                "uploadError": "ja_File upload canceled due to incorrect type of file. You can only upload html file."
+                "validationResponse": "選択したパラメータを含む電子メールテンプレートが既に存在します",
+                "uploadError": "ファイルの種類が正しくないため、ファイルのアップロードがキャンセルされました。 あなたはhtmlファイルしかアップロードできません."
             },
             "objectTypes": {
-                "caseFile": "ja_Case File",
-                "complaint": "ja_Complaint",
-                "task": "ja_Task",
-                "document": "ja_Document"
+                "caseFile": "ケースファイル",
+                "complaint": "苦情",
+                "task": "仕事",
+                "document": "資料"
             },
             "actions": {
-                "sendAsAttachments": "ja_Send as Attachments",
-                "sendAsLinks": "ja_Send as Links",
-                "sendAsAttachmentsAndLinks": "ja_Send as Attachments and Links"
+                "sendAsAttachments": "添付ファイルとして送信",
+                "sendAsLinks": "リンクとして送信",
+                "sendAsAttachmentsAndLinks": "添付ファイルとリンクとして送信"
             }
         },
         "security.exchangeConfiguration": {
@@ -427,6 +441,20 @@
                 }
             }
         },
+        "forms.timesheetConfiguration": {
+            "title": "タイムシート構成",
+            "chargeRole": "担当役割",
+            "chargeRole.placeholder": "担当役割を入力",
+            "rate": "レート",
+            "rate.placeholder": "入力レート ($)",
+            "active": "アクティブ/非アクティブ",
+            "active.active": "アクティブ",
+            "active.inactive": "非アクティブ",
+            "modal": {
+                "button.save": "セーブ",
+                "button.cancel": "キャンセル"
+            }
+        },
         "dashboard.title": "ダッシュボード",
         "dashboard.config": "ダッシュボードの設定",
         "dashboard.widgets": "ウィジェット",
@@ -438,41 +466,40 @@
                 "sync": "同期する"
             },
             "schedule": {
-                "title": "ja_Reports Scheduling",
-                "selectReportType": "ja_Select Report Type",
+                "title": "レポートのスケジュール設定",
+                "selectReportType": "レポートタイプの選択",
                 "emailAddress": {
-                    "title": "ja_Enter Email Addresses",
-                    "placeholder": "ja_Please enter comma (,) separated email addresses"
+                    "title": "メールアドレスを入力してください",
+                    "placeholder": "コンマ（、）で区切られたメールアドレスを入力してください"
                 },
                 "table": {
-                    "header": "ja_Existing Schedules",
-                    "startTimeFormat": "ja_hh:mm a",
+                    "header": "既存のスケジュール",
+                    "startTimeFormat": "hh:mm a",
                     "columns": {
-                        "jobName": "ja_Schedule Name",
-                        "recurrence": "ja_Recurrence",
-                        "startTime": "ja_Start Time",
-                        "startDate": "ja_Start Date",
-                        "endDate": "ja_End Date",
-                        "emailAddresses": "ja_Email Addresses",
-                        "state": "ja_Status"
+                        "jobName": "スケジュール名",
+                        "recurrence": "再発",
+                        "startTime": "始まる時間",
+                        "startDate": "開始日",
+                        "endDate": "終了日",
+                        "emailAddresses": "メールアドレス",
+                        "state": "状態"
                     }
                 },
                 "delete": {
-                    "success": "ja_Schedule deleted successfully",
-                    "error": "ja_Failed to delete schedule"
+                    "success": "スケジュールを正常に削除しました",
+                    "error": "スケジュールの削除に失敗しました"
                 },
-                "createScheduleSuccess": "ja_Schedule created successfully",
-                "createScheduleFailure": "ja_Failed to create schedule",
-                "enterFutureDate": "ja_Enter a start time in the future",
-                "recurrence": "ja_Recurrence (Enter future time)",
-                "time": "ja_Time",
-                "startDate": "ja_Start Date",
-                "endDate": "ja_End Date",
-                "filterStartDate": "ja_Result Filter Start Date",
-                "filterEndDate": "ja_Result Filter End Date",
-                "outputFormat": "ja_Select Output Format",
-                "submit": "ja_Submit",
-                "cancel": "ja_Cancel"
+                "createScheduleSuccess": "スケジュールが正常に作成された",
+                "createScheduleFailure": "スケジュールの作成に失敗しました",
+                "enterFutureDate": "将来の開始時刻を入力してください",
+                "recurrence": "繰り返し（将来の時間を入力）",
+                "time": "時間",
+                "startDate": "開始日",
+                "endDate": "終了日",
+                "filterStartDate": "結果フィルタ開始日",
+                "filterEndDate": "結果フィルタ終了日",
+                "outputFormat": "出力フォーマットの選択",
+                "submit": "提出する"
             }
         },
         "forms.title": "フォーム",
@@ -497,7 +524,7 @@
             "cancel": "キャンセル",
             "activate": "アクティブにする"
         },
-        "workflows.config.noHistory": "ja_There is no history for this workflow.",
+        "workflows.config.noHistory": "このワークフローの履歴はありません.",
         "workflows.config.grid": {
             "businessProcess": "ビジネスプロセス",
             "description": "説明",
@@ -583,19 +610,22 @@
                     "btnCancel.text": "キャンセル",
                     "btnOk.text": "エントリを保存"
                 },
-                "addLookup": "ja_Add Lookup",
-                "label": "ja_Lookup Type",
-                "lookupName": "ja_Lookup Name",
-                "placeholder": "ja_Enter lookup name",
-                "btnSave.text": "ja_Save",
-                "deleteLookupMsg": "ja_Are you sure you want to delete this lookup?",
-                "deleteEntryMsg": "ja_Are you sure you want to delete this entry?",
-                "delete.success": "ja_Lookup is successfully deleted",
-                "delete.error": "ja_Lookup can't be deleted",
-                "lookupExists.error": "ja_Lookup with this name already exists"
+                "addLookup": "ルックアップを追加",
+                "label": "ルックアップタイプ",
+                "lookupName": "検索名",
+                "placeholder": "検索名を入力",
+                "btnSave.text": "セーブ",
+                "deleteLookupMsg": "このルックアップを削除してもよろしいですか?",
+                "deleteEntryMsg": "このエントリを削除してもよろしいですか？",
+                "delete.success": "検索が正常に削除されました",
+                "delete.error": "ルックアップは削除できません",
+                "lookupExists.error": "この名前のルックアップは既に存在します"
             },
             "module.config": {
-                "title": "モジュール構成"
+                "title": "モジュール構成",
+				"btnDisabled": "無効",
+                "btnEnabled": "有効",
+                "message": "システム内にモジュールが見つかりません"
             },
             "userName.config": {
                 "title": "ユーザー名の表示構成",
@@ -607,13 +637,13 @@
                 "modal.ok": "[OK]"
             },
             "formsType.config": {
-                "title": "ja_Forms Type Configuration",
-                "angular.label": "ja_Use Angular Forms",
-                "frevvo.label": "ja_Use Frevvo Forms",
-                "apply": "ja_Apply",
-                "modal.title": "ja_Information",
-                "modal.info": "ja_Settings will take effect after refresh",
-                "modal.ok": "ja_OK"
+                "title": "フォームタイプの設定",
+                "angular.label": "角型を使用する",
+                "frevvo.label": "Frevvoフォームを使用する",
+                "apply": "適用",
+                "modal.title": "情報",
+                "modal.info": "設定はリフレッシュ後に有効になります",
+                "modal.ok": "[OK]"
             },
             "login.config": {
                 "title": "ログインの設定",
@@ -628,17 +658,18 @@
                 "apply.label": "適用"
             },
             "holiday": {
-                "title": "ja_Holiday Schedule",
+                "title": "休暇スケジュール",
+                "label": "週末を作業日として含める",
                 "grid": {
-                    "holidayName": "ja_Name of Holiday",
-                    "holidayDate": "ja_Date of holiday"
+                    "holidayName": "休日の名前",
+                    "holidayDate": "休日の日"
                 },
-                "cancel": "ja_Cancel",
-                "save": "ja_Save",
-                "message": "ja_The holiday you entered is not saved! Date of Holiday already exist!",
+                "cancel": "キャンセル",
+                "save": "セーブ",
+                "message": "入力した休日は保存されません！ 休日の日付はすでに存在します!",
                 "placeholder": {
-                    "name": "ja_Enter Name of Holiday",
-                    "date": "ja_Enter Date of Holiday"
+                    "name": "休日の名前を入力してください",
+                    "date": "休日の日付を入力"
                 }
             }
         },
@@ -680,8 +711,8 @@
                 "creator": "クリエイター",
                 "modifier": "変更者",
                 "activated": "状態",
-                "statusDeactivated": "ja_Deactivated",
-                "statusActivated": "ja_Activated",
+                "statusDeactivated": "無効化された",
+                "statusActivated": "活性化",
                 "objectType": "オブジェクトタイプ",
                 "version": "バージョン",
                 "templateVersionActive": "アクティブ"
@@ -698,7 +729,7 @@
                 }
             },
             "templates.modal": {
-                "objectTypes.selectedFiles": "ja_No File Selected",
+                "objectTypes.selectedFiles": "ファイルが選択されていません",
                 "objectTypes.label": "オブジェクト型",
                 "querySelect.label": "クエリ選択",
                 "label.label": "表示名",
@@ -747,7 +778,7 @@
                     "edit": "CMIS構成の編集"
                 },
                 "dialog": {
-                    "testConnection": "ja_Test Connection",
+                    "testConnection": "テスト接続",
                     "cancel": "キャンセル",
                     "ok": "[OK]"
                 },
@@ -825,47 +856,89 @@
                 "insert.success": "新しい構成行が正常に作成されました。",
                 "insert.error": "新しい設定行を作成中にエラーが発生しました。",
                 "update.success": "設定行が正常に更新されました。",
-                "update.error": "設定行の更新中にエラーが発生しました"
+                "update.error": "設定行の更新中にエラーが発生しました",
+				"test.conection.success": "接続に成功しました."
+            }
+        },
+        "transcription": {
+            "title": "転写サービス",
+            "transcriptionManagement": "転写管理",
+            "transcriptionConfigForm": {
+                "save.button": "セーブ",
+                "automation.label": "オートメーション",
+                "enableTranscription.checkbox": "転写を有効にする",
+                "automaticTranscription.checkbox": "自動転写",
+                "overwriteTranscription.checkbox": "元の転写を新しいバージョンで上書きする",
+                "mediaFileAdded.label": "新しいバージョンのメディアファイルが追加されると、システムは:",
+                "generateTranscription.radio": "新しいバージョンの新しい転写を生成する",
+                "copyTranscription.radio": "転写をアクティブなバージョンから新しいバージョンにコピーする",
+                "provider.label": "プロバイダ",
+                "numOfFiles.label": "処理するファイル数",
+                "selectProvider": "プロバイダを選択",
+                "wordCount.label": "ワード数",
+                "costPerSecond.label": "1秒あたりのコスト",
+                "confidenceThreshold.label": "信頼限界",
+				"mediaDurationInSeconds.label": "メディアの継続時間のしきい値（秒単位）",
+                "silenceBetweenWords.label": "数秒で単語間の沈黙",
+                "validation.messages": {
+                    "requiredErrorMsg": "この項目は必須です",
+                    "maxErrorMsg": "値は100以下でなければなりません",
+                    "minZeroValueErrorMsg": "値は0以上でなければなりません",
+                    "minOneValueErrorMsg": "値は1以上でなければなりません",
+					"minPositiveValueErrorMsg": "値は0より大きくなければなりません"
+                }
+            }
+        },
+        "stateOfArkcase": {
+            "title": "Arkcaseの状態",
+            "pickDate": "ピック・デート",
+            "btn.download": "ダウンロード",
+            "datePicker": {
+                "clear": "クリア",
+                "current": "現在の日",
+                "close": "閉じる"
+            }
+        },
+        "comp": {
+            "securityLdapConfig": {
+                "title": "セキュリティ - Ldap設定グリッド"
+            },
+            "correspondenceManagementMergeFields": {
+                "title": "通信管理マージフィールドグリッド"
+            },
+            "correspondenceManagementMergeFieldsVersions": {
+                "title": "対応管理マージフィールドバージョングリッド"
+            },
+            "correspondenceManagementTemplates": {
+                "title": "連絡文書管理テンプレートグリッド"
+            },
+            "correspondenceManagementTemplateVersions": {
+                "title": "対応管理テンプレートバージョングリッド"
+            },
+            "labelsConfig": {
+                "title": "アプリケーション - ラベル構成グリッド"
+            },
+            "plainFormsConfig": {
+                "title": "フォーム - フォーム構成グリッド"
+            },
+            "workflowsConfig": {
+                "title": "ワークフロー - ワークフロー構成グリッド"
+            },
+            "workflowsHistoryDialogConfig": {
+                "title": "ワークフロー - ワークフロー設定履歴ダイアロググリッド"
+            },
+            "usersPicker": {
+                "title": "ユーザーを選択"
+            },
+            "orgHierarchy": {
+                "title": "組織階層"
+            },
+            "cmisConfiguration": {
+                "title": "CMIS構成グリッド"
+            },
+            "emailTemplates": {
+                "title": "メールテンプレート"
             }
         }
-    },
-    "admin.comp.securityLdapConfig": {
-        "title": "セキュリティ - LDAP設定グリッド"
-    },
-    "admin.comp.correspondenceManagementMergeFields": {
-        "title": "対応管理マージフィールドグリッド"
-    },
-    "admin.comp.correspondenceManagementMergeFieldsVersions": {
-        "title": "対応管理マージフィールドバージョングリッド"
-    },
-    "admin.comp.correspondenceManagementTemplates": {
-        "title": "対応管理データファイル転送グリッド"
-    },
-    "admin.comp.correspondenceManagementTemplateVersions": {
-        "title": "対応管理テンプレートのバージョングリッド"
-    },
-    "admin.comp.labelsConfig": {
-        "title": "アプリケーション - ラベル設定グリッド"
-    },
-    "admin.comp.plainFormsConfig": {
-        "title": "フォーム - フォーム構成グリッド"
-    },
-    "admin.comp.workflowsConfig": {
-        "title": "ワークフロー - ワークフロー設定グリッド"
-    },
-    "admin.comp.workflowsHistoryDialogConfig": {
-        "title": "ワークフロー - ワークフロー設定履歴ダイアロググリッド"
-    },
-    "admin.comp.usersPicker": {
-        "title": "ユーザーを選択"
-    },
-    "admin.comp.orgHierarchy": {
-        "title": "組織階層"
-    },
-    "admin.comp.cmisConfiguration": {
-        "title": "CMIS構成グリッド"
-    },
-    "admin.comp.emailTemplates": {
-        "title": "メールテンプレート"
     }
 }

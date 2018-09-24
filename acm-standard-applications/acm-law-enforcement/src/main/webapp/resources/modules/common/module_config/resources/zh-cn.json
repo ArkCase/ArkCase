@@ -639,6 +639,16 @@
             "error.ownerUnique": "只有一个所有者允许."
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "添加参与者",
+        "editParticipant.label": "编辑记录",
+        "participantType.label": "参与者类型",
+        "participantName.label": "参与者名称",
+        "btnOk.text": "保存",
+        "btnCancel.text": "取消",
+        "dialogUserGroupPicker.header": "zh-cn_Search User/Group",
+        "replaceChildrenParticipant": "替换儿童参与者"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "完成百分百"
     },
