@@ -73,7 +73,7 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
 
     protected void startWorkflow(AcmCostsheetEvent event)
     {
-        EcmFile pdfRendition = event.getFrevvoUploadedFiles().getPdfRendition();
+        EcmFile pdfRendition = event.getUploadedFiles().getPdfRendition();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
 
         configuration.setEcmFile(pdfRendition);
@@ -109,8 +109,12 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
         pvars.put("reviewers", reviewers);
         pvars.put("taskName", taskName);
         pvars.put("documentAuthor", author);
-        pvars.put("pdfRenditionId", event.getFrevvoUploadedFiles().getPdfRendition().getFileId());
-        pvars.put("formXmlId", event.getFrevvoUploadedFiles().getFormXml().getFileId());
+        pvars.put("pdfRenditionId", event.getUploadedFiles().getPdfRendition().getFileId());
+
+        Long formXmlId = event.getUploadedFiles().getFormXml() != null
+                ? event.getUploadedFiles().getFormXml().getFileId()
+                : null;
+        pvars.put("formXmlId", formXmlId);
 
         pvars.put("OBJECT_TYPE", CostsheetConstants.OBJECT_TYPE);
         pvars.put("OBJECT_ID", costsheet.getId());

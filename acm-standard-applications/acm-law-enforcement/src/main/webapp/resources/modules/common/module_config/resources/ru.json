@@ -23,6 +23,22 @@
         "defaultDateUIFormat": "ММ/ДД/ГГГГ",
         "defaultDateTimeUIFormat": "ММ/ДД/ГГГГ чч:мм:"
     },
+    "common.userOrGroupSearch": {
+        "id": "ru_userSearch",
+        "title": "ru_User/Group Search",
+        "search": {
+            "btn": "ru_Search",
+            "placeholder": "ru_Search for the user or group."
+        },
+        "cancelButton": "ru_Cancel",
+        "confirmButton": "ru_Confirm",
+        "assigneeGridColumns": {
+            "name": "ru_Name",
+            "type": "ru_Type",
+            "title": "ru_Title",
+            "username": "ru_Username"
+        }
+    },
     "common.frevvo": {
         "defaultDateFormat": "ГГГГ-MM-ДД"
     },
@@ -200,7 +216,9 @@
         "noData.text": "Нет результатов",
         "pickUserLabel": "Выбрать ассоциированного пользователя",
         "pickGroupLabel": "Выбрать ассоциированную группу",
-        "selectedItemsGrid.label": "Выбранные записи"
+        "selectedItemsGrid.label": "Выбранные записи",
+        "notValidUser": "ru_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
+        "notValidGroup": "ru_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
     },
     "common.directive.search": {
         "showMore.button.text": "Показать больше значений",
@@ -621,6 +639,16 @@
             "error.ownerUnique": "Разрешен только один владелец."
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "Добавить участника",
+        "editParticipant.label": "Изменить запись",
+        "participantType.label": "Тип участника",
+        "participantName.label": "Имя участника",
+        "btnOk.text": "Сохранить",
+        "btnCancel.text": "Отмена",
+        "dialogUserGroupPicker.header": "ru_Search User/Group",
+        "replaceChildrenParticipant": "Заменить детей-участниц"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "Процент завершен"
     },
@@ -731,6 +759,9 @@
             "identificationYearIssued": "Идентификация выпущена",
             "identificationYearIssued.placeholder": "Выберите Идентификация выпущена",
             "identificationYearIssued.close.button": "Закрыть"
+        },
+        "details": {
+            "title": "ru_Details"
         }
     },
     "common.addPerson": {
@@ -848,12 +879,7 @@
         "people": {
             "title": "Люди",
             "searchExisting.placeholder": "Поиск существующего лица",
-            "personType": "Тип лица",
-            "comp":{
-                "details":{
-                    "title":"ru_Details"
-                }
-            }
+            "personType": "Тип лица"
         },
         "locations": {
             "title": "Места",

@@ -37,7 +37,7 @@ import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ import java.util.List;
 public class AcmCostsheetDao extends AcmAbstractDao<AcmCostsheet>
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     protected Class<AcmCostsheet> getPersistenceClass()
@@ -64,19 +64,18 @@ public class AcmCostsheetDao extends AcmAbstractDao<AcmCostsheet>
             orderByQuery = " ORDER BY costsheet." + sortParams;
         }
 
-        Query selectQuery = getEm().createQuery("SELECT costsheet "
+        TypedQuery<AcmCostsheet> selectQuery = getEm().createQuery("SELECT costsheet "
                 + "FROM AcmCostsheet costsheet "
                 + "WHERE costsheet.parentId = :parentId "
-                + "AND costsheet.parentType = :parentType"
-                + orderByQuery);
+                + "AND costsheet.parentType = :parentType "
+                + orderByQuery, AcmCostsheet.class);
 
         selectQuery.setParameter("parentId", objectId);
         selectQuery.setParameter("parentType", objectType);
         selectQuery.setFirstResult(startRow);
         selectQuery.setMaxResults(maxRows);
 
-        @SuppressWarnings("unchecked")
-        List<AcmCostsheet> costsheets = (List<AcmCostsheet>) selectQuery.getResultList();
+        List<AcmCostsheet> costsheets = selectQuery.getResultList();
 
         return costsheets;
     }

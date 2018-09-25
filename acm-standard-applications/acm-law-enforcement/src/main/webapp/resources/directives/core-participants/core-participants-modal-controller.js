@@ -1,10 +1,14 @@
 'use strict';
 
 angular.module('directives').controller('Directives.CoreParticipantsModalController', [ '$scope', '$modal', '$modalInstance', '$translate', 'UtilService', 'params', function($scope, $modal, $modalInstance, $translate, Util, paramsOwn) {
-
+    $scope.participantEdit = {
+        participantType: $scope.participant.participantType,
+        participantLdapId: $scope.participant.participantLdapId,
+        replaceChildrenParticipant: $scope.participant.showReplaceChildrenParticipants
+    };
     $scope.onClickOk = function() {
         $modalInstance.close({
-            participant: $scope.participant,
+            participant: $scope.participantEdit,
             isEdit: $scope.isEdit,
             selectedType: $scope.selectedType
         });
@@ -50,8 +54,7 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
         });
         modalInstance.result.then(function(selected) {
             if (!Util.isEmpty(selected)) {
-                $scope.participant.participantLdapId = selected.object_id_s;
-                $scope.selectedType = selected.object_type_s;
+                $scope.participantEdit.participantLdapId = selected.object_id_s;
             }
         });
     };

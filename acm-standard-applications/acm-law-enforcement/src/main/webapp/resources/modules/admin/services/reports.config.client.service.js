@@ -19,15 +19,15 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
         getReports: getReports,
         getReportsByMatchingName: getReportsByMatchingName,
         getReportsPaged: getReportsPaged,
-        getUserGroups: getUserGroups,
-        getGroupsForReport: getGroupsForReport,
-        getGroupsForReportByName: getGroupsForReportByName,
-        getReportsUserGroups: getReportsUserGroups,
-        getReportsGroupsPaged: getReportsGroupsPaged,
-        getReportsGroupsByName: getReportsGroupsByName,
-        saveReportsUserGroups: saveReportsUserGroups,
-        addGroupsToReport: addGroupsToReport,
-        removeGroupsFromReport: removeGroupsFromReport,
+        getAppRoles: getAppRoles,
+        getRolesForReport: getRolesForReport,
+        getRolesForReportByName: getRolesForReportByName,
+        getReportsRoles: getReportsRoles,
+        getReportsRolesPaged: getReportsRolesPaged,
+        getReportsRolesByName: getReportsRolesByName,
+        saveReportsRoles: saveReportsRoles,
+        addRolesToReport: addRolesToReport,
+        removeRolesFromReport: removeRolesFromReport,
         saveReports: saveReports,
         syncReports: syncReports
     });
@@ -106,40 +106,39 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
 
     /**
      * @ngdoc method
-     * @name getUserGroups
+     * @name getRoles
      * @methodOf admin.service:Admin.ReportsConfigService
      *
      * @description
-     * Performs retrieving all user groups
+     * Performs retrieving all application roles
      *
-     * @returns {HttpPromise} Future info about user groups
+     * @returns {HttpPromise} Future info about roles
      */
-    function getUserGroups() {
+    function getAppRoles() {
         return $http({
-            method: "GET",
-            url: "api/latest/users/groups/get",
-            cache: false
+            method: 'GET',
+            url: 'api/latest/functionalaccess/roles'
         });
     }
 
     /**
      * @ngdoc method
-     * @name getGroupsForReport
+     * @name getRolesForReport
      * @methodOf admin.service:Admin.ReportsConfigService
      *
      * @description
-     * Performs retrieving all user groups
-     *      String: data.isAuthorized = define which groups to be retrieved(authorized/notAuthorized)
+     * Performs retrieving all roles for report
+     *      String: data.isAuthorized = define which roles to be retrieved(authorized/notAuthorized)
      *      String: data.dir = Sort direction
      *      Integer: data.n = End position
      *      Integer: data.start = Start position
      *
-     * @returns {HttpPromise} Future info about user groups
+     * @returns {HttpPromise} Future info about roles
      */
-    function getGroupsForReport(data) {
+    function getRolesForReport(data) {
         return $http({
             method: "GET",
-            url: "api/latest/plugin/report/" + data.report.key + "/groups",
+            url: "api/latest/plugin/report/" + data.report.key + "/roles",
             cache: false,
             params: {
                 authorized: data.isAuthorized,
@@ -152,7 +151,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
 
     /**
      * @ngdoc method
-     * @name getGroupsForReportByName
+     * @name getRolesForReportByName
      * @methodOf admin.service:Admin.ReportsConfigService
      *
      * @description
@@ -162,12 +161,12 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
      *      Integer: data.n = End position
      *      String: data.fq = Filter word
      *
-     * @returns {HttpPromise} Future info about user groups
+     * @returns {HttpPromise} Future info about roles
      */
-    function getGroupsForReportByName(data) {
+    function getRolesForReportByName(data) {
         return $http({
             method: "GET",
-            url: "api/latest/plugin/report/" + data.report.key + "/groups",
+            url: "api/latest/plugin/report/" + data.report.key + "/roles",
             cache: false,
             params: {
                 authorized: data.isAuthorized,
@@ -181,37 +180,37 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
 
     /**
      * @ngdoc method
-     * @name getReportsUserGroups
+     * @name getReportsRoles
      * @methodOf admin.service:Admin.ReportsConfigService
      *
      * @description
-     * Performs retrieving all reports with user groups mapped
+     * Performs retrieving all reports with application roles mapped
      *
-     * @returns {HttpPromise} Future info about reports with user groups
+     * @returns {HttpPromise} Future info about reports with roles
      */
-    function getReportsUserGroups() {
+    function getReportsRoles() {
         return $http({
             method: "GET",
             cache: false,
-            url: "api/latest/plugin/report/reporttogroupsmap"
+            url: "api/latest/plugin/report/reporttorolesmap"
         });
     }
 
     /**
      * @ngdoc method
-     * @name getReportsGroupsPaged
+     * @name getReportsRolesPaged
      * @methodOf admin.service:Admin.ReportsConfigService
      *
      * @description
      * Performs retrieving all reports(only names) paged
      *
-     * @returns {HttpPromise} Future info about reports with user groups
+     * @returns {HttpPromise} Future info about reports with roles
      */
-    function getReportsGroupsPaged(data) {
+    function getReportsRolesPaged(data) {
         return $http({
             method: "GET",
             cache: false,
-            url: "api/latest/plugin/report/reportstogroups",
+            url: "api/latest/plugin/report/reportstoroles",
             params: {
                 n: (data.n ? data.n : 50),
                 start: (data.start ? data.start : 0)
@@ -221,19 +220,19 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
 
     /**
      * @ngdoc method
-     * @name getReportsGroupsByName
+     * @name getReportsRolesByName
      * @methodOf admin.service:Admin.ReportsConfigService
      *
      * @description
      * Performs retrieving all reports(only names) by name
      *
-     * @returns {HttpPromise} Future info about reports with user groups
+     * @returns {HttpPromise} Future info about reports with roles
      */
-    function getReportsGroupsByName(data) {
+    function getReportsRolesByName(data) {
         return $http({
             method: "GET",
             cache: false,
-            url: "api/latest/plugin/report/reportstogroups",
+            url: "api/latest/plugin/report/reportstoroles",
             params: {
                 n: (data.n ? data.n : 50),
                 start: (data.start ? data.start : 0),
@@ -244,19 +243,19 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
 
     /**
      * @ngdoc method
-     * @name saveReportsUserGroups
+     * @name saveReportsRoles
      * @methodOf admin.service:Admin.DashboardConfigService
      *
      * @description
      * Performs saving reports with changed roles authorizations
      *
-     * @param {object} reportsUserGroups ReportsUserGroups map to send to the server
+     * @param {object} reportsRoles ReportsRoles map to send to the server
      */
-    function saveReportsUserGroups(reportsUserGroups) {
+    function saveReportsRoles(reportsRoles) {
         return $http({
             method: "POST",
-            url: "api/latest/plugin/report/reporttogroupsmap",
-            data: reportsUserGroups,
+            url: "api/latest/plugin/report/reporttorolesmap",
+            data: reportsRoles,
             cache: false,
             headers: {
                 "Content-Type": "application/json"
@@ -266,22 +265,22 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
 
     /**
      * @ngdoc method
-     * @name addGroupsToReport
+     * @name addRolesToReport
      * @methodOf admin.service:Admin.FunctionalAccessControlService
      *
      * @description
-     * Performs saving groups to a privilege
+     * Performs saving roles to a privilege
      *
      * @param {object} roleName - privilege name
-     *        {list}  groups - groups which will be added to the privilege with name privilegeName
+     *        {list}  roles - roles which will be added to the privilege with name privilegeName
      *
      * @returns void
      */
-    function addGroupsToReport(privilegeName, groups) {
+    function addRolesToReport(privilegeName, roles) {
         return $http({
             method: 'PUT',
-            url: 'api/latest/plugin/report/' + privilegeName + '/groups',
-            data: groups,
+            url: 'api/latest/plugin/report/' + privilegeName + '/roles',
+            data: roles,
             cache: false,
             headers: {
                 'Content-Type': 'application/json'
@@ -291,22 +290,22 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
 
     /**
      * @ngdoc method
-     * @name removeGroupsFromReport
+     * @name removeRolesFromReport
      * @methodOf admin.service:Admin.FunctionalAccessControlService
      *
      * @description
-     * Performs removing groups from a privilege
+     * Performs removing roles from a privilege
      *
      * @param {object} privilegeName - privilege name
-     *        {list} groups - groups which will be added to the privilege with name privilegeName
+     *        {list} roles - roles which will be added to the privilege with name privilegeName
      *
      * @returns void
      */
-    function removeGroupsFromReport(privilegeName, groups) {
+    function removeRolesFromReport(privilegeName, roles) {
         return $http({
             method: 'DELETE',
-            url: 'api/latest/plugin/report/' + privilegeName + '/groups',
-            data: groups,
+            url: 'api/latest/plugin/report/' + privilegeName + '/roles',
+            data: roles,
             cache: false,
             headers: {
                 'Content-Type': 'application/json'

@@ -27,8 +27,10 @@ angular.module('complaints').controller(
                 'ModalDialogService',
                 'Admin.EmailSenderConfigurationService',
                 'MultiCorrespondence.Service',
+                'EcmService',
+
                 function($scope, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService, MultiCorrespondenceService) {
+                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService, MultiCorrespondenceService, Ecm) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -231,4 +233,4 @@ angular.module('complaints').controller(
                         });
                     });
 
-                }]);
+                } ]);

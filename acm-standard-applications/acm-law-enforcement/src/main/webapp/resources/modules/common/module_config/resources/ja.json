@@ -23,6 +23,22 @@
         "defaultDateUIFormat": "MM/dd/yyyy",
         "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
     },
+    "common.userOrGroupSearch": {
+        "id": "ja_userSearch",
+        "title": "ja_User/Group Search",
+        "search": {
+            "btn": "ja_Search",
+            "placeholder": "ja_Search for the user or group."
+        },
+        "cancelButton": "ja_Cancel",
+        "confirmButton": "ja_Confirm",
+        "assigneeGridColumns": {
+            "name": "ja_Name",
+            "type": "ja_Type",
+            "title": "ja_Title",
+            "username": "ja_Username"
+        }
+    },
     "common.frevvo": {
         "defaultDateFormat": "YYYY-MM-DD"
     },
@@ -200,7 +216,9 @@
         "noData.text": "結果なし",
         "pickUserLabel": "関連付けられたユーザを選ぶ",
         "pickGroupLabel": "関連グループを選択",
-        "selectedItemsGrid.label": "選択されたエントリ"
+        "selectedItemsGrid.label": "選択されたエントリ",
+        "notValidUser": "ja_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
+        "notValidGroup": "ja_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
     },
     "common.directive.search": {
         "showMore.button.text": "もっと表示",
@@ -621,6 +639,16 @@
             "error.ownerUnique": "所有者は1人だけです。"
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "参加者を追加",
+        "editParticipant.label": "レコードの編集",
+        "participantType.label": "参加者タイプ",
+        "participantName.label": "参加者名",
+        "btnOk.text": "セーブ",
+        "btnCancel.text": "キャンセル",
+        "dialogUserGroupPicker.header": "ja_Search User/Group",
+        "replaceChildrenParticipant": "子供の参加者を交換する"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "％完了"
     },
@@ -731,6 +759,9 @@
             "identificationYearIssued": "身分証明書発行",
             "identificationYearIssued.placeholder": "選択された番号を選択",
             "identificationYearIssued.close.button": "閉じる"
+        },
+        "details": {
+            "title": "ja_Details"
         }
     },
     "common.addPerson": {
@@ -848,12 +879,7 @@
         "people": {
             "title": "人物",
             "searchExisting.placeholder": "既存の人を検索する",
-            "personType": "人物の種類",
-            "comp":{
-                "details":{
-                    "title":"ja_Details"
-                }
-            }
+            "personType": "人物の種類"
         },
         "locations": {
             "title": "場所",

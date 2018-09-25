@@ -9,6 +9,7 @@
         "security.ldapConfig.addNewMember": "添加新會員",
         "security.ldapConfig.addMembers": "添加會員",
         "security.ldapConfig.addSubgroup": "添加子組",
+		"security.ldapConfig.addExistingSubgroup": "添加現有組",
         "security.ldapConfig.addExistingMembers": "添加現有成員",
         "security.ldapConfig.addLdapSubgroup": "添加LDAP子組",
         "security.ldapConfig.deleteLdapGroup": "刪除LDAP組",
@@ -18,20 +19,26 @@
         "security.ldapConfig.removeMember": "刪除會員",
         "security.ldapConfig.table.ldapUrl": "LDAP網址",
         "security.ldapConfig.table.directoryName": "目錄名稱",
+		"security.ldapConfig.table.userAttributesConfig": "LDAP用戶配置",
+        "security.ldapConfig.table.groupAttributesConfig": "LDAP組配置",
+        "security.ldapConfig.table.action.partialSync": "啟動LDAP部分同步",
         "security.ldapConfig.data": {
+		    "sync.dialog.header": "運行同步",
+            "sync.dialog.type.partial": " 差分同步",
+            "sync.dialog.type.full": "完全同步",
             "userAttributesTemplate": "Ldap用戶屬性模板",
             "groupAttributesTemplate": "Ldap組屬性模板",
             "addNewDirectory": "添加新目錄",
             "editRecord": "編輯記錄",
             "id": "ID",
-            "id.validationMessage": "zh-tw_The ID can only consist of letters, numbers or dots.",
+			"id.validationMessage": "ID只能由字母，數字或點組成.",
             "directoryType": "選擇目錄服務器",
             "ldapUrl": "LDAP網址",
             "base": "基礎",
             "directoryName": "目錄名稱",
             "authUserDn": "認證用戶Dn",
             "authUserPassword": "認證用戶密碼",
-            "confirmAuthUserPassword": "zh-tw_Confirm Auth User Password",
+			"confirmAuthUserPassword": "確認驗證用戶密碼",
             "userSearchBase": "用戶搜索庫",
             "userSearchFilter": "用戶搜索過濾器",
             "allUsersFilter": "所有用戶篩選",
@@ -64,7 +71,7 @@
             "base": "輸入基礎域組件（例如dc = example，dc = com）",
             "authUserDn": "輸入用戶DN進行身份驗證（例如cn = John Doe，ou = users，dc = example，dc = com）",
             "authUserPassword": "輸入認證用戶的密碼",
-            "confirmAuthUserPassword": "zh-tw_Confirm password for authentication user",
+			"confirmAuthUserPassword": "確認認證用戶的密碼",
             "userSearchBase": "輸入用戶搜索庫（例如ou = users）",
             "userSearchFilter": "輸入單個用戶的搜索過濾器（例如（＆（objectClass = person）（uid =％s））",
             "allUsersFilter": "為所有用戶輸入搜索過濾器（例如（objectClass = person））",
@@ -141,6 +148,7 @@
             },
             "addMembers": {
                 "title": "添加會員",
+				"group.title": "將現有組添加為成員",
                 "btn": {
                     "search": "開始！",
                     "cancel": "取消",
@@ -160,7 +168,10 @@
                     "lastName": "輸入姓氏",
                     "email": "輸入電子郵件",
                     "password": "輸入密碼",
-                    "confirmation": "再次鍵入您的密碼"
+                    "confirmation": "再次鍵入您的密碼",
+					 "_1_": "數值在資源文件中無效. _即將被刪除_",
+                    "_2_": "如果需要'minLengthForPassword'，請將其移至config.json",
+                    "_minLengthForPassword": "7"
                 },
                 "editLdapMember": {
                     "title": "編輯Ldap成員",
@@ -230,11 +241,12 @@
                 }
             },
             "tableColumns": {
-                "name": "zh-tw_Name",
-                "type": "zh-tw_Type",
-                "supervisorName": "zh-tw_Supervisor Name",
-                "actions": "zh-tw_Actions"
-            }
+                "name": "名稱",
+                "type": "類型",
+                "supervisorName": "主管姓名",
+                "actions": "操作"
+            },
+			"searchFilter.placeholder": "搜索"
         },
         "security.selectPrivileges": "創建角色並選擇特權",
         "security.selectPrivileges.applicationRole": "應用角色",
@@ -254,8 +266,8 @@
             "user": "用戶"
         },
         "security.group.management": {
-            "title": "zh-tw_Group Management",
-            "group": "zh-tw_Group"
+            "title": "集團管理",
+            "group": "組"
         },
         "security.calendarConfiguration": {
             "title": "日曆配置",
@@ -269,7 +281,7 @@
                 "purge.label": "清除",
                 "email.label": "系統電子郵件地址",
                 "password.label": "系統密碼",
-                "password.changeButton": "zh-tw_Change the calendar user password",
+                "password.changeButton": "更改日曆用戶密碼",
                 "purgeDays.label": "天",
                 "emailValid": "系統電子郵件地址和密碼有效",
                 "emailNotValid": "系統電子郵件地址或密碼無效",
@@ -345,7 +357,8 @@
                 "validate.label": "SMTP驗證",
                 "validate.button": "驗證",
                 "smtpValid": "SMTP設置有效",
-                "smtpNotValid": "SMTP設置無效"
+                "smtpNotValid": "SMTP設置無效",
+				"errorMsg": "請選擇文件的發送方式"
             }
         },
         "security.emailTemplates": {
@@ -364,29 +377,30 @@
                 "templateName.label": "模板名稱",
                 "templateName.placeholder": "輸入模板名稱",
                 "emailPattern.label": "電子郵件模式",
+				"emailPattern.description": "對所有收件人使用'。*'，對armedia.com收件人或其他一些正則表達式使用'。+ @ armedia.com'。 請注意，應使用反斜杠轉義點（。）!",
                 "emailPattern.placeholder": "輸入電子郵件模式",
                 "source.label": "資源",
                 "objectTypes.label": "對像類型",
                 "actions.label": "操作",
                 "manual.label": "手冊",
                 "automated.label": "自動化",
-                "choose.file": "zh-tw_Choose File",
-                "download": "zh-tw_Download",
+                "choose.file": "選擇文件",
+                "download": "下載",
                 "save": "保存",
                 "cancel": "取消",
-                "validationResponse": "zh-tw_Email Template already exists with selected parameters",
-                "uploadError": "zh-tw_File upload canceled due to incorrect type of file. You can only upload html file."
+                "validationResponse": "已存在包含所選參數的電子郵件模板",
+                "uploadError": "由於文件類型不正確，文件上傳被取消。 你只能上傳html文件."
             },
             "objectTypes": {
-                "caseFile": "zh-tw_Case File",
-                "complaint": "zh-tw_Complaint",
-                "task": "zh-tw_Task",
-                "document": "zh-tw_Document"
+                "caseFile": "案例檔案",
+                "complaint": "抱怨",
+                "task": "任務",
+                "document": "文件"
             },
             "actions": {
-                "sendAsAttachments": "zh-tw_Send as Attachments",
-                "sendAsLinks": "zh-tw_Send as Links",
-                "sendAsAttachmentsAndLinks": "zh-tw_Send as Attachments and Links"
+                "sendAsAttachments": "作為附件發送",
+                "sendAsLinks": "作為鏈接發送",
+                "sendAsAttachmentsAndLinks": "作為附件和鏈接發送"
             }
         },
         "security.exchangeConfiguration": {
@@ -427,15 +441,65 @@
                 }
             }
         },
-        "dashboard.title": "板面",
-        "dashboard.config": "板面配置",
+        "forms.timesheetConfiguration": {
+            "title": "時間表配置",
+            "chargeRole": "充電角色",
+            "chargeRole.placeholder": "充電角色",
+            "rate": "Rate",
+            "rate.placeholder": "輸入費率 ($)",
+            "active": "有效/無效",
+            "active.active": "活性",
+            "active.inactive": "待用",
+            "modal": {
+                "button.save": "保存",
+                "button.cancel": "取消"
+            }
+        },
+        "dashboard.title": "儀表板",
+        "dashboard.config": "儀表板配置",
         "dashboard.widgets": "小工具",
         "reports": {
             "title": "報告",
-            "config": "報表配置",
+            "config": "報告配置",
             "btn": {
                 "reportDesigner": "報表設計器",
                 "sync": "同步"
+            },
+            "schedule": {
+                "title": "報告計劃",
+                "selectReportType": "選擇報告類型",
+                "emailAddress": {
+                    "title": "輸入電子郵件地址",
+                    "placeholder": "請輸入逗號（，）分隔的電子郵件地址"
+                },
+                "table": {
+                    "header": "現有的時間表",
+                    "startTimeFormat": "hh:mm a",
+                    "columns": {
+                        "jobName": "時間表名稱",
+                        "recurrence": "循環",
+                        "startTime": "開始時間",
+                        "startDate": "開始日期",
+                        "endDate": "結束日期",
+                        "emailAddresses": "電子郵件地址",
+                        "state": "狀態"
+                    }
+                },
+                "delete": {
+                    "success": "計劃已成功刪除",
+                    "error": "無法刪除計劃"
+                },
+                "createScheduleSuccess": "計劃成功創建",
+                "createScheduleFailure": "無法創建計劃",
+                "enterFutureDate": "輸入將來的開始時間",
+                "recurrence": "重複發生（輸入未來時間）",
+                "time": "時間",
+                "startDate": "開始日期",
+                "endDate": "結束日期",
+                "filterStartDate": "結果篩選開始日期",
+                "filterEndDate": "結果過濾結束日期",
+                "outputFormat": "選擇輸出格式",
+                "submit": "提交"
             }
         },
         "forms.title": "形式",
@@ -460,7 +524,7 @@
             "cancel": "取消",
             "activate": "激活"
         },
-        "workflows.config.noHistory": "zh-tw_There is no history for this workflow.",
+        "workflows.config.noHistory": "此工作流程沒有歷史記錄.",
         "workflows.config.grid": {
             "businessProcess": "業務流程",
             "description": "描述",
@@ -546,20 +610,22 @@
                     "btnCancel.text": "取消",
                     "btnOk.text": "保存條目"
                 },
-                "addLookup": "zh-tw_Add Lookup",
-                "label": "zh-tw_Lookup Type",
-                "lookupName": "zh-tw_Lookup Name",
-                "placeholder": "zh-cn_Enter lookup name",
-                "btnSave.text": "zh-tw_Save",
-                "deleteLookupMsg": "zh-tw_Are you sure you want to delete this lookup?",
-                "deleteEntryMsg": "zh-tw_Are you sure you want to delete this entry?",
-                "delete.success": "zh-tw_Lookup is successfully deleted",
-                "delete.error": "zh-tw_Lookup can't be deleted",
-                "lookupExists.error": "zh-tw_Lookup with this name already exists"
-            }
+                "addLookup": "添加查找",
+                "label": "查找類型",
+                "lookupName": "查找名稱",
+                "placeholder": "輸入查找名稱",
+                "btnSave.text": "保存",
+                "deleteLookupMsg": "您確定要刪除此查找嗎？",
+                "deleteEntryMsg": "您確定要刪除此條目嗎？",
+                "delete.success": "查找已成功刪除",
+                "delete.error": "查找無法刪除",
+                "lookupExists.error": "具有此名稱的查找已存在"
         },
         "module.config": {
-            "title": "模塊配置"
+            "title": "模塊配置",
+			"btnDisabled": "殘",
+                "btnEnabled": "啟用",
+                "message": "系統中找不到任何模塊"
         },
         "userName.config": {
             "title": "用戶名顯示配置",
@@ -570,15 +636,15 @@
             "modal.info": "設置將在刷新後生效",
             "modal.ok": "確定"
         },
-        "formsType.config": {
-            "title": "zh-tw_Forms Type Configuration",
-            "angular.label": "zh-tw_Use Angular Forms",
-            "frevvo.label": "zh-tw_Use Frevvo Forms",
-            "apply": "zh-tw_Apply",
-            "modal.title": "zh-tw_Information",
-            "modal.info": "zh-tw_Settings will take effect after refresh",
-            "modal.ok": "zh-tw_OK"
-        },
+            "formsType.config": {
+                "title": "表單類型配置",
+                "angular.label": "使用角形式",
+                "frevvo.label": "使用Frevvo Forms",
+                "apply": "應用",
+                "modal.title": "信息",
+                "modal.info": "設置將在刷新後生效",
+                "modal.ok": "好"
+            },
         "login.config": {
             "title": "登錄配置",
             "idleLimit.label": "登錄空閒限制（以毫秒為單位）",
@@ -591,21 +657,22 @@
             "inform": "設置成功保存",
             "apply.label": "生效"
         },
-        "holiday": {
-            "title": "zh-tw_Holiday Schedule",
-            "grid": {
-                "holidayName": "zh-tw_Name of Holiday",
-                "holidayDate": "zh-tw_Date of holiday"
-            },
-            "cancel": "zh-tw_Cancel",
-            "save": "zh-tw_Save",
-            "message": "zh-tw_The holiday you entered is not saved! Date of Holiday already exist!",
-            "placeholder": {
-                "name": "zh-tw_Enter Name of Holiday",
-                "date": "zh-tw_Enter Date of Holiday"
+            "holiday": {
+                "title": "假期日程安排",
+                "label": "包括週末作為工作日",
+                "grid": {
+                    "holidayName": "假日名稱",
+                    "holidayDate": "假期"
+                },
+                "cancel": "取消",
+                "save": "保存",
+                "message": "您輸入的假期未保存！ 假期日期已經存在!",
+                "placeholder": {
+                    "name": "輸入假日名稱",
+                    "date": "輸入假日日期"
+                }
             }
-        }
-    },
+        },
     "branding.title": "品牌",
     "branding.logo": "商標",
     "branding.logo.messages": {
@@ -644,6 +711,8 @@
             "creator": "創造者",
             "modifier": "更改者",
             "activated": "狀態",
+			"statusDeactivated": "停用",
+            "statusActivated": "活性",
             "objectType": "對像類型",
             "version": "版本",
             "templateVersionActive": "有效"
@@ -660,6 +729,7 @@
             }
         },
         "templates.modal": {
+		    "objectTypes.selectedFiles": "沒有選擇文件",
             "objectTypes.label": "對像類型",
             "querySelect.label": "查詢選擇",
             "label.label": "顯示名稱",
@@ -708,7 +778,7 @@
                 "edit": "編輯CMIS配置"
             },
             "dialog": {
-                "testConnection": "zh-tw_Test Connection",
+                "testConnection": "測試連接",
                 "cancel": "取消",
                 "ok": "確定"
             },
@@ -786,18 +856,89 @@
             "insert.success": "成功創建新的配置行。",
             "insert.error": "創建新配置行時出錯。",
             "update.success": "成功更新配置行。",
-            "update.error": "錯誤更新配置行。"
+            "update.error": "錯誤更新配置行。",
+			"test.conection.success": "成功連接."
+        }
+    },
+        "transcription": {
+            "title": "轉錄服務",
+            "transcriptionManagement": "轉錄管理",
+            "transcriptionConfigForm": {
+                "save.button": "保存",
+                "automation.label": "自動化",
+                "enableTranscription.checkbox": "啟用轉錄",
+                "automaticTranscription.checkbox": "自動轉錄",
+                "overwriteTranscription.checkbox": "用新版本覆蓋原始轉錄",
+                "mediaFileAdded.label": "添加新版本的媒體文件時，系統將會:",
+                "generateTranscription.radio": "為新版本生成新的轉錄",
+                "copyTranscription.radio": "將轉錄從活動版本複製到新版本",
+                "provider.label": "提供商",
+                "numOfFiles.label": "處理文件數",
+                "selectProvider": "選擇提供商",
+                "wordCount.label": "字數",
+                "costPerSecond.label": "每秒成本",
+                "confidenceThreshold.label": "置信度閾值",
+				"mediaDurationInSeconds.label": "媒體持續時間閾值（秒）",
+                "silenceBetweenWords.label": "幾秒鐘之間的沉默",
+                "validation.messages": {
+                    "requiredErrorMsg": "這是必填欄",
+                    "maxErrorMsg": "值必須小於或等於100",
+                    "minZeroValueErrorMsg": "值必須大於或等於0",
+                    "minOneValueErrorMsg": "值必須大於或等於1",
+					"minPositiveValueErrorMsg": "值必須大於0"
+                }
+            }
+        },
+        "stateOfArkcase": {
+            "title": "Arkcase的狀態",
+            "pickDate": "選擇日期",
+            "btn.download": "下載",
+            "datePicker": {
+                "clear": "明確",
+                "current": "當前日期",
+                "close": "關"
+            }
+        },
+        "comp": {
+            "securityLdapConfig": {
+                "title": "安全性 - Ldap配置網格"
+            },
+            "correspondenceManagementMergeFields": {
+                "title": "通信管理合併字段網格"
+            },
+            "correspondenceManagementMergeFieldsVersions": {
+                "title": "通信管理合併字段版本網格"
+            },
+            "correspondenceManagementTemplates": {
+                "title": "通信管理模板網格"
+            },
+            "correspondenceManagementTemplateVersions": {
+                "title": "對應管理模板版本網格"
+            },
+            "labelsConfig": {
+                "title": "應用程序 - 標籤配置網格"
+            },
+            "plainFormsConfig": {
+                "title": "表單 - 表單配置網格"
+            },
+            "workflowsConfig": {
+                "title": "工作流程 - 工作流程配置網格"
+            },
+            "workflowsHistoryDialogConfig": {
+                "title": "工作流程 - 工作流程配置歷史記錄對話框網格"
+            },
+            "usersPicker": {
+                "title": "選擇用戶"
+            },
+            "orgHierarchy": {
+                "title": "組織層次結構"
+            },
+            "cmisConfiguration": {
+                "title": "CMIS配置網格"
+            },
+            "emailTemplates": {
+                "title": "電郵模板"
+            }
         }
     }
-},
-"admin.comp.securityLdapConfig": {"title": "安全 - Ldap配置網格"}, "admin.comp.correspondenceManagementMergeFields": {"title": "通信管理合併字段網格"}, "admin.comp.correspondenceManagementMergeFieldsVersions": {"title": "通信管理合併字段版本網格"
-}, "admin.comp.correspondenceManagementTemplates": {
-"title": "通信管理模板網格"
-}, "admin.comp.correspondenceManagementTemplateVersions": {"title": "對應管理模板版本網格"},
-"admin.comp.labelsConfig": {"title": "應用 - 標籤配置網格"}, "admin.comp.plainFormsConfig": {"title": "表格 - 表格配置網格"}, "admin.comp.workflowsConfig": {"title": "工作流程 - 工作流配置網格"
-}, "admin.comp.workflowsHistoryDialogConfig": {
-"title": "工作流程 - 工作流程配置歷史記錄對話框"
-}, "admin.comp.usersPicker": {"title": "選擇用戶"},
-"admin.comp.orgHierarchy": {"title": "組織層次結構"}, "admin.comp.cmisConfiguration": {"title": "CMIS配置網格"}, "admin.comp.emailTemplates": {"title": "電子郵件模板"
-}
 }

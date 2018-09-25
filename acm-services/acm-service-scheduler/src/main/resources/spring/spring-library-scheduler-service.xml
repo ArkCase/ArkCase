@@ -6,6 +6,10 @@
     <task:scheduler id="acmTaskScheduler" pool-size="1"/>
     <task:executor id="acmTaskExecutor" pool-size="20"/>
 
+
+    <!-- default scheduler for async tasks that didn't get assigned a specific scheduler -->
+    <task:executor id="taskExecutor" pool-size="5"/>
+
     <bean id="acmScheduler" class="com.armedia.acm.scheduler.AcmScheduler">
         <constructor-arg ref="acmTaskScheduler"/>
         <constructor-arg ref="acmTaskExecutor"/>

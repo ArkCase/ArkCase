@@ -345,7 +345,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
      * @throws NameAlreadyBoundException
      *             if a user exists and its status is "VALID"
      */
-    private AcmUser checkExistingUser(String userId)
+    @Transactional
+    public AcmUser checkExistingUser(String userId)
     {
         AcmUser existing = userDao.findByUserId(userId);
         if (existing == null)
@@ -362,11 +363,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
             // INVALID or DELETED user, remove current group membership
             // we have to do this, otherwise new user will be associated with new groups,
             // but also existing ones (which we do not want)
-            // TODO: AcmUser.setGroups() should take care of that
-            existing.getGroups().forEach(group -> {
-                group.removeUserMember(existing);
-                groupService.save(group);
-            });
+            existing.getGroups().forEach(group -> group.getUserMembers().remove(existing));
+            existing.setGroups(new HashSet<>());
         }
         return existing;
     }

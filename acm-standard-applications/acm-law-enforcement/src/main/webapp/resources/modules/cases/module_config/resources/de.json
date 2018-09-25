@@ -108,7 +108,8 @@
                 "witnessInterview2%": "Zeugen-Interviewantrag-2.0"
             }
         },
-        "newTask": "Neue Aufgabe"
+        "newTask": "Neue Aufgabe",
+        "addDocument": "Wählen Sie das hinzuzufügende Dokument aus."
     },
     "cases.comp.people": {
         "title": "Menschen",
@@ -359,6 +360,34 @@
             "approverId": "Genehmiger",
             "approverFullName": "Genehmiger",
             "approverDecision": "Genehmigungsentscheidung"
+        }
+    },
+    "cases.comp.change.status": {
+        "title": "de_Change Case Status",
+        "information": {
+            "title": "de_Change Case Status Information",
+            "date": "de_Change Date",
+            "case.number": "de_Case Number",
+            "status": {
+                "title": "de_Status",
+                "resolution": {
+                    "title": "de_Case Resolution",
+                    "denied": "de_Denied",
+                    "full": "de_Full",
+                    "partial": "de_Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "de_Select Approver",
+            "label": "de_Select Approver",
+            "addAnother": "de_Add another",
+            "remove": "de_Remove Approver",
+            "pickerModal.header": "de_Choose Approver"
+        },
+        "button": {
+            "cancel": "de_Cancel",
+            "save": "de_Save"
         }
     },
     "cases.comp.newCase": {

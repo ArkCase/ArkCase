@@ -7,7 +7,7 @@
         <div class="modal-search-header">
             <div class="input-group">
                 <input class="form-control input-md" autofocus ng-keydown="keyUp($event)" ng-model="searchQuery"
-                       placeholder="{{searchPlaceholder}}" ng-disabled="disableSearchControls">
+                        placeholder="{{searchPlaceholder}}" ng-disabled="disableSearchControls">
                 <span class="input-group-btn">
                         <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()"
                                 ng-disabled="disableSearchControls || (searchQuery.length < minSearchLength)">
@@ -22,14 +22,14 @@
             <div ng-if="config.showFacets" class="modal-left">
                 <ul class="list-unstyled">
                     <li ng-repeat="facet in facets"
-                        ng-if="facet.fields.length && facet.name!='Object Sub Type' && facet.name!= 'Object Type'">
+                            ng-if="facet.fields.length && facet.name!='Object Sub Type' && facet.name!= 'Object Type'">
                         <strong>{{facet.name}}</strong>
                         <ul class="list-unstyled">
                             <li ng-repeat="field in facet.fields">
                                 <div class="checkbox" ng-if="field.count > 0">
                                     <label><input type="checkbox" ng-disabled="disableSearchControls"
-                                                  ng-model="currentFacetSelection[field.name.nameValue + '|' + facet.name]"
-                                                  ng-click="selectFacet($event.target.checked,facet.name,field.name.nameValue)"/>{{field.name.nameFiltered}}<span
+                                            ng-model="currentFacetSelection[field.name.nameValue + '|' + facet.name]"
+                                            ng-click="selectFacet($event.target.checked,facet.name,field.name.nameValue)" />{{field.name.nameFiltered}}<span
                                             class="pull-right label label-info">{{field.count}}</span></label>
                                 </div>
                             </li>
@@ -42,7 +42,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div ui-grid="gridOptionsMaster" ui-grid-resize-columns ui-grid-pagination ui-grid-selection
-                             adjust-table-height="gridOptionsMaster.data.length" ui-grid-auto-resize class="grid">
+                                adjust-table-height="gridOptionsMaster.data.length" ui-grid-auto-resize class="grid">
                             <div ng-if="showNoDataResult" style="text-align: center;">
                                 {{onNoDataMessage}}
                             </div>
@@ -54,13 +54,11 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label ng-if="selectedItem.object_type_s === 'GROUP' && secondGrid && gridOptionsDetail.data.length  > 0"
-                               translate>{{pickUserLabel}}</label>
-                        <label ng-if="selectedItem.object_type_s === 'USER' && secondGrid && gridOptionsDetail.data.length > 0"
-                               translate>{{pickGroupLabel}}</label>
+                        <label ng-if="selectedItem.object_type_s === 'GROUP' && secondGrid && gridOptionsDetail.data.length  > 0" translate>{{pickUserLabel}}</label>
+                        <label ng-if="selectedItem.object_type_s === 'USER' && secondGrid && gridOptionsDetail.data.length > 0" translate>{{pickGroupLabel}}</label>
                         <div ui-grid="gridOptionsDetail" ui-grid-resize-columns ui-grid-pagination ui-grid-selection
-                             adjust-table-height="gridOptionsDetail.data.length" ui-grid-auto-resize class="grid"
-                             ng-if="gridOptionsDetail.data.length > 0 && secondGrid">
+                                adjust-table-height="gridOptionsDetail.data.length" ui-grid-auto-resize class="grid"
+                                ng-if="gridOptionsDetail.data.length > 0 && secondGrid">
                             <div ng-if="showNoData" style="text-align: center;">
                                 {{onNoDataMessage}}
                             </div>
@@ -74,7 +72,16 @@
                     <div class="col-md-12 div-mt">
                         <label translate>common.directive.searchModal.selectedItemsGrid.label</label>
                         <div ui-grid="gridSelectedItems" ui-grid-resize-columns ui-grid-pagination ui-grid-selection
-                             adjust-table-height="gridSelectedItems.data.length" ui-grid-auto-resize class="grid">
+                                adjust-table-height="gridSelectedItems.data.length" ui-grid-auto-resize class="grid"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 div-mt">
+                        <div ng-if="firstGridSelected && userNotValid && selectedDetailItem == null" class="alert alert-danger">
+                            <span>{{ 'common.directive.searchModal.notValidUser' | translate: {owningGroup: participant.owningGroup} }}</span>
+                        </div>
+                        <div ng-if="firstGridSelected && groupNotValid && selectedDetailItem == null" class="alert alert-danger">
+                            <span>{{ 'common.directive.searchModal.notValidGroup' | translate: {assignee: participant.assignee.name} }}</span>
                         </div>
                     </div>
                 </div>
@@ -82,14 +89,13 @@
         </div>
     </div>
 </div>
-</div>
 
 <div class="modal-footer" ng-if="showHeaderFooter">
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         {{cancel}}
     </button>
     <button class="btn btn-primary" ng-click="onClickOk()"
-            ng-disabled="selectedItems.length < 1 || (secondGrid && selectedDetailItem == null)">
+            ng-disabled="selectedItems.length < 1 || (secondGrid && selectedDetailItem == null && !secondSelectionOptional) || (secondSelectionOptional && selectedDetailItem == null && disableSearchButton) ">
         {{ok}}
     </button>
 </div>

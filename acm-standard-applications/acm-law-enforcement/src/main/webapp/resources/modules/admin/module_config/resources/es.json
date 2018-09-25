@@ -31,14 +31,14 @@
             "addNewDirectory": "Agrege un directorio nuevo",
             "editRecord": "Edite el registro",
             "id": "Identificación",
-            "id.validationMessage": "es_The ID can only consist of letters, numbers or dots.",
+			"id.validationMessage": "La ID solo puede consistir en letras, números o puntos.",
             "directoryType": "Seleccione el servidor de directorio",
             "ldapUrl": "LDAP URL",
             "base": "Base",
             "directoryName": "Nombre del directorio",
             "authUserDn": "Nombre único del usuario autorizado",
             "authUserPassword": "Contraseña de autenticación del usuario autorizado",
-            "confirmAuthUserPassword": "es_Confirm Auth User Password",
+			"confirmAuthUserPassword": "Confirmar contraseña de usuario de autenticación",
             "userSearchBase": "Base de búsqueda de usuarios",
             "userSearchFilter": "Filtro de búsqueda de usuarios",
             "allUsersFilter": "Filtro de todos los usuarios",
@@ -71,7 +71,7 @@
             "base": "Ingrese el componente de dominio base (ejemplo dc=example,dc=com)",
             "authUserDn": "Ingrese el nombre único para autenticar (ejemplo cn=John Doe,ou=users,dc=example,dc=com)",
             "authUserPassword": "Ingrese la contraseña para autenticar el usuario",
-            "confirmAuthUserPassword": "es_Confirm password for authentication user",
+			"confirmAuthUserPassword": "Confirmar contraseña para usuario de autenticación",
             "userSearchBase": "Ingrese la base de búsqueda de usuarios (ejemplo ou=users)",
             "userSearchFilter": "Ingrese el filtro de búsqueda de un solo usuario (ejemplo (&(objectClass=person)(uid=%s))",
             "allUsersFilter": "Ingrese el filtro de búsqueda para todos los usuarios (ejemplo (objectClass=person))",
@@ -266,8 +266,8 @@
             "user": "un usuario"
         },
         "security.group.management": {
-            "title": "es_Group Management",
-            "group": "es_Group"
+            "title": "Manejo de grupo",
+            "group": "Grupo"
         },
         "security.calendarConfiguration": {
             "title": "Configuración del calendario",
@@ -439,6 +439,20 @@
                     "FreeBusyTimeAndSubjectAndLocation": "Tiempo ocupado libre, tema y asignación",
                     "Custom": "Personalizado"
                 }
+            }
+        },
+		"forms.timesheetConfiguration": {
+            "title": "Configuración de la hoja de tiempo",
+            "chargeRole": "Rol de cargo",
+            "chargeRole.placeholder": "Ingrese el rol de cargo",
+            "rate": "Tarifa",
+            "rate.placeholder": "Ingresar tasa ($)",
+            "active": "Activo/Inactivo",
+            "active.active": "Activo",
+            "active.inactive": "Inactivo",
+            "modal": {
+                "button.save": "Salvar",
+                "button.cancel": "Cancelar"
             }
         },
         "dashboard.title": "Tablero",
@@ -623,13 +637,13 @@
                 "modal.ok": "Proceder"
             },
             "formsType.config": {
-                "title": "es_Forms Type Configuration",
-                "angular.label": "es_Use Angular Forms",
-                "frevvo.label": "es_Use Frevvo Forms",
-                "apply": "es_Apply",
-                "modal.title": "es_Information",
-                "modal.info": "es_Settings will take effect after refresh",
-                "modal.ok": "es_OK"
+                "title": "Configuración del tipo de formularios",
+                "angular.label": "Usa formas angulares",
+                "frevvo.label": "Usar formularios Frevvo",
+                "apply": "Aplicar",
+                "modal.title": "Información",
+                "modal.info": "La configuración tendrá efecto después de actualizar",
+                "modal.ok": "DE ACUERDO"
             },
             "login.config": {
                 "title": "Configuración de acceso",
@@ -644,17 +658,18 @@
                 "apply.label": "Aplicar"
             },
             "holiday": {
-                "title": "es_Holiday Schedule",
+                "title": "Calendario de vacaciones",
+                "label": "Incluir los fines de semana como días laborables",
                 "grid": {
-                    "holidayName": "es_Name of Holiday",
-                    "holidayDate": "es_Date of holiday"
+                    "holidayName": "Nombre de vacaciones",
+                    "holidayDate": "Fecha de vacaciones"
                 },
-                "cancel": "es_Cancel",
-                "save": "es_Save",
-                "message": "es_The holiday you entered is not saved! Date of Holiday already exist!",
+                "cancel": "Cancelar",
+                "save": "Salvar",
+                "message": "¡Las vacaciones que ingresaste no se guardan! La fecha de vacaciones ya existe!",
                 "placeholder": {
-                    "name": "es_Enter Name of Holiday",
-                    "date": "es_Enter Date of Holiday"
+                    "name": "Ingrese el nombre de vacaciones",
+                    "date": "Ingrese la fecha de vacaciones"
                 }
             }
         },
@@ -844,45 +859,86 @@
                 "update.error": "Hubo un error actualizando la fila de configuración",
                 "test.conection.success": "Conectado con éxito."
             }
+        },
+        "transcription": {
+            "title": "Servicios de transcripción",
+            "transcriptionManagement": "Gestión de la transcripción",
+            "transcriptionConfigForm": {
+                "save.button": "Salvar",
+                "automation.label": "Automatización",
+                "enableTranscription.checkbox": "Habilitar la transcripción",
+                "automaticTranscription.checkbox": "Transcripción automática",
+                "overwriteTranscription.checkbox": "Sobrescribir la transcripción original con nuevas versiones",
+                "mediaFileAdded.label": "Cuando se agrega una nueva versión de un archivo multimedia, el sistema:",
+                "generateTranscription.radio": "Generar una nueva transcripción para la nueva versión",
+                "copyTranscription.radio": "Copie la transcripción de la versión activa a la nueva versión",
+                "provider.label": "Proveedor",
+                "numOfFiles.label": "Cantidad de archivos para procesamiento",
+                "selectProvider": "Seleccione un Proveedor",
+                "wordCount.label": "El recuento de palabras",
+                "costPerSecond.label": "Costo por segundo",
+                "confidenceThreshold.label": "Umbral de confianza",
+				"mediaDurationInSeconds.label": "Umbral de duración del medio en segundos",
+                "silenceBetweenWords.label": "Silencio entre palabras en segundos",
+                "validation.messages": {
+                    "requiredErrorMsg": "Este campo es requerido",
+                    "maxErrorMsg": "El valor debe ser menor o igual a 100",
+                    "minZeroValueErrorMsg": "El valor debe ser mayor o igual que 0",
+                    "minOneValueErrorMsg": "El valor debe ser mayor o igual que 1",
+					"minPositiveValueErrorMsg": "El valor debe ser mayor que 0"
+                }
+            }
+        },
+        "stateOfArkcase": {
+            "title": "Estado de Arkcase",
+            "pickDate": "Fecha de recogida",
+            "btn.download": "Descargar",
+            "datePicker": {
+                "clear": "Claro",
+                "current": "Día actual",
+                "close": "Cerca"
+            }
+        },
+        "comp": {
+            "securityLdapConfig": {
+                "title": "Seguridad - Cuadrícula de configuración Ldap"
+            },
+            "correspondenceManagementMergeFields": {
+                "title": "Correspondence Management Merge Fields grid"
+            },
+            "correspondenceManagementMergeFieldsVersions": {
+                "title": "Correspondence Management Merge Fields versión grilla"
+            },
+            "correspondenceManagementTemplates": {
+                "title": "Cuadrícula de plantillas de gestión de correspondencia "
+            },
+            "correspondenceManagementTemplateVersions": {
+                "title": "Correspondance Management Template Versiones de la grilla"
+            },
+            "labelsConfig": {
+                "title": "Aplicación - Cuadrícula de configuración de etiquetas"
+            },
+            "plainFormsConfig": {
+                "title": "Formularios: red de configuración de formularios"
+            },
+            "workflowsConfig": {
+                "title": "Workflows - Cuadrícula de configuración de flujos de trabajo"
+            },
+            "workflowsHistoryDialogConfig": {
+                "title": "Flujos de trabajo: cuadrícula de diálogo de historial de configuración de flujos de trabajo"
+            },
+            "usersPicker": {
+                "title": "Seleccionar usuarios"
+            },
+            "orgHierarchy": {
+                "title": "Jerarquía de la organización"
+            },
+            "cmisConfiguration": {
+                "title": "Cuadrícula de configuración CMIS"
+            },
+            "emailTemplates": {
+                "title": "Plantillas de correo electrónico"
+            }
         }
-    },
-    "admin.comp.securityLdapConfig": {
-        "title": "Seguridad - Cuadrícula de configuración Ldap"
-    },
-    "admin.comp.correspondenceManagementMergeFields": {
-        "title": "Correspondencia Administración Fusionar Campos Cuadrícula"
-    },
-    "admin.comp.correspondenceManagementMergeFieldsVersions": {
-        "title": "Correspondencia Administración Fusionar Campos versión grilla"
-    },
-    "admin.comp.correspondenceManagementTemplates": {
-        "title": "Plantilla de gestión de correspondencia grid"
-    },
-    "admin.comp.correspondenceManagementTemplateVersions": {
-        "title": "Correspondencia Administración Modelo Versiones de la grilla"
-    },
-    "admin.comp.labelsConfig": {
-        "title": "Aplicación - Cuadrícula de configuración de etiquetas"
-    },
-    "admin.comp.plainFormsConfig": {
-        "title": "Formularios: red de configuración de formularios"
-    },
-    "admin.comp.workflowsConfig": {
-        "title": "Flujos de trabajo - Cuadrícula de configuración de flujos de trabajo"
-    },
-    "admin.comp.workflowsHistoryDialogConfig": {
-        "title": "Flujos de trabajo: cuadrícula de diálogo de historial de configuración de flujos de trabajo"
-    },
-    "admin.comp.usersPicker": {
-        "title": "Seleccionar usuarios"
-    },
-    "admin.comp.orgHierarchy": {
-        "title": "Jerarquía de la organización"
-    },
-    "admin.comp.cmisConfiguration": {
-        "title": "Cuadrícula de configuración CMIS"
-    },
-    "admin.comp.emailTemplates": {
-        "title": "Plantillas de correo electrónico"
     }
 }

@@ -75,7 +75,7 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
 
     protected void startWorkflow(AcmTimesheetEvent event)
     {
-        EcmFile pdfRendition = event.getFrevvoUploadedFiles().getPdfRendition();
+        EcmFile pdfRendition = event.getUploadedFiles().getPdfRendition();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
 
         configuration.setEcmFile(pdfRendition);
@@ -111,8 +111,12 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
         pvars.put("reviewers", reviewers);
         pvars.put("taskName", taskName);
         pvars.put("documentAuthor", author);
-        pvars.put("pdfRenditionId", event.getFrevvoUploadedFiles().getPdfRendition().getFileId());
-        pvars.put("formXmlId", event.getFrevvoUploadedFiles().getFormXml().getFileId());
+        pvars.put("pdfRenditionId", event.getUploadedFiles().getPdfRendition().getFileId());
+
+        Long formXmlId = event.getUploadedFiles().getFormXml() != null
+                ? event.getUploadedFiles().getFormXml().getFileId()
+                : null;
+        pvars.put("formXmlId", formXmlId);
 
         pvars.put("OBJECT_TYPE", TimesheetConstants.OBJECT_TYPE);
         pvars.put("OBJECT_ID", timesheet.getId());

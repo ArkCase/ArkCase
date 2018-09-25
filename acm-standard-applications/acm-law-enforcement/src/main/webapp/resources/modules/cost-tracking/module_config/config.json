@@ -1,6 +1,7 @@
 {
     "id": "cost-tracking",
     "title": "Cost Tracking",
+    "className": "com.armedia.acm.services.costsheet.model.AcmCostsheet",
     "configurable": true,
     "initialLinksShown": true,
     "menus": [
@@ -18,7 +19,22 @@
             "menuItemTitle": "costTracking.menus.topbar.item",
             "moduleId": "cost",
             "iconClass": "fa fa-money",
-            "position": 70
+            "position": 70,
+            "formsType": "frevvo"
+        },
+        {
+            "menuId": "topbar",
+            "menuItemURL": "newCostsheet",
+            "menuItemTitle": "costTracking.menus.topbar.item",
+            "moduleId": "cost",
+            "modalDialog": {
+                "moduleName": "cost-tracking",
+                "templateUrl": "modules/cost-tracking/views/components/cost-tracking-new-costsheet-modal.client.view.html",
+                "controllerName": "CostTracking.NewCostsheetController"
+            },
+            "iconClass": "fa fa-money",
+            "position": 70,
+            "formsType": "angular"
         }
     ],
     "tree": {
@@ -324,6 +340,7 @@
         {
             "id": "person",
             "title": "costTracking.comp.person.title",
+            "className": "com.armedia.acm.services.participants.model.AcmParticipant",
             "icon": "fa fa-user",
             "enabled": true,
             "configurable": true,
@@ -528,6 +545,87 @@
                     "headerCellFilter": "translate"
                 }
             ]
+        },
+        {
+            "id": "newCostObjectPicker",
+            "title": "costTracking.comp.newCostsheet.objectPicker.title",
+            "enabled": "true",
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "emptySearch": false,
+            "hideTypeahead": true,
+            "showFacets": false,
+            "multiSelect": false,
+            "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE",
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "costTracking.comp.newCostsheet.objectPicker.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "costTracking.comp.newCostsheet.objectPicker.table.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "costTracking.comp.newCostsheet.objectPicker.table.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "costTracking.comp.newCostsheet.objectPicker.table.columns.id",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        },
+        {
+            "id": "userSearch",
+            "title": "costTracking.comp.newCostsheet.userSearch.title",
+            "enableFiltering": false,
+            "configurable": true,
+            "multiSelect": false,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "costTracking.comp.newCostsheet.objectPicker.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "costTracking.comp.newCostsheet.objectPicker.table.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "costTracking.comp.newCostsheet.objectPicker.table.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "costTracking.comp.newCostsheet.objectPicker.table.columns.username",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
         }
     ]
 }

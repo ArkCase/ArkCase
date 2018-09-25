@@ -314,6 +314,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getDispositionTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of disposition types
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getDispositionTypes = function() {
+        return Service.getLookupByLookupName("dispositions");
+    };
+
+    /**
+     * @ngdoc method
      * @name getParticipantTypes
      * @methodOf services:Object.LookupService
      *
@@ -689,6 +703,90 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
      */
     Service.getBusinessProcessTypes = function() {
         return Service.getLookupByLookupName('businessProcessTypes');
+    };
+
+    /**
+     * @ngdoc method
+     * @name getCostsheetTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Costsheet Types
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCostsheetTypes = function() {
+        return Service.getLookupByLookupName('costsheetTypes');
+    };
+
+    /**
+     * @ngdoc method
+     * @name getTimesheetTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Timesheet Types
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getTimesheetTypes = function() {
+        return Service.getLookupByLookupName('timesheetTypes');
+    };
+
+    /**
+     * @ngdoc method
+     * @name getCostsheetTitles
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Costsheet Titles
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCostsheetTitles = function() {
+        return Service.getLookupByLookupName('costsheetTitles');
+    };
+
+    /**
+     * @ngdoc method
+     * @name getCostsheetStatuses
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Costsheet Statuses
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCostsheetStatuses = function() {
+        return Service.getLookupByLookupName('costsheetStatuses');
+    };
+
+    /**
+     * @ngdoc method
+     * @name getTimesheetStatuses
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Timesheet Statuses
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getTimesheetStatuses = function() {
+        return Service.getLookupByLookupName('timesheetStatuses');
+    };
+
+    /**
+     * @ngdoc method
+     * @name getTimesheetChargeRoles
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Timesheet Statuses
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getTimesheetChargeRoles = function() {
+        return Service.getLookupByLookupName('timesheetChargeRoles');
     };
 
     /**

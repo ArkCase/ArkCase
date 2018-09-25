@@ -107,7 +107,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         }
         else
         {
-            fileNotFound();
+            fileNotFound(fileId);
         }
     }
 
@@ -125,7 +125,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         }
         else
         {
-            fileNotFound();
+            fileNotFound(ecmFile.getId());
         }
 
     }
@@ -186,6 +186,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                 JSONObject fileMetadata = new JSONObject();
                 fileMetadata.put("fileName", ecmFile.getFileName());
                 fileMetadata.put("fileType", ecmFile.getFileType());
+                String versionTag = version == null ? ecmFile.getActiveVersionTag() : version;
+                fileMetadata.put("fileNameWithVersion", String.format("%s:%s", ecmFile.getFileName(), versionTag)); 
                 fileMetadata.put("fileTypeCapitalized",
                         ecmFile.getFileType().substring(0, 1).toUpperCase() + ecmFile.getFileType().substring(1));
                 response.setHeader("X-ArkCase-File-Metadata", fileMetadata.toString());
@@ -220,9 +222,9 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     }
 
     // called when the file was not found.
-    private void fileNotFound() throws AcmObjectNotFoundException
+    private void fileNotFound(Long fileId) throws AcmObjectNotFoundException
     {
-        throw new AcmObjectNotFoundException(null, null, "File not found", null);
+        throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, String.format("File %d not found", fileId), null);
     }
 
     public MuleContextManager getMuleContextManager()

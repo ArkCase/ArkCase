@@ -63,7 +63,8 @@
                 "witnessInterview2%": "证人面试请求2.0"
             }
         },
-        "newTask": "新任务"
+        "newTask": "新任务",
+        "addDocument": "选择要添加的文档。"
     },
     "complaints.comp.people": {
         "title": "成员",
@@ -315,6 +316,48 @@
             "approverFullName": "审批人",
             "approverDecision": "审批决定"
         }
+    },
+    "complaints.comp.closeComplaint": {
+        "title": "zh-cn_Close Complaint",
+        "info": "zh-cn_Incident Information",
+        "infoMessage": "zh-cn_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "zh-cn_Complaint Title",
+        "information": {
+            "title": "zh-cn_Close Complaint Information",
+            "close.date": "zh-cn_Complaint Close Date",
+            "complaint.number": "zh-cn_Complaint Number",
+            "complaint.disposition": "zh-cn_Complaint Disposition"
+        },
+        "add.existing.case": {
+            "title": "zh-cn_Add Existing Case",
+            "search": "zh-cn_Search",
+            "case": {
+                "number": "zh-cn_Enter Case Number",
+                "title": "zh-cn_Case Title",
+                "date": "zh-cn_Case Creation Date",
+                "priority": "zh-cn_Case Priority"
+            }
+        },
+        "refer.external": {
+            "title": "zh-cn_Refer External",
+            "name": "zh-cn_Name of Agency",
+            "date": "zh-cn_Referral Date",
+            "contact": {
+                "title": "zh-cn_Contact",
+                "name": "zh-cn_Contact Name",
+                "type": "zh-cn_Type",
+                "value": "zh-cn_Value"
+            }
+        },
+        "approver": {
+            "placeholder": "zh-cn_Select Approver",
+            "label": "zh-cn_Select Approver",
+            "addAnother": "zh-cn_Add another",
+            "remove": "zh-cn_Remove Approver",
+            "pickerModal.header": "zh-cn_Choose Approver"
+        },
+        "cancelButton": "zh-cn_Cancel",
+        "saveButton": "zh-cn_Save Complaint"
     },
     "complaints.comp.newComplaint": {
         "title": "zh-cn_New Complaint",

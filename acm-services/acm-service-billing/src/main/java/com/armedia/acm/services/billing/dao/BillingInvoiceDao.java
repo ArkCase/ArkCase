@@ -84,9 +84,10 @@ public class BillingInvoiceDao extends AcmAbstractDao<BillingInvoice>
 
         String queryText = "SELECT billingInvoice " +
                 "FROM BillingInvoice billingInvoice " +
+                "WHERE billingInvoice.id = (" +
+                "SELECT MAX(billingInvoice.id) FROM BillingInvoice billingInvoice " +
                 "WHERE billingInvoice.parentObjectType = :parentObjectType " +
-                "AND billingInvoice.parentObjectId = :parentObjectId " +
-                "AND billingInvoice.id = (SELECT MAX(billingInvoice.id) FROM BillingInvoice billingInvoice)";
+                "AND billingInvoice.parentObjectId = :parentObjectId)";
 
         TypedQuery<BillingInvoice> query = getEntityManager().createQuery(queryText, BillingInvoice.class);
 

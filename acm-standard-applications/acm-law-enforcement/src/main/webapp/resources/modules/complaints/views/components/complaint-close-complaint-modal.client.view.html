@@ -1,0 +1,231 @@
+<form name="complaintForm" ng-submit="save()">
+    <div class="modal-header">
+        <h3><span translate>complaints.comp.closeComplaint.title</span></h3>
+    </div>
+    <div class="modal-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion45" href="#collapseInfo" translate>complaints.comp.closeComplaint.information.title</a>
+                </h4>
+            </div>
+            <div id="collapseInfo" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="row form-group">
+                        <div class="col-sm-6">
+                            <label translate>complaints.comp.closeComplaint.information.close.date</label>
+                            <p class="input-group">
+                                <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.closeDate"
+                                        datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                        datepicker-append-to-body="false" is-open="defaultOpened" close-on-date-selection="true"
+                                        show-button-bar="true" on-open-focus="false"
+                                        close-text="{{'complaints.comp.newComplaint.incidentDate.close.button' | translate}}" />
+                                <span class="input-group-btn">
+                                     <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
+                                             <i class="fa fa-calendar"></i>
+                                     </button>
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-sm-6">
+                            <label translate>complaints.comp.closeComplaint.information.complaint.number</label>
+                            <input type="text" ng-model="modalParams.info.complaintNumber" class="input-md form-control" disabled>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-6">
+                            <label translate>complaints.comp.closeComplaint.information.complaint.disposition</label>
+                            <p class="input-group">
+                                <select ng-model="closeComplaintRequest.disposition.dispositionType" ng-change="dispositionTypeChanged()"
+                                        class="form-control input-md" required>
+                                    <option ng-repeat="option in complaintDispositions" ng-value="option.key">
+                                        {{option.value}}
+                                    </option>
+                                </select>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default" ng-if="showExistingCase">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion46" href="#collapseExistingCase" translate>complaints.comp.closeComplaint.add.existing.case.title</a>
+                </h4>
+            </div>
+            <div id="collapseExistingCase" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="row form-group">
+                        <div class="col-sm-6">
+                            <label translate>complaints.comp.closeComplaint.add.existing.case.case.number<span
+                                    class="required-asterisk">*</span></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required"
+                                        ng-model="closeComplaintRequest.disposition.existingCaseNumber" required>
+                                <div class="input-group-btn">
+
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="fa fa-search"></i>
+                                        <span translate="" class="ng-scope" ng-click="searchCase()">Search</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-6">
+                            <label translate>complaints.comp.closeComplaint.add.existing.case.case.title</label>
+                            <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.existingCaseTitle"
+                                    disabled />
+                        </div>
+                        <div class="col-sm-3">
+                            <label translate>complaints.comp.closeComplaint.add.existing.case.case.date</label>
+                            <p class="input-group">
+                                <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.existingCaseCreated"
+                                        disabled />
+                                <span class="input-group-btn">
+                                     <button type="button" class="btn btn-default" disabled>
+                                             <i class="fa fa-calendar"></i>
+                                     </button>
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <label translate>complaints.comp.closeComplaint.add.existing.case.case.priority</label>
+                            <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.existingCasePriority"
+                                    disabled />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default" ng-if="showReferExternal">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion47" href="#collapseReferExternal" translate>complaints.comp.closeComplaint.refer.external.title</a>
+                </h4>
+            </div>
+            <div id="collapseReferExternal" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="row form-group">
+                        <div class="col-sm-4">
+                            <label translate>complaints.comp.closeComplaint.refer.external.name <span
+                                    class="required-asterisk">*</span></label>
+                            <input type="text" class="form-control"
+                                    ng-model="closeComplaintRequest.disposition.referExternalOrganizationName" required />
+                        </div>
+                        <div class="col-sm-4">
+                            <label translate>complaints.comp.closeComplaint.refer.external.date</label>
+                            <p class="input-group">
+                                <input type="text" class="form-control" datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                        datepicker-append-to-body="false" ng-model="closeComplaintRequest.disposition.referExternalDate"
+                                        is-open="defaultOpened"
+                                        close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
+                                        close-text="{{'complaints.comp.newComplaint.incidentDate.close.button' | translate}}" />
+                                <span class="input-group-btn">
+                                     <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
+                                             <i class="fa fa-calendar"></i>
+                                     </button>
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-sm-4">
+                            <label translate>complaints.comp.closeComplaint.refer.external.contact.name <span
+                                    class="required-asterisk">*</span></label>
+                            <input type="text" class="form-control"
+                                    ng-model="closeComplaintRequest.disposition.referExternalContactPersonName" required />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span translate>complaints.comp.closeComplaint.refer.external.contact.title</span>
+                                </h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row form-group">
+                                    <div class="col-sm-6">
+                                        <span translate>complaints.comp.closeComplaint.refer.external.contact.type <label
+                                                class="required-asterisk">*</label></span>
+                                        <select ng-model="closeComplaintRequest.disposition.referExternalContactMethod.type"
+                                                class="form-control input-md"
+                                                required>
+                                            <option ng-repeat="option in contactTypes" ng-value="option.value">
+                                                {{option.value}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label translate>complaints.comp.closeComplaint.refer.external.contact.value <span
+                                                class="required-asterisk">*</span></label>
+                                        <input type="text" class="form-control"
+                                                ng-model="closeComplaintRequest.disposition.referExternalContactMethod.value"
+                                                required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="well-sm">
+            <div class="row">
+                <div class="col-sm-5">
+                    <label for="participant">{{'complaints.comp.closeComplaint.approver.label' | translate}} <span
+                            class="required-asterisk">*</span></label>
+                </div>
+            </div>
+            <div class="" ng-repeat="participant in closeComplaintRequest.participants">
+                <div class="row">
+                    <div class="col-sm-4 form-group">
+                        <input type="text" id="participant" ng-model="participant.participantLdapId"
+                                class="input-md form-control user-picker-input"
+                                placeholder="{{ 'complaints.comp.closeComplaint.approver.placeholder' | translate }}"
+                                ng-click="addApprover($index)" readonly required>
+                    </div>
+                    <div class="col-sm-4 pull-left form-group">
+                        <div class="pull-left">
+                            <button type="button" class="btn btn-link form-control" ng-click="removeApprover(participant)"
+                                    ng-show="!$first">
+                                <i class="fa fa-minus text-danger"></i><span translate>complaints.comp.closeComplaint.approver.remove</span>
+                            </button>
+                        </div>
+                        <div class="pull-left">
+                            <button type="button" class="btn btn-link form-control" ng-click="addNewApprover()"
+                                    ng-disabled="!participant.participantLdapId" ng-show="$last">
+                                <i class="fa fa-plus text-success"></i><span
+                                    translate>complaints.comp.closeComplaint.approver.addAnother</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="well-sm">
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <span class="required-asterisk" ng-show="isDescriptionRequired">*</span>
+                    <summernote id="complaintDesc" config="options" ng-model="description" ng-required="isDescriptionRequired"></summernote>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
+            <span translate>complaints.comp.closeComplaint.cancelButton</span>
+        </button>
+        <button type="submit" ng-disabled="complaintForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+                id="saveButton" data-title="Save">
+            <i class="{{loadingIcon}}"></i>
+            <span translate>complaints.comp.closeComplaint.saveButton</span>
+        </button>
+    </div>
+</form>

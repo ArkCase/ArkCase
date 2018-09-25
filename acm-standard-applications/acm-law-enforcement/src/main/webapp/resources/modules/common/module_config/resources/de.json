@@ -23,6 +23,22 @@
         "defaultDateUIFormat": "MM/tt/jjjj",
         "defaultDateTimeUIFormat": "MM/tt/jjjj UU:mm"
     },
+    "common.userOrGroupSearch": {
+        "id": "de_userSearch",
+        "title": "de_User/Group Search",
+        "search": {
+            "btn": "de_Search",
+            "placeholder": "de_Search for the user or group."
+        },
+        "cancelButton": "de_Cancel",
+        "confirmButton": "de_Confirm",
+        "assigneeGridColumns": {
+            "name": "de_Name",
+            "type": "de_Type",
+            "title": "de_Title",
+            "username": "de_Username"
+        }
+    },
     "common.frevvo": {
         "defaultDateFormat": "JJJJ-MM-TT"
     },
@@ -200,7 +216,10 @@
         "noData.text": "Keine Ergebnisse",
         "pickUserLabel": "Wählen Sie den zugeordneten Benutzer aus",
         "pickGroupLabel": "Wählen Sie Zugehörige Gruppe",
-        "selectedItemsGrid.label": "Ausgewählte Einträge"
+        "selectedItemsGrid.label": "Ausgewählte Einträge",
+        "notValidUser": "de_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
+        "notValidGroup": "de_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
+
     },
     "common.directive.search": {
         "showMore.button.text": "Mehr Werte anzeigen",
@@ -621,6 +640,16 @@
             "error.ownerUnique": "Nur ein Besitzer ist erlaubt."
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "Teilnehmer hinzufügen",
+        "editParticipant.label": "Datensatz bearbeiten",
+        "participantType.label": "Teilnehmertyp",
+        "participantName.label": "Teilnehmer name",
+        "btnOk.text": "Sparen",
+        "btnCancel.text": "Stornieren",
+        "dialogUserGroupPicker.header": "de_Search User/Group",
+        "replaceChildrenParticipant": "Ersetzen Kinder Teilnehmer"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "% Abgeschlossen"
     },
@@ -731,6 +760,9 @@
             "identificationYearIssued": "Identifikation ausgestellt",
             "identificationYearIssued.placeholder": "Ausgewählte Identifikation auswählen",
             "identificationYearIssued.close.button": "Schließen"
+        },
+        "details": {
+            "title": "de_Details"
         }
     },
     "common.addPerson": {
@@ -848,12 +880,7 @@
         "people": {
             "title": "Menschen",
             "searchExisting.placeholder": "Existierende Person suchen",
-            "personType": "Personentyp",
-            "comp":{
-                "details":{
-                    "title":"de_Details"
-                }
-            }
+            "personType": "Personentyp"
         },
         "locations": {
             "title": "Standorte",

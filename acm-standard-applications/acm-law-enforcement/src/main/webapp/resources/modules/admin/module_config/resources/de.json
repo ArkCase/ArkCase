@@ -9,6 +9,7 @@
         "security.ldapConfig.addNewMember": "Neues Mitglied hinzufügen",
         "security.ldapConfig.addMembers": "Mitglieder hinzufügen",
         "security.ldapConfig.addSubgroup": "Untergruppe hinzufügen",
+		"security.ldapConfig.addExistingSubgroup": "Vorhandene Gruppe hinzufügen",
         "security.ldapConfig.addExistingMembers": "Vorhandene Mitglieder hinzufügen",
         "security.ldapConfig.addLdapSubgroup": "LDAP-Untergruppe hinzufügen",
         "security.ldapConfig.deleteLdapGroup": "LDAP-Gruppe löschen",
@@ -18,20 +19,26 @@
         "security.ldapConfig.removeMember": "Remove Member",
         "security.ldapConfig.table.ldapUrl": "LDAP-URL",
         "security.ldapConfig.table.directoryName": "Verzeichnisname",
+		"security.ldapConfig.table.userAttributesConfig": "LDAP-Benutzerkonfiguration",
+        "security.ldapConfig.table.groupAttributesConfig": "LDAP-Gruppenkonfiguration",
+        "security.ldapConfig.table.action.partialSync": "Starten Sie die partielle LDAP-Synchronisierung",
         "security.ldapConfig.data": {
+		    "sync.dialog.header": "Führen Sie die Synchronisierung aus",
+            "sync.dialog.type.partial": "Differenzielle Synchronisierung",
+            "sync.dialog.type.full": "Vollständige Synchronisierung",
             "userAttributesTemplate": "Ldap-Benutzerattributvorlage",
             "groupAttributesTemplate": "Ldap-Gruppenattributvorlage",
             "addNewDirectory": "Neues Verzeichnis hinzufügen",
             "editRecord": "Datensatz bearbeiten",
             "id": "ID",
-            "id.validationMessage": "de_The ID can only consist of letters, numbers or dots.",
+			"id.validationMessage": "Die ID kann nur aus Buchstaben, Zahlen oder Punkten bestehen.",
             "directoryType": "Verzeichnisserver auswählen",
             "ldapUrl": "LDAP-URL",
             "base": "Base",
             "directoryName": "Verzeichnisname",
             "authUserDn": "Auth Benutzer Dn",
             "authUserPassword": "Auth User Passwort",
-            "confirmAuthUserPassword": "de_Confirm Auth User Password",
+			"confirmAuthUserPassword": "Bestätigen Sie das Benutzerpasswort",
             "userSearchBase": "Benutzer Suchbasis",
             "userSearchFilter": "Benutzer Suchfilter",
             "allUsersFilter": "Alle Benutzer filtern",
@@ -64,7 +71,7 @@
             "base": "Geben Sie die Basisdomänenkomponente ein (zum Beispiel dc = example, dc = com)",
             "authUserDn": "Geben Sie den Benutzer-DN zur Authentifizierung ein (z. B. cn = John Doe, ou = users, dc = example, dc = com)",
             "authUserPassword": "Passwort für den Authentifizierungsbenutzer eingeben",
-            "confirmAuthUserPassword": "de_Confirm password for authentication user",
+			"confirmAuthUserPassword": "Bestätigen Sie das Passwort für den Authentifizierungsbenutzer",
             "userSearchBase": "Geben Sie die Benutzersuchbasis ein (z. B. ou = Benutzer)",
             "userSearchFilter": "Geben Sie den Suchfilter für einen einzelnen Benutzer ein (z. B. (& (objectClass = person) (uid =% s))",
             "allUsersFilter": "Geben Sie den Suchfilter für alle Benutzer ein (z. B. (objectClass = person))",
@@ -141,6 +148,7 @@
             },
             "addMembers": {
                 "title": "Mitglieder hinzufügen",
+				"group.title": "Fügen Sie eine vorhandene Gruppe als Mitglied hinzu",
                 "btn": {
                     "search": "Gehen!",
                     "cancel": "Stornieren",
@@ -160,7 +168,10 @@
                     "lastName": "Nachnamen eingeben",
                     "email": "Email eingeben",
                     "password": "Passwort eingeben",
-                    "confirmation": "Gib dein Passwort erneut ein"
+                    "confirmation": "Gib dein Passwort erneut ein",
+					"_1_": "Numerische Werte sind in der Ressourcendatei nicht gültig. _ENTFERNT WERDEN_",
+                    "_2_": "Wenn 'minLengthForPassword' benötigt wird, verschiebe es bitte in config.json",
+                    "_minLengthForPassword": "7"
                 },
                 "editLdapMember": {
                     "title": "Ldap-Mitglied bearbeiten",
@@ -215,26 +226,27 @@
                     "deleteBtn": "Löschen",
                     "headerText": "Sie sind dabei, member zu löschen:",
                     "bodyText": "Bist du sicher?"
-                },
-                "tableColumns": {
-                    "name": "de_Name",
-                    "type": "de_Type",
-                    "supervisorName": "de_Supervisor Name",
-                    "actions": "de_Actions"
                 }
-            },
+			},
             "messages": {
                 "delete": {
                     "group": {
                         "success": "Erfolg",
-                        "error": "Fehler"
+                        "error": "error"
                     },
                     "member": {
                         "success": "Erfolg",
-                        "error": "Fehler"
+                        "error": "error"
                     }
                 }
-            }
+            },
+            "tableColumns": {
+                "name": "Name",
+                "type": "Art",
+                "supervisorName": "Name des Vorgesetzten",
+                "actions": "Aktionen"
+            },
+            "searchFilter.placeholder": "Suche"
         },
         "security.selectPrivileges": "Rolle erstellen / Rechte auswählen",
         "security.selectPrivileges.applicationRole": "Anwendungsrolle",
@@ -254,8 +266,8 @@
             "user": "Benutzer"
         },
         "security.group.management": {
-            "title": "de_Group Management",
-            "group": "de_Group"
+            "title": "Gruppenmanagement",
+            "group": "Gruppe"
         },
         "security.calendarConfiguration": {
             "title": "Kalender-Konfiguration",
@@ -269,6 +281,7 @@
                 "purge.label": "Spülung",
                 "email.label": "System E-Mail-Adresse",
                 "password.label": "Systemkennwort",
+				"password.changeButton": "Ändern Sie das Kalenderbenutzerkennwort",
                 "purgeDays.label": "Tage",
                 "emailValid": "System Email Adresse und Passwort sind gültig",
                 "emailNotValid": "System Email Adresse oder Passwort sind ungültig",
@@ -344,7 +357,8 @@
                 "validate.label": "SMTP-Validierung",
                 "validate.button": "Bestätigen",
                 "smtpValid": "SMTP-Einstellungen sind gültig",
-                "smtpNotValid": "SMTP-Einstellungen sind ungültig"
+                "smtpNotValid": "SMTP-Einstellungen sind ungültig",
+				"errorMsg": "Bitte wählen Sie aus, wie Dokumente gesendet werden"
             }
         },
         "security.emailTemplates": {
@@ -363,29 +377,30 @@
                 "templateName.label": "Vorlagenname",
                 "templateName.placeholder": "Name der Vorlage eingeben",
                 "emailPattern.label": "Email-Muster",
+				"emailPattern.description": "Verwenden Sie '. *' Für alle Empfänger, verwenden Sie '. + @ Armedia.com' für Empfänger von armedia.com oder einen anderen Regex. Bitte beachten Sie, dass der Punkt (.) Mit einem Backslash versehen werden sollte!",
                 "emailPattern.placeholder": "E-Mail-Muster eingeben",
                 "source.label": "Quelle",
                 "objectTypes.label": "Objekttypen",
                 "actions.label": "Maßnahmen",
                 "manual.label": "Handbuch",
                 "automated.label": "Automatisiert",
-                "choose.file": "de_Choose File",
-                "download": "de_Download",
+                "choose.file": "Datei wählen",
+                "download": "Herunterladen",
                 "save": "Sparen",
                 "cancel": "Stornieren",
-                "validationResponse": "de_Email Template already exists with selected parameters",
-                "uploadError": "de_File upload canceled due to incorrect type of file. You can only upload html file."
+                "validationResponse": "E-Mail-Vorlage existiert bereits mit ausgewählten Parametern",
+                "uploadError": "Der Dateiupload wurde aufgrund eines falschen Dateityps abgebrochen. Sie können nur eine HTML-Datei hochladen."
             },
             "objectTypes": {
-                "caseFile": "de_Case File",
-                "complaint": "de_Complaint",
-                "task": "de_Task",
-                "document": "de_Document"
+                "caseFile": "Akte",
+                "complaint": "Beschwerde",
+                "task": "Aufgabe",
+                "document": "Dokument"
             },
             "actions": {
-                "sendAsAttachments": "de_Send as Attachments",
-                "sendAsLinks": "de_Send as Links",
-                "sendAsAttachmentsAndLinks": "de_Send as Attachments and Links"
+                "sendAsAttachments": "Als Anhänge senden",
+                "sendAsLinks": "Als Links senden",
+                "sendAsAttachmentsAndLinks": "Als Anhänge und Links senden"
             }
         },
         "security.exchangeConfiguration": {
@@ -426,6 +441,20 @@
                 }
             }
         },
+        "forms.timesheetConfiguration": {
+            "title": "Timesheet Configuration",
+            "chargeRole": "Charge Role",
+            "chargeRole.placeholder": "Enter Charge Role",
+            "rate": "Rate",
+            "rate.placeholder": "Enter Rate ($)",
+            "active": "Active/Inactive",
+            "active.active": "Active",
+            "active.inactive": "Inactive",
+            "modal": {
+                "button.save": "Save",
+                "button.cancel": "Cancel"
+            }
+        },
         "dashboard.title": "Instrumententafel",
         "dashboard.config": "Dashboard-Konfiguration",
         "dashboard.widgets": "Widgets",
@@ -435,6 +464,42 @@
             "btn": {
                 "reportDesigner": "Berichtsdesigner",
                 "sync": "Synchronisieren"
+            },
+            "schedule": {
+                "title": "Berichte einplanen",
+                "selectReportType": "Wählen Sie Berichtstyp",
+                "emailAddress": {
+                    "title": "Geben Sie E-Mail-Adressen ein",
+                    "placeholder": "Bitte geben Sie Komma (,) getrennte E-Mail-Adressen ein"
+                },
+                "table": {
+                    "header": "Vorhandene Zeitpläne",
+                    "startTimeFormat": "hh:mm a",
+                    "columns": {
+                        "jobName": "Zeitplanname",
+                        "recurrence": "Wiederholung",
+                        "startTime": "Startzeit",
+                        "startDate": "Anfangsdatum",
+                        "endDate": "Endtermin",
+                        "emailAddresses": "E-mailadressen",
+                        "state": "Status"
+                    }
+                },
+                "delete": {
+                    "success": "Zeitplan erfolgreich gelöscht",
+                    "error": "Fehler beim Löschen des Zeitplans"
+                },
+                "createScheduleSuccess": "Zeitplan erfolgreich erstellt",
+                "createScheduleFailure": "Fehler beim Erstellen des Zeitplans",
+                "enterFutureDate": "Geben Sie eine Startzeit in der Zukunft ein",
+                "recurrence": "Wiederholung (Geben Sie die zukünftige Zeit ein)",
+                "time": "Zeit",
+                "startDate": "Anfangsdatum",
+                "endDate": "Endtermin",
+                "filterStartDate": "Ergebnis Filter Startdatum",
+                "filterEndDate": "Ergebnis Filter Enddatum",
+                "outputFormat": "Wählen Sie Ausgabeformat",
+                "submit": "Einreichen"
             }
         },
         "forms.title": "Formen",
@@ -459,7 +524,7 @@
             "cancel": "Stornieren",
             "activate": "Aktivieren"
         },
-        "workflows.config.noHistory": "de_There is no history for this workflow.",
+        "workflows.config.noHistory": "Für diesen Workflow gibt es keine Historie.",
         "workflows.config.grid": {
             "businessProcess": "Geschäftsprozess",
             "description": "Beschreibung",
@@ -545,21 +610,22 @@
                     "btnCancel.text": "Stornieren",
                     "btnOk.text": "Eintrag speichern"
                 },
-                "addLookup": "de_Add Lookup",
-                "label": "de_Lookup Type",
-                "lookupName": "de_Lookup Name",
-                "placeholder": "de_Enter lookup name",
-                "btnSave.text": "de_Save",
-                "deleteLookupMsg": "de_Are you sure you want to delete this lookup?",
-                "deleteEntryMsg": "de_Are you sure you want to delete this entry?",
-                "delete.success": "de_Lookup is successfully deleted",
-                "delete.error": "de_Lookup can't be deleted",
-                "lookupExists.error": "de_Lookup with this name already exists"
+                "addLookup": "Suche hinzufügen",
+                "label": "Nachschlagetyp",
+                "lookupName": "Suchname",
+                "placeholder": "Geben Sie den Namen der Suche ein",
+                "btnSave.text": "sparen",
+                "deleteLookupMsg": "Möchten Sie diese Suche wirklich löschen?",
+                "deleteEntryMsg": "Möchten Sie diesen Eintrag wirklich löschen?",
+                "delete.success": "Die Suche wurde erfolgreich gelöscht",
+                "delete.error": "Suche kann nicht gelöscht werden",
+                "lookupExists.error": "Nachschlagen mit diesem Namen existiert bereits"
             },
             "module.config": {
                 "title": "Modulkonfiguration",
-                "btnDisabled": "de_Disabled",
-                "btnEnabled": "de_Enabled"
+                "btnDisabled": "Behindert",
+                "btnEnabled": "Aktiviert",
+				"message": "Keine Module im System gefunden"
             },
             "userName.config": {
                 "title": "Konfiguration der Benutzernamenanzeige",
@@ -571,13 +637,13 @@
                 "modal.ok": "OK"
             },
             "formsType.config": {
-                "title": "de_Forms Type Configuration",
-                "angular.label": "de_Use Angular Forms",
-                "frevvo.label": "de_Use Frevvo Forms",
-                "apply": "de_Apply",
-                "modal.title": "de_Information",
-                "modal.info": "de_Settings will take effect after refresh",
-                "modal.ok": "de_OK"
+                "title": "Formulartyp Konfiguration",
+                "angular.label": "Verwenden Sie eckige Formen",
+                "frevvo.label": "Verwenden Sie Frevvo-Formulare",
+                "apply": "Sich bewerben",
+                "modal.title": "Information",
+                "modal.info": "Einstellungen werden nach dem Aktualisieren wirksam",
+                "modal.ok": "OK"
             },
             "login.config": {
                 "title": "Login-Konfiguration",
@@ -592,17 +658,18 @@
                 "apply.label": "Sich bewerben"
             },
             "holiday": {
-                "title": "de_Holiday Schedule",
+                "title": "Urlaubsplan",
+                "label": "Fügen Sie Wochenenden als Arbeitstage ein",
                 "grid": {
-                    "holidayName": "de_Name of Holiday",
-                    "holidayDate": "de_Date of holiday"
+                    "holidayName": "Name des Feiertags",
+                    "holidayDate": "Datum des Urlaubs"
                 },
-                "cancel": "de_Cancel",
-                "save": "de_Save",
-                "message": "de_The holiday you entered is not saved! Date of Holiday already exist!",
+                "cancel": "Stornieren",
+                "save": "Sparen",
+                "message": "Der eingegebene Urlaub wird nicht gespeichert! Das Datum des Feiertages ist bereits vorhanden!",
                 "placeholder": {
-                    "name": "de_Enter Name of Holiday",
-                    "date": "de_Enter Date of Holiday"
+                    "name": "Geben Sie den Namen des Urlaubs ein",
+                    "date": "Geben Sie das Urlaubsdatum ein"
                 }
             }
         },
@@ -644,8 +711,8 @@
                 "creator": "Schöpfer",
                 "modifier": "Angepasst von",
                 "activated": "Status",
-                "statusDeactivated": "de_Deactivated",
-                "statusActivated": "de_Activated",
+                "statusDeactivated": "Deaktiviert",
+                "statusActivated": "Aktiviert",
                 "objectType": "Objekttyp",
                 "version": "Version",
                 "templateVersionActive": "Aktiv"
@@ -662,6 +729,7 @@
                 }
             },
             "templates.modal": {
+			    "objectTypes.selectedFiles": "Keine Datei ausgewählt",
                 "objectTypes.label": "Objekttypen",
                 "querySelect.label": "Abfrage Auswählen",
                 "label.label": "Anzeigename",
@@ -710,7 +778,7 @@
                     "edit": "CMIS-Konfiguration bearbeiten"
                 },
                 "dialog": {
-                    "testConnection": "de_Test Connection",
+                    "testConnection": "Testverbindung",
                     "cancel": "Stornieren",
                     "ok": "OK"
                 },
@@ -788,47 +856,89 @@
                 "insert.success": "Die neue Konfigurationszeile wurde erfolgreich erstellt.",
                 "insert.error": "Fehler beim Erstellen einer neuen Konfigurationszeile.",
                 "update.success": "Die Konfigurationszeile wurde erfolgreich aktualisiert.",
-                "update.error": "Fehler beim Aktualisieren der Konfigurationszeile."
+                "update.error": "Fehler beim Aktualisieren der Konfigurationszeile.",
+				"test.conection.success": "Erfolgreich verbunden."
+            }
+        },
+        "transcription": {
+            "title": "Transkriptionsdienste",
+            "transcriptionManagement": "Transkriptionsverwaltung",
+            "transcriptionConfigForm": {
+                "save.button": "Sparen",
+                "automation.label": "Automatisierung",
+                "enableTranscription.checkbox": "Transkription aktivieren",
+                "automaticTranscription.checkbox": "Automatische Transkription",
+                "overwriteTranscription.checkbox": "Überschreiben Sie Original-Transkription mit neuen Versionen",
+                "mediaFileAdded.label": "Wenn eine neue Version einer Mediendatei hinzugefügt wird, wird das System:",
+                "generateTranscription.radio": "Erstellen Sie eine neue Transkription für die neue Version",
+                "copyTranscription.radio": "Kopieren Sie die Transkription von der aktiven Version in die neue Version",
+                "provider.label": "Anbieter",
+                "numOfFiles.label": "Anzahl der zu verarbeitenden Dateien",
+                "selectProvider": "Wählen Sie einen Anbieter aus",
+                "wordCount.label": "Wortzahl",
+                "costPerSecond.label": "Kosten pro Sekunde",
+                "confidenceThreshold.label": "Vertrauensschwelle",
+				"mediaDurationInSeconds.label": "Mediendauerschwelle in Sekunden",
+                "silenceBetweenWords.label": "Stille zwischen Wörtern in Sekunden",
+                "validation.messages": {
+                    "requiredErrorMsg": "Dieses Feld wird benötigt",
+                    "maxErrorMsg": "Der Wert muss kleiner oder gleich 100 sein",
+                    "minZeroValueErrorMsg": "Der Wert muss größer oder gleich 0 sein",
+                    "minOneValueErrorMsg": "Der Wert muss größer oder gleich 1 sein",
+					"minPositiveValueErrorMsg": "Der Wert muss größer als 0 sein"
+                }
+            }
+        },
+        "stateOfArkcase": {
+            "title": "Staat von Arkcase",
+            "pickDate": "Wählen Sie Datum aus",
+            "btn.download": "Herunterladen",
+            "datePicker": {
+                "clear": "Klar",
+                "current": "Heutige Tag",
+                "close": "Schließen"
+            }
+        },
+        "comp": {
+            "securityLdapConfig": {
+                "title": "Sicherheit - Ldap Config Grid"
+            },
+            "correspondenceManagementMergeFields": {
+                "title": "Correspondence Management Zusammenführen von Feldern"
+            },
+            "correspondenceManagementMergeFieldsVersions": {
+                "title": "Correspondence Management Merge Felder Versionsraster"
+            },
+            "correspondenceManagementTemplates": {
+                "title": "Correspondence Management Vorlagenraster"
+            },
+            "correspondenceManagementTemplateVersions": {
+                "title": "Correspondance Management Template Versionsraster"
+            },
+            "labelsConfig": {
+                "title": "Anwendung - Etiketten Konfigurationsraster"
+            },
+            "plainFormsConfig": {
+                "title": "Formulare - Formulare Konfigurationsraster"
+            },
+            "workflowsConfig": {
+                "title": "Workflows - Workflows Config-Raster"
+            },
+            "workflowsHistoryDialogConfig": {
+                "title": "Workflows - Workflows Konfigurationsdialogfeld für Konfigurationshistorie"
+            },
+            "usersPicker": {
+                "title": "Wählen Sie Benutzer aus"
+            },
+            "orgHierarchy": {
+                "title": "Organisationshierarchie"
+            },
+            "cmisConfiguration": {
+                "title": "CMIS-Konfigurationsraster"
+            },
+            "emailTemplates": {
+                "title": "E-Mail-Vorlagen"
             }
         }
-    },
-    "admin.comp.securityLdapConfig": {
-        "title": "Sicherheit - Ldap config grid"
-    },
-    "admin.comp.correspondenceManagementMergeFields": {
-        "title": "Korrespondenzverwaltung Zusammenführen von Feldern"
-    },
-    "admin.comp.correspondenceManagementMergeFieldsVersions": {
-        "title": "Korrespondenzverwaltung Zusammenführen von Feldversionsgittern"
-    },
-    "admin.comp.correspondenceManagementTemplates": {
-        "title": "Korrespondenzverwaltung Vorlagen-Raster"
-    },
-    "admin.comp.correspondenceManagementTemplateVersions": {
-        "title": "Korrespondenzverwaltung Vorlagenversionen Raster"
-    },
-    "admin.comp.labelsConfig": {
-        "title": "Anwendung - Etiketten Konfigurationsraster"
-    },
-    "admin.comp.plainFormsConfig": {
-        "title": "Formulare - Formulare Konfigurationsgitter"
-    },
-    "admin.comp.workflowsConfig": {
-        "title": "Workflows - Workflows Konfigurationsraster"
-    },
-    "admin.comp.workflowsHistoryDialogConfig": {
-        "title": "Workflows - Workflows Dialogfeld 'Konfighistoriendialog'"
-    },
-    "admin.comp.usersPicker": {
-        "title": "Benutzer auswählen"
-    },
-    "admin.comp.orgHierarchy": {
-        "title": "Organisationshierarchie"
-    },
-    "admin.comp.cmisConfiguration": {
-        "title": "CMIS-Konfigurationsraster"
-    },
-    "admin.comp.emailTemplates": {
-        "title": "E-Mail Vorlagen"
     }
 }

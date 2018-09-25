@@ -362,6 +362,34 @@
             "approverDecision": "Approver Decision"
         }
     },
+    "cases.comp.change.status": {
+        "title": "Change Case Status",
+        "information": {
+            "title": "Change Case Status Information",
+            "date": "Change Date",
+            "case.number": "Case Number",
+            "status": {
+                "title": "Status",
+                "resolution": {
+                    "title": "Case Resolution",
+                    "denied": "Denied",
+                    "full": "Full",
+                    "partial": "Partial"
+                }
+            }
+        },
+        "approver": {
+            "placeholder": "Select Approver",
+            "label": "Select Approver",
+            "addAnother": "Add another",
+            "remove": "Remove Approver",
+            "pickerModal.header": "Choose Approver"
+        },
+        "button": {
+            "cancel": "Cancel",
+            "save": "Save"
+        }
+    },
     "cases.comp.newCase": {
         "title": "New Case File",
         "editCase.title": "Edit Case File",
@@ -403,6 +431,15 @@
             "type": "Type",
             "title": "Title",
             "username": "Username"
+        }
+    },
+    "cases.dialogObjectPicker": {
+        "header": "Search for document",
+        "table.columns": {
+            "name": "Name",
+            "type": "Type",
+            "title": "Title",
+            "id": "ID"
         }
     },
     "cases.tree": {
