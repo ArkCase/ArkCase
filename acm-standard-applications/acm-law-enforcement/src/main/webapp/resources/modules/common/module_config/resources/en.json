@@ -815,7 +815,8 @@
             "name": "Name",
             "id": "ID",
             "title": "Title"
-        }
+        },
+        "addDocument": "Choose document to add"
     },
     "common.addOrganization": {
         "title": "Add Organization",
