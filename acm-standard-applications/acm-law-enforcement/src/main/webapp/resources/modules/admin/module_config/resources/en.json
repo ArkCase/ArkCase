@@ -499,7 +499,8 @@
                 "filterStartDate": "Result Filter Start Date",
                 "filterEndDate": "Result Filter End Date",
                 "outputFormat": "Select Output Format",
-                "submit": "Submit"
+                "submit": "Submit",
+                "cancel": "Cancel"
             }
         },
         "forms.title": "Forms",
