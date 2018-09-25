@@ -23,7 +23,7 @@
     </beans:beans>
 
     <!-- no need to protect the Login page in LDAP- and Kerberos-based authentication -->
-    <beans:beans profile="ldap,kerberos,mfa-okta">
+    <beans:beans profile="ldap,kerberos,mfa-okta,externalAuth,externalSaml">
         <http security="none" pattern="/views/login.jsp"/>
         <http security="none" pattern="/login"/>
         <http security="none" pattern="/login.html"/>
@@ -35,7 +35,7 @@
     </beans:beans>
 
     <!-- no need to protect the Login page in SSO SAML-based authentication -->
-    <beans:beans profile="ssoSaml">
+    <beans:beans profile="ssoSaml,externalSaml">
         <http security="none" pattern="/views/saml_login.jsp"/>
         <http security="none" pattern="/sso/loggedout"/>
         <http security="none" pattern="/samllogin"/>

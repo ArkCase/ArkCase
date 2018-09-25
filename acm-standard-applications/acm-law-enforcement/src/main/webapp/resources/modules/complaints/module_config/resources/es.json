@@ -63,7 +63,8 @@
                 "witnessInterview2%": "Solicitud de entrevista de testigo-2.0"
             }
         },
-        "newTask": "Nueva tarea"
+        "newTask": "Nueva tarea",
+        "addDocument": "Elija el documento para agregar."
     },
     "complaints.comp.people": {
         "title": "Personas",
@@ -315,6 +316,48 @@
             "approverFullName": "Aprobador",
             "approverDecision": "Decisión de aprobación"
         }
+    },
+    "complaints.comp.closeComplaint": {
+        "title": "es_Close Complaint",
+        "info": "es_Incident Information",
+        "infoMessage": "es_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "es_Complaint Title",
+        "information": {
+            "title": "es_Close Complaint Information",
+            "close.date": "es_Complaint Close Date",
+            "complaint.number": "es_Complaint Number",
+            "complaint.disposition": "es_Complaint Disposition"
+        },
+        "add.existing.case": {
+            "title": "es_Add Existing Case",
+            "search": "es_Search",
+            "case": {
+                "number": "es_Enter Case Number",
+                "title": "es_Case Title",
+                "date": "es_Case Creation Date",
+                "priority": "es_Case Priority"
+            }
+        },
+        "refer.external": {
+            "title": "es_Refer External",
+            "name": "es_Name of Agency",
+            "date": "es_Referral Date",
+            "contact": {
+                "title": "es_Contact",
+                "name": "es_Contact Name",
+                "type": "es_Type",
+                "value": "es_Value"
+            }
+        },
+        "approver": {
+            "placeholder": "es_Select Approver",
+            "label": "es_Select Approver",
+            "addAnother": "es_Add another",
+            "remove": "es_Remove Approver",
+            "pickerModal.header": "es_Choose Approver"
+        },
+        "cancelButton": "es_Cancel",
+        "saveButton": "es_Save Complaint"
     },
     "complaints.comp.newComplaint": {
         "title": "es_New Complaint",

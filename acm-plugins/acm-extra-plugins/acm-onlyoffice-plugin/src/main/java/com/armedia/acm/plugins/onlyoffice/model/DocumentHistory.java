@@ -1,8 +1,8 @@
-package com.armedia.acm.frevvo.model;
+package com.armedia.acm.plugins.onlyoffice.model;
 
 /*-
  * #%L
- * ACM Service: Form Configuration
+ * ACM Extra Plugin: OnlyOffice Integration
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,47 +27,30 @@ package com.armedia.acm.frevvo.model;
  * #L%
  */
 
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by armdev on 11/4/14.
- */
-public class FrevvoUploadedFiles
+public class DocumentHistory
 {
-    private EcmFile pdfRendition;
-    private EcmFile formXml;
-    private List<EcmFile> uploadedFiles = new ArrayList<>();
+    private List<DocumentHistoryVersion> history;
+    private String currentVersion;
 
-    public EcmFile getPdfRendition()
+    public List<DocumentHistoryVersion> getHistory()
     {
-        return pdfRendition;
+        return history;
     }
 
-    public void setPdfRendition(EcmFile pdfRendition)
+    public void setHistory(List<DocumentHistoryVersion> history)
     {
-        this.pdfRendition = pdfRendition;
+        this.history = history;
     }
 
-    public EcmFile getFormXml()
+    public String getCurrentVersion()
     {
-        return formXml;
+        return currentVersion;
     }
 
-    public void setFormXml(EcmFile formXml)
+    public void setCurrentVersion(String currentVersion)
     {
-        this.formXml = formXml;
-    }
-
-    public List<EcmFile> getUploadedFiles()
-    {
-        return uploadedFiles;
-    }
-
-    public void setUploadedFiles(List<EcmFile> uploadedFiles)
-    {
-        this.uploadedFiles = uploadedFiles;
+        this.currentVersion = currentVersion;
     }
 }

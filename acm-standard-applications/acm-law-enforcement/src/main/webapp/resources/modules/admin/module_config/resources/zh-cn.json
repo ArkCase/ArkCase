@@ -9,6 +9,7 @@
         "security.ldapConfig.addNewMember": "添加新会员",
         "security.ldapConfig.addMembers": "添加会员",
         "security.ldapConfig.addSubgroup": "添加子组",
+		"security.ldapConfig.addExistingSubgroup": "添加现有组",
         "security.ldapConfig.addExistingMembers": "添加现有成员",
         "security.ldapConfig.addLdapSubgroup": "添加LDAP子组",
         "security.ldapConfig.deleteLdapGroup": "删除LDAP组",
@@ -18,20 +19,26 @@
         "security.ldapConfig.removeMember": "删除会员",
         "security.ldapConfig.table.ldapUrl": "LDAP网址",
         "security.ldapConfig.table.directoryName": "目录名称",
+		"security.ldapConfig.table.userAttributesConfig": "LDAP用户配置",
+        "security.ldapConfig.table.groupAttributesConfig": "LDAP组配置",
+        "security.ldapConfig.table.action.partialSync": "启动LDAP部分同步",
         "security.ldapConfig.data": {
+		    "sync.dialog.header": "运行同步",
+            "sync.dialog.type.partial": " 差分同步",
+            "sync.dialog.type.full": "完全同步",
             "userAttributesTemplate": "Ldap用户属性模板",
             "groupAttributesTemplate": "Ldap组属性模板",
             "addNewDirectory": "添加新目录",
             "editRecord": "编辑记录",
             "id": "ID",
-            "id.validationMessage": "zh-cn_The ID can only consist of letters, numbers or dots.",
+			"id.validationMessage": "ID只能由字母，数字或点组成.",
             "directoryType": "选择目录服务器",
             "ldapUrl": "LDAP网址",
             "base": "基础",
             "directoryName": "目录名称",
             "authUserDn": "认证用户Dn",
             "authUserPassword": "认证用户密码",
-            "confirmAuthUserPassword": "zh-cn_Confirm Auth User Password",
+			"confirmAuthUserPassword": "确认验证用户密码",
             "userSearchBase": "用户搜索库",
             "userSearchFilter": "用户搜索过滤限制",
             "allUsersFilter": "所有用户筛选",
@@ -64,7 +71,7 @@
             "base": "键入基础域组件（例如dc = example，dc = com）",
             "authUserDn": "键入用户DN进行身份验证（例如cn = John Doe，ou = users，dc = example，dc = com）",
             "authUserPassword": "键入认证用户的密码",
-            "confirmAuthUserPassword": "zh-cn_Confirm password for authentication user",
+			"confirmAuthUserPassword": "确认认证用户的密码",
             "userSearchBase": "键入用户搜索库（例如ou = users）",
             "userSearchFilter": "键入单个用户的搜索过滤限制（例如（＆（objectClass = person）（uid =％s））",
             "allUsersFilter": "为所有用户键入搜索过滤限制（例如（objectClass = person））",
@@ -141,6 +148,7 @@
             },
             "addMembers": {
                 "title": "添加会员",
+				"group.title": "将现有组添加为成员",
                 "btn": {
                     "search": "开始！",
                     "cancel": "取消",
@@ -160,7 +168,10 @@
                     "lastName": "键入姓氏",
                     "email": "键入电子邮件",
                     "password": "键入密码",
-                    "confirmation": "再次键入您的密码"
+                    "confirmation": "再次键入您的密码",
+					 "_1_": "数值在资源文件中无效. _即将被删除_",
+                    "_2_": "如果需要'minLengthForPassword'，请将其移至config.json",
+                    "_minLengthForPassword": "7"
                 },
                 "editLdapMember": {
                     "title": "编辑Ldap成员",
@@ -230,11 +241,12 @@
                 }
             },
             "tableColumns": {
-                "name": "zh-cn_Name",
-                "type": "zh-cn_Type",
-                "supervisorName": "zh-cn_Supervisor Name",
-                "actions": "zh-cn_Actions"
-            }
+                "name": "名称",
+                "type": "类型",
+                "supervisorName": "主管姓名",
+                "actions": "操作"
+            },
+			"searchFilter.placeholder": "搜索"
         },
         "security.selectPrivileges": "创建角色并选择特权",
         "security.selectPrivileges.applicationRole": "应用角色",
@@ -254,8 +266,8 @@
             "user": "用户"
         },
         "security.group.management": {
-            "title": "zh-cn_Group Management",
-            "group": "zh-cn_Group"
+            "title": "集团管理",
+            "group": "组"
         },
         "security.calendarConfiguration": {
             "title": "日历配置",
@@ -269,7 +281,7 @@
                 "purge.label": "清除",
                 "email.label": "系统电子邮件地址",
                 "password.label": "系统密码",
-                "password.changeButton": "zh-cn_Change the calendar user password",
+                "password.changeButton": "更改日历用户密码",
                 "purgeDays.label": "天",
                 "emailValid": "系统电子邮件地址和密码有效",
                 "emailNotValid": "系统电子邮件地址或密码无效",
@@ -345,7 +357,8 @@
                 "validate.label": "SMTP验证",
                 "validate.button": "验证",
                 "smtpValid": "SMTP设置有效",
-                "smtpNotValid": "SMTP设置无效"
+                "smtpNotValid": "SMTP设置无效",
+				"errorMsg": "请选择文件的发送方式"
             }
         },
         "security.emailTemplates": {
@@ -364,29 +377,30 @@
                 "templateName.label": "模板名称",
                 "templateName.placeholder": "键入模板名称",
                 "emailPattern.label": "电子邮件模式",
+				"emailPattern.description": "对所有收件人使用'。*'，对armedia.com收件人或其他一些正则表达式使用'。+ @ armedia.com'。 请注意，点（。）应该用反斜杠转义！",
                 "emailPattern.placeholder": "键入电子邮件模式",
                 "source.label": "资源",
                 "objectTypes.label": "对象类型",
                 "actions.label": "操作",
                 "manual.label": "手册",
                 "automated.label": "自动化",
-                "choose.file": "zh-cn_Choose File",
-                "download": "zh-cn_Download",
+                "choose.file": "选择文件",
+                "download": "下载",
                 "save": "保存",
                 "cancel": "取消",
-                "validationResponse": "zh-cn_Email Template already exists with selected parameters",
-                "uploadError": "zh-cn_File upload canceled due to incorrect type of file. You can only upload html file."
+                "validationResponse": "已存在包含所选参数的电子邮件模板",
+                "uploadError": "由于文件类型不正确，文件上传被取消。 你只能上传html文件."
             },
             "objectTypes": {
-                "caseFile": "zh-cn_Case File",
-                "complaint": "zh-cn_Complaint",
-                "task": "zh-cn_Task",
-                "document": "zh-cn_Document"
+                "caseFile": "案例档案",
+                "complaint": "抱怨",
+                "task": "任务",
+                "document": "文件"
             },
             "actions": {
-                "sendAsAttachments": "zh-cn_Send as Attachments",
-                "sendAsLinks": "zh-cn_Send as Links",
-                "sendAsAttachmentsAndLinks": "zh-cn_Send as Attachments and Links"
+                "sendAsAttachments": "作为附件发送",
+                "sendAsLinks": "作为链接发送",
+                "sendAsAttachmentsAndLinks": "作为附件和链接发送"
             }
         },
         "security.exchangeConfiguration": {
@@ -427,15 +441,65 @@
                 }
             }
         },
-        "dashboard.title": "板面",
-        "dashboard.config": "板面配置",
+        "forms.timesheetConfiguration": {
+            "title": "时间表配置",
+            "chargeRole": "充电角色",
+            "chargeRole.placeholder": "输入充电角色",
+            "rate": "率",
+            "rate.placeholder": "输入费率 ($)",
+            "active": "有效/无效",
+            "active.active": "活性",
+            "active.inactive": "待用",
+            "modal": {
+                "button.save": "保存",
+                "button.cancel": "取消"
+            }
+        },
+        "dashboard.title": "仪表板",
+        "dashboard.config": "仪表板配置",
         "dashboard.widgets": "小工具",
         "reports": {
             "title": "报告",
-            "config": "报表配置",
+            "config": "报告配置",
             "btn": {
                 "reportDesigner": "报表设计器",
                 "sync": "同步"
+            },
+            "schedule": {
+                "title": "报告计划",
+                "selectReportType": "选择报告类型",
+                "emailAddress": {
+                    "title": "输入电子邮件地址",
+                    "placeholder": "请输入逗号（，）分隔的电子邮件地址"
+                },
+                "table": {
+                    "header": "现有的时间表",
+                    "startTimeFormat": "hh:mm a",
+                    "columns": {
+                        "jobName": "时间表名称",
+                        "recurrence": "循环",
+                        "startTime": "开始时间",
+                        "startDate": "开始日期",
+                        "endDate": "结束日期",
+                        "emailAddresses": "电子邮件地址",
+                        "state": "状态"
+                    }
+                },
+                "delete": {
+                    "success": "计划已成功删除",
+                    "error": "无法删除计划"
+                },
+                "createScheduleSuccess": "计划成功创建",
+                "createScheduleFailure": "无法创建计划",
+                "enterFutureDate": "输入将来的开始时间",
+                "recurrence": "重复发生（输入未来时间）",
+                "time": "时间",
+                "startDate": "开始日期",
+                "endDate": "结束日期",
+                "filterStartDate": "结果筛选开始日期",
+                "filterEndDate": "结果过滤结束日期",
+                "outputFormat": "选择输出格式",
+                "submit": "提交"
             }
         },
         "forms.title": "形式",
@@ -460,7 +524,7 @@
             "cancel": "取消",
             "activate": "激活"
         },
-        "workflows.config.noHistory": "zh-cn_There is no history for this workflow.",
+        "workflows.config.noHistory": "此工作流程没有历史记录.",
         "workflows.config.grid": {
             "businessProcess": "业务流程",
             "description": "描述",
@@ -546,19 +610,22 @@
                     "btnCancel.text": "取消",
                     "btnOk.text": "保存条目"
                 },
-                "addLookup": "zh-cn_Add Lookup",
-                "label": "zh-cn_Lookup Type",
-                "lookupName": "zh-cn_Lookup Name",
-                "placeholder": "zh-cn_Enter lookup name",
-                "btnSave.text": "zh-cnn_Save",
-                "deleteLookupMsg": "zh-cn_Are you sure you want to delete this lookup?",
-                "deleteEntryMsg": "zh-cn_Are you sure you want to delete this entry?",
-                "delete.success": "zh-cnn_Lookup is successfully deleted",
-                "delete.error": "zh-cn_Lookup can't be deleted",
-                "lookupExists.error": "zh-cn_Lookup with this name already exists"
+                "addLookup": "添加查找",
+                "label": "查找类型",
+                "lookupName": "查找名称",
+                "placeholder": "输入查找名称",
+                "btnSave.text": "保存",
+                "deleteLookupMsg": "您确定要删除此查找吗?",
+                "deleteEntryMsg": "您确定要删除此条目吗?",
+                "delete.success": "查找已成功删除",
+                "delete.error": "查找无法删除",
+                "lookupExists.error": "具有此名称的查找已存在"
             },
             "module.config": {
-                "title": "模块配置"
+                "title": "模块配置",
+				"btnDisabled": "残",
+                "btnEnabled": "启用",
+                "message": "系统中找不到任何模块"
             },
             "userName.config": {
                 "title": "用户名显示配置",
@@ -570,13 +637,13 @@
                 "modal.ok": "确定"
             },
             "formsType.config": {
-                "title": "zh-cn_Forms Type Configuration",
-                "angular.label": "zh-cn_Use Angular Forms",
-                "frevvo.label": "zh-cn_Use Frevvo Forms",
-                "apply": "zh-cn_Apply",
-                "modal.title": "zh-cn_Information",
-                "modal.info": "zh-cn_Settings will take effect after refresh",
-                "modal.ok": "zh-cn_OK"
+                "title": "表单类型配置",
+                "angular.label": "使用角形式",
+                "frevvo.label": "使用Frevvo Forms",
+                "apply": "应用",
+                "modal.title": "信息",
+                "modal.info": "设置将在刷新后生效",
+                "modal.ok": "好"
             },
             "login.config": {
                 "title": "登录配置",
@@ -591,17 +658,18 @@
                 "apply.label": "生效"
             },
             "holiday": {
-                "title": "zh-cn_Holiday Schedule",
+                "title": "假期日程安排",
+                "label": "包括周末作为工作日",
                 "grid": {
-                    "holidayName": "zh-cn_Name of Holiday",
-                    "holidayDate": "zh-cn_Date of holiday"
+                    "holidayName": "假日名称",
+                    "holidayDate": "假期"
                 },
-                "cancel": "zh-cn_Cancel",
-                "save": "zh-cn_Save",
-                "message": "zh-cn_The holiday you entered is not saved! Date of Holiday already exist!",
+                "cancel": "取消",
+                "save": "保存",
+                "message": "您输入的假期未保存！ 假期日期已经存在!",
                 "placeholder": {
-                    "name": "zh-cn_Enter Name of Holiday",
-                    "date": "zh-cn_Enter Date of Holiday"
+                    "name": "输入假日名称",
+                    "date": "输入假日日期"
                 }
             }
         },
@@ -643,8 +711,8 @@
                 "creator": "创造者",
                 "modifier": "更改者",
                 "activated": "状态",
-                "statusDeactivated": "zh-cn_Deactivated",
-                "statusActivated": "zh-cn_Activated",
+                "statusDeactivated": "停用",
+                "statusActivated": "活性",
                 "objectType": "对象类型",
                 "version": "版本",
                 "templateVersionActive": "有效"
@@ -661,7 +729,7 @@
                 }
             },
             "templates.modal": {
-                "objectTypes.selectedFiles": "zh-cn_No File Selected",
+                "objectTypes.selectedFiles": "没有选择文件",
                 "objectTypes.label": "对象类型",
                 "querySelect.label": "查询选择",
                 "label.label": "显示名称",
@@ -710,7 +778,7 @@
                     "edit": "编辑CMIS配置"
                 },
                 "dialog": {
-                    "testConnection": "zh-cn_Test Connection",
+                    "testConnection": "测试连接",
                     "cancel": "取消",
                     "ok": "确定"
                 },
@@ -788,47 +856,89 @@
                 "insert.success": "成功创建新的配置行。",
                 "insert.error": "创建新配置行时出错。",
                 "update.success": "成功更新配置行。",
-                "update.error": "错误更新配置行。"
+                "update.error": "错误更新配置行。",
+				"test.conection.success": "成功连接."
+            }
+        },
+        "transcription": {
+            "title": "转录服务",
+            "transcriptionManagement": "转录管理",
+            "transcriptionConfigForm": {
+                "save.button": "保存",
+                "automation.label": "自动化",
+                "enableTranscription.checkbox": "启用转录",
+                "automaticTranscription.checkbox": "自动转录",
+                "overwriteTranscription.checkbox": "用新版本覆盖原始转录",
+                "mediaFileAdded.label": "添加新版本的媒体文件时，系统将会:",
+                "generateTranscription.radio": "为新版本生成新的转录",
+                "copyTranscription.radio": "将转录从活动版本复制到新版本",
+                "provider.label": "提供商",
+                "numOfFiles.label": "处理文件数",
+                "selectProvider": "选择提供商",
+                "wordCount.label": "字数",
+                "costPerSecond.label": "每秒成本",
+                "confidenceThreshold.label": "置信度阈值",
+				 "mediaDurationInSeconds.label": "媒体持续时间阈值（秒）",
+                "silenceBetweenWords.label": "几秒钟之间的沉默",
+                "validation.messages": {
+                    "requiredErrorMsg": "这是必填栏",
+                    "maxErrorMsg": "值必须小于或等于100",
+                    "minZeroValueErrorMsg": "值必须大于或等于0",
+                    "minOneValueErrorMsg": "值必须大于或等于1",
+					"minPositiveValueErrorMsg": "值必须大于0"
+                }
+            }
+        },
+        "stateOfArkcase": {
+            "title": "Arkcase的状态",
+            "pickDate": "选择日期",
+            "btn.download": "下载",
+            "datePicker": {
+                "clear": "明确",
+                "current": "当前日期",
+                "close": "关"
+            }
+        },
+        "comp": {
+            "securityLdapConfig": {
+                "title": "安全性 - Ldap配置网格"
+            },
+            "correspondenceManagementMergeFields": {
+                "title": "通信管理合并字段网格"
+            },
+            "correspondenceManagementMergeFieldsVersions": {
+                "title": "通信管理合并字段版本网格"
+            },
+            "correspondenceManagementTemplates": {
+                "title": "通信管理模板网格"
+            },
+            "correspondenceManagementTemplateVersions": {
+                "title": "对应管理模板版本网格"
+            },
+            "labelsConfig": {
+                "title": "应用程序 - 标签配置网格"
+            },
+            "plainFormsConfig": {
+                "title": "表单 - 表单配置网格"
+            },
+            "workflowsConfig": {
+                "title": "工作流程 - 工作流程配置网格"
+            },
+            "workflowsHistoryDialogConfig": {
+                "title": "工作流程 - 工作流程配置历史记录对话框网格"
+            },
+            "usersPicker": {
+                "title": "选择用户"
+            },
+            "orgHierarchy": {
+                "title": "组织层次结构"
+            },
+            "cmisConfiguration": {
+                "title": "CMIS配置网格"
+            },
+            "emailTemplates": {
+                "title": "电邮模板"
             }
         }
-    },
-    "admin.comp.securityLdapConfig": {
-        "title": "安全 - Ldap配置网格"
-    },
-    "admin.comp.correspondenceManagementMergeFields": {
-        "title": "通信管理合并字段网格"
-    },
-    "admin.comp.correspondenceManagementMergeFieldsVersions": {
-        "title": "通信管理合并字段版本网格"
-    },
-    "admin.comp.correspondenceManagementTemplates": {
-        "title": "通信管理模板网格"
-    },
-    "admin.comp.correspondenceManagementTemplateVersions": {
-        "title": "对应管理模板版本网格"
-    },
-    "admin.comp.labelsConfig": {
-        "title": "应用 - 标签配置网格"
-    },
-    "admin.comp.plainFormsConfig": {
-        "title": "表格 - 表格配置网格"
-    },
-    "admin.comp.workflowsConfig": {
-        "title": "工作流程 - 工作流配置网格"
-    },
-    "admin.comp.workflowsHistoryDialogConfig": {
-        "title": "工作流程 - 工作流程配置历史记录对话框"
-    },
-    "admin.comp.usersPicker": {
-        "title": "选择用户"
-    },
-    "admin.comp.orgHierarchy": {
-        "title": "组织层次结构"
-    },
-    "admin.comp.cmisConfiguration": {
-        "title": "CMIS配置网格"
-    },
-    "admin.comp.emailTemplates": {
-        "title": "电子邮件模板"
     }
 }

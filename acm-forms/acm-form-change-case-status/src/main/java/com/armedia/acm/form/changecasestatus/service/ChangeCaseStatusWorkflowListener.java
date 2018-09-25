@@ -69,7 +69,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
     protected void handleNewCloseCaseRequest(ChangeCaseStatusFormEvent event)
     {
-        EcmFile pdfRendition = event.getFrevvoUploadedFiles().getPdfRendition();
+        EcmFile pdfRendition = event.getUploadedFiles().getPdfRendition();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
 
         configuration.setEcmFile(pdfRendition);
@@ -111,12 +111,12 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         pvars.put("reviewers", reviewers);
         pvars.put("taskName", taskName);
         pvars.put("documentAuthor", author);
-        pvars.put("pdfRenditionId", event.getFrevvoUploadedFiles().getPdfRendition().getFileId());
-        pvars.put("formXmlId", event.getFrevvoUploadedFiles().getFormXml().getFileId());
+        pvars.put("pdfRenditionId", event.getUploadedFiles().getPdfRendition().getFileId());
+        pvars.put("formXmlId", event.getUploadedFiles().getFormXml().getFileId());
 
         pvars.put("OBJECT_TYPE", "FILE");
-        pvars.put("OBJECT_ID", event.getFrevvoUploadedFiles().getPdfRendition().getFileId());
-        pvars.put("OBJECT_NAME", event.getFrevvoUploadedFiles().getPdfRendition().getFileName());
+        pvars.put("OBJECT_ID", event.getUploadedFiles().getPdfRendition().getFileId());
+        pvars.put("OBJECT_NAME", event.getUploadedFiles().getPdfRendition().getFileName());
         pvars.put("PARENT_OBJECT_TYPE", "CASE_FILE");
         pvars.put("PARENT_OBJECT_ID", event.getCaseId());
         pvars.put("CASE_FILE", event.getCaseId());

@@ -45,6 +45,9 @@ public interface TimesheetService
     AcmTimesheet save(AcmTimesheet timesheet) throws PipelineProcessException;
 
     @Transactional
+    AcmTimesheet save(AcmTimesheet timesheet, Authentication authentication, String submissionName) throws PipelineProcessException;
+
+    @Transactional
     AcmTimesheet save(AcmTimesheet timesheet, String submissionName) throws PipelineProcessException;
 
     AcmTimesheet get(Long id);

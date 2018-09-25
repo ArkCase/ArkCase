@@ -27,16 +27,21 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
+import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+import com.armedia.acm.services.pipeline.PipelineManager;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -49,6 +54,26 @@ public class ChangeCaseFileStateService
     private CaseFileDao dao;
     private ChangeCaseStatusDao changeCaseStatusDao;
     private CaseFileEventUtility caseFileEventUtility;
+    private PipelineManager<ChangeCaseStatus, CaseFilePipelineContext> pipelineManager;
+
+    @Transactional
+    public void save(ChangeCaseStatus form, Authentication auth, String mode) throws PipelineProcessException
+    {
+        CaseFilePipelineContext ctx = new CaseFilePipelineContext();
+        ctx.setAuthentication(auth);
+        String ipAddress = AuthenticationUtils.getUserIpAddress();
+        ctx.setIpAddress(ipAddress);
+        ctx.addProperty("mode", mode);
+        ctx.addProperty("caseResolution", form.getCaseResolution());
+        ctx.addProperty("changeDate", form.getChangeDate().toString());
+
+        pipelineManager.executeOperation(form, ctx, () -> {
+
+            ChangeCaseStatus savedCaseStatus = getChangeCaseStatusDao().save(form);
+            ctx.setChangeCaseStatus(savedCaseStatus);
+            return savedCaseStatus;
+        });
+    }
 
     public CaseFile changeCaseState(Authentication auth, Long caseId, String newState, String ipAddress)
             throws AcmUserActionFailedException
@@ -146,5 +171,15 @@ public class ChangeCaseFileStateService
     public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
     {
         this.caseFileEventUtility = caseFileEventUtility;
+    }
+
+    public PipelineManager<ChangeCaseStatus, CaseFilePipelineContext> getPipelineManager()
+    {
+        return pipelineManager;
+    }
+
+    public void setPipelineManager(PipelineManager<ChangeCaseStatus, CaseFilePipelineContext> pipelineManager)
+    {
+        this.pipelineManager = pipelineManager;
     }
 }

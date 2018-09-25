@@ -14,25 +14,30 @@
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
 
-    <bean id="findCasesByTitleAPIController" class="com.armedia.acm.plugins.casefile.web.api.FindCasesByTitleAPIController">
+    <bean id="findCasesByTitleAPIController"
+        class="com.armedia.acm.plugins.casefile.web.api.FindCasesByTitleAPIController">
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
-    <bean id="getCaseByNumberAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCaseByNumberAPIController">
+    <bean id="getCaseByNumberAPIController"
+        class="com.armedia.acm.plugins.casefile.web.api.GetCaseByNumberAPIController">
         <property name="getCaseByNumberService" ref="getCaseByNumberService"/>
         <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
 
-    <bean id="getCasesByStatusAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCasesByStatusAPIController">
+    <bean id="getCasesByStatusAPIController"
+        class="com.armedia.acm.plugins.casefile.web.api.GetCasesByStatusAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
-    <bean id="listCaseFilesByUserAPIController" class="com.armedia.acm.plugins.casefile.web.api.ListCaseFilesByUserAPIController">
+    <bean id="listCaseFilesByUserAPIController"
+        class="com.armedia.acm.plugins.casefile.web.api.ListCaseFilesByUserAPIController">
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
 
-    <bean id="getCaseFileStatusSummaryAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCaseFileStatusSummaryAPIController">
+    <bean id="getCaseFileStatusSummaryAPIController"
+        class="com.armedia.acm.plugins.casefile.web.api.GetCaseFileStatusSummaryAPIController">
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
@@ -63,11 +68,15 @@
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
-    <bean id="caseFileEnqueueAPIController" class="com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueAPIController">
+    <bean id="caseFileEnqueueAPIController"
+        class="com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueAPIController">
         <property name="enqueueCaseFileService" ref="enqueueCaseFileService"/>
         <property name="userTrackerService" ref="userTrackerService"/>
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
 
+    <bean class="com.armedia.acm.plugins.casefile.web.api.ChangeCaseStatusApiController">
+        <property name="changeCaseFileStateService" ref="changeCaseFileStateService"/>
+    </bean>
 </beans>

@@ -31,6 +31,7 @@ package com.armedi.acm.services.timesheet.web;
  */
 
 import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,6 +44,7 @@ import com.armedia.acm.services.timesheet.web.SaveTimesheetAPIController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -122,7 +124,8 @@ public class SaveTimesheetAPIControllerTest extends EasyMockSupport
         Capture<AcmTimesheet> saved = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn("acm-user");
-        expect(mockTimesheetService.save(capture(saved))).andReturn(timesheet);
+        Capture<Authentication> capturedAuthentication = EasyMock.newCapture();
+        expect(mockTimesheetService.save(capture(saved), capture(capturedAuthentication), eq("Save"))).andReturn(timesheet);
 
         timesheet.setDetails(expectedDetails);
 
@@ -132,7 +135,7 @@ public class SaveTimesheetAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/v1/service/timesheet")
+                post("/api/v1/service/timesheet/{submissionName}", "Save")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication)
@@ -180,7 +183,8 @@ public class SaveTimesheetAPIControllerTest extends EasyMockSupport
         Capture<AcmTimesheet> saved = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn("acm-user");
-        expect(mockTimesheetService.save(capture(saved))).andThrow(new RuntimeException());
+        Capture<Authentication> capturedAuthentication = EasyMock.newCapture();
+        expect(mockTimesheetService.save(capture(saved), capture(capturedAuthentication), eq("Save"))).andThrow(new RuntimeException());
 
         replayAll();
 
@@ -189,7 +193,7 @@ public class SaveTimesheetAPIControllerTest extends EasyMockSupport
         try
         {
             result = mockMvc.perform(
-                    post("/api/v1/service/timesheet")
+                    post("/api/v1/service/timesheet/{submissionName}", "Save")
                             .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                             .contentType(MediaType.APPLICATION_JSON)
                             .principal(mockAuthentication)

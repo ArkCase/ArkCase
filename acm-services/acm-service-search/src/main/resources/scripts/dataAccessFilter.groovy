@@ -4,10 +4,6 @@ import org.springframework.security.core.GrantedAuthority
 
 import java.nio.charset.StandardCharsets
 
-// include records with no protected object field
-// include records where protected_object_b is false
-// include records where public_doc_b is true
-String dataAccessFilter = "{!frange l=1}sum(if(exists(protected_object_b), 0, 1), if(protected_object_b, 0, 1), if(public_doc_b, 1, 0)";
 
 Authentication authentication = message.getInboundProperty("acmUser");
 
@@ -20,30 +16,49 @@ String rowQueryParametars = message.getInboundProperty('rowQueryParametars');
 String targetType = getObjectType(query, rowQueryParametars);
 
 String denyAccessFilter = "";
+String dataAccessFilter = "";
 
-if (!enableDocumentACL && targetType != null && (targetType.equals("FILE") || targetType.equals("FOLDER") || targetType.contentEquals("CONTAINER"))) {
-    dataAccessFilter += ")";
-} else {
+Boolean excludeDAC = !enableDocumentACL && targetType != null && (targetType.equals("FILE") || targetType.equals("FOLDER") || targetType.equals("CONTAINER"));
+
+if (!excludeDAC) {
+    // include records with no protected object field
+    // include records where protected_object_b is false
+    // include records where public_doc_b is true
+    dataAccessFilter = "{!frange l=1}sum(if(exists(protected_object_b), 0, 1), if(protected_object_b, 0, 1), if(public_doc_b, 1, 0)";
+
     // include records where current user is directly on allow_acl_ss
     dataAccessFilter += ", termfreq(allow_acl_ss, " + safeUserId + ")";
-
-    // exclude records where the user is specifically locked out
-    denyAccessFilter = "-deny_acl_ss:" + safeUserId;
 
     for (GrantedAuthority granted : authentication.getAuthorities()) {
         String authName = granted.getAuthority();
         String safeAuthName = encodeCharacters(authName);
         // include records where current user is in a group on allow_acl_ss
         dataAccessFilter += ", termfreq(allow_acl_ss, " + safeAuthName + ")";
-        // exclude records where current user is in a locked-out group
-        denyAccessFilter += " AND -deny_acl_ss:" + safeAuthName;
     }
 
     dataAccessFilter += ")";
 }
 
-message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter, StandardCharsets.UTF_8.displayName()));
-message.setInboundProperty("denyAccessFilter", URLEncoder.encode(denyAccessFilter, StandardCharsets.UTF_8.displayName()));
+boolean includeDenyAccessFilter = message.getInboundProperty("includeDenyAccessFilter")
+if (includeDenyAccessFilter) {
+    // exclude records where the user is specifically locked out
+    denyAccessFilter = "-deny_acl_ss:" + safeUserId
+    for (GrantedAuthority granted : authentication.getAuthorities()) {
+        String authName = granted.getAuthority()
+        String safeAuthName = encodeCharacters(authName)
+        // exclude records where current user is in a locked-out group
+        denyAccessFilter += " AND -deny_acl_ss:" + safeAuthName
+    }
+}
+
+boolean includeDACFilter = message.getInboundProperty("includeDACFilter")
+if (includeDACFilter) {
+    message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter, StandardCharsets.UTF_8.displayName()))
+    message.setInboundProperty("denyAccessFilter", URLEncoder.encode(denyAccessFilter, StandardCharsets.UTF_8.displayName()))
+} else {
+    message.setInboundProperty("dataAccessFilter", "")
+    message.setInboundProperty("denyAccessFilter", "")
+}
 
 String childObjectDacFilter = "{!join from=id to=parent_ref_s}(not(exists(protected_object_b)) OR ";
 childObjectDacFilter += "protected_object_b:false OR public_doc_b:true ";
@@ -56,14 +71,18 @@ for (GrantedAuthority granted : authentication.getAuthorities()) {
     // include records where current user is in a group on allow_acl_ss
     childObjectDacFilter += " OR allow_acl_ss:" + safeAuthName;
 }
+childObjectDacFilter += " )"
 
+if (includeDenyAccessFilter) {
 // now we have to add the mandatory denies
-childObjectDacFilter += " ) AND -deny_acl_ss:" + safeUserId;
-for (GrantedAuthority granted : authentication.getAuthorities()) {
-    String authName = granted.getAuthority();
-    String safeAuthName = encodeCharacters(authName);
-    // include records where current user is in a group on allow_acl_ss
-    childObjectDacFilter += " AND -deny_acl_ss:" + safeAuthName;
+    childObjectDacFilter += " AND -deny_acl_ss:" + safeUserId
+
+    for (GrantedAuthority granted : authentication.getAuthorities()) {
+        String authName = granted.getAuthority()
+        String safeAuthName = encodeCharacters(authName)
+        // include records where current user is in a group on allow_acl_ss
+        childObjectDacFilter += " AND -deny_acl_ss:" + safeAuthName
+    }
 }
 
 // Solr 7.2.1
@@ -73,12 +92,12 @@ String childObjectFilterQuery = "{!frange l=1}if(not(exists(parent_ref_s)), 1, \
 
 boolean filterParentRef = message.getInboundProperty("filterParentRef");
 
-if (filterParentRef) {
+if (filterParentRef && includeDACFilter) {
     message.setInboundProperty("childObjectDacFilter", URLEncoder.encode(childObjectDacFilter, StandardCharsets.UTF_8.displayName()));
     message.setInboundProperty("childObjectFilterQuery", URLEncoder.encode(childObjectFilterQuery, StandardCharsets.UTF_8.displayName()));
 } else {
-    message.setInboundProperty("childObjectDacFilter", "");
-    message.setInboundProperty("childObjectFilterQuery", "");
+    message.setInboundProperty("childObjectDacFilter", "")
+    message.setInboundProperty("childObjectFilterQuery", "")
 }
 
 String subscribedFilter = "{!join from=id to=related_subscription_ref_s}object_type_s:SUBSCRIPTION";

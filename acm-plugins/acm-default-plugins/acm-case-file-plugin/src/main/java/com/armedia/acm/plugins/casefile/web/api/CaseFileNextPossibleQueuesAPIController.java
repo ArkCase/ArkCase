@@ -67,7 +67,7 @@ public class CaseFileNextPossibleQueuesAPIController
 
         if (caseFile == null)
         {
-            return new CaseFileNextPossibleQueuesResponse("", "", new ArrayList<>());
+            return new CaseFileNextPossibleQueuesResponse("", "", "", new ArrayList<>());
         }
 
         CaseFilePipelineContext context = new CaseFilePipelineContext();
@@ -80,7 +80,7 @@ public class CaseFileNextPossibleQueuesAPIController
         NextPossibleQueuesModel<CaseFile, CaseFilePipelineContext> nextPossibleQueues = queueService.nextPossibleQueues(caseFile, context,
                 businessRule);
         return new CaseFileNextPossibleQueuesResponse(nextPossibleQueues.getDefaultNextQueue(), nextPossibleQueues.getDefaultReturnQueue(),
-                nextPossibleQueues.getNextPossibleQueues());
+                nextPossibleQueues.getDefaultDenyQueue(), nextPossibleQueues.getNextPossibleQueues());
 
     }
 

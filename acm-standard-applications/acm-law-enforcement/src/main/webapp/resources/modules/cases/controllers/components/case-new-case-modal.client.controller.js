@@ -16,11 +16,27 @@ angular.module('cases').controller(
                     ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
                         $scope.config = moduleConfig;
 
+                        if (!$scope.isEdit) {
+                            //new casefile with predefined values
+                            $scope.casefile = {
+                                className: $scope.config.className,
+                                caseType: '',
+                                title: '',
+                                details: '',
+                                initiator: '',
+                                personAssociations: [ {} ],
+                                participants: []
+                            };
+                        }
+
                         $scope.userSearchConfig = _.find(moduleConfig.components, {
                             id: "userSearch"
                         });
                         $scope.caseParticipantConfig = _.find(moduleConfig.components, {
                             id: "participants"
+                        });
+                        $scope.casePeopleConfig = _.find(moduleConfig.components, {
+                            id: "people"
                         });
 
                         return moduleConfig;
@@ -55,24 +71,12 @@ angular.module('cases').controller(
                             caseType: $scope.objectInfo.caseType,
                             title: $scope.objectInfo.title,
                             details: $scope.objectInfo.details,
-                            initiator: $scope.modalParams.initiator,
+                            initiator: $scope.objectInfo.originator.person.givenName + " " + $scope.objectInfo.originator.person.familyName,
                             personAssociations: tmpCasefile.personAssociations,
                             participants: tmpCasefile.participants
                         };
-
-                    } else {
-
-                        //new casefile with predefined values
-                        $scope.casefile = {
-                            className: 'com.armedia.acm.plugins.casefile.model.CaseFile',
-                            caseType: '',
-                            title: '',
-                            details: '',
-                            initiator: '',
-                            personAssociations: [ {} ],
-                            participants: []
-                        };
                     }
+
                     var initiatorType = 'Initiator';
 
                     ObjectLookupService.getCaseFileTypes().then(function(caseTypes) {
@@ -103,7 +107,7 @@ angular.module('cases').controller(
                             personDescription: "",
                             notes: "",
                             person: null,
-                            className: "com.armedia.acm.plugins.person.model.PersonAssociation"
+                            className: $scope.casePeopleConfig.personAssociationClassName
                         };
                     };
 
@@ -321,8 +325,8 @@ angular.module('cases').controller(
                         var modalInstance = $modal.open({
                             scope: modalScope,
                             animation: true,
-                            templateUrl: "directives/core-participants/core-participants-modal.client.view.html",
-                            controller: "Directives.NewComplaintCaseCoreParticipantsModalController",
+                            templateUrl: "directives/core-participants/core-participants-create-new-object-modal.client.view.html",
+                            controller: "Directives.CoreParticipantsCreateNewObjectFormModalController",
                             size: 'lg',
                             backdrop: 'static',
                             resolve: {
@@ -347,7 +351,7 @@ angular.module('cases').controller(
                                         $scope.owningGroup = data.owningGroup.participantFullName;
                                         var participantOwningGroup = data.owningGroup;
                                         participantOwningGroup.participantType = typeOwningGroup;
-                                        participantOwningGroup.className = "com.armedia.acm.services.participants.model.AcmParticipant";
+                                        participantOwningGroup.className = $scope.caseParticipantConfig.className;
 
                                         if (ObjectParticipantService.validateParticipants([ participantOwningGroup ], true) && !_.includes($scope.casefile.participants, participantOwningGroup)) {
                                             $scope.casefile.participants.push(participantOwningGroup);
@@ -356,7 +360,7 @@ angular.module('cases').controller(
 
                                     participant.id = data.participant.id;
                                     participant.participantType = data.participant.participantType;
-                                    participant.className = "com.armedia.acm.services.participants.model.AcmParticipant";
+                                    participant.className = $scope.caseParticipantConfig.className;
                                     participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
 
                                     if (ObjectParticipantService.validateParticipants([ participant ], true) && !_.includes($scope.casefile.participants, participant)) {

@@ -16,7 +16,8 @@
       "DocTreeExt.Record",
       "DocTreeExt.Template",
       "DocTreeExt.Participants",
-      "DocTreeExt.ReviewDoc"
+      "DocTreeExt.ReviewDoc",
+      "DocTreeExt.SearchAndAddDocuments"
     ],
     "columnDefs": [
       {
@@ -120,6 +121,11 @@
             "cmd": "subMenuCorrespondenceForms"
           },
           {
+            "titleKey": "common.directive.docTree.menu.searchDocument",
+            "cmd": "searchDocument",
+            "uiIcon": "ui-icon-search"
+          },
+          {
             "title": "----"
           },
           {
@@ -144,6 +150,11 @@
           {
             "titleKey": "common.directive.docTree.menu.newCorrespondence",
             "cmd": "subMenuCorrespondenceForms"
+          },
+          {
+            "titleKey": "common.directive.docTree.menu.searchDocument",
+            "cmd": "searchDocument",
+            "uiIcon": "ui-icon-search"
           },
           {
             "title": "----"
@@ -595,7 +606,41 @@
       "paginationPageSize": 10,
       "start": 0
     },
-    "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$"
+    "dialogObjectPicker": {
+      "enableFiltering": false,
+      "multiSelect": false,
+      "showFacets": false,
+      "columnDefs": [
+        {
+          "name": "object_id_s",
+          "displayName": "common.dialogObjectPicker.table.columns.id",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "name",
+          "displayName": "common.dialogObjectPicker.table.columns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title_parseable",
+          "displayName": "common.dialogObjectPicker.table.columns.title",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
+    },
+    "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$",
+    "disabledFileCommandsOnLock": {
+      "WRITE":["editWithWebDAV","checkout","checkin","cancelEditing","cut","copy","paste","rename","remove","replace","declare","co-edit","collaborate"],
+      "SHARED_WRITE": ["editWithWebDAV","checkout","checkin","cancelEditing","cut","copy","paste","rename","remove","replace","declare"]
+    }
   },
   "coreCalendar": {
     "chooseEventAttendeesDialog": {
@@ -833,5 +878,50 @@
         "cellTemplate": "historyEventDetailsCellTemplateId"
       }
     ]
-  }
+  },
+  "components": [
+    {
+      "id": "userOrGroupSearch",
+      "title": "tasks.userOrGroupSearch.title",
+      "enableFiltering": false,
+      "configurable": true,
+      "multiSelect": false,
+      "showFacets": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "common.userOrGroupSearch.assigneeGridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "common.userOrGroupSearch.assigneeGridColumns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title",
+          "displayName": "common.userOrGroupSearch.assigneeGridColumns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_id_s",
+          "displayName": "common.userOrGroupSearch.assigneeGridColumns.username",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0,
+      "userOrGroupSearchFilters": {
+        "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
+        "userOrGroupFacetExtraFilter": "&fq=\"name\": "
+      }
+    }
+  ]
+
 }
