@@ -247,9 +247,9 @@
                         <value>application/octet-stream</value>
                     </list>
                 </entry>
-                <entry key="application/pdf">
+                <entry key="application/xhtml+xml">
                     <list>
-                        <value>application/pdf</value>
+                        <value>text/html</value>
                     </list>
                 </entry>
             </map>
