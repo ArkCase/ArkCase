@@ -37,7 +37,6 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -46,6 +45,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by armdev on 8/29/14.
@@ -85,7 +85,10 @@ public class SaveCaseServiceImpl implements SaveCaseService
         pipelineContext.setNewCase(caseFile.getId() == null);
         pipelineContext.setAuthentication(authentication);
         pipelineContext.setIpAddress(ipAddress);
-        pipelineContext.addProperty("attachmentFiles", files);
+        if(Objects.nonNull(files))
+        {
+            pipelineContext.addProperty("attachmentFiles", files);
+        }
 
         return pipelineManager.executeOperation(caseFile, pipelineContext, () -> {
 

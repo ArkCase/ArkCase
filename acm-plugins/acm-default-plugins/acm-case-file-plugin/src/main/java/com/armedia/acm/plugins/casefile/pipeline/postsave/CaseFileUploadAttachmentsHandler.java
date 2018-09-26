@@ -40,7 +40,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 public class CaseFileUploadAttachmentsHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
@@ -52,7 +51,7 @@ public class CaseFileUploadAttachmentsHandler implements PipelineHandler<CaseFil
     {
         List<MultipartFile> files = null;
 
-        if(Objects.nonNull(pipelineContext.getPropertyValue("attachmentFiles")))
+        if(pipelineContext.hasProperty("attachmentFiles"))
         {
             files = (List<MultipartFile>)pipelineContext.getPropertyValue("attachmentFiles");
         }
