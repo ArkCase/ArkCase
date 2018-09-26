@@ -32,6 +32,8 @@ import com.armedia.acm.plugins.ecm.service.lock.FileLockType;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
 import com.armedia.acm.plugins.onlyoffice.model.DocumentHistory;
 import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
+import com.armedia.acm.plugins.onlyoffice.model.config.Config;
+import com.armedia.acm.plugins.onlyoffice.model.config.DocumentPermissions;
 import com.armedia.acm.plugins.onlyoffice.service.CallbackService;
 import com.armedia.acm.plugins.onlyoffice.service.ConfigService;
 import com.armedia.acm.plugins.onlyoffice.service.DocumentHistoryManager;
@@ -84,12 +86,18 @@ public class OnlyOfficeController
         try
         {
             ModelAndView mav = new ModelAndView("onlyoffice/editor");
-            // lock file for onlyoffice processing
-            AcmObjectLock lock = objectLockingManager.acquireObjectLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE,
-                    FileLockType.SHARED_WRITE.name(), null, false, auth.getName());
+
             String authTicket = authenticationTokenService.getTokenForAuthentication(auth);
 
-            String configJsonString = objectMapper.writeValueAsString(configService.getConfig(fileId, "edit", "en-US", auth));
+            Config config = configService.getConfig(fileId, "edit", "en-US", auth);
+
+            if (userCanLock(config))
+            {
+                // lock file for onlyoffice processing if document is opened for editing
+                AcmObjectLock lock = objectLockingManager.acquireObjectLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE,
+                        FileLockType.SHARED_WRITE.name(), null, false, auth.getName());
+            }
+            String configJsonString = objectMapper.writeValueAsString(config);
             mav.addObject("config", configJsonString);
             mav.addObject("docserviceApiUrl", configService.getDocumentServerUrlApi());
             if (configService.isOutboundSignEnabled())
@@ -109,6 +117,20 @@ public class OnlyOfficeController
             modelAndView.addObject("errorMessage", e.getMessage());
             return modelAndView;
         }
+    }
+
+    private boolean userCanLock(Config config)
+    {
+        DocumentPermissions permissions = config.getDocument().getPermissions();
+        if (permissions.isEdit())
+        {
+            return true;
+        }
+        else if (!permissions.isEdit() && permissions.isReview())
+        {
+            return true;
+        }
+        return false;
     }
 
     @RequestMapping(value = "/callback", method = RequestMethod.POST)

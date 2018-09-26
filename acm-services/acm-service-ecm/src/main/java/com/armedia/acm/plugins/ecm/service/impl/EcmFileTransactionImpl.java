@@ -124,6 +124,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 log.error("Could not extract metadata with Tika: [{}]", e.getMessage(), e);
             }
 
+            if(metadata.getFileActiveVersionMimeType().contains(";"))
+            {
+                metadata.setFileActiveVersionMimeType(metadata.getFileActiveVersionMimeType().split(";")[0]);
+            }
+
             if ((detectedMetadata.getContentType().equals(metadata.getFileActiveVersionMimeType())) ||
                     (getAllTikaMimeTypesForFile(mimeTypesByTika, metadata.getFileActiveVersionMimeType())
                             .contains(detectedMetadata.getContentType())))
