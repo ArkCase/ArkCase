@@ -89,7 +89,7 @@ public class FacetedSearchAPIControllerV2
             // Part of the query to NOT ESCAPE
             @RequestParam(value = "unescapedQuery", required = false, defaultValue = "") String unescapedQuery,
             //Add time-zone param for AFDP-5769
-            @RequestParam(value = "timeZone", required = false,defaultValue = "") String timeZone,
+            @RequestParam(value = "timeZone", required = false,defaultValue = "") Integer timeZoneOffsetinMinutes ,
 
             Authentication authentication) throws MuleException, UnsupportedEncodingException
     {
@@ -164,10 +164,14 @@ public class FacetedSearchAPIControllerV2
 
             try
             {
+
+                if (timeZoneOffsetinMinutes == null){
+                    timeZoneOffsetinMinutes = 0;
+                }
                 // Get the appropriate generator for the requested file type
                 ReportGenerator generator = springContextHolder.getBeanByName(String.format("%sReportGenerator",
                         export.toLowerCase()), ReportGenerator.class);
-                String content = generator.generateReport(exportFields, exportTitles, res,timeZone);
+                String content = generator.generateReport(exportFields, exportTitles, res,timeZoneOffsetinMinutes);
                 headers.add("Content-Type", generator.getReportContentType());
                 headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)));
 

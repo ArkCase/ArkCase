@@ -78,7 +78,7 @@ public class CSVReportGenerator extends ReportGenerator
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public String generateReport(String[] requestedFields, String[] titles, String jsonData, String timeZone)
+    public String generateReport(String[] requestedFields, String[] titles, String jsonData, int timeZoneOffsetinMinutes)
     {
         JSONObject jsonResult = new JSONObject(jsonData);
         JSONObject jsonResponse = jsonResult.getJSONObject("response");
@@ -119,7 +119,7 @@ public class CSVReportGenerator extends ReportGenerator
                             try
                             {
                                 LocalDateTime localDateTime = LocalDateTime.parse(stringValue, SOLR_DATE_TIME_PATTERN);
-                                stringValue = timeZoneAdjust(localDateTime, timeZone);
+                                stringValue = timeZoneAdjust(localDateTime, timeZoneOffsetinMinutes);
                             }
                             catch (DateTimeException e)
                             {
@@ -175,7 +175,7 @@ public class CSVReportGenerator extends ReportGenerator
     @Override
     public String generateReport(String[] requestedFields, String[] titles, String jsonData)
     {
-        return generateReport(requestedFields, titles, jsonData,"0");
+        return generateReport(requestedFields, titles, jsonData,0);
     }
 
     /**
@@ -212,12 +212,12 @@ public class CSVReportGenerator extends ReportGenerator
     /**
      * Time zone process for AFDP-5769
      * @param localDateTime service time
-     * @param timeZone timeZone received from client. Should be format like"240" "-480"
+     * @param timeZoneOffsetinMinutes timeZone received from client. Should be format like"240" "-480"
      *
      */
-    private String timeZoneAdjust(LocalDateTime localDateTime, String timeZone)
+    private String timeZoneAdjust(LocalDateTime localDateTime, int timeZoneOffsetinMinutes)
     {
-        int adjTimeZone = ~(Integer.parseInt(timeZone)/60) + 1;
+        int adjTimeZone = ~(timeZoneOffsetinMinutes/60) + 1;
         LocalDateTime adjDateTime = localDateTime.plusHours(adjTimeZone);
 
         return adjDateTime.format(EXCEL_DATE_TIME_PATTERN);
