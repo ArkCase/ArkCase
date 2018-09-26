@@ -494,6 +494,7 @@ public class PersonServiceImpl implements PersonService
         {
             boolean hasDefaultPicture = person.getDefaultPicture() != null;
 
+            // change for AFDP-6287
             try
             {
                 if (person.getContainer() == null)
@@ -503,6 +504,7 @@ public class PersonServiceImpl implements PersonService
             }   catch (AcmObjectNotFoundException e)
             {
                 log.error("Error uploading pictures to person id [{}]", person.getId());
+                return person;
             }
 
             for (MultipartFile picture : pictures)
