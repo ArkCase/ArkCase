@@ -391,37 +391,39 @@
             <div id="collapseCommunicationAccounts" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div ng-repeat="caType in communicationAccountsTypes">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <label>
-                                    {{'people.comp.editPerson.communicationAccounts.' + caType |
-                                    translate}} </label>
-                                <input type="{{caType}}" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
-                                        class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.communicationAccounts.' + caType + '.placeholder' | translate }}">
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="defaultPhoneSubType" class="control-label">{{'people.comp.editPerson.communicationAccounts.'
-                                    + caType + 'Type' | translate}}</label>
-                                <select id="defaultPhoneSubType" class="form-control"
-                                        ng-required="person['default'+capitalizeFirstLetter(caType)].value"
-                                        ng-disabled="!person['default'+capitalizeFirstLetter(caType)].value"
-                                        ng-model="person['default'+capitalizeFirstLetter(caType)].subType">
-                                    <option ng-repeat="option in cmTypes[caType].subLookup" value="{{option.key}}">
-                                        {{option.value | translate}}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="pull-left">
-                                    <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control" ng-click="addContactMethod(caType);"
-                                            ng-show="showAddAnotherContactMethod(caType)">
-                                        <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
-                                    </button>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>
+                                        {{'people.comp.editPerson.communicationAccounts.' + caType |
+                                        translate}} </label>
+                                    <input name="item" type="{{caType}}" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
+                                            class="input-md form-control"
+                                            placeholder="{{ 'people.comp.editPerson.communicationAccounts.' + caType + '.placeholder' | translate }}"
+                                            ng-blur="validateInput(caType)">
+                                    <span ng-if="caType == 'phone' && showPhoneError == true">The Phone Number you entered is invalid. Should be in this format: xxx-xxx-xxxx</span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="defaultPhoneSubType" class="control-label">{{'people.comp.editPerson.communicationAccounts.'
+                                        + caType + 'Type' | translate}}</label>
+                                    <select id="defaultPhoneSubType" class="form-control"
+                                            ng-required="person['default'+capitalizeFirstLetter(caType)].value"
+                                            ng-disabled="!person['default'+capitalizeFirstLetter(caType)].value"
+                                            ng-model="person['default'+capitalizeFirstLetter(caType)].subType">
+                                        <option ng-repeat="option in cmTypes[caType].subLookup" value="{{option.key}}">
+                                            {{option.value | translate}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="pull-left">
+                                        <label class="control-label">&nbsp;</label>
+                                        <button type="button" class="btn btn-link form-control" ng-click="addContactMethod(caType);"
+                                                ng-show="showAddAnotherContactMethod(caType)">
+                                            <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         <div ng-repeat="contactMethod in person.contactMethods | filter: {type:caType}" class="row">
                             <div class="col-sm-4">
                                 <label>
