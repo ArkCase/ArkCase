@@ -396,7 +396,7 @@
                                 <label>
                                     {{'people.comp.editPerson.communicationAccounts.' + caType |
                                     translate}} </label>
-                                <input name="item" type="{{caType}}" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
+                                <input type="{{caType}}" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
                                         class="input-md form-control"
                                         placeholder="{{ 'people.comp.editPerson.communicationAccounts.' + caType + '.placeholder' | translate }}"
                                         ng-blur="validateInput(caType)">
