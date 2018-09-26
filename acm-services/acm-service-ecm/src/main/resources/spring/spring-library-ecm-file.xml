@@ -247,6 +247,11 @@
                         <value>application/octet-stream</value>
                     </list>
                 </entry>
+                <entry key="application/xhtml+xml">
+                    <list>
+                        <value>text/html</value>
+                    </list>
+                </entry>
             </map>
         </property>
     </bean>

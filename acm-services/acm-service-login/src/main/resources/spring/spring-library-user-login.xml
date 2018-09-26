@@ -105,7 +105,7 @@
         <property name="auditDao" ref="auditDao"/>
     </bean>
 
-    <beans profile="ldap,kerberos,externalAuth,mfa-okta">
+    <beans profile="ldap,kerberos,externalAuth,mfa-okta,externalSaml">
         <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
             <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory"/>
             <property name="defaultTargetUrl" value="/login?logout"/>
@@ -113,7 +113,7 @@
         </bean>
     </beans>
 
-    <beans profile="ssoSaml">
+    <beans profile="ssoSaml,externalSaml">
         <bean id="ssoProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
             <!-- note: must leave "file:" at the start of the file name for spring
             to be able to read the file; otherwise it will try to read from the

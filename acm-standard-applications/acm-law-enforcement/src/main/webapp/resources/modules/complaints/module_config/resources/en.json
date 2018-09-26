@@ -63,8 +63,7 @@
                 "witnessInterview2%": "Witness Interview Request-2.0"
             }
         },
-        "newTask": "New Task",
-        "addDocument": "Choose document to add."
+        "newTask": "New Task"
     },
     "complaints.comp.people": {
         "title": "People",
