@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-sm-6">
                             <span translate>cases.comp.change.status.information.case.number</span>
-                            <input type="text" ng-model="modalParams.caseNumber" class="input-md form-control" disabled>
+                            <input type="text" ng-model="modalParams.info.caseNumber" class="input-md form-control" disabled>
                         </div>
                     </div>
                     <div class="row form-group">
@@ -92,7 +92,7 @@
                         </div>
                         <div class="pull-left">
                             <button type="button" class="btn btn-link form-control" ng-click="addNewApprover()"
-                                    ng-disabled="!participant.email_lcs" ng-show="$last">
+                                    ng-disabled="!participant.participantLdapId" ng-show="$last">
                                 <i class="fa fa-plus text-success"></i><span translate>cases.comp.change.status.approver.addAnother</span>
                             </button>
                         </div>
