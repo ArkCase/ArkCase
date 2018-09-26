@@ -36,7 +36,7 @@ public abstract class ReportGenerator
     public abstract String generateReport(String[] requestedFields, String[] titles, String jsonData);
 
     //Add timeZone param for AFDP-5769
-    public abstract String generateReport(String[] requestedFields, String[] titles, String jsonData, String timeZone);
+    public abstract String generateReport(String[] requestedFields, String[] titles, String jsonData, int timeZone);
 
     public abstract String generateReportName(String name);
 
