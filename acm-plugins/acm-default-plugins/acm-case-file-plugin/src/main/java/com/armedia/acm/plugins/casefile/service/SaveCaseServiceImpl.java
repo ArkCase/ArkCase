@@ -61,20 +61,16 @@ public class SaveCaseServiceImpl implements SaveCaseService
     @Transactional
     public CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress) throws PipelineProcessException
     {
-        CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
-        // populate the context
-        pipelineContext.setNewCase(in.getId() == null);
-        pipelineContext.setAuthentication(auth);
-        pipelineContext.setIpAddress(ipAddress);
-
-        return pipelineManager.executeOperation(in, pipelineContext, () -> {
-
-            CaseFile saved = caseFileDao.save(in);
-
-            log.info("Case saved '{}'", saved);
-            return saved;
-
-        });
+        CaseFile saved = null;
+        try
+        {
+            saved = saveCase(in, null, auth, ipAddress);
+        }
+        catch (AcmUserActionFailedException | AcmCreateObjectFailedException |AcmUpdateObjectFailedException | AcmObjectNotFoundException | IOException e)
+        {
+            log.error("Error in saving Case File");
+        }
+        return  saved;
     }
 
     @Override
@@ -84,29 +80,21 @@ public class SaveCaseServiceImpl implements SaveCaseService
             AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
             IOException
     {
-        CaseFile saved = saveCase(caseFile, authentication, ipAddress);
+        CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
+        // populate the context
+        pipelineContext.setNewCase(caseFile.getId() == null);
+        pipelineContext.setAuthentication(authentication);
+        pipelineContext.setIpAddress(ipAddress);
+        pipelineContext.addProperty("attachmentFiles", files);
 
-        if (files != null)
-        {
-            for (MultipartFile file : files)
-            {
-                if (file != null)
-                {
+        return pipelineManager.executeOperation(caseFile, pipelineContext, () -> {
 
-                    String folderId = saved.getContainer().getAttachmentFolder() == null
-                            ? saved.getContainer().getFolder().getCmisFolderId()
-                            : saved.getContainer().getAttachmentFolder().getCmisFolderId();
+            CaseFile saved = caseFileDao.save(caseFile);
 
-                    log.debug("Uploading document for FOIA Request [{}] as [{}]", saved.getId(), file.getOriginalFilename());
+            log.info("Case saved '{}'", saved);
+            return saved;
 
-                    getEcmFileService().upload(file.getOriginalFilename(), "other", "Document", file.getInputStream(), file.getContentType(),
-                            file.getOriginalFilename(), authentication,
-                            folderId, saved.getObjectType(), saved.getId());
-                }
-            }
-        }
-
-        return saved;
+        });
     }
 
     public CaseFileDao getCaseFileDao()
