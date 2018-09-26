@@ -11,6 +11,7 @@ angular.module('cost-tracking').controller(
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.isEdit = $scope.modalParams.isEdit;
                     $scope.sumAmount = 0;
+                    $scope.disableCostType = false;
 
                     ConfigService.getModuleConfig("cost-tracking").then(function(moduleConfig) {
                         $scope.config = moduleConfig;
@@ -29,6 +30,15 @@ angular.module('cost-tracking').controller(
                                 costs: [ {} ],
                                 participants: [ {} ]
                             };
+
+                            if(!Util.isEmpty($scope.modalParams.parentType) && !Util.isEmpty($scope.modalParams.parentNumber) && !Util.isEmpty($scope.modalParams.parentId)) {
+                                $scope.costsheet.parentId = $scope.modalParams.parentId;
+                                $scope.costsheet.parentType = $scope.modalParams.parentType;
+                                $scope.costsheet.parentNumber = $scope.modalParams.parentNumber;
+                                $scope.costsheet.title =  "Costsheet" + " " + $scope.modalParams.parentNumber;
+                                $scope.isTypeSelected = true;
+                                $scope.disableCostType = true;
+                            }
                         }
 
                         $scope.newCostObjectPicker = _.find(moduleConfig.components, {
@@ -59,7 +69,7 @@ angular.module('cost-tracking').controller(
                         $scope.isTypeSelected = true;
                         $scope.objectInfo = $scope.modalParams.costsheet;
                         var tmpCostsheet = $scope.modalParams.costsheet;
-                        $scope.isApproverAdded = !Util.isArrayEmpty($scope.objectInfo.participants);
+                        $scope.isApproverAdded = !Util.isArrayEmpty($scope.objectInfo.participants) && $scope.objectInfo.participants[0].hasOwnProperty("id") ? true : false;
                         $scope.updateBalance($scope.objectInfo.costs);
 
                         if (tmpCostsheet.participants != undefined) {
@@ -250,9 +260,10 @@ angular.module('cost-tracking').controller(
                                     objectType: objectTypeString,
                                     costsheetTitle: objectInfo.title
                                 });
+                                // $scope.refresh(objectInfo.id);
                                 MessageService.info(costsheetUpdatedMessage);
                                 ObjectService.showObject(ObjectService.ObjectTypes.COSTSHEET, objectInfo.id);
-                                $modalInstance.dismiss();
+                                $modalInstance.close(objectInfo);
                                 $scope.loading = false;
                                 $scope.loadingIcon = "fa fa-floppy-o";
                             }, function(error) {
@@ -273,7 +284,7 @@ angular.module('cost-tracking').controller(
                             checkForChanges($scope.objectInfo);
                             if (CostTrackingInfoService.validateCostsheet($scope.objectInfo)) {
                                 var objectInfo = Util.omitNg($scope.objectInfo);
-                                promiseSaveInfo = CostTrackingInfoService.saveCostsheetInfo(objectInfo, submissionName);
+                                promiseSaveInfo = CostTrackingInfoService.saveCostsheetInfo(clearNotFilledElements(_.cloneDeep(objectInfo)), submissionName);
                                 promiseSaveInfo.then(function(costsheetInfo) {
                                     $scope.$emit("report-object-updated", costsheetInfo);
                                     var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.COSTSHEET);
@@ -282,7 +293,7 @@ angular.module('cost-tracking').controller(
                                         costsheetTitle: objectInfo.title
                                     });
                                     MessageService.info(costsheetUpdatedMessage);
-                                    $modalInstance.dismiss();
+                                    $modalInstance.close(objectInfo);
                                     $scope.loading = false;
                                     $scope.loadingIcon = "fa fa-floppy-o";
                                 }, function(error) {
@@ -340,6 +351,10 @@ angular.module('cost-tracking').controller(
 
                     $scope.cancelModal = function() {
                         $modalInstance.dismiss();
+                    };
+
+                    $scope.refresh = function(id) {
+                        $scope.$emit('report-object-refreshed', id);
                     };
 
                 } ]);
