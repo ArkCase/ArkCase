@@ -33,6 +33,7 @@ import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.SaveCaseServiceCaller;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
@@ -93,6 +94,26 @@ public class SaveCaseServiceImpl implements SaveCaseService
         return pipelineManager.executeOperation(caseFile, pipelineContext, () -> {
 
             CaseFile saved = caseFileDao.save(caseFile);
+
+            log.info("Case saved '{}'", saved);
+            return saved;
+
+        });
+    }
+
+    @Override
+    public CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress, SaveCaseServiceCaller caller) throws PipelineProcessException
+    {
+        CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
+        // populate the context
+        pipelineContext.setNewCase(in.getId() == null);
+        pipelineContext.setAuthentication(auth);
+        pipelineContext.setIpAddress(ipAddress);
+        pipelineContext.setCaller(caller);
+
+        return pipelineManager.executeOperation(in, pipelineContext, () -> {
+
+            CaseFile saved = caseFileDao.save(in);
 
             log.info("Case saved '{}'", saved);
             return saved;
