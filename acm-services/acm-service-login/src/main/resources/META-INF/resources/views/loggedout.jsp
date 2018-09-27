@@ -65,8 +65,6 @@
 
     <p></p>
 
-    <p class="text-center"><a href="<c:url value="/" />">Click here to return to ArkCase</a></p>
-
 </div>
 
 <footer id="footer">
