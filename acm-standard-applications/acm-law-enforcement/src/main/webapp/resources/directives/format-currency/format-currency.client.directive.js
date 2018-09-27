@@ -25,7 +25,7 @@ angular
             link: function (scope, elem, attrs, ctrl) {
                 if (!ctrl) return;
 
-                var numberRegExp = new RegExp("^-?\\d{1,}$|^-?\\d{1,}\\.\\d{1,2}$");
+                var numberRegExp = new RegExp("^-?\\d{1,}$|^-?\\d{0,}\\.\\d{1,2}$");
 
                 var keyDownExecuted = false; //avoid pressing keyboard too long
                 var strKeyPress = "";
