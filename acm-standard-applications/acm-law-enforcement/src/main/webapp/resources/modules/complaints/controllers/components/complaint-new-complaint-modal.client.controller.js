@@ -92,6 +92,10 @@ angular.module('complaints').controller(
                         $scope.addressTypes = addressTypes;
                     });
 
+                    ObjectLookupService.getStates().then(function(states) {
+                        $scope.states = states;
+                    });
+
                     ObjectLookupService.getCountries().then(function(countries) {
                         $scope.countries = countries;
                     });
