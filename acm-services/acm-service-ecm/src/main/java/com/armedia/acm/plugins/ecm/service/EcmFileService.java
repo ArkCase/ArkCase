@@ -276,7 +276,7 @@ public interface EcmFileService
             String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException;
 
     AcmCmisObjectList listFlatSearchResultsAdvanced(Authentication auth, AcmContainer container, String category, String sortBy,
-                                                    String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException;
+            String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException;
 
     AcmCmisObjectList listFileFolderByCategory(Authentication auth,
             AcmContainer container,

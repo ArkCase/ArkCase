@@ -88,7 +88,7 @@ public class FolderListAPIController
         return getEcmFileService().listFlatSearchResults(auth, container, category, sortBy, sortDirection, startRow, maxRows, searchFilter);
     }
 
-    @PreAuthorize("hasPermission(#objectId, #objectType, 'read|write|group-read|group-write')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'read|group-read')")
     @RequestMapping(value = "/folder/{objectType}/{objectId}/searchAdvanced", method = RequestMethod.GET)
     @ResponseBody
     public AcmCmisObjectList listFlatSearchResultsFromFolderContentAdvanced(Authentication auth,
