@@ -260,7 +260,6 @@ angular.module('cost-tracking').controller(
                                     objectType: objectTypeString,
                                     costsheetTitle: objectInfo.title
                                 });
-                                // $scope.refresh(objectInfo.id);
                                 MessageService.info(costsheetUpdatedMessage);
                                 ObjectService.showObject(ObjectService.ObjectTypes.COSTSHEET, objectInfo.id);
                                 $modalInstance.close(objectInfo);
