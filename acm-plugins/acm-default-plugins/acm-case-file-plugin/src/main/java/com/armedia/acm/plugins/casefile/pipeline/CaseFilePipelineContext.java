@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.casefile.pipeline;
 
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
+import com.armedia.acm.plugins.casefile.model.SaveCaseServiceCaller;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
 import org.springframework.security.core.Authentication;
@@ -73,6 +74,8 @@ public class CaseFilePipelineContext extends AbstractPipelineContext
      * Change Case Status
      */
     private ChangeCaseStatus changeCaseStatus;
+
+    private SaveCaseServiceCaller caller;
 
     public boolean isNewCase()
     {
@@ -142,5 +145,13 @@ public class CaseFilePipelineContext extends AbstractPipelineContext
     public void setCaseFile(CaseFile caseFile)
     {
         this.caseFile = caseFile;
+    }
+
+    public SaveCaseServiceCaller getCaller() {
+        return caller;
+    }
+
+    public void setCaller(SaveCaseServiceCaller caller) {
+        this.caller = caller;
     }
 }

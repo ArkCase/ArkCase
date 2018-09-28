@@ -33,6 +33,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.Disposition;
+import com.armedia.acm.plugins.casefile.model.SaveCaseServiceCaller;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
@@ -311,7 +312,7 @@ public class CloseComplaintRequestService
 
         // here we need a full Authentication object
         Authentication auth = new UsernamePasswordAuthenticationToken(userId, userId);
-        CaseFile fullInvestigation = getSaveCaseService().saveCase(caseFile, auth, null);
+        CaseFile fullInvestigation = getSaveCaseService().saveCase(caseFile, auth, null, SaveCaseServiceCaller.CLOSE_COMPLAINT);
 
         addChildObjectsToCaseFile(updatedComplaint, fullInvestigation, auth);
 

@@ -33,11 +33,11 @@ import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.SaveCaseServiceCaller;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -46,6 +46,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by armdev on 8/29/14.
@@ -61,20 +62,16 @@ public class SaveCaseServiceImpl implements SaveCaseService
     @Transactional
     public CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress) throws PipelineProcessException
     {
-        CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
-        // populate the context
-        pipelineContext.setNewCase(in.getId() == null);
-        pipelineContext.setAuthentication(auth);
-        pipelineContext.setIpAddress(ipAddress);
-
-        return pipelineManager.executeOperation(in, pipelineContext, () -> {
-
-            CaseFile saved = caseFileDao.save(in);
-
-            log.info("Case saved '{}'", saved);
-            return saved;
-
-        });
+        CaseFile saved = null;
+        try
+        {
+            saved = saveCase(in, null, auth, ipAddress);
+        }
+        catch (AcmUserActionFailedException | AcmCreateObjectFailedException |AcmUpdateObjectFailedException | AcmObjectNotFoundException | IOException e)
+        {
+            log.error("Error in saving Case File");
+        }
+        return  saved;
     }
 
     @Override
@@ -84,29 +81,44 @@ public class SaveCaseServiceImpl implements SaveCaseService
             AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
             IOException
     {
-        CaseFile saved = saveCase(caseFile, authentication, ipAddress);
-
-        if (files != null)
+        CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
+        // populate the context
+        pipelineContext.setNewCase(caseFile.getId() == null);
+        pipelineContext.setAuthentication(authentication);
+        pipelineContext.setIpAddress(ipAddress);
+        if(Objects.nonNull(files))
         {
-            for (MultipartFile file : files)
-            {
-                if (file != null)
-                {
-
-                    String folderId = saved.getContainer().getAttachmentFolder() == null
-                            ? saved.getContainer().getFolder().getCmisFolderId()
-                            : saved.getContainer().getAttachmentFolder().getCmisFolderId();
-
-                    log.debug("Uploading document for FOIA Request [{}] as [{}]", saved.getId(), file.getOriginalFilename());
-
-                    getEcmFileService().upload(file.getOriginalFilename(), "other", "Document", file.getInputStream(), file.getContentType(),
-                            file.getOriginalFilename(), authentication,
-                            folderId, saved.getObjectType(), saved.getId());
-                }
-            }
+            pipelineContext.addProperty("attachmentFiles", files);
         }
 
-        return saved;
+        return pipelineManager.executeOperation(caseFile, pipelineContext, () -> {
+
+            CaseFile saved = caseFileDao.save(caseFile);
+
+            log.info("Case saved '{}'", saved);
+            return saved;
+
+        });
+    }
+
+    @Override
+    public CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress, SaveCaseServiceCaller caller) throws PipelineProcessException
+    {
+        CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
+        // populate the context
+        pipelineContext.setNewCase(in.getId() == null);
+        pipelineContext.setAuthentication(auth);
+        pipelineContext.setIpAddress(ipAddress);
+        pipelineContext.setCaller(caller);
+
+        return pipelineManager.executeOperation(in, pipelineContext, () -> {
+
+            CaseFile saved = caseFileDao.save(in);
+
+            log.info("Case saved '{}'", saved);
+            return saved;
+
+        });
     }
 
     public CaseFileDao getCaseFileDao()
