@@ -41,7 +41,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    {{ (objectInfo.modified | date: 'shortDate' ) || 'common.value.unknown' | translate }}
+                    {{ (objectInfo.modified | date: ('common.defaultDateTimeUIFormat' | translate) ) || 'common.value.unknown' | translate }}
                 </div>
                 <small class="text-muted"><span translate>document-repository.comp.info.modified.label</span></small>
             </div>
