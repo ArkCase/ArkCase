@@ -49,6 +49,7 @@ import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -113,7 +114,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
     {
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
-        String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig.getUserDomain());
+        String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig.getUserDomain(), ldapSyncConfig.getUserPrefix());
 
         AcmUser user = checkExistingUser(userId);
 
@@ -140,6 +141,11 @@ public class LdapUserService implements ApplicationEventPublisherAware
         }
 
         Set<AcmGroup> groups = new HashSet<>();
+
+        if (StringUtils.isNotBlank(ldapSyncConfig.getUserControlGroup()))
+        {
+            userDto.getGroupNames().add(ldapSyncConfig.getUserControlGroup());
+        }
 
         for (String groupName : userDto.getGroupNames())
         {

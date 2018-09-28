@@ -27,6 +27,7 @@ package com.armedia.acm.services.users.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -265,6 +266,16 @@ public class AcmUserAPIController extends SecureLdapController
             log.error("Changing password for user [{}] failed!", userId, e);
             return Collections.singletonMap("message", "Unknown error occurred");
         }
+    }
+
+    @RequestMapping(value = "/{directory:.+}/managePasswordEnabled", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Boolean> isManagePasswordsEnabled(@PathVariable String directory)
+    {
+        AcmSpringActiveProfile acmSpringActiveProfile = new AcmSpringActiveProfile();
+        boolean enableEditingLdapUsers = isLdapManagementEnabled(directory);
+        boolean managePasswordEnabled = !acmSpringActiveProfile.isSsoEnvironment() && enableEditingLdapUsers;
+        return Collections.singletonMap("managePasswordEnabled", managePasswordEnabled);
     }
 
     public LdapUserService getLdapUserService()
