@@ -63,7 +63,7 @@
                     "name": "modified_date_tdt",
                     "displayName": "tags.comp.grid.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 }
             ],
             "paginationPageSizes": [
