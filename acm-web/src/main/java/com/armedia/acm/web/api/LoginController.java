@@ -50,6 +50,7 @@ import java.util.Map;
 public class LoginController
 {
     private LoginWarningMessageService loginWarningMessageService;
+    private AcmSpringActiveProfile acmSpringActiveProfile;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = { "/login", "/login.html" }, method = RequestMethod.GET)
@@ -64,7 +65,6 @@ public class LoginController
         }
         else
         {
-            AcmSpringActiveProfile acmSpringActiveProfile = new AcmSpringActiveProfile();
             model.addAttribute("isSsoEnv", acmSpringActiveProfile.isSsoEnvironment());
             loginWarningMessageService.buildModel(model);
             return "login";
@@ -86,5 +86,15 @@ public class LoginController
     public void setLoginWarningMessageService(LoginWarningMessageService loginWarningMessageService)
     {
         this.loginWarningMessageService = loginWarningMessageService;
+    }
+
+    public AcmSpringActiveProfile getAcmSpringActiveProfile()
+    {
+        return acmSpringActiveProfile;
+    }
+
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
+    {
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 }

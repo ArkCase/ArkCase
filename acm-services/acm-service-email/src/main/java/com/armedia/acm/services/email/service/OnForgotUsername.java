@@ -47,6 +47,7 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     private final Logger log = LoggerFactory.getLogger(getClass());
     private AcmEmailSenderService emailSenderService;
     private AcmApplication acmAppConfiguration;
+    private AcmSpringActiveProfile acmSpringActiveProfile;
     private String forgotUsernameEmailSubject;
     /**
      * Formatting string to be used for producing text to inserted as a body in the forgot username email. The
@@ -73,15 +74,14 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     {
         if (forgotUsernameEvent.isSucceeded())
         {
-            AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData = (AbstractMap.SimpleImmutableEntry<String, List<String>>)
-                    forgotUsernameEvent.getSource();
+            AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData = (AbstractMap.SimpleImmutableEntry<String, List<String>>) forgotUsernameEvent
+                    .getSource();
             sendUsernameEmail(emailUserData);
         }
     }
 
     private void sendUsernameEmail(AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData)
     {
-        AcmSpringActiveProfile acmSpringActiveProfile = new AcmSpringActiveProfile();
         if (acmSpringActiveProfile.isSsoEnvironment())
         {
             log.info("Won't send forgot username email when SSO environment");
@@ -124,5 +124,15 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     public void setForgotUsernameEmailBodyTemplate(String forgotUsernameEmailBodyTemplate)
     {
         this.forgotUsernameEmailBodyTemplate = forgotUsernameEmailBodyTemplate;
+    }
+
+    public AcmSpringActiveProfile getAcmSpringActiveProfile()
+    {
+        return acmSpringActiveProfile;
+    }
+
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
+    {
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 }

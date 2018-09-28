@@ -66,8 +66,8 @@ import java.util.Map;
 public class AcmUserAPIController extends SecureLdapController
 {
     private LdapUserService ldapUserService;
-
     private AcmUserEventPublisher acmUserEventPublisher;
+    private AcmSpringActiveProfile acmSpringActiveProfile;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -272,7 +272,6 @@ public class AcmUserAPIController extends SecureLdapController
     @ResponseBody
     public Map<String, Boolean> isManagePasswordsEnabled(@PathVariable String directory)
     {
-        AcmSpringActiveProfile acmSpringActiveProfile = new AcmSpringActiveProfile();
         boolean enableEditingLdapUsers = isLdapManagementEnabled(directory);
         boolean managePasswordEnabled = !acmSpringActiveProfile.isSsoEnvironment() && enableEditingLdapUsers;
         return Collections.singletonMap("managePasswordEnabled", managePasswordEnabled);
@@ -296,5 +295,15 @@ public class AcmUserAPIController extends SecureLdapController
     public void setAcmUserEventPublisher(AcmUserEventPublisher acmUserEventPublisher)
     {
         this.acmUserEventPublisher = acmUserEventPublisher;
+    }
+
+    public AcmSpringActiveProfile getAcmSpringActiveProfile()
+    {
+        return acmSpringActiveProfile;
+    }
+
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
+    {
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 }

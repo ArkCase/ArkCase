@@ -48,6 +48,7 @@ public class ResetPasswordService
     private UserDao userDao;
     private AcmApplication acmAppConfiguration;
     private AcmEmailSenderService emailSenderService;
+    private AcmSpringActiveProfile acmSpringActiveProfile;
     /**
      * Formatting string to be used for producing text to inserted as a body in the password reset email. The formatting
      * string accepts the password reset link string twice.
@@ -75,7 +76,6 @@ public class ResetPasswordService
     @Async
     public void sendPasswordResetEmail(AcmUser user)
     {
-        AcmSpringActiveProfile acmSpringActiveProfile = new AcmSpringActiveProfile();
         if (acmSpringActiveProfile.isSsoEnvironment())
         {
             log.info("Won't sen password reset email when SSO environment");
@@ -145,5 +145,15 @@ public class ResetPasswordService
     public void setPasswordResetLink(String passwordResetLink)
     {
         this.passwordResetLink = passwordResetLink;
+    }
+
+    public AcmSpringActiveProfile getAcmSpringActiveProfile()
+    {
+        return acmSpringActiveProfile;
+    }
+
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
+    {
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 }
