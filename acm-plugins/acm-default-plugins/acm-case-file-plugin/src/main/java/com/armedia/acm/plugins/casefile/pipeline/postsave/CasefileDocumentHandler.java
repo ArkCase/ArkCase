@@ -34,6 +34,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.SaveCaseServiceCaller;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.service.PDFCasefileDocumentGenerator;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -54,7 +55,7 @@ public class CasefileDocumentHandler extends PDFCasefileDocumentGenerator<CaseFi
     public void execute(CaseFile casefile, CaseFilePipelineContext ctx) throws PipelineProcessException
     {
 
-        if (!formsTypeCheckService.getTypeOfForm().equals("frevvo"))
+        if (!formsTypeCheckService.getTypeOfForm().equals("frevvo") || (ctx.getCaller() != null && ctx.getCaller().equals(SaveCaseServiceCaller.CLOSE_COMPLAINT)))
         {
             log.debug("Entering pipeline handler for case file with id [{}] and title [{}]", casefile.getId(), casefile.getTitle());
 
