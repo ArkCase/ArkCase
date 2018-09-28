@@ -29,6 +29,7 @@ package com.armedia.acm.services.email.service;
 
 import com.armedia.acm.auth.web.ForgotUsernameEvent;
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 
@@ -72,14 +73,20 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     {
         if (forgotUsernameEvent.isSucceeded())
         {
-            AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData = (AbstractMap.SimpleImmutableEntry<String, List<String>>) forgotUsernameEvent
-                    .getSource();
+            AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData = (AbstractMap.SimpleImmutableEntry<String, List<String>>)
+                    forgotUsernameEvent.getSource();
             sendUsernameEmail(emailUserData);
         }
     }
 
     private void sendUsernameEmail(AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData)
     {
+        AcmSpringActiveProfile acmSpringActiveProfile = new AcmSpringActiveProfile();
+        if (acmSpringActiveProfile.isSsoEnvironment())
+        {
+            log.info("Won't send forgot username email when SSO environment");
+            return;
+        }
         String userEmailAddress = emailUserData.getKey();
         String userAccounts = toUserAccountsString(emailUserData.getValue());
         try

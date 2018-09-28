@@ -177,6 +177,18 @@ public class MapperUtils
         return String.format("%s@%s", userId, domain).toLowerCase();
     }
 
+    public static String buildUserId(String userId, String domain, String userPrefix)
+    {
+        if (StringUtils.isNotBlank(userPrefix))
+        {
+            return String.format("%s.%s@%s", userPrefix, userId, domain).toLowerCase().substring(0, 19);
+        }
+        else
+        {
+            return buildUserId(userId, domain);
+        }
+    }
+
     public static byte[] encodeUTF16LE(String str) throws UnsupportedEncodingException
     {
         return String.format("\"%s\"", str).getBytes("UTF-16LE");

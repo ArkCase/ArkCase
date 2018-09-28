@@ -22,8 +22,8 @@
                         <button class="btn btn-default btn-sm" ng-click="openPasswordDialog()"><i class="fa fa-key"></i>
                             <span translate>profile.buttons.outlookPassword</span>
                         </button>
-                        <button class="btn btn-default btn-sm" ng-click="openChangeLdapPasswordDialog()"><i
-                                class="fa fa-key"></i>
+                        <button class="btn btn-default btn-sm" ng-click="openChangeLdapPasswordDialog()"
+                                ng-if="manageLdapPasswordEnabled"><i class="fa fa-key"></i>
                             <span translate>profile.buttons.ldapPassword</span>
                         </button>
                     </div>

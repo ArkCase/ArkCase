@@ -28,6 +28,7 @@ package com.armedia.acm.services.email.service;
  */
 
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.model.MessageBodyFactory;
@@ -74,6 +75,12 @@ public class ResetPasswordService
     @Async
     public void sendPasswordResetEmail(AcmUser user)
     {
+        AcmSpringActiveProfile acmSpringActiveProfile = new AcmSpringActiveProfile();
+        if (acmSpringActiveProfile.isSsoEnvironment())
+        {
+            log.info("Won't sen password reset email when SSO environment");
+            return;
+        }
         try
         {
             log.debug("Sending password reset email for user: [{}]", user.getUserId());
