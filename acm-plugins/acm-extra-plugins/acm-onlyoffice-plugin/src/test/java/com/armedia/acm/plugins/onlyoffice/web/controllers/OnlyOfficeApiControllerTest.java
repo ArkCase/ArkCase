@@ -68,7 +68,7 @@ import java.util.List;
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-onlyoffice-plugin-test.xml",
 })
-public class OnlyOfficeControllerTest extends EasyMockSupport
+public class OnlyOfficeApiControllerTest extends EasyMockSupport
 {
 
     private MockMvc mockMvc;
@@ -78,7 +78,7 @@ public class OnlyOfficeControllerTest extends EasyMockSupport
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
     @Autowired
-    private OnlyOfficeController onlyOfficeController;
+    private OnlyOfficeApiController onlyOfficeApiController;
 
     @Before
     public void setUp()
@@ -87,9 +87,9 @@ public class OnlyOfficeControllerTest extends EasyMockSupport
         mockAuthentication = createMock(Authentication.class);
         mockCallbackService = createMock(CallbackService.class);
         mockHttpSession = new MockHttpSession();
-        onlyOfficeController.setCallbackService(mockCallbackService);
-        onlyOfficeController.setObjectMapper(mapper);
-        mockMvc = MockMvcBuilders.standaloneSetup(onlyOfficeController).setHandlerExceptionResolvers(exceptionResolver).build();
+        onlyOfficeApiController.setCallbackService(mockCallbackService);
+        onlyOfficeApiController.setObjectMapper(mapper);
+        mockMvc = MockMvcBuilders.standaloneSetup(onlyOfficeApiController).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
     @Test
@@ -104,7 +104,7 @@ public class OnlyOfficeControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/onlyoffice/callback")
+                post("/api/onlyoffice/callback")
                         .contentType(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .content(getFileAsBytes("test_request/callback_request_status_2.json"))
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
@@ -144,7 +144,7 @@ public class OnlyOfficeControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/onlyoffice/callback")
+                post("/api/onlyoffice/callback")
                         .contentType(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .content(getFileAsBytes("test_request/callback_request_status_5.json"))
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
