@@ -252,6 +252,11 @@
                         <value>text/html</value>
                     </list>
                 </entry>
+                <entry key="application/vnd.ms-outlook">
+                    <list>
+                        <value>application/octet-stream</value>
+                    </list>
+                </entry>
             </map>
         </property>
     </bean>
