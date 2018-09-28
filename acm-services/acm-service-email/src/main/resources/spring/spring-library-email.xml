@@ -45,6 +45,7 @@
     <bean id="onForgotUsername" class="com.armedia.acm.services.email.service.OnForgotUsername">
         <property name="emailSenderService" ref="configurableEmailSenderService"/>
         <property name="acmAppConfiguration" ref="acmApplication"/>
+        <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
         <property name="forgotUsernameEmailBodyTemplate" value="${upcoming.forgotUsername.notification.body.template}"/>
         <property name="forgotUsernameEmailSubject" value="${upcoming.forgotUsername.notification.subject}"/>
     </bean>
@@ -61,6 +62,7 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="emailSenderService" ref="configurableEmailSenderService"/>
         <property name="acmAppConfiguration" ref="acmApplication"/>
+        <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
         <property name="passwordResetEmailBodyTemplate" value="${upcoming.password.notification.body.template}"/>
         <property name="passwordResetEmailSubject" value="${upcoming.password.notification.subject}"/>
         <property name="passwordResetLink" value="${upcoming.password.notification.resetPasswordLink}"/>
