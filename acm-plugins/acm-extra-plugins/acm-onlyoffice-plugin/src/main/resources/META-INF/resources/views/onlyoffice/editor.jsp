@@ -122,7 +122,7 @@
         var version = event.data;
         docEditor.setHistoryData({
             "key": "${fileId}-" + version,
-            "changesUrl": "${arkcaseBaseUrl}/api/onlyoffice/history/${fileId}-" + version + "/changes?acm_email_ticket=${ticket}&ecmFileId=${fileId}",
+            "changesUrl": "${arkcaseBaseUrl}/api/onlyoffice/history/${fileId}/" + version + "/changes?acm_email_ticket=${ticket}&ecmFileId=${fileId}",
             "url": "${arkcaseBaseUrl}/api/v1/plugin/ecm/download?ecmFileId=${fileId}&version=" + version + "&acm_email_ticket=${ticket}",
             "version": version
         });

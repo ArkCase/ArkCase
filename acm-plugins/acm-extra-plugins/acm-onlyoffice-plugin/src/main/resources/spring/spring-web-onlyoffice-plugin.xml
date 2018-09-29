@@ -18,6 +18,7 @@
         <property name="documentHistoryManager" ref="historyFilesManager"/>
         <property name="configService" ref="onlyOfficeConfigService"/>
         <property name="objectMapper" ref="sourceObjectMapper"/>
+        <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
 
 </beans>
