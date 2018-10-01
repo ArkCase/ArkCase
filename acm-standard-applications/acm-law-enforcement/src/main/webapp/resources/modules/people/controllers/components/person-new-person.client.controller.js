@@ -58,6 +58,10 @@ angular.module('people').controller(
                         $scope.identificationTypes = identificationTypes;
                     });
 
+                    ObjectLookupService.getStates().then(function(states) {
+                        $scope.states = states;
+                    });
+
                     ObjectLookupService.getCountries().then(function(countries) {
                         $scope.countries = countries;
                     });
