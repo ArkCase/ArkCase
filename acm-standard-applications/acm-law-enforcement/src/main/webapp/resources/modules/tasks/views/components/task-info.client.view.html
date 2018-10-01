@@ -54,7 +54,7 @@
                             e-on-open-focus="false" e-min-date="minStartDate" e-ng-change="onChange($data, $form)"
                             onaftersave="updateStartDate(dateInfo.taskStartDate)" permission="editTask" permission-object-type="TASK"
                             permission-properties="objectInfo" permission-action="disable">
-                        {{dateInfo.taskStartDate | date: 'shortDate'}}</a>
+                        {{dateInfo.taskStartDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</a>
                 </div>
                 <small class="text-muted"><span translate>tasks.comp.info.startDate.label</span></small>
             </div>
@@ -65,7 +65,7 @@
                             e-on-open-focus="false" e-min-date="dateInfo.taskStartDate" e-ng-change="onChange($data, $form)"
                             onaftersave="updateDueDate(dateInfo.dueDate)" permission="editTask" permission-object-type="TASK"
                             permission-properties="objectInfo" permission-action="disable" e-required>
-                        {{ dateInfo.dueDate | date: 'shortDate' }}</a>
+                        {{ dateInfo.dueDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</a>
                     <a ng-if="dateInfo.isOverdue" tooltip="{{'tasks.comp.info.overdue.tooltip' | translate}}" tooltip-append-to-body="true"
                             tooltip-class="tooltip-overdue">
                         <i class="fa fa-exclamation-circle icon-overdue"></i>

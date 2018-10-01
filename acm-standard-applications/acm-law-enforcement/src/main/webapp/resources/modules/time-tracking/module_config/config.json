@@ -152,7 +152,7 @@
                             "name": "modified",
                             "displayName": "timeTracking.comp.details.table.columns.modified",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         },
                         {
                             "name": "modifier",
@@ -194,7 +194,7 @@
                         {
                             "name": "created",
                             "displayName": "timeTracking.comp.tags.table.columns.created",
-                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate"
                         },
                         {
@@ -237,7 +237,7 @@
                             "field": "create_tdt",
                             "displayName": "timeTracking.comp.tasks.table.columns.created",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         },
                         {
                             "name": "priority",
@@ -250,7 +250,7 @@
                             "field": "due_tdt",
                             "displayName": "timeTracking.comp.tasks.table.columns.due",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         },
                         {
                             "name": "status",
@@ -391,13 +391,13 @@
                     "name": "date",
                     "displayName": "timeTracking.comp.summary.table.columns.date",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.date | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.date | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "modified",
                     "displayName": "timeTracking.comp.summary.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 }
             ]
         },
@@ -427,7 +427,7 @@
                 {
                     "name": "created",
                     "displayName": "timeTracking.comp.tags.table.columns.created",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -484,7 +484,7 @@
                     "field": "create_tdt",
                     "displayName": "timeTracking.comp.tasks.table.columns.created",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "priority",
@@ -497,7 +497,7 @@
                     "field": "due_tdt",
                     "displayName": "timeTracking.comp.tasks.table.columns.due",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "status",
