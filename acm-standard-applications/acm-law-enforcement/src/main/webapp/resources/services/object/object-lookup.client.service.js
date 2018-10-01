@@ -634,7 +634,19 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
     Service.getDBAsTypes = function() {
         return Service.getLookupByLookupName("dbasTypes");
     };
-
+    /**
+     * @ngdoc method
+     * @name getStates
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of states
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getStates = function() {
+        return Service.getLookupByLookupName("states");
+    };
     /**
      * @ngdoc method
      * @name getCountries
