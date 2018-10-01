@@ -91,10 +91,26 @@
     };
 
     var onRequestHistory = function (event) {
-        $.getJSON("history/${fileId}", function (response) {
-            docEditor.refreshHistory(response);
-        }, function (errorResponse) {
-            docEditor.refreshHistory({"error": errorResponse});
+        $.ajax({
+            type: "get",
+            url: "${pageContext.servletContext.contextPath}/api/onlyoffice/history/${fileId}",
+            datatype: "json",
+            cache: false,
+            success: function (data, text) {
+                if (typeof data === "object") {
+                    docEditor.refreshHistory(data);
+                } else {
+                    docEditor.refreshHistory({"error": "Unknown error. Please reload page."});
+                }
+            },
+            //add this error handler you'll get alert
+            error: function (response, status, error) {
+                if (response.status === 401 || response.status === 403) {
+                    docEditor.refreshHistory({"error": "Session timeout. Please login again on ArkCase in another tab or window."});
+                } else {
+                    docEditor.refreshHistory({"error": error});
+                }
+            }
         });
     };
 
@@ -106,8 +122,8 @@
         var version = event.data;
         docEditor.setHistoryData({
             "key": "${fileId}-" + version,
-            "changesUrl": "${arkcaseBaseUrl}/onlyoffice/history/${fileId}-" + version + "/changes?acm_ticket=${ticket}",
-            "url": "${arkcaseBaseUrl}/api/v1/plugin/ecm/download?ecmFileId=${fileId}&version=" + version + "&acm_ticket=${ticket}",
+            "changesUrl": "${arkcaseBaseUrl}/api/onlyoffice/history/${fileId}/" + version + "/changes?acm_email_ticket=${ticket}&ecmFileId=${fileId}",
+            "url": "${arkcaseBaseUrl}/api/v1/plugin/ecm/download?ecmFileId=${fileId}&version=" + version + "&acm_email_ticket=${ticket}",
             "version": version
         });
     };
