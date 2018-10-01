@@ -33,7 +33,7 @@
                     "name": "eventDate",
                     "displayName": "documentDetails.comp.eventHistory.table.columns.eventDate",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.eventDate | date : 'short' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.eventDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "width": 130
                 },
                 {
@@ -77,7 +77,7 @@
                     "name": "created",
                     "displayName": "documentDetails.comp.notes.table.columns.created",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "enableCellEdit": false
                 },
                 {
@@ -117,7 +117,7 @@
                     "name": "created",
                     "displayName": "documentDetails.comp.versionHistory.table.columns.created",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "enableCellEdit": false,
                     "width": 130
                 },
@@ -246,7 +246,7 @@
                 {
                     "name": "created",
                     "displayName": "documentDetails.comp.tags.table.columns.created",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate"
                 },
                 {

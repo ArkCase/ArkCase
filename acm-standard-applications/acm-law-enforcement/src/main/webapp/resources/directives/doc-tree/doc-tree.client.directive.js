@@ -1209,14 +1209,14 @@ angular
                                 {
                                     name : "created",
                                     renderer : function(element, node, columnDef, isReadOnly) {
-                                        var createDate = $filter("date")(node.data.created, "shortDate");
+                                        var createDate = $filter("date")(node.data.created, $translate.instant('common.defaultDateTimeUIFormat'));
                                         $(element).text(createDate);
                                     }
                                 },
                                 {
                                     name : "modified",
                                     renderer : function(element, node, columnDef, isReadOnly) {
-                                        var modifiedDate = $filter("date")(node.data.modified, "shortDate");
+                                        var modifiedDate = $filter("date")(node.data.modified, $translate.instant('common.defaultDateTimeUIFormat'));
                                         $(element).text(modifiedDate);
                                     }
                                 },
