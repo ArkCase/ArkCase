@@ -29,9 +29,8 @@ package com.armedia.acm.service.objectlock.service;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
+import com.armedia.acm.scheduler.AcmSchedulableBean;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
-
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +43,7 @@ import java.util.Map;
  * 
  * Created by bojan.milenkoski on 03/05/20186.
  */
-public class AcmObjectLockingManager
+public class AcmObjectLockingManager implements AcmSchedulableBean
 {
     private Map<String, ObjectLockingProvider> objectLockingProvidersMap = new HashMap<>();
     private ObjectLockingProvider defaultObjectLockingProvider;
@@ -137,12 +136,6 @@ public class AcmObjectLockingManager
         getObjectLockingProvider(objectType).releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId, lockId);
     }
 
-    @Scheduled(fixedRateString = "${expired_locks.scan_interval}")
-    public void automaticallyReleaseExpiredLocks()
-    {
-        acmObjectLockService.removeExpiredLocks();
-    }
-
     private ObjectLockingProvider getObjectLockingProvider(String objectType)
     {
         return objectLockingProvidersMap.getOrDefault(objectType, defaultObjectLockingProvider);
@@ -171,5 +164,11 @@ public class AcmObjectLockingManager
     public void setAcmObjectLockService(AcmObjectLockService acmObjectLockService)
     {
         this.acmObjectLockService = acmObjectLockService;
+    }
+
+    @Override
+    public void executeTask()
+    {
+        acmObjectLockService.removeExpiredLocks();
     }
 }
