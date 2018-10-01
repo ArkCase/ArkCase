@@ -61,9 +61,9 @@ public class FileLockingProvider implements ObjectLockingProvider
         AcmObjectLock existingLock = objectLockService.findLock(objectId, objectType);
 
         Date now = new Date(System.currentTimeMillis());
-        if (existingLock != null && now.after(existingLock.getExpiry()))
+        if (existingLock != null && existingLock.getExpiry() != null && now.after(existingLock.getExpiry()))
         {
-            //lock has expired and will be removed
+            // lock has expired and will be removed
             objectLockService.removeLock(existingLock);
             existingLock = null;
         }
