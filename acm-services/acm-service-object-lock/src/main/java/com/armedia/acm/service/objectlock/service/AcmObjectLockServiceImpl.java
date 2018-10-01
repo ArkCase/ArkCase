@@ -174,6 +174,20 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
         acmObjectLockDao.getExpiredLocks().forEach(objectLock -> acmObjectLockDao.remove(objectLock));
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Override
+    public void removeLock(AcmObjectLock objectLock)
+    {
+        try
+        {
+            acmObjectLockDao.remove(objectLock);
+        }
+        catch (Exception e)
+        {
+            log.warn("Lock can't be removed. Reason: [{}]", e.getMessage());
+        }
+    }
+
     @Override
     public String getDocumentsWithoutLock(String objectType, Authentication auth, int firstRow, int maxRows, String sort, String fqParams)
             throws MuleException

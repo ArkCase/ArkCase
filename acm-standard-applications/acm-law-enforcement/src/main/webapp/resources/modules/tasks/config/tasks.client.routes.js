@@ -82,9 +82,9 @@ angular.module('tasks').config(
                         templateUrl: 'modules/tasks/views/components/task-reworkdetails.client.view.html'
                     })
 
-                    .state('tasks.docsreview', {
-                        url: '/:type/:id/docsreview',
-                        templateUrl: 'modules/tasks/views/components/task-docsreview.client.view.html'
+                    .state('tasks.documentsunderreview', {
+                        url: '/:type/:id/documentsunderreview',
+                        templateUrl: 'modules/tasks/views/components/task-docs-under-review.client.view.html'
                     })
 
                     .state('tasks.rejcomments', {

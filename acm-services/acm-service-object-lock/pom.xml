@@ -64,6 +64,11 @@
             <artifactId>acm-service-users</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-scheduler</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
