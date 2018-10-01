@@ -400,7 +400,7 @@
                                         class="input-md form-control"
                                         placeholder="{{ 'people.comp.editPerson.communicationAccounts.' + caType + '.placeholder' | translate }}"
                                         ng-blur="validateInput(caType)">
-                                <span ng-if="caType == 'phone' && showPhoneError == true">The Phone Number you entered is invalid. Should be in this format: xxx-xxx-xxxx</span>
+                                <span ng-if="caType == 'phone' && showPhoneError == true" translate>people.comp.editPerson.communicationAccounts.validationMessage</span>
                             </div>
                             <div class="col-sm-4">
                                 <label for="defaultPhoneSubType" class="control-label">{{'people.comp.editPerson.communicationAccounts.'
