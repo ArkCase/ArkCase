@@ -105,6 +105,7 @@ public class CSVReportGenerator extends ReportGenerator
 
             for (String field : requestedFields)
             {
+
                 if (data.has(field))
                 {
                     Object value = data.get(field);
@@ -112,6 +113,16 @@ public class CSVReportGenerator extends ReportGenerator
                     if (value instanceof String)
                     {
                         String stringValue = data.getString(field);
+                        // if parent_number_lcs is not existed, use related_object_number instead. For AFDP-5767
+                        if (stringValue.length() == 0 && field.equals("parent_number_lcs") && data.has("related_object_number_s"))
+                        {
+                            value = data.get("related_object_number_s");
+                            if (value instanceof String)
+                            {
+                                stringValue = data.getString("related_object_number_s");
+                            }
+                        }
+
                         // check if this is Solr Date/Time field in expected format
                         if (field.endsWith("_tdt") && stringValue.matches(ISO8601_PATTERN))
                         {
@@ -170,20 +181,19 @@ public class CSVReportGenerator extends ReportGenerator
     }
 
     /**
-     *   Override original generateReport, return a UTC Time value. Add for AFDP-5769
+     * Override original generateReport, return a UTC Time value. Add for AFDP-5769
      */
     @Override
     public String generateReport(String[] requestedFields, String[] titles, String jsonData)
     {
-        return generateReport(requestedFields, titles, jsonData,0);
+        return generateReport(requestedFields, titles, jsonData, 0);
     }
 
     /**
      * Encloses new lines or value if contains SEPARATOR or if value contains ".
      * for more information: https://tools.ietf.org/html/rfc4180
      *
-     * @param value
-     *            actual value
+     * @param value actual value
      * @return value with enclosed new lines, separator or ". If null or empty string returns as is
      */
     private String purifyForCSV(String value)
@@ -211,13 +221,13 @@ public class CSVReportGenerator extends ReportGenerator
 
     /**
      * Time zone process for AFDP-5769
-     * @param localDateTime service time
-     * @param timeZoneOffsetinMinutes timeZone received from client. Should be format like"240" "-480"
      *
+     * @param localDateTime           service time
+     * @param timeZoneOffsetinMinutes timeZone received from client. Should be format like"240" "-480"
      */
     private String timeZoneAdjust(LocalDateTime localDateTime, int timeZoneOffsetinMinutes)
     {
-        int adjTimeZone = ~(timeZoneOffsetinMinutes/60) + 1;
+        int adjTimeZone = ~(timeZoneOffsetinMinutes / 60) + 1;
         LocalDateTime adjDateTime = localDateTime.plusHours(adjTimeZone);
 
         return adjDateTime.format(EXCEL_DATE_TIME_PATTERN);
