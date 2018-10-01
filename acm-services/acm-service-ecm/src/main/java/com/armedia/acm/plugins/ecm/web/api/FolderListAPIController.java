@@ -88,6 +88,26 @@ public class FolderListAPIController
         return getEcmFileService().listFlatSearchResults(auth, container, category, sortBy, sortDirection, startRow, maxRows, searchFilter);
     }
 
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'read|group-read')")
+    @RequestMapping(value = "/folder/{objectType}/{objectId}/searchAdvanced", method = RequestMethod.GET)
+    @ResponseBody
+    public AcmCmisObjectList listFlatSearchResultsFromFolderContentAdvanced(Authentication auth,
+            @PathVariable("objectType") String objectType,
+            @PathVariable("objectId") Long objectId, @RequestParam(value = "fq") String searchFilter,
+            @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
+            @RequestParam(value = "category", required = false) String category)
+            throws AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        AcmContainer container = findContainerWithFolder(objectType, objectId);
+        category = filterCategory(category);
+
+        return getEcmFileService().listFlatSearchResultsAdvanced(auth, container, category, sortBy, sortDirection, startRow, maxRows,
+                searchFilter);
+    }
+
     /**
      * the special category "all" should not be sent to Solr
      */

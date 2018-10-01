@@ -114,7 +114,7 @@
                 "components": [
                     "details",
                     "reworkdetails",
-                    "docsreview",
+                    "documentsunderrreview",
                     "parentdocs",
                     "attachments",
                     "notes",
@@ -142,11 +142,11 @@
                 ]
             },
             {
-                "type": "p/TASK/docrev",
+                "type": "p/TASK/documentsunderrev",
                 "label": "tasks.tree.nodeTypes.docReview.label",
                 "icon": "fa fa-search-plus",
                 "components": [
-                    "docsreview"
+                    "documentsunderreview"
                 ]
             },
             {
@@ -377,24 +377,24 @@
                     ]
                 },
                 {
-                    "id": "docsReview",
+                    "id": "documentsunderreview",
                     "type": "component",
                     "columnDefs": [
                         {
                             "name": "fileName",
-                            "displayName": "tasks.comp.docsreview.table.columns.fileName",
+                            "displayName": "tasks.comp.documentsunderreview.table.columns.fileName",
                             "headerCellFilter": "translate",
                             "cellTemplate": "<div ng-bind-html='row.entity.fileName' title='{{row.entity.fileName}}' class='ui-grid-cell-contents'></div>"
                         },
                         {
                             "name": "createDate",
-                            "displayName": "tasks.comp.docsreview.table.columns.created",
+                            "displayName": "tasks.comp.documentsunderreview.table.columns.created",
                             "headerCellFilter": "translate",
                             "cellTemplate": "<div>{{ row.entity.createDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         },
                         {
                             "name": "creator",
-                            "displayName": "tasks.comp.docsreview.table.columns.creator",
+                            "displayName": "tasks.comp.documentsunderreview.table.columns.creator",
                             "headerCellFilter": "translate",
                             "enableCellEdit": false,
                             "fullNameField": "creator_full_name_lcs",
@@ -402,7 +402,7 @@
                         },
                         {
                             "name": "status",
-                            "displayName": "tasks.comp.docsreview.table.columns.status",
+                            "displayName": "tasks.comp.documentsunderreview.table.columns.status",
                             "headerCellFilter": "translate",
                             "cellTemplate": "<div ng-bind-html='row.entity.status' title='{{row.entity.status}}' class='ui-grid-cell-contents'></div>"
                         }
@@ -844,47 +844,21 @@
             ]
         },
         {
-            "id": "docsreview",
-            "title": "tasks.comp.docsreview.title",
+            "id": "documentsunderreview",
+            "title": "tasks.comp.documentsunderreview.title",
             "icon": "fa fa-search-plus",
             "enabled": true,
             "configurable": true,
-            "type": "grid",
-            "enableFiltering": true,
-            "paginationPageSizes": [
-                5,
-                10,
-                20,
-                50
-            ],
-            "paginationPageSize": 5,
-            "columnDefs": [
-                {
-                    "name": "fileName",
-                    "displayName": "tasks.comp.docsreview.table.columns.fileName",
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onDownloadFile($event, row.entity)'>{{row.entity.fileName}}</a>"
+            "type": "empty",
+            "docTree": {
+                "email": {
+                    "subjectRegex": "(.*)\\$([^\\s]+)",
+                    "objectTypeRegexGroup": 1,
+                    "objectNumberRegexGroup": 2
                 },
-                {
-                    "name": "createDate",
-                    "displayName": "tasks.comp.docsreview.table.columns.created",
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.createDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
-                },
-                {
-                    "name": "creator",
-                    "displayName": "tasks.comp.docsreview.table.columns.creator",
-                    "headerCellFilter": "translate",
-                    "enableCellEdit": false,
-                    "fullNameField": "creator_full_name_lcs",
-                    "cellTemplate": "<div ng-bind-html='row.entity.creator' title='{{row.entity.creator}}' class='ui-grid-cell-contents'></div>"
-                },
-                {
-                    "name": "status",
-                    "displayName": "tasks.comp.docsreview.table.columns.status",
-                    "headerCellFilter": "translate"
-                }
-            ]
+                "hideMenu": true,
+                "ecmAPIName": "retrieveFlatSearchResultListAdvanced"
+            }
         },
         {
             "id": "rejcomments",

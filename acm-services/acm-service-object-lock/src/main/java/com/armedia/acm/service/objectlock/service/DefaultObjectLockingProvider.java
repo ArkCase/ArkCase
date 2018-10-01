@@ -6,22 +6,22 @@ package com.armedia.acm.service.objectlock.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -33,13 +33,14 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Default implementation of {@link ObjectLockingProvider}. It only checks if the same lock type on the same object is
  * acquired by another user and throws an exception if that is the case.
- * 
+ * <p>
  * Created by bojan.milenkoski on 15/05/2018.
  */
 public class DefaultObjectLockingProvider implements ObjectLockingProvider
@@ -58,10 +59,15 @@ public class DefaultObjectLockingProvider implements ObjectLockingProvider
         log.trace("Checking if object lock[objectId={}, objectType={}, lockType={}] can be aquired for user: [{}]", objectId, objectType,
                 lockType, userId);
 
-        objectLockService.removeExpiredLocks();
-
         AcmObjectLock existingLock = objectLockService.findLock(objectId, objectType);
 
+        Date now = new Date(System.currentTimeMillis());
+        if (existingLock != null && now.after(existingLock.getExpiry()))
+        {
+            // lock has expired and will be removed
+            objectLockService.removeLock(existingLock);
+            existingLock = null;
+        }
         if (existingLock != null)
         {
             // if current user is different then the creator throw an exception
