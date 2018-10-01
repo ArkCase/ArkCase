@@ -55,6 +55,13 @@ angular.module('time-tracking').controller(
                         totalCost: 0,
                         dayHours: [0, 0, 0, 0, 0, 0, 0]
                     }];
+
+                    if(!Util.isEmpty($scope.modalParams.timeType) && !Util.isEmpty($scope.modalParams.timeNumber) && !Util.isEmpty($scope.modalParams.timeId)) {
+                        $scope.timesForms[0].objectId = $scope.modalParams.timeId;
+                        $scope.timesForms[0].type = $scope.modalParams.timeType;
+                        $scope.timesForms[0].code = $scope.modalParams.timeNumber;
+                        $scope.isTypeSelected = true;
+                    }
                 }
 
                 $scope.newTimeObjectPicker = _.find(moduleConfig.components, {
@@ -397,7 +404,7 @@ angular.module('time-tracking').controller(
                 } else return hour * 100;
             }
 
-            function fillTimes() {
+            function fillTimes(timesheet) {
                 _.forEach($scope.timesForms, function (timesForm) {
                     _.forEach(timesForm.dayHours, function (hour, i) {
                         if (hour != 0 && !Util.isEmpty(hour)) {
@@ -411,7 +418,28 @@ angular.module('time-tracking').controller(
                                 totalCost: fillTotalCost(hour, timesForm.chargeRole),
                                 value: hour
                             };
-                            $scope.timesheet.times.push(time);
+                            if (!$scope.isEdit) {
+                                timesheet.times.push(time);
+                            }else {
+                                var alreadyExists = false;
+                                _.forEach(timesheet.times, function (timesheetTime) {
+                                    if(moment(timesheetTime.date).format("YYYY-MM-DD") == moment(time.date).format("YYYY-MM-DD")
+                                        && timesheetTime.type == time.type && timesheetTime.code == time.code
+                                        && timesheetTime.chargeRole == time.chargeRole){
+                                        if(timesheetTime.value != time.value){
+                                            timesheetTime.value = time.value;
+                                            timesheetTime.totalCost = time.totalCost;
+                                        }
+                                        alreadyExists = true;
+                                    }
+                                });
+                                if(!alreadyExists) {
+                                    if(Util.isEmpty(time.objectId)){
+                                        time.objectId = time.code.split("_")[1];
+                                    }
+                                    timesheet.times.push(time);
+                                }
+                            }
                         }
                     });
                 });
@@ -480,7 +508,7 @@ angular.module('time-tracking').controller(
                 if (!$scope.isEdit) {
                     $scope.loading = true;
                     $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                    fillTimes();
+                    fillTimes($scope.timesheet);
                     TimeTrackingInfoService.saveNewTimesheetInfo(clearNotFilledElements(_.cloneDeep($scope.timesheet)), submissionName).then(function (objectInfo) {
                         var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.TIMESHEET);
                         var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} was created.', {
@@ -489,7 +517,7 @@ angular.module('time-tracking').controller(
                         });
                         MessageService.info(timesheetUpdatedMessage);
                         ObjectService.showObject(ObjectService.ObjectTypes.TIMESHEET, objectInfo.id);
-                        $modalInstance.dismiss();
+                        $modalInstance.close(objectInfo);
                         $scope.loading = false;
                         $scope.loadingIcon = "fa fa-floppy-o";
                     }, function (error) {
@@ -507,7 +535,7 @@ angular.module('time-tracking').controller(
                     $scope.loading = true;
                     $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                     var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-                    fillTimes();
+                    fillTimes($scope.objectInfo);
                     checkForChanges($scope.objectInfo);
                     if (TimeTrackingInfoService.validateTimesheet($scope.objectInfo)) {
                         var objectInfo = Util.omitNg($scope.objectInfo);
@@ -520,7 +548,7 @@ angular.module('time-tracking').controller(
                                 timesheetTitle: objectInfo.title
                             });
                             MessageService.info(timesheetUpdatedMessage);
-                            $modalInstance.dismiss();
+                            $modalInstance.close(objectInfo);
                             $scope.loading = false;
                             $scope.loadingIcon = "fa fa-floppy-o";
                         }, function (error) {

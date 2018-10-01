@@ -39,7 +39,14 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
 
     .state('cases.cost', {
         url: '/:id/cost',
-        templateUrl: 'modules/cases/views/components/case-cost.client.view.html'
+        templateUrl: 'modules/cases/views/components/case-cost.client.view.html',
+        resolve: {
+            translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
+                $translatePartialLoader.addPart('common');
+                $translatePartialLoader.addPart('cost-tracking');
+                return $translate.refresh();
+            } ]
+        }
     })
 
     .state('cases.details', {
@@ -92,7 +99,14 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
 
     .state('cases.time', {
         url: '/:id/time',
-        templateUrl: 'modules/cases/views/components/case-time.client.view.html'
+        templateUrl: 'modules/cases/views/components/case-time.client.view.html',
+        resolve: {
+            translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
+                $translatePartialLoader.addPart('common');
+                $translatePartialLoader.addPart('time-tracking');
+                return $translate.refresh();
+            } ]
+        }
     })
 
     .state('cases.tags', {
