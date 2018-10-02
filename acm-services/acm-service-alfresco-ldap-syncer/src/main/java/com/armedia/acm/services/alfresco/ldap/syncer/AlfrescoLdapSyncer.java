@@ -106,6 +106,8 @@ public class AlfrescoLdapSyncer implements ApplicationEventPublisherAware, Exter
         ListenableFuture<ResponseEntity<SyncResult>> futureEntity = restTemplate.postForEntity(baseUrl, entity, SyncResult.class);
         baseUrl = null;
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         futureEntity.addCallback(new ListenableFutureCallback<ResponseEntity<SyncResult>>()
         {
             @Override
@@ -125,7 +127,6 @@ public class AlfrescoLdapSyncer implements ApplicationEventPublisherAware, Exter
                 }
 
                 syncResult.setService("Alfresco");
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 String userName = authentication.getName();
                 syncResult.setUser(userName);
                 syncResult.setResult(result.getBody().isSuccess());

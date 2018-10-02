@@ -114,7 +114,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
     {
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
-        String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig.getUserDomain(), ldapSyncConfig.getUserPrefix());
+        String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig.getUserDomain(),
+                ldapSyncConfig.getUserPrefix(), Directory.valueOf(ldapSyncConfig.getDirectoryType()));
 
         AcmUser user = checkExistingUser(userId);
 
@@ -127,7 +128,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
             user = userDto.updateAcmUser(user);
         }
 
-        String dn = Directory.valueOf(ldapSyncConfig.getDirectoryType()).buildDnForUserEntry(userDto.getUserId(), ldapSyncConfig);
+        String dn = Directory.valueOf(ldapSyncConfig.getDirectoryType())
+                .buildDnForUserEntry(StringUtils.substringBeforeLast(userId, "@"), ldapSyncConfig);
         user.setDistinguishedName(dn);
         user.setUserDirectoryName(directoryName);
         user.setUserState(AcmUserState.VALID);
@@ -316,7 +318,16 @@ public class LdapUserService implements ApplicationEventPublisherAware
     public AcmUser removeUserFromGroups(String userId, List<String> groups, String directory)
             throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
+        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
+
         Set<String> groupsDnToUpdate = new HashSet<>();
+
+        // prevent removing the user from the control group if configured
+        groups.remove(ldapSyncConfig.getUserControlGroup());
+        if (groups.isEmpty())
+        {
+            throw new AcmLdapActionFailedException("Can't remove user from configured user control group");
+        }
 
         for (String groupName : groups)
         {
@@ -328,8 +339,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
         }
 
         AcmUser user = userDao.findByUserId(userId);
-
-        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
 
         ldapGroupDao.removeMemberFromGroups(user.getDistinguishedName(), groupsDnToUpdate, ldapSyncConfig);
 

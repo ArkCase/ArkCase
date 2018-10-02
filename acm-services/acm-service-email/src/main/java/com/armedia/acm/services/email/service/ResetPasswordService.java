@@ -78,7 +78,7 @@ public class ResetPasswordService
     {
         if (acmSpringActiveProfile.isSsoEnvironment())
         {
-            log.info("Won't sen password reset email when SSO environment");
+            log.info("Won't send password reset email when SSO environment");
             return;
         }
         try
