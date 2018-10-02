@@ -65,7 +65,7 @@ public class LoginController
         }
         else
         {
-            model.addAttribute("isSsoEnv", acmSpringActiveProfile.isSsoEnvironment());
+            model.addAttribute("isSsoEnv", acmSpringActiveProfile.isSAMLEnabledEnvironment());
             loginWarningMessageService.buildModel(model);
             return "login";
         }

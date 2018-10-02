@@ -76,7 +76,7 @@ public class ResetPasswordService
     @Async
     public void sendPasswordResetEmail(AcmUser user)
     {
-        if (acmSpringActiveProfile.isSsoEnvironment())
+        if (acmSpringActiveProfile.isSAMLEnabledEnvironment())
         {
             log.info("Won't send password reset email when SSO environment");
             return;

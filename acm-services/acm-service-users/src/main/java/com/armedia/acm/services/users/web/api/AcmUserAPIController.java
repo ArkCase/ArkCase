@@ -274,7 +274,7 @@ public class AcmUserAPIController extends SecureLdapController
     public Map<String, Boolean> isManagePasswordsEnabled(@PathVariable String directory)
     {
         boolean enableEditingLdapUsers = isLdapManagementEnabled(directory);
-        boolean managePasswordEnabled = !acmSpringActiveProfile.isSsoEnvironment() && enableEditingLdapUsers;
+        boolean managePasswordEnabled = !acmSpringActiveProfile.isSAMLEnabledEnvironment() && enableEditingLdapUsers;
         return Collections.singletonMap("managePasswordEnabled", managePasswordEnabled);
     }
 
