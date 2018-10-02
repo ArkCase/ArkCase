@@ -29,6 +29,7 @@ package com.armedia.acm.services.users.model.ldap;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
@@ -97,9 +98,17 @@ public class MapperUtilsTest
     }
 
     @Test
-    public void testUserIdLength(){
-        String userId = MapperUtils.buildUserId("verylongusername", "armedia.com", "dco");
-        assertThat("Username length should be 20 characters", (long) userId.length(), lessThanOrEqualTo(20L));
+    public void testUserIdMoreThen20Chars()
+    {
+        String userId = MapperUtils.buildUserId("veryyylongusername", "armedia.com", "dco", Directory.activedirectory);
+        assertEquals("dco.veryyylonguserna@armedia.com",userId);
+    }
+
+    @Test
+    public void testUserIdLessThen20Chars()
+    {
+        String userId = MapperUtils.buildUserId("ann-acm", "armedia.com", "dco", Directory.activedirectory);
+        assertEquals("dco.***REMOVED***",userId);
     }
 
 }

@@ -41,28 +41,33 @@ public enum Directory
     activedirectory(
             "yyyyMMddHHmmss.0VV",
             "cn",
+            20,
             MapperUtils.convertFileTimeTimestampToDate,
             MapperUtils.activeDirectoryPasswordToAttribute,
             MapperUtils.activeDirectoryPasswordToAttribute),
     openldap(
             "yyyyMMddHHmmssVV",
             "uid",
+            20,
             MapperUtils.calculatePasswordExpirationDateByShadowAccount,
             MapperUtils.openLdapPasswordToAttribute,
             MapperUtils.openLdapCurrentPasswordToAttribute);
 
     private final String datePattern;
     private final String userRdnAttribute;
+    private final int userRdnAttributeLength;
     private final Function<DirContextAdapter, LocalDate> timestampToLocalDate;
     private final Function<String, BasicAttribute> passwordToAttribute;
     private final Function<String, BasicAttribute> currentPasswordToAttribute;
     private DateTimeFormatter dateTimeFormatter;
 
-    Directory(String datePattern, String userRdnAttribute, Function<DirContextAdapter, LocalDate> timestampToLocalDate,
+    Directory(String datePattern, String userRdnAttribute, int userRdnAttributeLength,
+            Function<DirContextAdapter, LocalDate> timestampToLocalDate,
             Function<String, BasicAttribute> passwordToAttribute, Function<String, BasicAttribute> currentPasswordToAttribute)
     {
         this.datePattern = datePattern;
         this.userRdnAttribute = userRdnAttribute;
+        this.userRdnAttributeLength = userRdnAttributeLength;
         this.timestampToLocalDate = timestampToLocalDate;
         dateTimeFormatter = DateTimeFormatter.ofPattern(datePattern);
         this.passwordToAttribute = passwordToAttribute;
@@ -77,6 +82,11 @@ public enum Directory
     public String getUserRdnAttribute()
     {
         return userRdnAttribute;
+    }
+
+    public int getUserRdnAttributeLength()
+    {
+        return userRdnAttributeLength;
     }
 
     public String buildDnForUserEntry(String userId, AcmLdapSyncConfig syncConfig)

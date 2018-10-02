@@ -177,17 +177,13 @@ public class MapperUtils
         return String.format("%s@%s", userId, domain).toLowerCase();
     }
 
-    public static String buildUserId(String userId, String domain, String userPrefix)
+    public static String buildUserId(String userId, String domain, String userPrefix, Directory directory)
     {
-        if (StringUtils.isNotBlank(userPrefix))
-        {
-            return String.format("%s.%s@%s", userPrefix, userId, domain).toLowerCase().substring(0, 19);
-        }
-        else
-        {
-            return buildUserId(userId, domain);
-        }
+        String username = StringUtils.isNotBlank(userPrefix) ? String.format("%s.%s", userPrefix, userId) : userId;
+        username = StringUtils.left(username, directory.getUserRdnAttributeLength());
+        return buildUserId(username, domain);
     }
+
 
     public static byte[] encodeUTF16LE(String str) throws UnsupportedEncodingException
     {
