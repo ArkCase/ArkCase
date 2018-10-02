@@ -2,8 +2,8 @@
 
 angular.module('complaints').controller(
         'Complaints.CostController',
-        [ '$scope', '$stateParams', '$translate', '$state', 'UtilService', 'ObjectService', 'ConfigService', 'Object.CostService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService',
-                function($scope, $stateParams, $translate, $state, Util, ObjectService, ConfigService, ObjectCostService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService) {
+        [ '$scope', '$stateParams', '$translate', '$state', 'UtilService', 'ObjectService', 'ConfigService', 'Object.CostService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'FormsType.Service',
+                function($scope, $stateParams, $translate, $state, Util, ObjectService, ConfigService, ObjectCostService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, $modal, FormsTypeService) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -22,6 +22,14 @@ angular.module('complaints').controller(
 
                     var gridHelper = new HelperUiGridService.Grid({
                         scope: $scope
+                    });
+
+                    FormsTypeService.isAngularFormType().then(function(isAngularFormType) {
+                        $scope.isAngularFormType = isAngularFormType;
+                    });
+
+                    FormsTypeService.isFrevvoFormType().then(function(isFrevvoFormType) {
+                        $scope.isFrevvoFormType = isFrevvoFormType;
                     });
 
                     var onConfigRetrieved = function(config) {
@@ -66,9 +74,50 @@ angular.module('complaints').controller(
                         }
                     };
 
-                    $scope.editRow = function(rowEntity) {
-                        $state.go('frevvo.edit-costsheet', {
-                            id: rowEntity.id
+                    $scope.newCostsheet = function() {
+                        var params = {
+                            isEdit: false,
+                            parentType: $scope.newCostsheetParamsFromObject.type,
+                            parentNumber: $scope.newCostsheetParamsFromObject.objectNumber,
+                            parentId: $scope.newCostsheetParamsFromObject.objectId
+                        };
+                        showModal(params);
+                    };
+
+                    function showModal(params) {
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/cost-tracking/views/components/cost-tracking-new-costsheet-modal.client.view.html',
+                            controller: 'CostTracking.NewCostsheetController',
+                            size: 'lg',
+                            resolve: {
+                                modalParams: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(data) {
+                            var addedCostsheet = data;
+                            addedCostsheet.acm$_formName = $translate.instant("complaints.comp.cost.formNamePrefix") + " " + Util.goodValue(addedCostsheet.parentNumber);
+                            addedCostsheet.acm$_costs = _.reduce(Util.goodArray(addedCostsheet.costs), function(total, n) {
+                                return total + Util.goodValue(n.value, 0);
+                            }, 0);
+                            $scope.gridOptions.data.push(addedCostsheet);
                         });
                     }
+
+                    $scope.editRow = function(rowEntity) {
+                        if($scope.isFrevvoFormType){
+                            $state.go('frevvo.edit-costsheet', {
+                                id: rowEntity.id
+                            });
+                        }else{
+                            $scope.editCaseParams = {
+                                isEdit: true,
+                                costsheet: rowEntity
+                            };
+                            showModal($scope.editCaseParams, true);
+                        }
+                    };
                 } ]);
