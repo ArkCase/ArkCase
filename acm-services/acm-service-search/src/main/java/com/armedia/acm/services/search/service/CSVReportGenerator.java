@@ -113,8 +113,8 @@ public class CSVReportGenerator extends ReportGenerator
                     if (value instanceof String)
                     {
                         String stringValue = data.getString(field);
-                        // if parent_number_lcs is not existed, use related_object_number instead. For AFDP-5767
-                        if (stringValue.length() == 0 && field.equals("parent_number_lcs") && data.has("related_object_number_s"))
+                        // if related_object_number existed, use related_object_number instead of parent number. For AFDP-5767
+                        if (field.equals("parent_number_lcs") && data.has("related_object_number_s"))
                         {
                             value = data.get("related_object_number_s");
                             if (value instanceof String)
