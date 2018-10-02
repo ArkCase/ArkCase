@@ -114,8 +114,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
     {
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
-        String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig.getUserDomain(),
-                ldapSyncConfig.getUserPrefix(), Directory.valueOf(ldapSyncConfig.getDirectoryType()));
+        String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig);
 
         AcmUser user = checkExistingUser(userId);
 
@@ -323,8 +322,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
         Set<String> groupsDnToUpdate = new HashSet<>();
 
         // prevent removing the user from the control group if configured
-        groups.remove(ldapSyncConfig.getUserControlGroup());
-        if (groups.isEmpty())
+        if (groups.contains(ldapSyncConfig.getUserControlGroup()))
         {
             throw new AcmLdapActionFailedException("Can't remove user from configured user control group");
         }

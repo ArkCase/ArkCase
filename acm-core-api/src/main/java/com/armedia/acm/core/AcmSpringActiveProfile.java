@@ -11,7 +11,7 @@ public class AcmSpringActiveProfile
     @Autowired
     private Environment environment;
 
-    public boolean isSsoEnvironment()
+    public boolean isSAMLEnabledEnvironment()
     {
         String[] activeProfiles = environment.getActiveProfiles();
         if (activeProfiles.length == 0)
