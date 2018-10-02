@@ -11,9 +11,7 @@ angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.Mod
 
     var appModulesPromise = ModuleService.getAppModules();
     var userRolesPromise = Authentication.queryUserInfo();
-    var formsTypePromise = ApplicationFormsTypeConfigService.getProperty(ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE).then(function(response) {
-        return response;
-    });
+    var formsTypePromise = ApplicationFormsTypeConfigService.getProperty(ApplicationFormsTypeConfigService.PROPERTIES.FORMS_TYPE);
 
     // A private function for rendering decision
     var shouldRender = function(user) {
