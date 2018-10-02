@@ -27,6 +27,7 @@ package com.armedia.acm.service.identity.state;
  * #L%
  */
 
+import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.service.identity.exceptions.AcmIdentityException;
 import com.armedia.acm.service.identity.model.AcmArkcaseIdentity;
 import com.armedia.acm.service.identity.service.AcmArkcaseIdentityService;
@@ -42,6 +43,7 @@ public class AcmIdentityStateProvider implements StateOfModuleProvider
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AcmArkcaseIdentityService acmArkcaseIdentityService;
+    private AcmApplication acmApplication;
 
     @Override
     public String getModuleName()
@@ -64,16 +66,35 @@ public class AcmIdentityStateProvider implements StateOfModuleProvider
             AcmArkcaseIdentity identity = acmArkcaseIdentityService.getIdentity();
             acmIdentityState.setGlobalID(identity.getGlobalID());
             acmIdentityState.setInstanceID(identity.getInstanceID());
+            acmIdentityState.setDomain(getDomainName());
         }
         catch (AcmIdentityException e)
         {
             log.error("Not able to provide identity state.", e.getMessage());
+            acmIdentityState.addProperty("error", "Not able to provide identity state." + e.getMessage());
         }
         return acmIdentityState;
+    }
+
+    private String getDomainName() throws AcmIdentityException
+    {
+        String baseUrl = acmApplication.getBaseUrl();
+        if (baseUrl == null || !baseUrl.contains("//") || !baseUrl.contains("/arkcase"))
+        {
+            throw new AcmIdentityException("Can't parse base url[" + baseUrl + "]");
+        }
+        int start = baseUrl.indexOf("//") + 2;
+        int end = baseUrl.indexOf("/arkcase");
+        return baseUrl.substring(start, end);
     }
 
     public void setAcmArkcaseIdentityService(AcmArkcaseIdentityService acmArkcaseIdentityService)
     {
         this.acmArkcaseIdentityService = acmArkcaseIdentityService;
+    }
+
+    public void setAcmApplication(AcmApplication acmApplication)
+    {
+        this.acmApplication = acmApplication;
     }
 }

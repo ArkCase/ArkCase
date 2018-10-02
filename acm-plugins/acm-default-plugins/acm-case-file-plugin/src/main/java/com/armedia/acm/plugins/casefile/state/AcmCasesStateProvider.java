@@ -31,10 +31,14 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModule;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModuleProvider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
 
 public class AcmCasesStateProvider implements StateOfModuleProvider
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private CaseFileDao caseFileDao;
 
     @Override
@@ -53,7 +57,15 @@ public class AcmCasesStateProvider implements StateOfModuleProvider
     public StateOfModule getModuleState(LocalDate day)
     {
         AcmCasesState acmCasesState = new AcmCasesState();
-        acmCasesState.setNumberOfCases(caseFileDao.getCaseCount(day.atTime(23, 59, 59)));
+        try
+        {
+            acmCasesState.setNumberOfCases(caseFileDao.getCaseCount(day.atTime(23, 59, 59)));
+        }
+        catch (Exception e)
+        {
+            log.error("Not able to provide cases state.", e.getMessage());
+            acmCasesState.addProperty("error", "Not able to provide status." + e.getMessage());
+        }
         return acmCasesState;
     }
 

@@ -32,10 +32,14 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModule;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModuleProvider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
 
 public class AcmFilesStateProvider implements StateOfModuleProvider
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileVersionDao ecmFileVersionDao;
     private EcmFileDao ecmFileDao;
 
@@ -55,8 +59,16 @@ public class AcmFilesStateProvider implements StateOfModuleProvider
     public StateOfModule getModuleState(LocalDate day)
     {
         AcmFilesState acmFilesState = new AcmFilesState();
-        acmFilesState.setNumberOfDocuments(ecmFileDao.getFilesCount(day.atTime(23, 59, 59)));
-        acmFilesState.setSizeOfRepository(ecmFileVersionDao.getTotalSizeOfFiles(day.atTime(23, 59, 59)));
+        try
+        {
+            acmFilesState.setNumberOfDocuments(ecmFileDao.getFilesCount(day.atTime(23, 59, 59)));
+            acmFilesState.setSizeOfRepository(ecmFileVersionDao.getTotalSizeOfFiles(day.atTime(23, 59, 59)));
+        }
+        catch (Exception e)
+        {
+            log.error("Not able to provide files state.", e.getMessage());
+            acmFilesState.addProperty("error", "Not able to provide status." + e.getMessage());
+        }
         return acmFilesState;
     }
 

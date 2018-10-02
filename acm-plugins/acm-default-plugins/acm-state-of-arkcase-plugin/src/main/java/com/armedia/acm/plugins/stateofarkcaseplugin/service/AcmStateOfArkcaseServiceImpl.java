@@ -38,7 +38,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -110,8 +113,14 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
             // copy error log if not null
             if (errorsLogFile != null)
             {
-                Files.copy(errorsLogFile.toPath(), zipfs.getPath(errorsLogName),
-                        StandardCopyOption.REPLACE_EXISTING);
+                // errors log file input stream, append closing brackets to the json and combine both input streams
+                try (InputStream fis = new FileInputStream(errorsLogFile);
+                        InputStream bais = new ByteArrayInputStream("]".getBytes());
+                        SequenceInputStream sis = new SequenceInputStream(fis, bais))
+                {
+                    Files.copy(sis, zipfs.getPath(errorsLogName),
+                            StandardCopyOption.REPLACE_EXISTING);
+                }
             }
         }
         catch (Exception e)
