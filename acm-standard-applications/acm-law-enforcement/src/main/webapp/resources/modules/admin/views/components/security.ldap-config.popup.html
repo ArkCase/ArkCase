@@ -110,6 +110,16 @@
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userDomain' | translate }}" required>
         </div>
         <div class="form-group">
+            <label>{{ 'admin.security.ldapConfig.data.userPrefix' | translate }}</label>
+            <input class="form-control" type="text" ng-model="dir.userPrefix"
+                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userPrefix' | translate }}">
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.security.ldapConfig.data.userControlGroup' | translate }}</label>
+            <input class="form-control" type="text" ng-model="dir.userControlGroup"
+                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userControlGroup' | translate }}">
+        </div>
+        <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.syncPageSize' | translate }}</label>
             <input class="form-control" type="text" ng-model="dir.syncPageSize"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.syncPageSize' | translate }}" required>
