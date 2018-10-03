@@ -61,7 +61,6 @@ public class AcmAuthenticationManager implements AuthenticationManager
     private AcmGrantedAuthoritiesMapper authoritiesMapper;
     private DefaultAuthenticationEventPublisher authenticationEventPublisher;
     private UserDao userDao;
-    private GroupService groupService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -156,7 +155,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         Collection<AcmGrantedAuthority> acmAuths = getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
 
         // Collection with LDAP and ADHOC authority groups that the user belongs to
-        Collection<AcmGrantedAuthority> acmAuthsGroups = getAuthorityGroups(user);
+        Collection<AcmGrantedAuthority> acmAuthsGroups = getAuthoritiesMapper().getAuthorityGroups(user);
 
         // Collection with application roles for LDAP and ADHOC groups/subgroups that the user belongs to
         Collection<AcmGrantedAuthority> acmAuthsRoles = getAuthoritiesMapper().mapAuthorities(acmAuthsGroups);
@@ -170,23 +169,6 @@ public class AcmAuthenticationManager implements AuthenticationManager
 
         return new AcmAuthentication(acmAuths, providerAuthentication.getCredentials(), providerAuthentication.getDetails(),
                 providerAuthentication.isAuthenticated(), user.getUserId(), user.getIdentifier());
-    }
-
-    protected Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)
-    {
-        // All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
-        List<AcmGroup> groups = getGroupService().findByUserMember(user);
-
-        Stream<AcmGrantedGroupAuthority> authorityGroups = groups.stream()
-                .map(authority -> new AcmGrantedGroupAuthority(authority.getName(), authority.getIdentifier()));
-
-        Stream<AcmGrantedGroupAuthority> authorityAscendantsGroups = groups.stream()
-                .flatMap(AcmGroup::getAscendantsStream)
-                .map(it -> groupService.findByName(it))
-                .map(authority -> new AcmGrantedGroupAuthority(authority.getName(), authority.getIdentifier()));
-
-        return Stream.concat(authorityGroups, authorityAscendantsGroups)
-                .collect(Collectors.toSet());
     }
 
     public SpringContextHolder getSpringContextHolder()
@@ -229,13 +211,4 @@ public class AcmAuthenticationManager implements AuthenticationManager
         this.userDao = userDao;
     }
 
-    public GroupService getGroupService()
-    {
-        return groupService;
-    }
-
-    public void setGroupService(GroupService groupService)
-    {
-        this.groupService = groupService;
-    }
 }

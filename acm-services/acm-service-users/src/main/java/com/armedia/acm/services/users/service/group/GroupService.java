@@ -35,7 +35,6 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.mule.api.MuleException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 import javax.persistence.FlushModeType;
@@ -167,10 +166,10 @@ public interface GroupService
     /**
      * Retrieve all LDAP groups that a user belongs to
      *
-     * @param usernamePasswordAuthenticationToken
+     * @param authentication
      * @return LDAP groups
      */
-    String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException;
+    String getLdapGroupsForUser(Authentication authentication) throws MuleException;
 
     /**
      * Returns true if the user is a member of the given group
