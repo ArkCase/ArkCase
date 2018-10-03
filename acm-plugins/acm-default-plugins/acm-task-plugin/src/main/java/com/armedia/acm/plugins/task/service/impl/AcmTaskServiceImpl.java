@@ -27,6 +27,9 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.auth.AcmGrantedAuthoritiesMapper;
+import com.armedia.acm.auth.AcmGrantedAuthority;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -59,6 +62,8 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
 
@@ -71,7 +76,6 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,6 +84,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -105,11 +110,12 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private EcmFileService ecmFileService;
     private AcmParticipantDao acmParticipantDao;
     private ObjectAssociationService objectAssociationService;
-
     private ObjectConverter objectConverter;
+    private UserDao userDao;
+    private AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper;
 
     @Override
-    public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId) throws AcmTaskException
+    public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId)
     {
         Map<String, Object> matchProcessVariables = ImmutableMap.of(
                 TaskConstants.VARIABLE_NAME_OBJECT_ID, objectId,
@@ -122,7 +128,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    public List<BuckslipProcess> getBuckslipProcessesForChildren(String parentObjectType, Long parentObjectId) throws AcmTaskException
+    public List<BuckslipProcess> getBuckslipProcessesForChildren(String parentObjectType, Long parentObjectId)
     {
         Map<String, Object> matchProcessVariables = ImmutableMap.of(
                 TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId,
@@ -465,7 +471,11 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 AcmContainer container = task.getContainer() != null ? task.getContainer()
                         : getAcmContainerDao().findFolderByObjectTypeAndId(task.getObjectType(), task.getId());
 
-                Authentication auth = new UsernamePasswordAuthenticationToken(container.getCreator(), container.getCreator());
+                AcmUser creator = userDao.findByUserId(container.getCreator());
+                Collection<AcmGrantedAuthority> authorityGroups = acmGrantedAuthoritiesMapper.getAuthorityGroups(creator);
+                Collection<AcmGrantedAuthority> grantedAuthorities = acmGrantedAuthoritiesMapper.mapAuthorities(authorityGroups);
+                Authentication auth = new AcmAuthentication(grantedAuthorities, container.getCreator(), null,
+                        true, container.getCreator(), creator.getIdentifier());
 
                 AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
 
@@ -686,5 +696,25 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
+    public AcmGrantedAuthoritiesMapper getAcmGrantedAuthoritiesMapper()
+    {
+        return acmGrantedAuthoritiesMapper;
+    }
+
+    public void setAcmGrantedAuthoritiesMapper(AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper)
+    {
+        this.acmGrantedAuthoritiesMapper = acmGrantedAuthoritiesMapper;
     }
 }
