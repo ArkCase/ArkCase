@@ -31,10 +31,14 @@ import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModule;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModuleProvider;
 import com.armedia.acm.services.users.dao.UserDao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
 
 public class AcmUsersStateProvider implements StateOfModuleProvider
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private UserDao userDao;
 
     @Override
@@ -53,7 +57,15 @@ public class AcmUsersStateProvider implements StateOfModuleProvider
     public StateOfModule getModuleState(LocalDate day)
     {
         AcmUsersState acmUsersState = new AcmUsersState();
-        acmUsersState.setNumberOfUsers(userDao.getUserCount(day.atTime(23, 59, 59)));
+        try
+        {
+            acmUsersState.setNumberOfUsers(userDao.getUserCount(day.atTime(23, 59, 59)));
+        }
+        catch (Exception e)
+        {
+            log.error("Not able to provide users state.", e.getMessage());
+            acmUsersState.addProperty("error", "Not able to provide status." + e.getMessage());
+        }
         return acmUsersState;
     }
 

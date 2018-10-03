@@ -31,12 +31,16 @@ import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModule;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModuleProvider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 public class AcmLoginStateProvider implements StateOfModuleProvider
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     public static final String COM_ARMEDIA_ACM_LOGIN_STATE = "com.armedia.acm.login";
     private AuditDao auditDao;
 
@@ -56,12 +60,20 @@ public class AcmLoginStateProvider implements StateOfModuleProvider
     public StateOfModule getModuleState(LocalDate day)
     {
         AcmLoginState acmLoginState = new AcmLoginState();
-        LocalDateTime now = LocalDate.now().atStartOfDay();
-        LocalDateTime to = day.atTime(23, 59, 59);
-        acmLoginState.setTotalLoginPastSevenDays(auditDao.getCountAuditEventSince(COM_ARMEDIA_ACM_LOGIN_STATE,
-                now.minus(7, ChronoUnit.DAYS), to));
-        acmLoginState.setTotalLoginPastThirtyDays(auditDao.getCountAuditEventSince(COM_ARMEDIA_ACM_LOGIN_STATE,
-                now.minus(30, ChronoUnit.DAYS), to));
+        try
+        {
+            LocalDateTime now = LocalDate.now().atStartOfDay();
+            LocalDateTime to = day.atTime(23, 59, 59);
+            acmLoginState.setTotalLoginPastSevenDays(auditDao.getCountAuditEventSince(COM_ARMEDIA_ACM_LOGIN_STATE,
+                    now.minus(7, ChronoUnit.DAYS), to));
+            acmLoginState.setTotalLoginPastThirtyDays(auditDao.getCountAuditEventSince(COM_ARMEDIA_ACM_LOGIN_STATE,
+                    now.minus(30, ChronoUnit.DAYS), to));
+        }
+        catch (Exception e)
+        {
+            log.error("Not able to provide login state.", e.getMessage());
+            acmLoginState.addProperty("error", "Not able to provide status." + e.getMessage());
+        }
         return acmLoginState;
     }
 
