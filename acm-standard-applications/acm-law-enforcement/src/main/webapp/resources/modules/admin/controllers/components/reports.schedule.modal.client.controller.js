@@ -34,7 +34,7 @@ angular.module('admin').controller('Admin.ReportsScheduleModalController',
 
                         var element = new Object;
                         element.label = report["title"];
-                        element.value = report["propertyName"];
+                        element.value = report["name"];
 
                     $scope.reportTypesList.push(element);
 

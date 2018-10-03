@@ -52,7 +52,7 @@
                     "type": "date",
                     "displayName": "notifications.comp.grid.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{(row.entity.action_date_tdt || row.entity.modified_date_tdt) | date : 'short' }}</div>"
+                    "cellTemplate": "<div>{{(row.entity.modified_date_tdt || row.entity.action_date_tdt) | date : 'short' }}</div>"
                 }
             ],
             "paginationPageSizes": [
