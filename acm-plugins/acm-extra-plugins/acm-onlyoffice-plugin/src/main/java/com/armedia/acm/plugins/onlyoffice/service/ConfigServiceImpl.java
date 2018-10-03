@@ -113,13 +113,17 @@ public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin
         if (document.getPermissions() == null)
         {
             boolean reviewPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
-                    "write|group-write");
+                    "reviewOnlyOfficeDocument");
+            boolean commentPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
+                    "commentOnlyOfficeDocument");
             boolean writePermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
-                    "write|group-write");
-            boolean downloadPermission = false;// FIXME hardcoded
-            boolean printPermission = true;// FIXME hardcoded
+                    "editOnlyOfficeDocument");
+            boolean downloadPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
+                    "downloadOnlyOfficeDocument");
+            boolean printPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
+                    "printOnlyOfficeDocument");
             document.setPermissions(new DocumentPermissions(
-                    reviewPermission,
+                    commentPermission,
                     downloadPermission,
                     writePermission,
                     printPermission,
