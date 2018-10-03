@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.stateofarkcaseplugin.service;
  */
 
 import com.armedia.acm.service.stateofarkcase.exceptions.ErrorLogFileException;
+import com.armedia.acm.service.stateofarkcase.exceptions.StateOfArkcaseReportException;
 import com.armedia.acm.service.stateofarkcase.model.StateOfArkcase;
 import com.armedia.acm.service.stateofarkcase.service.ErrorsLogFileService;
 import com.armedia.acm.service.stateofarkcase.service.StateOfArkcaseReportGenerator;
@@ -68,6 +69,12 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
     @Override
     public File generateReportForDay(LocalDate day)
     {
+        if (LocalDate.now().isBefore(day))
+        {
+            // no report for tomorrow
+            throw new StateOfArkcaseReportException("Can't generate report for day in future.");
+
+        }
         StateOfArkcase stateOfArkcase = stateOfArkcaseReportGenerator.generateReport(LocalDate.now());
 
         String stateReportName = String.format("state-of-arkcase-%s", day.format(DateTimeFormatter.ISO_DATE));
@@ -113,13 +120,25 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
             // copy error log if not null
             if (errorsLogFile != null)
             {
-                // errors log file input stream, append closing brackets to the json and combine both input streams
-                try (InputStream fis = new FileInputStream(errorsLogFile);
-                        InputStream bais = new ByteArrayInputStream("]".getBytes());
-                        SequenceInputStream sis = new SequenceInputStream(fis, bais))
+                if (LocalDate.now().equals(day))
                 {
-                    Files.copy(sis, zipfs.getPath(errorsLogName),
-                            StandardCopyOption.REPLACE_EXISTING);
+                    // log file for today is not complete and needs to be closed in order json to be valid
+                    // errors log file input stream, append closing brackets to the json and combine both input streams
+                    try (InputStream fis = new FileInputStream(errorsLogFile);
+                            InputStream bais = new ByteArrayInputStream("]".getBytes());
+                            SequenceInputStream sis = new SequenceInputStream(fis, bais))
+                    {
+                        Files.copy(sis, zipfs.getPath(errorsLogName),
+                                StandardCopyOption.REPLACE_EXISTING);
+                    }
+                }
+                else
+                {
+                    try (InputStream fis = new FileInputStream(errorsLogFile))
+                    {
+                        Files.copy(fis, zipfs.getPath(errorsLogName),
+                                StandardCopyOption.REPLACE_EXISTING);
+                    }
                 }
             }
         }
