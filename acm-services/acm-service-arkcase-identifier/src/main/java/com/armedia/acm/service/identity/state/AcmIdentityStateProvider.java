@@ -37,6 +37,8 @@ import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModuleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDate;
 
 public class AcmIdentityStateProvider implements StateOfModuleProvider
@@ -79,13 +81,15 @@ public class AcmIdentityStateProvider implements StateOfModuleProvider
     private String getDomainName() throws AcmIdentityException
     {
         String baseUrl = acmApplication.getBaseUrl();
-        if (baseUrl == null || !baseUrl.contains("//") || !baseUrl.contains("/arkcase"))
+        try
         {
-            throw new AcmIdentityException("Can't parse base url[" + baseUrl + "]");
+            URL url = new URL(baseUrl);
+            return url.getHost();
         }
-        int start = baseUrl.indexOf("//") + 2;
-        int end = baseUrl.indexOf("/arkcase");
-        return baseUrl.substring(start, end);
+        catch (MalformedURLException e)
+        {
+            throw new AcmIdentityException("Can't parse base url[" + baseUrl + "]", e);
+        }
     }
 
     public void setAcmArkcaseIdentityService(AcmArkcaseIdentityService acmArkcaseIdentityService)
