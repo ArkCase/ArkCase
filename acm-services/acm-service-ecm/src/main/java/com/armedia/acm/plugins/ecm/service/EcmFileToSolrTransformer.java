@@ -67,6 +67,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     private ArkCaseBeanUtils arkCaseBeanUtils = new ArkCaseBeanUtils();
     // whether to index file contents or just store document-related metadata
     private Boolean enableContentFileIndexing;
+    private Boolean enableDocumentACL;
     private AcmDataService acmDataService;
 
     @Override
@@ -155,7 +156,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
     private void mapParentAclProperties(SolrBaseDocument doc, EcmFile in)
     {
-        if (in.getParentObjectType() != null)
+        if (!enableDocumentACL && in.getParentObjectType() != null)
         {
             AcmAbstractDao<AcmObject> parentDAO = acmDataService.getDaoByObjectType(in.getParentObjectType());
             AcmObject parent = parentDAO.find(in.getParentObjectId());
@@ -340,6 +341,16 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     public void setEnableContentFileIndexing(Boolean enableContentFileIndexing)
     {
         this.enableContentFileIndexing = enableContentFileIndexing;
+    }
+
+    public Boolean getEnableDocumentACL()
+    {
+        return enableDocumentACL;
+    }
+
+    public void setEnableDocumentACL(Boolean enableDocumentACL)
+    {
+        this.enableDocumentACL = enableDocumentACL;
     }
 
     public UserDao getUserDao()
