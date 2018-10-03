@@ -364,6 +364,7 @@
     },
     "cases.comp.change.status": {
         "title": "hi_Change Case Status",
+        "description.label": "hi_Description",
         "information": {
             "title": "hi_Change Case Status Information",
             "date": "hi_Change Date",
@@ -380,10 +381,10 @@
         },
         "approver": {
             "placeholder": "hi_Select Approver",
-            "label": "hi_Select Approver",
+            "label": "hi_Approver",
             "addAnother": "hi_Add another",
             "remove": "hi_Remove Approver",
-            "pickerModal.header": "hi_Choose Approver"
+            "pickerModal.header": "hi_Search for User"
         },
         "button": {
             "cancel": "hi_Cancel",

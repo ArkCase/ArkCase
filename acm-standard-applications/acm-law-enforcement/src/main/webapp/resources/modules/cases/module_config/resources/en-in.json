@@ -363,6 +363,7 @@
     },
     "cases.comp.change.status": {
         "title": "Change Case Status",
+        "description.label": "Description",
         "information": {
             "title": "Change Case Status Information",
             "date": "Change Date",
@@ -379,10 +380,10 @@
         },
         "approver": {
             "placeholder": "Select Approver",
-            "label": "Select Approver",
+            "label": "Approver",
             "addAnother": "Add another",
             "remove": "Remove Approver",
-            "pickerModal.header": "Choose Approver"
+            "pickerModal.header": "Search for User"
         },
         "button": {
             "cancel": "Cancel",
