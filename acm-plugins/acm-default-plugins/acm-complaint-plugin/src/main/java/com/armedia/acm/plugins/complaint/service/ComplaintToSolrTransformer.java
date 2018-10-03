@@ -29,10 +29,10 @@ package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper;
+import com.armedia.acm.plugins.task.model.TaskConstants;
+import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
-import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
@@ -42,8 +42,6 @@ import com.armedia.acm.services.users.model.AcmUser;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import javax.persistence.FlushModeType;
 
 import java.util.Date;
 import java.util.List;
@@ -55,7 +53,8 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
 {
     private UserDao userDao;
     private ComplaintDao complaintDao;
-    private EcmFileDao fileDao;
+    private TaskDao taskDao;
+    private FileAclSolrUpdateHelper fileAclSolrUpdateHelper;
     private SearchAccessControlFields searchAccessControlFields;
 
     @Override
@@ -90,7 +89,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setIncident_type_lcs(in.getComplaintType());
         solr.setStatus_lcs(in.getStatus());
 
-        String assigneeUserId = findAssigneeUserId(in);
+        String assigneeUserId = ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants());
         solr.setAssignee_id_lcs(assigneeUserId);
 
         solr.setTitle_parseable_lcs(in.getComplaintTitle());
@@ -156,7 +155,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
             solr.setDisposition_id_s(in.getDisposition().getId() + "-" + in.getDisposition().getObjectType());
         }
 
-        String assigneeUserId = findAssigneeUserId(in);
+        String assigneeUserId = ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants());
         solr.setAssignee_s(assigneeUserId);
 
         // needed a _lcs property for sorting
@@ -164,33 +163,17 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         return solr;
     }
 
-    private String findAssigneeUserId(Complaint in)
-    {
-        if (in.getParticipants() != null)
-        {
-            for (AcmParticipant participant : in.getParticipants())
-            {
-                if ("assignee".equals(participant.getParticipantType()))
-                {
-                    return participant.getParticipantLdapId();
-                }
-            }
-        }
-
-        return null;
-    }
-
     @Override
     public JSONArray childrenUpdatesToSolr(Complaint in)
     {
-        List<EcmFile> filesPerContainer = fileDao.findForContainer(in.getContainer().getId(), FlushModeType.COMMIT);
-        JSONArray updates = new JSONArray();
-        filesPerContainer.forEach(it -> {
-            JSONObject doc = searchAccessControlFields.buildParentAccessControlFieldsUpdate(in,
-                    String.format("%s-%s", it.getId(), it.getObjectType()));
-            updates.put(doc);
+        JSONArray docUpdates = fileAclSolrUpdateHelper.buildFileAclUpdates(in.getContainer().getId(), in);
+        List<Long> childTasksIds = taskDao.findTasksIdsForParentObjectIdAndParentObjectType(in.getObjectType(), in.getId());
+        childTasksIds.forEach(it -> {
+            JSONObject doc = searchAccessControlFields.buildParentAccessControlFieldsUpdate(in, String.format("%d-%s", it,
+                    TaskConstants.OBJECT_TYPE));
+            docUpdates.put(doc);
         });
-        return updates;
+        return docUpdates;
     }
 
     @Override
@@ -235,14 +218,23 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         return Complaint.class;
     }
 
-    public EcmFileDao getFileDao()
+    public FileAclSolrUpdateHelper getFileAclSolrUpdateHelper()
     {
-        return fileDao;
+        return fileAclSolrUpdateHelper;
     }
 
-    public void setFileDao(EcmFileDao fileDao)
+    public void setFileAclSolrUpdateHelper(FileAclSolrUpdateHelper fileAclSolrUpdateHelper)
     {
-        this.fileDao = fileDao;
+        this.fileAclSolrUpdateHelper = fileAclSolrUpdateHelper;
     }
 
+    public TaskDao getTaskDao()
+    {
+        return taskDao;
+    }
+
+    public void setTaskDao(TaskDao taskDao)
+    {
+        this.taskDao = taskDao;
+    }
 }

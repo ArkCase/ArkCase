@@ -34,6 +34,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import javax.persistence.FlushModeType;
@@ -134,6 +135,7 @@ public class SearchAccessControlFields
     private Map<String, Long> getParticipantsToUserIdMap(List<String> participantsLdapIds)
     {
         return participantsLdapIds.stream()
+                .filter(StringUtils::isNotBlank)
                 .map(it -> userDao.findByUserId(it))
                 .filter(Objects::nonNull)
                 .distinct()
@@ -143,6 +145,7 @@ public class SearchAccessControlFields
     private Map<String, Long> getParticipantsToGroupIdMap(List<String> participantsLdapIds)
     {
         return participantsLdapIds.stream()
+                .filter(StringUtils::isNotBlank)
                 .map(it -> groupService.findByName(it, FlushModeType.COMMIT))
                 .filter(Objects::nonNull)
                 .distinct()

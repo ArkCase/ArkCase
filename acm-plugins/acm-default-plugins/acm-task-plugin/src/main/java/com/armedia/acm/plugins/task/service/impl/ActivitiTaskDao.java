@@ -567,6 +567,26 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     }
 
     @Override
+    @Transactional
+    public List<Long> findTasksIdsForParentObjectIdAndParentObjectType(String parentObjectType, Long parentObjectId)
+    {
+        List<ProcessInstance> processes = getActivitiRuntimeService().createProcessInstanceQuery()
+                .variableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, parentObjectType)
+                .variableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId).list();
+
+        List<Task> activitiTasks = processes.stream()
+                .map(it -> getActivitiTaskService().createTaskQuery()
+                        .processInstanceId(it.getProcessInstanceId())
+                        .singleResult())
+                .collect(Collectors.toList());
+
+        log.debug("Found [{}] tasks for object [{}:{}]", activitiTasks.size(), parentObjectType, parentObjectId);
+        return activitiTasks.stream()
+                .map(it -> Long.valueOf(it.getId()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<AcmTask> allTasks()
     {
         log.info("Finding all tasks for all users'");

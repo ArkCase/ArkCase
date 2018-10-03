@@ -155,6 +155,8 @@ public interface TaskDao
 
     AcmTask findById(Long taskId) throws AcmTaskException;
 
+    List<Long> findTasksIdsForParentObjectIdAndParentObjectType(String parentObjectType, Long parentObjectId);
+
     AcmTask save(AcmTask in) throws AcmTaskException;
 
     AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId, String outcomePropertyName, String outcomeId)
