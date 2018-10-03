@@ -41,4 +41,9 @@ public class StateOfArkcaseReportException extends RuntimeException
     {
         super(message, e);
     }
+
+    public StateOfArkcaseReportException(String message)
+    {
+        super(message);
+    }
 }

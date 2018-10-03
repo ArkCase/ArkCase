@@ -27,6 +27,7 @@ package com.armedia.acm.service.identity.state;
  * #L%
  */
 
+import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.service.identity.exceptions.AcmIdentityException;
 import com.armedia.acm.service.identity.model.AcmArkcaseIdentity;
 import com.armedia.acm.service.identity.service.AcmArkcaseIdentityService;
@@ -36,12 +37,15 @@ import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModuleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDate;
 
 public class AcmIdentityStateProvider implements StateOfModuleProvider
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AcmArkcaseIdentityService acmArkcaseIdentityService;
+    private AcmApplication acmApplication;
 
     @Override
     public String getModuleName()
@@ -64,16 +68,37 @@ public class AcmIdentityStateProvider implements StateOfModuleProvider
             AcmArkcaseIdentity identity = acmArkcaseIdentityService.getIdentity();
             acmIdentityState.setGlobalID(identity.getGlobalID());
             acmIdentityState.setInstanceID(identity.getInstanceID());
+            acmIdentityState.setDomain(getDomainName());
         }
         catch (AcmIdentityException e)
         {
             log.error("Not able to provide identity state.", e.getMessage());
+            acmIdentityState.addProperty("error", "Not able to provide identity state." + e.getMessage());
         }
         return acmIdentityState;
+    }
+
+    private String getDomainName() throws AcmIdentityException
+    {
+        String baseUrl = acmApplication.getBaseUrl();
+        try
+        {
+            URL url = new URL(baseUrl);
+            return url.getHost();
+        }
+        catch (MalformedURLException e)
+        {
+            throw new AcmIdentityException("Can't parse base url[" + baseUrl + "]", e);
+        }
     }
 
     public void setAcmArkcaseIdentityService(AcmArkcaseIdentityService acmArkcaseIdentityService)
     {
         this.acmArkcaseIdentityService = acmArkcaseIdentityService;
+    }
+
+    public void setAcmApplication(AcmApplication acmApplication)
+    {
+        this.acmApplication = acmApplication;
     }
 }
