@@ -175,45 +175,57 @@
             </div>
         </div>
 
-        <div class="well-sm">
-            <div class="row">
-                <div class="col-sm-5">
-                    <label for="participant">{{'complaints.comp.closeComplaint.approver.label' | translate}} <span
-                            class="required-asterisk">*</span></label>
-                </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion4" href="#collapseApprovers" translate>complaints.comp.closeComplaint.approver.label</a>
+                </h4>
             </div>
-            <div class="" ng-repeat="participant in closeComplaintRequest.participants">
-                <div class="row">
-                    <div class="col-sm-4 form-group">
-                        <input type="text" id="participant" ng-model="participant.participantLdapId"
-                                class="input-md form-control user-picker-input"
-                                placeholder="{{ 'complaints.comp.closeComplaint.approver.placeholder' | translate }}"
-                                ng-click="addApprover($index)" readonly required>
-                    </div>
-                    <div class="col-sm-4 pull-left form-group">
-                        <div class="pull-left">
-                            <button type="button" class="btn btn-link form-control" ng-click="removeApprover(participant)"
-                                    ng-show="!$first">
-                                <i class="fa fa-minus text-danger"></i><span translate>complaints.comp.closeComplaint.approver.remove</span>
-                            </button>
-                        </div>
-                        <div class="pull-left">
-                            <button type="button" class="btn btn-link form-control" ng-click="addNewApprover()"
-                                    ng-disabled="!participant.participantLdapId" ng-show="$last">
-                                <i class="fa fa-plus text-success"></i><span
-                                    translate>complaints.comp.closeComplaint.approver.addAnother</span>
-                            </button>
+            <div id="collapseApprovers" class="panel-collapse">
+                <div class="panel-body">
+                    <div class="" ng-repeat="participant in closeComplaintRequest.participants">
+                        <div class="row">
+                            <div class="col-sm-6 form-group">
+                                <input type="text" id="participant" ng-model="participant.participantFullName"
+                                        class="input-md form-control"
+                                        placeholder="{{ 'complaints.comp.closeComplaint.approver.placeholder' | translate }}"
+                                        ng-click="addApprover($index)" readonly required/>
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <div class="pull-left">
+                                    <button type="button" class="btn btn-link form-control" ng-click="removeApprover(participant)"
+                                            ng-show="!$first">
+                                        <i class="fa fa-minus text-danger"></i><span translate>complaints.comp.closeComplaint.approver.remove</span>
+                                    </button>
+                                </div>
+                                <div class="pull-left">
+                                    <button type="button" class="btn btn-link form-control" ng-click="addNewApprover()"
+                                            ng-disabled="!participant.participantLdapId" ng-show="$last">
+                                        <i class="fa fa-plus text-success"></i><span
+                                            translate>complaints.comp.closeComplaint.approver.addAnother</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="well-sm">
-            <div class="row">
-                <div class="col-sm-12 form-group">
-                    <span class="required-asterisk" ng-show="isDescriptionRequired">*</span>
-                    <summernote id="complaintDesc" config="options" ng-model="description" ng-required="isDescriptionRequired"></summernote>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion45" href="#collapseDesc" translate>complaints.comp.closeComplaint.description.label</a>
+                </h4>
+            </div>
+            <div id="collapseDesc" class="panel-collapse">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <span class="required-asterisk" ng-show="isDescriptionRequired">*</span>
+                            <summernote id="complaintDesc" config="options" ng-model="description" ng-required="isDescriptionRequired"></summernote>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

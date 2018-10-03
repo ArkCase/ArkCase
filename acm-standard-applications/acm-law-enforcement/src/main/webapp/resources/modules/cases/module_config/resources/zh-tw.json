@@ -364,6 +364,7 @@
     },
     "cases.comp.change.status": {
         "title": "zh-tw_Change Case Status",
+        "description.label": "zh-tw_Description",
         "information": {
             "title": "zh-tw_Change Case Status Information",
             "date": "zh-tw_Change Date",
@@ -380,10 +381,10 @@
         },
         "approver": {
             "placeholder": "zh-tw_Select Approver",
-            "label": "zh-tw_Select Approver",
+            "label": "zh-tw_Approver",
             "addAnother": "zh-tw_Add another",
             "remove": "zh-tw_Remove Approver",
-            "pickerModal.header": "zh-tw_Choose Approver"
+            "pickerModal.header": "zh-tw_Search for User"
         },
         "button": {
             "cancel": "zh-tw_Cancel",

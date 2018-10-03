@@ -364,6 +364,7 @@
     },
     "cases.comp.change.status": {
         "title": "zh-cn_Change Case Status",
+        "description.label": "zh-cn_Description",
         "information": {
             "title": "zh-cn_Change Case Status Information",
             "date": "zh-cn_Change Date",
@@ -380,10 +381,10 @@
         },
         "approver": {
             "placeholder": "zh-cn_Select Approver",
-            "label": "zh-cn_Select Approver",
+            "label": "zh-cn_Approver",
             "addAnother": "zh-cn_Add another",
             "remove": "zh-cn_Remove Approver",
-            "pickerModal.header": "zh-cn_Choose Approver"
+            "pickerModal.header": "zh-cn_Search for User"
         },
         "button": {
             "cancel": "zh-cn_Cancel",
