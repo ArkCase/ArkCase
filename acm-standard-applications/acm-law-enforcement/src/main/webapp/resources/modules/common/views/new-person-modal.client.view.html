@@ -403,7 +403,7 @@
                                 <label>
                                     {{'common.newPerson.communicationAccounts.' + caType |
                                     translate}} </label>
-                                <input type="text" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
+                                <input type="{{caType}}" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
                                         class="input-md form-control"
                                         placeholder="{{ 'common.newPerson.communicationAccounts.' + caType + '.placeholder' | translate }}">
                             </div>
@@ -434,7 +434,7 @@
                                 <label>
                                     {{'common.newPerson.communicationAccounts.' + caType |
                                     translate}} </label>
-                                <input type="text" ng-model="contactMethod.value" required="required" class="input-md form-control"
+                                <input type="{{contactMethod.type}}" ng-model="contactMethod.value" required="required" class="input-md form-control"
                                         placeholder="{{ 'common.newPerson.communicationAccounts.'+ caType +'.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4">
