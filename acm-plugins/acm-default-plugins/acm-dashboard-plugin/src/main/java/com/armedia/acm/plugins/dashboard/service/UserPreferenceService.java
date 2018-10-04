@@ -64,7 +64,12 @@ public class UserPreferenceService
     public PreferredWidgetsDto updateUserPreferenceWidgets(String userId, PreferredWidgetsDto preferredWidgets, String ipAddress)
             throws AcmObjectNotFoundException
     {
-        List<Widget> widgetList = createWidgetList(preferredWidgets.getPreferredWidgets());
+        List<Widget> widgetList;
+        if(preferredWidgets.getPreferredWidgets().size() == 0){
+            widgetList = java.util.Collections.emptyList();
+        }else {
+            widgetList = createWidgetList(preferredWidgets.getPreferredWidgets());
+        }
         List<UserPreference> upList = null;
         Module module;
         AcmUser user;
