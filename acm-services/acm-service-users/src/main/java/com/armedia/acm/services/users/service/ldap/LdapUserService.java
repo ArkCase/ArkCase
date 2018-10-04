@@ -320,11 +320,12 @@ public class LdapUserService implements ApplicationEventPublisherAware
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
 
         Set<String> groupsDnToUpdate = new HashSet<>();
+        String controlGroup = ldapSyncConfig.getUserControlGroup();
 
         // prevent removing the user from the control group if configured
-        if (groups.contains(ldapSyncConfig.getUserControlGroup()))
+        if (groups.contains(controlGroup))
         {
-            throw new AcmLdapActionFailedException("Can't remove user from configured user control group");
+            throw new AcmLdapActionFailedException(String.format("'%s' group is a required system group and can't be removed.", controlGroup));
         }
 
         for (String groupName : groups)
