@@ -349,6 +349,7 @@
     "complaints.comp.closeComplaint": {
         "title": "Close Complaint",
         "info": "Incident Information",
+        "description.label": "Description",
         "infoMessage": "Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
         "complaintTitle": "Complaint Title",
         "information": {
@@ -380,10 +381,10 @@
         },
         "approver": {
             "placeholder": "Select Approver",
-            "label": "Select Approver",
+            "label": "Approver",
             "addAnother": "Add another",
             "remove": "Remove Approver",
-            "pickerModal.header": "Choose Approver"
+            "pickerModal.header": "Search for User"
         },
         "cancelButton": "Cancel",
         "saveButton": "Save Complaint"
