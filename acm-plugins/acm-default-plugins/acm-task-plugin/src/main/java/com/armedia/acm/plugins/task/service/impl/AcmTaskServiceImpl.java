@@ -28,8 +28,7 @@ package com.armedia.acm.plugins.task.service.impl;
  */
 
 import com.armedia.acm.auth.AcmAuthentication;
-import com.armedia.acm.auth.AcmGrantedAuthoritiesMapper;
-import com.armedia.acm.auth.AcmGrantedAuthority;
+import com.armedia.acm.auth.AcmAuthenticationManager;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -62,8 +61,6 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
 
@@ -76,6 +73,8 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,7 +83,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -112,8 +110,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private AcmParticipantDao acmParticipantDao;
     private ObjectAssociationService objectAssociationService;
     private ObjectConverter objectConverter;
-    private UserDao userDao;
-    private AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper;
+    private AcmAuthenticationManager authenticationManager;
 
     @Override
     public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId)
@@ -472,22 +469,20 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 AcmContainer container = task.getContainer() != null ? task.getContainer()
                         : getAcmContainerDao().findFolderByObjectTypeAndId(task.getObjectType(), task.getId());
 
-                String creatorId = container.getCreator();
-                AcmUser creator = userDao.findByUserId(creatorId);
-                Authentication auth;
-                if (creator == null)
+                String principal = container.getCreator();
+                AcmAuthentication authentication;
+                try
                 {
-                    auth = new AcmAuthentication(Collections.EMPTY_SET, creatorId, null, true, creatorId);
+                    authentication = authenticationManager.getAcmAuthentication(
+                            new UsernamePasswordAuthenticationToken(principal, principal));
                 }
-                else
+                catch (AuthenticationServiceException e)
                 {
-                    Collection<AcmGrantedAuthority> authorityGroups = acmGrantedAuthoritiesMapper.getAuthorityGroups(creator);
-                    Collection<AcmGrantedAuthority> grantedAuthorities = acmGrantedAuthoritiesMapper.mapAuthorities(authorityGroups);
-                    auth = new AcmAuthentication(grantedAuthorities, container.getCreator(), null,
-                            true, container.getCreator(), creator.getIdentifier());
+                    authentication = new AcmAuthentication(Collections.emptySet(), principal, "",
+                            true, principal);
                 }
 
-                AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
+                AcmCmisObjectList files = getEcmFileService().allFilesForContainer(authentication, container);
 
                 if (files != null && files.getChildren() != null && files.getTotalChildren() > 0)
                 {
@@ -708,23 +703,13 @@ public class AcmTaskServiceImpl implements AcmTaskService
         this.objectConverter = objectConverter;
     }
 
-    public UserDao getUserDao()
+    public AcmAuthenticationManager getAuthenticationManager()
     {
-        return userDao;
+        return authenticationManager;
     }
 
-    public void setUserDao(UserDao userDao)
+    public void setAuthenticationManager(AcmAuthenticationManager authenticationManager)
     {
-        this.userDao = userDao;
-    }
-
-    public AcmGrantedAuthoritiesMapper getAcmGrantedAuthoritiesMapper()
-    {
-        return acmGrantedAuthoritiesMapper;
-    }
-
-    public void setAcmGrantedAuthoritiesMapper(AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper)
-    {
-        this.acmGrantedAuthoritiesMapper = acmGrantedAuthoritiesMapper;
+        this.authenticationManager = authenticationManager;
     }
 }
