@@ -186,7 +186,7 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
             onSuccess: function(data) {
                 if (Service.validateComplaintInfo(data)) {
                     complaintCache.put(complaintGetUrl + data.complaintId, data);
-                    return complaintInfo;
+                    return data;
                 }
             }
         });
@@ -218,7 +218,7 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
             onSuccess: function(data) {
                 if (Service.validateComplaintInfo(data)) {
                     complaintCache.put(complaintGetUrl + data.complaintId, data);
-                    return complaintInfo;
+                    return data;
                 }
             }
         });
