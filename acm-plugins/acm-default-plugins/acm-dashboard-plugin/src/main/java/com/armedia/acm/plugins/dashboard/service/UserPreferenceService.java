@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,9 +66,12 @@ public class UserPreferenceService
             throws AcmObjectNotFoundException
     {
         List<Widget> widgetList;
-        if(preferredWidgets.getPreferredWidgets().size() == 0){
-            widgetList = java.util.Collections.emptyList();
-        }else {
+        if (preferredWidgets.getPreferredWidgets().isEmpty())
+        {
+            widgetList = Collections.emptyList();
+        }
+        else
+        {
             widgetList = createWidgetList(preferredWidgets.getPreferredWidgets());
         }
         List<UserPreference> upList = null;
