@@ -85,6 +85,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -471,11 +472,20 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 AcmContainer container = task.getContainer() != null ? task.getContainer()
                         : getAcmContainerDao().findFolderByObjectTypeAndId(task.getObjectType(), task.getId());
 
-                AcmUser creator = userDao.findByUserId(container.getCreator());
-                Collection<AcmGrantedAuthority> authorityGroups = acmGrantedAuthoritiesMapper.getAuthorityGroups(creator);
-                Collection<AcmGrantedAuthority> grantedAuthorities = acmGrantedAuthoritiesMapper.mapAuthorities(authorityGroups);
-                Authentication auth = new AcmAuthentication(grantedAuthorities, container.getCreator(), null,
-                        true, container.getCreator(), creator.getIdentifier());
+                String creatorId = container.getCreator();
+                AcmUser creator = userDao.findByUserId(creatorId);
+                Authentication auth;
+                if (creator == null)
+                {
+                    auth = new AcmAuthentication(Collections.EMPTY_SET, creatorId, null, true, creatorId);
+                }
+                else
+                {
+                    Collection<AcmGrantedAuthority> authorityGroups = acmGrantedAuthoritiesMapper.getAuthorityGroups(creator);
+                    Collection<AcmGrantedAuthority> grantedAuthorities = acmGrantedAuthoritiesMapper.mapAuthorities(authorityGroups);
+                    auth = new AcmAuthentication(grantedAuthorities, container.getCreator(), null,
+                            true, container.getCreator(), creator.getIdentifier());
+                }
 
                 AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
 
