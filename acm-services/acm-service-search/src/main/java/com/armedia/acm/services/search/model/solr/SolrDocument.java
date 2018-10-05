@@ -78,6 +78,12 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
     private List<Long> deny_user_ls;
     private List<Long> allow_group_ls;
     private List<Long> deny_group_ls;
+
+    private List<Long> parent_allow_user_ls;
+    private List<Long> parent_deny_user_ls;
+    private List<Long> parent_allow_group_ls;
+    private List<Long> parent_deny_group_ls;
+
     private Long parent_object_id_i;
 
     ////////////////// disposition id and type //////////////////////////////////////
@@ -668,6 +674,50 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.deny_group_ls = deny_group_ls;
     }
 
+    public List<Long> getParent_allow_user_ls()
+    {
+        return parent_allow_user_ls;
+    }
+
+    @Override
+    public void setParent_allow_user_ls(List<Long> parent_allow_user_ls)
+    {
+        this.parent_allow_user_ls = parent_allow_user_ls;
+    }
+
+    public List<Long> getParentDenyUser_ls()
+    {
+        return parent_deny_user_ls;
+    }
+
+    @Override
+    public void setParent_deny_user_ls(List<Long> parent_deny_user_ls)
+    {
+        this.parent_deny_user_ls = parent_deny_user_ls;
+    }
+
+    public List<Long> getParent_allow_group_ls()
+    {
+        return parent_allow_group_ls;
+    }
+
+    @Override
+    public void setParent_allow_group_ls(List<Long> parent_allow_group_ls)
+    {
+        this.parent_allow_group_ls = parent_allow_group_ls;
+    }
+
+    public List<Long> getParent_deny_group_ls()
+    {
+        return parent_deny_group_ls;
+    }
+
+    @Override
+    public void setParent_deny_group_ls(List<Long> parent_deny_group_ls)
+    {
+        this.parent_deny_group_ls = parent_deny_group_ls;
+    }
+
     @Override
     public String toString()
     {
@@ -702,6 +752,10 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
                 + ", deny_user_ls=" + deny_user_ls
                 + ", allow_group_ls=" + allow_group_ls
                 + ", deny_group_ls=" + deny_group_ls
+                + ", parent_allow_user_ls=" + parent_allow_user_ls
+                + ", parent_deny_user_ls=" + parent_deny_user_ls
+                + ", parent_allow_group_ls=" + parent_allow_group_ls
+                + ", parent_deny_group_ls=" + parent_deny_group_ls
                 + ", parent_object_id_i=" + parent_object_id_i
                 + ", disposition_id_s='" + disposition_id_s + '\''
                 + ", disposition_type_s='" + disposition_type_s + '\''

@@ -75,7 +75,6 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
     private AcmGrantedAuthoritiesMapper mockAuthoritiesMapper;
     private DefaultAuthenticationEventPublisher mockEventPublisher;
     private UserDao mockUserDao;
-    private GroupService mockGroupService;
 
     @Before
     public void setUp() throws Exception
@@ -87,7 +86,6 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         mockAuthoritiesMapper = createMock(AcmGrantedAuthoritiesMapper.class);
         mockEventPublisher = createMock(DefaultAuthenticationEventPublisher.class);
         mockUserDao = createMock(UserDao.class);
-        mockGroupService = createMock(GroupService.class);
 
         unit = new AcmAuthenticationManager();
 
@@ -95,7 +93,6 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         unit.setAuthoritiesMapper(mockAuthoritiesMapper);
         unit.setAuthenticationEventPublisher(mockEventPublisher);
         unit.setUserDao(mockUserDao);
-        unit.setGroupService(mockGroupService);
     }
 
     @Test
@@ -133,7 +130,7 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         expect(mockFirstProvider.authenticate(mockAuthentication)).andReturn(successAuthentication);
         expect(mockAuthoritiesMapper.mapAuthorities(authsFromProvider)).andReturn(authsFromMapper);
         expect(mockUserDao.findByUserId(user.getUserId())).andReturn(user);
-        expect(mockGroupService.findByUserMember(user)).andReturn(groups);
+        expect(mockAuthoritiesMapper.getAuthorityGroups(user)).andReturn(authsGroups);
         expect(mockAuthoritiesMapper.mapAuthorities(authsGroups)).andReturn(authsGroups);
         expect(mockAuthentication.getName()).andReturn(user.getUserId());
 
