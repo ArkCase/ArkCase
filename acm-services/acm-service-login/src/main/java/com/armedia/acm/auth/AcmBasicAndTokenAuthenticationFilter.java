@@ -27,7 +27,6 @@ package com.armedia.acm.auth;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
@@ -41,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -215,7 +215,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                             log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
                                     authenticationToken.getCreator(), emailToken);
                         }
-                        catch (AcmNotAuthorizedException e)
+                        catch (AuthenticationServiceException e)
                         {
                             log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
                                     emailToken);
@@ -242,7 +242,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         {
             return;
         }
-        // extract userId (Common Name attribute) from the certifcate
+        // extract userId (Common Name attribute) from the certificate
         X509PrincipalExtractor principalExtractor = new SubjectDnX509PrincipalExtractor();
         String userId = (String) principalExtractor.extractPrincipal(clientCert);
         try
@@ -250,7 +250,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             authenticateUser(request, userId);
             log.trace("User [{}] successfully authenticated using client certificate", userId);
         }
-        catch (AcmNotAuthorizedException e)
+        catch (AuthenticationServiceException e)
         {
             log.warn("User [{}] failed authenticating using client certificate", userId);
         }
@@ -282,18 +282,19 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
      * @param userId
      *            user identifier
      */
-    private void authenticateUser(HttpServletRequest request, String userId) throws AcmNotAuthorizedException
+    private void authenticateUser(HttpServletRequest request, String userId)
     {
         AcmUser user = userDao.findByUserId(userId);
         if (user == null)
         {
             log.debug("User with id:[{}] does not exist.", userId);
-            throw new AcmNotAuthorizedException("authenticate user");
+            throw new AuthenticationServiceException("Provided credentials are not valid");
         }
         Collection<AcmGrantedAuthority> authorityGroups = acmGrantedAuthoritiesMapper.getAuthorityGroups(user);
         Collection<AcmGrantedAuthority> grantedAuthorities = acmGrantedAuthoritiesMapper.mapAuthorities(authorityGroups);
-        Authentication authentication = new AcmAuthentication(grantedAuthorities, userId, null, true, userId, user.getIdentifier());
+        grantedAuthorities.addAll(authorityGroups);
 
+        Authentication authentication = new AcmAuthentication(grantedAuthorities, userId, null, true, userId, user.getIdentifier());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         loginSuccessOperations.onSuccessfulAuthentication(request, authentication);

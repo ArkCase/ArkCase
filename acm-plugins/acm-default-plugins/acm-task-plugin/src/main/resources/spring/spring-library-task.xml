@@ -142,8 +142,7 @@
         <property name="objectAssociationService" ref="objectAssociationService"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
         <property name="objectConverter" ref="objectConverter"/>
-        <property name="acmGrantedAuthoritiesMapper" ref="acmAuthoritiesMapper"/>
-        <property name="userDao" ref="userJpaDao"/>
+        <property name="authenticationManager" ref="acmAuthenticationManager"/>
     </bean>
 
     <bean id="acmApplicationTaskEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">

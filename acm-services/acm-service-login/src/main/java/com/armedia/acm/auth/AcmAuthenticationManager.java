@@ -30,8 +30,6 @@ package com.armedia.acm.auth;
 import com.armedia.acm.auth.okta.model.OktaAPIConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -47,10 +45,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Cycle through the configured authentication provider. If one of them works, map the provider's groups to ACM groups.
@@ -148,9 +143,14 @@ public class AcmAuthenticationManager implements AuthenticationManager
         throw new NoProviderFoundException("Authentication problem. Please contact your administrator.");
     }
 
-    protected AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
+    public AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
     {
         AcmUser user = getUserDao().findByUserId(providerAuthentication.getName());
+
+        if (user == null)
+        {
+            throw new AuthenticationServiceException("Provided credentials are not valid");
+        }
 
         Collection<AcmGrantedAuthority> acmAuths = getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
 
