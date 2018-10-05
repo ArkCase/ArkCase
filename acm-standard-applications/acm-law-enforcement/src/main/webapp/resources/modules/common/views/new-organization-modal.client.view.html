@@ -396,7 +396,7 @@
                                 <label>
                                     {{'common.newOrganization.communicationAccounts.' + caType |
                                     translate}} </label>
-                                <input type="text" ng-model="contactMethod.value" required="required" class="input-md form-control"
+                                <input type="{{contactMethod.type}}" ng-model="contactMethod.value" required="required" class="input-md form-control"
                                         placeholder="{{ 'common.newOrganization.communicationAccounts.'+ caType +'.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4">
