@@ -33,6 +33,8 @@ import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
+import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.auth.AcmAuthenticationManager;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -42,8 +44,10 @@ import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import java.util.Collections;
 import java.util.Date;
 
 public class AcmCaseFileClosedListenerTest extends EasyMockSupport
@@ -51,6 +55,7 @@ public class AcmCaseFileClosedListenerTest extends EasyMockSupport
     private AcmCaseFileClosedListener unit;
     private AlfrescoRecordsService mockService;
     private Authentication mockAuthentication;
+    private AcmAuthenticationManager mockAuthenticationManager;
 
     @Before
     public void setUp()
@@ -58,8 +63,10 @@ public class AcmCaseFileClosedListenerTest extends EasyMockSupport
         unit = new AcmCaseFileClosedListener();
         mockService = createMock(AlfrescoRecordsService.class);
         mockAuthentication = createMock(Authentication.class);
+        mockAuthenticationManager = createMock(AcmAuthenticationManager.class);
 
         unit.setAlfrescoRecordsService(mockService);
+        unit.setAuthenticationManager(mockAuthenticationManager);
     }
 
     @Test
@@ -103,14 +110,18 @@ public class AcmCaseFileClosedListenerTest extends EasyMockSupport
         Capture<Authentication> captureAuth = Capture.newInstance();
 
         expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.CASE_CLOSE_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
+        expect(mockAuthenticationManager.getAcmAuthentication(new UsernamePasswordAuthenticationToken(user, user)))
+                .andReturn(new AcmAuthentication(Collections.emptySet(), user, "", true, user));
+
+        CaseEvent caseEvent = new CaseEvent(caseFile, "ipAddress", user,
+                AlfrescoRmaPluginConstants.CASE_CLOSED_EVENT, new Date(), true,
+                new AcmAuthentication(Collections.emptySet(), user, "", true, user));
+
         mockService.declareAllContainerFilesAsRecords(
                 capture(captureAuth),
                 eq(caseFile.getContainer()),
                 anyObject(Date.class),
                 eq(caseFile.getCaseNumber()));
-
-        CaseEvent caseEvent = new CaseEvent(caseFile, "ipAddress", user,
-                AlfrescoRmaPluginConstants.CASE_CLOSED_EVENT, new Date(), true, mockAuthentication);
 
         replayAll();
 
@@ -119,7 +130,6 @@ public class AcmCaseFileClosedListenerTest extends EasyMockSupport
         verifyAll();
 
         Authentication actual = captureAuth.getValue();
-
         assertEquals(user, actual.getName());
     }
 

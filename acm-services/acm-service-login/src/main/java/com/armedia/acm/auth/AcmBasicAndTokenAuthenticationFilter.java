@@ -31,24 +31,19 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
-import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.search.service.SearchResults;
-import com.armedia.acm.services.users.service.group.GroupService;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.json.JSONArray;
-import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
 import org.springframework.security.web.authentication.preauth.x509.SubjectDnX509PrincipalExtractor;
@@ -66,9 +61,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -91,7 +85,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     private AuthenticationTokenService authenticationTokenService;
     private MuleContextManager muleContextManager;
     private AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper;
-    private GroupService groupService;
+    private UserDao userDao;
 
     /**
      * Constructor.
@@ -221,7 +215,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                             log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
                                     authenticationToken.getCreator(), emailToken);
                         }
-                        catch (MuleException e)
+                        catch (AuthenticationServiceException e)
                         {
                             log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
                                     emailToken);
@@ -248,7 +242,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         {
             return;
         }
-        // extract userId (Common Name attribute) from the certifcate
+        // extract userId (Common Name attribute) from the certificate
         X509PrincipalExtractor principalExtractor = new SubjectDnX509PrincipalExtractor();
         String userId = (String) principalExtractor.extractPrincipal(clientCert);
         try
@@ -256,7 +250,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             authenticateUser(request, userId);
             log.trace("User [{}] successfully authenticated using client certificate", userId);
         }
-        catch (MuleException e)
+        catch (AuthenticationServiceException e)
         {
             log.warn("User [{}] failed authenticating using client certificate", userId);
         }
@@ -287,43 +281,26 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
      *            HTTP servlet request
      * @param userId
      *            user identifier
-     * @throws MuleException
-     *             on error while retrieving LDAP groups
      */
-    private void authenticateUser(HttpServletRequest request, String userId) throws MuleException
+    private void authenticateUser(HttpServletRequest request, String userId)
     {
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userId, userId);
-        String ldapGroups = groupService.getLdapGroupsForUser(usernamePasswordAuthenticationToken);
-        if (ldapGroups != null)
+        AcmUser user = userDao.findByUserId(userId);
+        if (user == null)
         {
-            SearchResults searchResults = new SearchResults();
-            JSONArray docs = searchResults.getDocuments(ldapGroups);
-            List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-            if (docs != null)
-            {
-                for (int i = 0; i < docs.length(); i++)
-                {
-                    String groupName = searchResults.extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_NAME);
-                    List<String> ascendants = searchResults.extractStringList(docs.getJSONObject(i), SearchConstants.PROPERTY_ASCENDANTS);
-                    GrantedAuthority authority = new SimpleGrantedAuthority(groupName);
-                    grantedAuthorities.add(authority);
-                    if (ascendants != null)
-                    {
-                        ascendants.stream()
-                                .map(SimpleGrantedAuthority::new)
-                                .forEach(grantedAuthorities::add);
-                    }
-                }
-            }
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userId, userId,
-                    acmGrantedAuthoritiesMapper.mapAuthorities(grantedAuthorities));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            loginSuccessOperations.onSuccessfulAuthentication(request, authentication);
-
-            InteractiveAuthenticationSuccessEvent event = new InteractiveAuthenticationSuccessEvent(authentication, getClass());
-            loginSuccessEventListener.onApplicationEvent(event);
+            log.debug("User with id:[{}] does not exist.", userId);
+            throw new AuthenticationServiceException("Provided credentials are not valid");
         }
+        Collection<AcmGrantedAuthority> authorityGroups = acmGrantedAuthoritiesMapper.getAuthorityGroups(user);
+        Collection<AcmGrantedAuthority> grantedAuthorities = acmGrantedAuthoritiesMapper.mapAuthorities(authorityGroups);
+        grantedAuthorities.addAll(authorityGroups);
+
+        Authentication authentication = new AcmAuthentication(grantedAuthorities, userId, null, true, userId, user.getIdentifier());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        loginSuccessOperations.onSuccessfulAuthentication(request, authentication);
+
+        InteractiveAuthenticationSuccessEvent event = new InteractiveAuthenticationSuccessEvent(authentication, getClass());
+        loginSuccessEventListener.onApplicationEvent(event);
     }
 
     /**
@@ -435,16 +412,6 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         this.acmGrantedAuthoritiesMapper = acmGrantedAuthoritiesMapper;
     }
 
-    public GroupService getGroupService()
-    {
-        return groupService;
-    }
-
-    public void setGroupService(GroupService groupService)
-    {
-        this.groupService = groupService;
-    }
-
     private enum AuthRequestType
     {
         AUTH_REQUEST_TYPE_TOKEN,
@@ -452,5 +419,15 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         AUTH_REQUEST_TYPE_CLIENT_CERT,
         AUTH_REQUEST_TYPE_BASIC,
         AUTH_REQUEST_TYPE_OTHER
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 }

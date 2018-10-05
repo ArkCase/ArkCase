@@ -46,6 +46,14 @@ public interface SolrBaseDocument
 
     void setAllow_group_ls(List<Long> allow_group_ls);
 
+    void setParent_deny_user_ls(List<Long> parent_deny_user_ls);
+
+    void setParent_allow_user_ls(List<Long> parent_allow_user_ls);
+
+    void setParent_deny_group_ls(List<Long> parent_deny_group_ls);
+
+    void setParent_allow_group_ls(List<Long> parent_allow_group_ls);
+
     void setPublic_doc_b(boolean public_doc_b);
 
     void setProtected_object_b(boolean protected_object_b);
