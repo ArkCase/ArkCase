@@ -193,6 +193,17 @@
             <column name="cm_diff_details_json" type="CLOB"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="14-add-index-parent_object_id" author="ilinpetar">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="acm_audit_log" indexName="idx_audit_log_parent_object_id"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="acm_audit_log" indexName="idx_audit_log_parent_object_id">
+            <column name="cm_parent_object_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
     
 
