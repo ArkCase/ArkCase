@@ -22,8 +22,9 @@ angular.module('time-tracking').controller(
         'Object.ParticipantService',
         'Profile.UserInfoService',
         'Helper.UiGridService',
+        'Admin.TimesheetConfigurationService',
         function ($scope, $stateParams, $translate, $modalInstance, TimeTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, UtilDateService, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService,
-                  UserInfoService, HelperUiGridService) {
+                  UserInfoService, HelperUiGridService, TimesheetConfigurationService) {
 
             $scope.modalParams = modalParams;
             $scope.loading = false;
@@ -81,6 +82,11 @@ angular.module('time-tracking').controller(
                 });
 
                 return moduleConfig;
+            });
+
+            TimesheetConfigurationService.getConfig().then(
+            	function (response) {
+            	    $scope.timesheetConfiguration = response.data;
             });
 
             // ----------------------------- total ----------------------------------------------------------
@@ -399,9 +405,16 @@ angular.module('time-tracking').controller(
             };
 
             function fillTotalCost(hour, chargeRole) {
-                if (chargeRole == "INVESTIGATOR") {
-                    return hour * 300;
-                } else return hour * 100;
+                var hourRate = 0;
+                if ($scope.timesheetConfiguration !== undefined) {
+                    for(var i=0; i<$scope.timesheetConfiguration.chargeRoleItems.length; i++){
+                         if($scope.timesheetConfiguration.chargeRoleItems[i].chargeRole === chargeRole && $scope.timesheetConfiguration.chargeRoleItems[i].active === "ACTIVE"){
+                             hourRate = $scope.timesheetConfiguration.chargeRoleItems[i].rate;
+                             break;
+                         }
+                    }
+                }
+                return hour * hourRate;
             }
 
             function fillTimes(timesheet) {
