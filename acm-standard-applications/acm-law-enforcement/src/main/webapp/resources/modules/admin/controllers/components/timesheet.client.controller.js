@@ -15,7 +15,7 @@ angular.module('admin').controller('Admin.TimesheetController',
                 $scope.config = config;
 
                 gridHelper.addButton(config, "edit");
-                //gridHelper.addButton(config, "delete");
+                gridHelper.addButton(config, "delete");
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
                 gridHelper.disableGridScrolling(config);
