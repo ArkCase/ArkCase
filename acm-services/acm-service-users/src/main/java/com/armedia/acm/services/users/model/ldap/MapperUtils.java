@@ -179,10 +179,12 @@ public class MapperUtils
 
     public static String buildUserId(String userId, AcmLdapSyncConfig ldapSyncConfig)
     {
-        if (StringUtils.isNotBlank(ldapSyncConfig.getUserPrefix()) &&
-                ldapSyncConfig.getUserIdAttributeName().equalsIgnoreCase("samaccountname"))
+        String userPrefix = ldapSyncConfig.getUserPrefix();
+        if (StringUtils.isNotBlank(userPrefix) &&
+                ldapSyncConfig.getUserIdAttributeName().equalsIgnoreCase("samaccountname")
+            && !userId.startsWith(userPrefix))
         {
-            String username = String.format("%s.%s", ldapSyncConfig.getUserPrefix(), userId);
+            String username = String.format("%s.%s", userPrefix, userId);
             username = StringUtils.left(username, 20);
             return buildUserId(username, ldapSyncConfig.getUserDomain());
         }
