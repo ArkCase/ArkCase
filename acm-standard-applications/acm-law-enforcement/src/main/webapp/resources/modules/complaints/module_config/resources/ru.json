@@ -320,6 +320,7 @@
     "complaints.comp.closeComplaint": {
         "title": "ru_Close Complaint",
         "info": "ru_Incident Information",
+        "description.label": "ru_Description",
         "infoMessage": "ru_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
         "complaintTitle": "ru_Complaint Title",
         "information": {
@@ -351,10 +352,10 @@
         },
         "approver": {
             "placeholder": "ru_Select Approver",
-            "label": "ru_Select Approver",
+            "label": "ru_Approver",
             "addAnother": "ru_Add another",
             "remove": "ru_Remove Approver",
-            "pickerModal.header": "ru_Choose Approver"
+            "pickerModal.header": "ru_Search for User"
         },
         "cancelButton": "ru_Cancel",
         "saveButton": "ru_Save Complaint"

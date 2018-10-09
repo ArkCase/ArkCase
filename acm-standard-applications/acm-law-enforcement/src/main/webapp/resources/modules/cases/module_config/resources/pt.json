@@ -364,6 +364,7 @@
     },
     "cases.comp.change.status": {
         "title": "pt_Change Case Status",
+        "description.label": "pt_Description",
         "information": {
             "title": "pt_Change Case Status Information",
             "date": "pt_Change Date",
@@ -380,10 +381,10 @@
         },
         "approver": {
             "placeholder": "pt_Select Approver",
-            "label": "pt_Select Approver",
+            "label": "pt_Approver",
             "addAnother": "pt_Add another",
             "remove": "pt_Remove Approver",
-            "pickerModal.header": "pt_Choose Approver"
+            "pickerModal.header": "pt_Search for User"
         },
         "button": {
             "cancel": "pt_Cancel",

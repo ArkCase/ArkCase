@@ -86,6 +86,7 @@ angular.module('cases').controller(
                                     objectId: null,
                                     participantType: "approver",
                                     participantLdapId: data.email_lcs,
+                                    participantFullName: data.name,
                                     created: null,
                                     creator: null,
                                     modified: null,
