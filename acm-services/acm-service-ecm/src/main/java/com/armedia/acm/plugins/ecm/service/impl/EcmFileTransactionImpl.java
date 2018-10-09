@@ -91,6 +91,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         List<String> keys = new ArrayList<>();
         for (Map.Entry<String, List<String>> entry : mimeTypesByTika.entrySet())
         {
+            if(value.contains(";"))
+            {
+                value = value.split(";")[0];
+            }
             if (entry.getValue().contains(value))
             {
                 keys.add(entry.getKey());
@@ -124,13 +128,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 log.error("Could not extract metadata with Tika: [{}]", e.getMessage(), e);
             }
 
-            if(metadata.getFileActiveVersionMimeType().contains(";"))
+            String activeVersionMimeType = metadata.getFileActiveVersionMimeType();
+            if(activeVersionMimeType.contains(";"))
             {
-                metadata.setFileActiveVersionMimeType(metadata.getFileActiveVersionMimeType().split(";")[0]);
+                activeVersionMimeType = metadata.getFileActiveVersionMimeType().split(";")[0];
             }
 
-            if ((detectedMetadata.getContentType().equals(metadata.getFileActiveVersionMimeType())) ||
-                    (getAllTikaMimeTypesForFile(mimeTypesByTika, metadata.getFileActiveVersionMimeType())
+            if ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
+                    (getAllTikaMimeTypesForFile(mimeTypesByTika, activeVersionMimeType)
                             .contains(detectedMetadata.getContentType())))
             {
 
