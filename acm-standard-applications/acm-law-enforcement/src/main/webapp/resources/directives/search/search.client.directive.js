@@ -424,10 +424,9 @@ angular.module('directives').directive(
                                 facet.limit = scope.facetLimit;
                             };
 
-                            scope.onClick = function (objectType, title) {
+                            scope.onClick = function(objectType, title) {
 
-
-                                if(objectType == ObjectService.ObjectTypes.ASSOCIATED_TAG){
+                                if (objectType == ObjectService.ObjectTypes.ASSOCIATED_TAG) {
                                     $state.go('tags', {
                                         query: title
                                     });
