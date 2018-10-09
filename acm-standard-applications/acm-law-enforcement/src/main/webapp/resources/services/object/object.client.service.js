@@ -33,10 +33,10 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
 
         ,
         LockTypes: {
-            WRITE : "WRITE",
-            READ : "READ",
-            SHARED_WRITE : "SHARED_WRITE",
-            DELETE : "DELETE"
+            WRITE: "WRITE",
+            READ: "READ",
+            SHARED_WRITE: "SHARED_WRITE",
+            DELETE: "DELETE"
         }
 
         ,
