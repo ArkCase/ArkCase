@@ -299,7 +299,7 @@ public class CmisConfigurationService
         props.put("username", jsonObj.getString(CmisConfigurationConstants.CMIS_USERNAME));
         props.put("password", encryptablePropertyUtils.encryptPropertyValue(jsonObj.getString(CmisConfigurationConstants.CMIS_PASSWORD)));
         props.put("useAlfrescoExtension", jsonObj.getString(CmisConfigurationConstants.CMIS_USEALFRESCOEXTENSION));
-        props.put("endpoint", jsonObj.getString(CmisConfigurationConstants.CMIS_ENDPOINT));
+        props.put("endpoint", CmisConfigurationConstants.CMIS_ENDPOINT);
         props.put("maxIdle", jsonObj.getInt(CmisConfigurationConstants.CMIS_MAXIDLE));
         props.put("maxActive", jsonObj.getInt(CmisConfigurationConstants.CMIS_MAXACTIVE));
         props.put("maxWait", jsonObj.getInt(CmisConfigurationConstants.CMIS_MAXWAIT));
