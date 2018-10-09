@@ -413,7 +413,7 @@
                                 <label for="caType">
                                     {{'organizations.comp.newOrganization.communicationAccounts.' + caType |
                                     translate}} </label>
-                                <input id="caType" type="text" ng-model="contactMethod.value" required="required"
+                                <input id="caType" type="{{contactMethod.type}}" ng-model="contactMethod.value" required="required"
                                         class="input-md form-control"
                                         placeholder="{{ 'organizations.comp.newOrganization.communicationAccounts.'+ caType +'.placeholder' | translate }}">
                             </div>

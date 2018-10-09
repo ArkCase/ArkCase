@@ -98,6 +98,7 @@
             "enableFiltering": false,
             "enableRowSelection": true,
             "enableRowHeaderSelection": true,
+            "multiSelect": true,
             "enableFullRowSelection": true,
             "paginationPageSizes": [
                 5,

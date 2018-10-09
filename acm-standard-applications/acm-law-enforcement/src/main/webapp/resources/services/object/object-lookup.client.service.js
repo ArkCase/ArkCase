@@ -505,6 +505,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getCaseFileSubTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of case file subtypes
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCaseFileSubTypes = function() {
+        return Service.getLookupByLookupName("caseFileSubTypes");
+    };
+
+    /**
+     * @ngdoc method
      * @name getComplaintTypes
      * @methodOf services:Object.LookupService
      *
