@@ -1549,6 +1549,10 @@
                         <groupId>org.slf4j</groupId>
                         <artifactId>jul-to-slf4j</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>com.tdunning</groupId>
+                        <artifactId>json</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
