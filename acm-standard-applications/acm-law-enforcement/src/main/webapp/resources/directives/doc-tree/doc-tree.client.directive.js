@@ -1948,7 +1948,7 @@ angular
                                 if (menuResource === "menu.basic.root" && DocTree.treeConfig.hideMenu) {
                                     return emptyArray;
                                 }
-                                menu = _.clone(menu);
+                                menu = _.cloneDeep(menu);
                                 var menuFileTypes = _.find(menu, {
                                     "cmd" : "subMenuFileTypes"
                                 });
@@ -1985,10 +1985,11 @@ angular
                                     newFolderMenu.disabledExpression = disabled || DocTree.readOnly;
                                     newFileMenu.disabledExpression = disabled || DocTree.readOnly;
                                 }
-
+                                
+                                // disable commands based on locks
                                 var currentNode = nodes[0];
                                 var lock = currentNode.data.lock;
-                                if(lock && DocTree.treeConfig.disabledFileCommandsOnLock){
+                                if(lock && lock !== "" && DocTree.treeConfig.disabledFileCommandsOnLock) {
                                     var disableCommands = DocTree.treeConfig.disabledFileCommandsOnLock[lock.lockType];
                                     _.each(disableCommands, function(dc) {
                                         var cmdMenu = _.find(menu, {
@@ -1999,13 +2000,6 @@ angular
                                         }
                                     });
                                 }
-                                //} else {
-                                //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
-                                //    menu = [{
-                                //        title: $translate.instant("common.directive.docTree.menu.noop"),
-                                //        cmd: "noop",
-                                //        uiIcon: ""
-                                //    }];
                             }
 
                             //Check to see if there is a global handling, if there is, it would override specific handler
