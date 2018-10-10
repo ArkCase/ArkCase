@@ -2,9 +2,28 @@
 
 angular.module('cases').controller(
         'Cases.ActionsController',
-        [ '$scope', '$state', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService', 'Helper.ObjectBrowserService',
-                'Profile.UserInfoService', '$timeout', 'FormsType.Service',
-                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, $timeout, FormsTypeService) {
+        [
+                '$scope',
+                '$state',
+                '$stateParams',
+                '$translate',
+                '$q',
+                '$modal',
+                'UtilService',
+                'ConfigService',
+                'ObjectService',
+                'Authentication',
+                'Case.LookupService',
+                'Object.SubscriptionService',
+                'Object.ModelService',
+                'Case.InfoService',
+                'Case.MergeSplitService',
+                'Helper.ObjectBrowserService',
+                'Profile.UserInfoService',
+                '$timeout',
+                'FormsType.Service',
+                function($scope, $state, $stateParams, $translate, $q, $modal, Util, ConfigService, ObjectService, Authentication, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, $timeout,
+                        FormsTypeService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -174,7 +193,7 @@ angular.module('cases').controller(
                     $scope.merge = function(caseInfo) {
 
                         var params = {};
-                        params.header = 'Search for object';
+                        params.header = $translate.instant("cases.comp.merge.objectPicker.title");
                         params.config = $scope.newTimeObjectPicker;
                         params.filter = 'fq="object_type_s": CASE_FILE';
 
