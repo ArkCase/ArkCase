@@ -261,6 +261,16 @@
             "title": "タイトル",
             "parent": "親",
             "modified": "変更された"
+        },
+        "objectPicker": {
+            "title": "ja_Search for object",
+            "table.columns": {
+                "name": "ja_Name",
+                "type": "ja_Type",
+                "title": "ja_Title",
+                "id": "ja_ID",
+                "username": "ja_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {
