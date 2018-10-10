@@ -107,8 +107,7 @@ public class HolidayConfigurationService
 
     public boolean isWeekendNonWorkingDay(LocalDate date)
     {
-        return (!getHolidayConfiguration().getIncludeWeekends() && (date.getDayOfWeek().equals(DayOfWeek.SATURDAY))
-                || date.getDayOfWeek().equals(DayOfWeek.SUNDAY));
+        return (((date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) || date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) && !getHolidayConfiguration().getIncludeWeekends());
     }
 
     public boolean isHoliday(LocalDate date)
