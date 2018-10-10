@@ -28,6 +28,9 @@ angular.module('cases').controller(
                         $scope.caseFileSearchConfig = _.find(moduleConfig.components, {
                             id: "merge"
                         });
+                        $scope.newTimeObjectPicker = _.find(moduleConfig.components, {
+                            id: "newObjectPicker"
+                        });
                     });
 
                     FormsTypeService.isAngularFormType().then(function(isAngularFormType) {
@@ -169,17 +172,26 @@ angular.module('cases').controller(
                     };
 
                     $scope.merge = function(caseInfo) {
+
+                        var params = {};
+                        params.header = 'Search for object';
+                        params.config = $scope.newTimeObjectPicker;
+                        params.filter = 'fq="object_type_s": CASE_FILE';
+
                         var modalInstance = $modal.open({
-                            animation: $scope.animationsEnabled,
-                            templateUrl: 'modules/cases/views/components/case-merge.client.view.html',
-                            controller: 'Cases.MergeController',
+                            templateUrl: 'modules/cost-tracking/views/components/cost-tracking-object-picker-search-modal.client.view.html',
+                            controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+                                $scope.modalInstance = $modalInstance;
+                                $scope.header = params.header;
+                                $scope.filter = params.filter;
+                                $scope.extraFilter = params.extraFilter;
+                                $scope.config = params.config;
+                            } ],
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
-                                config: function() {
-                                    return $scope.caseFileSearchConfig;
-                                },
-                                filter: function() {
-                                    return '"Object Type": CASE_FILE' + '&fq="!status_lcs":"CLOSED"&fq="!object_id_s":' + caseInfo.id;
+                                params: function() {
+                                    return params;
                                 }
                             }
                         });
