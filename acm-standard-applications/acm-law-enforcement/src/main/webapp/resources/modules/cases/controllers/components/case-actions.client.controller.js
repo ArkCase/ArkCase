@@ -47,7 +47,7 @@ angular.module('cases').controller(
                         $scope.caseFileSearchConfig = _.find(moduleConfig.components, {
                             id: "merge"
                         });
-                        $scope.newTimeObjectPicker = _.find(moduleConfig.components, {
+                        $scope.newObjectPicker = _.find(moduleConfig.components, {
                             id: "newObjectPicker"
                         });
                     });
@@ -194,11 +194,11 @@ angular.module('cases').controller(
 
                         var params = {};
                         params.header = $translate.instant("cases.comp.merge.objectPicker.title");
-                        params.config = $scope.newTimeObjectPicker;
+                        params.config = $scope.newObjectPicker;
                         params.filter = 'fq="object_type_s": CASE_FILE';
 
                         var modalInstance = $modal.open({
-                            templateUrl: 'modules/cost-tracking/views/components/cost-tracking-object-picker-search-modal.client.view.html',
+                            templateUrl: 'directives/core-participants/core-participants-picker-modal.client.view.html',
                             controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
                                 $scope.modalInstance = $modalInstance;
                                 $scope.header = params.header;

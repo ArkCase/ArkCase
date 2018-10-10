@@ -260,6 +260,16 @@
             "title": "Title",
             "parent": "Parent",
             "modified": "Modified"
+        },
+        "objectPicker": {
+            "title": "en-in_Search for object",
+            "table.columns": {
+                "name": "en-in_Name",
+                "type": "en-in_Type",
+                "title": "en-in_Title",
+                "id": "en-in_ID",
+                "username": "en-in_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {
