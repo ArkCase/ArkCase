@@ -261,6 +261,16 @@
             "title": "Título",
             "parent": "Padre",
             "modified": "Modificado"
+        },
+        "objectPicker": {
+            "title": "es_Search for object",
+            "table.columns": {
+                "name": "es_Name",
+                "type": "es_Type",
+                "title": "es_Title",
+                "id": "es_ID",
+                "username": "es_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {

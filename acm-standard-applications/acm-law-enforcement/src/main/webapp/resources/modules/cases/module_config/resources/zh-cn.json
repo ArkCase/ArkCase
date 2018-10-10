@@ -261,6 +261,16 @@
             "title": "标题",
             "parent": "原属",
             "modified": "更改"
+        },
+        "objectPicker": {
+            "title": "zh-cn_Search for object",
+            "table.columns": {
+                "name": "zh-cn_Name",
+                "type": "zh-cn_Type",
+                "title": "zh-cn_Title",
+                "id": "zh-cn_ID",
+                "username": "zh-cn_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {
