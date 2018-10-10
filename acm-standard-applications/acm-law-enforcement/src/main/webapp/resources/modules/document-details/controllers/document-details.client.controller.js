@@ -2,9 +2,9 @@
 
 angular.module('document-details').controller(
         'DocumentDetailsController',
-        [ '$scope', '$stateParams', '$sce', '$q', '$timeout', '$window', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Helper.LocaleService', 'Admin.TranscriptionManagementService', 'MessageService', 'UtilService', 'Util.TimerService',
-                'Object.LockingService', 'ObjectService', '$log',
-                function($scope, $stateParams, $sce, $q, $timeout, $window, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log) {
+        [ '$rootScope', '$scope', '$stateParams', '$sce', '$q', '$timeout', '$window', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Helper.LocaleService', 'Admin.TranscriptionManagementService', 'MessageService', 'UtilService', 'Util.TimerService',
+                'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate',
+                function($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate) {
 
                     new LocaleHelper.Locale({
                         scope: $scope
@@ -281,6 +281,11 @@ angular.module('document-details').controller(
                         }
                     });
 
+                    $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function() {
+                        DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
+                            $scope.openSnowboundViewer();
+                        }); 
+                    });
                 } ]);
 
 /**
