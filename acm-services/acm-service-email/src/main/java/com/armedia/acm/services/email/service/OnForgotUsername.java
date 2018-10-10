@@ -29,6 +29,7 @@ package com.armedia.acm.services.email.service;
 
 import com.armedia.acm.auth.web.ForgotUsernameEvent;
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 
@@ -46,6 +47,7 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     private final Logger log = LoggerFactory.getLogger(getClass());
     private AcmEmailSenderService emailSenderService;
     private AcmApplication acmAppConfiguration;
+    private AcmSpringActiveProfile acmSpringActiveProfile;
     private String forgotUsernameEmailSubject;
     /**
      * Formatting string to be used for producing text to inserted as a body in the forgot username email. The
@@ -80,6 +82,11 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
 
     private void sendUsernameEmail(AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData)
     {
+        if (acmSpringActiveProfile.isSAMLEnabledEnvironment())
+        {
+            log.info("Won't send forgot username email when SSO environment");
+            return;
+        }
         String userEmailAddress = emailUserData.getKey();
         String userAccounts = toUserAccountsString(emailUserData.getValue());
         try
@@ -117,5 +124,15 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     public void setForgotUsernameEmailBodyTemplate(String forgotUsernameEmailBodyTemplate)
     {
         this.forgotUsernameEmailBodyTemplate = forgotUsernameEmailBodyTemplate;
+    }
+
+    public AcmSpringActiveProfile getAcmSpringActiveProfile()
+    {
+        return acmSpringActiveProfile;
+    }
+
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
+    {
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 }

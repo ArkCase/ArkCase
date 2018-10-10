@@ -58,7 +58,8 @@ public enum Directory
     private final Function<String, BasicAttribute> currentPasswordToAttribute;
     private DateTimeFormatter dateTimeFormatter;
 
-    Directory(String datePattern, String userRdnAttribute, Function<DirContextAdapter, LocalDate> timestampToLocalDate,
+    Directory(String datePattern, String userRdnAttribute,
+            Function<DirContextAdapter, LocalDate> timestampToLocalDate,
             Function<String, BasicAttribute> passwordToAttribute, Function<String, BasicAttribute> currentPasswordToAttribute)
     {
         this.datePattern = datePattern;

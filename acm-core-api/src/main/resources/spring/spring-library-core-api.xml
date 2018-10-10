@@ -2,9 +2,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="loginController" class="com.armedia.acm.web.api.LoginController">
-        <property name="loginWarningMessageService" ref="loginWarningMessageService"/>
-        <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
-    </bean>
+    <bean id="acmSpringActiveProfile" class="com.armedia.acm.core.AcmSpringActiveProfile"/>
 
 </beans>

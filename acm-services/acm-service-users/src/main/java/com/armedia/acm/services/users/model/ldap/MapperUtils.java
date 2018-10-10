@@ -177,6 +177,21 @@ public class MapperUtils
         return String.format("%s@%s", userId, domain).toLowerCase();
     }
 
+    public static String buildUserId(String userId, AcmLdapSyncConfig ldapSyncConfig)
+    {
+        String userPrefix = ldapSyncConfig.getUserPrefix();
+        if (StringUtils.isNotBlank(userPrefix) &&
+                ldapSyncConfig.getUserIdAttributeName().equalsIgnoreCase("samaccountname")
+            && !userId.startsWith(userPrefix))
+        {
+            String username = String.format("%s.%s", userPrefix, userId);
+            username = StringUtils.left(username, 20);
+            return buildUserId(username, ldapSyncConfig.getUserDomain());
+        }
+        return buildUserId(userId, ldapSyncConfig.getUserDomain());
+
+    }
+
     public static byte[] encodeUTF16LE(String str) throws UnsupportedEncodingException
     {
         return String.format("\"%s\"", str).getBytes("UTF-16LE");

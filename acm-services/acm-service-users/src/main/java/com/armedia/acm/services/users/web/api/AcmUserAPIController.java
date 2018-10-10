@@ -27,9 +27,12 @@ package com.armedia.acm.services.users.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
@@ -65,8 +68,8 @@ import java.util.Map;
 public class AcmUserAPIController extends SecureLdapController
 {
     private LdapUserService ldapUserService;
-
     private AcmUserEventPublisher acmUserEventPublisher;
+    private AcmSpringActiveProfile acmSpringActiveProfile;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -165,18 +168,17 @@ public class AcmUserAPIController extends SecureLdapController
     @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser removeUserFromGroups(@RequestParam("groupNames") List<String> groupNames, @PathVariable("userId") String userId,
-            @PathVariable("directory") String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+            @PathVariable("directory") String directory) throws AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
         {
             return ldapUserService.removeUserFromGroups(userId, groupNames, directory);
         }
-        catch (Exception e)
+        catch (AcmLdapActionFailedException | AcmObjectNotFoundException e)
         {
-            log.error("Removing user [{}] from groups [{}] failed!", userId, groupNames, e);
-            throw new AcmUserActionFailedException("Removing user from groups", null, null,
-                    "Removing the user from groups: [{}] failed!", e);
+            log.error("Removing user [{}] from groups [{}] failed!", userId, groupNames, e.getMessage());
+            throw new AcmAppErrorJsonMsg(e.getMessage(), "GROUP", e);
         }
     }
 
@@ -267,6 +269,15 @@ public class AcmUserAPIController extends SecureLdapController
         }
     }
 
+    @RequestMapping(value = "/{directory:.+}/managePasswordEnabled", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Boolean> isManagePasswordsEnabled(@PathVariable String directory)
+    {
+        boolean enableEditingLdapUsers = isLdapManagementEnabled(directory);
+        boolean managePasswordEnabled = !acmSpringActiveProfile.isSAMLEnabledEnvironment() && enableEditingLdapUsers;
+        return Collections.singletonMap("managePasswordEnabled", managePasswordEnabled);
+    }
+
     public LdapUserService getLdapUserService()
     {
         return ldapUserService;
@@ -285,5 +296,15 @@ public class AcmUserAPIController extends SecureLdapController
     public void setAcmUserEventPublisher(AcmUserEventPublisher acmUserEventPublisher)
     {
         this.acmUserEventPublisher = acmUserEventPublisher;
+    }
+
+    public AcmSpringActiveProfile getAcmSpringActiveProfile()
+    {
+        return acmSpringActiveProfile;
+    }
+
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
+    {
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 }
