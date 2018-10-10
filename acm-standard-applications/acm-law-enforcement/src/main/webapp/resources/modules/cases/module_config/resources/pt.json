@@ -261,6 +261,16 @@
             "title": "Título",
             "parent": "Pai",
             "modified": "Modificado"
+        },
+        "objectPicker": {
+            "title": "pt_Search for object",
+            "table.columns": {
+                "name": "pt_Name",
+                "type": "pt_Type",
+                "title": "pt_Title",
+                "id": "pt_ID",
+                "username": "pt_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {
