@@ -37,7 +37,7 @@ public interface CmisConfigurationConstants
     String CMIS_USERNAME = "cmis.username";
     String CMIS_PASSWORD = "cmis.password";
     String CMIS_USEALFRESCOEXTENSION = "cmis.useAlfrescoExtension";
-    String CMIS_ENDPOINT = "cmis.endpoint";
+    String CMIS_ENDPOINT = "ATOM";
     String CMIS_MAXIDLE = "cmis.maxIdle";
     String CMIS_MAXACTIVE = "cmis.maxActive";
     String CMIS_MAXWAIT = "cmis.maxWait";

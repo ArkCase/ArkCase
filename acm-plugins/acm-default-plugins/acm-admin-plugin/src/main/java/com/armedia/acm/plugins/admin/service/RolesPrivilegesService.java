@@ -365,6 +365,7 @@ public class RolesPrivilegesService
             try
             {
                 userDao.saveAcmRole(acmRole);
+                addRoleToPrivileges(roleName);
             }
             catch (IllegalArgumentException | TransactionRequiredException e)
             {
@@ -407,6 +408,29 @@ public class RolesPrivilegesService
                 rolesPrivileges.put(newRoleName, value);
                 saveRolesPrivileges(rolesPrivileges);
             }
+        }
+    }
+
+    private void addRoleToPrivileges(String roleName) throws AcmRolesPrivilegesException
+    {
+        try (InputStream applicationInputStream = FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)))
+        {
+            Properties props = new Properties();
+            props.load(applicationInputStream);
+            String propPrivileges = props.getProperty(roleName);
+            if(Objects.isNull(propPrivileges))
+            {
+                props.setProperty(roleName, new String());
+                try (OutputStream applicationOutputStream = FileUtils.openOutputStream(new File(applicationRolesPrivilegesPropertiesFile)))
+                {
+                    props.store(applicationOutputStream, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            log.error("Can't save role [{}] to file", roleName, e);
+            throw new AcmRolesPrivilegesException(String.format("Can't save role '%s' to file", roleName), e);
         }
     }
 

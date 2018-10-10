@@ -33,14 +33,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8"/>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>You have been logged out. | ArkCase</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>You have been logged out. | ArkCase</title>
 
-	<link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
-	<link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/login.css">
-	<!-- custom css-->
-	<link rel="stylesheet" href="<%= request.getContextPath()%>/branding/customcss">
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/login.css">
+    <!-- custom css-->
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/branding/customcss">
 </head>
 <body>
 <div class="login-wrapper">
@@ -49,30 +49,30 @@
     </div>
 
     <header class="text-center">
-        <div class="alert alert-danger">
-            <c:choose>
-                <c:when test="${'2'.equals(param.login_error)}">
+        <c:choose>
+            <c:when test="${'2'.equals(param.login_error)}">
+                <div class="alert alert-danger">
                     Your session has been invalidated due to concurrent session limit!
-                </c:when>
-                <c:otherwise>
-                    You have been logged out.
-                </c:otherwise>
-            </c:choose>
-        </div>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="alert alert-success">
+                    You have successfully logged out. Please close your browser window.
+                </div>
+            </c:otherwise>
+        </c:choose>
     </header>
 
-	<p></p>
-
-	<p class="text-center"><a href="<c:url value="/" />">Click here to return to ArkCase</a></p>
+    <p></p>
 
 </div>
 
 <footer id="footer">
-	<div class="text-center padder">
-		<p>
-			<small><span>ArkCase</span><br>&copy;<span>2014, 2015, 2016, 2017</span></small>
-		</p>
-	</div>
+    <div class="text-center padder">
+        <p>
+            <small><span>ArkCase</span><br>&copy;<span>2014, 2015, 2016, 2017</span></small>
+        </p>
+    </div>
 </footer>
 </body>
 </html>

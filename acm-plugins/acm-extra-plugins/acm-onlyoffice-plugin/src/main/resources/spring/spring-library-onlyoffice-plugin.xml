@@ -1,25 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="onlyOfficeConfigService"
-        class="com.armedia.acm.plugins.onlyoffice.service.ConfigServiceImpl">
+          class="com.armedia.acm.plugins.onlyoffice.service.ConfigServiceImpl">
         <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
         <property name="documentTypeResolver" ref="documentTypeResolver"/>
-        <property name="arkcaseBaseUrl" value="${arkcase.baseurl}"/>
-        <property name="documentServerUrlApi" value="${files.docservice.url.api}"/>
-        <property name="pluginEnabled" value="${plugin.enabled}"/>
+        <property name="arkcaseBaseUrl" value="${onlyoffice.arkcase.baseurl}"/>
+        <property name="documentServerUrlApi" value="${onlyoffice.files.docservice.url.api}"/>
+        <property name="configViewHeight" value="${onlyoffice.config.view.height}"/>
+        <property name="configViewWidth" value="${onlyoffice.config.view.width}"/>
+        <property name="configViewType" value="${onlyoffice.config.view.type}"/>
+        <property name="outboundSignEnabled" value="${onlyoffice.jwt.outbound.enabled}"/>
+        <property name="pluginEnabled" value="${onlyoffice.plugin.enabled}"/>
     </bean>
 
     <bean id="onlyOfficeCallbackService"
-        class="com.armedia.acm.plugins.onlyoffice.service.CallbackServiceImpl">
+          class="com.armedia.acm.plugins.onlyoffice.service.CallbackServiceImpl">
         <property name="onlyOfficeEventPublisher" ref="onlyOfficeEventPublisher"/>
+        <property name="inboundVerifyEnabled" value="${onlyoffice.jwt.inbound.enabled}"/>
         <property name="objectLockService" ref="objectLockService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="documentHistoryManager" ref="historyFilesManager"/>
+        <property name="acmObjectLockingManager" ref="acmObjectLockingManager"/>
+    </bean>
+
+    <bean id="historyFilesManager"
+          class="com.armedia.acm.plugins.onlyoffice.service.DocumentHistoryManagerImpl">
+        <property name="historyFolderPath" value="${onlyoffice.history.folder_path}"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="mapper" ref="sourceObjectMapper"/>
+        <property name="documentHistoryDateFormat" value="${onlyoffice.history.date_format}"/>
+    </bean>
+
+    <bean id="signingServiceImpl"
+            class="com.armedia.acm.plugins.onlyoffice.service.JWTSigningServiceImpl">
+        <property name="jwtInboundKey" value="${onlyoffice.jwt.inbound.key}"/>
+        <property name="jwtInboundTrustStore" value="${onlyoffice.jwt.inbound.truststore}"/>
+        <property name="jwtOutboundAlgorithm" value="${onlyoffice.jwt.outbound.algorithm}"/>
+        <property name="jwtOutboundKey" value="${onlyoffice.jwt.outbound.key}"/>
+        <property name="jwtOutboundKeyStore" value="${onlyoffice.jwt.outbound.keystore}"/>
+        <property name="jwtOutboundCertificateAlias" value="${onlyoffice.jwt.outbound.certificate_alias}"/>
+
     </bean>
 
     <bean id="documentTypeResolver" class="com.armedia.acm.plugins.onlyoffice.util.DocumentTypeResolver"/>

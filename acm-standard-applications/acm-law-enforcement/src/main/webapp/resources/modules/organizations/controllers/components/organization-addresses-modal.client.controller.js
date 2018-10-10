@@ -5,6 +5,10 @@ angular.module('organizations').controller('Organizations.AddressesModalControll
         return addressTypes;
     });
 
+    ObjectLookupService.getStates().then(function(states) {
+        $scope.states = states;
+    });
+
     ObjectLookupService.getCountries().then(function(countries) {
         $scope.countries = countries;
     });

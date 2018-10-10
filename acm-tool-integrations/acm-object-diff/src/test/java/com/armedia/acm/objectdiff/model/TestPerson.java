@@ -30,6 +30,10 @@ package com.armedia.acm.objectdiff.model;
 import com.armedia.acm.core.AcmObject;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 public class TestPerson implements AcmObject, Serializable
@@ -40,6 +44,10 @@ public class TestPerson implements AcmObject, Serializable
     private String toBeIgnored;
     private TestAttribute defaultAttribute;
     private List<TestAttribute> attributeList;
+    private Date dateOfBirth;
+    private LocalDate employmentDate;
+    private LocalDateTime completed;
+    private LocalTime alarmTime;
 
     @Override
     public String getObjectType()
@@ -106,5 +114,45 @@ public class TestPerson implements AcmObject, Serializable
     public void setDefaultAttribute(TestAttribute defaultAttribute)
     {
         this.defaultAttribute = defaultAttribute;
+    }
+
+    public Date getDateOfBirth()
+    {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth)
+    {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public LocalDate getEmploymentDate()
+    {
+        return employmentDate;
+    }
+
+    public void setEmploymentDate(LocalDate employmentDate)
+    {
+        this.employmentDate = employmentDate;
+    }
+
+    public LocalDateTime getCompleted()
+    {
+        return completed;
+    }
+
+    public void setCompleted(LocalDateTime completed)
+    {
+        this.completed = completed;
+    }
+
+    public LocalTime getAlarmTime()
+    {
+        return alarmTime;
+    }
+
+    public void setAlarmTime(LocalTime alarmTime)
+    {
+        this.alarmTime = alarmTime;
     }
 }

@@ -85,6 +85,61 @@
             "status": "状态"
         }
     },
+    "timeTracking.comp.newTimesheet": {
+        "title": "zh-cn_Time Tracking",
+        "editCase.title": "zh-cn_Edit Time Tracking",
+        "user": "zh-cn_User",
+        "status": "zh-cn_Status",
+        "objectPicker": {
+            "title": "zh-cn_Search for object",
+            "table.columns": {
+                "name": "zh-cn_Name",
+                "type": "zh-cn_Type",
+                "title": "zh-cn_Title",
+                "id": "zh-cn_ID",
+                "username": "zh-cn_Username"
+            }
+        },
+        "otherChargeCodePicker":{
+            "title": "zh-cn_Search charge code",
+            "table.columns": {
+                "name": "zh-cn_Name",
+                "type": "zh-cn_Type"
+            },
+            "buttons":{
+                "cancel":"zh-cn_Cancel",
+                "ok": "zh-cn_OK"
+            }
+        },
+        "time": {
+            "title": "zh-cn_Timesheet",
+            "date": "zh-cn_Period",
+            "date.placeholder": "zh-cn_Select week",
+            "date.close.button": "zh-cn_Close",
+            "prevWeekBtn": "zh-cn_Prev Week",
+            "nextWeekBtn": "zh-cn_Next Week",
+            "type": "zh-cn_Type",
+            "selectTypeMessage": "zh-cn_You have to select 'Type', so that you can choose a 'Charge Code'.",
+            "chargeCode": "zh-cn_Charge Code",
+            "chargeRole": "zh-cn_Charge Role",
+            "total": "zh-cn_Total",
+            "totalCost": "zh-cn_Total Cost",
+            "removeBtn": "zh-cn_Remove",
+            "addBtn": "zh-cn_Add"
+        },
+        "userSearch.title": "zh-cn_Search for User",
+        "details": "zh-cn_Details",
+        "approver": {
+            "title": "zh-cn_Approver",
+            "placeholder": "zh-cn_Select Approver",
+            "removeBtn": "zh-cn_Remove Approver",
+            "addBtn": "zh-cn_Add Another Approver"
+        },
+        "cancelButton": "zh-cn_Cancel",
+        "saveButton": "zh-cn_Save",
+        "updateButton": "zh-cn_Update",
+        "sendForApproval": "zh-cn_Send for Approval"
+    },
     "timeTracking.tree": {
         "nodeTypes": {
             "details.label": "详情",

@@ -36,6 +36,8 @@ Time: 12:44
     <meta charset="utf-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ACM | ArkCase | User Interface</title>
+    <!-- Fav Icon -->
+    <link href="<%= request.getContextPath()%>/modules/core/img/brand/favicon.png" rel="shortcut icon" type="image/x-png">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script src="<%= request.getContextPath()%>/lib/bootstrap/dist/js/bootstrap.js"></script>
     <c:if test="${warningEnabled}">
@@ -219,13 +221,15 @@ Time: 12:44
         </div>
 
         <button id="submit" type="submit" class="btn btn-lg btn-primary btn-block">Log In</button>
-        <p></p>
-        <div class="pull-left">
-            <a data-toggle="modal" href="#forgot-username-modal">Forgot Username</a>
-        </div>
-        <div class="pull-right">
-            <a data-toggle="modal" href="#forgot-password-modal">Forgot Password</a>
-        </div>
+        <c:if test="${!isSsoEnv}">
+            <p></p>
+            <div class="pull-left">
+                <a data-toggle="modal" href="#forgot-username-modal">Forgot Username</a>
+            </div>
+            <div class="pull-right">
+                <a data-toggle="modal" href="#forgot-password-modal">Forgot Password</a>
+            </div>
+        </c:if>
     </form>
 </div>
 

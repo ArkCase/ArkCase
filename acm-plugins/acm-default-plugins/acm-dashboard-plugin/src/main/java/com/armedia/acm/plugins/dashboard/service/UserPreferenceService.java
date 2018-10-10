@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -64,7 +65,15 @@ public class UserPreferenceService
     public PreferredWidgetsDto updateUserPreferenceWidgets(String userId, PreferredWidgetsDto preferredWidgets, String ipAddress)
             throws AcmObjectNotFoundException
     {
-        List<Widget> widgetList = createWidgetList(preferredWidgets.getPreferredWidgets());
+        List<Widget> widgetList;
+        if (preferredWidgets.getPreferredWidgets().isEmpty())
+        {
+            widgetList = Collections.emptyList();
+        }
+        else
+        {
+            widgetList = createWidgetList(preferredWidgets.getPreferredWidgets());
+        }
         List<UserPreference> upList = null;
         Module module;
         AcmUser user;

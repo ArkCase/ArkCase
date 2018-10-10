@@ -15,5 +15,6 @@
     <bean id="globalIdentityDao" class="com.armedia.acm.service.identity.dao.AcmArkcaseGlobalIdentityDao"/>
     <bean class="com.armedia.acm.service.identity.state.AcmIdentityStateProvider" id="acmIdentityStateProvider">
         <property name="acmArkcaseIdentityService" ref="acmArkcaseIdentityService"/>
+        <property name="acmApplication" ref="acmApplication"/>
     </bean>
 </beans>

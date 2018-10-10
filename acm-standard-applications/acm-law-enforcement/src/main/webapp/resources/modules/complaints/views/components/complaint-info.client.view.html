@@ -30,7 +30,7 @@
                 <small class="text-muted"><span translate>complaints.comp.info.type.label</span></small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{objectInfo.created | date: 'shortDate' }}
+                <div class="h4 font-bold">{{objectInfo.created | date: ('common.defaultDateTimeUIFormat' | translate) }}
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.created.label</span></small>
             </div>
@@ -48,7 +48,7 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()"
+                    <a href="javascript:;" class="editable-click no-outline" ng-click="userOrGroupSearch()"
                             permission="editComplaintOwningGroup" permission-object-type="COMPLAINT" permission-properties="objectInfo"
                             permission-action="disable">
                         <user-full-name userId="assignee" fallback="{{'common.value.none' | translate}}" />
@@ -58,7 +58,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="javascript:;" class="editable-click no-outline" ng-click="openGroupPickerModal()"
+                    <a href="javascript:;" class="editable-click no-outline" ng-click="userOrGroupSearch()"
                             permission="editComplaintOwningGroup" permission-object-type="COMPLAINT" permission-properties="objectInfo"
                             permission-action="disable">
                         {{owningGroup || 'common.value.none' | translate}}</a>
@@ -71,7 +71,7 @@
                             e-ng-click="onPickerClick()" e-is-open="picker.opened" e-init-date="dateInfo.dueDate" e-on-open-focus="false"
                             onaftersave="updateDueDate(dateInfo.dueDate)" permission="editComplaint" permission-object-type="COMPLAINT"
                             permission-properties="objectInfo" permission-action="disable">
-                        {{ (dateInfo.dueDate | date: 'shortDate' ) || ('common.value.unknown' | translate) }}</a>
+                        {{ (dateInfo.dueDate | date: ('common.defaultDateTimeUIFormat' | translate) ) || ('common.value.unknown' | translate) }}</a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.dueDate.label</span></small>
             </div>

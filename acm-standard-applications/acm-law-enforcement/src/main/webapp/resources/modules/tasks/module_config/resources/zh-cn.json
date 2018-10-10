@@ -150,7 +150,7 @@
             "signedBy": "签字人"
         }
     },
-    "tasks.comp.docsreview": {
+    "tasks.comp.documentsunderreview": {
         "title": "审查文件",
         "table.columns": {
             "fileId": "识别号",
@@ -158,7 +158,11 @@
             "created": "创建",
             "creator": "作者",
             "status": "状态"
-        }
+        },
+        "searchInputPlaceholder": "Search",
+        "sendEmail": "Send Email",
+        "noDocsMessage": "No Documents for review",
+        "filterInputPlaceholder": "Filter"
     },
     "tasks.comp.history": {
         "title": "历史",

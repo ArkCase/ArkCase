@@ -493,6 +493,20 @@ public class PersonServiceImpl implements PersonService
         if (pictures != null)
         {
             boolean hasDefaultPicture = person.getDefaultPicture() != null;
+
+            // change for AFDP-6287
+            try
+            {
+                if (person.getContainer() == null)
+                {
+                    person = createContainerAndPictureFolder(person, authentication);
+                }
+            }   catch (AcmObjectNotFoundException e)
+            {
+                log.error("Error uploading pictures to person id [{}]", person.getId());
+                return person;
+            }
+
             for (MultipartFile picture : pictures)
             {
                 // TODO we need to send description from front end

@@ -2,9 +2,28 @@
 
 angular.module('cases').controller(
         'Cases.ActionsController',
-        [ '$scope', '$state', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService', 'Helper.ObjectBrowserService',
-                'Profile.UserInfoService', '$timeout', 'FormsType.Service',
-                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, $timeout, FormsTypeService) {
+        [
+                '$scope',
+                '$state',
+                '$stateParams',
+                '$translate',
+                '$q',
+                '$modal',
+                'UtilService',
+                'ConfigService',
+                'ObjectService',
+                'Authentication',
+                'Case.LookupService',
+                'Object.SubscriptionService',
+                'Object.ModelService',
+                'Case.InfoService',
+                'Case.MergeSplitService',
+                'Helper.ObjectBrowserService',
+                'Profile.UserInfoService',
+                '$timeout',
+                'FormsType.Service',
+                function($scope, $state, $stateParams, $translate, $q, $modal, Util, ConfigService, ObjectService, Authentication, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, $timeout,
+                        FormsTypeService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -27,6 +46,9 @@ angular.module('cases').controller(
                     ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
                         $scope.caseFileSearchConfig = _.find(moduleConfig.components, {
                             id: "merge"
+                        });
+                        $scope.newObjectPicker = _.find(moduleConfig.components, {
+                            id: "newObjectPicker"
                         });
                     });
 
@@ -169,17 +191,26 @@ angular.module('cases').controller(
                     };
 
                     $scope.merge = function(caseInfo) {
+
+                        var params = {};
+                        params.header = $translate.instant("cases.comp.merge.objectPicker.title");
+                        params.config = $scope.newObjectPicker;
+                        params.filter = 'fq="object_type_s": CASE_FILE';
+
                         var modalInstance = $modal.open({
-                            animation: $scope.animationsEnabled,
-                            templateUrl: 'modules/cases/views/components/case-merge.client.view.html',
-                            controller: 'Cases.MergeController',
+                            templateUrl: 'directives/core-participants/core-participants-picker-modal.client.view.html',
+                            controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+                                $scope.modalInstance = $modalInstance;
+                                $scope.header = params.header;
+                                $scope.filter = params.filter;
+                                $scope.extraFilter = params.extraFilter;
+                                $scope.config = params.config;
+                            } ],
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
-                                config: function() {
-                                    return $scope.caseFileSearchConfig;
-                                },
-                                filter: function() {
-                                    return '"Object Type": CASE_FILE' + '&fq="!status_lcs":"CLOSED"&fq="!object_id_s":' + caseInfo.id;
+                                params: function() {
+                                    return params;
                                 }
                             }
                         });

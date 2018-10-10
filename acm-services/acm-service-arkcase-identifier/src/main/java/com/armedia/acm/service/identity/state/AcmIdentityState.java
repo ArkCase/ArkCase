@@ -32,6 +32,10 @@ import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModule;
 public class AcmIdentityState extends StateOfModule
 {
     /**
+     * domain for
+     */
+    private String domain;
+    /**
      * local instance id
      */
     private String instanceID;
@@ -58,5 +62,15 @@ public class AcmIdentityState extends StateOfModule
     public void setGlobalID(String globalID)
     {
         this.globalID = globalID;
+    }
+
+    public String getDomain()
+    {
+        return domain;
+    }
+
+    public void setDomain(String domain)
+    {
+        this.domain = domain;
     }
 }

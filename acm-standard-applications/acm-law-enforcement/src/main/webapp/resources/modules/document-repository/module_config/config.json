@@ -190,7 +190,7 @@
                             "name": "modified",
                             "displayName": "document-repository.comp.details.table.columns.modified",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         },
                         {
                             "width": 150,
@@ -239,7 +239,7 @@
                         {
                             "name": "created",
                             "displayName": "document-repository.comp.notes.table.columns.created",
-                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate",
                             "enableCellEdit": false,
                             "width": 150
@@ -298,7 +298,7 @@
                         {
                             "name": "created",
                             "displayName": "document-repository.comp.tags.table.columns.created",
-                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate"
                         },
                         {
@@ -467,7 +467,7 @@
                 {
                     "name": "created",
                     "displayName": "document-repository.comp.notes.table.columns.created",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "width": 150
@@ -520,7 +520,7 @@
                     "name": "modified",
                     "displayName": "document-repository.comp.references.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "targetType",
@@ -560,7 +560,7 @@
                     "name": "eventDate",
                     "displayName": "document-repository.comp.history.table.columns.eventDate",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.eventDate | date : 'short' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.eventDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "userId",
@@ -596,7 +596,7 @@
                 {
                     "name": "created",
                     "displayName": "document-repository.comp.tags.table.columns.created",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -657,7 +657,7 @@
                     "name": "modified_date_tdt",
                     "displayName": "document-repository.comp.addreference.grid.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 }
             ],
             "paginationPageSizes": [

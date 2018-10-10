@@ -315,8 +315,9 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                     }
                 }
             }
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userId, userId,
-                    acmGrantedAuthoritiesMapper.mapAuthorities(grantedAuthorities));
+            grantedAuthorities.addAll(acmGrantedAuthoritiesMapper.mapAuthorities(grantedAuthorities));
+            Authentication authentication = new UsernamePasswordAuthenticationToken(userId, userId, grantedAuthorities);
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             loginSuccessOperations.onSuccessfulAuthentication(request, authentication);
