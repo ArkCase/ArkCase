@@ -443,6 +443,12 @@ public class LdapConfigurationService implements InitializingBean
         props.put("userDomain", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN)
                 ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN)
                 : "");
+        props.put("userPrefix", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_USER_PREFIX)
+                ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_PREFIX)
+                : "");
+        props.put("userControlGroup", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_USER_CONTROL_GROUP)
+                ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_CONTROL_GROUP)
+                : "");
         return props;
     }
 
