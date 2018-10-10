@@ -278,7 +278,7 @@
                             "name": "modified",
                             "displayName": "cases.comp.details.table.columns.modified",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         },
                         {
                             "width": 150,
@@ -373,7 +373,7 @@
                         {
                             "name": "created",
                             "displayName": "cases.comp.notes.table.columns.created",
-                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate",
                             "enableCellEdit": false,
                             "width": 150
@@ -414,7 +414,7 @@
                             "field": "due_tdt",
                             "displayName": "cases.comp.tasks.table.columns.due",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         }
                     ]
                 },
@@ -470,7 +470,7 @@
                         {
                             "name": "created",
                             "displayName": "cases.comp.tags.table.columns.created",
-                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate"
                         },
                         {
@@ -511,7 +511,7 @@
                             "field": "due_tdt",
                             "displayName": "cases.comp.approvalRouting.dueDate.label",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         }
                     ]
                 }
@@ -561,6 +561,42 @@
                     "subMenuForms": "cases.comp.documents.menu.forms",
                     "subMenuCorrespondences": "cases.comp.documents.menu.correspondences"
                 }
+            },
+            "dialogObjectPicker": {
+                "enableFiltering": false,
+                "multiSelect": false,
+                "showFacets": false,
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "cases.dialogObjectPicker.table.columns.name",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_type_s",
+                        "displayName": "cases.dialogObjectPicker.table.columns.type",
+                        "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "title_parseable",
+                        "displayName": "cases.dialogObjectPicker.table.columns.title",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_id_s",
+                        "displayName": "cases.dialogObjectPicker.table.columns.id",
+                        "headerCellFilter": "translate"
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 10,
+                "start": 0
             }
         },
         {
@@ -799,7 +835,7 @@
                 {
                     "name": "created",
                     "displayName": "cases.comp.notes.table.columns.created",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "width": 150
@@ -858,7 +894,7 @@
                     "field": "create_tdt",
                     "displayName": "cases.comp.tasks.table.columns.created",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "priority",
@@ -871,7 +907,7 @@
                     "field": "due_tdt",
                     "displayName": "cases.comp.tasks.table.columns.due",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "status",
@@ -928,7 +964,7 @@
                     "field": "target_object.modified_date_tdt",
                     "displayName": "cases.comp.references.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "status",
@@ -964,7 +1000,7 @@
                     "name": "eventDate",
                     "displayName": "cases.comp.history.table.columns.eventDate",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.eventDate | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.eventDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "userId",
@@ -1017,7 +1053,7 @@
                     "field": "modified",
                     "displayName": "cases.comp.time.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "status",
@@ -1066,7 +1102,7 @@
                     "field": "modified",
                     "displayName": "cases.comp.cost.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "status",
@@ -1102,7 +1138,7 @@
                 {
                     "name": "created",
                     "displayName": "cases.comp.tags.table.columns.created",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -1163,7 +1199,7 @@
                     "name": "modified_date_tdt",
                     "displayName": "cases.comp.merge.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 }
             ],
             "paginationPageSizes": [
@@ -1224,7 +1260,7 @@
                     "name": "modified_date_tdt",
                     "displayName": "cases.comp.addreference.grid.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 }
             ],
             "paginationPageSizes": [
@@ -1354,7 +1390,7 @@
                     "name": "approvalDate",
                     "displayName": "cases.comp.pastApprovals.table.columns.approvalDate",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.approvalDate | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.approvalDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "cellEditableCondition": false
                 },
                 {
@@ -1370,6 +1406,49 @@
                     "cellEditableCondition": false
                 }
             ]
+        },
+        {
+            "id": "newObjectPicker",
+            "title": "cases.comp.merge.objectPicker.title",
+            "enabled": "true",
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "emptySearch": false,
+            "hideTypeahead": true,
+            "showFacets": false,
+            "multiSelect": false,
+            "searchFilter":  "\"Object Type\": CASE_FILE",
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "cases.comp.merge.objectPicker.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "cases.comp.merge.objectPicker.table.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "cases.comp.merge.objectPicker.table.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "cases.comp.merge.objectPicker.table.columns.id",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
         },
         {
             "id": "userSearch",
@@ -1408,48 +1487,6 @@
             ],
             "paginationPageSize": 10,
             "start": 0
-        },
-        {
-            "id": "userOrGroupSearch",
-            "title": "tasks.userOrGroupSearch.title",
-            "enableFiltering": false,
-            "configurable": true,
-            "multiSelect": false,
-            "showFacets": false,
-            "columnDefs": [
-                {
-                    "name": "name",
-                    "displayName": "cases.userOrGroupSearch.assigneeGridColumns.name",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "object_type_s",
-                    "displayName": "cases.userOrGroupSearch.assigneeGridColumns.type",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "title",
-                    "displayName": "cases.userOrGroupSearch.assigneeGridColumns.title",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "object_id_s",
-                    "displayName": "cases.userOrGroupSearch.assigneeGridColumns.username",
-                    "headerCellFilter": "translate"
-                }
-            ],
-            "paginationPageSizes": [
-                5,
-                10,
-                20,
-                50
-            ],
-            "paginationPageSize": 10,
-            "start": 0,
-            "userOrGroupSearchFilters": {
-                "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
-                "userOrGroupFacetExtraFilter": "&fq=\"name\": "
-            }
         }
     ]
 }

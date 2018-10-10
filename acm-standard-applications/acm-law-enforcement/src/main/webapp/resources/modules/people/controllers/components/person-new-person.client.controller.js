@@ -58,6 +58,10 @@ angular.module('people').controller(
                         $scope.identificationTypes = identificationTypes;
                     });
 
+                    ObjectLookupService.getStates().then(function(states) {
+                        $scope.states = states;
+                    });
+
                     ObjectLookupService.getCountries().then(function(countries) {
                         $scope.countries = countries;
                     });
@@ -338,4 +342,22 @@ angular.module('people').controller(
                     $scope.cancelModal = function() {
                         $scope.onModalDismiss();
                     };
+
+                    $scope.validateInput = function(caType) {
+
+                        var inputType = caType;
+                        var value = $scope.person.defaultPhone.value;
+                        if (inputType == 'phone') {
+
+                            var regex = /^\d{3}[\-]\d{3}[\-]\d{4}$/;
+                            if (regex.test(value)) {
+                                $scope.showPhoneError = false;
+                                $scope.person.defaultPhone.value = value;
+                            } else {
+                                $scope.showPhoneError = true;
+                                $scope.person.defaultPhone.value = null;
+                            }
+                        }
+                    };
+
                 } ]);

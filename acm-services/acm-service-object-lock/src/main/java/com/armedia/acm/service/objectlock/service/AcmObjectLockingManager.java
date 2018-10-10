@@ -29,6 +29,7 @@ package com.armedia.acm.service.objectlock.service;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
+import com.armedia.acm.scheduler.AcmSchedulableBean;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 
 import java.util.HashMap;
@@ -42,11 +43,12 @@ import java.util.Map;
  * 
  * Created by bojan.milenkoski on 03/05/20186.
  */
-public class AcmObjectLockingManager
+public class AcmObjectLockingManager implements AcmSchedulableBean
 {
-
     private Map<String, ObjectLockingProvider> objectLockingProvidersMap = new HashMap<>();
     private ObjectLockingProvider defaultObjectLockingProvider;
+
+    private AcmObjectLockService acmObjectLockService;
 
     /**
      * Checks if a lock type can be acquired for a given {@link AcmObject}, specified by the objectId and object type.
@@ -159,4 +161,14 @@ public class AcmObjectLockingManager
         this.defaultObjectLockingProvider = defaultObjectLockingProvider;
     }
 
+    public void setAcmObjectLockService(AcmObjectLockService acmObjectLockService)
+    {
+        this.acmObjectLockService = acmObjectLockService;
+    }
+
+    @Override
+    public void executeTask()
+    {
+        acmObjectLockService.removeExpiredLocks();
+    }
 }

@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.onlyoffice.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -40,7 +40,9 @@ import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseSuccess;
 import com.armedia.acm.plugins.onlyoffice.model.StatusType;
 import com.armedia.acm.plugins.onlyoffice.model.callback.Action;
 import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +50,7 @@ import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
@@ -59,12 +62,22 @@ public class CallbackServiceImpl implements CallbackService
     private EcmFileService ecmFileService;
     private AcmObjectLockService objectLockService;
     private OnlyOfficeEventPublisher onlyOfficeEventPublisher;
+    private JWTSigningService jwtSigningService;
+    private boolean inboundVerifyEnabled;
+    private DocumentHistoryManager documentHistoryManager;
+    private AcmObjectLockingManager acmObjectLockingManager;
 
     @Override
     public CallbackResponse handleCallback(CallBackData callBackData, Authentication authentication)
     {
         Objects.requireNonNull(callBackData, "Callback data must not be null.");
         logger.debug("handle callback data [{}]", callBackData);
+
+        if (inboundVerifyEnabled)
+        {
+            // TODO verify callback data in token are equal as provided
+        }
+
         switch (StatusType.from(callBackData.getStatus()))
         {
         case NO_DOCUMENT_WITH_ID_FOUND:
@@ -126,11 +139,11 @@ public class CallbackServiceImpl implements CallbackService
     private CallbackResponse handleReadyForSaving(CallBackData callBackData, Authentication authentication)
     {
         logger.debug("handleReadyForSaving.");
-        java.net.HttpURLConnection connection;
+        HttpURLConnection connection;
         try
         {
             URL url = new URL(callBackData.getUrl());
-            connection = (java.net.HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
         }
         catch (IOException e)
         {
@@ -145,7 +158,9 @@ public class CallbackServiceImpl implements CallbackService
                 Long fileId = parseFileId(key);
                 EcmFile ecmFile = ecmFileDao.find(fileId);
 
-                ecmFileService.update(ecmFile, stream, authentication);
+                AcmObjectLock existingLock = objectLockService.findLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE);
+
+                EcmFile updatedFile = ecmFileService.update(ecmFile, stream, authentication);
                 stream.close();
                 logger.debug("Document with key [{}] successfully saved to Arkcase.", key);
                 // handle actions
@@ -153,7 +168,12 @@ public class CallbackServiceImpl implements CallbackService
                 {
                     handleActions(callBackData.getActions(), ecmFile);
                 }
-                objectLockService.removeLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE, FileLockType.SHARED_WRITE.name(), authentication);
+                // save changes
+                documentHistoryManager.saveHistoryChanges(callBackData.getHistory(), callBackData.getChangesUrl(), updatedFile);
+
+                // remove lock
+                acmObjectLockingManager.releaseObjectLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE, FileLockType.SHARED_WRITE.name(),
+                        false, authentication.getName(), existingLock.getId());
                 onlyOfficeEventPublisher.publishDocumentCoEditSavedEvent(ecmFile, authentication.getName());
             }
             else
@@ -178,7 +198,7 @@ public class CallbackServiceImpl implements CallbackService
 
     /**
      * this method is being called when user opens/closes document for/from editing
-     * 
+     *
      * @param callBackData
      * @return CallbackResponseSuccess
      */
@@ -234,5 +254,25 @@ public class CallbackServiceImpl implements CallbackService
     public void setObjectLockService(AcmObjectLockService objectLockService)
     {
         this.objectLockService = objectLockService;
+    }
+
+    public void setInboundVerifyEnabled(boolean inboundVerifyEnabled)
+    {
+        this.inboundVerifyEnabled = inboundVerifyEnabled;
+    }
+
+    public void setJwtSigningService(JWTSigningService jwtSigningService)
+    {
+        this.jwtSigningService = jwtSigningService;
+    }
+
+    public void setDocumentHistoryManager(DocumentHistoryManager documentHistoryManager)
+    {
+        this.documentHistoryManager = documentHistoryManager;
+    }
+
+    public void setAcmObjectLockingManager(AcmObjectLockingManager acmObjectLockingManager)
+    {
+        this.acmObjectLockingManager = acmObjectLockingManager;
     }
 }

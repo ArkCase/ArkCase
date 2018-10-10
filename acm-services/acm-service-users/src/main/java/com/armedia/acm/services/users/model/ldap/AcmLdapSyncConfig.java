@@ -33,6 +33,8 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String groupSearchFilter;
     private String auditUserId = AcmLdapConstants.DEFAULT_AUDIT_USER;
     private String userDomain;
+    private String userPrefix;
+    private String userControlGroup;
     private String userSearchBase;
     private String userSearchFilter;
     private String allUsersFilter;
@@ -86,6 +88,26 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setUserDomain(String userDomain)
     {
         this.userDomain = userDomain;
+    }
+
+    public String getUserPrefix()
+    {
+        return userPrefix;
+    }
+
+    public void setUserPrefix(String userPrefix)
+    {
+        this.userPrefix = userPrefix;
+    }
+
+    public String getUserControlGroup()
+    {
+        return userControlGroup;
+    }
+
+    public void setUserControlGroup(String userControlGroup)
+    {
+        this.userControlGroup = userControlGroup;
     }
 
     public String getUserSearchBase()

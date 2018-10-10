@@ -49,6 +49,7 @@ import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -113,7 +114,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
     {
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
-        String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig.getUserDomain());
+        String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig);
 
         AcmUser user = checkExistingUser(userId);
 
@@ -126,7 +127,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
             user = userDto.updateAcmUser(user);
         }
 
-        String dn = Directory.valueOf(ldapSyncConfig.getDirectoryType()).buildDnForUserEntry(userDto.getUserId(), ldapSyncConfig);
+        String dn = Directory.valueOf(ldapSyncConfig.getDirectoryType())
+                .buildDnForUserEntry(StringUtils.substringBeforeLast(userId, "@"), ldapSyncConfig);
         user.setDistinguishedName(dn);
         user.setUserDirectoryName(directoryName);
         user.setUserState(AcmUserState.VALID);
@@ -140,6 +142,11 @@ public class LdapUserService implements ApplicationEventPublisherAware
         }
 
         Set<AcmGroup> groups = new HashSet<>();
+
+        if (StringUtils.isNotBlank(ldapSyncConfig.getUserControlGroup()))
+        {
+            userDto.getGroupNames().add(ldapSyncConfig.getUserControlGroup());
+        }
 
         for (String groupName : userDto.getGroupNames())
         {
@@ -310,7 +317,16 @@ public class LdapUserService implements ApplicationEventPublisherAware
     public AcmUser removeUserFromGroups(String userId, List<String> groups, String directory)
             throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
+        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
+
         Set<String> groupsDnToUpdate = new HashSet<>();
+        String controlGroup = ldapSyncConfig.getUserControlGroup();
+
+        // prevent removing the user from the control group if configured
+        if (groups.contains(controlGroup))
+        {
+            throw new AcmLdapActionFailedException(String.format("'%s' group is a required system group and can't be removed.", controlGroup));
+        }
 
         for (String groupName : groups)
         {
@@ -322,8 +338,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
         }
 
         AcmUser user = userDao.findByUserId(userId);
-
-        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
 
         ldapGroupDao.removeMemberFromGroups(user.getDistinguishedName(), groupsDnToUpdate, ldapSyncConfig);
 

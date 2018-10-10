@@ -320,6 +320,7 @@
     "complaints.comp.closeComplaint": {
         "title": "hi_Close Complaint",
         "info": "hi_Incident Information",
+        "description.label": "hi_Description",
         "infoMessage": "hi_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
         "complaintTitle": "hi_Complaint Title",
         "information": {
@@ -351,10 +352,10 @@
         },
         "approver": {
             "placeholder": "hi_Select Approver",
-            "label": "hi_Select Approver",
+            "label": "hi_Approver",
             "addAnother": "hi_Add another",
             "remove": "hi_Remove Approver",
-            "pickerModal.header": "hi_Choose Approver"
+            "pickerModal.header": "hi_Search for User"
         },
         "cancelButton": "hi_Cancel",
         "saveButton": "hi_Save Complaint"

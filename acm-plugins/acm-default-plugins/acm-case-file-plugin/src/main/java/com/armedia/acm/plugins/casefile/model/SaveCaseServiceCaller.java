@@ -1,8 +1,8 @@
-package com.armedia.acm.plugins.onlyoffice.service;
+package com.armedia.acm.plugins.casefile.model;
 
 /*-
  * #%L
- * ACM Extra Plugin: OnlyOffice Integration
+ * ACM Default Plugin: Case File
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.onlyoffice.service;
  * #L%
  */
 
-public class CallbackServiceImplTest
+public enum SaveCaseServiceCaller
 {
-
+    CLOSE_COMPLAINT
 }

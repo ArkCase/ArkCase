@@ -28,10 +28,11 @@ html {
     height: 100%;
     width: 100%;
 }
+
 body {
     background: #fff;
     color: #333;
-    font-family: 'Open Sans', Tahoma,sans-serif;
+    font-family: 'Open Sans', Tahoma, sans-serif;
     font-size: 12px;
     font-weight: normal;
     height: 100%;
@@ -39,36 +40,42 @@ body {
     padding: 0;
     text-decoration: none;
 }
+
 form {
     height: 100%;
 }
+
 div {
     margin: 0;
     padding: 0;
 }
+
 a, a:hover, a:visited {
     color: #333;
 }
 
-
 .top-panel {
-    background: url("img/logo.png") no-repeat 30px center #3D4A6B;
+    background: url("../img/logo.png") no-repeat 30px center #3D4A6B;
     height: 80px;
     width: 100%;
 }
+
 .main-panel {
     margin: 80px auto;
     width: 600px;
 }
+
 .portal-name {
     font-size: 20px;
 }
+
 .portal-descr {
     display: inline-block;
     line-height: 20px;
     margin-bottom: 24px;
     width: 600px;
 }
+
 .save-original {
     color: #929597;
     line-height: 20px;
@@ -76,16 +83,19 @@ a, a:hover, a:visited {
     white-space: nowrap;
     width: 272px;
 }
+
 label .checkbox {
     vertical-align: middle;
 }
+
 .question {
-    background: url("img/question_small.png") no-repeat center center transparent;
+    background: url("../img/question_small.png") no-repeat center center transparent;
     cursor: pointer;
     display: inline-block;
     height: 16px;
     width: 16px;
 }
+
 #hint {
     background-color: #FFFFFF;
     border: 1px solid #8E908F;
@@ -96,8 +106,9 @@ label .checkbox {
     word-wrap: break-word;
     z-index: 255;
 }
+
 .corner {
-    background: url("img/corner.png") no-repeat scroll 0 0 transparent;
+    background: url("../img/corner.png") no-repeat scroll 0 0 transparent;
     height: 6px;
     left: 35px;
     margin-top: -15px;
@@ -105,9 +116,10 @@ label .checkbox {
     width: 9px;
     z-index: 261;
 }
+
 .try-descr {
     font-size: 16px;
-    white-space : nowrap;
+    white-space: nowrap;
 }
 
 .try-editor-list {
@@ -115,11 +127,13 @@ label .checkbox {
     margin: 0;
     padding: 0;
 }
+
 .try-editor-list li {
     float: left;
     margin: 25px;
     width: 150px;
 }
+
 .try-editor {
     background-color: transparent;
     background-position: center 0;
@@ -132,14 +146,17 @@ label .checkbox {
     text-align: center;
     text-decoration: none;
 }
+
 .try-editor.document {
-    background-image: url("img/file_docx.png");
+    background-image: url("../img/file_docx.png");
 }
+
 .try-editor.spreadsheet {
-    background-image: url("img/file_xlsx.png");
+    background-image: url("../img/file_xlsx.png");
 }
+
 .try-editor.presentation {
-    background-image: url("img/file_pptx.png");
+    background-image: url("../img/file_pptx.png");
 }
 
 .button, .button:visited, .button:hover, .button:active {
@@ -147,8 +164,8 @@ label .checkbox {
     font-weight: normal;
     text-align: center;
     text-decoration: none;
-    vertical-align: middle;    
-    cursor:pointer;
+    vertical-align: middle;
+    cursor: pointer;
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -165,8 +182,8 @@ label .checkbox {
     margin-right: 3px;
     padding: 4px 12px;
 
-    color: #fff; 
-    
+    color: #fff;
+
     background: #3D96C6;
 
     border-width: 1px;
@@ -177,8 +194,9 @@ label .checkbox {
 .button.disable {
     cursor: default;
     background: #BADDEF;
-    border: 1px solid #BADDEF;   
+    border: 1px solid #BADDEF;
 }
+
 .button.gray {
     background: #888;
     border: 1px solid #E9EAEA;
@@ -191,10 +209,12 @@ label .checkbox {
     overflow: hidden;
     position: relative;
 }
+
 .file-upload span {
     line-height: 21px;
     margin: 2px 12px;
 }
+
 .file-upload input {
     cursor: pointer;
     font-size: 23px;
@@ -210,17 +230,21 @@ label .checkbox {
     display: none;
     margin: 15px;
 }
+
 #mainProgress #embeddedView {
     display: none;
 }
+
 #mainProgress.embedded #embeddedView {
     display: block;
 }
+
 #mainProgress.embedded #uploadSteps {
     display: none;
 }
+
 .error-message {
-    background: url("img/alert.png") no-repeat scroll 4px 10px #FFECE3;
+    background: url("../img/alert.png") no-repeat scroll 4px 10px #FFECE3;
     color: #666668 !important;
     display: none;
     font-size: 13px;
@@ -229,9 +253,11 @@ label .checkbox {
     padding: 10px 10px 10px 30px;
     vertical-align: middle;
 }
+
 #mainProgress .error-message a {
     color: #666668;
 }
+
 .step {
     background-repeat: no-repeat;
     background-position: left center;
@@ -241,47 +267,54 @@ label .checkbox {
     line-height: 30px;
     padding-left: 25px;
 }
+
 .current {
-    background-image: url("img/loader16.gif");
+    background-image: url("../img/loader16.gif");
     color: #333;
 }
+
 .done {
-    background-image: url("img/done.png");
+    background-image: url("../img/done.png");
     color: #333;
 }
+
 .error {
-    background-image: url("img/alert.png");
+    background-image: url("../img/alert.png");
 }
+
 .step-descr {
     display: block;
     margin-left: 45px;
 }
+
 #mainProgress .step-descr a {
     color: #979B9F;
 }
+
 .progress-descr {
     color: #333;
 }
+
 #loadScripts {
     display: none;
 }
+
 #iframeScripts {
     position: absolute;
     visibility: hidden;
 }
+
 .bottom-panel {
     bottom: 0;
     position: fixed;
     text-align: right;
     width: 100%;
 }
+
 .help-block span {
     font-size: 16px;
     line-height: 26px;
 }
-
-
-
 
 .blockTitle {
     background-color: #E2E2E2 !important;
@@ -294,8 +327,9 @@ label .checkbox {
     font-weight: normal !important;
     padding: 15px 25px !important;
 }
+
 .dialog-close {
-    background: url("img/close.png") no-repeat scroll left top #E2E2E2;
+    background: url("../img/close.png") no-repeat scroll left top #E2E2E2;
     cursor: pointer;
     float: right;
     font-size: 1px;
@@ -304,11 +338,12 @@ label .checkbox {
     margin-top: 4px;
     width: 12px;
 }
+
 .blockPage {
     border: none !important;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    -webkit-box-shadow:0 2px 4px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     padding: 0 !important;
 }

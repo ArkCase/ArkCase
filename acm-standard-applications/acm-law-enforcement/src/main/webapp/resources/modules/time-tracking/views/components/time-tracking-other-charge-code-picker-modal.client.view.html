@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <h3>
+        <span translate>timeTracking.comp.newTimesheet.otherChargeCodePicker.title</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <div ui-grid="gridOptions" ui-grid-selection class="grid"></div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="onClickCancel()">
+        <span translate>timeTracking.comp.newTimesheet.otherChargeCodePicker.buttons.cancel</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="!selectedItem">
+        <span translate>timeTracking.comp.newTimesheet.otherChargeCodePicker.buttons.ok</span>
+    </button>
+</div>
