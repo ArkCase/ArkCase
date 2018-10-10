@@ -125,7 +125,8 @@ import java.util.UUID;
         "/spring/spring-library-search.xml",
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-task.xml",
-        "/spring/spring-library-user-service.xml"
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-core-api.xml"        
     })
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
@@ -225,10 +226,13 @@ public class MergeCaseFileServiceIT
         mergeCaseOptions.setTargetCaseFileId(targetId);
 
         List<EcmFile> sourceFiles = ecmFileDao.findForContainer(sourceSaved.getContainer().getId());
-        assertEquals(2, sourceFiles.size());
+        // the case file pipeline generates a PDF representation of the case file, so we start with one file,
+        // and then we added two in this test.
+        assertEquals(3, sourceFiles.size());
 
         List<EcmFile> targetFiles = ecmFileDao.findForContainer(targetSaved.getContainer().getId());
-        assertEquals(0, targetFiles.size());
+        // target case file also got a PDF file, from the pipeline.
+        assertEquals(1, targetFiles.size());
 
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
 
@@ -236,7 +240,7 @@ public class MergeCaseFileServiceIT
         assertEquals(0, sourceFiles.size());
 
         targetFiles = ecmFileDao.findForContainer(targetSaved.getContainer().getId());
-        assertEquals(2, targetFiles.size());
+        assertEquals(4, targetFiles.size());
 
         CaseFile sourceCase = caseFileDao.find(sourceId);
         CaseFile targetCase = caseFileDao.find(targetId);
