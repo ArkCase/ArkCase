@@ -76,10 +76,20 @@ public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends C
 
         Complaint complaint = (Complaint) businessObject;
 
+        String incidentDateStr = "Unknown";
+        if ( complaint.getIncidentDate() != null )
+        {
+            incidentDateStr = complaint.getIncidentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString();
+        }
         addElement(document, rootElem, "incidentDate",
-                complaint.getIncidentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString(),
+                incidentDateStr,
                 true);
-        addElement(document, rootElem, "initiator", complaint.getOriginator().getPerson().getFullName(), true);
+        String initiator = "Unknown";
+        if ( complaint.getOriginator() != null && complaint.getOriginator().getPerson() != null && complaint.getOriginator().getPerson().getFullName() != null )
+        {
+            initiator = complaint.getOriginator().getPerson().getFullName();
+        }
+        addElement(document, rootElem, "initiator", initiator, true);
 
         addElement(document, rootElem, "complaintType", complaint.getComplaintType(), true);
         addElement(document, rootElem, "complaintNumber", complaint.getComplaintNumber(), true);
