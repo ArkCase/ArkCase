@@ -341,4 +341,25 @@ angular.module('admin').controller(
                         }
                     }
 
+                    // Add method for AFDP-6803 to customize ok button
+                    $scope.deleteUserConfirm = function deleteUserConfirm() {
+                        bootbox.confirm({
+                            message: $translate.instant("admin.security.ldap.user.management.deleteUserMsg"),
+                            buttons: {
+                                confirm:{
+                                    label: $translate.instant("admin.security.ldap.user.management.deleteUserBtn"),
+                                    className: "btn btn-danger"
+                                },
+                                cancel: {
+                                    label: $translate.instant("admin.security.ldap.user.management.cancelBtn")
+                                }
+                            },
+                            callback: function(result){
+                                if (result) {
+                                    deleteUser();
+                                }
+                            }
+                        })
+                    }
+
                 } ]);
