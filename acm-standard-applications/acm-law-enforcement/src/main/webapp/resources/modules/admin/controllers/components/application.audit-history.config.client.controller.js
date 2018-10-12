@@ -13,10 +13,18 @@ angular.module('admin').controller('Admin.AuditHistoryController',
                     ApplicationSettingsService.setProperty(ApplicationSettingsService.PROPERTIES.HISTORY_DAYS, $scope.historyDays);
                     saved.historyDays = $scope.historyDays;
 
-                    // Replace with "successfully saved" message.
-                    DialogService.alert($translate.instant("admin.application.auditHistory.config.inform")).then(function() {
-                        //success
-                        messageService.succsessAction();
+
+                    //change for AFDP-6803 change ok button content
+                    bootbox.alert({
+                        message: $translate.instant("admin.application.auditHistory.config.inform"),
+                        buttons: {
+                            ok:{
+                                label: $translate.instant("admin.application.auditHistory.config.dialog.OKBtn")
+                            },
+                        },
+                        callback: function(result) {
+                            messageService.succsessAction();
+                        }
                     });
                 }
             }
