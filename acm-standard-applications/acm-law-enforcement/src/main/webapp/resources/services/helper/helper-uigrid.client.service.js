@@ -584,35 +584,8 @@ angular.module('services').factory(
                                 cellTemplate: "<span><i class='fa fa-trash-o fa-lg' style='cursor :pointer' ng-hide='grid.appScope.isReadOnly(row.entity)' ng-click='" + onClickDelete + "'></i></span>"
                             };
                             columnDefs.push(columnDef);
-                        },
-
-                        /**
-                         * @ngdoc method
-                         * @name setPermission
-                         * @methodOf services:Helper.UiGridService
-                         *
-                         * @description
-                         * add permission check to columns
-                         *
-                         * @param {Object} config Component configuration data with grid options.
-                         * @param {String} defualt fallback permission sent from initialization object - nullable.
-                         */
-                        setPermission: function (config) {
-                            if(config.permission){
-                                this.scope.gridOptions.permission= config.permission;
-                                if(this.scope.gridOptions.columnDefs) {
-                                    for (var i = 0; i < this.scope.gridOptions.columnDefs.length; i++) {
-                                        var column = this.scope.gridOptions.columnDefs[i];
-                                        if(column.cellTemplate){
-                                            if(column.cellTemplate.indexOf('<a') != -1){
-                                                var permissionTemplate = "permission='" + this.scope.gridOptions.permission.name + "' permission-object-type='" + this.scope.gridOptions.permission.type + "' permission-properties='grid.appScope.objectInfo' permission-action='disable' ";
-                                                column.cellTemplate = [column.cellTemplate.slice(0, 3), permissionTemplate, column.cellTemplate.slice(3)].join('');
-                                            }
-                                        }
-                                    }
-                                }
-                            }
                         }
+
                         /**
                          * @ngdoc method
                          * @name addButton
@@ -661,10 +634,6 @@ angular.module('services').factory(
                             var cellTemplate = "<a title='' class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
                             if (readOnlyFn) {
                                 cellTemplate += " ng-hide='grid.appScope." + readOnlyFn + "(row.entity)'";
-                            }
-                            if(this.scope.gridOptions.permission){
-                                // additional permission check
-                                cellTemplate += "permission='" + this.scope.gridOptions.permission.name + "' permission-object-type='" + this.scope.gridOptions.permission.type + "' permission-properties='grid.appScope.objectInfo' permission-action='disable' ";
                             }
                             cellTemplate += "><i class='" + icon + "'></i></a>";
 

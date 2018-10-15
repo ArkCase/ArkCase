@@ -37,7 +37,6 @@ angular.module('cases').controller(
                         gridHelper.setBasicOptions(config);
                         gridHelper.disableGridScrolling(config);
                         gridHelper.addButton(config, "edit");
-                        gridHelper.setPermission(config);
 
                         for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                             if ("name" == $scope.config.columnDefs[i].name) {
