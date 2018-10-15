@@ -1,8 +1,8 @@
-package com.armedia.acm.services.search.model.solr;
+package com.armedia.acm.services.users.model.group;
 
 /*-
  * #%L
- * ACM Service: Search
+ * ACM Service: Users
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,34 +27,26 @@ package com.armedia.acm.services.search.model.solr;
  * #L%
  */
 
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
-/**
- * Created by armdev on 10/23/14.
- */
-public interface SolrBaseDocument
+@Entity
+@Table(name = "acm_group_identifier")
+public class AcmGroupIdentifier
 {
-    String getId();
+    @Id
+    @TableGenerator(name = "group_identifier_generator", table = "acm_group_identifier_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_group_identifier", initialValue = 100, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "group_identifier_generator")
+    @Column(name = "cm_id", nullable = false, updatable = false)
+    private Long id;
 
-    void setId(String id);
-
-    void setDeny_user_ls(List<Long> deny_user_ls);
-
-    void setAllow_user_ls(List<Long> allow_user_ls);
-
-    void setDeny_group_ls(List<Long> deny_group_ls);
-
-    void setAllow_group_ls(List<Long> allow_group_ls);
-
-    void setParent_deny_user_ls(List<Long> parent_deny_user_ls);
-
-    void setParent_allow_user_ls(List<Long> parent_allow_user_ls);
-
-    void setParent_deny_group_ls(List<Long> parent_deny_group_ls);
-
-    void setParent_allow_group_ls(List<Long> parent_allow_group_ls);
-
-    void setPublic_doc_b(boolean public_doc_b);
-
-    void setProtected_object_b(boolean protected_object_b);
+    public Long getId()
+    {
+        return id;
+    }
 }

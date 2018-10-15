@@ -30,9 +30,12 @@ package com.armedia.acm.auth;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.event.LdapGroupCreatedEvent;
 import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
 
+import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.service.group.GroupService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +54,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AcmGrantedAuthoritiesMapper implements ApplicationListener<ApplicationEvent>
 {
@@ -74,6 +78,8 @@ public class AcmGrantedAuthoritiesMapper implements ApplicationListener<Applicat
     private PropertyFileManager propertyFileManager;
 
     private AcmRoleToGroupMapping roleToGroupMapping;
+
+    private GroupService groupService;
 
     /**
      * Read the role mapping file and set the group mapping properties. The
@@ -151,6 +157,23 @@ public class AcmGrantedAuthoritiesMapper implements ApplicationListener<Applicat
                 .collect(Collectors.toSet());
     }
 
+    public Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)
+    {
+        // All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
+        List<AcmGroup> groups = groupService.findByUserMember(user);
+
+        Stream<AcmGrantedGroupAuthority> authorityGroups = groups.stream()
+                .map(authority -> new AcmGrantedGroupAuthority(authority.getName(), authority.getIdentifier()));
+
+        Stream<AcmGrantedGroupAuthority> authorityAscendantsGroups = groups.stream()
+                .flatMap(AcmGroup::getAscendantsStream)
+                .map(it -> groupService.findByName(it))
+                .map(authority -> new AcmGrantedGroupAuthority(authority.getName(), authority.getIdentifier()));
+
+        return Stream.concat(authorityGroups, authorityAscendantsGroups)
+                .collect(Collectors.toSet());
+    }
+
     public Properties getApplicationRoleToUserGroupProperties()
     {
         return applicationRoleToUserGroupProperties;
@@ -184,5 +207,15 @@ public class AcmGrantedAuthoritiesMapper implements ApplicationListener<Applicat
     public void setRoleToGroupMapping(AcmRoleToGroupMapping roleToGroupMapping)
     {
         this.roleToGroupMapping = roleToGroupMapping;
+    }
+
+    public GroupService getGroupService()
+    {
+        return groupService;
+    }
+
+    public void setGroupService(GroupService groupService)
+    {
+        this.groupService = groupService;
     }
 }
