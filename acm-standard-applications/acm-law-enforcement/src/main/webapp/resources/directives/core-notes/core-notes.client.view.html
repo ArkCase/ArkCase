@@ -4,7 +4,7 @@
             <span>{{notesInit.noteTitle}}</span>
 
             <div class="pull-right">
-                <button class="btn btn-default btn-xs" ng-click="addNew()" ng-disabled="notesInit.isReadOnly"><i
+                <button class="btn btn-default btn-xs" ng-click="addNew()" ng-disabled="notesInit.isReadOnly || !hasActionPermission"><i
                         class="fa fa-lg fa-plus"></i></button>
             </div>
         </div>

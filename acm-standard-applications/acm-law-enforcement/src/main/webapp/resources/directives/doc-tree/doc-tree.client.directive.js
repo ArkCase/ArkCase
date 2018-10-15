@@ -2071,6 +2071,11 @@ angular
                                         }
                                     });
                                 }
+                                if (!DocTree.hasActionPermission) {
+                                    _.each(menu, function(item) {
+                                        item.disabled = true;
+                                    });
+                                }
                                 menuDeferred.resolve(menu);
                             });
 

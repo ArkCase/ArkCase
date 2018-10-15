@@ -86,6 +86,7 @@ angular.module('cases').controller(
                             gridHelper.setColumnDefs(updatedConfig);
                             gridHelper.setBasicOptions(updatedConfig);
                             gridHelper.disableGridScrolling(updatedConfig);
+                            gridHelper.setPermission(updatedConfig);
                         });
 
                     };

@@ -95,6 +95,9 @@ angular.module('directives').directive(
                                 gridHelper.setBasicOptions(config);
                                 gridHelper.disableGridScrolling(config);
                                 gridHelper.setUserNameFilterToConfig(promiseUsers);
+
+                                config.permission = config.permission || scope.participantsInit.permission;
+                                gridHelper.setPermission(config);
                             };
 
                             var showModal = function(participant, isEdit, showReplaceChildrenParticipants) {
@@ -242,7 +245,7 @@ angular.module('directives').directive(
                                     scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                                 }
                                 saveObjectInfoAndRefresh();
-                            }
+                            };
 
                             scope.isDeleteDisabled = function(rowEntity) {
                                 return !rowEntity.deletable;

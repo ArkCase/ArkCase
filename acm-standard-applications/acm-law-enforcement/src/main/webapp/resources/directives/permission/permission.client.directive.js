@@ -12,7 +12,7 @@
  * The permission directive controls User Interface control availability depends on security settings.
  * Action name consists of 2 parts: module name and actionName, for example: 'cases.createCase'
  *
- * @param {string} permission Acion name that includes module name, for example: 'cases.createCase'
+ * @param {string} permission Acion name that includes module name, for example: 'cases.createCase' ( can also be included multiple action for a single element ex: 'cases.createCase | cases.editCase'
  * @param {String} permission-object-type Object type to be passed to permission service
  * @param {string} permission-properties Data object that shhould be passed to permissions service
  * @param {string} [permission-action=disable] Defines action that should be applied to disabled UI control ('disable', 'hide')
@@ -67,7 +67,10 @@ angular.module('directives').directive('permission', [ '$q', '$log', 'Permission
     };
 
     function setPermission(element, actionName, objectType, permissionProperties, permissionAction) {
-        PermissionsService.getActionPermission(actionName, permissionProperties, {
+        actionName = actionName.split("|");
+        for(var i=0;i < actionName.length; i++){
+            var action = actionName[i];
+        PermissionsService.getActionPermission(action, permissionProperties, {
             objectType: objectType
         }).then(function success(enabled) {
 
@@ -99,8 +102,9 @@ angular.module('directives').directive('permission', [ '$q', '$log', 'Permission
                 element.attr('permission-disabled', false);
             }
         }, function error() {
-            $log.error('Can\'t get permission info for action ' + actionName);
+            $log.error('Can\'t get permission info for action ' + action);
         });
+        }
     }
     ;
 
