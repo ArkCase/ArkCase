@@ -30,7 +30,6 @@ angular.module('cases').controller(
                         gridHelper.setColumnDefs(config);
                         gridHelper.setBasicOptions(config);
                         gridHelper.disableGridScrolling(config);
-                        gridHelper.setPermission(config);
                     };
 
                     var onObjectInfoRetrieved = function(objectInfo) {

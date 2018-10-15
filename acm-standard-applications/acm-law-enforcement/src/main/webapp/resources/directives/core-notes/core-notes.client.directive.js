@@ -111,9 +111,6 @@ angular.module('directives').directive(
                                     gridHelper.disableGridScrolling(config);
                                     gridHelper.setExternalPaging(config, scope.retrieveGridData);
 
-                                    config.permission = config.permission || scope.notesInit.permission;
-                                    gridHelper.setPermission(config);
-
                                     gridHelper.setUserNameFilterToConfig(promiseUsers);
                                     scope.retrieveGridData();
                                 }
