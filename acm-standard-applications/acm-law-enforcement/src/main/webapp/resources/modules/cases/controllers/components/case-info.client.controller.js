@@ -45,7 +45,7 @@ angular.module('cases').controller(
                     ConfigService.getComponentConfig("cases", "participants").then(function(componentConfig) {
                         $scope.config = componentConfig;
                     });
-                    ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
+                    ConfigService.getModuleConfig("common").then(function(moduleConfig) {
                         $scope.userOrGroupSearchConfig = _.find(moduleConfig.components, {
                             id: "userOrGroupSearch"
                         });

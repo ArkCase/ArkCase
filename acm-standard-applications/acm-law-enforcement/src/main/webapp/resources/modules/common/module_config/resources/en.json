@@ -642,6 +642,16 @@
             "error.ownerUnique": "Only one owner is allowed."
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "Add Participant",
+        "editParticipant.label": "Edit Record",
+        "participantType.label": "Participant Type",
+        "participantName.label": "Participant Name",
+        "btnOk.text": "Save",
+        "btnCancel.text": "Cancel",
+        "dialogUserGroupPicker.header": "Search User/Group",
+        "replaceChildrenParticipant": "replace children participant"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "% Complete"
     },
@@ -805,7 +815,8 @@
             "name": "Name",
             "id": "ID",
             "title": "Title"
-        }
+        },
+        "addDocument": "Choose document to add"
     },
     "common.addOrganization": {
         "title": "Add Organization",

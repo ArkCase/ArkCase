@@ -32,6 +32,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.SaveCaseServiceCaller;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.springframework.security.core.Authentication;
@@ -67,4 +68,10 @@ public interface SaveCaseService
             throws AcmUserActionFailedException,
             AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
             IOException;
+
+    @Transactional
+    default CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress, SaveCaseServiceCaller caller) throws PipelineProcessException
+    {
+        return null;
+    }
 }

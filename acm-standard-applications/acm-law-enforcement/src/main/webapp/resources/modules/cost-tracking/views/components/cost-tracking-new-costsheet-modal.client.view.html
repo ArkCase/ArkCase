@@ -26,7 +26,7 @@
                         <label for="costType" translate>costTracking.comp.newCostsheet.costType</label>
                         <span class="required-asterisk">*</span>
                         <select id="costType" ng-model="costsheet.parentType" class="form-control input-md"
-                                ng-change="updateIsTypeSelected()" required>
+                                ng-change="updateIsTypeSelected()" ng-disabled="disableCostType" required>
                             <option ng-repeat="option in costsheetTypes" value="{{option.key}}">
                                 {{option.value | translate}}
                             </option>

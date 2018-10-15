@@ -1,0 +1,16 @@
+<div>
+    <div ng-if="docReview.showChart">
+        <div class="panel-body">
+            </br>
+            <div class="chart-container">
+                <canvas id="bar" class="chart chart-bar" chart-data="docReview.data" chart-labels="docReview.labels"
+                        chart-series="docReview.series" chart-responsive="true" chart-legend="true"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="alert" ng-if="!docReview.showChart">
+        <p class="text-center">
+            <span translate>dashboard.widgets.docReview.noDataMessage</span>
+        </p>
+    </div>
+</div>

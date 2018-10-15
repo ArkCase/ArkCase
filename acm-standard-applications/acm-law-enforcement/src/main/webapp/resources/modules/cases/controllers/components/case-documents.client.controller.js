@@ -232,46 +232,6 @@ angular.module('cases').controller(
                         });
                     };
 
-                    $scope.$on('onSearchDocumentsDocTree', function() {
-                        var params = {};
-                        params.header = $translate.instant("cases.comp.documents.addDocument");
-                        params.filter = '"Object Type": FILE';
-                        params.config = Util.goodMapValue($scope.config, "dialogObjectPicker");
-
-                        var modalInstance = $modal.open({
-                            templateUrl: "modules/common/views/object-picker-modal.client.view.html",
-                            controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
-                                $scope.modalInstance = $modalInstance;
-                                $scope.header = params.header;
-                                $scope.filter = params.filter;
-                                $scope.config = params.config;
-
-                                $scope.modalInstance.result.then(function(result) {
-                                    Util.serviceCall({
-                                        service: Ecm.copyFile,
-                                        param: {
-                                            objType: ObjectService.ObjectTypes.CASE_FILE,
-                                            objId: componentHelper.currentObjectId
-                                        },
-                                        data: {
-                                            id: parseInt(result.id),
-                                            folderId: result.parent_folder_id_i
-                                        }
-                                    })
-                                });
-
-                            } ],
-                            animation: true,
-                            size: 'lg',
-                            backdrop: 'static',
-                            resolve: {
-                                params: function() {
-                                    return params;
-                                }
-                            }
-                        });
-                    });
-
                     $scope.$bus.subscribe('removeSearchFilter', function() {
                         $scope.searchFilter = null;
                     });

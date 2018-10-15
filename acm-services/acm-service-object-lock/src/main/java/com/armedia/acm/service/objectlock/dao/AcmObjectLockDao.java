@@ -32,7 +32,11 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,16 +79,23 @@ public class AcmObjectLockDao extends AcmAbstractDao<AcmObjectLock>
 
     public void remove(AcmObjectLock ol)
     {
+        if (!getEm().contains(ol))
+        {
+            ol = getEm().merge(ol);
+        }
         getEm().remove(ol);
     }
 
     public List<AcmObjectLock> getExpiredLocks()
     {
+        String timestampNow = ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
         String queryText = "SELECT ol " +
                 "FROM AcmObjectLock ol " +
                 "WHERE " +
-                "     ol.expiry < CURRENT_DATE";
+                "     ol.expiry < :timeStampNow";
 
-        return getEm().createQuery(queryText).getResultList();
+        Query query = getEm().createQuery(queryText);
+        query.setParameter("timeStampNow", new Date(), TemporalType.TIMESTAMP);
+        return query.getResultList();
     }
 }

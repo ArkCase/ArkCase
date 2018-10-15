@@ -26,6 +26,7 @@ package com.armedia.acm.services.timesheet.pipeline.postsave;
  * #L%
  */
 
+import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -45,28 +46,31 @@ public class TimesheetEventHandler implements PipelineHandler<AcmTimesheet, Time
     private final Logger log = LoggerFactory.getLogger(getClass());
     private TimesheetEventPublisher timesheetEventPublisher;
     private TimesheetService timesheetService;
+    private FormsTypeCheckService formsTypeCheckService;
     private EcmFileDao ecmFileDao;
 
     @Override
     public void execute(AcmTimesheet timesheet, TimesheetPipelineContext ctx) throws PipelineProcessException
     {
-        log.info("Timesheet with id [{}] and title [{}] entering TimesheetEventHandler", timesheet.getId(), timesheet.getTitle());
+        if (!formsTypeCheckService.getTypeOfForm().equals("frevvo")) {
+            log.info("Timesheet with id [{}] and title [{}] entering TimesheetEventHandler", timesheet.getId(), timesheet.getTitle());
 
-        String submissionName = ctx.getSubmissonName(); // "Save" or "Submit"
-        UploadedFiles uploadedFiles = new UploadedFiles();
+            String submissionName = ctx.getSubmissonName(); // "Save" or "Submit"
+            UploadedFiles uploadedFiles = new UploadedFiles();
 
-        EcmFile existing = getEcmFileDao().findForContainerAttachmentFolderAndFileType(timesheet.getContainer().getId(),
-                timesheet.getContainer().getAttachmentFolder().getId(), TimesheetConstants.TIMESHEET_DOCUMENT);
-        uploadedFiles.setPdfRendition(existing);
+            EcmFile existing = getEcmFileDao().findForContainerAttachmentFolderAndFileType(timesheet.getContainer().getId(),
+                    timesheet.getContainer().getAttachmentFolder().getId(), TimesheetConstants.TIMESHEET_DOCUMENT);
+            uploadedFiles.setPdfRendition(existing);
 
-        boolean startWorkflow = getTimesheetService()
-                .checkWorkflowStartup(TimesheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
+            boolean startWorkflow = getTimesheetService()
+                    .checkWorkflowStartup(TimesheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
 
-        getTimesheetEventPublisher().publishEvent(timesheet, ctx.getAuthentication().getName(), ctx.getIpAddress(), true,
-                submissionName.toLowerCase(), uploadedFiles,
-                startWorkflow);
+            getTimesheetEventPublisher().publishEvent(timesheet, ctx.getAuthentication().getName(), ctx.getIpAddress(), true,
+                    submissionName.toLowerCase(), uploadedFiles,
+                    startWorkflow);
 
-        log.info("Timesheet with id [{}] and title [{}] exiting TimesheetEventHandler", timesheet.getId(), timesheet.getTitle());
+            log.info("Timesheet with id [{}] and title [{}] exiting TimesheetEventHandler", timesheet.getId(), timesheet.getTitle());
+        }
     }
 
     @Override
@@ -103,5 +107,9 @@ public class TimesheetEventHandler implements PipelineHandler<AcmTimesheet, Time
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService) {
+        this.formsTypeCheckService = formsTypeCheckService;
     }
 }

@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.2.16-SNAPSHOT</version>
+    <version>3.2.17-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -96,7 +96,7 @@
         <org.apache.poi.version>3.17-beta1</org.apache.poi.version>
         <org.json.version>20140107</org.json.version>
         <org.mvel.version>2.2.1.Final</org.mvel.version>
-        <pdfbox.version>2.0.8</pdfbox.version>
+        <pdfbox.version>2.0.11</pdfbox.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
         <powermock.version>1.7.0</powermock.version>
         <puppycrawl.version>6.8.1</puppycrawl.version>
@@ -1548,6 +1548,10 @@
                     <exclusion>
                         <groupId>org.slf4j</groupId>
                         <artifactId>jul-to-slf4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.tdunning</groupId>
+                        <artifactId>json</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

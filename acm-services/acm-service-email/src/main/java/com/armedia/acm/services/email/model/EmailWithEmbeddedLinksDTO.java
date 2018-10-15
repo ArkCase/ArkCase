@@ -28,6 +28,7 @@ package com.armedia.acm.services.email.model;
  */
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.util.List;
@@ -47,6 +48,9 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
     private List<String> emailAddresses;
 
     private List<Long> fileIds;
+
+    @JsonIgnore
+    private List<String> fileNames;
 
     private String baseUrl;
 
@@ -115,6 +119,23 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
     public void setFileIds(List<Long> fileIds)
     {
         this.fileIds = fileIds;
+    }
+
+    /**
+     * @return the fileNames
+     */
+    public List<String> getFileNames()
+    {
+        return fileNames;
+    }
+
+    /**
+     * @param fileNames
+     *            the fileNames to set
+     */
+    public void setFileNames(List<String> fileNames)
+    {
+        this.fileNames = fileNames;
     }
 
     public String getBaseUrl()

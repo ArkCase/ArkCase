@@ -320,6 +320,7 @@
     "complaints.comp.closeComplaint": {
         "title": "zh-cn_Close Complaint",
         "info": "zh-cn_Incident Information",
+        "description.label": "zh-cn_Description",
         "infoMessage": "zh-cn_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
         "complaintTitle": "zh-cn_Complaint Title",
         "information": {
@@ -351,10 +352,10 @@
         },
         "approver": {
             "placeholder": "zh-cn_Select Approver",
-            "label": "zh-cn_Select Approver",
+            "label": "zh-cn_Approver",
             "addAnother": "zh-cn_Add another",
             "remove": "zh-cn_Remove Approver",
-            "pickerModal.header": "zh-cn_Choose Approver"
+            "pickerModal.header": "zh-cn_Search for User"
         },
         "cancelButton": "zh-cn_Cancel",
         "saveButton": "zh-cn_Save Complaint"

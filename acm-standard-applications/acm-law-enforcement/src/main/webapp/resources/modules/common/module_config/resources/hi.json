@@ -639,6 +639,16 @@
             "error.ownerUnique": "केवल एक मालिक की अनुमति है"
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "प्रतिभागी को जोड़ें",
+        "editParticipant.label": "रिकॉर्ड संपादित करें",
+        "participantType.label": "प्रतिभागी प्रकार",
+        "participantName.label": "भाग लेने वाले का नाम",
+        "btnOk.text": "बचाना",
+        "btnCancel.text": "रद्द करना",
+        "dialogUserGroupPicker.header": "hi_Search User/Group",
+        "replaceChildrenParticipant": "बच्चों के प्रतिभागी की जगह"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "% पूर्ण"
     },

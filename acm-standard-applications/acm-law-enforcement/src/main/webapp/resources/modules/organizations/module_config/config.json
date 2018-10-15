@@ -255,7 +255,7 @@
                             "name": "modified",
                             "displayName": "organizations.comp.details.table.columns.modified",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         },
                         {
                             "width": 150,
@@ -287,7 +287,7 @@
                             "name": "modified",
                             "displayName": "organizations.comp.addresses.table.columns.modified",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "enableCellEdit": false
                         },
                         {
@@ -325,7 +325,7 @@
                         {
                             "name": "modified",
                             "displayName": "organizations.comp.phones.table.columns.modified",
-                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate",
                             "width": 150
                         }
@@ -357,7 +357,7 @@
                         {
                             "name": "modified",
                             "displayName": "organizations.comp.faxes.table.columns.modified",
-                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate",
                             "width": 150
                         }
@@ -389,7 +389,7 @@
                         {
                             "name": "modified",
                             "displayName": "organizations.comp.emails.table.columns.modified",
-                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate",
                             "width": 150
                         }
@@ -421,7 +421,7 @@
                         {
                             "name": "modified",
                             "displayName": "organizations.comp.urls.table.columns.modified",
-                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate",
                             "width": 150
                         }
@@ -472,7 +472,7 @@
                         {
                             "name": "modified",
                             "displayName": "organizations.comp.dbas.table.columns.modified",
-                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate",
                             "width": 150
                         }
@@ -528,7 +528,7 @@
                         {
                             "name": "modified",
                             "displayName": "organizations.comp.ids.table.columns.modified",
-                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate",
                             "enableCellEdit": false,
                             "width": 150
@@ -575,7 +575,7 @@
                             "field": "modified_date_tdt",
                             "displayName": "organizations.comp.complaints.table.columns.modified",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         }
                     ]
                 },
@@ -625,7 +625,7 @@
                             "field": "parent_object.modified_date_tdt",
                             "displayName": "organizations.comp.cases.table.columns.modified",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         }
                     ]
                 },
@@ -751,7 +751,7 @@
                     "name": "modified",
                     "displayName": "organizations.comp.addresses.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "enableCellEdit": false
                 },
                 {
@@ -804,7 +804,7 @@
                 {
                     "name": "modified",
                     "displayName": "organizations.comp.phones.table.columns.modified",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "width": 150
@@ -853,7 +853,7 @@
                 {
                     "name": "modified",
                     "displayName": "organizations.comp.faxes.table.columns.modified",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "width": 150
@@ -902,7 +902,7 @@
                 {
                     "name": "modified",
                     "displayName": "organizations.comp.emails.table.columns.modified",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "width": 150
@@ -950,7 +950,7 @@
                 {
                     "name": "modified",
                     "displayName": "organizations.comp.urls.table.columns.modified",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "width": 150
@@ -1083,7 +1083,7 @@
                 {
                     "name": "modified",
                     "displayName": "organizations.comp.dbas.table.columns.modified",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "width": 150
@@ -1194,7 +1194,7 @@
                 {
                     "name": "modified",
                     "displayName": "organizations.comp.ids.table.columns.modified",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "width": 150
@@ -1266,7 +1266,7 @@
                     "field": "parent_object.modified_date_tdt",
                     "displayName": "organizations.comp.cases.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 }
             ]
         },
@@ -1335,7 +1335,7 @@
                     "field": "parent_object.modified_date_tdt",
                     "displayName": "organizations.comp.complaints.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 }
             ]
         },
@@ -1428,7 +1428,7 @@
                     "name": "eventDate",
                     "displayName": "organizations.comp.history.table.columns.eventDate",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.eventDate | date : 'short' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.eventDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "userId",
