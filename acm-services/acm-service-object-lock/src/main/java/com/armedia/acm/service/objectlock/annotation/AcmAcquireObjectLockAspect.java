@@ -53,16 +53,11 @@ public class AcmAcquireObjectLockAspect
 
     private AcmObjectLockingManager objectLockingManager;
 
-    @Around(value = "@annotation(acmAcquireObjectLock)")
-    public Object aroundAcquireObjectLock(ProceedingJoinPoint pjp, AcmAcquireObjectLock acmAcquireObjectLock)
+    @Around(value = "@annotation(acmAcquireObjectLocks)")
+    public Object aroundAcquireObjectLock(ProceedingJoinPoint pjp, AcmAcquireObjectLock.List acmAcquireObjectLocks)
             throws Throwable, AcmObjectLockException
     {
         Object[] args = pjp.getArgs();
-        String objectType = acmAcquireObjectLock.objectType();
-        Long objectId = getObjectId(pjp, acmAcquireObjectLock, args);
-        String lockType = acmAcquireObjectLock.lockType();
-        Long expiry = acmAcquireObjectLock.expiryTimeInMilliseconds();
-        boolean lockChildObjects = acmAcquireObjectLock.lockChildObjects();
         String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
         if (userId == null)
         {
@@ -75,12 +70,21 @@ public class AcmAcquireObjectLockAspect
         {
             Object ret = pjp.proceed();
 
-            // if objectId is null, probably we are trying to lock an object before it is persisted for the first time,
-            // we cannot lock such objects, but we don't raise an error
-            if (objectId != null)
+            for (AcmAcquireObjectLock acmAcquireObjectLock : acmAcquireObjectLocks.value())
             {
-                objectLockingManager.acquireObjectLock(objectId, objectType, lockType, expiry, lockChildObjects, userId);
+                String objectType = acmAcquireObjectLock.objectType();
+                Long objectId = getObjectId(pjp, acmAcquireObjectLock, args);
+                String lockType = acmAcquireObjectLock.lockType();
+                Long expiry = acmAcquireObjectLock.expiryTimeInMilliseconds();
+                boolean lockChildObjects = acmAcquireObjectLock.lockChildObjects();
+                // if objectId is null, probably we are trying to lock an object before it is persisted for the first
+                // time, we cannot lock such objects, but we don't raise an error
+                if (objectId != null)
+                {
+                    objectLockingManager.acquireObjectLock(objectId, objectType, lockType, expiry, lockChildObjects, userId);
+                }
             }
+
             return ret;
         }
         catch (Exception e)
