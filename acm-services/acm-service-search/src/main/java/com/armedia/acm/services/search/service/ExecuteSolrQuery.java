@@ -27,6 +27,7 @@ package com.armedia.acm.services.search.service;
  * #L%
  */
 
+import com.armedia.acm.core.AcmUserAuthorityContext;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -351,7 +352,7 @@ public class ExecuteSolrQuery
     /**
      * Executes solr queries and returns results as String
      *
-     * @param auth
+     * @param authentication
      *            Authenticated user
      * @param core
      *            SolrCore could be quick or advanced search
@@ -378,18 +379,18 @@ public class ExecuteSolrQuery
      * @return results as String
      * @throws MuleException
      */
-    public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents,
-            String defaultField, boolean includeDACFilter)
-            throws MuleException
+    public String getResultsByPredefinedQuery(Authentication authentication, SolrCore core, String solrQuery, int firstRow, int maxRows,
+            String sort, boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents,
+            String defaultField, boolean includeDACFilter) throws MuleException
     {
+        AcmUserAuthorityContext authorityContext = (AcmUserAuthorityContext) authentication;
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", solrQuery);
         headers.put("firstRow", firstRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
-        headers.put("acmUser", auth);
-        headers.put("filterParentRef", filterParentRef);
+        headers.put("acmUser", authorityContext.getUserIdentity());
+        headers.put("acmUserGroupIds", authorityContext.getGroupAuthorities());
         headers.put("filterSubscriptionEvents", filterSubscriptionEvents);
         headers.put("rowQueryParametars", rowQueryParameters);
         headers.put("enableDocumentACL", isEnableDocumentACL());

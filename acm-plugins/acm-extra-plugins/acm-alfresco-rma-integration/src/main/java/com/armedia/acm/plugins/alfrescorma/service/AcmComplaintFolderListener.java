@@ -57,11 +57,7 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
 
         if (!complaintCreatedEvent.isSucceeded())
         {
-            if (log.isTraceEnabled())
-            {
-                log.trace("Returning - complaint creation was not successful");
-            }
-
+            log.trace("Returning - complaint creation was not successful");
             return;
         }
 
