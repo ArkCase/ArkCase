@@ -737,6 +737,10 @@
             ],
             "paginationPageSize": 5,
             "typeNoAccess": "No Access",
+            "permission": {
+                "name": "editRequestData",
+                "type": "CASE_FILE"
+            },
             "columnDefs": [
                 {
                     "name": "participantType",
