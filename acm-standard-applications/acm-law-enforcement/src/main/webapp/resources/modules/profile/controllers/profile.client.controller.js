@@ -1,48 +1,55 @@
 'use strict';
 
-angular.module('profile').controller('ProfileController', [ '$scope', 'ConfigService', 'Admin.OrganizationalHierarchyService', '$modal', 'Authentication', 'Profile.MfaService', function($scope, ConfigService, OrganizationalHierarchyService, $modal, Authentication, ProfileMfaService) {
+angular.module('profile').controller('ProfileController',
+        [ '$scope', 'ConfigService', 'Admin.OrganizationalHierarchyService', '$modal', 'Authentication', 'Profile.MfaService', 'Profile.ChangePasswordService', function($scope, ConfigService, OrganizationalHierarchyService, $modal, Authentication, ProfileMfaService, ChangePasswordService) {
 
-    //TODO: Remove following phased out code block. Leave it just in case some extension are still using
-    //the 'req-component-config' and 'component-config' events to get config.
-    $scope._phaseout_config = ConfigService.getModule({
-        moduleId: 'profile'
-    });
-    $scope.$on('req-component-config', onConfigRequest);
-    function onConfigRequest(e, componentId) {
-        $scope._phaseout_config.$promise.then(function(config) {
-            var componentConfig = _.find(config.components, {
-                id: componentId
+            //TODO: Remove following phased out code block. Leave it just in case some extension are still using
+            //the 'req-component-config' and 'component-config' events to get config.
+            $scope._phaseout_config = ConfigService.getModule({
+                moduleId: 'profile'
             });
-            $scope.$broadcast('component-config', componentId, componentConfig);
-        });
-    }
-    //end of block
+            $scope.$on('req-component-config', onConfigRequest);
+            function onConfigRequest(e, componentId) {
+                $scope._phaseout_config.$promise.then(function(config) {
+                    var componentConfig = _.find(config.components, {
+                        id: componentId
+                    });
+                    $scope.$broadcast('component-config', componentId, componentConfig);
+                });
+            }
+            //end of block
 
-    ConfigService.getModuleConfig("profile").then(function(moduleConfig) {
-        $scope.config = moduleConfig;
-        return moduleConfig;
-    });
+            ConfigService.getModuleConfig("profile").then(function(moduleConfig) {
+                $scope.config = moduleConfig;
+                return moduleConfig;
+            });
 
-    ProfileMfaService.getAuthProfile().then(function(authProfile) {
-        $scope.authProfile = authProfile;
-    });
+            ProfileMfaService.getAuthProfile().then(function(authProfile) {
+                $scope.authProfile = authProfile;
+            });
 
-    $scope.openPasswordDialog = function() {
-        $modal.open({
-            templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-changePassword.client.view.html',
-            controller: 'ChangePasswordModalController',
-            backdrop: false,
-            size: 'sm'
-        });
-    };
-    $scope.openChangeLdapPasswordDialog = function() {
-        $modal.open({
-            templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-changeLdapPassword.client.view.html',
-            controller: 'ChangeLdapPasswordModalController',
-            size: 'sm'
-        });
-    }
-} ]);
+            $scope.openPasswordDialog = function() {
+                $modal.open({
+                    templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-changePassword.client.view.html',
+                    controller: 'ChangePasswordModalController',
+                    backdrop: false,
+                    size: 'sm'
+                });
+            };
+            $scope.openChangeLdapPasswordDialog = function() {
+                $modal.open({
+                    templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-changeLdapPassword.client.view.html',
+                    controller: 'ChangeLdapPasswordModalController',
+                    size: 'sm'
+                });
+            };
+
+            Authentication.queryUserInfo().then(function(userInfo) {
+                ChangePasswordService.canManageLdapPassword(userInfo.directoryName).then(function(res) {
+                    $scope.manageLdapPasswordEnabled = res.data.managePasswordEnabled;
+                });
+            });
+        } ]);
 angular.module('profile').run(function(editableOptions, editableThemes) {
     editableThemes.bs3.inputClass = 'input-sm';
     editableThemes.bs3.buttonsClass = 'btn-sm';

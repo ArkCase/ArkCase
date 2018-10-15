@@ -75,7 +75,8 @@ import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
         "/spring/spring-library-email-smtp.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-service-data.xml"
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-core-api.xml"
 })
 public class OutlookServiceImplIT
 {

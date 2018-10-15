@@ -480,7 +480,7 @@ public class AcmGroup implements Serializable, AcmEntity
         AcmGroup acmGroup = (AcmGroup) o;
         if (name != null)
         {
-            return name.equalsIgnoreCase(acmGroup.name);
+            return name.equals(acmGroup.name);
         }
         return acmGroup.name == null;
     }

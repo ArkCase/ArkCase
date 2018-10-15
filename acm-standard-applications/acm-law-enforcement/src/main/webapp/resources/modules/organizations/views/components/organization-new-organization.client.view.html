@@ -255,8 +255,11 @@
                         <div class="col-sm-2 form-group">
                             <label for="state" translate>
                                 organizations.comp.newOrganization.locations.state</label>
-                            <input id="state" type="text" ng-model="organization.defaultAddress.state" class="input-md form-control"
-                                    placeholder="{{ 'organizations.comp.newOrganization.locations.state.placeholder' | translate }}">
+                            <select id="state" class="form-control" ng-model="organization.defaultAddress.state">
+                                <option ng-repeat="option in states" value="{{option.key}}">
+                                    {{option.value | translate}}
+                                </option>
+                            </select>
                         </div>
                         <div class="col-sm-2 form-group">
                             <label for="zip" translate>
@@ -330,8 +333,11 @@
                             <div class="col-sm-3 form-group">
                                 <label for="state" translate>
                                     organizations.comp.newOrganization.locations.state</label>
-                                <input id="state" type="text" ng-model="address.state" class="input-md form-control"
-                                        placeholder="{{ 'organizations.comp.newOrganization.locations.state.placeholder' | translate }}">
+                                <select id="state" class="form-control" ng-model="address.state">
+                                    <option ng-repeat="option in states" value="{{option.key}}">
+                                        {{option.value | translate}}
+                                    </option>
+                                </select>
                             </div>
                             <div class="col-sm-3 form-group">
                                 <label for="zip" translate>
@@ -407,7 +413,7 @@
                                 <label for="caType">
                                     {{'organizations.comp.newOrganization.communicationAccounts.' + caType |
                                     translate}} </label>
-                                <input id="caType" type="text" ng-model="contactMethod.value" required="required"
+                                <input id="caType" type="{{contactMethod.type}}" ng-model="contactMethod.value" required="required"
                                         class="input-md form-control"
                                         placeholder="{{ 'organizations.comp.newOrganization.communicationAccounts.'+ caType +'.placeholder' | translate }}">
                             </div>

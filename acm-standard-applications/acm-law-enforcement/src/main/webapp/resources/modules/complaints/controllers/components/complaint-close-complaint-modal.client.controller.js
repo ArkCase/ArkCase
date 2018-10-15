@@ -132,7 +132,7 @@ angular.module('complaints').controller(
                     function addApprover(index) {
                         var params = {};
 
-                        params.header = $translate.instant("complaints.comp.approver.pickerModal.header");
+                        params.header = $translate.instant("complaints.comp.closeComplaint.approver.pickerModal.header");
                         params.filter = $scope.futureTaskConfig.userSearch.userFacetFilter;
                         params.extraFilter = $scope.futureTaskConfig.userSearch.userFacetExtraFilter;
                         params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
@@ -158,6 +158,7 @@ angular.module('complaints').controller(
                                     objectId: null,
                                     participantType: "approver",
                                     participantLdapId: data.email_lcs,
+                                    participantFullName: data.name,
                                     created: null,
                                     creator: null,
                                     modified: null,

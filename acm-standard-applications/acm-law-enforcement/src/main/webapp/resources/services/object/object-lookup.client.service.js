@@ -505,6 +505,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getCaseFileSubTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of case file subtypes
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCaseFileSubTypes = function() {
+        return Service.getLookupByLookupName("caseFileSubTypes");
+    };
+
+    /**
+     * @ngdoc method
      * @name getComplaintTypes
      * @methodOf services:Object.LookupService
      *
@@ -634,7 +648,19 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
     Service.getDBAsTypes = function() {
         return Service.getLookupByLookupName("dbasTypes");
     };
-
+    /**
+     * @ngdoc method
+     * @name getStates
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of states
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getStates = function() {
+        return Service.getLookupByLookupName("states");
+    };
     /**
      * @ngdoc method
      * @name getCountries

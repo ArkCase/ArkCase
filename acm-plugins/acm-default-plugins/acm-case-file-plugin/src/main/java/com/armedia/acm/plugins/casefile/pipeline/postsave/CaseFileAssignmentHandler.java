@@ -6,32 +6,34 @@ package com.armedia.acm.plugins.casefile.pipeline.postsave;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
+import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
@@ -47,6 +49,7 @@ public class CaseFileAssignmentHandler implements PipelineHandler<CaseFile, Case
 {
 
     private AcmAssignmentDao acmAssignmentDao;
+    private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
 
     /**
      * Logger instance.
@@ -68,7 +71,9 @@ public class CaseFileAssignmentHandler implements PipelineHandler<CaseFile, Case
             if (assigneeId != null && !assigneeId.equals(""))
             {
                 AcmAssignment acmAssignment = createAcmAssignment(entity, assigneeId);
-                getAcmAssignmentDao().save(acmAssignment);
+                AcmAssignment saved = getAcmAssignmentDao().save(acmAssignment);
+                getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(saved, AuthenticationUtils.getUsername(),
+                        AuthenticationUtils.getUserIpAddress());
             }
         }
         log.trace("CaseFile exiting CaseFileAssignmentHandler : [{}]", entity);
@@ -112,6 +117,23 @@ public class CaseFileAssignmentHandler implements PipelineHandler<CaseFile, Case
     public void setAcmAssignmentDao(AcmAssignmentDao acmAssignmentDao)
     {
         this.acmAssignmentDao = acmAssignmentDao;
+    }
+
+    /**
+     * @return the acmObjectHistoryEventPublisher
+     */
+    public AcmObjectHistoryEventPublisher getAcmObjectHistoryEventPublisher()
+    {
+        return acmObjectHistoryEventPublisher;
+    }
+
+    /**
+     * @param acmObjectHistoryEventPublisher
+     *            the acmObjectHistoryEventPublisher to set
+     */
+    public void setAcmObjectHistoryEventPublisher(AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher)
+    {
+        this.acmObjectHistoryEventPublisher = acmObjectHistoryEventPublisher;
     }
 
 }

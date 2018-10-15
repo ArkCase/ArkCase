@@ -6,22 +6,22 @@ package com.armedia.acm.services.dataaccess.service.impl;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -30,11 +30,16 @@ package com.armedia.acm.services.dataaccess.service.impl;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.easymock.*;
+import org.easymock.EasyMock;
+import org.easymock.EasyMockRunner;
+import org.easymock.EasyMockSupport;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +53,12 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Petar Ilin <petar.ilin@armedia.com> on 06.11.2015.
@@ -549,9 +559,9 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
     }
 
     @Test
-    public void testCheckParticipantTypesWhenPrincipalIsSupervisor()
+    public void testCheckParticipantTypesWhenPrincipalIsReader()
     {
-        List<String> userIsParticipantTypeAny = Arrays.asList("assignee", "supervisor", "owning group");
+        List<String> userIsParticipantTypeAny = Arrays.asList("assignee", "supervisor", "owning group", "reader");
         AccessControlRule accessControlRule = new AccessControlRule();
         accessControlRule.setUserIsParticipantTypeAny(userIsParticipantTypeAny);
         accessControlRule.setObjectType("CASE_FILE");
@@ -565,9 +575,12 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         JSONObject solrDocumentJson = new JSONObject(solrDocument);
         JSONObject solrResultJson = solrDocumentJson.getJSONObject("response").getJSONArray("docs").getJSONObject(0);
         solrResultJson.put("acm_participants_lcs", "[{\"ldapId\":\"ACM_INVESTIGATOR_DEV\", \"type\":\"owning group\"}," +
-                "{\"ldapId\":\"ann-acm\", \"type\":\"supervisor\"},{\"ldapId\":\"ian-acm\", \"type\":\"assignee\"}]");
-        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                "restrictCase", solrDocument);
+                "{\"ldapId\":\"ian-acm\", \"type\":\"assignee\"}, {\"ldapId\":\"joy-acm\", \"type\":\"reader\"}," +
+                "{\"ldapId\":\"hope-acm\", \"type\":\"reader\"}, {\"ldapId\":\"ann-acm\", \"type\":\"reader\"}]");
+
+        boolean granted = accessControlRuleChecker.isAccessGranted(new AcmAuthentication(grantedAuthorities, null,
+                null, true, "hope-acm"), 1L, "CASE_FILE",
+                "restrictCase", solrDocumentJson.toString());
         assertTrue(granted);
         verifyAll();
     }
@@ -589,7 +602,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         solrResultJson.put("acm_participants_lcs", "[{\"ldapId\":\"ACM_ADMINISTRATOR\", \"type\":\"owning group\"}," +
                 "{\"ldapId\":\"ian-acm\", \"type\":\"assignee\"}]");
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                "restrictCase", solrDocument);
+                "restrictCase", solrDocumentJson.toString());
         assertTrue(granted);
         verifyAll();
     }
@@ -664,7 +677,8 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         GrantedAuthority grantedAuthority1 = new SimpleGrantedAuthority("ROLE_ADMINISTRATOR");
         GrantedAuthority grantedAuthority2 = new SimpleGrantedAuthority("ROLE_ANALYST");
         GrantedAuthority grantedAuthority3 = new SimpleGrantedAuthority("ROLE_TECHNICIAN");
-        return Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3);
+        GrantedAuthority grantedAuthority4 = new SimpleGrantedAuthority("ACM_ADMINISTRATOR");
+        return Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3, grantedAuthority4);
     }
 
     public AccessControlRule getAccessControlRuleForParticipantTypesTest()

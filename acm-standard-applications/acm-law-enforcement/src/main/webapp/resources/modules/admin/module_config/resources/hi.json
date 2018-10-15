@@ -9,6 +9,7 @@
         "security.ldapConfig.addNewMember": "नए सदस्य जोड़ें",
         "security.ldapConfig.addMembers": "सदस्य जोड़ें",
         "security.ldapConfig.addSubgroup": "उप समूह जोड़ें",
+		"security.ldapConfig.addExistingSubgroup": "मौजूदा समूह जोड़ें",
         "security.ldapConfig.addExistingMembers": "मौजूदा सदस्य जोड़ें",
         "security.ldapConfig.addLdapSubgroup": "एलडीएपी उप-समूह जोड़ें",
         "security.ldapConfig.deleteLdapGroup": "एलडीएपी समूह हटाएं",
@@ -18,20 +19,26 @@
         "security.ldapConfig.removeMember": "सदस्य निकालें",
         "security.ldapConfig.table.ldapUrl": "एलडीएपी यूआरएल",
         "security.ldapConfig.table.directoryName": "डायरेक्टरी का नाम",
+		"security.ldapConfig.table.userAttributesConfig": "एलडीएपी उपयोगकर्ता विन्यास",
+        "security.ldapConfig.table.groupAttributesConfig": "एलडीएपी समूह विन्यास",
+        "security.ldapConfig.table.action.partialSync": "एलडीएपी आंशिक सिंक शुरू करें",
         "security.ldapConfig.data": {
+		    "sync.dialog.header": "सिंक्रनाइज़ेशन चलाएं",
+            "sync.dialog.type.partial": " विभेदक सिंक",
+            "sync.dialog.type.full": "पूर्ण सिंक",
             "userAttributesTemplate": "एलडीएपी उपयोगकर्ता विशेषता टेम्पलेट",
             "groupAttributesTemplate": "एलडीएपी समूह विशेषता टेम्पलेट",
             "addNewDirectory": "नई निर्देशिका जोड़ें",
             "editRecord": "रिकॉर्ड संपादित करें",
             "id": "आईडी",
-            "id.validationMessage": "hi_The ID can only consist of letters, numbers or dots.",
+			"id.validationMessage": "आईडी में केवल अक्षरों, संख्याओं या बिंदुओं का समावेश हो सकता है.",
             "directoryType": "निर्देशिका सर्वर का चयन करें",
             "ldapUrl": "एलडीएपी यूआरएल",
             "base": "आधार",
             "directoryName": "डायरेक्टरी का नाम",
             "authUserDn": "एथ यूजर डीएन",
             "authUserPassword": "एथ यूजर पासवर्ड",
-            "confirmAuthUserPassword": "hi_Confirm Auth User Password",
+			"confirmAuthUserPassword": "उपयोगकर्ता पासवर्ड की पुष्टि करें",
             "userSearchBase": "उपयोगकर्ता खोज बेस",
             "userSearchFilter": "उपयोगकर्ता खोज फ़िल्टर",
             "allUsersFilter": "सभी उपयोगकर्ता फ़िल्टर",
@@ -64,7 +71,7 @@
             "base": "आधार डोमेन घटक दर्ज करें (उदा। डीसी = उदाहरण, डीसी = कॉम)",
             "authUserDn": "प्रमाणीकरण के लिए उपयोगकर्ता डीएनएन दर्ज करें (जैसे सीएन = जॉन डो, ओ = यूजर, डीसी = उदाहरण, डीसी = कॉम)",
             "authUserPassword": "प्रमाणीकरण उपयोगकर्ता के लिए पासवर्ड दर्ज करें",
-            "confirmAuthUserPassword": "hi_Confirm password for authentication user",
+			"confirmAuthUserPassword": "प्रमाणीकरण उपयोगकर्ता के लिए पासवर्ड की पुष्टि करें",
             "userSearchBase": "उपयोगकर्ताओं को खोज आधार दर्ज करें (उदाहरण के लिए = उपयोगकर्ता)",
             "userSearchFilter": "एकल उपयोगकर्ता के लिए खोज फ़िल्टर दर्ज करें (उदा। (और (objectClass = व्यक्ति) (यूआईडी =% s))",
             "allUsersFilter": "सभी उपयोगकर्ताओं के लिए खोज फ़िल्टर दर्ज करें (उदा। (ऑब्जेक्ट क्लास = व्यक्ति))",
@@ -141,6 +148,7 @@
             },
             "addMembers": {
                 "title": "सदस्य जोड़ें",
+				"group.title": "मौजूदा समूह को सदस्य के रूप में जोड़ें",
                 "btn": {
                     "search": "चले जाओ!",
                     "cancel": "रद्द करना",
@@ -160,7 +168,10 @@
                     "lastName": "अंतिम नाम दर्ज करो",
                     "email": "ईमेल दर्ज करें",
                     "password": "पास वर्ड दर्ज करें",
-                    "confirmation": "अपना पासवर्ड दोबारा दर्ज करें"
+                    "confirmation": "अपना पासवर्ड दोबारा दर्ज करें",
+					"_1_": "संख्यात्मक मान संसाधन फ़ाइल में मान्य नहीं हैं। _निकाले जाने के लिए_",
+                    "_2_": "यदि 'minLengthForPassword' की आवश्यकता है, तो कृपया इसे config.json पर ले जाएं",
+                    "_minLengthForPassword": "7"
                 },
                 "editLdapMember": {
                     "title": "Ldap सदस्य को संपादित करें",
@@ -230,11 +241,12 @@
                 }
             },
             "tableColumns": {
-                "name": "hi_Name",
-                "type": "hi_Type",
-                "supervisorName": "hi_Supervisor Name",
-                "actions": "hi_Actions"
-            }
+                "name": "नाम",
+                "type": "प्रकार",
+                "supervisorName": "पर्यवेक्षक का नाम",
+                "actions": "क्रिया"
+            },
+			"searchFilter.placeholder": "खोज"
         },
         "security.selectPrivileges": "भूमिका बनाएं / विशेषाधिकारों का चयन करें",
         "security.selectPrivileges.applicationRole": "आवेदन भूमिका",
@@ -254,8 +266,8 @@
             "user": "उपयोगकर्ता"
         },
         "security.group.management": {
-            "title": "hi_Group Management",
-            "group": "hi_Group"
+            "title": "समूह प्रबंधन",
+            "group": "समूह"
         },
         "security.calendarConfiguration": {
             "title": "कैलेंडर कॉन्फ़िगरेशन",
@@ -269,7 +281,7 @@
                 "purge.label": "शुद्ध करना",
                 "email.label": "सिस्टम ईमेल पता",
                 "password.label": "सिस्टम पासवर्ड",
-                "password.changeButton": "hi_Change the calendar user password",
+                "password.changeButton": "कैलेंडर उपयोगकर्ता पासवर्ड बदलें",
                 "purgeDays.label": "दिन",
                 "emailValid": "सिस्टम ईमेल पता और पासवर्ड मान्य हैं",
                 "emailNotValid": "सिस्टम ईमेल पता या पासवर्ड मान्य नहीं हैं",
@@ -345,7 +357,8 @@
                 "validate.label": "एसएमटीपी सत्यापन",
                 "validate.button": "मान्य करें",
                 "smtpValid": "एसएमटीपी सेटिंग्स मान्य हैं",
-                "smtpNotValid": "SMTP सेटिंग्स मान्य नहीं हैं"
+                "smtpNotValid": "SMTP सेटिंग्स मान्य नहीं हैं",
+				"errorMsg": "कृपया चुनें कि दस्तावेज़ कैसे भेजे जाएंगे"
             }
         },
         "security.emailTemplates": {
@@ -364,29 +377,30 @@
                 "templateName.label": "टेम्पलेट नाम",
                 "templateName.placeholder": "टेम्पलेट नाम दर्ज करें",
                 "emailPattern.label": "ईमेल पैटर्न",
+				"emailPattern.description": "सभी प्राप्तकर्ताओं के लिए '। *' का उपयोग करें, सशस्त्र.com प्राप्तकर्ताओं या कुछ अन्य regex के लिए '। + सशस्त्रिया.com' का उपयोग करें। कृपया ध्यान दें कि डॉट (।) बैकस्लैश से बच जाना चाहिए!",
                 "emailPattern.placeholder": "ईमेल पैटर्न दर्ज करें",
                 "source.label": "स्रोत",
                 "objectTypes.label": "ऑब्जेक्ट प्रकार",
                 "actions.label": "क्रिया",
                 "manual.label": "गाइड",
                 "automated.label": "स्वचालित",
-                "choose.file": "hi_Choose File",
-                "download": "hi_Download",
+                "choose.file": "फ़ाइल का चयन",
+                "download": "डाउनलोड",
                 "save": "बचाना",
                 "cancel": "रद्द करना",
-                "validationResponse": "hi_Email Template already exists with selected parameters",
-                "uploadError": "hi_File upload canceled due to incorrect type of file. You can only upload html file."
+                "validationResponse": "ईमेल टेम्पलेट चयनित पैरामीटर के साथ पहले से मौजूद है",
+                "uploadError": "गलत अपलोड फ़ाइल के कारण फ़ाइल अपलोड रद्द कर दिया गया। आप केवल एचटीएमएल फाइल अपलोड कर सकते हैं।"
             },
             "objectTypes": {
-                "caseFile": "hi_Case File",
-                "complaint": "hi_Complaint",
-                "task": "hi_Task",
-                "document": "hi_Document"
+                "caseFile": "मुकदमे की फ़ाइल",
+                "complaint": "शिकायत",
+                "task": "कार्य",
+                "document": "दस्तावेज़"
             },
             "actions": {
-                "sendAsAttachments": "hi_Send as Attachments",
-                "sendAsLinks": "hi_Send as Links",
-                "sendAsAttachmentsAndLinks": "hi_Send as Attachments and Links"
+                "sendAsAttachments": "संलग्नक के रूप में भेजें",
+                "sendAsLinks": "लिंक के रूप में भेजें",
+                "sendAsAttachmentsAndLinks": "संलग्नक और लिंक के रूप में भेजें"
             }
         },
         "security.exchangeConfiguration": {
@@ -427,6 +441,20 @@
                 }
             }
         },
+        "forms.timesheetConfiguration": {
+            "title": "टाइम्सशीट कॉन्फ़िगरेशन",
+            "chargeRole": "चार्ज रोल",
+            "chargeRole.placeholder": "चार्ज रोल दर्ज करें",
+            "rate": "मूल्यांकन करें",
+            "rate.placeholder": "दर दर्ज करें($)",
+            "active": "सक्रिय निष्क्रिय",
+            "active.active": "सक्रिय",
+            "active.inactive": "निष्क्रिय",
+            "modal": {
+                "button.save": "बचाना",
+                "button.cancel": "रद्द करना"
+            }
+        },
         "dashboard.title": "डैशबोर्ड",
         "dashboard.config": "डैशबोर्ड कॉन्फ़िगरेशन",
         "dashboard.widgets": "विजेट",
@@ -437,19 +465,54 @@
                 "reportDesigner": "रिपोर्ट डिजाइनर",
                 "sync": "सिंक्रनाइज़ करें"
             },
-            "cancel": "Cancel"
+            "schedule": {
+                "title": "रिपोर्ट शेड्यूलिंग",
+                "selectReportType": "रिपोर्ट प्रकार का चयन करें",
+                "emailAddress": {
+                    "title": "ईमेल पते दर्ज करें",
+                    "placeholder": "कृपया अल्पविराम (,) अलग-अलग ईमेल पते दर्ज करें"
+                },
+                "table": {
+                    "header": "मौजूदा अनुसूची",
+                    "startTimeFormat": "एचएच: मिमी ए",
+                    "columns": {
+                        "jobName": "अनुसूची का नाम",
+                        "recurrence": "पुनरावृत्ति",
+                        "startTime": "समय शुरू",
+                        "startDate": "आरंभ करने की तिथि",
+                        "endDate": "अंतिम तिथि",
+                        "emailAddresses": "ईमेल पता",
+                        "state": "स्थिति"
+                    }
+                },
+                "delete": {
+                    "success": "अनुसूची सफलतापूर्वक हटा दी गई",
+                    "error": "अनुसूची हटाने में विफल"
+                },
+                "createScheduleSuccess": "अनुसूची सफलतापूर्वक बनाई गई",
+                "createScheduleFailure": "अनुसूची बनाने में विफल",
+                "enterFutureDate": "भविष्य में एक प्रारंभ समय दर्ज करें",
+                "recurrence": "पुनरावृत्ति (भविष्य का समय दर्ज करें)",
+                "time": "पहर",
+                "startDate": "आरंभ करने की तिथि",
+                "endDate": "अंतिम तिथि",
+                "filterStartDate": "परिणाम फ़िल्टर प्रारंभ दिनांक",
+                "filterEndDate": "परिणाम फ़िल्टर समाप्ति दिनांक",
+                "outputFormat": "आउटपुट प्रारूप का चयन करें",
+                "submit": "जमा करें"
+            }
         },
         "forms.title": "फार्म",
         "forms.config": "फॉर्म कॉन्फ़िगरेशन",
         "workflows.title": "वर्कफ़्लो",
         "workflows.config": "वर्कफ़्लो कॉन्फ़िगरेशन",
         "workflows.config.bpmn.upload": "अपलोड",
-        "workflows.config.bpmn.addNewWorkflow": "कार्यप्रवाह अपलोड करें",
+        "workflows.config.bpmn.addNewWorkflow": "वर्कफ़्लो अपलोड करें",
         "workflows.config.bpmn.modal": {
             "label.description": "विवरण",
             "label.noFileSelected": "किसी भी फाइल का चयन नहीं",
             "btnCancel.text": "रद्द करना",
-            "btnOk.text": "कार्यप्रवाह अपलोड करें"
+            "btnOk.text": "वर्कफ़्लो अपलोड करें"
         },
         "workflows.config.activate": {
             "error": "इस प्रक्रिया को सक्रिय कर सकते हैं!",
@@ -461,7 +524,7 @@
             "cancel": "रद्द करना",
             "activate": "सक्रिय बनाना"
         },
-        "workflows.config.noHistory": "hi_There is no history for this workflow.",
+        "workflows.config.noHistory": "इस वर्कफ़्लो के लिए कोई इतिहास नहीं है।",
         "workflows.config.grid": {
             "businessProcess": "व्यापार प्रक्रिया",
             "description": "विवरण",
@@ -547,19 +610,22 @@
                     "btnCancel.text": "रद्द करना",
                     "btnOk.text": "प्रवेश सहेजें"
                 },
-                "addLookup": "hi_Add Lookup",
-                "label": "hi_Lookup Type",
-                "lookupName": "hi_Lookup Name",
-                "placeholder": "hi_Enter lookup name",
-                "btnSave.text": "hi_Save",
-                "deleteLookupMsg": "hi_Are you sure you want to delete this lookup?",
-                "deleteEntryMsg": "hi_Are you sure you want to delete this entry?",
-                "delete.success": "hi_Lookup is successfully deleted",
-                "delete.error": "hi_Lookup can't be deleted",
-                "lookupExists.error": "hi_Lookup with this name already exists"
+                "addLookup": "लुकअप जोड़ें",
+                "label": "लुकअप प्रकार",
+                "lookupName": "लुकअप नाम",
+                "placeholder": "लुकअप नाम दर्ज करें",
+                "btnSave.text": "बचाना",
+                "deleteLookupMsg": "क्या आप वाकई इस लुकअप को मिटाना चाहते हैं?",
+                "deleteEntryMsg": "क्या आप वाकई इस प्रविष्टि को मिटाना चाहते हैं?",
+                "delete.success": "लुकअप सफलतापूर्वक हटा दिया गया है",
+                "delete.error": "लुकअप हटाया नहीं जा सकता है",
+                "lookupExists.error": "इस नाम के साथ लुकअप पहले से मौजूद है"
             },
             "module.config": {
-                "title": "मॉड्यूल कॉन्फ़िगरेशन"
+                "title": "मॉड्यूल कॉन्फ़िगरेशन",
+				"btnDisabled": "विकलांग",
+                "btnEnabled": "सक्रिय",
+                "message": "सिस्टम में कोई मॉड्यूल नहीं मिला"
             },
             "userName.config": {
                 "title": "उपयोगकर्ता नाम प्रदर्शन विन्यास",
@@ -571,13 +637,13 @@
                 "modal.ok": "ठीक"
             },
             "formsType.config": {
-                "title": "hi_Forms Type Configuration",
-                "angular.label": "hi_Use Angular Forms",
-                "frevvo.label": "hi_Use Frevvo Forms",
-                "apply": "hi_Apply",
-                "modal.title": "hi_Information",
-                "modal.info": "hi_Settings will take effect after refresh",
-                "modal.ok": "hi_OK"
+                "title": "फॉर्म प्रकार कॉन्फ़िगरेशन",
+                "angular.label": "कोणीय रूपों का प्रयोग करें",
+                "frevvo.label": "फ्रीवो फॉर्म का प्रयोग करें",
+                "apply": "लागू करें",
+                "modal.title": "जानकारी",
+                "modal.info": "ताज़ा करने के बाद सेटिंग्स प्रभावी हो जाएंगी",
+                "modal.ok": "ठीक"
             },
             "login.config": {
                 "title": "लॉग इन कॉन्फ़िगरेशन",
@@ -592,17 +658,18 @@
                 "apply.label": "लागू करें"
             },
             "holiday": {
-                "title": "hi_Holiday Schedule",
+                "title": "छुट्टी के दिन का कार्यक्रम",
+                "label": "कार्य दिवसों के रूप में सप्ताहांत शामिल करें",
                 "grid": {
-                    "holidayName": "hi_Name of Holiday",
-                    "holidayDate": "hi_Date of holiday"
+                    "holidayName": "छुट्टी का नाम",
+                    "holidayDate": "छुट्टी की तारीख"
                 },
-                "cancel": "hi_Cancel",
-                "save": "hi_Save",
-                "message": "hi_The holiday you entered is not saved! Date of Holiday already exist!",
+                "cancel": "रद्द करना",
+                "save": "बचाना",
+                "message": "आपके द्वारा दर्ज की गई छुट्टियां सहेजी नहीं गई हैं! छुट्टी की तारीख पहले से मौजूद है!",
                 "placeholder": {
-                    "name": "hi_Enter Name of Holiday",
-                    "date": "hi_Enter Date of Holiday"
+                    "name": "छुट्टी का नाम दर्ज करें",
+                    "date": "छुट्टी की तारीख दर्ज करें"
                 }
             }
         },
@@ -644,8 +711,8 @@
                 "creator": "बनाने वाला",
                 "modifier": "द्वारा संशोधित",
                 "activated": "स्थिति",
-                "statusDeactivated": "hi_Deactivated",
-                "statusActivated": "hi_Activated",
+                "statusDeactivated": "निष्क्रिय किया गया",
+                "statusActivated": "सक्रिय",
                 "objectType": "वस्तु प्रकार",
                 "version": "संस्करण",
                 "templateVersionActive": "सक्रिय"
@@ -662,7 +729,7 @@
                 }
             },
             "templates.modal": {
-                "objectTypes.selectedFiles": "hi_No File Selected",
+                "objectTypes.selectedFiles": "किसी भी फाइल का चयन नहीं",
                 "objectTypes.label": "ऑब्जेक्ट प्रकार",
                 "querySelect.label": "क्वेरी का चयन करें",
                 "label.label": "प्रदर्शित होने वाला नाम",
@@ -711,7 +778,7 @@
                     "edit": "CMIS कॉन्फ़िगरेशन को संपादित करें"
                 },
                 "dialog": {
-                    "testConnection": "hi_Test Connection",
+                    "testConnection": "परीक्षण कनेक्शन",
                     "cancel": "रद्द करना",
                     "ok": "ठीक"
                 },
@@ -789,47 +856,89 @@
                 "insert.success": "सफलतापूर्वक नई कॉन्फ़िगरेशन पंक्ति बनाई गई",
                 "insert.error": "नई कॉन्फ़िगरेशन पंक्ति बनाने में त्रुटि",
                 "update.success": "कॉन्फ़िगरेशन पंक्ति को सफलतापूर्वक अपडेट किया गया",
-                "update.error": "कॉन्फ़िगरेशन पंक्ति को अपडेट करने में त्रुटि"
+                "update.error": "कॉन्फ़िगरेशन पंक्ति को अपडेट करने में त्रुटि",
+				"test.conection.success": "सफलतापूर्वक जुड़ा हुआ."
+            }
+        },
+        "transcription": {
+            "title": "ट्रांसक्रिप्शन सेवाएं",
+            "transcriptionManagement": "",
+            "transcriptionConfigForm": {
+                "save.button": "बचाना",
+                "automation.label": "स्वचालन",
+                "enableTranscription.checkbox": "ट्रांसक्रिप्शन सक्षम करें",
+                "automaticTranscription.checkbox": "स्वचालित ट्रांसक्रिप्शन",
+                "overwriteTranscription.checkbox": "नए संस्करणों के साथ मूल प्रतिलेखन को ओवरराइट करें",
+                "mediaFileAdded.label": "जब एक मीडिया फ़ाइल का एक नया संस्करण जोड़ा जाता है, तो सिस्टम होगा:",
+                "generateTranscription.radio": "नए संस्करण के लिए एक नया प्रतिलेखन उत्पन्न करें",
+                "copyTranscription.radio": "प्रतिलेख को सक्रिय संस्करण से नए संस्करण में कॉपी करें",
+                "provider.label": "प्रदाता",
+                "numOfFiles.label": "प्रसंस्करण के लिए फाइलों की संख्या",
+                "selectProvider": "एक प्रदाता का चयन करें",
+                "wordCount.label": "शब्द गणना",
+                "costPerSecond.label": "प्रति सेकंड लागत",
+                "confidenceThreshold.label": "विश्वास थ्रेसहोल्ड",
+				"mediaDurationInSeconds.label": "सेकंड में मीडिया अवधि दहलीज",
+                "silenceBetweenWords.label": "सेकंड में शब्दों के बीच मौन",
+                "validation.messages": {
+                    "requiredErrorMsg": "यह फ़ील्ड आवश्यक है",
+                    "maxErrorMsg": "मान 100 से कम या बराबर होना चाहिए",
+                    "minZeroValueErrorMsg": "मान 0 से अधिक या बराबर होना चाहिए",
+                    "minOneValueErrorMsg": "मान 1 से अधिक या बराबर होना चाहिए",
+					"minPositiveValueErrorMsg": "मान 0 से अधिक होना चाहिए"
+                }
+            }
+        },
+        "stateOfArkcase": {
+            "title": "आर्ककेस राज्य",
+            "pickDate": "तिथि उठाओ",
+            "btn.download": "डाउनलोड",
+            "datePicker": {
+                "clear": "स्पष्ट",
+                "current": "वर्तमान दिन",
+                "close": "बंद करे"
+            }
+        },
+        "comp": {
+            "securityLdapConfig": {
+                "title": "सुरक्षा - एलडीएपी कॉन्फ़िगर ग्रिड"
+            },
+            "correspondenceManagementMergeFields": {
+                "title": "पत्राचार प्रबंधन मर्ज फ़ील्ड ग्रिड"
+            },
+            "correspondenceManagementMergeFieldsVersions": {
+                "title": "पत्राचार प्रबंधन मर्ज फ़ील्ड संस्करण ग्रिड"
+            },
+            "correspondenceManagementTemplates": {
+                "title": "पत्राचार प्रबंधन टेम्पलेट ग्रिड"
+            },
+            "correspondenceManagementTemplateVersions": {
+                "title": "संवाद प्रबंधन टेम्पलेट संस्करण ग्रिड"
+            },
+            "labelsConfig": {
+                "title": "आवेदन - लेबल कॉन्फ़िगर ग्रिड"
+            },
+            "plainFormsConfig": {
+                "title": "फॉर्म - फॉर्म कॉन्फ़िगर ग्रिड "
+            },
+            "workflowsConfig": {
+                "title": "वर्कफ़्लोज़ - वर्कफ़्लो कॉन्फ़िगर ग्रिड"
+            },
+            "workflowsHistoryDialogConfig": {
+                "title": "वर्कफ़्लो - वर्कफ़्लो कॉन्फ़िगर इतिहास संवाद ग्रिड"
+            },
+            "usersPicker": {
+                "title": "उपयोगकर्ताओं का चयन करें"
+            },
+            "orgHierarchy": {
+                "title": "संगठन पदानुक्रम"
+            },
+            "cmisConfiguration": {
+                "title": "सीएमआईएस कॉन्फ़िगरेशन ग्रिड"
+            },
+            "emailTemplates": {
+                "title": "ईमेल टेम्पलेट्स"
             }
         }
-    },
-    "admin.comp.securityLdapConfig": {
-        "title": "सुरक्षा - एलडीएपी कॉन्फ़िग ग्रिड"
-    },
-    "admin.comp.correspondenceManagementMergeFields": {
-        "title": "पत्राचार प्रबंधन मर्ज फील्ड ग्रिड"
-    },
-    "admin.comp.correspondenceManagementMergeFieldsVersions": {
-        "title": "पत्राचार प्रबंधन मर्ज फ़ील्ड संस्करण ग्रिड"
-    },
-    "admin.comp.correspondenceManagementTemplates": {
-        "title": "पत्राचार प्रबंधन टेम्पलेट ग्रिड"
-    },
-    "admin.comp.correspondenceManagementTemplateVersions": {
-        "title": "संगत प्रबंधन टेम्पलेट संस्करण ग्रिड"
-    },
-    "admin.comp.labelsConfig": {
-        "title": "अनुप्रयोग - लेबल कॉन्फ़िग ग्रिड"
-    },
-    "admin.comp.plainFormsConfig": {
-        "title": "प्रपत्र - फॉर्म कॉन्फ़िग ग्रिड"
-    },
-    "admin.comp.workflowsConfig": {
-        "title": "कार्यप्रवाह - वर्कफ़्लो कॉन्फ़िग ग्रिड"
-    },
-    "admin.comp.workflowsHistoryDialogConfig": {
-        "title": "कार्यप्रवाह - कार्यप्रवाह कॉन्फ़िग इतिहास संवाद ग्रिड"
-    },
-    "admin.comp.usersPicker": {
-        "title": "उपयोगकर्ता चुनें"
-    },
-    "admin.comp.orgHierarchy": {
-        "title": "संगठन पदानुक्रम"
-    },
-    "admin.comp.cmisConfiguration": {
-        "title": "CMIS कॉन्फ़िगरेशन ग्रिड"
-    },
-    "admin.comp.emailTemplates": {
-        "title": "ईमेल टेम्पलेट्स"
     }
 }

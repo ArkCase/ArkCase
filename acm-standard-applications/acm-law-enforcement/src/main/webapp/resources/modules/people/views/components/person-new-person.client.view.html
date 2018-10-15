@@ -282,8 +282,11 @@
                         <div class="col-sm-2 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.state</label>
-                            <input type="text" ng-model="person.defaultAddress.state" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.state.placeholder' | translate }}">
+                            <select class="form-control" ng-model="person.defaultAddress.state">
+                                <option ng-repeat="option in states" value="{{option.key}}">
+                                    {{option.value | translate}}
+                                </option>
+                            </select>
                         </div>
                         <div class="col-sm-2 form-group">
                             <label translate>
@@ -353,8 +356,11 @@
                             <div class="col-sm-3 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.state</label>
-                                <input type="text" ng-model="address.state" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.locations.state.placeholder' | translate }}">
+                                <select class="form-control" ng-model="address.state">
+                                    <option ng-repeat="option in states" value="{{option.key}}">
+                                        {{option.value | translate}}
+                                    </option>
+                                </select>
                             </div>
                             <div class="col-sm-3 form-group">
                                 <label translate>
@@ -398,7 +404,9 @@
                                     translate}} </label>
                                 <input type="{{caType}}" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
                                         class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.communicationAccounts.' + caType + '.placeholder' | translate }}">
+                                        placeholder="{{ 'people.comp.editPerson.communicationAccounts.' + caType + '.placeholder' | translate }}"
+                                        ng-blur="validateInput(caType)">
+                                <span ng-if="caType == 'phone' && showPhoneError == true" translate>people.comp.editPerson.communicationAccounts.validationMessage</span>
                             </div>
                             <div class="col-sm-4">
                                 <label for="defaultPhoneSubType" class="control-label">{{'people.comp.editPerson.communicationAccounts.'
@@ -427,7 +435,7 @@
                                 <label>
                                     {{'people.comp.editPerson.communicationAccounts.' + caType |
                                     translate}} {{contactMethod.input_type}} </label>
-                                <input type="text" ng-model="contactMethod.value" required="required" class="input-md form-control"
+                                <input type="{{contactMethod.type}}" ng-model="contactMethod.value" required="required" class="input-md form-control"
                                         placeholder="{{ 'people.comp.editPerson.communicationAccounts.'+ caType +'.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4">

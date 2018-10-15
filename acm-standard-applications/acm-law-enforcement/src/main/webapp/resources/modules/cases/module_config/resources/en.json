@@ -108,8 +108,7 @@
                 "witnessInterview2%": "Witness Interview Request-2.0"
             }
         },
-        "newTask": "New Task",
-        "addDocument": "Choose document to add."
+        "newTask": "New Task"
     },
     "cases.comp.people": {
         "title": "People",
@@ -262,6 +261,16 @@
             "title": "Title",
             "parent": "Parent",
             "modified": "Modified"
+        },
+        "objectPicker": {
+            "title": "Search for object",
+            "table.columns": {
+                "name": "Name",
+                "type": "Type",
+                "title": "Title",
+                "id": "ID",
+                "username": "Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {
@@ -365,6 +374,7 @@
     },
     "cases.comp.change.status": {
         "title": "Change Case Status",
+        "description.label": "Description",
         "information": {
             "title": "Change Case Status Information",
             "date": "Change Date",
@@ -381,10 +391,10 @@
         },
         "approver": {
             "placeholder": "Select Approver",
-            "label": "Select Approver",
+            "label": "Approver",
             "addAnother": "Add another",
             "remove": "Remove Approver",
-            "pickerModal.header": "Choose Approver"
+            "pickerModal.header": "Search for User"
         },
         "button": {
             "cancel": "Cancel",

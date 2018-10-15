@@ -40,8 +40,11 @@
             <div class="col-sm-3 form-group">
                 <label for="state" translate>
                     people.comp.addresses.modal.state.label</label>
-                <input id="state" type="text" ng-model="address.state" class="input-md form-control"
-                        placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}">
+                <select id="state" class="form-control" ng-model="address.state">
+                    <option ng-repeat="option in states" value="{{option.key}}">
+                        {{option.value | translate}}
+                    </option>
+                </select>
             </div>
             <div class="col-sm-3 form-group">
                 <label for="zip" translate>

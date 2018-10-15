@@ -63,7 +63,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -82,12 +84,31 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUpdatePipelineManager;
     private CmisConfigUtils cmisConfigUtils;
     private Logger log = LoggerFactory.getLogger(getClass());
+    private Map<String, List<String>> mimeTypesByTika;
+
+    public static List<String> getAllTikaMimeTypesForFile(Map<String, List<String>> mimeTypesByTika, String value)
+    {
+        if(value.contains(";"))
+        {
+            value = value.split(";")[0];
+        }
+        List<String> keys = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : mimeTypesByTika.entrySet())
+        {
+            if (entry.getValue().contains(value))
+            {
+                keys.add(entry.getKey());
+            }
+        }
+        return keys;
+    }
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
             Document existingCmisDocument) throws MuleException, IOException
     {
+
         log.debug("Creating ecm file pipeline context");
 
         File tempFileContents = null;
@@ -107,37 +128,56 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 log.error("Could not extract metadata with Tika: [{}]", e.getMessage(), e);
             }
 
-            Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
-                    metadata.getFileActiveVersionMimeType());
-            String finalMimeType = mimeTypeAndExtension.getLeft();
-            String finalExtension = mimeTypeAndExtension.getRight();
-
-            ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
-
-            EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
-                    tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
-                    detectedMetadata, ecmUniqueFilename);
-
-            String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
-            metadata.setFileName(fileName);
-            metadata.setFileActiveVersionMimeType(finalMimeType);
-            metadata.setFileActiveVersionNameExtension(finalExtension);
-
-            try
+            String activeVersionMimeType = metadata.getFileActiveVersionMimeType();
+            if(activeVersionMimeType.contains(";"))
             {
-                log.debug("Calling pipeline manager handlers");
-                getEcmFileUploadPipelineManager().executeOperation(metadata, pipelineContext, () -> metadata);
+                activeVersionMimeType = metadata.getFileActiveVersionMimeType().split(";")[0];
             }
-            catch (Exception e)
+
+            if ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
+                    (getAllTikaMimeTypesForFile(mimeTypesByTika, activeVersionMimeType)
+                            .contains(detectedMetadata.getContentType())))
             {
-                log.error("pipeline handler call failed: {}", e.getMessage(), e);
-                if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass()))
+
+                Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
+                        metadata.getFileActiveVersionMimeType());
+                String finalMimeType = mimeTypeAndExtension.getLeft();
+                String finalExtension = mimeTypeAndExtension.getRight();
+
+                ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
+
+                EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
+                        tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
+                        detectedMetadata, ecmUniqueFilename);
+
+                String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
+                metadata.setFileName(fileName);
+                metadata.setFileActiveVersionMimeType(finalMimeType);
+                metadata.setFileActiveVersionNameExtension(finalExtension);
+
+                try
                 {
-                    throw (MuleException) e.getCause();
+                    log.debug("Calling pipeline manager handlers");
+                    getEcmFileUploadPipelineManager().executeOperation(metadata, pipelineContext, () -> metadata);
                 }
+                catch (Exception e)
+                {
+                    log.error("pipeline handler call failed: {}", e.getMessage(), e);
+                    if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass()))
+                    {
+                        throw (MuleException) e.getCause();
+                    }
+                }
+                log.debug("Returning from addFileTransaction method");
+                return pipelineContext.getEcmFile();
             }
-            log.debug("Returning from addFileTransaction method");
-            return pipelineContext.getEcmFile();
+            else
+            {
+                log.error("Uploaded file with name [{}] - MIME type [{}] is not compatible with advertised type [{}]",
+                        metadata.getFileName(), metadata.getFileType(), metadata.getFileActiveVersionMimeType());
+                throw new IOException("Uploaded file's " + metadata.getFileName() + " MIME type " + metadata.getFileActiveVersionMimeType()
+                        + " is not compatible. " + metadata.getFileType());
+            }
         }
         finally
         {
@@ -580,5 +620,13 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
     {
         this.cmisConfigUtils = cmisConfigUtils;
+    }
+
+    public Map<String, List<String>> getMimeTypesByTika() {
+        return mimeTypesByTika;
+    }
+
+    public void setMimeTypesByTika(Map<String, List<String>> mimeTypesByTika) {
+        this.mimeTypesByTika = mimeTypesByTika;
     }
 }

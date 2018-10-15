@@ -29,52 +29,36 @@ package com.armedia.acm.plugins.onlyoffice.web.controllers;
 
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.lock.FileLockType;
-import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
-import com.armedia.acm.plugins.onlyoffice.model.DocumentHistory;
-import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
-import com.armedia.acm.plugins.onlyoffice.service.CallbackService;
+import com.armedia.acm.plugins.onlyoffice.model.config.Config;
+import com.armedia.acm.plugins.onlyoffice.model.config.DocumentPermissions;
 import com.armedia.acm.plugins.onlyoffice.service.ConfigService;
-import com.armedia.acm.plugins.onlyoffice.service.DocumentHistoryManager;
 import com.armedia.acm.plugins.onlyoffice.service.JWTSigningService;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
-
 @RequestMapping(value = "/onlyoffice")
-public class OnlyOfficeController
+public class OnlyOfficeViewController
 {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private ConfigService configService;
-    private CallbackService callbackService;
-    private DocumentHistoryManager documentHistoryManager;
+
     private AuthenticationTokenService authenticationTokenService;
     private AcmObjectLockingManager objectLockingManager;
     private JWTSigningService JWTSigningService;
     private ObjectMapper objectMapper;
+    private UserDao userDao;
 
     @RequestMapping(value = "/editor", method = RequestMethod.GET)
     public ModelAndView editor(
@@ -83,13 +67,22 @@ public class OnlyOfficeController
     {
         try
         {
-            ModelAndView mav = new ModelAndView("onlyoffice/editor");
-            // lock file for onlyoffice processing
-            AcmObjectLock lock = objectLockingManager.acquireObjectLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE,
-                    FileLockType.SHARED_WRITE.name(), null, false, auth.getName());
-            String authTicket = authenticationTokenService.getTokenForAuthentication(auth);
+            String userId = auth.getName();
+            AcmUser user = userDao.findByUserId(userId);
 
-            String configJsonString = objectMapper.writeValueAsString(configService.getConfig(fileId, "edit", "en-US", auth));
+            ModelAndView mav = new ModelAndView("onlyoffice/editor");
+
+            String authTicket = authenticationTokenService.generateAndSaveAuthenticationToken(fileId, user.getMail(), auth);
+
+            Config config = configService.getConfig(fileId, "edit", "en-US", auth, authTicket, user);
+
+            if (userCanLock(config))
+            {
+                // lock file for onlyoffice processing if document is opened for editing
+                AcmObjectLock lock = objectLockingManager.acquireObjectLock(fileId, EcmFileConstants.OBJECT_FILE_TYPE,
+                        FileLockType.SHARED_WRITE.name(), null, false, auth.getName());
+            }
+            String configJsonString = objectMapper.writeValueAsString(config);
             mav.addObject("config", configJsonString);
             mav.addObject("docserviceApiUrl", configService.getDocumentServerUrlApi());
             if (configService.isOutboundSignEnabled())
@@ -111,51 +104,23 @@ public class OnlyOfficeController
         }
     }
 
-    @RequestMapping(value = "/callback", method = RequestMethod.POST)
-    @ResponseStatus(value = HttpStatus.OK)
-    public @ResponseBody CallbackResponse callbackHandler(@RequestBody String callBackDataString,
-            Authentication auth, @RequestHeader(required = false, name = "Authorization") String token) throws IOException
+    private boolean userCanLock(Config config)
     {
-        logger.info("got Callback [{}]", callBackDataString);
-        CallBackData callBackData = objectMapper.readValue(callBackDataString, CallBackData.class);
-
-        return callbackService.handleCallback(callBackData, auth);
-    }
-
-    @RequestMapping(value = "/history/{fileId}", method = RequestMethod.GET)
-    public @ResponseBody DocumentHistory getDocumentHistory(@PathVariable Long fileId)
-    {
-        return documentHistoryManager.getDocumentHistory(fileId);
-    }
-
-    @RequestMapping(value = "/history/{key}/changes", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> downloadHistoryChanges(@PathVariable String key)
-            throws IOException
-    {
-        String[] keySplit = key.split("-");
-        Long fileId = Long.valueOf(keySplit[0]);
-        String version = keySplit[1];
-        File file = documentHistoryManager.getHistoryChangesFile(fileId, version);
-
-        HttpHeaders respHeaders = new HttpHeaders();
-        respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        respHeaders.setContentLength(file.length());
-        // must have this header, because is called from iframe
-        URL url = new URL(configService.getDocumentServerUrlApi());
-        respHeaders.setAccessControlAllowOrigin(url.getProtocol() + "://" + url.getHost());
-
-        InputStreamResource isr = new InputStreamResource(new FileInputStream(file));
-        return new ResponseEntity<>(isr, respHeaders, HttpStatus.OK);
+        DocumentPermissions permissions = config.getDocument().getPermissions();
+        if (permissions.isEdit())
+        {
+            return true;
+        }
+        else if (!permissions.isEdit() && permissions.isReview())
+        {
+            return true;
+        }
+        return false;
     }
 
     public void setConfigService(ConfigService configService)
     {
         this.configService = configService;
-    }
-
-    public void setCallbackService(CallbackService callbackService)
-    {
-        this.callbackService = callbackService;
     }
 
     public void setObjectMapper(ObjectMapper objectMapper)
@@ -173,13 +138,13 @@ public class OnlyOfficeController
         this.JWTSigningService = JWTSigningService;
     }
 
-    public void setDocumentHistoryManager(DocumentHistoryManager documentHistoryManager)
-    {
-        this.documentHistoryManager = documentHistoryManager;
-    }
-
     public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
     {
         this.authenticationTokenService = authenticationTokenService;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 }

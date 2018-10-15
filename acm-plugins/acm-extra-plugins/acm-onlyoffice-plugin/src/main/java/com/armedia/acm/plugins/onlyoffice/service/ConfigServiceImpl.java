@@ -31,11 +31,15 @@ import com.armedia.acm.pluginmanager.service.AcmConfigurablePlugin;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.onlyoffice.exceptions.UnsupportedExtension;
-import com.armedia.acm.plugins.onlyoffice.model.config.*;
+import com.armedia.acm.plugins.onlyoffice.model.config.Config;
+import com.armedia.acm.plugins.onlyoffice.model.config.Document;
+import com.armedia.acm.plugins.onlyoffice.model.config.DocumentInfo;
+import com.armedia.acm.plugins.onlyoffice.model.config.DocumentPermissions;
+import com.armedia.acm.plugins.onlyoffice.model.config.EditorConfig;
+import com.armedia.acm.plugins.onlyoffice.model.config.EditorCustomization;
+import com.armedia.acm.plugins.onlyoffice.model.config.User;
 import com.armedia.acm.plugins.onlyoffice.util.DocumentTypeResolver;
-import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
-import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;
@@ -44,11 +48,11 @@ import org.springframework.security.core.Authentication;
 
 import java.text.SimpleDateFormat;
 
-public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin {
+public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin
+{
     private Logger logger = LoggerFactory.getLogger(getClass());
     private EcmFileDao ecmFileDao;
-    private UserDao userDao;
-    private AuthenticationTokenService authenticationTokenService;
+
     private ArkPermissionEvaluator arkPermissionEvaluator;
     private DocumentTypeResolver documentTypeResolver;
 
@@ -63,35 +67,36 @@ public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin {
     private boolean outboundSignEnabled;
 
     @Override
-    public Config getConfig(Long fileId, String mode, String lang, Authentication auth) {
+    public Config getConfig(Long fileId, String mode, String lang, Authentication auth, String token, AcmUser user)
+    {
         EcmFile ecmFile = ecmFileDao.find(fileId);
-        String userId = auth.getName();
-        AcmUser user = userDao.findByUserId(userId);
-        String authTicket = authenticationTokenService.getTokenForAuthentication(auth);
 
         Config config = new Config();
         config.setHeight(configViewHeight);
         config.setWidth(configViewWidth);
         config.setType(configViewType);
-        if (ecmFile.getFileExtension() == null) {
+        if (ecmFile.getFileExtension() == null)
+        {
             throw new UnsupportedExtension("Extension is not specified for document id[" + ecmFile.getId() + "].");
         }
         config.setDocumentType(documentTypeResolver.resolveDocumentType(ecmFile.getFileExtension().replace(".", "")));
 
-        setDocumentConfig(config, ecmFile, user, authTicket);
-        setEditorConfig(config, user, mode, lang, authTicket);
+        setDocumentConfig(config, ecmFile, auth, token);
+        setEditorConfig(config, user, mode, lang, token, fileId);
 
         return config;
     }
 
-    private void setDocumentConfig(Config config, EcmFile ecmFile, AcmUser acmUser, String authTicket) {
+    private void setDocumentConfig(Config config, EcmFile ecmFile, Authentication authentication, String authTicket)
+    {
         // set document
-        if (config.getDocument() == null) {
+        if (config.getDocument() == null)
+        {
             config.setDocument(
                     new Document(ecmFile.getFileExtension().replace(".", ""),
                             String.format("%s-%s", ecmFile.getId(), ecmFile.getActiveVersionTag()),
                             ecmFile.getFileName(),
-                            String.format("%s/api/v1/plugin/ecm/download?ecmFileId=%s&acm_ticket=%s",
+                            String.format("%s/api/v1/plugin/ecm/download?ecmFileId=%s&acm_email_ticket=%s",
                                     arkcaseBaseUrl,
                                     ecmFile.getFileId(),
                                     authTicket)));
@@ -105,16 +110,20 @@ public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin {
         documentInfo.setCreated(formatter.format(ecmFile.getCreated()));
         document.setInfo(documentInfo);
         // set permissions
-        if (document.getPermissions() == null) {
-            Authentication authentication = authenticationTokenService.getAuthenticationForToken(authTicket);
+        if (document.getPermissions() == null)
+        {
             boolean reviewPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
-                    "write|group-write");
+                    "reviewOnlyOfficeDocument");
+            boolean commentPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
+                    "commentOnlyOfficeDocument");
             boolean writePermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
-                    "write|group-write");
-            boolean downloadPermission = false;// FIXME hardcoded
-            boolean printPermission = true;// FIXME hardcoded
+                    "editOnlyOfficeDocument");
+            boolean downloadPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
+                    "downloadOnlyOfficeDocument");
+            boolean printPermission = arkPermissionEvaluator.hasPermission(authentication, ecmFile.getFileId(), "FILE",
+                    "printOnlyOfficeDocument");
             document.setPermissions(new DocumentPermissions(
-                    reviewPermission,
+                    commentPermission,
                     downloadPermission,
                     writePermission,
                     printPermission,
@@ -123,10 +132,15 @@ public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin {
 
     }
 
-    private void setEditorConfig(Config config, AcmUser acmUser, String mode, String lang, String authTicket) {
+    private void setEditorConfig(Config config, AcmUser acmUser, String mode, String lang, String authTicket, Long fileId)
+    {
         // set editorConfig
-        if (config.getEditorConfig() == null) {
-            config.setEditorConfig(new EditorConfig(String.format("%s/onlyoffice/callback?acm_ticket=%s", arkcaseBaseUrl, authTicket)));
+        if (config.getEditorConfig() == null)
+        {
+            config.setEditorConfig(
+                    new EditorConfig(
+                            String.format("%s/api/onlyoffice/callback?acm_email_ticket=%s&ecmFileId=%s", arkcaseBaseUrl, authTicket,
+                                    fileId.toString())));
         }
         EditorConfig editorConfig = config.getEditorConfig();
         editorConfig.setMode(mode);
@@ -138,7 +152,8 @@ public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin {
         editorConfig.setUser(user);
 
         // set editor customization
-        if (editorConfig.getCustomization() == null) {
+        if (editorConfig.getCustomization() == null)
+        {
             editorConfig.setCustomization(new EditorCustomization());
         }
         EditorCustomization customization = editorConfig.getCustomization();
@@ -148,80 +163,88 @@ public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin {
         customization.setShowReviewChanges(true);
     }
 
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    public void setArkcaseBaseUrl(String arkcaseBaseUrl) {
+    public void setArkcaseBaseUrl(String arkcaseBaseUrl)
+    {
         this.arkcaseBaseUrl = arkcaseBaseUrl;
     }
 
-    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService) {
-        this.authenticationTokenService = authenticationTokenService;
-    }
-
-    public void setEcmFileDao(EcmFileDao ecmFileDao) {
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
         this.ecmFileDao = ecmFileDao;
     }
 
-    public void setDocumentServerUrlApi(String documentServerUrlApi) {
+    public void setDocumentServerUrlApi(String documentServerUrlApi)
+    {
         this.documentServerUrlApi = documentServerUrlApi;
     }
 
     @Override
-    public String getDocumentServerUrlApi() {
+    public String getDocumentServerUrlApi()
+    {
         return documentServerUrlApi;
     }
 
     @Override
-    public String getArkcaseBaseUrl() {
+    public String getArkcaseBaseUrl()
+    {
         return arkcaseBaseUrl;
     }
 
-    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator) {
+    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
+    {
         this.arkPermissionEvaluator = arkPermissionEvaluator;
     }
 
-    public void setDocumentTypeResolver(DocumentTypeResolver documentTypeResolver) {
+    public void setDocumentTypeResolver(DocumentTypeResolver documentTypeResolver)
+    {
         this.documentTypeResolver = documentTypeResolver;
     }
 
-    public void setConfigViewType(String configViewType) {
+    public void setConfigViewType(String configViewType)
+    {
         this.configViewType = configViewType;
     }
 
-    public void setConfigViewHeight(String configViewHeight) {
+    public void setConfigViewHeight(String configViewHeight)
+    {
         this.configViewHeight = configViewHeight;
     }
 
-    public void setConfigViewWidth(String configViewWidth) {
+    public void setConfigViewWidth(String configViewWidth)
+    {
         this.configViewWidth = configViewWidth;
     }
 
-    public Boolean getPluginEnabled() {
+    public Boolean getPluginEnabled()
+    {
         return pluginEnabled;
     }
 
-    public void setPluginEnabled(Boolean pluginEnabled) {
+    public void setPluginEnabled(Boolean pluginEnabled)
+    {
         this.pluginEnabled = pluginEnabled;
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled()
+    {
         return pluginEnabled;
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return ONLY_OFFICE_PLUGIN;
     }
 
-    public void setOutboundSignEnabled(boolean outboundSignEnabled) {
+    public void setOutboundSignEnabled(boolean outboundSignEnabled)
+    {
         this.outboundSignEnabled = outboundSignEnabled;
     }
 
     @Override
-    public boolean isOutboundSignEnabled() {
+    public boolean isOutboundSignEnabled()
+    {
         return outboundSignEnabled;
     }
 }

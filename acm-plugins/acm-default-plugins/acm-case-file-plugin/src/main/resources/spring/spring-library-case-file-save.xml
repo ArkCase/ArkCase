@@ -21,9 +21,9 @@
                 <ref bean="caseFileEcmFolderHandler"/>
                 <ref bean="caseFileOutlookHandler"/>
                 <ref bean="caseFileFolderStructureHandler"/>
+                <ref bean="caseFileUploadAttachmentsHandler"/>
                 <ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
                 <ref bean="casefileDocumentHandler"/>
-                <ref bean="caseFileAssignmentHandler"/>
             </list>
         </property>
     </bean>
@@ -66,5 +66,10 @@
     
     <bean id="caseFileAssignmentHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileAssignmentHandler">
         <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
+        <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
+    </bean>
+
+    <bean id="caseFileUploadAttachmentsHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileUploadAttachmentsHandler">
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 </beans>

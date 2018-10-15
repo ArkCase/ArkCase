@@ -261,6 +261,16 @@
             "title": "标题",
             "parent": "原属",
             "modified": "更改"
+        },
+        "objectPicker": {
+            "title": "zh-cn_Search for object",
+            "table.columns": {
+                "name": "zh-cn_Name",
+                "type": "zh-cn_Type",
+                "title": "zh-cn_Title",
+                "id": "zh-cn_ID",
+                "username": "zh-cn_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {
@@ -364,6 +374,7 @@
     },
     "cases.comp.change.status": {
         "title": "zh-cn_Change Case Status",
+        "description.label": "zh-cn_Description",
         "information": {
             "title": "zh-cn_Change Case Status Information",
             "date": "zh-cn_Change Date",
@@ -380,10 +391,10 @@
         },
         "approver": {
             "placeholder": "zh-cn_Select Approver",
-            "label": "zh-cn_Select Approver",
+            "label": "zh-cn_Approver",
             "addAnother": "zh-cn_Add another",
             "remove": "zh-cn_Remove Approver",
-            "pickerModal.header": "zh-cn_Choose Approver"
+            "pickerModal.header": "zh-cn_Search for User"
         },
         "button": {
             "cancel": "zh-cn_Cancel",
