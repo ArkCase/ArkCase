@@ -57,7 +57,7 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
             params.parentType = DocTree._objType;
             params.parentId = DocTree._objId;
             params.folderId = DocTree.objectInfo.container.id;
-            params.filter = '"Object Type": FILE';
+            params.filter = 'fq="object_type_s": FILE AND acm_participants_lcs: *"'+ DocTree.objectInfo.participants[2].participantLdapId + '"*';
             params.header = $translate.instant("common.dialogObjectPicker.addDocument");
             params.config = Util.goodMapValue(DocTree.treeConfig, "dialogObjectPicker");
 
@@ -87,16 +87,20 @@ angular.module('directives').controller('directives.DocTreeSearchAndAddDocuments
         $scope.config = params.config;
 
         $scope.modalInstance.result.then(function(result) {
-            Util.serviceCall({
-                service: Ecm.copyFile,
-                param: {
-                    objType: params.parentType,
-                    objId: params.parentId
-                },
-                data: {
-                    id : parseInt(result.object_id_s),
-                    folderId : params.folderId
-                }
-            })
+            var docs = result;
+                angular.forEach(docs, function(doc) {
+                    var documentId = doc.object_id_s;
+                    Util.serviceCall({
+                        service: Ecm.copyFile,
+                        param: {
+                            objType: params.parentType,
+                            objId: params.parentId
+                        },
+                        data: {
+                            id : parseInt(documentId),
+                            folderId : params.folderId
+                        }
+                    })
+            });
         });
     } ]);
