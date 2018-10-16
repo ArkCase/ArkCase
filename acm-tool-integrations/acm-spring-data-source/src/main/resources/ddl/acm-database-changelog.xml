@@ -77,10 +77,12 @@
          or the constraint ddl.
     -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/tables" relativeToChangelogFile="false"/>
+    <includeAll path="classpath*:/com/armedia/acm/extension/ddl/tables" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/ddl/tables" relativeToChangelogFile="false"/>
 
     <!-- then constraints.  Foreign key constraint changelogs should go in these folders. -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/constraints" relativeToChangelogFile="false"/>
+    <includeAll path="classpath*:/com/armedia/acm/extension/ddl/constraints" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/ddl/constraints" relativeToChangelogFile="false"/>
 
     <!-- insertion logs: lookup table insertion logs-->
@@ -90,26 +92,32 @@
          assumptions here.  When we support other databases we will have to configure Spring to load a
          database-specific changelog file. -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/packageSpecs" relativeToChangelogFile="false"/>
+    <includeAll path="classpath*:/com/armedia/acm/extension/ddl/packageSpecs" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/ddl/packageSpecs" relativeToChangelogFile="false"/>
 
     <includeAll path="classpath*:/com/armedia/acm/ddl/packageBodies" relativeToChangelogFile="false"/>
+    <includeAll path="classpath*:/com/armedia/acm/extension/ddl/packageBodies" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/ddl/packageBodies" relativeToChangelogFile="false"/>
 
     <!-- then triggers.  -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/triggers" relativeToChangelogFile="false"/>
+    <includeAll path="classpath*:/com/armedia/acm/extension/ddl/triggers" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/ddl/triggers" relativeToChangelogFile="false"/>
 
     <!-- data maintenance SQL scripts -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/sql" relativeToChangelogFile="false"/>
+    <includeAll path="classpath*:/com/armedia/acm/extension/ddl/sql" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/ddl/sql" relativeToChangelogFile="false"/>
 
     <!-- drop constraints, triggers, columns should be executed after SQL scripts used for data migration -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/drops" relativeToChangelogFile="false"/>
+    <includeAll path="classpath*:/com/armedia/acm/extension/ddl/drops" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/ddl/drops" relativeToChangelogFile="false"/>
 
     <!-- drop tables... needs to be last... in case any existing tables are dropped, when changelogs in constraint
          or trigger folders referred to them.  -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/dropTables" relativeToChangelogFile="false"/>
+    <includeAll path="classpath*:/com/armedia/acm/extension/ddl/dropTables" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/ddl/dropTables" relativeToChangelogFile="false"/>
 
     <!-- other types of database objects can be included here as the need arises.
@@ -117,6 +125,7 @@
          you need to create them.
     -->
     <includeAll path="classpath*:/com/armedia/acm/dml" relativeToChangelogFile="false"/>
+    <includeAll path="classpath*:/com/armedia/acm/extension/dml" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/dml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
