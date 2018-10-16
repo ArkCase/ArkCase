@@ -57,6 +57,7 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
             params.parentType = DocTree._objType;
             params.parentId = DocTree._objId;
             params.folderId = DocTree.objectInfo.container.id;
+            //this is a workaround because, DocTree.objectInfo.participants[2].participantLdapId is the only reference to the owning ldap group of the file and we would need to evaulate over that for ticket AFDP-5936
             params.filter = 'fq="object_type_s": FILE AND acm_participants_lcs: *"'+ DocTree.objectInfo.participants[2].participantLdapId + '"*';
             params.header = $translate.instant("common.dialogObjectPicker.addDocument");
             params.config = Util.goodMapValue(DocTree.treeConfig, "dialogObjectPicker");
@@ -85,6 +86,7 @@ angular.module('directives').controller('directives.DocTreeSearchAndAddDocuments
         $scope.modalInstance = $modalInstance;
         $scope.filter = params.filter;
         $scope.config = params.config;
+        $scope.header = params.header;
 
         $scope.modalInstance.result.then(function(result) {
             var docs = result;
