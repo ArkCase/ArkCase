@@ -2,8 +2,8 @@
 
 angular.module('document-repository').controller(
         'DocumentRepository.InfoController',
-        [ '$scope', '$stateParams', '$translate', '$modal', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'DocumentRepository.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService',
-                function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, DocumentRepositoryInfoService, ObjectModelService, HelperObjectBrowserService) {
+        [ '$scope', '$stateParams', '$translate', '$modal', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'DocumentRepository.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+                function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, DocumentRepositoryInfoService, ObjectModelService, HelperObjectBrowserService, HelperUiGridService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -16,6 +16,11 @@ angular.module('document-repository').controller(
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
+
+                    var gridHelper = new HelperUiGridService.Grid({
+                        scope: $scope
+                    });
+                    var promiseUsers = gridHelper.getUsers();
 
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
@@ -48,7 +53,7 @@ angular.module('document-repository').controller(
 
                     $scope.userOrGroupSearch = function() {
                         var assigneUserName = _.find($scope.userFullNames, function(user) {
-                            return user.name === $scope.assignee
+                            return user.id === $scope.assignee
                         });
                         var params = {
                             owningGroup: $scope.owningGroup,
