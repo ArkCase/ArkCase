@@ -623,4 +623,16 @@
         </sql>
     </changeSet>
 
+    <changeSet id="38-set-seq-num-in-acm-user-identifier-if-null" author="ncuculova">
+        <sql>
+            UPDATE acm_user_identifier_id SET cm_seq_num = 100 WHERE cm_seq_num IS NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="39-set-seq-num-in-acm-group-identifier-if-null" author="ncuculova">
+        <sql>
+            UPDATE acm_group_identifier_id SET cm_seq_num = 100 WHERE cm_seq_num IS NULL;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
