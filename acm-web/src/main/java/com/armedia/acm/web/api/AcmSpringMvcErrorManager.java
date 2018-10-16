@@ -189,8 +189,9 @@ public class AcmSpringMvcErrorManager
     {
         // Make sure the error message doesn't look like JSON when it really isn't JON
         // otherwise Angular will try to parse it and fail
-        String JSONStart = "^(\\[|\\{)(.*)(\\]|\\})$";
-        if (message.matches(JSONStart))
+        
+        String jsonStart = "^(\\[|\\{)(.*)(\\]|\\})$";
+        if (message != null && message.matches(jsonStart))
         {
             try
             {
@@ -209,7 +210,7 @@ public class AcmSpringMvcErrorManager
                 }
             }
         }
-
+        
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
         response.setStatus(status.value());
 
