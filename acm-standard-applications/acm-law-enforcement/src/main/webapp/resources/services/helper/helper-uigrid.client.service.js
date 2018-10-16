@@ -515,6 +515,24 @@ angular.module('services').factory(
 
                         /**
                          * @ngdoc method
+                         * @name transitionToState
+                         * @methodOf services:Helper.UiGridService
+                         *
+                         * @param {String} objTypeKey Lookup key for an ArkCase Object type. Typically, lookup key is of format
+                         * "OBJECT_TYPE" or "OBJECT_TYPE.SUB_TYPE"
+                         * @param {String} objId ArkCase Object ID
+                         * @param {String} state Angular route state
+                         *
+                         * @description
+                         * Go to a page state that show the specified ArkCase Object (Case, Complaint, Document, etc.)
+                         */
+                        ,
+                        transitionToState: function(objType, objId, state) {
+                            return ObjectService.transitionToState(objType, objId, state);
+                        }
+
+                        /**
+                         * @ngdoc method
                          * @name openObject
                          * @methodOf services:Helper.UiGridService
                          *
