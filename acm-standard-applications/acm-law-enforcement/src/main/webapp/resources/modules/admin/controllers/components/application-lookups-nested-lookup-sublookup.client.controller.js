@@ -69,17 +69,29 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', [ '$
     };
 
     $scope.deleteRow = function(rowEntity) {
-        bootbox.confirm($translate.instant('admin.application.lookups.config.deleteEntryMsg'), function(result) {
-            if (result) {
-                var idx;
-                _.find($scope.lookup, function(entry, entryIdx) {
-                    if (entry.key == rowEntity.key) {
-                        idx = entryIdx;
-                        return true;
-                    }
-                });
-                $scope.lookup.splice(idx, 1);
-                saveLookup();
+        //change for AFDP-6803 change ok button content
+        bootbox.confirm({
+            message: $translate.instant("admin.application.lookups.config.deleteEntryMsg"),
+            buttons: {
+                confirm:{
+                    label: $translate.instant("admin.application.lookups.config.dialog.deleteEntryConfirm")
+                },
+                cancel: {
+                    label:  $translate.instant("admin.application.lookups.config.dialog.cancel")
+                }
+            },
+            callback: function(result){
+                if (result) {
+                    var idx;
+                    _.find($scope.lookup, function(entry, entryIdx) {
+                        if (entry.key == rowEntity.key) {
+                            idx = entryIdx;
+                            return true;
+                        }
+                    });
+                    $scope.lookup.splice(idx, 1);
+                    saveLookup();
+                }
             }
         });
     };
