@@ -614,7 +614,7 @@
         {
           "name": "checkbox",
           "displayName": "",
-          "cellTemplate": "<input type='checkbox'/>",
+          "cellTemplate": "<input type='checkbox' ng-click='grid.appScope.onClick($event, row.entity)'/>",
           "width": "6%",
           "index": 0
         },
