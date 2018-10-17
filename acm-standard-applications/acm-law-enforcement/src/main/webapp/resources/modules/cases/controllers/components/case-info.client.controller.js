@@ -22,8 +22,9 @@ angular.module('cases').controller(
                 'Helper.ObjectBrowserService',
                 'Helper.UiGridService',
                 'Dialog.BootboxService',
+                '$filter',
                 function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService, SearchQueryBuilder,
-                        HelperObjectBrowserService, HelperUiGridService, DialogService) {
+                        HelperObjectBrowserService, HelperUiGridService, DialogService, $filter) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -199,7 +200,7 @@ angular.module('cases').controller(
                             var correctedDueDate = new Date(data);
                             var startDate = new Date($scope.objectInfo.create_date_tdt);
                             if(correctedDueDate < startDate){
-                                $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
+                                $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
                                 DialogService.alert("Due Date must be bigger then created date " + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                             }else {
                                 $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
