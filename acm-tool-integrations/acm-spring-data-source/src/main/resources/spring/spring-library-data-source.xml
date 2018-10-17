@@ -1,130 +1,129 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
-             xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx"
-             xmlns:beans="http://www.springframework.org/schema/beans"
-             xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-    <beans:bean id="datasourceProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="datasourceProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <beans:property name="location" value="file:${user.home}/.arkcase/acm/datasource.properties"/>
-        <beans:property name="ignoreResourceNotFound" value="true"/>
-        <beans:property name="localOverride" value="false"/>
+        <property name="location" value="file:${user.home}/.arkcase/acm/datasource.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
         <!-- following properties are the default datasource mappings.  The properties file
              should include all of these properties.  In practice there should always be a
              specific properties file; these defaults are here for reference, not to be used. -->
-        <beans:property name="properties">
-            <beans:props>
-                <beans:prop key="acm.driverClassName">oracle.jdbc.OracleDriver</beans:prop>
-                <beans:prop key="acm.url">jdbc:oracle:thin:@localhost:1521:XE</beans:prop>
-                <beans:prop key="acm.username">acm</beans:prop>
-                <beans:prop key="acm.password">acm</beans:prop>
-                <beans:prop key="acm.initialSize">5</beans:prop>
-                <beans:prop key="acm.maxActive">5</beans:prop>
-                <beans:prop key="acm.minIdle">5</beans:prop>
-                <beans:prop key="acm.maxWait">10000</beans:prop>
-                <beans:prop key="acm.testOnBorrow">true</beans:prop>
-                <beans:prop key="acm.testOnReturn">false</beans:prop>
-                <beans:prop key="acm.idleConnectionTestPeriodInSeconds">30</beans:prop>
-                <beans:prop key="acm.validationQuery">select 1 from dual</beans:prop>
-                <beans:prop key="acm.acquireRetryAttempts">30</beans:prop>
-                <beans:prop key="acm.acquireRetryDelay">1000</beans:prop>
-                <beans:prop key="acm.acquireIncrement">5</beans:prop>
-                <beans:prop key="acm.abandonedTimeoutInSeconds">60</beans:prop>
+        <property name="properties">
+            <props>
+                <prop key="acm.driverClassName">oracle.jdbc.OracleDriver</prop>
+                <prop key="acm.url">jdbc:oracle:thin:@localhost:1521:XE</prop>
+                <prop key="acm.username">acm</prop>
+                <prop key="acm.password">acm</prop>
+                <prop key="acm.initialSize">5</prop>
+                <prop key="acm.maxActive">5</prop>
+                <prop key="acm.minIdle">5</prop>
+                <prop key="acm.maxWait">10000</prop>
+                <prop key="acm.testOnBorrow">true</prop>
+                <prop key="acm.testOnReturn">false</prop>
+                <prop key="acm.idleConnectionTestPeriodInSeconds">30</prop>
+                <prop key="acm.validationQuery">select 1 from dual</prop>
+                <prop key="acm.acquireRetryAttempts">30</prop>
+                <prop key="acm.acquireRetryDelay">1000</prop>
+                <prop key="acm.acquireIncrement">5</prop>
+                <prop key="acm.abandonedTimeoutInSeconds">60</prop>
 
                 <!-- whether the schema should be updated at application startup - set to false to run with JRebel  -->
-                <beans:prop key="schema.autoUpdate">true</beans:prop>
+                <prop key="schema.autoUpdate">true</prop>
                 <!-- database.platform must be an EclipseLink database platform. -->
-                <beans:prop key="database.platform">org.eclipse.persistence.platform.database.OraclePlatform</beans:prop>
+                <prop key="database.platform">org.eclipse.persistence.platform.database.OraclePlatform</prop>
                 <!-- EclipseLink specific: whether it should output the SQL that caused an exception -->
-                <beans:prop key="database.platform.showSql">true</beans:prop>
+                <prop key="database.platform.showSql">true</prop>
                 <!-- EclipseLink specific: logging level - FINER shows SQL and transaction details -->
-                <beans:prop key="eclipselink.logging.level">FINER</beans:prop>
+                <prop key="eclipselink.logging.level">FINER</prop>
 
                 <!-- JPA package scanning:
                     - comma separated list of packages to scan for JPA entity classes.
                     - NOTE: Cannot start with a wild card.  The leading package name must be specified.
                     - NOTE: Use '**' to recurse into sub-packages.
                  -->
-                <beans:prop key="jpa.model.packages">com.armedia.**</beans:prop>
+                <prop key="jpa.model.packages">com.armedia.**</prop>
 
-            </beans:props>
-        </beans:property>
-    </beans:bean>
+            </props>
+        </property>
+    </bean>
 
-    <beans:bean id="acmObjectsNotifications" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="acmObjectsNotifications" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <beans:property name="location" value="file:${user.home}/.arkcase/acm/acmObjectsNotifications.properties"/>
-        <beans:property name="ignoreResourceNotFound" value="true"/>
-        <beans:property name="localOverride" value="false"/>
-        <beans:property name="properties">
-            <beans:props></beans:props>
-        </beans:property>
-    </beans:bean>
+        <property name="location" value="file:${user.home}/.arkcase/acm/acmObjectsNotifications.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props></props>
+        </property>
+    </bean>
 
-    <beans:bean id="acmDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
-        <beans:property name="driverClassName" value="${acm.driverClassName}"/>
-        <beans:property name="url" value="${acm.url}"/>
-        <beans:property name="username" value="${acm.username}"/>
-        <beans:property name="password" value="${acm.password}"/>
-        <beans:property name="initialSize" value="${acm.initialSize}"/>
-        <beans:property name="maxActive" value="${acm.maxActive}"/>
-        <beans:property name="maxIdle" value="${acm.maxActive}"/>
-        <beans:property name="minIdle" value="${acm.maxActive}"/>
-        <beans:property name="maxWait" value="${acm.maxWait}"/>
-        <beans:property name="maxAge" value="5000"/>
-        <beans:property name="testOnBorrow" value="${acm.testOnBorrow}"/>
-        <beans:property name="testOnReturn" value="${acm.testOnReturn}"/>
+    <bean id="acmDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+        <property name="driverClassName" value="${acm.driverClassName}"/>
+        <property name="url" value="${acm.url}"/>
+        <property name="username" value="${acm.username}"/>
+        <property name="password" value="${acm.password}"/>
+        <property name="initialSize" value="${acm.initialSize}"/>
+        <property name="maxActive" value="${acm.maxActive}"/>
+        <property name="maxIdle" value="${acm.maxActive}"/>
+        <property name="minIdle" value="${acm.maxActive}"/>
+        <property name="maxWait" value="${acm.maxWait}"/>
+        <property name="maxAge" value="5000"/>
+        <property name="testOnBorrow" value="${acm.testOnBorrow}"/>
+        <property name="testOnReturn" value="${acm.testOnReturn}"/>
         <!--<property name="test" value="${acm.idleConnectionTestPeriodInSeconds}"/>-->
-        <beans:property name="validationQuery" value="${acm.validationQuery}"/>
-        <beans:property name="loginTimeout" value="${acm.maxWait}"/>
-        <beans:property name="defaultAutoCommit" value="${acm.autoCommit}"/>
-        <beans:property name="logAbandoned" value="true"/>
-        <beans:property name="minEvictableIdleTimeMillis" value="1000"/>
-        <beans:property name="removeAbandoned" value="true"/>
-        <beans:property name="removeAbandonedTimeout" value="${acm.abandonedTimeoutInSeconds}"/>
-        <beans:property name="timeBetweenEvictionRunsMillis" value="3000"/>
-        <beans:property name="testOnConnect" value="true"/>
-    </beans:bean>
+        <property name="validationQuery" value="${acm.validationQuery}"/>
+        <property name="loginTimeout" value="${acm.maxWait}"/>
+        <property name="defaultAutoCommit" value="${acm.autoCommit}"/>
+        <property name="logAbandoned" value="true"/>
+        <property name="minEvictableIdleTimeMillis" value="1000"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="${acm.abandonedTimeoutInSeconds}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="3000"/>
+        <property name="testOnConnect" value="true"/>
+    </bean>
 
-    <beans:bean id="converterScanPostProcessor" class="com.armedia.acm.data.converter.ConverterScanPostProcessor">
-        <beans:property name="packagesToScan" value="${jpa.model.packages}"/>
-    </beans:bean>
+    <bean id="converterScanPostProcessor" class="com.armedia.acm.data.converter.ConverterScanPostProcessor">
+        <property name="packagesToScan" value="${jpa.model.packages}"/>
+    </bean>
 
-    <beans:bean id="acmPersistenceUnitManager" class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
-        <beans:property name="defaultDataSource" ref="acmDataSource"/>
-        <beans:property name="packagesToScan" value="${jpa.model.packages}"/>
-        <beans:property name="persistenceUnitPostProcessors">
-            <beans:list>
-                <beans:ref bean="converterScanPostProcessor"/>
-            </beans:list>
-        </beans:property>
-    </beans:bean>
+    <bean id="acmPersistenceUnitManager" class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
+        <property name="defaultDataSource" ref="acmDataSource"/>
+        <property name="packagesToScan" value="${jpa.model.packages}"/>
+        <property name="persistenceUnitPostProcessors">
+            <list>
+                <ref bean="converterScanPostProcessor"/>
+            </list>
+        </property>
+    </bean>
 
-    <beans:bean id="acmEntityManager" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <bean id="acmEntityManager" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <!--<property name="dataSource" ref="acmDataSource"/>-->
-        <beans:property name="jpaDialect" ref="eclipseLinkDialect"/>
-        <beans:property name="persistenceProviderClass" value="org.eclipse.persistence.jpa.PersistenceProvider"/>
-        <beans:property name="jpaPropertyMap">
-            <beans:props>
-                <beans:prop key="eclipselink.weaving">false</beans:prop>
-                <beans:prop key="eclipselink.logging.level">${eclipselink.logging.level}</beans:prop>
-                <beans:prop key="eclipselink.logging.logger">${eclipselink.logging.logger}</beans:prop>
+        <property name="jpaDialect" ref="eclipseLinkDialect"/>
+        <property name="persistenceProviderClass" value="org.eclipse.persistence.jpa.PersistenceProvider"/>
+        <property name="jpaPropertyMap">
+            <props>
+                <prop key="eclipselink.weaving">false</prop>
+                <prop key="eclipselink.logging.level">${eclipselink.logging.level}</prop>
+                <prop key="eclipselink.logging.logger">${eclipselink.logging.logger}</prop>
                 <!-- The EclipseLink core cache causes unusual things to happen unless every single database
            update is through EclipseLink.  For ACM this mostly will not be true; most customers will have
            batch feeds and other processes that modify the share database without using the application
            code.  May have to find another way around this if performance testing turns into an issue.
            But for now we'll err on the side of correctness (i.e. accurate database info) -->
-                <beans:prop key="eclipselink.cache.shared.default">false</beans:prop>
-                <beans:prop key="eclipselink.persistence-context.close-on-commit">true</beans:prop>
-                <beans:prop key="eclipselink.validate-existence">true</beans:prop>
-                <beans:prop key="eclipselink.jdbc.sequence-connection-pool">true</beans:prop>
+                <prop key="eclipselink.cache.shared.default">false</prop>
+                <prop key="eclipselink.persistence-context.close-on-commit">true</prop>
+                <prop key="eclipselink.validate-existence">true</prop>
+                <prop key="eclipselink.jdbc.sequence-connection-pool">true</prop>
                 <!--<prop key="eclipselink.connection-pool.initial">5</prop>-->
                 <!--<prop key="eclipselink.connection-pool.min">5</prop>-->
                 <!--<prop key="eclipselink.connection-pool.max">10</prop>-->
@@ -136,18 +135,18 @@
                 <!--<prop key="eclipselink.connection-pool.jtaDataSource">jdbc/acmDataSource</prop>-->
                 <!--<prop key="eclipselink.connection-pool.nonJtaDataSource">jdbc/acmDataSource</prop>-->
 
-            </beans:props>
-        </beans:property>
+            </props>
+        </property>
         <!--<property name="packagesToScan" value="${jpa.model.packages}"/>-->
-        <beans:property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
-        <beans:property name="persistenceUnitManager" ref="acmPersistenceUnitManager"/>
-    </beans:bean>
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+        <property name="persistenceUnitManager" ref="acmPersistenceUnitManager"/>
+    </bean>
 
-    <beans:bean id="objectChangesBySessionAccumulator" class="com.armedia.acm.data.ObjectChangesBySessionAccumulator"/>
+    <bean id="objectChangesBySessionAccumulator" class="com.armedia.acm.data.ObjectChangesBySessionAccumulator"/>
 
-    <beans:bean id="sessionCommitListener" class="com.armedia.acm.data.SessionAccumulatingSessionListener">
-        <beans:property name="descriptorListener" ref="objectChangesBySessionAccumulator"/>
-    </beans:bean>
+    <bean id="sessionCommitListener" class="com.armedia.acm.data.SessionAccumulatingSessionListener">
+        <property name="descriptorListener" ref="objectChangesBySessionAccumulator"/>
+    </bean>
 
     <!-- Channel for sending all acm object changes, it can have as many subscribers to that channel-->
     <task:executor id="channelExecutor" pool-size="4"/>
@@ -155,104 +154,89 @@
     <!-- Channel for sending simple generic messages for general purposes -->
     <int:publish-subscribe-channel id="genericMessagesChannel" task-executor="channelExecutor" min-subscribers="1"/>
 
-    <beans:bean id="acmObjectChangeNotifier" class="com.armedia.acm.data.AcmObjectChangedNotifier">
-        <beans:property name="objectEventChannel" ref="objectEventChannel"/>
-    </beans:bean>
-
-    <beans:bean id="acmObjectChangedLogger" class="com.armedia.acm.data.AcmObjectChangedLogger"/>
+    <bean id="acmObjectChangeNotifier" class="com.armedia.acm.data.AcmObjectChangedNotifier">
+        <property name="objectEventChannel" ref="objectEventChannel"/>
+    </bean>
+    <bean id="acmObjectChangedLogger" class="com.armedia.acm.data.AcmObjectChangedLogger"/>
 
     <int:service-activator ref="acmObjectChangedLogger" input-channel="objectEventChannel" method="logObject"/>
 
-    <beans:bean id="acmProgressNotifier" class="com.armedia.acm.data.AcmProgressNotifier">
-        <beans:property name="genericMessagesChannel" ref="genericMessagesChannel"/>
-    </beans:bean>
+    <bean id="acmProgressNotifier" class="com.armedia.acm.data.AcmProgressNotifier">
+        <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
+    </bean>
 
-    <beans:bean id="acmServiceLdapSyncNotifier" class="com.armedia.acm.data.AcmServiceLdapSyncNotifier">
-        <beans:property name="genericMessagesChannel" ref="genericMessagesChannel"/>
-    </beans:bean>
+    <bean id="acmServiceLdapSyncNotifier" class="com.armedia.acm.data.AcmServiceLdapSyncNotifier">
+        <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
+    </bean>
 
-    <beans:bean id="acmProgressNotifierInitializer" class="com.armedia.acm.data.AcmProgressNotifierInitializer">
-        <beans:property name="progressNotifier" ref="acmProgressNotifier"/>
-    </beans:bean>
+    <bean id="acmProgressNotifierInitializer" class="com.armedia.acm.data.AcmProgressNotifierInitializer">
+        <property name="progressNotifier" ref="acmProgressNotifier"/>
+    </bean>
 
-    <beans:bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
+    <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
 
-    <beans:bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer">
-        <beans:property name="springContextHolder" ref="acmContextHolder"/>
-        <beans:property name="entityManagerFactory" ref="acmEntityManager"/>
-        <beans:property name="sessionListener" ref="sessionCommitListener"/>
-        <beans:property name="defaultListeners">
-            <beans:list>
-                <beans:ref bean="objectChangesBySessionAccumulator"/>
-                <beans:ref bean="auditPropertyEntityAdapter"/>
-            </beans:list>
-        </beans:property>
-    </beans:bean>
+    <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="entityManagerFactory" ref="acmEntityManager"/>
+        <property name="sessionListener" ref="sessionCommitListener"/>
+        <property name="defaultListeners">
+            <list>
+                <ref bean="objectChangesBySessionAccumulator"/>
+                <ref bean="auditPropertyEntityAdapter"/>
+            </list>
+        </property>
+    </bean>
 
-    <beans:bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <beans:property name="staticMethod" value="com.armedia.acm.data.converter.StringEncryptionConverter.setAcmDecryptionProperties"/>
-        <beans:property name="arguments">
-            <beans:list>
-                <beans:value type="java.lang.Boolean">${database.encryption_enabled}</beans:value>
-                <beans:ref bean="acmCryptoUtils"/>
-                <beans:value type="java.lang.String">${database.encryption_passphrase}</beans:value>
-                <beans:value type="java.lang.Boolean">${database.encryption_supported}</beans:value>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="com.armedia.acm.data.converter.StringEncryptionConverter.setAcmDecryptionProperties"/>
+        <property name="arguments">
+            <list>
+                <value type="java.lang.Boolean">${database.encryption_enabled}</value>
+                <ref bean="acmCryptoUtils"/>
+                <value type="java.lang.String">${database.encryption_passphrase}</value>
+                <value type="java.lang.Boolean">${database.encryption_supported}</value>
 
-            </beans:list>
-        </beans:property>
-    </beans:bean>
+            </list>
+        </property>
+    </bean>
 
-    <beans:bean id="eclipseLinkDialect" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect">
-        <beans:property name="lazyDatabaseTransaction" value="false"/>
-    </beans:bean>
+    <bean id="eclipseLinkDialect" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect">
+        <property name="lazyDatabaseTransaction" value="false"/>
+    </bean>
 
-    <beans:bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
-        <beans:property name="databasePlatform" value="${database.platform}"/>
-        <beans:property name="generateDdl" value="false"/>
-        <beans:property name="showSql" value="${database.platform.showSql}"/>
-    </beans:bean>
+    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
+        <property name="databasePlatform" value="${database.platform}"/>
+        <property name="generateDdl" value="false"/>
+        <property name="showSql" value="${database.platform.showSql}"/>
+    </bean>
 
     <!-- JPA transaction manager (use JtaTransactionManager for
          global tx) -->
-    <beans:bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <beans:property name="dataSource" ref="acmDataSource"/>
-    </beans:bean>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="dataSource" ref="acmDataSource"/>
+    </bean>
 
     <!-- enable transaction demarcation with annotations -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <!-- bean post-processor for JPA annotations -->
-    <beans:bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
     <!-- jdbc template for non-JPA resources e.g. lists of values -->
-    <beans:bean id="acmJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <beans:constructor-arg index="0" ref="acmDataSource"/>
-    </beans:bean>
+    <bean id="acmJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg index="0" ref="acmDataSource"/>
+    </bean>
 
     <!-- generate the database structures -->
-    <beans:bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
-        <beans:property name="dataSource" ref="acmDataSource"/>
-        <beans:property name="changeLog" value="classpath:/ddl/acm-database-changelog.xml"/>
-        <beans:property name="shouldRun" value="${schema.autoUpdate}"/>
+    <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+        <property name="dataSource" ref="acmDataSource"/>
+        <property name="changeLog" value="classpath:/ddl/acm-database-changelog.xml"/>
+        <property name="shouldRun" value="${schema.autoUpdate}"/>
         <!--<property name="dropFirst" value="true"/>-->
 
         <!--
         contexts specifies the runtime contexts to use.
         -->
         <!--<property name="contexts" value="test, production" />-->
-    </beans:bean>
-
-    <beans:beans profile="extension-foia">
-        <beans:bean id="foia-liquibase" class="liquibase.integration.spring.SpringLiquibase">
-            <beans:property name="dataSource" ref="acmDataSource"/>
-            <beans:property name="changeLog" value="classpath:/ddl/acm-extension-foia-database-changelog.xml"/>
-            <beans:property name="shouldRun" value="${schema.autoUpdate}"/>
-            <!--<property name="dropFirst" value="true"/>-->
-
-            <!--
-            contexts specifies the runtime contexts to use.
-            -->
-            <!--<property name="contexts" value="test, production" />-->
-        </beans:bean>
-    </beans:beans>
-</beans:beans>
+    </bean>
+</beans>
