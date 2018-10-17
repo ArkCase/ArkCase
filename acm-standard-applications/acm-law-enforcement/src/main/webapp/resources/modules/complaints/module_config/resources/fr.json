@@ -22,7 +22,8 @@
         "priority.label": "Priorité",
         "assignee.label": "Assigné à",
         "owningGroup.label": "Appartenant au groupe",
-        "dueDate.label": "Date d'échéance"
+        "dueDate.label": "Date d'échéance",
+        "alertMessage": "fr_Due date must be bigger than create date "
     },
     "complaints.comp.actions": {
         "title": "Actes",

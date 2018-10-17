@@ -22,7 +22,8 @@
         "priority.label": "Prioridad",
         "assignee.label": "Asignado a",
         "owningGroup.label": "Grupo propietario",
-        "dueDate.label": "Fecha de vencimiento"
+        "dueDate.label": "Fecha de vencimiento",
+        "alertMessage": "es_Due date must be bigger than create date "
     },
     "complaints.comp.actions": {
         "title": "Acciones",

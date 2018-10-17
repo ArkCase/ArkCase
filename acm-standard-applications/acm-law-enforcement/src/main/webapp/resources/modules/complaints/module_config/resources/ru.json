@@ -22,7 +22,8 @@
         "priority.label": "Приоритет",
         "assignee.label": "Назначено",
         "owningGroup.label": "Собственная группа",
-        "dueDate.label": "Дата погашения"
+        "dueDate.label": "Дата погашения",
+        "alertMessage": "ru_Due date must be bigger than create date "
     },
     "complaints.comp.actions": {
         "title": "Действия",
