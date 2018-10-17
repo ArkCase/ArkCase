@@ -23,7 +23,8 @@
         "state.label": "狀態",
         "overdue.tooltip": "任務已逾期",
         "deadline.tooltip": "截止日期正在接近",
-        "owningGroup.label": "所屬群體"
+        "owningGroup.label": "所屬群體",
+        "alertMessage": "zh-tw_Due date must be bigger than start date "
     },
     "tasks.comp.parentinfo": {
         "title": "原屬信息",

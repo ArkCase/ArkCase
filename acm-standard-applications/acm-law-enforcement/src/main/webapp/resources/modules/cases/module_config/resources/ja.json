@@ -26,6 +26,7 @@
         "assignee.label": "割り当て先",
         "owningGroup.label": "群に所属",
         "dueDate.label": "期限日",
+        "alertMessage": "ja_Due date must be bigger than create date ",
         "priorities": {
             "low%": "低い",
             "medium%": "中",

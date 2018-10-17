@@ -201,7 +201,7 @@ angular.module('cases').controller(
                             var startDate = new Date($scope.objectInfo.create_date_tdt);
                             if(correctedDueDate < startDate){
                                 $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
-                                DialogService.alert("Due Date must be bigger then created date " + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
+                                DialogService.alert($translate.instant("cases.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                             }else {
                                 $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
                                 $scope.saveCase();

@@ -22,7 +22,8 @@
         "priority.label": "Priority",
         "assignee.label": "Assigned To",
         "owningGroup.label": "Owning Group",
-        "dueDate.label": "Due Date"
+        "dueDate.label": "Due Date",
+        "alertMessage": "en-in_Due date must be bigger than create date "
     },
     "complaints.comp.actions": {
         "title": "Actions",

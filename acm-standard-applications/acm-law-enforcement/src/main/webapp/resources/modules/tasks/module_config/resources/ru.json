@@ -23,7 +23,8 @@
         "state.label": "Состояние",
         "overdue.tooltip": "Задача просрочена",
         "deadline.tooltip": "Крайний срок приближается",
-        "owningGroup.label": "Собственная группа"
+        "owningGroup.label": "Собственная группа",
+        "alertMessage": "ru_Due date must be bigger than start date "
     },
     "tasks.comp.parentinfo": {
         "title": "Родительская информация",
