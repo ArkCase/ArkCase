@@ -85,7 +85,7 @@ angular.module('tasks').controller(
 
                     $scope.userOrGroupSearch = function() {
                         var assigneUserName = _.find($scope.userFullNames, function(user) {
-                            return user.name === $scope.assignee
+                            return user.id === $scope.assignee
                         });
                         var params = {
                             owningGroup: $scope.owningGroup,
