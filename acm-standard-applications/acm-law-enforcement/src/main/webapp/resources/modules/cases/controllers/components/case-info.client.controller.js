@@ -206,7 +206,6 @@ angular.module('cases').controller(
                                 $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
                                 $scope.saveCase();
                             }
-
                         }else {
                             $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
                             $scope.saveCase();
