@@ -29,6 +29,7 @@ package com.armedia.acm.service.objectlock.annotation;
 
 import static java.lang.annotation.ElementType.METHOD;
 
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -51,6 +52,7 @@ import java.lang.annotation.Target;
  * 
  * Created by bojan.milenkoski on 03/05/2018.
  */
+@Repeatable(AcmAcquireAndReleaseObjectLock.List.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(METHOD)
 public @interface AcmAcquireAndReleaseObjectLock
@@ -93,4 +95,11 @@ public @interface AcmAcquireAndReleaseObjectLock
      * The index of the lockId argument in the method parameters.
      */
     int lockIdArgIndex() default -1;
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(METHOD)
+    @interface List
+    {
+        AcmAcquireAndReleaseObjectLock[] value();
+    }
 }

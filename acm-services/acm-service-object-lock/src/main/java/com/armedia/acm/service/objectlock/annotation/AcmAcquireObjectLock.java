@@ -31,6 +31,7 @@ import static java.lang.annotation.ElementType.METHOD;
 
 import com.armedia.acm.service.objectlock.service.ObjectLockingProvider;
 
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -52,6 +53,7 @@ import java.lang.annotation.Target;
  * 
  * Created by bojan.milenkoski on 03/05/2018.
  */
+@Repeatable(AcmAcquireObjectLock.List.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(METHOD)
 public @interface AcmAcquireObjectLock
@@ -89,4 +91,11 @@ public @interface AcmAcquireObjectLock
      * set to true the child objects are locked with the same lock type, otherwise, they are not locked.
      */
     boolean lockChildObjects() default true;
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(METHOD)
+    @interface List
+    {
+        AcmAcquireObjectLock[] value();
+    }
 }
