@@ -22,8 +22,9 @@ angular.module('complaints').controller(
                 'SearchService',
                 'Search.QueryBuilderService',
                 'Dialog.BootboxService',
+                '$filter',
                 function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService, ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, ObjectParticipantService,
-                        SearchService, SearchQueryBuilder, DialogService) {
+                        SearchService, SearchQueryBuilder, DialogService, $filter) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -201,7 +202,7 @@ angular.module('complaints').controller(
                             var correctedDueDate = new Date(data);
                             var startDate = new Date($scope.objectInfo.create_date_tdt);
                             if(correctedDueDate < startDate){
-                                $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
+                                $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
                                 DialogService.alert("Due Date must be biger then create date " + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                             }else {
                                 $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();

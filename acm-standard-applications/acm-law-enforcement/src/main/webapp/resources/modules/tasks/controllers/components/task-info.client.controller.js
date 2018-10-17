@@ -249,7 +249,7 @@ angular.module('tasks').controller(
                             var dueDate = new Date(data);
                             var startDate = new Date($scope.dateInfo.taskStartDate);
                             if(dueDate < startDate){
-                                $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
+                                $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
                                 DialogService.alert("Due date must be bigger then start date "+ $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                             }else {
                                 $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(dueDate)).format();
