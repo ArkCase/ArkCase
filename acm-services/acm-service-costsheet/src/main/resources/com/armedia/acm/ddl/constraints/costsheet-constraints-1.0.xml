@@ -1,0 +1,10 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="costsheet-constraint-01-restricted-flag" author="ivana.shekerova">
+        <addForeignKeyConstraint baseTableName="acm_costsheet" baseColumnNames="cm_costsheet_restricted_flag"
+            constraintName="fk_costsheet_restricted_flag" referencedTableName="acm_boolean_lu" referencedColumnNames="cm_value"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+</databaseChangeLog>
