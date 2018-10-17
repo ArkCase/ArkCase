@@ -81,10 +81,10 @@
                 </div>
             </div>
         </div>
-        <div ng-if="viewerOnly">
+        <div>
             <a ng-show="!editingMode" class="btn btn-sm btn-default" ng-click="enableEditing()">
                 <i class="fa fa-edit"></i>
-                <span translate="" class="ng-scope">{{documentDetails.enableEditing | translate}}</span>
+                <span translate>documentDetails.enableEditing</span>
             </a>
         </div>
         <div ng-class="viewerOnly? 'content-body well-sm full-docview' : 'content-body well-sm'">
