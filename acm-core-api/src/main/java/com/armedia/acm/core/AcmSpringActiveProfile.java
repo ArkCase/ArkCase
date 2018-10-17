@@ -63,10 +63,11 @@ public class AcmSpringActiveProfile
 
     public Optional<String> getExtensionActiveProfile()
     {
-        String [] activeProfiles = getActiveProfiles();
+        String[] activeProfiles = getActiveProfiles();
+        final String prefix = "extension-";
         return Arrays.stream(activeProfiles)
-                .filter(it -> it.startsWith("extension-"))
-                .map(it -> it.split("extension-")[1])
+                .filter(it -> it.startsWith(prefix))
+                .map(it -> it.substring(prefix.length()))
                 .findFirst();
     }
 }
