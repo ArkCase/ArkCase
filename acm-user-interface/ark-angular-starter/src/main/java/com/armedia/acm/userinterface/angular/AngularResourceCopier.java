@@ -132,7 +132,7 @@ public class AngularResourceCopier implements ServletContextAware
                 log.debug("Copy resources for specific profile [{}]", profile);
                 for (String folder : customResourceSourcesToCopyFromArchive)
                 {
-                    String moduleRoot = String.format("%s_%s", activeProfiles, folder);
+                    String moduleRoot = String.format("%s_%s", profile, folder);
                     copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, moduleRoot, folder));
                 }
             }
