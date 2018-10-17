@@ -1,0 +1,112 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="user" value="USER" dbms="oracle,postgresql,mssql"/>
+    <property name="user" value="CURRENT_USER()" dbms="mysql"/>
+
+    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="idType" value="BIGINT" dbms="mysql,mssql"/>
+    <!--<property name="idType" value="BIGSERIAL" dbms="postgresql"/>-->
+    <property name="idType" value="BIGINT" dbms="postgresql"/>
+
+    <!-- conversions -->
+    <property name="strToIntLeader" value="to_char(" dbms="postgresql"/>
+    <property name="strToIntTrailer" value=", '999999999999')" dbms="postgresql"/>
+    <property name="strToIntLeader" value="concat('', " dbms="mssql,mysql"/>
+    <property name="strToIntTrailer" value=")" dbms="mssql,mysql"/>
+    <property name="strToIntLeader" value="to_char(" dbms="oracle"/>
+    <property name="strToIntTrailer" value=")" dbms="oracle"/>
+
+    <!-- gps properties -->
+    <property name="gpsLatLong" value="NUMBER(10, 5)" dbms="oracle"/>
+    <property name="gpsLatLong" value="NUMERIC" dbms="postgresql"/>
+    <property name="gpsLatLong" value="FLOAT(10, 5)" dbms="mysql"/>
+    <property name="gpsLatLong" value="NUMERIC(10, 5)" dbms="mssql"/>
+
+    <!-- duration -->
+    <property name="duration" value="NUMBER(32, 5)" dbms="oracle"/>
+    <property name="duration" value="NUMERIC" dbms="postgresql"/>
+    <property name="duration" value="FLOAT(32, 5)" dbms="mysql"/>
+    <property name="duration" value="NUMERIC(32, 5)" dbms="mssql"/>
+
+    <property name="fkIdType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="fkIdType" value="BIGINT" dbms="mysql,postgresql,mssql"/>
+
+    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
+    <property name="autoIncrement" value="true" dbms="mysql,mssql"/>
+
+    <property name="nextValFromSequence" value="SEQ_GEN_IDENTITY.NEXTVAL" dbms="oracle"/>
+    <property name="nextValFromSequence" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+
+    <property name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
+    <property name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
+    <property name="timestampFunction" value="CURRENT_TIMESTAMP" dbms="mysql,mssql"/>
+
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql,mssql"/>
+
+    <property name="defaultValueComputedFunction" value="SYS_GUID()" dbms="oracle"/>
+    <property name="defaultValueComputedFunction" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+
+    <property name="deferrable" value="true" dbms="oracle,postgresql"/>
+    <property name="deferrable" value="false" dbms="mysql,mssql"/>
+
+    <property name="initially.deferred" value="true" dbms="oracle,postgresql"/>
+    <property name="initially.deferred" value="false" dbms="mysql,mssql"/>
+
+    <property name="excludeMSSQL" value="mysql" dbms="mysql"/>
+    <property name="excludeMSSQL" value="oracle" dbms="oracle"/>
+    <property name="excludeMSSQL" value="postgresql" dbms="postgresql"/>
+    <property name="excludeMSSQL" value="EXCLUDE" dbms="mssql"/>
+
+    <property name="maxVarChar" value="VARCHAR(512)" dbms="oracle,postgresql"/>
+    <property name="maxVarChar" value="TEXT" dbms="mysql,mssql"/>
+
+    <!--<property name="maxVarChar" value="512" dbms="postgresql,oracle"/>
+    <property name="maxVarChar" value="128" dbms="mysql,mssql"/>-->
+    <property name="classNameType" value="VARCHAR(400)" dbms="oracle,mysql,postgresql"/>
+    <property name="classNameType" value="TEXT" dbms="mysql"/>
+    <!-- sequences are core objects with no dependencies, so they should be next. -->
+    <includeAll path="classpath*:/com/armedia/acm/extension/foia/ddl/sequences" relativeToChangelogFile="false"/>
+
+    <!-- tables next... The table changelogs can include indexes and primary keys,
+         but should not include foreign keys. Check constraints can be either in the table DDL
+         or the constraint ddl.
+    -->
+    <includeAll path="classpath*:/com/armedia/acm/extension/foia/ddl/tables" relativeToChangelogFile="false"/>
+
+    <!-- then constraints.  Foreign key constraint changelogs should go in these folders. -->
+    <includeAll path="classpath*:/com/armedia/acm/extension/foia/ddl/constraints" relativeToChangelogFile="false"/>
+
+    <!-- insertion logs: lookup table insertion logs-->
+    <!--<includeAll path="classpath*:/com/armedia/acm/ddl/lookupTableInserts"  relativeToChangelogFile="false"/>-->
+
+    <!-- packages before triggers, since triggers can call packages. Note we have some Oracle specific
+         assumptions here.  When we support other databases we will have to configure Spring to load a
+         database-specific changelog file. -->
+    <includeAll path="classpath*:/com/armedia/acm/extension/foia/ddl/packageSpecs" relativeToChangelogFile="false"/>
+
+    <includeAll path="classpath*:/com/armedia/acm/extension/foia/ddl/packageBodies" relativeToChangelogFile="false"/>
+
+    <!-- then triggers.  -->
+    <includeAll path="classpath*:/com/armedia/acm/extension/foia/ddl/triggers" relativeToChangelogFile="false"/>
+
+    <!-- data maintenance SQL scripts -->
+    <includeAll path="classpath*:/com/armedia/acm/extension/foia/ddl/sql" relativeToChangelogFile="false"/>
+
+    <!-- drop constraints, triggers, columns should be executed after SQL scripts used for data migration -->
+    <includeAll path="classpath*:/com/armedia/acm/extension/foia/ddl/drops" relativeToChangelogFile="false"/>
+
+    <!-- drop tables... needs to be last... in case any existing tables are dropped, when changelogs in constraint
+         or trigger folders referred to them.  -->
+    <includeAll path="classpath*:/com/armedia/acm/extension/foia/ddl/dropTables" relativeToChangelogFile="false"/>
+
+    <!-- other types of database objects can be included here as the need arises.
+         NOTE: Liquibase fails if it finds no objects.  So only add more object type patterns when
+         you need to create them.
+    -->
+    <includeAll path="classpath*:/com/armedia/acm/extension/foia/dml" relativeToChangelogFile="false"/>
+
+</databaseChangeLog>
+
