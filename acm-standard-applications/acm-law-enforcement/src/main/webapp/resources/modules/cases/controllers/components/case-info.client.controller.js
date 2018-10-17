@@ -21,8 +21,9 @@ angular.module('cases').controller(
                 'Search.QueryBuilderService',
                 'Helper.ObjectBrowserService',
                 'Helper.UiGridService',
+                'Dialog.BootboxService',
                 function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService, SearchQueryBuilder,
-                        HelperObjectBrowserService, HelperUiGridService) {
+                        HelperObjectBrowserService, HelperUiGridService, DialogService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -153,6 +154,7 @@ angular.module('cases').controller(
                     var onObjectInfoRetrieved = function(data) {
                         $scope.dateInfo = $scope.dateInfo || {};
                         $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
+                        $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
                         $scope.owningGroup = ObjectModelService.getGroup(data);
                         $scope.assignee = ObjectModelService.getAssignee(data);
 
@@ -192,10 +194,22 @@ angular.module('cases').controller(
                     $scope.updateAssignee = function() {
                         ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
                     };
-                    $scope.updateDueDate = function() {
-                        var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
-                        $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
-                        $scope.saveCase();
+                    $scope.updateDueDate = function(data) {
+                        if (!Util.isEmpty(data)) {
+                            var correctedDueDate = new Date(data);
+                            var startDate = new Date($scope.objectInfo.create_date_tdt);
+                            if(correctedDueDate < startDate){
+                                $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
+                                DialogService.alert("Due Date must be bigger then created date " + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
+                            }else {
+                                $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
+                                $scope.saveCase();
+                            }
+
+                        }else {
+                            $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
+                            $scope.saveCase();
+                        }
                     };
 
                 } ]);
