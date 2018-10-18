@@ -24,7 +24,7 @@
         "overdue.tooltip": "La tarea está atrasada",
         "deadline.tooltip": "La fecha límite es el acercamiento",
         "owningGroup.label": "Grupo propietario",
-        "alertMessage": "es_Due date must be bigger than start date "
+        "alertMessage": "es_Due date must be after the start date "
     },
     "tasks.comp.parentinfo": {
         "title": "Información para Padres",

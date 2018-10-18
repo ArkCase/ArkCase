@@ -26,7 +26,7 @@
         "assignee.label": "指定人員",
         "owningGroup.label": "所屬群體",
         "dueDate.label": "到期日期",
-        "alertMessage": "zh-tw_Due date must be bigger than create date ",
+        "alertMessage": "zh-tw_Due date must be after the create date ",
         "priorities": {
             "low%": "低級",
             "medium%": "中級",

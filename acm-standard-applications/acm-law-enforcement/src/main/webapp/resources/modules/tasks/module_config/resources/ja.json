@@ -24,7 +24,7 @@
         "overdue.tooltip": "任務延滞",
         "deadline.tooltip": "締め切りが近づいています",
         "owningGroup.label": "群に所属",
-        "alertMessage": "ja_Due date must be bigger than start date "
+        "alertMessage": "ja_Due date must be after the start date "
     },
     "tasks.comp.parentinfo": {
         "title": "任務の起源",

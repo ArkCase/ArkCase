@@ -24,7 +24,7 @@
         "overdue.tooltip": "Tarefa está atrasada",
         "deadline.tooltip": "O prazo está se aproximando",
         "owningGroup.label": "O grupo pertence a",
-        "alertMessage": "pt_Due date must be bigger than start date "
+        "alertMessage": "pt_Due date must be after the start date "
     },
     "tasks.comp.parentinfo": {
         "title": "Nformação principal",

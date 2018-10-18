@@ -26,7 +26,7 @@
         "assignee.label": "Zugewiesen",
         "owningGroup.label": "Besitzgruppe",
         "dueDate.label": "Fälligkeitsdatum",
-        "alertMessage": "de_Due date must be bigger than create date ",
+        "alertMessage": "de_Due date must be after the create date ",
         "priorities": {
             "low%": "Niedrig",
             "medium%": "Mittel",

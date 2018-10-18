@@ -23,7 +23,7 @@
         "assignee.label": "Assigné à",
         "owningGroup.label": "Appartenant au groupe",
         "dueDate.label": "Date d'échéance",
-        "alertMessage": "fr_Due date must be bigger than create date "
+        "alertMessage": "fr_Due date must be after the create date "
     },
     "complaints.comp.actions": {
         "title": "Actes",

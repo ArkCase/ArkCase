@@ -24,7 +24,7 @@
         "overdue.tooltip": "Aufgabe ist überfällig",
         "deadline.tooltip": "Fälligkeitsdatum ist Annäherung",
         "owningGroup.label": "Besitzgruppe",
-        "alertMessage": "de_Due date must be bigger than start date "
+        "alertMessage": "de_Due date must be after the start date "
     },
     "tasks.comp.parentinfo": {
         "title": "Übergeordnete Info",
