@@ -26,6 +26,7 @@
         "assignee.label": "Assigned To",
         "owningGroup.label": "Owning Group",
         "dueDate.label": "Due Date",
+        "alertMessage": "Due date must be after the create date ",
         "priorities": {
             "low%": "Low",
             "medium%": "Medium",

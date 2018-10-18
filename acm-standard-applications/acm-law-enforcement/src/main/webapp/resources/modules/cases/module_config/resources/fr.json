@@ -26,6 +26,7 @@
         "assignee.label": "Cessionnaire",
         "owningGroup.label": "Appartenant au groupe",
         "dueDate.label": "Date d'échéance",
+        "alertMessage": "fr_Due date must be after the create date ",
         "priorities": {
             "low%": "Bas",
             "medium%": "Moyen",
