@@ -24,7 +24,7 @@
         "overdue.tooltip": "La tâche est en retard",
         "deadline.tooltip": "La date limite est l'approche",
         "owningGroup.label": "Appartenant au groupe",
-        "alertMessage": "fr_Due date must be bigger than start date "
+        "alertMessage": "fr_Due date must be after the start date "
     },
     "tasks.comp.parentinfo": {
         "title": "Information parentale",

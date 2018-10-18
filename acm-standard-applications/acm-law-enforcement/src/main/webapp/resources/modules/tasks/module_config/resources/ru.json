@@ -24,7 +24,7 @@
         "overdue.tooltip": "Задача просрочена",
         "deadline.tooltip": "Крайний срок приближается",
         "owningGroup.label": "Собственная группа",
-        "alertMessage": "ru_Due date must be bigger than start date "
+        "alertMessage": "ru_Due date must be after the start date "
     },
     "tasks.comp.parentinfo": {
         "title": "Родительская информация",

@@ -26,7 +26,7 @@
         "assignee.label": "Atribuído a",
         "owningGroup.label": "O grupo pertence a",
         "dueDate.label": "Data de vencimento",
-        "alertMessage": "pt_Due date must be bigger than create date ",
+        "alertMessage": "pt_Due date must be after the create date ",
         "priorities": {
             "low%": "Baixo",
             "medium%": "Médio",

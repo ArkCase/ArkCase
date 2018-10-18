@@ -24,7 +24,7 @@
         "overdue.tooltip": "任务已逾期",
         "deadline.tooltip": "截止日期正在接近",
         "owningGroup.label": "所属群体",
-        "alertMessage": "zh-cn_Due date must be bigger than start date "
+        "alertMessage": "zh-cn_Due date must be after the start date "
     },
     "tasks.comp.parentinfo": {
         "title": "原属信息",
