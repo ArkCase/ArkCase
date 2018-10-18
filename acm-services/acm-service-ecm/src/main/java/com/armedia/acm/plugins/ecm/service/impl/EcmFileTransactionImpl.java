@@ -129,6 +129,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             }
 
             String activeVersionMimeType = metadata.getFileActiveVersionMimeType();
+            if (activeVersionMimeType == null && detectedMetadata != null )
+            {
+                activeVersionMimeType = detectedMetadata.getContentType();
+            }
+
             if(activeVersionMimeType != null && activeVersionMimeType.contains(";"))
             {
                 activeVersionMimeType = metadata.getFileActiveVersionMimeType().split(";")[0];
