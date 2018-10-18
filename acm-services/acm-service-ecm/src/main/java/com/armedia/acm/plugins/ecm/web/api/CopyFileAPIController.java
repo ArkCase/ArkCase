@@ -62,7 +62,7 @@ public class CopyFileAPIController
     private EcmFileService fileService;
     private FileEventPublisher fileEventPublisher;
 
-    @PreAuthorize("hasPermission(#in.id, 'FILE', 'read|group-read|write|group-write') and hasPermission(#in.folderId, 'FOLDER', 'write|group-write')")
+    @PreAuthorize("hasPermission(#in.id, 'FILE', 'read|group-read|write|group-write') and hasPermission(#in.folderId, 'FOLDER', 'read|group-read|write|group-write')")
     @RequestMapping(value = "/copyToAnotherContainer/{targetObjectType}/{targetObjectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public FileDTO copyFile(@RequestBody MoveCopyFileDto in, @PathVariable("targetObjectType") String targetObjectType,
