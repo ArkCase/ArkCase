@@ -26,6 +26,7 @@
         "assignee.label": "Asignado a",
         "owningGroup.label": "Grupo propietario",
         "dueDate.label": "Fecha de vencimiento",
+        "alertMessage": "es_Due date must be after the create date ",
         "priorities": {
             "low%": "Bajo",
             "medium%": "Medio",

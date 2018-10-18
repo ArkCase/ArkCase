@@ -22,7 +22,8 @@
         "priority.label": "प्राथमिकता",
         "assignee.label": "असाइन करने के लिए",
         "owningGroup.label": "स्वामी समूह",
-        "dueDate.label": "नियत दिनांक"
+        "dueDate.label": "नियत दिनांक",
+        "alertMessage": "hi_Due date must be after the create date "
     },
     "complaints.comp.actions": {
         "title": "क्रियाएं",

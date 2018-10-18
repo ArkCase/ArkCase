@@ -67,10 +67,8 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-bsdate="dateInfo.dueDate" e-datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
-                            e-ng-click="onPickerClick()" e-is-open="picker.opened" e-init-date="dateInfo.dueDate" e-on-open-focus="false"
-                            onaftersave="updateDueDate(dateInfo.dueDate)" permission="editCase" permission-object-type="CASE_FILE"
-                            permission-properties="objectInfo" permission-action="disable">
+                    <a href="#" editable-combodate="dateInfo.dueDate" onaftersave="updateDueDate($data, dateInfo.dueDate)"
+                       permission="editCase" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disable">
                         {{ (dateInfo.dueDate | date: ('common.defaultDateTimeUIFormat' | translate)) || ('common.value.unknown' | translate) }}</a>
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.dueDate.label</span></small>

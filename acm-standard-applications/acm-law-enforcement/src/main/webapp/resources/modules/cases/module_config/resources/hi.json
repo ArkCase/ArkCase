@@ -26,6 +26,7 @@
         "assignee.label": "असाइन करने के लिए",
         "owningGroup.label": "स्वामी समूह",
         "dueDate.label": "नियत दिनांक",
+        "alertMessage": "hi_Due date must be after the create date ",
         "priorities": {
             "low%": "निचे",
             "medium%": "मध्यम",
