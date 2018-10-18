@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SolrReindexAssignedObjectsExecutor implements AcmDataUpdateExecutor
@@ -53,12 +54,15 @@ public class SolrReindexAssignedObjectsExecutor implements AcmDataUpdateExecutor
     @Override
     public void execute()
     {
-        List<Class> assignedObjects = Arrays.stream(packages.split(","))
+        Object[] packagesToScan = Arrays.stream(packages.split(","))
                 .map(it -> StringUtils.substringBeforeLast(it, ".*"))
-                .flatMap(it -> {
-                    Reflections reflections = new Reflections(it);
-                    return reflections.getSubTypesOf(AcmAssignedObject.class).stream();
-                })
+                .toArray();
+
+        Reflections reflections = new Reflections(packagesToScan);
+
+        Set<Class<? extends AcmAssignedObject>> acmObjects = reflections.getSubTypesOf(AcmAssignedObject.class);
+
+        List<Class> assignedObjects = acmObjects.stream()
                 .peek(it -> log.debug("Found entity [{}] for solr reindex", it.getSimpleName()))
                 .collect(Collectors.toList());
         solrReindexService.reindex(assignedObjects);
