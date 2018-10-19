@@ -4,6 +4,9 @@
 
     <includeAll path="classpath*:/ddl/properties" relativeToChangelogFile="false"/>
 
+    <!-- first run default core profile changelog file -->
+    <include file="classpath:/ddl/acm-database-changelog.xml" relativeToChangelogFile="false"/>
+
     <!-- sequences are core objects with no dependencies, so they should be next. -->
     <includeAll path="classpath*:/com/armedia/acm/extension/foia/ddl/sequences" relativeToChangelogFile="false"/>
 

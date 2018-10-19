@@ -124,8 +124,8 @@ public class AngularResourceCopier implements ServletContextAware
             // add 'customer' as specific profile, so if any customer resources are present will come
             // on top of core and extension resources
             List<String> activeProfiles = springActiveProfile.getExtensionActiveProfile()
-                    .map(it -> Arrays.asList(it, "customer"))
-                    .orElse(Collections.singletonList("customer"));
+                    .map(it -> Arrays.asList(it, "custom"))
+                    .orElse(Collections.singletonList("custom"));
 
             for (String profile : activeProfiles)
             {
