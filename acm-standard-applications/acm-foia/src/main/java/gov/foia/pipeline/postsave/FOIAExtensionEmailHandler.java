@@ -1,0 +1,198 @@
+package gov.foia.pipeline.postsave;
+
+import static gov.foia.model.FOIAConstants.EMAIL_BODY_ATTACHMENT;
+import static gov.foia.model.FOIAConstants.EMAIL_FOOTER_ATTACHMENT;
+import static gov.foia.model.FOIAConstants.EMAIL_HEADER_ATTACHMENT;
+import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
+
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.notification.service.NotificationSender;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+import com.armedia.acm.services.users.dao.UserDao;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.Arrays;
+
+import gov.foia.model.FOIAConstants;
+import gov.foia.model.FOIADocumentDescriptor;
+import gov.foia.model.FOIARequest;
+import gov.foia.service.DocumentGenerator;
+import gov.foia.service.DocumentGeneratorException;
+import gov.foia.service.FOIADocumentGeneratorService;
+
+public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext>
+{
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
+
+    private static final String NEW_EXTENSION_FILE = "NEW_EXTENSION_FILE";
+    private static final String EXTENSION_FILE_ID = "EXTENSION_FILE_ID";
+
+    private DocumentGenerator documentGenerator;
+    private FOIADocumentGeneratorService documentGeneratorService;
+    private EcmFileService ecmFileService;
+    private NotificationSender notificationSender;
+    private UserDao userDao;
+
+    @Override
+    public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
+    {
+        log.debug("FOIARequest extension post save handler called for RequestId={}", entity.getId());
+
+        if (pipelineContext.getPropertyValue(FOIAConstants.FOIA_PIPELINE_EXTENSION_PROPERTY_KEY) != null)
+        {
+            log.debug("Generating extension document");
+            EcmFile file = generateExtensionDocument(entity, pipelineContext);
+
+            log.debug("Emailing extension document");
+            emailRequestExtension(entity, file);
+        }
+
+        log.debug("FOIARequest extension post save handler ended for RequestId={}", entity.getId());
+    }
+
+    @Override
+    public void rollback(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
+    {
+        if (pipelineContext.getPropertyValue(NEW_EXTENSION_FILE) != null)
+        {
+            // delete created and uploaded file from Alfresco
+            if (pipelineContext.hasProperty(EXTENSION_FILE_ID))
+            {
+                Long fileId = (Long) pipelineContext.getPropertyValue(EXTENSION_FILE_ID);
+                try
+                {
+                    getEcmFileService().deleteFile(fileId);
+                }
+                catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
+                {
+                    log.warn("Unable to delete ecm file with id [{}]", fileId);
+                    throw new PipelineProcessException(e);
+                }
+            }
+        }
+    }
+
+    private EcmFile generateExtensionDocument(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
+    {
+        FOIADocumentDescriptor documentDescriptor = getDocumentGeneratorService().getDocumentDescriptor(entity,
+                FOIAConstants.REQ_EXTENSION);
+        String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), entity.getId());
+        String targetFolderId = entity.getContainer().getAttachmentFolder() == null
+                ? entity.getContainer().getFolder().getCmisFolderId()
+                : entity.getContainer().getAttachmentFolder().getCmisFolderId();
+
+        EcmFile ecmFile = null;
+        try
+        {
+            ecmFile = getDocumentGenerator().generateAndUpload(documentDescriptor, entity, targetFolderId, arkcaseFilename,
+                    getDocumentGeneratorService().getReportSubstitutions(entity));
+
+            if (pipelineContext != null)
+            {
+                pipelineContext.addProperty(NEW_EXTENSION_FILE, true);
+                pipelineContext.addProperty(EXTENSION_FILE_ID, ecmFile.getId());
+            }
+        }
+        catch (DocumentGeneratorException e)
+        {
+            throw new PipelineProcessException(e);
+        }
+
+        return ecmFile;
+    }
+
+    private void emailRequestExtension(FOIARequest request, EcmFile file)
+    {
+        String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
+        if (emailAddress != null)
+        {
+            EmailWithAttachmentsDTO emailData = new EmailWithAttachmentsDTO();
+            emailData.setEmailAddresses(Arrays.asList(emailAddress));
+
+            emailData.setSubject(String.format("%s %s", FOIAConstants.EMAIL_HEADER_SUBJECT, request.getCaseNumber()));
+            emailData.setHeader(EMAIL_HEADER_ATTACHMENT);
+            emailData.setBody(EMAIL_BODY_ATTACHMENT);
+            emailData.setFooter(EMAIL_FOOTER_ATTACHMENT);
+            emailData.setAttachmentIds(Arrays.asList(file.getFileId()));
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+            String userIdOrName = request.getCreator();
+            try
+            {
+                if (request.isExternal()) // request from external portal
+                {
+                    getNotificationSender().sendEmailWithAttachments(emailData, auth, userIdOrName);
+                }
+                else // request from foia app
+                {
+                    getNotificationSender().sendEmailWithAttachments(emailData, auth, getUserDao().findByUserId(userIdOrName));
+                }
+
+            }
+            catch (Exception e)
+            {
+                log.error("Unable to email extension letter for RequestId={}", request.getId(), e);
+            }
+        }
+    }
+
+    public FOIADocumentGeneratorService getDocumentGeneratorService()
+    {
+        return documentGeneratorService;
+    }
+
+    public void setDocumentGeneratorService(FOIADocumentGeneratorService documentGeneratorService)
+    {
+        this.documentGeneratorService = documentGeneratorService;
+    }
+
+    public DocumentGenerator getDocumentGenerator()
+    {
+        return documentGenerator;
+    }
+
+    public void setDocumentGenerator(DocumentGenerator documentGenerator)
+    {
+        this.documentGenerator = documentGenerator;
+    }
+
+    public EcmFileService getEcmFileService()
+    {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
+        this.ecmFileService = ecmFileService;
+    }
+
+    public NotificationSender getNotificationSender()
+    {
+        return notificationSender;
+    }
+
+    public void setNotificationSender(NotificationSender notificationSender)
+    {
+        this.notificationSender = notificationSender;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+}

@@ -1,6 +1,5 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.objectonverter.json.JSONMarshaller;
@@ -491,14 +490,13 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
     @Override
     public void afterPropertiesSet()
     {
-        String[] packages = packagesToScan.split(",");
-
-        Set<Class<? extends AcmAssignedObject>> acmObjects = Arrays.stream(packages)
+        Object[] packages = Arrays.stream(packagesToScan.split(","))
                 .map(it -> StringUtils.substringBeforeLast(it, ".*"))
-                .flatMap(it -> {
-                    Reflections reflections = new Reflections(it);
-                    return reflections.getSubTypesOf(AcmAssignedObject.class).stream();
-                }).collect(Collectors.toSet());
+                .toArray();
+
+        Reflections reflections = new Reflections(packages);
+
+        Set<Class<? extends AcmAssignedObject>> acmObjects = reflections.getSubTypesOf(AcmAssignedObject.class);
 
         assignedObjectTypes = acmObjects.stream()
                 .peek(it -> log.debug("Found assigned object [{}]", it.getSimpleName()))
