@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <beans:beans profile="extension-foia">
+        <beans:bean id="closeComplaintRequestService" class="com.armedia.acm.plugins.complaint.service.CloseComplaintRequestService">
+            <beans:property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
+            <beans:property name="complaintDao" ref="acmComplaintDao"/>
+            <beans:property name="complaintEventPublisher" ref="complaintEventPublisher"/>
+            <beans:property name="saveCaseService" ref="saveCaseService"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="complaintFolderNameFormat" value="FOIA Response (%s)"/>
+            <beans:property name="caseFileDetailsFormat" value="This case file is based on Complaint '%s'.%s"/>
+            <beans:property name="complaintDetailsFormat" value="&lt;p/&gt;Complaint '%s' had these details:&lt;p/&gt;%s"/>
+        </beans:bean>
+    </beans:beans>
+
+</beans:beans>

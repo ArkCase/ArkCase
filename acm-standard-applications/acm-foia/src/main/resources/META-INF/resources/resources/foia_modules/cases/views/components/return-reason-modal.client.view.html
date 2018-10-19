@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <h3>
+        <span translate>cases.comp.returnReason.modal.title</span>
+    </h3>
+
+</div>
+
+<div class="modal-body">
+    <label><span translate>cases.comp.returnReason.modal.reason</span><span class="required-asterisk">*</span></label>
+    <input type="text" id="returnReason" ng-required="true" ng-model="returnReason" name="returnReason" class="input-md form-control"
+            placeholder="{{ 'cases.comp.returnReason.modal.placeholder' | translate }}">
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>cases.comp.returnReason.modal.buttons.cancel</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="returnReason == '' || returnReason == null">
+        <span translate>cases.comp.returnReason.modal.buttons.ok</span>
+    </button>
+</div>
