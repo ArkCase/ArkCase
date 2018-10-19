@@ -6,7 +6,7 @@
 
     <beans:beans profile="extension-foia">
 
-        <beans:bean id="foia-liquibase" class="liquibase.integration.spring.SpringLiquibase" depends-on="">
+        <beans:bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
             <beans:property name="dataSource" ref="acmDataSource"/>
             <beans:property name="changeLog" value="classpath:/ddl/acm-extension-foia-database-changelog.xml"/>
             <beans:property name="shouldRun" value="${schema.autoUpdate}"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1"
-    metadata-complete="true">
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1"
+         metadata-complete="true">
     <!-- 
         These settings shave 23 seconds on Tomcat startup (Scan jars step is down from 30s to 7 s):
         
@@ -30,7 +30,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:/spring/spring-library-*.xml,
             classpath*:/spring/spring-extension-*.xml,
-            classpath*:/spring/spring-customer-*.xml
+            classpath*:/spring/spring-custom-*.xml
             classpath:/spring/spring-security-config.xml,
             file:${user.home}/.arkcase/acm/spring-security/spring-security-config-*.xml
         </param-value>
@@ -130,7 +130,7 @@
                 classpath:/spring/appServlet/servlet-context.xml
                 classpath*:spring/spring-web-*.xml
                 classpath*:spring/spring-rest-extension-*.xml
-                classpath*:spring/spring-rest-customer-*.xml
+                classpath*:spring/spring-rest-custom-*.xml
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
