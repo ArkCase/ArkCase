@@ -2,7 +2,8 @@
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-01-alter-acm_case_file-for-foia-request" author="lazo.lazarev" dbms="oracle,mssql,postgres">
+    <changeSet id="01-01-alter-acm_case_file-for-foia-request" author="lazo.lazarev" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_received_date" type="${timestampType}"/>
         </addColumn>
@@ -38,7 +39,8 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="01-01-alter-acm_case_file-for-foia-request" author="lazo.lazarev" dbms="mysql">
+    <changeSet id="01-01-alter-acm_case_file-for-foia-request" author="lazo.lazarev" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_received_date" type="${timestampType}"/>
         </addColumn>
@@ -74,7 +76,8 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="01-02-create-table-foia_file_exemption_code" author="lazo.lazarev">
+    <changeSet id="01-02-create-table-foia_file_exemption_code" author="lazo.lazarev"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <createTable tableName="foia_file_exemption_code">
             <column name="ecm_file_id" type="${idType}">
                 <constraints nullable="false"/>
@@ -89,13 +92,15 @@
             deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
-    <changeSet id="01-03-alter-acm_person_assoc-for-foia-request" author="lazo.lazarev">
+    <changeSet id="01-03-alter-acm_person_assoc-for-foia-request" author="lazo.lazarev"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_person_assoc">
             <column name="fo_requester_source" type="varchar(128)"/>
         </addColumn>
     </changeSet>
 
-    <changeSet id="02-acm-case-file-add-released-date-and-disposition-sub-type" author="lazo.lazarev" dbms="oracle,mssql,postgres">
+    <changeSet id="02-acm-case-file-add-released-date-and-disposition-sub-type" author="lazo.lazarev" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_release_date" type="${timestampType}"/>
         </addColumn>
@@ -104,7 +109,8 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="02-acm-case-file-add-released-date-and-disposition-sub-type" author="lazo.lazarev" dbms="mysql">
+    <changeSet id="02-acm-case-file-add-released-date-and-disposition-sub-type" author="lazo.lazarev" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_release_date" type="${timestampType}"/>
         </addColumn>
@@ -113,31 +119,36 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="03-acm-case-file-paid-flag" author="dmiller" dbms="oracle,mssql,postgres">
+    <changeSet id="03-acm-case-file-paid-flag" author="dmiller" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_paid_flag" type="VARCHAR(10)" defaultValue="false"/>
         </addColumn>
     </changeSet>
 
-    <changeSet id="03-acm-case-file-paid-flag" author="dmiller" dbms="mysql">
+    <changeSet id="03-acm-case-file-paid-flag" author="dmiller" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_paid_flag" type="TEXT"/>
         </addColumn>
     </changeSet>
 
-    <changeSet id="04-acm-case-file-add-fo_billing_enter_date" author="lazo.lazarev">
+    <changeSet id="04-acm-case-file-add-fo_billing_enter_date" author="lazo.lazarev"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_billing_enter_date" type="${timestampType}"/>
         </addColumn>
     </changeSet>
 
-    <changeSet id="05-acm-case-file-add-fo_hold_enter_date" author="lazo.lazarev">
+    <changeSet id="05-acm-case-file-add-fo_hold_enter_date" author="lazo.lazarev"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_hold_enter_date" type="${timestampType}"/>
         </addColumn>
     </changeSet>
 
-    <changeSet id="06-foia-file-exemption-code-creator" author="dragan.simonovski" dbms="oracle,mssql,postgres">
+    <changeSet id="06-foia-file-exemption-code-creator" author="dragan.simonovski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="foia_file_exemption_code">
             <column name="fo_code_creator" type="VARCHAR(1024)"></column>
         </addColumn>
@@ -146,7 +157,8 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="06-foia-file-exemption-code-creator" author="dragan.simonovski" dbms="mysql">
+    <changeSet id="06-foia-file-exemption-code-creator" author="dragan.simonovski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="foia_file_exemption_code">
             <column name="fo_code_creator" type="TEXT"></column>
         </addColumn>
@@ -155,7 +167,8 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="07-exemption-code-report-functions" author="lazo.lazarev" dbms="postgres">
+    <changeSet id="07-exemption-code-report-functions" author="lazo.lazarev" dbms="postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <sql splitStatements="false" stripComments="false">
             <![CDATA[
 /*
@@ -242,24 +255,25 @@ LANGUAGE plpgsql;
         </sql>
     </changeSet>
 
-    <changeSet id="08-add-queue-enter-date" author="riste.tutureski">
+    <changeSet id="08-add-queue-enter-date" author="riste.tutureski" logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_queue_enter_date" type="${timestampType}"/>
         </addColumn>
     </changeSet>
 
-    <changeSet id="09-add-previous-queue" author="riste.tutureski">
+    <changeSet id="09-add-previous-queue" author="riste.tutureski" logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_previous_queue_id" type="${idType}"/>
         </addColumn>
     </changeSet>
 
-    <changeSet id="10-remove-columns-in-core" author="teng.wang" dbms="mysql">
+    <changeSet id="10-remove-columns-in-core" author="teng.wang" dbms="mysql" logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <dropColumn tableName="acm_case_file" columnName="fo_queue_enter_date"/>
         <dropColumn tableName="acm_case_file" columnName="fo_previous_queue_id"/>
     </changeSet>
 
-    <changeSet id="11-01-alter-acm_case_file-fdic-foia-request" author="sasko.tanaskoski" dbms="oracle,mssql,postgres">
+    <changeSet id="11-01-alter-acm_case_file-fdic-foia-request" author="sasko.tanaskoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_delivery_method_of_response" type="VARCHAR(512)"/>
         </addColumn>
@@ -283,7 +297,8 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
-    <changeSet id="11-02-alter-acm_case_file-fdic-foia-request" author="sasko.tanaskoski" dbms="mysql">
+    <changeSet id="11-02-alter-acm_case_file-fdic-foia-request" author="sasko.tanaskoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_delivery_method_of_response" type="TEXT"/>
         </addColumn>
@@ -306,37 +321,45 @@ LANGUAGE plpgsql;
             <column name="fo_request_expedite_reason" type="TEXT"/>
         </addColumn>
     </changeSet>
-    <changeSet id="12-01-acm_case_file-add-column-fo_public_flag" author="sasko.tanaskoski" dbms="oracle,mssql,postgres">
+
+    <changeSet id="12-01-acm_case_file-add-column-fo_public_flag" author="sasko.tanaskoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_public_flag" type="VARCHAR(10)"/>
         </addColumn>
     </changeSet>
-    <changeSet id="12-02-acm_case_file-add-column-fo_public_flag" author="sasko.tanaskoski" dbms="mysql">
+    <changeSet id="12-02-acm_case_file-add-column-fo_public_flag" author="sasko.tanaskoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_public_flag" type="TEXT"/>
         </addColumn>
     </changeSet>
-    <changeSet id="13-01-acm_person-add-column-fo_position" author="sasko.tanaskoski" dbms="oracle,mssql,postgres">
+    <changeSet id="13-01-acm_person-add-column-fo_position" author="sasko.tanaskoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_person">
             <column name="fo_position" type="VARCHAR(512)"/>
         </addColumn>
     </changeSet>
-    <changeSet id="13-02-acm_person-add-column-fo_position" author="sasko.tanaskoski" dbms="mysql">
+    <changeSet id="13-02-acm_person-add-column-fo_position" author="sasko.tanaskoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_person">
             <column name="fo_position" type="TEXT"/>
         </addColumn>
     </changeSet>
-    <changeSet id="14-01-acm_file-add-column-fo_public_flag" author="marko.stojanoski" dbms="oracle,mssql,postgres">
+    <changeSet id="14-01-acm_file-add-column-fo_public_flag" author="marko.stojanoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_file">
             <column name="fo_public_flag" type="VARCHAR(10)"/>
         </addColumn>
     </changeSet>
-    <changeSet id="14-02-acm_file-add-column-fo_public_flag" author="marko.stojanoski" dbms="mysql">
+    <changeSet id="14-02-acm_file-add-column-fo_public_flag" author="marko.stojanoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_file">
             <column name="fo_public_flag" type="TEXT"/>
         </addColumn>
     </changeSet>
-    <changeSet id="15-01-acm_case_file-add-column-fo_request_track" author="adrijana.maneva" dbms="mysql">
+    <changeSet id="15-01-acm_case_file-add-column-fo_request_track" author="adrijana.maneva" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_request_track" type="TEXT"/>
         </addColumn>
@@ -344,7 +367,8 @@ LANGUAGE plpgsql;
             <column name="fo_other_reason" type="TEXT"/>
         </addColumn>
     </changeSet>
-    <changeSet id="15-01-acm_case_file-add-column-fo_request_track" author="adrijana.maneva" dbms="oracle,mssql,postgres">
+    <changeSet id="15-01-acm_case_file-add-column-fo_request_track" author="adrijana.maneva" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_request_track" type="VARCHAR(10)"/>
         </addColumn>
@@ -353,50 +377,58 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
-    <changeSet id="16-01-foia-file-exemption-code-statute" author="ana.serafimoska" dbms="mysql">
+    <changeSet id="16-01-foia-file-exemption-code-statute" author="ana.serafimoska" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="foia_file_exemption_code">
             <column name="fo_exemption_statute" type="TEXT"></column>
         </addColumn>
     </changeSet>
 
-    <changeSet id="17-01-foia-file-exemption-code-statute" author="ana.serafimoska" dbms="oracle,mssql,postgres">
+    <changeSet id="17-01-foia-file-exemption-code-statute" author="ana.serafimoska" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="foia_file_exemption_code">
             <column name="fo_exemption_statute" type="VARCHAR(512)"></column>
         </addColumn>
     </changeSet>
 
-    <changeSet id="18-acm-case-file-component-agency-column" author="marko.stojanoski" dbms="oracle,mssql,postgres">
+    <changeSet id="18-acm-case-file-component-agency-column" author="marko.stojanoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_component_agency" type="VARCHAR(512)"/>
         </addColumn>
     </changeSet>
 
-    <changeSet id="18-acm-case-file-component-agency-column" author="marko.stojanoski" dbms="mysql">
+    <changeSet id="18-acm-case-file-component-agency-column" author="marko.stojanoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_component_agency" type="TEXT"/>
         </addColumn>
     </changeSet>
 
-    <changeSet id="19-update-acm-case-file-component-agency" author="marko.stojanoski">
+    <changeSet id="19-update-acm-case-file-component-agency" author="marko.stojanoski"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <update tableName="acm_case_file">
             <column name="fo_component_agency" value="FOIA"/>
             <where>fo_component_agency is null</where>
         </update>
     </changeSet>
 
-    <changeSet id="20-acm-case-file-extension-column" author="bojan.milenkoski">
+    <changeSet id="20-acm-case-file-extension-column" author="bojan.milenkoski"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_extension" type="VARCHAR(10)" defaultValue="false"/>
         </addColumn>
     </changeSet>
 
-    <changeSet id="21-acm-case-file-add-notification-group-column" author="marko.stojanoski" dbms="oracle,mssql,postgres">
+    <changeSet id="21-acm-case-file-add-notification-group-column" author="marko.stojanoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_notification_group" type="VARCHAR(512)"/>
         </addColumn>
     </changeSet>
 
-    <changeSet id="21-acm-case-file-add-notification-group-column-if-not-exists" author="marko.stojanoski" dbms="mysql">
+    <changeSet id="21-acm-case-file-add-notification-group-column-if-not-exists" author="marko.stojanoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <preConditions onFail="MARK_RAN" onError="MARK_RAN">
             <not>
                 <columnExists tableName="acm_case_file" columnName="fo_notification_group"/>
@@ -406,13 +438,15 @@ LANGUAGE plpgsql;
             <column name="fo_notification_group" type="TEXT"/>
         </addColumn>
     </changeSet>
-    <changeSet id="22-acm-case-file-change-column-pay-fee-type" author="adrijana.maneva">
+    <changeSet id="22-acm-case-file-change-column-pay-fee-type" author="adrijana.maneva"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <modifyDataType columnName="fo_pay_fee"
             newDataType="VARCHAR(64)"
             tableName="acm_case_file"/>
     </changeSet>
 
-    <changeSet id="23-foia-file-exemption-code-version" author="nebojsha.davidovikj">
+    <changeSet id="23-foia-file-exemption-code-version" author="nebojsha.davidovikj"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="foia_file_exemption_code">
             <column name="ecm_file_version" type="VARCHAR(10)" defaultValue="0.0"></column>
         </addColumn>

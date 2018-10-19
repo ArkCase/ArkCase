@@ -8,7 +8,7 @@
 
         <beans:bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
             <beans:property name="dataSource" ref="acmDataSource"/>
-            <beans:property name="changeLog" value="classpath:/ddl/acm-extension-foia-database-changelog.xml"/>
+            <beans:property name="changeLog" value="classpath:/com/armedia/acm/extension/foia/ddl/acm-extension-foia-database-changelog.xml"/>
             <beans:property name="shouldRun" value="${schema.autoUpdate}"/>
             <!--<property name="dropFirst" value="true"/>-->
 
