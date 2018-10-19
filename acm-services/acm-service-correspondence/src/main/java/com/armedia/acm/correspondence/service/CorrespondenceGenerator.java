@@ -214,24 +214,27 @@ public class CorrespondenceGenerator
     {
         JSONObject jsonObject = new JSONObject(getLookupDao().getMergedLookups());
 
-        String standardLookupSearch = searchByLookupType("standardLookup", key, jsonObject);
-        if (!standardLookupSearch.equals(key))
+        String lookupSearch = searchByLookupType("standardLookup", key, jsonObject);
+        if (!lookupSearch.equals(key))
         {
-            return standardLookupSearch;
+            return lookupSearch;
         }
-
-        String nestedLookupSearch = searchByLookupType("nestedLookup", key, jsonObject);
-        if (!nestedLookupSearch.equals(key))
+        else
         {
-            return nestedLookupSearch;
+            lookupSearch = searchByLookupType("nestedLookup", key, jsonObject);
+            if (!lookupSearch.equals(key))
+            {
+                return lookupSearch;
+            }
+            else
+            {
+                lookupSearch = searchByLookupType("inverseValuesLookup", key, jsonObject);
+                if (!lookupSearch.equals(key))
+                {
+                    return lookupSearch;
+                }
+            }
         }
-
-        String inverseValuesLookupSearch = searchByLookupType("inverseValuesLookup", key, jsonObject);
-        if (!inverseValuesLookupSearch.equals(key))
-        {
-            return inverseValuesLookupSearch;
-        }
-
         return key;
     }
 
