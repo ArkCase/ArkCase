@@ -26,6 +26,7 @@
         "assignee.label": "割り当て先",
         "owningGroup.label": "群に所属",
         "dueDate.label": "期限日",
+        "alertMessage": "ja_Due date must be after the create date ",
         "priorities": {
             "low%": "低い",
             "medium%": "中",
@@ -261,6 +262,16 @@
             "title": "タイトル",
             "parent": "親",
             "modified": "変更された"
+        },
+        "objectPicker": {
+            "title": "ja_Search for object",
+            "table.columns": {
+                "name": "ja_Name",
+                "type": "ja_Type",
+                "title": "ja_Title",
+                "id": "ja_ID",
+                "username": "ja_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {

@@ -52,6 +52,11 @@ public final class ContactMethodsUtil
                 .filter(m -> !ContactMethod.EMAIL_ADDRESS_REGEX.matcher(m.getValue()).matches())
                 .collect(Collectors.toList());
 
+        List<ContactMethod> invalidPhones = contactMethods.stream()
+                .filter(m -> "phone".equals(m.getType().toLowerCase()))
+                .filter(m -> !ContactMethod.PHONE_REGEX.matcher(m.getValue()).matches())
+                .collect(Collectors.toList());
+
         if (invalidEmails.size() > 0)
         {
             StringBuilder errorMessage = new StringBuilder();
@@ -61,5 +66,15 @@ public final class ContactMethodsUtil
             });
             throw new AcmContactMethodValidationException(errorMessage.toString(), null);
         }
+        if (invalidPhones.size() > 0)
+        {
+            StringBuilder errorMessage = new StringBuilder();
+            errorMessage.append("Invalid phone in Contact Method!");
+            invalidPhones.forEach(invalid -> {
+                errorMessage.append(" [ContactMethodId: " + invalid.getId() + " phoneValue: " + invalid.getValue() + "]");
+            });
+            throw new AcmContactMethodValidationException(errorMessage.toString(), null);
+        }
+
     }
 }

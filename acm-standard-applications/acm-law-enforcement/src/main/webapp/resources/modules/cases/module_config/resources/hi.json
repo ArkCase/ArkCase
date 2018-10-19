@@ -26,6 +26,7 @@
         "assignee.label": "असाइन करने के लिए",
         "owningGroup.label": "स्वामी समूह",
         "dueDate.label": "नियत दिनांक",
+        "alertMessage": "hi_Due date must be after the create date ",
         "priorities": {
             "low%": "निचे",
             "medium%": "मध्यम",
@@ -261,6 +262,16 @@
             "title": "शीर्षक",
             "parent": "माता-पिता",
             "modified": "संशोधित"
+        },
+        "objectPicker": {
+            "title": "hi_Search for object",
+            "table.columns": {
+                "name": "hi_Name",
+                "type": "hi_Type",
+                "title": "hi_Title",
+                "id": "hi_ID",
+                "username": "hi_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {

@@ -78,7 +78,12 @@ public class PDFCasefileDocumentGenerator<D extends AcmAbstractDao, T extends Ca
         addElement(document, rootElem, "caseType", caseFile.getCaseType(), true);
         addElement(document, rootElem, "caseDetails", caseFile.getDetails() != null ? caseFile.getDetails() : "N/A", false);
 
-        addElement(document, rootElem, "initiator", caseFile.getOriginator().getPerson().getFullName(), true);
+        String initiator = "Unknown";
+        if ( caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null && caseFile.getOriginator().getPerson().getFullName() != null )
+        {
+            initiator = caseFile.getOriginator().getPerson().getFullName();
+        }
+        addElement(document, rootElem, "initiator", initiator, true);
 
         if (!caseFile.getPersonAssociations().isEmpty())
         {

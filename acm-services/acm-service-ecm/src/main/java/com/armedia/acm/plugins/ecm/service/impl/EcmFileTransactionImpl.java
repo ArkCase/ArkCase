@@ -88,6 +88,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     public static List<String> getAllTikaMimeTypesForFile(Map<String, List<String>> mimeTypesByTika, String value)
     {
+        if(value.contains(";"))
+        {
+            value = value.split(";")[0];
+        }
         List<String> keys = new ArrayList<>();
         for (Map.Entry<String, List<String>> entry : mimeTypesByTika.entrySet())
         {
@@ -124,14 +128,20 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 log.error("Could not extract metadata with Tika: [{}]", e.getMessage(), e);
             }
 
-            if(metadata.getFileActiveVersionMimeType().contains(";"))
+            String activeVersionMimeType = metadata.getFileActiveVersionMimeType();
+            if (activeVersionMimeType == null && detectedMetadata != null )
             {
-                metadata.setFileActiveVersionMimeType(metadata.getFileActiveVersionMimeType().split(";")[0]);
+                activeVersionMimeType = detectedMetadata.getContentType();
             }
 
-            if ((detectedMetadata.getContentType().equals(metadata.getFileActiveVersionMimeType())) ||
-                    (getAllTikaMimeTypesForFile(mimeTypesByTika, metadata.getFileActiveVersionMimeType())
-                            .contains(detectedMetadata.getContentType())))
+            if(activeVersionMimeType != null && activeVersionMimeType.contains(";"))
+            {
+                activeVersionMimeType = metadata.getFileActiveVersionMimeType().split(";")[0];
+            }
+
+            if (activeVersionMimeType != null && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
+                    (getAllTikaMimeTypesForFile(mimeTypesByTika, activeVersionMimeType)
+                            .contains(detectedMetadata.getContentType()))))
             {
 
                 Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,

@@ -22,8 +22,9 @@ angular.module('time-tracking').controller(
         'Object.ParticipantService',
         'Profile.UserInfoService',
         'Helper.UiGridService',
+        'Admin.TimesheetConfigurationService',
         function ($scope, $stateParams, $translate, $modalInstance, TimeTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, UtilDateService, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService,
-                  UserInfoService, HelperUiGridService) {
+                  UserInfoService, HelperUiGridService, TimesheetConfigurationService) {
 
             $scope.modalParams = modalParams;
             $scope.loading = false;
@@ -37,32 +38,37 @@ angular.module('time-tracking').controller(
                     id: "times"
                 });
 
-                if (!$scope.isEdit) {
-                    //new timesheet with predefined values
-                    $scope.isTypeSelected = false;
-                    $scope.timesheet = {
-                        className: $scope.config.className,
-                        status: 'DRAFT',
-                        times: [],
-                        participants: [{}]
-                    };
+                UserInfoService.getUserInfo().then(function (infoData) {
+                    if (!$scope.isEdit) {
+                        //new timesheet with predefined values
+                        $scope.isTypeSelected = false;
+                        $scope.timesheet = {
+                            className: $scope.config.className,
+                            status: 'DRAFT',
+                            times: [],
+                            participants: [{}]
+                        };
+                        $scope.timesheet.user = infoData;
 
-                    $scope.selectedDate = new Date();
-                    $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
+                        $scope.selectedDate = new Date();
+                        $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
 
-                    $scope.timesForms = [{
-                        totalWeekHours: 0,
-                        totalCost: 0,
-                        dayHours: [0, 0, 0, 0, 0, 0, 0]
-                    }];
+                        $scope.timesForms = [{
+                            totalWeekHours: 0,
+                            totalCost: 0,
+                            dayHours: [0, 0, 0, 0, 0, 0, 0]
+                        }];
 
-                    if(!Util.isEmpty($scope.modalParams.timeType) && !Util.isEmpty($scope.modalParams.timeNumber) && !Util.isEmpty($scope.modalParams.timeId)) {
-                        $scope.timesForms[0].objectId = $scope.modalParams.timeId;
-                        $scope.timesForms[0].type = $scope.modalParams.timeType;
-                        $scope.timesForms[0].code = $scope.modalParams.timeNumber;
-                        $scope.isTypeSelected = true;
+                        if(!Util.isEmpty($scope.modalParams.timeType) && !Util.isEmpty($scope.modalParams.timeNumber) && !Util.isEmpty($scope.modalParams.timeId)) {
+                            $scope.timesForms[0].objectId = $scope.modalParams.timeId;
+                            $scope.timesForms[0].type = $scope.modalParams.timeType;
+                            $scope.timesForms[0].code = $scope.modalParams.timeNumber;
+                            $scope.isTypeSelected = true;
+                        }
                     }
-                }
+                });
+
+
 
                 $scope.newTimeObjectPicker = _.find(moduleConfig.components, {
                     id: "newTimeObjectPicker"
@@ -81,6 +87,21 @@ angular.module('time-tracking').controller(
                 });
 
                 return moduleConfig;
+            });
+
+            TimesheetConfigurationService.getConfig().then(function (response) {
+            	    $scope.timesheetConfiguration = response.data;
+            });
+
+            ObjectLookupService.getTimesheetTypes().then(function (timesheetTypes) {
+                $scope.timesheetTypes = timesheetTypes;
+            });
+
+            ObjectLookupService.getTimesheetChargeRoles().then(function (timesheetChargeRoles) {
+                $scope.timesheetChargeRoles = timesheetChargeRoles;
+            });
+            ObjectLookupService.getTimesheetStatuses().then(function (timesheetStatuses) {
+                $scope.timesheetStatuses = timesheetStatuses;
             });
 
             // ----------------------------- total ----------------------------------------------------------
@@ -197,21 +218,6 @@ angular.module('time-tracking').controller(
                 $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
             }
 
-            ObjectLookupService.getTimesheetTypes().then(function (timesheetTypes) {
-                $scope.timesheetTypes = timesheetTypes;
-            });
-
-            ObjectLookupService.getTimesheetChargeRoles().then(function (timesheetChargeRoles) {
-                $scope.timesheetChargeRoles = timesheetChargeRoles;
-            });
-            ObjectLookupService.getTimesheetStatuses().then(function (timesheetStatuses) {
-                $scope.timesheetStatuses = timesheetStatuses;
-            });
-
-            UserInfoService.getUserInfo().then(function (infoData) {
-                $scope.timesheet.user = infoData;
-            });
-
             //------------------------------------- selectedWeek ----------------------------------------------
             $scope.isDateBeforeTodaysDate = false;
 
@@ -255,7 +261,7 @@ angular.module('time-tracking').controller(
                 $scope.timesheet.endDate = endOfWeek.toDate();
 
                 if (!Util.isEmpty($scope.timesheet)) {
-                    $scope.timesheet.title = "Timesheet" + " " + startOfWeek.format("M/D/YYYY") + "-" + endOfWeek.format("M/D/YYYY");
+                    $scope.timesheet.title = $scope.timesheet.user.fullName + " - " + " " + startOfWeek.format("M/D/YYYY") + "-" + endOfWeek.format("M/D/YYYY");
                 }
 
                 setWeekDatesInCalendar(startOfWeek, endOfWeek);
@@ -399,9 +405,16 @@ angular.module('time-tracking').controller(
             };
 
             function fillTotalCost(hour, chargeRole) {
-                if (chargeRole == "INVESTIGATOR") {
-                    return hour * 300;
-                } else return hour * 100;
+                var hourRate = 0;
+                if ($scope.timesheetConfiguration !== undefined) {
+                    for(var i=0; i<$scope.timesheetConfiguration.chargeRoleItems.length; i++){
+                         if($scope.timesheetConfiguration.chargeRoleItems[i].chargeRole === chargeRole && $scope.timesheetConfiguration.chargeRoleItems[i].active === "ACTIVE"){
+                             hourRate = $scope.timesheetConfiguration.chargeRoleItems[i].rate;
+                             break;
+                         }
+                    }
+                }
+                return hour * hourRate;
             }
 
             function fillTimes(timesheet) {

@@ -41,15 +41,11 @@ import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -64,10 +60,10 @@ public class AdvancedSearchQueryFlowIT
     public void largeRequest() throws Exception
     {
         String query = "COMPLAINT&fq=%7B%21frange+l%3D1%7Dsum%28if%28exists%28protected_object_b%29%2C+0%2C+1%29%2C+if"
-                + "%28protected_object_b%2C+0%2C+1%29%2C+if%28public_doc_b%2C+1%2C+0%29%2C+termfreq%28allow_acl_ss%2C+"
-                + "%27ann-acm%27%29%2C+termfreq%28allow_acl_ss%2C+%27ROLE_ADMINISTRATOR%27%29%2C+termfreq%28allow_acl_ss"
-                + "%2C+%27ACM_ADMINISTRATOR_DEV%27%29%29&fq=-deny_acl_ss%3Aann-acm+AND+-deny_acl_ss%3AROLE_ADMINISTRATOR+"
-                + "AND+-deny_acl_ss%3AACM_ADMINISTRATOR_DEV&start=0&rows=500&wt=json&sort=&indent=true&facet=true&"
+                + "%28protected_object_b%2C+0%2C+1%29%2C+if%28public_doc_b%2C+1%2C+0%29%2C+termfreq%28allow_user_ls%2C+"
+                + "%27100%27%29%2C+termfreq%28allow_group_ls%2C+%27100%27%29%2C+termfreq%28allow_group_ls"
+                + "%2C+%27200%27%29%29&fq=-deny_user_ls%3A100+AND+-deny_group_ls%3A100+"
+                + "AND+-deny_group_ls%3A200&start=0&rows=500&wt=json&sort=&indent=true&facet=true&"
                 + "facet.field=%7B%21key%3D%27Create+User%27%7Dcreator_lcs&facet.field=%7B%21key%3D%27City%27"
                 + "%7Dlocation_city_lcs&facet.query=%7B%21key%3D%27Create+Date%2C+Previous+Week%27%7Dcreate_date_tdt:"
                 + "%5BNOW%2FDAY-7DAY+TO+*%5D&facet.query=%7B%21key%3D%27Create+Date%2C+Previous+Month%27%7D"
@@ -93,17 +89,14 @@ public class AdvancedSearchQueryFlowIT
 
         log.debug("query length: " + query.length());
 
-        List<SimpleGrantedAuthority> groups = new ArrayList<>();
-        groups.add(new SimpleGrantedAuthority("GROUP1"));
-        groups.add(new SimpleGrantedAuthority("GROUP WITH SPACE"));
-        Authentication authentication = new UsernamePasswordAuthenticationToken("jerry", "garcia", groups);
-
+        Long authenticatedUserId = 100L;
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
         headers.put("firstRow", 0);
         headers.put("maxRows", 10);
         headers.put("sort", "object_type_s asc");
-        headers.put("acmUser", authentication);
+        headers.put("acmUser", authenticatedUserId);
+        headers.put("acmUserGroupIds", Arrays.asList(100L, 200L));
 
         MuleMessage response = muleContextManager.send("vm://advancedSearchQuery.in", "", headers);
 
@@ -129,18 +122,15 @@ public class AdvancedSearchQueryFlowIT
 
         log.debug("query length: " + query.length());
 
-        List<SimpleGrantedAuthority> groups = new ArrayList<>();
-        groups.add(new SimpleGrantedAuthority("GROUP1"));
-        groups.add(new SimpleGrantedAuthority("GROUP WITH SPACE"));
-        Authentication authentication = new UsernamePasswordAuthenticationToken("jerry", "garcia", groups);
-
+        Long authenticatedUserId = 100L;
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
         headers.put("firstRow", 0);
         headers.put("maxRows", 10);
         headers.put("sort", "object_type_s asc");
-        headers.put("acmUser", authentication);
+        headers.put("acmUser", authenticatedUserId);
         headers.put("df", "catch_all");
+        headers.put("acmUserGroupIds", Arrays.asList(1L, 2L, 3L));
 
         MuleMessage response = muleContextManager.send("vm://advancedSearchQuery.in", "", headers);
 
@@ -162,17 +152,14 @@ public class AdvancedSearchQueryFlowIT
 
         log.debug("query length: " + query.length());
 
-        List<SimpleGrantedAuthority> groups = new ArrayList<>();
-        groups.add(new SimpleGrantedAuthority("GROUP1"));
-        groups.add(new SimpleGrantedAuthority("GROUP WITH SPACE"));
-        Authentication authentication = new UsernamePasswordAuthenticationToken("jerry", "garcia", groups);
-
+        Long authenticatedUserId = 100L;
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
         headers.put("firstRow", 0);
         headers.put("maxRows", 10);
         headers.put("sort", "object_type_s asc");
-        headers.put("acmUser", authentication);
+        headers.put("acmUser", authenticatedUserId);
+        headers.put("acmUserGroupIds", Arrays.asList(1L, 2L, 3L));
 
         MuleMessage response = muleContextManager.send("vm://advancedSearchQuery.in", "", headers);
 

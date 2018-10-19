@@ -325,4 +325,19 @@ angular.module('common').controller(
                     $scope.capitalizeFirstLetter = function(input) {
                         return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
                     }
+
+                    $scope.validateInput = function(caType) {
+                        var inputType = caType;
+                        var value = $scope.person.defaultPhone.value;
+                        if (inputType == 'phone') {
+                            var regex = /^\d{3}[\-]\d{3}[\-]\d{4}$/;
+                            if (regex.test(value)) {
+                                $scope.showPhoneError = false;
+                                $scope.person.defaultPhone.value = value;
+                            } else {
+                                $scope.showPhoneError = true;
+                                $scope.person.defaultPhone = null;
+                            }
+                        }
+                    }
                 } ]);

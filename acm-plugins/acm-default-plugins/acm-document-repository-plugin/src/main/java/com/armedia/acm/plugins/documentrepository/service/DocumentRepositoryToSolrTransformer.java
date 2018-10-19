@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.documentrepository.service;
 import com.armedia.acm.plugins.documentrepository.dao.DocumentRepositoryDao;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepositoryConstants;
+import com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
@@ -38,12 +39,15 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.json.JSONArray;
+
 import java.util.Date;
 import java.util.List;
 
 public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTransformer<DocumentRepository>
 {
     private UserDao userDao;
+    private FileAclSolrUpdateHelper fileAclSolrUpdateHelper;
     private SearchAccessControlFields searchAccessControlFields;
     private DocumentRepositoryDao documentRepositoryDao;
 
@@ -146,6 +150,12 @@ public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTr
     }
 
     @Override
+    public JSONArray childrenUpdatesToSolr(DocumentRepository in)
+    {
+        return fileAclSolrUpdateHelper.buildFileAclUpdates(in.getContainer().getId(), in);
+    }
+
+    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return DocumentRepository.class.equals(acmObjectType);
@@ -185,5 +195,15 @@ public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTr
     public void setDocumentRepositoryDao(DocumentRepositoryDao documentRepositoryDao)
     {
         this.documentRepositoryDao = documentRepositoryDao;
+    }
+
+    public FileAclSolrUpdateHelper getFileAclSolrUpdateHelper()
+    {
+        return fileAclSolrUpdateHelper;
+    }
+
+    public void setFileAclSolrUpdateHelper(FileAclSolrUpdateHelper fileAclSolrUpdateHelper)
+    {
+        this.fileAclSolrUpdateHelper = fileAclSolrUpdateHelper;
     }
 }

@@ -78,7 +78,8 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
         "/spring/spring-library-email-smtp.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-service-data.xml"
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-core-api.xml"
 })
 public class OutlookServiceRetryLogicIT extends EasyMockSupport
 {

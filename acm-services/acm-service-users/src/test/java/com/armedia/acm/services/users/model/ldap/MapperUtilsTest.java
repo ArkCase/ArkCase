@@ -28,6 +28,8 @@ package com.armedia.acm.services.users.model.ldap;
  */
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
@@ -93,6 +95,39 @@ public class MapperUtilsTest
                 .collect(Collectors.toSet());
 
         assertThat("Sets should be equal", actual, containsInAnyOrder(expected.toArray()));
+    }
+
+    @Test
+    public void testUserIdMoreThen20Chars()
+    {
+        AcmLdapSyncConfig config = new AcmLdapSyncConfig();
+        config.setUserPrefix("dco");
+        config.setUserDomain("armedia.com");
+        config.setUserIdAttributeName("sAMAccountName");
+        String userId = MapperUtils.buildUserId("veryyylongusername", config);
+        assertEquals("dco.veryyylonguserna@armedia.com",userId);
+    }
+
+    @Test
+    public void testUserIdLessThen20Chars()
+    {
+        AcmLdapSyncConfig config = new AcmLdapSyncConfig();
+        config.setUserPrefix("dco");
+        config.setUserDomain("armedia.com");
+        config.setUserIdAttributeName("sAMAccountName");
+        String userId = MapperUtils.buildUserId("ann-acm", config);
+        assertEquals("dco.***REMOVED***",userId);
+    }
+
+    @Test
+    public void testUserIdUidAttribute()
+    {
+        AcmLdapSyncConfig config = new AcmLdapSyncConfig();
+        config.setUserPrefix("dco");
+        config.setUserDomain("armedia.com");
+        config.setUserIdAttributeName("uid");
+        String userId = MapperUtils.buildUserId("veryyyyyylongusername", config);
+        assertEquals("veryyyyyylongusername@armedia.com",userId);
     }
 
 }

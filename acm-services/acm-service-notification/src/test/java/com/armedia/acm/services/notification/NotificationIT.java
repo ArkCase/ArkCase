@@ -69,7 +69,8 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-calendar-config-service.xml",
         "/spring/spring-library-calendar-integration-exchange-service.xml",
         "/spring/spring-library-object-converter.xml",
-        "/spring/spring-library-ecm-file-lock.xml"
+        "/spring/spring-library-ecm-file-lock.xml",
+        "/spring/spring-library-core-api.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NotificationIT

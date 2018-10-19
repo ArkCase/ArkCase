@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
@@ -57,6 +58,12 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     @Transactional
     public AcmGroup findByName(String name)
     {
+        return findByName(name, FlushModeType.AUTO);
+    }
+
+    @Transactional
+    public AcmGroup findByName(String name, FlushModeType flushModeType)
+    {
         CriteriaBuilder builder = getEm().getCriteriaBuilder();
         CriteriaQuery<AcmGroup> query = builder.createQuery(AcmGroup.class);
         Root<AcmGroup> group = query.from(AcmGroup.class);
@@ -68,6 +75,8 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
                         builder.equal(group.<String> get("name"), name)));
 
         TypedQuery<AcmGroup> dbQuery = getEm().createQuery(query);
+
+        dbQuery.setFlushMode(flushModeType);
 
         AcmGroup acmGroup = null;
 

@@ -114,7 +114,7 @@
             "selFileTypes.label": "File Type:",
             "optFileType.prompt": "[choose file type]",
             "btnCancel.text": "Cancel",
-            "btnOk.text": "OK"
+            "btnOk.text": "Submit"
         },
         "emailDialog": {
             "title": "Email",
@@ -212,7 +212,7 @@
     "common.directive.searchModal": {
         "header": "Search",
         "btnSearch.text": "Search",
-        "btnOk.text": "OK",
+        "btnOk.text": "Submit Result",
         "btnConfirm.text": "Confirm",
         "btnCancel.text": "Cancel",
         "edtPlaceholder": "Type in to search",
@@ -669,7 +669,9 @@
         }
     },
     "common.comp.acmLogin": {
-        "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in."
+        "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in.",
+        "logoutBtn" : "Logout",
+        "cancelBtn" : "Cancel"
     },
     "common.objectTypes": {
         "CASE_FILE": "Case File",
@@ -724,7 +726,8 @@
             "url": "URL",
             "url.placeholder": "Enter URL",
             "removeContactMethod": "Remove",
-            "urlType": "URL Type"
+            "urlType": "URL Type",
+            "validationMessage": "The Phone Number you entered is invalid. Should be in this format: xxx-xxx-xxxx"
         },
         "organizations": {
             "title": "Organizations",

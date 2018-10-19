@@ -27,15 +27,16 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
             ORGANIZATION: "ORGANIZATION",
             FOLDER: "FOLDER",
             TRANSCRIBE: "TRANSCRIBE",
-            TRANSCRIBE_ITEM: "TRANSCRIBE_ITEM"
+            TRANSCRIBE_ITEM: "TRANSCRIBE_ITEM",
+            ASSOCIATED_TAG: "ASSOCIATED_TAG"
         }
 
         ,
         LockTypes: {
-            WRITE : "WRITE",
-            READ : "READ",
-            SHARED_WRITE : "SHARED_WRITE",
-            DELETE : "DELETE"
+            WRITE: "WRITE",
+            READ: "READ",
+            SHARED_WRITE: "SHARED_WRITE",
+            DELETE: "DELETE"
         }
 
         ,
@@ -56,6 +57,17 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
         gotoState: function(objType, objId) {
             $log.warn("WARNING: Object.ObjectService.gotoState() is phasing out. Please use Object.ObjectService.showObject() instead");
             this.showObject(objType, objId);
+        },
+
+        transitionToState: function(objType, objId, state) {
+            var params = {
+                id: objId,
+                type: objType
+            };
+            $state.transitionTo(state, params, {
+                reload: true,
+                notify: true
+            });
         }
 
         /**

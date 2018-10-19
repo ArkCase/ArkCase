@@ -29,6 +29,7 @@ package com.armedia.acm.service.objectlock.annotation;
 
 import static java.lang.annotation.ElementType.METHOD;
 
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -49,6 +50,7 @@ import java.lang.annotation.Target;
  * 
  * Created by bojan.milenkoski on 03/05/2018.
  */
+@Repeatable(AcmReleaseObjectLock.List.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(METHOD)
 public @interface AcmReleaseObjectLock
@@ -85,4 +87,11 @@ public @interface AcmReleaseObjectLock
      * set to true the child objects are unlocked at the end, otherwise, they are not unlocked.
      */
     boolean unlockChildObjects() default true;
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(METHOD)
+    @interface List
+    {
+        AcmReleaseObjectLock[] value();
+    }
 }
