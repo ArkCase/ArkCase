@@ -33,6 +33,7 @@ angular.module('document-details').controller(
 
                     $scope.acmTicket = '';
                     $scope.userId = '';
+                    $scope.userFullName = '';
                     $scope.ecmFileProperties = {};
                     $scope.snowboundUrl = '';
                     $scope.ecmFileEvents = [];
@@ -134,7 +135,7 @@ angular.module('document-details').controller(
                      * an iframe which points to snowbound
                      */
                     $scope.openSnowboundViewer = function() {
-                        var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.fileInfo, !$scope.editingMode);
+                        var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode);
                         $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
                     };
 
@@ -177,6 +178,7 @@ angular.module('document-details').controller(
                     $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise ]).then(function(data) {
                         $scope.acmTicket = data[0].data;
                         $scope.userId = data[1].userId;
+                        $scope.userFullName = data[1].fullName;
                         $scope.userList = data[2];
                         $scope.ecmFileProperties = data[3];
                         $scope.editingMode = !$scope.ecmFileProperties['ecm.viewer.snowbound.readonly.initialState'];
@@ -241,7 +243,7 @@ angular.module('document-details').controller(
                         ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(function(lockedFile) {
                             $scope.editingMode = true;
                             $scope.openSnowboundViewer();
-                            
+
                             // count user idle time. When user is idle for more then 1 minute, don't acquire lock
                             $scope._idleSecondsCounter = 0;
                             document.onclick = function() {
@@ -252,12 +254,12 @@ angular.module('document-details').controller(
                             };
                             document.onkeypress = function() {
                                 $scope._idleSecondsCounter = 0;
-                            };                            
+                            };
                             function incrementIdleSecondsCounter() {
                                 $scope._idleSecondsCounter++;
                             }
                             window.setInterval(incrementIdleSecondsCounter, 1000);
-                            
+
                             // Refresh editing lock on timer
                             UtilTimerService.useTimer('refreshFileEditingLock', 60000 // every 1 minute
                             , function() {
@@ -284,7 +286,7 @@ angular.module('document-details').controller(
                     $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function() {
                         DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
                             $scope.openSnowboundViewer();
-                        }); 
+                        });
                     });
                 } ]);
 
@@ -292,7 +294,7 @@ angular.module('document-details').controller(
  * 2018-06-01 David Miller. This block is needed to tell the PDF.js angular module, where the PDF.js library is. Without this, on minified
  * systems the PDF.js viewer will not work. I copied this from the project web page,
  * https://github.com/legalthings/angular-pdfjs-viewer#advanced-configuration.
- * 
+ *
  * @param pdfjsViewerConfigProvider
  * @returns
  */
