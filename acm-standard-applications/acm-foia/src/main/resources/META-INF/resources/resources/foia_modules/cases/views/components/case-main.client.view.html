@@ -1,0 +1,207 @@
+<div ng-controller="Cases.MainController">
+    <fieldset permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disabled">
+        <panel-view header="Request Information" collapsible="true" collapsed="false">
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <label class="control-label" translate> cases.comp.main.requestType.label </label>
+                    <select ng-model="objectInfo.requestType" ng-options="requestType.id as requestType.name for requestType in requestTypes"
+                            class="form-control input-md" ng-disabled="true">
+                    </select>
+
+                </div>
+                <div class="form-group col-sm-3">
+                    <label class="control-label" translate> cases.comp.main.requestTrack.label </label>
+                    <select ng-model="objectInfo.requestTrack"
+                            ng-options="requestTrack.key as requestTrack.value | translate for requestTrack in requestTracks"
+                            class="form-control input-md" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                            permission-action="disable">
+                    </select>
+
+                </div>
+                <div class="col-sm-3">
+                    <label for="recordSearchDateFrom" translate> cases.comp.main.recordSearchDateFrom.label </label>
+                    <div>
+                        <div class="input-group">
+                            <input type="text" id="recordSearchDateFrom" class="form-control" name="recordSearchDateFrom"
+                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                   ng-model="objectInfo.recordSearchDateFrom" is-open="openedRecordSearchDateFrom.openedEnd"
+                                   close-on-date-selection="true" show-button-bar="true" on-open-focus="false" close-text="Close" readonly />
+                            <span class="input-group-btn">
+                    <button type="button" class="btn btn-default"
+                            ng-click="openedRecordSearchDateFrom.openedEnd = !openedRecordSearchDateFrom.openedEnd" ng-disabled="true"><i
+                            class="fa fa-calendar"></i></button>
+                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <label for="recordSearchDateTo" translate> cases.comp.main.recordSearchDateTo.label </label>
+                    <div>
+                        <div class="input-group">
+                            <input type="text" id="recordSearchDateTo" class="form-control" name="recordSearchDateTo"
+                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="objectInfo.recordSearchDateTo"
+                                   is-open="openedRecordSearchDateTo.openedEnd" close-on-date-selection="true" show-button-bar="true"
+                                   on-open-focus="false" close-text="Close" readonly/>
+                            <span class="input-group-btn">
+                    <button type="button" class="btn btn-default"
+                            ng-click="openedRecordSearchDateTo.openedEnd = !openedRecordSearchDateTo.openedEnd" ng-disabled="true"><i
+                            class="fa fa-calendar"></i></button>
+                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <label class="control-label" translate> cases.comp.main.deliveryMethodOfResponse.label </label>
+                    <select id="deliveryMethodOfResponse" ng-model="objectInfo.deliveryMethodOfResponse"
+                            ng-options="deliveryMethodOfResponse.key as deliveryMethodOfResponse.value for deliveryMethodOfResponse in deliveryMethodOfResponses"
+                            class="form-control input-md" ng-disabled="true">
+                    </select>
+                </div>
+                <div class="form-group col-sm-3">
+                  <label class="control-label" translate> cases.comp.main.dispositionType.label</label>
+                  <select
+                        ng-model="objectInfo.disposition"
+                        ng-options="dispositionType.key as dispositionType.value | translate for dispositionType in dispositionTypes"
+                        class="form-control input-md" ng-change="populateDispositionSubTypes(objectInfo.disposition, objectInfo.requestType)"
+                        permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                        permission-action="disable">
+                  </select>
+                </div>
+                <div class="form-group col-sm-3">
+                    <label class="control-label" translate> cases.comp.main.dispositionSubType.label</label> <select
+                        ng-model="objectInfo.dispositionSubtype" ng-change="isChanged(objectInfo.dispositionSubtype)"
+                        ng-disabled="!objectInfo.disposition || objectInfo.disposition=='partial-denial'"
+                        ng-options="dispositionSubType.key as dispositionSubType.value | translate for dispositionSubType in dispositionSubTypes"
+                        class="form-control input-md" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                        permission-action="disable">
+                </select>
+                </div>
+                <div class="form-group col-sm-3">
+                    <label class="control-label" translate> cases.comp.main.otherReason.label</label>
+                    <input type="text" id="otherReason"
+                           ng-model="objectInfo.otherReason" name="otherReason" class="input-md form-control" ng-disabled="isDisabled"
+                           placeholder="{{ 'cases.comp.main.otherReason.placeholder'  | translate }}" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                           permission-action="disable">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <label translate> cases.comp.main.description.label </label>
+                    <textarea rows=5 ng-model="objectInfo.details" class="input-md form-control" ng-disabled="true"></textarea>
+                </div>
+
+                <div class="col-sm-3">
+                    <label for="scannedDate" translate> cases.comp.main.scannedDate.label </label>
+                    <div>
+                        <div class="input-group">
+                            <input type="text" id="scannedDate" class="form-control" name="scannedDate"
+                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="objectInfo.scannedDate"
+                                   is-open="openedScanned.openedEnd" close-on-date-selection="true" show-button-bar="true"
+                                   on-open-focus="false" close-text="Close" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                                   permission-action="disable"/> <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openedScanned.openedEnd = !openedScanned.openedEnd" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                                    permission-action="disable">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <label for="releasedDate" translate> cases.comp.main.releasedDate.label </label>
+                    <div>
+                        <div class="input-group">
+                            <input type="text" id="releasedDate" class="form-control" name="releasedDate"
+                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="objectInfo.releasedDate"
+                                   is-open="opened.openedEnd" close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
+                                   close-text="Close" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                                   permission-action="disable"/> <span class="input-group-btn" >
+                            <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                                    permission-action="disable">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <label for="processingFeeWaive" translate> cases.comp.main.processingFeeWaive.label </label> <input type="text"
+                                                                                                                        id="processingFeeWaive" ng-model="objectInfo.processingFeeWaive" name="processingFeeWaive" class="input-md form-control"
+                                                                                                                        placeholder="{{ 'cases.comp.main.processingFeeWaive.placeholder'  | translate }}" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                                                                                                                        permission-action="disable"/>
+                </div>
+                <div class="form-group col-sm-3">
+                    <label class="control-label" translate> cases.comp.main.payFee.label </label>
+                    <select id="payFee" ng-model="objectInfo.payFee"
+                            ng-options="payFee.key as payFee.value for payFee in payFees"
+                            class="form-control input-md" ng-disabled="true">
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="objectInfo.feeWaiverFlag" ng-change="objectInfo.requestFeeWaiveReason= !objectInfo.feeWaiverFlag ? '' : objectInfo.requestFeeWaiveReason" ng-disabled="true">
+                            <span translate>cases.comp.main.feeWaiverFlag.label </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="objectInfo.expediteFlag" ng-change="objectInfo.requestExpediteReason= !objectInfo.expediteFlag ? '' : objectInfo.requestExpediteReason"
+                                   permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disable">
+                            <span translate>cases.comp.main.expediteFlag.label </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="objectInfo.litigationFlag" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                                   permission-action="disable">
+                            <span translate>cases.comp.main.litigationFlag.label </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="objectInfo.paidFlag" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                                   permission-action="disable">
+                            <span translate>cases.comp.main.paidFlag.label </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <label for="requestFeeWaiveReason" translate> cases.comp.main.requestFeeWaiveReason.label </label>
+                    <textarea rows=5 id="requestFeeWaiveReason" ng-model="objectInfo.requestFeeWaiveReason" name="requestFeeWaiveReason"
+                              class="input-md form-control" ng-disabled="!objectInfo.feeWaiverFlag"
+                              placeholder="{{ 'cases.comp.main.requestFeeWaiveReason.placeholder'  | translate }}" readonly></textarea>
+                </div>
+                <div class="col-sm-3">
+                    <label for="requestExpediteReason" translate> cases.comp.main.requestExpediteReason.label </label>
+                    <textarea rows=5 id="requestExpediteReason" ng-model="objectInfo.requestExpediteReason" name="requestExpediteReason"
+                              class="input-md form-control" ng-disabled="!objectInfo.expediteFlag"
+                              placeholder="{{ 'cases.comp.main.requestExpediteReason.placeholder'  | translate }}"></textarea>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="objectInfo.extensionFlag" ng-click='extensionClicked($event)' ng-disabled="objectInfo.extensionFlag && !extendedDueDate"
+                                   permission="requestDueDateExtension" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                                   permission-action="hide">
+                            <span translate>cases.comp.main.extensionFlag.label </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </panel-view>
+    </fieldset>
+
+</div>

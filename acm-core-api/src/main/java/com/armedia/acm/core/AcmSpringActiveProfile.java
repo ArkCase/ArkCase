@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class AcmSpringActiveProfile
@@ -40,15 +41,33 @@ public class AcmSpringActiveProfile
 
     public boolean isSAMLEnabledEnvironment()
     {
-        String[] activeProfiles = environment.getActiveProfiles();
-        if (activeProfiles.length == 0)
-        {
-            activeProfiles = environment.getDefaultProfiles();
-        }
+        String[] activeProfiles = getActiveProfiles();
         Predicate<String> isSamlProfile = it -> it.equals("externalSaml");
         Predicate<String> isExternalSamlProfile = it -> it.equals("ssoSaml");
 
         return Arrays.stream(activeProfiles)
                 .anyMatch(isSamlProfile.or(isExternalSamlProfile));
+    }
+
+    public String[] getActiveProfiles()
+    {
+        if (environment.getActiveProfiles().length > 0)
+        {
+            return environment.getActiveProfiles();
+        }
+        else
+        {
+            return environment.getDefaultProfiles();
+        }
+    }
+
+    public Optional<String> getExtensionActiveProfile()
+    {
+        String[] activeProfiles = getActiveProfiles();
+        final String prefix = "extension-";
+        return Arrays.stream(activeProfiles)
+                .filter(it -> it.startsWith(prefix))
+                .map(it -> it.substring(prefix.length()))
+                .findFirst();
     }
 }
