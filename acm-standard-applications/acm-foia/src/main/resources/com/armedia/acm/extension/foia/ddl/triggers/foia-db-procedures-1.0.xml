@@ -2,7 +2,8 @@
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-stored-procedures-for-median-calculations" author="marko.stojanoski" dbms="mysql">
+    <changeSet id="01-stored-procedures-for-median-calculations" author="marko.stojanoski" dbms="mysql"
+               logicalFilePath="/ddl/triggers/foia-db-procedures-1.0.xml">
         <createProcedure>
             <![CDATA[
             CREATE PROCEDURE Median( tbl CHAR(64), col CHAR(64), OUT res DOUBLE )
@@ -166,7 +167,8 @@
         </createProcedure>
     </changeSet>
 
-    <changeSet id="02-functions-for-median-calculations" author="bojan.milenkoski" dbms="mysql">
+    <changeSet id="02-functions-for-median-calculations" author="bojan.milenkoski" dbms="mysql"
+               logicalFilePath="/ddl/triggers/foia-db-procedures-1.0.xml">
         <createProcedure>
             <![CDATA[
             CREATE FUNCTION `MedianForRequests` (p_component_agency text, p_case_status text, p_request_track text, p_start_date text, p_end_date text)
@@ -252,7 +254,8 @@
         </createProcedure>
     </changeSet>
     
-    <changeSet id="03-functions-for-median-calculations" author="bojan.milenkoski" dbms="mysql">
+    <changeSet id="03-functions-for-median-calculations" author="bojan.milenkoski" dbms="mysql"
+               logicalFilePath="/ddl/triggers/foia-db-procedures-1.0.xml">
         <createProcedure>
             <![CDATA[
             CREATE FUNCTION `MedianForPendingRequestsAnyTrack`(p_component_agency text, p_end_date text) 

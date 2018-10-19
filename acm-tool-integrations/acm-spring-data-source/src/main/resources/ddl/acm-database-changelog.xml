@@ -3,7 +3,7 @@
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <!-- first include parameter values -->
-    <includeAll path="classpath*:/ddl/properties" relativeToChangelogFile="false"/>
+    <include file="acm-database-changelog-properties.xml" relativeToChangelogFile="true"/>
 
     <!-- sequences are core objects with no dependencies, so they should be next. -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/sequences" relativeToChangelogFile="false"/>
