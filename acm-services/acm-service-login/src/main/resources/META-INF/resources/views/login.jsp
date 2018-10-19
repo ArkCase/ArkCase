@@ -221,13 +221,15 @@ Time: 12:44
         </div>
 
         <button id="submit" type="submit" class="btn btn-lg btn-primary btn-block">Log In</button>
-        <p></p>
-        <div class="pull-left">
-            <a data-toggle="modal" href="#forgot-username-modal">Forgot Username</a>
-        </div>
-        <div class="pull-right">
-            <a data-toggle="modal" href="#forgot-password-modal">Forgot Password</a>
-        </div>
+        <c:if test="${!isSsoEnv}">
+            <p></p>
+            <div class="pull-left">
+                <a data-toggle="modal" href="#forgot-username-modal">Forgot Username</a>
+            </div>
+            <div class="pull-right">
+                <a data-toggle="modal" href="#forgot-password-modal">Forgot Password</a>
+            </div>
+        </c:if>
     </form>
 </div>
 

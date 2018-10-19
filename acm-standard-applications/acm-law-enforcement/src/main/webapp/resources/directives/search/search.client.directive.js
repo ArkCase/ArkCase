@@ -61,8 +61,8 @@
  */
 angular.module('directives').directive(
         'search',
-        [ 'SearchService', '$window', '$q', '$location', '$browser', '$translate', '$interval', 'UtilService', 'Object.LookupService', 'uiGridExporterConstants', 'Tags.TagsService', 'Search.QueryBuilderService', 'ObjectService', 'Search.AutoSuggestService',
-                function(SearchService, $window, $q, $location, $browser, $translate, $interval, Util, ObjectLookupService, uiGridExporterConstants, TagsService, SearchQueryBuilder, ObjectService, AutoSuggestService) {
+        [ 'SearchService', '$window', '$q', '$location', '$browser', '$translate', '$interval', 'UtilService', 'Object.LookupService', 'uiGridExporterConstants', 'Tags.TagsService', 'Search.QueryBuilderService', 'ObjectService', 'Search.AutoSuggestService', '$state',
+                function(SearchService, $window, $q, $location, $browser, $translate, $interval, Util, ObjectLookupService, uiGridExporterConstants, TagsService, SearchQueryBuilder, ObjectService, AutoSuggestService, $state) {
                     return {
                         restrict: 'E', //match only element name
                         scope: {
@@ -422,6 +422,15 @@ angular.module('directives').directive(
 
                             scope.decreaseFacetLimit = function(facet) {
                                 facet.limit = scope.facetLimit;
+                            };
+
+                            scope.onClick = function(objectType, title) {
+
+                                if (objectType == ObjectService.ObjectTypes.ASSOCIATED_TAG) {
+                                    $state.go('tags', {
+                                        query: title
+                                    });
+                                }
                             };
 
                             //prepare the UI-grid

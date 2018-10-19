@@ -22,20 +22,30 @@ angular.module('services').factory(
                          * @methodOf services.service:SnowboundService
                          *
                          * @param {JSON} data properties from the ecmFileService.properties configuration file
+                         * @param {Boolean} readonly should the base URL be for readonly mode
                          *
                          * @description
                          * This method takes the configuration from ecmFileService.properties and
                          * extracts the base part of the snowbound url (host/port, etc.)
                          */
-                        extractViewerBaseUrl: function(data) {
+                        extractViewerBaseUrl: function(data, readonly) {
                             var viewerUrl = "";
-                            if (data && data["ecm.viewer.snowbound"]) {
-                                var viewerUrlConfig = data["ecm.viewer.snowbound"];
-                                var urlConfigComponents = viewerUrlConfig.split("?");
-                                if (urlConfigComponents && urlConfigComponents.length > 0) {
-                                    viewerUrl = urlConfigComponents[0];
+                            if (data) {
+                                if (readonly && data["ecm.viewer.snowbound.readonly.url"]) {
+                                    var viewerUrlConfig = data["ecm.viewer.snowbound.readonly.url"];
+                                    var urlConfigComponents = viewerUrlConfig.split("?");
+                                    if (urlConfigComponents && urlConfigComponents.length > 0) {
+                                        viewerUrl = urlConfigComponents[0];
+                                    }
+                                } else if (data && data["ecm.viewer.snowbound"]) {
+                                    var viewerUrlConfig = data["ecm.viewer.snowbound"];
+                                    var urlConfigComponents = viewerUrlConfig.split("?");
+                                    if (urlConfigComponents && urlConfigComponents.length > 0) {
+                                        viewerUrl = urlConfigComponents[0];
+                                    }
                                 }
                             }
+
                             return viewerUrl;
                         }
 
@@ -46,6 +56,7 @@ angular.module('services').factory(
                          *
                          * @param {JSON} ecmFileProperties properties from the ecmFileService.properties configuration file
                          * @param {String} authentication token for ArkCase for the currently logged in user
+                         * @param {Boolean} readonly should the base URL be for readonly mode
                          *
                          * @description
                          * This method takes the configuration from ecmFileService.properties and generates the
@@ -53,10 +64,10 @@ angular.module('services').factory(
                          * and allow snowbound to callback Alfresco (for merge/split, etc.) and authenticate.
                          */
                         ,
-                        buildSnowboundUrl: function(ecmFileProperties, acmTicket, userId, userFullName, file) {
+                        buildSnowboundUrl: function(ecmFileProperties, acmTicket, userId, userFullName, file, readonly) {
 
                             // Obtains the base portion of the viewer url (host/port, etc)
-                            var viewerBaseUrl = this.extractViewerBaseUrl(ecmFileProperties);
+                            var viewerBaseUrl = this.extractViewerBaseUrl(ecmFileProperties, readonly);
                             var encryptionPassphrase = ecmFileProperties['ecm.viewer.snowbound.encryptionKey'];
                             // Forces the viewer iframe to be reloaded with the latest version of the document
                             var randomUrlArgToCauseIframeRefresh = (new Date()).getTime();

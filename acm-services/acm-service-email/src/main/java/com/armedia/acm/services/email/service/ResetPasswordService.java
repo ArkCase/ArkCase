@@ -28,6 +28,7 @@ package com.armedia.acm.services.email.service;
  */
 
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.model.MessageBodyFactory;
@@ -47,6 +48,7 @@ public class ResetPasswordService
     private UserDao userDao;
     private AcmApplication acmAppConfiguration;
     private AcmEmailSenderService emailSenderService;
+    private AcmSpringActiveProfile acmSpringActiveProfile;
     /**
      * Formatting string to be used for producing text to inserted as a body in the password reset email. The formatting
      * string accepts the password reset link string twice.
@@ -74,6 +76,11 @@ public class ResetPasswordService
     @Async
     public void sendPasswordResetEmail(AcmUser user)
     {
+        if (acmSpringActiveProfile.isSAMLEnabledEnvironment())
+        {
+            log.info("Won't send password reset email when SSO environment");
+            return;
+        }
         try
         {
             log.debug("Sending password reset email for user: [{}]", user.getUserId());
@@ -138,5 +145,15 @@ public class ResetPasswordService
     public void setPasswordResetLink(String passwordResetLink)
     {
         this.passwordResetLink = passwordResetLink;
+    }
+
+    public AcmSpringActiveProfile getAcmSpringActiveProfile()
+    {
+        return acmSpringActiveProfile;
+    }
+
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
+    {
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 }

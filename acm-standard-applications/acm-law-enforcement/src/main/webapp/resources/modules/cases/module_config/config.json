@@ -1408,6 +1408,49 @@
             ]
         },
         {
+            "id": "newObjectPicker",
+            "title": "cases.comp.merge.objectPicker.title",
+            "enabled": "true",
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "emptySearch": false,
+            "hideTypeahead": true,
+            "showFacets": false,
+            "multiSelect": false,
+            "searchFilter":  "\"Object Type\": CASE_FILE",
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "cases.comp.merge.objectPicker.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "cases.comp.merge.objectPicker.table.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "cases.comp.merge.objectPicker.table.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "cases.comp.merge.objectPicker.table.columns.id",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        },
+        {
             "id": "userSearch",
             "title": "cases.userOrGroupSearch.title",
             "enableFiltering": false,

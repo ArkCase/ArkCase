@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.2.16-SNAPSHOT</version>
+    <version>3.2.17-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -1548,6 +1548,10 @@
                     <exclusion>
                         <groupId>org.slf4j</groupId>
                         <artifactId>jul-to-slf4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.tdunning</groupId>
+                        <artifactId>json</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

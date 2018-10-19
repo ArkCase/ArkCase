@@ -108,7 +108,8 @@ import java.util.UUID;
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-audit-service.xml"
+        "/spring/spring-library-audit-service.xml",
+        "/spring/spring-library-core-api.xml"        
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintServiceIT

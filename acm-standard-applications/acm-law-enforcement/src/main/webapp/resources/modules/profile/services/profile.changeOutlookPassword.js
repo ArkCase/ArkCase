@@ -2,7 +2,8 @@
 angular.module('profile').service('Profile.ChangePasswordService', function($http, $q, $modal) {
     return ({
         changePassword: changePassword,
-        changeLdapPassword: changeLdapPassword
+        changeLdapPassword: changeLdapPassword,
+        canManageLdapPassword: canManageLdapPassword
     });
     function changePassword(newPassword) {
         var request = $http({
@@ -51,6 +52,13 @@ angular.module('profile').service('Profile.ChangePasswordService', function($htt
                 currentPassword: credentials.currentPassword,
                 userId: credentials.userId
             }
+        });
+    }
+
+    function canManageLdapPassword(directory) {
+        return $http({
+            method: "GET",
+            url: 'api/latest/ldap/' + directory + '/managePasswordEnabled'
         });
     }
 });

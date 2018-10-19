@@ -26,6 +26,7 @@
         "assignee.label": "Atribuído a",
         "owningGroup.label": "O grupo pertence a",
         "dueDate.label": "Data de vencimento",
+        "alertMessage": "pt_Due date must be after the create date ",
         "priorities": {
             "low%": "Baixo",
             "medium%": "Médio",
@@ -261,6 +262,16 @@
             "title": "Título",
             "parent": "Pai",
             "modified": "Modificado"
+        },
+        "objectPicker": {
+            "title": "pt_Search for object",
+            "table.columns": {
+                "name": "pt_Name",
+                "type": "pt_Type",
+                "title": "pt_Title",
+                "id": "pt_ID",
+                "username": "pt_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {

@@ -27,10 +27,12 @@ package com.armedia.acm.services.costsheet.pipeline.postsave;
  * #L%
  */
 
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.pipeline.CostsheetPipelineContext;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
@@ -47,6 +49,17 @@ public class CostsheetContainerHandler implements PipelineHandler<AcmCostsheet, 
     public void execute(AcmCostsheet entity, CostsheetPipelineContext ctx) throws PipelineProcessException
     {
         log.trace("Costsheet with id [{}] and title [{}] entering CostsheetContainerHandler ", entity.getId(), entity.getTitle());
+        if (entity.getContainer() == null)
+        {
+            AcmContainer container = new AcmContainer();
+            entity.setContainer(container);
+        }
+
+        if (entity.getContainer().getContainerObjectType() == null)
+        {
+            entity.getContainer().setContainerObjectType(entity.getObjectType());
+        }
+
         if (entity.getContainer().getContainerObjectTitle() == null)
         {
             entity.getContainer().setContainerObjectTitle(entity.getCostsheetNumber());

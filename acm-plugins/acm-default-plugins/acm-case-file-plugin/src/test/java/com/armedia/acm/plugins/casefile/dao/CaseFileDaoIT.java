@@ -97,8 +97,8 @@ public class CaseFileDaoIT
     @Before
     public void setUp()
     {
-
-        authentication = new AcmAuthentication(null, null, null, true, "user");
+        authentication = new AcmAuthentication(null, null, null, true,
+                "user", 0L);
         auditAdapter.setUserId("auditUser");
     }
 

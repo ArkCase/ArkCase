@@ -27,6 +27,8 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.auth.AcmAuthenticationManager;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -71,6 +73,7 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
@@ -80,6 +83,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -105,11 +109,11 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private EcmFileService ecmFileService;
     private AcmParticipantDao acmParticipantDao;
     private ObjectAssociationService objectAssociationService;
-
     private ObjectConverter objectConverter;
+    private AcmAuthenticationManager authenticationManager;
 
     @Override
-    public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId) throws AcmTaskException
+    public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId)
     {
         Map<String, Object> matchProcessVariables = ImmutableMap.of(
                 TaskConstants.VARIABLE_NAME_OBJECT_ID, objectId,
@@ -122,7 +126,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    public List<BuckslipProcess> getBuckslipProcessesForChildren(String parentObjectType, Long parentObjectId) throws AcmTaskException
+    public List<BuckslipProcess> getBuckslipProcessesForChildren(String parentObjectType, Long parentObjectId)
     {
         Map<String, Object> matchProcessVariables = ImmutableMap.of(
                 TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId,
@@ -467,9 +471,20 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 AcmContainer container = task.getContainer() != null ? task.getContainer()
                         : getAcmContainerDao().findFolderByObjectTypeAndId(task.getObjectType(), task.getId());
 
-                Authentication auth = new UsernamePasswordAuthenticationToken(container.getCreator(), container.getCreator());
+                String principal = container.getCreator();
+                AcmAuthentication authentication;
+                try
+                {
+                    authentication = authenticationManager.getAcmAuthentication(
+                            new UsernamePasswordAuthenticationToken(principal, principal));
+                }
+                catch (AuthenticationServiceException e)
+                {
+                    authentication = new AcmAuthentication(Collections.emptySet(), principal, "",
+                            true, principal);
+                }
 
-                AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
+                AcmCmisObjectList files = getEcmFileService().allFilesForContainer(authentication, container);
 
                 if (files != null && files.getChildren() != null && files.getTotalChildren() > 0)
                 {
@@ -688,5 +703,15 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public AcmAuthenticationManager getAuthenticationManager()
+    {
+        return authenticationManager;
+    }
+
+    public void setAuthenticationManager(AcmAuthenticationManager authenticationManager)
+    {
+        this.authenticationManager = authenticationManager;
     }
 }

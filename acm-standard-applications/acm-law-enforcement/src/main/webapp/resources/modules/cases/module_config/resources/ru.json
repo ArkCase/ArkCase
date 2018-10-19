@@ -26,6 +26,7 @@
         "assignee.label": "Назначено",
         "owningGroup.label": "Собственная группа",
         "dueDate.label": "Дата погашения",
+        "alertMessage": "ru_Due date must be after the create date ",
         "priorities": {
             "low%": "Низко",
             "medium%": "Средний",
@@ -261,6 +262,16 @@
             "title": "Заглавие",
             "parent": "Родитель",
             "modified": "Модифицированный"
+        },
+        "objectPicker": {
+            "title": "ru_Search for object",
+            "table.columns": {
+                "name": "ru_Name",
+                "type": "ru_Type",
+                "title": "ru_Title",
+                "id": "ru_ID",
+                "username": "ru_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {

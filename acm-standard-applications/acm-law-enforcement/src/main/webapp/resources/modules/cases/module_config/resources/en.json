@@ -26,6 +26,7 @@
         "assignee.label": "Assigned To",
         "owningGroup.label": "Owning Group",
         "dueDate.label": "Due Date",
+        "alertMessage": "Due date must be after the create date ",
         "priorities": {
             "low%": "Low",
             "medium%": "Medium",
@@ -261,6 +262,16 @@
             "title": "Title",
             "parent": "Parent",
             "modified": "Modified"
+        },
+        "objectPicker": {
+            "title": "Search for object",
+            "table.columns": {
+                "name": "Name",
+                "type": "Type",
+                "title": "Title",
+                "id": "ID",
+                "username": "Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {

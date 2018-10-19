@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('common').controller('Common.HistoryController',
-        [ '$scope', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Object.AuditService', 'Helper.UiGridService', '$modal', function($scope, $stateParams, $q, Util, ConfigService, ObjectService, ObjectAuditService, HelperUiGridService, $modal) {
+        [ '$scope', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Object.AuditService', 'Object.LookupService', 'Helper.UiGridService', '$modal', function($scope, $stateParams, $q, Util, ConfigService, ObjectService, ObjectAuditService, ObjectLookupService, HelperUiGridService, $modal) {
 
             var onConfigRetrieved = function(config) {
                 $scope.config = config;
@@ -41,7 +41,21 @@ angular.module('common').controller('Common.HistoryController',
                 var targetType = Util.goodMapValue(rowEntity, "objectType");
                 var targetId = Util.goodMapValue(rowEntity, "objectId");
 
-                gridHelper.showObject(targetType, targetId);
+                if(targetType === "NOTE") {
+                    var parentTargetType = Util.goodMapValue(rowEntity, "parentObjectType");
+                    var parentTargetId = Util.goodMapValue(rowEntity, "parentObjectId");
+                    ObjectLookupService.getObjectTypes().then(function(objectTypes) {
+                        var found = _.find(objectTypes, {
+                            key: parentTargetType
+                        });
+                        var state = found.state;
+                        state = state.replace(".main", ".notes");
+                        gridHelper.transitionToState(parentTargetType, parentTargetId, state);
+                    });
+                }
+                else {
+                    gridHelper.showObject(targetType, targetId);
+                }
             };
 
             $scope.showDetails = function(objectHistoryDetails) {
