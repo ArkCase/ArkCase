@@ -334,7 +334,7 @@ public class DefaultFolderCompressor implements FolderCompressor
     }
 
     /**
-     * @param file
+     * @param
      * @param files
      * @return
      */
