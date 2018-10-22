@@ -127,13 +127,14 @@
             "removeBtn": "hi_Remove",
             "addBtn": "hi_Add"
         },
-        "userSearch.title": "hi_Search for User",
+        "userSearch.title": "hi_User/Group Search",
         "details": "hi_Details",
         "approver": {
             "title": "hi_Approver",
             "placeholder": "hi_Select Approver",
             "removeBtn": "hi_Remove Approver",
-            "addBtn": "hi_Add Another Approver"
+            "addBtn": "hi_Add Another Approver",
+            "owningGroup": "hi_Owning Group"
         },
         "cancelButton": "hi_Cancel",
         "saveButton": "hi_Save",

@@ -127,13 +127,14 @@
             "removeBtn": "ru_Remove",
             "addBtn": "ru_Add"
         },
-        "userSearch.title": "ru_Search for User",
+        "userSearch.title": "ru_User/Group Search",
         "details": "ru_Details",
         "approver": {
             "title": "ru_Approver",
             "placeholder": "ru_Select Approver",
             "removeBtn": "ru_Remove Approver",
-            "addBtn": "ru_Add Another Approver"
+            "addBtn": "ru_Add Another Approver",
+            "owningGroup": "ru_Owning Group"
         },
         "cancelButton": "ru_Cancel",
         "saveButton": "ru_Save",

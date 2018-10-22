@@ -461,19 +461,19 @@ angular.module('time-tracking').controller(
             // ---------------------------            approver         --------------------------------------
             var participantType = 'approver';
 
-            $scope.addApprover = function () {
-                $timeout(function () {
-                    $scope.searchApprover(-1);
-                }, 0);
-            };
+            // $scope.addApprover = function () {
+            //     $timeout(function () {
+            //         $scope.searchApprover(-1);
+            //     }, 0);
+            // };
 
-            $scope.removeApprover = function (approver) {
-                $timeout(function () {
-                    _.remove($scope.timesheet.participants, function (object) {
-                        return object === approver;
-                    });
-                }, 0);
-            };
+            // $scope.removeApprover = function (approver) {
+            //     $timeout(function () {
+            //         _.remove($scope.timesheet.participants, function (object) {
+            //             return object === approver;
+            //         });
+            //     }, 0);
+            // };
 
             $scope.searchApprover = function (index) {
                 var participant = index > -1 ? $scope.timesheet.participants[index] : {};
@@ -512,6 +512,112 @@ angular.module('time-tracking').controller(
                         }
                     }
                 });
+            };
+
+            $scope.userOrGroupSearch = function(index) {
+                var params = {};
+                var participant = index > -1 ? $scope.timesheet.participants[index] : {};
+
+                params.header = $translate.instant("timeTracking.comp.newTimesheet.userSearch.title");
+                params.filter = "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)";
+                params.extraFilter = "&fq=\"name\": ";
+                params.config = $scope.userSearchConfig;
+                params.secondGrid = 'true';
+
+                var modalInstance = $modal.open({
+                    templateUrl: "directives/core-participants/participants-user-group-search.client.view.html",
+                    controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+                        $scope.modalInstance = $modalInstance;
+                        $scope.header = params.header;
+                        $scope.filter = params.filter;
+                        $scope.config = params.config;
+                        $scope.secondGrid = params.secondGrid;
+                    } ],
+                    animation: true,
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function() {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function(selection) {
+
+                    // if (selection) {
+                    //     participant.className = $scope.participantsConfig.className;
+                    //     participant.participantType = participantType;
+                    //     participant.participantLdapId = selection.object_id_s;
+                    //     participant.participantFullName = selection.name;
+                    //     if (ObjectParticipantService.validateParticipants([participant], true) && !_.includes($scope.timesheet.participants, participant)) {
+                    //         $scope.timesheet.participants.push(participant);
+                    //     }
+                    // }
+
+                    if (selection) {
+                        var selectedObjectType = selection.masterSelectedItem.object_type_s;
+                        if (selectedObjectType === 'USER') { // Selected user
+                            var selectedUser = selection.masterSelectedItem;
+                            var selectedGroup = selection.detailSelectedItems;
+
+                            // $scope.participant.participantLdapId = selectedUser.object_id_s;
+                            // $scope.participant.participantFullName = selectedUser.name;
+                            // $scope.selectedType = selectedUser.object_type_s;
+                            //
+                            // if (selectedGroup) {
+                            //     $scope.owningGroup = {};
+                            //     $scope.owningGroup.participantLdapId = selectedGroup.object_id_s;
+                            //     $scope.owningGroup.participantFullName = selectedGroup.name;
+                            //     $scope.owningGroup.selectedType = selectedGroup.object_type_s;
+                            // }
+
+                            participant.className = $scope.participantsConfig.className;
+                            participant.participantType = participantType;
+                            participant.participantLdapId = selectedUser.object_id_s;
+                            participant.participantFullName = selectedUser.name;
+                            if (ObjectParticipantService.validateParticipants([participant], true) && !_.includes($scope.timesheet.participants, participant)) {
+                                $scope.timesheet.participants.push(participant);
+                            }
+
+                            // $scope.config.data.assignee = selectedUser.object_id_s;
+                            // $scope.userOrGroupName = selectedUser.name;
+                            if (selectedGroup) {
+                                $scope.candidateGroups = [ selectedGroup.object_id_s ];
+                                $scope.groupName = selectedGroup.name;
+                            }
+
+                            return;
+                        } else if (selectedObjectType === 'GROUP') { // Selected group
+                            var selectedUser = selection.detailSelectedItems;
+                            var selectedGroup = selection.masterSelectedItem;
+
+                            $scope.candidateGroups = [ selectedGroup.object_id_s ];
+                            $scope.groupName = selectedGroup.name;
+
+                            if (selectedUser) {
+                                participant.className = $scope.participantsConfig.className;
+                                participant.participantType = participantType;
+                                participant.participantLdapId = selectedUser.object_id_s;
+                                participant.participantFullName = selectedUser.name;
+                                if (ObjectParticipantService.validateParticipants([participant], true) && !_.includes($scope.timesheet.participants, participant)) {
+                                    $scope.timesheet.participants.push(participant);
+                                }
+                            }
+                            // $scope.owningGroup = {};
+                            // $scope.owningGroup.participantLdapId = selectedGroup.object_id_s;
+                            // $scope.owningGroup.participantFullName = selectedGroup.name;
+                            // $scope.owningGroup.selectedType = selectedGroup.object_type_s;
+
+                            return;
+                        }
+                    }
+
+                }, function() {
+                    // Cancel button was clicked.
+                    return [];
+                });
+
             };
 
             //-----------------------------------------------------------------------------------------------
