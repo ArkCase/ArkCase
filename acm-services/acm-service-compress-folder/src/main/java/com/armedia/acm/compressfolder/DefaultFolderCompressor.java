@@ -52,11 +52,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.Deflater;
@@ -242,12 +238,14 @@ public class DefaultFolderCompressor implements FolderCompressor
                 AcmFolder childFolder = AcmFolder.class.cast(c);
 
                 String objectName = getUniqueObjectName(fileFolderList, format, c, childFolder.getName());
-                fileFolderList.add(objectName);
-
                 String entryName = concatStrings(parentPath, objectName, "/");
-                zos.putNextEntry(new ZipEntry(entryName));
+                if(canFolderBeCompressed(compressNode, childFolder))
+                {
+                   fileFolderList.add(objectName);
+                   zos.putNextEntry(new ZipEntry(entryName));
+                   zos.closeEntry();
+                }
                 compressFolder(zos, childFolder, entryName, compressNode);
-                zos.closeEntry();
             }
             catch (IOException e)
             {
@@ -260,6 +258,23 @@ public class DefaultFolderCompressor implements FolderCompressor
             }
         });
 
+    }
+
+    public boolean canFolderBeCompressed(CompressNode compressNode, AcmFolder childFolder)
+    {
+       if(Objects.nonNull(compressNode) && Objects.nonNull(childFolder))
+       {
+           return compressNode
+                   .getSelectedNodes()
+                   .stream()
+                   .anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(childFolder.getId()) && fileFolderNode.isFolder())
+                   ||
+                   isRootFolderSelected(compressNode);
+       }
+       else
+       {
+           return true;
+       }
     }
 
     /*
@@ -319,7 +334,7 @@ public class DefaultFolderCompressor implements FolderCompressor
     }
 
     /**
-     * @param acmObject
+     * @param file
      * @param files
      * @return
      */
