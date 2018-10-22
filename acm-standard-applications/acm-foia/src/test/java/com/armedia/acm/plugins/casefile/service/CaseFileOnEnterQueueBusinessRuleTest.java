@@ -1,0 +1,171 @@
+package com.armedia.acm.plugins.casefile.service;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import com.armedia.acm.plugins.businessprocess.model.OnEnterQueueModel;
+import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
+
+import org.drools.decisiontable.InputType;
+import org.drools.decisiontable.SpreadsheetCompiler;
+import org.junit.Before;
+import org.junit.Test;
+import org.kie.api.io.ResourceType;
+import org.kie.internal.builder.DecisionTableConfiguration;
+import org.kie.internal.builder.DecisionTableInputType;
+import org.kie.internal.builder.KnowledgeBuilder;
+import org.kie.internal.builder.KnowledgeBuilderError;
+import org.kie.internal.builder.KnowledgeBuilderFactory;
+import org.kie.internal.io.ResourceFactory;
+import org.kie.internal.runtime.StatelessKnowledgeSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import gov.foia.model.FOIARequest;
+
+/**
+ * Created by dmiller on 8/9/16.
+ */
+public class CaseFileOnEnterQueueBusinessRuleTest
+{
+    private Logger log = LoggerFactory.getLogger(getClass());
+    private StatelessKnowledgeSession workingMemory;
+
+    @Before
+    public void setUp() throws Exception
+    {
+        SpreadsheetCompiler sc = new SpreadsheetCompiler();
+
+        Resource xls = new ClassPathResource("/rules/drools-on-enter-queue-rules-foia.xlsx");
+        assertTrue(xls.exists());
+
+        String drl = sc.compile(xls.getInputStream(), InputType.XLS);
+
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+        DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
+        dtconf.setInputType(DecisionTableInputType.XLS);
+        kbuilder.add(ResourceFactory.newInputStreamResource(xls.getInputStream()), ResourceType.DTABLE, dtconf);
+
+        if (kbuilder.hasErrors())
+        {
+
+            System.out.println("DRL: " + drl);
+
+            for (KnowledgeBuilderError error : kbuilder.getErrors())
+            {
+                log.error("Error building rules: " + error);
+            }
+
+            throw new RuntimeException("Could not build rules from " + xls.getFile().getAbsolutePath());
+        }
+
+        workingMemory = kbuilder.newKnowledgeBase().newStatelessKnowledgeSession();
+
+        assertNotNull(workingMemory);
+    }
+
+    @Test
+    public void enterFulfillQueue() throws Exception
+    {
+        OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> model = buildEnterQueueModel("Fulfill");
+
+        workingMemory.execute(model);
+
+        assertEquals("foia-extension-fulfill-process", model.getBusinessProcessName());
+    }
+
+    @Test
+    public void enterHoldQueue() throws Exception
+    {
+        OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> model = buildEnterQueueModel("Hold");
+
+        workingMemory.execute(model);
+
+        assertEquals("foia-extension-hold-process", model.getBusinessProcessName());
+    }
+
+    @Test
+    public void enterSuspendQueue() throws Exception
+    {
+        OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> model = buildEnterQueueModel("Suspend");
+
+        workingMemory.execute(model);
+
+        assertEquals("foia-extension-suspend-process", model.getBusinessProcessName());
+    }
+
+    @Test
+    public void enterApproveQueue() throws Exception
+    {
+        OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> model = buildEnterQueueModel("Approve");
+
+        workingMemory.execute(model);
+
+        assertEquals("foia-extension-approve-process", model.getBusinessProcessName());
+    }
+
+    @Test
+    public void enterBillingQueue() throws Exception
+    {
+        OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> model = buildEnterQueueModel("Billing");
+
+        workingMemory.execute(model);
+
+        assertEquals("foia-extension-billing-process", model.getBusinessProcessName());
+    }
+
+    @Test
+    public void enterGeneralCounselQueue() throws Exception
+    {
+        OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> model = buildEnterQueueModel("General Counsel");
+
+        workingMemory.execute(model);
+
+        assertEquals("foia-extension-generalcounsel-process", model.getBusinessProcessName());
+    }
+
+    @Test
+    public void enterReleaseQueue() throws Exception
+    {
+        OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> model = buildEnterQueueModel("Release");
+
+        workingMemory.execute(model);
+
+        assertEquals("foia-extension-release-process", model.getBusinessProcessName());
+    }
+
+    @Test
+    public void enterDeleteQueue() throws Exception
+    {
+        OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> model = buildEnterQueueModel("Delete");
+
+        workingMemory.execute(model);
+
+        assertEquals("foia-extension-delete-process", model.getBusinessProcessName());
+    }
+
+    @Test
+    public void enterIntakeQueue() throws Exception
+    {
+        OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> model = buildEnterQueueModel("Intake");
+
+        workingMemory.execute(model);
+
+        assertEquals("foia-extension-intake-process", model.getBusinessProcessName());
+    }
+
+    private OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> buildEnterQueueModel(String enqueueName)
+    {
+        CaseFilePipelineContext ctx = new CaseFilePipelineContext();
+        ctx.setEnqueueName(enqueueName);
+
+        OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> enterQueueModel = new OnEnterQueueModel<>();
+        enterQueueModel.setBusinessObject(new FOIARequest());
+        enterQueueModel.setPipelineContext(ctx);
+
+        return enterQueueModel;
+    }
+}
