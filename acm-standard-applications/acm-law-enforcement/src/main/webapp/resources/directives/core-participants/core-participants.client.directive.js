@@ -186,6 +186,7 @@ angular.module('directives').directive(
                                     modalScope.isEdit = isEdit || false;
                                     modalScope.showReplaceChildrenParticipants = showReplaceChildrenParticipants || false;
                                     modalScope.selectedType = participant.selectedType ? participant.selectedType : "";
+                                    modalScope.id = participant.id;
 
                                     var params = {};
 
@@ -207,7 +208,7 @@ angular.module('directives').directive(
 
                                     modalInstance.result.then(function(data) {
                                         if (ObjectParticipantService.validateType(data.participant.participantLdapId, data.participant.participantType)) {
-                                            scope.participant.id = data.participant.id;
+                                            scope.participant.id = data.id;
                                             scope.participant.participantLdapId = data.participant.participantLdapId;
                                             scope.participant.participantType = data.participant.participantType;
 
@@ -226,10 +227,10 @@ angular.module('directives').directive(
 
                                             if (data.isEdit) {
                                                 var participant = _.find(scope.objectInfo.participants, function(pa) {
-                                                    return Util.compare(pa.id, data.participant.id);
+                                                    return Util.compare(pa.id, data.id);
                                                 });
                                                 participant.participantLdapId = data.participant.participantLdapId;
-                                                participant.id = data.participant.id;
+                                                participant.id = data.id;
 
                                                 if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
                                                     MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
