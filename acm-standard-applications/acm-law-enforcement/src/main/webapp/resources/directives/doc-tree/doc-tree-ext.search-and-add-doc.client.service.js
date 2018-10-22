@@ -10,7 +10,7 @@
  *
  * DocTree extensions for searching and adding documents.
  */
-angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '$modal', '$translate', 'UtilService', function($q, $modal, $translate, Util) {
+angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '$modal', '$translate', 'UtilService', 'PermissionsService', 'ObjectService', function($q, $modal, $translate, Util, PermissionsService, ObjectService) {
 
     var Documents = {
 
@@ -42,12 +42,16 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
          */
         ,
         getCommandHandlers: function(DocTree) {
-            return [ {
-                name: "searchDocument",
-                execute: function() {
-                    Documents.openModal(DocTree);
-                }
-            } ];
+            PermissionsService.getActionPermission('allowCopyingFile', DocTree.objectInfo, {
+                objectType: ObjectService.ObjectTypes.FOLDER
+            }).then(function(result) {
+                return [ {
+                    name: "searchDocument",
+                    execute: function() {
+                        Documents.openModal(DocTree);
+                    }
+                } ];
+            })
         }
 
         ,
