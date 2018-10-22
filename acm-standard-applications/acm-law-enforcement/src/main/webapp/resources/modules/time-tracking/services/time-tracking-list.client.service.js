@@ -103,8 +103,8 @@ angular.module('services').factory('TimeTracking.ListService', [ '$resource', '$
                             node = {
                                 nodeId: Util.goodValue(doc.object_id_s, 0),
                                 nodeType: ObjectService.ObjectTypes.TIMESHEET,
-                                nodeTitle: Util.goodValue(doc.name),
-                                nodeToolTip: Util.goodValue(doc.name)
+                                nodeTitle: Util.goodValue(doc.title_parseable),
+                                nodeToolTip: Util.goodValue(doc.title_parseable)
                             };
                         }
                         treeData.docs.push(node);

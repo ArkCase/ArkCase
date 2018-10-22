@@ -41,7 +41,7 @@ angular.module('cost-tracking').controller(
                                 $scope.costsheet.parentId = $scope.modalParams.parentId;
                                 $scope.costsheet.parentType = $scope.modalParams.parentType;
                                 $scope.costsheet.parentNumber = $scope.modalParams.parentNumber;
-                                $scope.costsheet.title =  "Costsheet" + " " + $scope.modalParams.parentNumber;
+                                $scope.costsheet.title =  $scope.costsheet.user.fullName + " - " + $scope.modalParams.parentNumber;
                                 $scope.isTypeSelected = true;
                                 $scope.disableCostType = true;
                             }
@@ -176,7 +176,7 @@ angular.module('cost-tracking').controller(
                             if (!Util.isEmpty(selected)) {
                                 $scope.costsheet.parentNumber = selected.name;
                                 $scope.costsheet.parentId = selected.object_id_s;
-                                $scope.costsheet.title = "Costsheet" + " " + selected.name;
+                                $scope.costsheet.title = $scope.costsheet.user.fullName + " - " + selected.name;
                             }
                         });
 
