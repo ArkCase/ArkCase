@@ -42,17 +42,28 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
          */
         ,
         getCommandHandlers: function(DocTree) {
-            PermissionsService.getActionPermission('allowCopyingFile', DocTree.objectInfo, {
-                objectType: ObjectService.ObjectTypes.FOLDER
-            }).then(function(result) {
-                return [ {
-                    name: "searchDocument",
-                    execute: function() {
-                        Documents.openModal(DocTree);
+            return [ {
+                name: "searchDocument",
+                onAllowCmd: function(nodes, objectInfo) {
+                    if(Util.isArray(nodes) && !Util.isEmpty(nodes) && nodes.length == 1 && !Util.isEmpty(nodes[0].data) && (nodes[0].data.objectType == ObjectService.ObjectTypes.FOLDER.toLowerCase() || nodes[0].data.root == true)) {
+                        return PermissionsService.getActionPermission('allowCopyingFile', objectInfo.container.folder, {
+                            objectType: ObjectService.ObjectTypes.FOLDER
+                        }).then(function success(enabled) {
+                            return enabled ? 'visible' : 'invisible';
+                        }, function error() {
+                            return 'invisible';
+                        });
+                    }else {
+                        return 'invisible';
                     }
-                } ];
-            })
+                },
+                execute: function() {
+                    Documents.openModal(DocTree);
+                }
+            } ];
+
         }
+
 
         ,
         openModal: function(DocTree) {
@@ -93,19 +104,19 @@ angular.module('directives').controller('directives.DocTreeSearchAndAddDocuments
 
         $scope.modalInstance.result.then(function(result) {
             var docs = result;
-                angular.forEach(docs, function(doc) {
-                    var documentId = doc.object_id_s;
-                    Util.serviceCall({
-                        service: Ecm.copyFile,
-                        param: {
-                            objType: params.parentType,
-                            objId: params.parentId
-                        },
-                        data: {
-                            id : parseInt(documentId),
-                            folderId : params.folderId
-                        }
-                    })
+            angular.forEach(docs, function(doc) {
+                var documentId = doc.object_id_s;
+                Util.serviceCall({
+                    service: Ecm.copyFile,
+                    param: {
+                        objType: params.parentType,
+                        objId: params.parentId
+                    },
+                    data: {
+                        id : parseInt(documentId),
+                        folderId : params.folderId
+                    }
+                })
             });
         });
     } ]);
