@@ -1,0 +1,690 @@
+{
+    "id": "dashboard",
+    "title": "Dashboard",
+    "configurable": true,
+    "menus": [
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "dashboard",
+            "menuItemTitle": "dashboard.menus.leftnav.item",
+            "moduleId": "dashboard",
+            "iconClass": "fa fa-dashboard",
+            "position": 0
+        }
+    ],
+    "components": [
+        {
+            "id": "news",
+            "title": "dashboard.comp.news.title",
+            "configurable": true,
+            "url": "https:\/\/query.yahooapis.com\/v1\/public\/yql",
+            "query": "select * from xml where url = '$1'",
+            "format": "json"
+        },
+        {
+            "id": "weather",
+            "title": "Weather Widget",
+            "APPID": "672e193bbf022bdc749986f7be4c0364",
+            "units": "imperial"
+        },
+        {
+            "id": "myCases",
+            "title": "dashboard.comp.myCases.title",
+            "configurable": true,
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                25
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "object_id_s",
+                    "displayName": "dashboard.widgets.myCases.table.header.caseId",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true,
+                    "type": "number",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'><a ui-sref='order-info({orderId: row.entity.object_id_s})'>{{COL_FIELD CUSTOM_FILTERS}}</a></div>",
+                    "width": 130
+                },
+                {
+                    "name": "title_parseable",
+                    "sortField": "title_parseable_lcs",
+                    "displayName": "dashboard.widgets.myCases.table.header.topic",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true,
+                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+                },
+                {
+                    "name": "request_status_lcs",
+                    "displayName": "dashboard.widgets.myCases.table.header.status",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true,
+                    "width": 150
+                },
+                {
+                    "name": "priority_lcs",
+                    "displayName": "dashboard.widgets.myCases.table.header.priority",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true,
+                    "width": 70
+                }
+            ]
+        },
+        {
+            "id": "myTasks",
+            "title": "dashboard.comp.myTasks.title",
+            "configurable": true,
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                25
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "field": "alerts",
+                    "displayName": "",
+                    "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'dashboard.widgets.myTasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'dashboard.widgets.myTasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+                    "width": 40,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "dashboard.widgets.myTasks.table.header.taskId",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true,
+                    "type": "number",
+                    "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}</a>",
+                    "width": 75
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "dashboard.widgets.myTasks.table.header.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}</a>"
+                },
+                {
+                    "name": "priority_lcs",
+                    "displayName": "dashboard.widgets.myTasks.table.header.priority",
+                    "headerCellFilter": "translate",
+                    "width": 75
+                },
+                {
+                    "name": "dueDate_tdt",
+                    "displayName": "dashboard.widgets.myTasks.table.header.dueDate",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                    "width": 70
+                },
+                {
+                    "name": "status_lcs",
+                    "displayName": "dashboard.widgets.myTasks.table.header.status",
+                    "headerCellFilter": "translate",
+                    "width": 100
+                },
+                {
+                    "name": "parent_number_lcs",
+                    "displayName": "dashboard.widgets.myTasks.table.header.caseId",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_id_s})\">{{COL_FIELD}}<\/a>",
+                    "width": 100
+                }
+            ]
+        },
+        {
+            "id": "newCases",
+            "title": "dashboard.comp.newCases.title",
+            "configurable": true,
+            "redirectSettings": {
+            }
+        },
+        {
+            "id": "casesByQueue",
+            "title": "dashboard.comp.casesByQueue.title",
+            "configurable": true,
+            "redirectSettings": {
+                "Intake": {
+                    "title": "dashboard.queues.intake",
+                    "state": "queues.queue",
+                    "params": {
+                        "name": "Intake"
+                    }
+                },
+                "Fulfill": {
+                    "title": "dashboard.queues.fulfill",
+                    "state": "queues.queue",
+                    "params": {
+                        "name": "Fulfill"
+                    }
+                },
+                "Approve": {
+                    "title": "dashboard.queues.approve",
+                    "state": "queues.queue",
+                    "params": {
+                        "name": "Approve"
+                    }
+                },
+                "General Counsel": {
+                    "title": "dashboard.queues.generalCounsel",
+                    "state": "queues.queue",
+                    "params": {
+                        "name": "General Counsel"
+                    }
+                },
+                "Billing": {
+                    "title": "dashboard.queues.billing",
+                    "state": "queues.queue",
+                    "params": {
+                        "name": "Billing"
+                    }
+                },
+                "Release": {
+                    "title": "dashboard.queues.release",
+                    "state": "queues.queue",
+                    "params": {
+                        "name": "Release"
+                    }
+                },
+                "Suspend": {
+                    "title": "dashboard.queues.suspend",
+                    "state": "queues.queue",
+                    "params": {
+                        "name": "Suspend"
+                    }
+                },
+                "Hold": {
+                    "title": "dashboard.queues.hold",
+                    "state": "queues.queue",
+                    "params": {
+                        "name": "Hold"
+                    }
+                },
+                "Appeal": {
+                    "title": "dashboard.queues.appeal",
+                    "state": "queues.queue",
+                    "params": {
+                        "name": "Appeal"
+                    }
+                }
+            }
+        },
+        {
+            "id": "userWebsites",
+            "title": "dashboard.widgets.userWebsites.title",
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                25
+            ],
+            "paginationPageSize": 5,
+            "rowHeight": "auto",
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "dashboard.widgets.userWebsites.table.header.name",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true,
+                    "width": 300
+                },
+                {
+                    "name": "url",
+                    "displayName": "dashboard.widgets.userWebsites.table.header.url",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true,
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.url}}</a>"
+                }
+            ]
+        }
+    ],
+    "modules": [
+        {
+            "name": "CASE",
+            "configName": "cases"
+        },
+        {
+            "name": "COMPLAINT",
+            "configName": "complaints"
+        },
+        {
+            "name": "COST",
+            "configName": "cost-tracking"
+        },
+        {
+            "name": "TIME",
+            "configName": "time-tracking"
+        },
+        {
+            "name": "TASK",
+            "configName": "tasks"
+        },
+        {
+            "name": "DOC_REPO",
+            "configName": "document-repository"
+        },
+        {
+            "name": "DOC_REPO",
+            "configName": "my-documents"
+        },
+        {
+            "name": "PERSON",
+            "configName": "people"
+        },
+        {
+            "name": "ORGANIZATION",
+            "configName": "organizations"
+        }
+    ],
+    "objectWidgets": [
+        "calendar",
+        "cost",
+        "details",
+        "docReview",
+        "parentDocs",
+        "attachments",
+        "documents",
+        "expenses",
+        "history",
+        "hoursSummary",
+        "locations",
+        "notes",
+        "participants",
+        "people",
+        "person",
+        "references",
+        "reworkDetails",
+        "signature",
+        "tasks",
+        "time",
+        "workflow",
+        "approvalRouting",
+        "pictures",
+        "addresses",
+        "phones",
+        "faxes",
+        "emails",
+        "aliases",
+        "organizations",
+        "urls",
+        "dbas",
+        "ids",
+        "complaints",
+        "cases",
+        "relOrganizations",
+        "tags",
+        "related",
+        "approvers"
+    ],
+    "structures": [
+        {
+            "name": "6-6",
+            "def": {
+                "rows": [
+                    {
+                        "columns": [
+                            {
+                                "styleClass": "col-md-6"
+                            },
+                            {
+                                "styleClass": "col-md-6"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "12",
+            "def": {
+                "rows": [
+                    {
+                        "columns": [
+                            {
+                                "styleClass": "col-md-12"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "4-4-4",
+            "def": {
+                "rows": [
+                    {
+                        "columns": [
+                            {
+                                "styleClass": "col-md-4"
+                            },
+                            {
+                                "styleClass": "col-md-4"
+                            },
+                            {
+                                "styleClass": "col-md-4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "4-8",
+            "def": {
+                "rows": [
+                    {
+                        "columns": [
+                            {
+                                "styleClass": "col-md-4",
+                                "widgets": []
+                            },
+                            {
+                                "styleClass": "col-md-8",
+                                "widgets": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "8-4",
+            "def": {
+                "rows": [
+                    {
+                        "columns": [
+                            {
+                                "styleClass": "col-md-8",
+                                "widgets": []
+                            },
+                            {
+                                "styleClass": "col-md-4",
+                                "widgets": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "locals": [
+        {
+            "iso": "de",
+            "translations": {
+                "ADF_COMMON_CLOSE": "Schließen",
+                "ADF_COMMON_DELETE": "Löschen",
+                "ADF_COMMON_TITLE": "Titel",
+                "ADF_COMMON_CANCEL": "Abbrechen",
+                "ADF_COMMON_APPLY": "Übernehmen",
+                "ADF_COMMON_EDIT_DASHBOARD": "Dashboard bearbeiten",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "Struktur",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "Neues Widget hinzufügen",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "Änderungen speichern",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "Editiermodus aktivieren",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "Änderungen rückgängig machen",
+                "ADF_WIDGET_ADD_HEADER": "Neues Widget hinzufügen",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "Bist du sicher, dass du dieses Widget löschen möchtest?",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "Widget Content neu laden",
+                "ADF_WIDGET_TOOLTIP_MOVE": "Widget-Speicherort ändern",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "Collapse widget",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "Expand Widget",
+                "ADF_WIDGET_TOOLTIP_EDIT": "Widget-Konfiguration bearbeiten",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "Fullscreen-Widget",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "Widget entfernen"
+            }
+        },
+        {
+            "iso": "en",
+            "translations": {
+                "ADF_COMMON_CLOSE": "Close",
+                "ADF_COMMON_DELETE": "Delete",
+                "ADF_COMMON_TITLE": "Title",
+                "ADF_COMMON_CANCEL": "Cancel",
+                "ADF_COMMON_APPLY": "Apply",
+                "ADF_COMMON_EDIT_DASHBOARD": "Edit dashboard",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "Structure",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "Add new widget",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "Save changes",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "Enable edit mode",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "Undo changes",
+                "ADF_WIDGET_ADD_HEADER": "Add new widget",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "Are you sure you want to delete this widget ?",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "Reload Widget Content",
+                "ADF_WIDGET_TOOLTIP_MOVE": "Change widget location",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "Collapse widget",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "Expand widget",
+                "ADF_WIDGET_TOOLTIP_EDIT": "Edit widget configuration",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "Fullscreen widget",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "Remove widget"
+            }
+        },
+        {
+            "iso": "en-IN",
+            "translations": {
+                "ADF_COMMON_CLOSE": "Close",
+                "ADF_COMMON_DELETE": "Delete",
+                "ADF_COMMON_TITLE": "Title",
+                "ADF_COMMON_CANCEL": "Cancel",
+                "ADF_COMMON_APPLY": "Apply",
+                "ADF_COMMON_EDIT_DASHBOARD": "Edit dashboard",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "Structure",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "Add new widget",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "Save changes",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "Enable edit mode",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "Undo changes",
+                "ADF_WIDGET_ADD_HEADER": "Add new widget",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "Are you sure you want to delete this widget ?",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "Reload Widget Content",
+                "ADF_WIDGET_TOOLTIP_MOVE": "Change widget location",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "Collapse widget",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "Expand widget",
+                "ADF_WIDGET_TOOLTIP_EDIT": "Edit widget configuration",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "Fullscreen widget",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "Remove widget"
+            }
+        },
+        {
+            "iso": "es",
+            "translations": {
+                "ADF_COMMON_CLOSE": "Cerrar",
+                "ADF_COMMON_DELETE": "Eliminar",
+                "ADF_COMMON_TITLE": "Título",
+                "ADF_COMMON_CANCEL": "Cancelar",
+                "ADF_COMMON_APPLY": "Aplicar",
+                "ADF_COMMON_EDIT_DASHBOARD": "Editar panel",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "Estructura",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "Añadir nuevo widget",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "Guardar cambios",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "Habilitar modo de edición",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "Deshacer cambios",
+                "ADF_WIDGET_ADD_HEADER": "Añadir nuevo widget",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "¿Está seguro de que desea eliminar este widget?",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "Recargar Contenido de Widget",
+                "ADF_WIDGET_TOOLTIP_MOVE": "Cambiar la ubicación del widget",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "Contraer widget",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "Expandir widget",
+                "ADF_WIDGET_TOOLTIP_EDIT": "Editar configuración de widget",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "Widget de pantalla completa",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "Eliminar widget"
+            }
+        },
+        {
+            "iso": "fr",
+            "translations": {
+                "ADF_COMMON_CLOSE": "Fermer",
+                "ADF_COMMON_DELETE": "Supprimer",
+                "ADF_COMMON_TITLE": "Titre",
+                "ADF_COMMON_CANCEL": "Annuler",
+                "ADF_COMMON_APPLY": "Appliquer",
+                "ADF_COMMON_EDIT_DASHBOARD": "Editer le tableau de bord",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "Structure",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "Ajouter un nouvel widget",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "Enregistrer les modifications",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "Activer le mode d'édition",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "Annuler les modifications",
+                "ADF_WIDGET_ADD_HEADER": "Ajouter un nouvel widget",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "Êtes-vous sûr de vouloir supprimer ce widget?",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "Rechargez le contenu du Widget",
+                "ADF_WIDGET_TOOLTIP_MOVE": "Modifier l'emplacement du widget",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "Collapse widget",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "Développer le widget",
+                "ADF_WIDGET_TOOLTIP_EDIT": "Modifier la configuration du widget",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "Widget en plein écran",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "Supprimer le widget"
+            }
+        },
+        {
+            "iso": "hi",
+            "translations": {
+                "ADF_COMMON_CLOSE": "बंद करें",
+                "ADF_COMMON_DELETE": "हटाएं",
+                "ADF_COMMON_TITLE": "शीर्षक",
+                "ADF_COMMON_CANCEL": "रद्द करें",
+                "ADF_COMMON_APPLY": "लागू करें",
+                "ADF_COMMON_EDIT_DASHBOARD": "डैशबोर्ड संपादित करें",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "संरचना",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "नया विजेट जोड़ें",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "परिवर्तन सहेजें",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "संपादन मोड सक्षम करें",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "परिवर्तन पूर्ववत करें",
+                "ADF_WIDGET_ADD_HEADER": "नया विजेट जोड़ें",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "क्या आप वाकई इस विजेट को हटाना चाहते हैं?",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "विजेट सामग्री पुनः लोड करें",
+                "ADF_WIDGET_TOOLTIP_MOVE": "विजेट स्थान बदलें",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "विजेट संक्षिप्त करें",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "विजेट विस्तृत करें",
+                "ADF_WIDGET_TOOLTIP_EDIT": "विजेट विन्यास संपादित करें",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "पूर्णस्क्रीन विजेट",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "विजेट निकालें"
+            }
+        },
+        {
+            "iso": "ja",
+            "translations": {
+                "ADF_COMMON_CLOSE": "閉じる",
+                "ADF_COMMON_DELETE": "削除",
+                "ADF_COMMON_TITLE": "Title",
+                "ADF_COMMON_CANCEL": "キャンセル",
+                "ADF_COMMON_APPLY": "適用",
+                "ADF_COMMON_EDIT_DASHBOARD": "ダッシュボードの編集",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "構造",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "新しいウィジェットを追加",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "変更を保存する",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "編集モードを有効にする",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "変更を元に戻す",
+                "ADF_WIDGET_ADD_HEADER": "新しいウィジェットの追加",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "このウィジェットを削除してもよろしいですか？",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "リロードウィジェットコンテンツ",
+                "ADF_WIDGET_TOOLTIP_MOVE": "ウィジェットの場所を変更する",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "折りたたみウィジェット",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "展開ウィジェット",
+                "ADF_WIDGET_TOOLTIP_EDIT": "ウィジェット設定の編集",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "フルスクリーンウィジェット",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "ウィジェットの削除"
+            }
+        },
+        {
+            "iso": "pt",
+            "translations": {
+                "ADF_COMMON_CLOSE": "Fechar",
+                "ADF_COMMON_DELETE": "Apagar",
+                "ADF_COMMON_TITLE": "Título",
+                "ADF_COMMON_CANCEL": "Cancelar",
+                "ADF_COMMON_APPLY": "Aplicar",
+                "ADF_COMMON_EDIT_DASHBOARD": "Editar painel",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "Estrutura",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "Adicionar novo widget",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "Salvar alterações",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "Ativar modo de edição",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "Desfazer alterações",
+                "ADF_WIDGET_ADD_HEADER": "Adicionar novo widget",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "Tem certeza de que deseja excluir este widget?",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "Recarregar Conteúdo Widget",
+                "ADF_WIDGET_TOOLTIP_MOVE": "Alterar local do widget",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "Recolher widget",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "Expandir widget",
+                "ADF_WIDGET_TOOLTIP_EDIT": "Editar configuração do widget",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "widget de tela cheia",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "Remover widget"
+            }
+        },
+        {
+            "iso": "ru",
+            "translations": {
+                "ADF_COMMON_CLOSE": "Закрыть",
+                "ADF_COMMON_DELETE": "Удалить",
+                "ADF_COMMON_TITLE": "Название",
+                "ADF_COMMON_CANCEL": "Отмена",
+                "ADF_COMMON_APPLY": "Применить",
+                "ADF_COMMON_EDIT_DASHBOARD": "Изменить панель мониторинга",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "Структура",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "Добавить новый виджет",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "Сохранить изменения",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "Включить режим редактирования",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "Отменить изменения",
+                "ADF_WIDGET_ADD_HEADER": "Добавить новый виджет",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "Вы действительно хотите удалить этот виджет?",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "Обновить содержимое виджета",
+                "ADF_WIDGET_TOOLTIP_MOVE": "Изменить расположение виджетов",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "Свернуть виджетов",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "Развернуть виджет",
+                "ADF_WIDGET_TOOLTIP_EDIT": "Редактировать конфигурацию виджетов",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "Полноэкранный виджет",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "Удалить виджет"
+            }
+        },
+        {
+            "iso": "zh-CN",
+            "translations": {
+                "ADF_COMMON_CLOSE": "关闭",
+                "ADF_COMMON_DELETE": "删除",
+                "ADF_COMMON_TITLE": "标题",
+                "ADF_COMMON_CANCEL": "取消",
+                "ADF_COMMON_APPLY": "应用",
+                "ADF_COMMON_EDIT_DASHBOARD": "编辑仪表板",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "结构",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "添加新小部件",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "保存更改",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "启用编辑模式",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "撤消更改",
+                "ADF_WIDGET_ADD_HEADER": "添加新小部件",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "您确定要删除此小部件吗？",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "重新加载小部件内容",
+                "ADF_WIDGET_TOOLTIP_MOVE": "更改小部件位置",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "折叠窗口小部件",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "展开小部件",
+                "ADF_WIDGET_TOOLTIP_EDIT": "编辑小部件配置",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "全屏幕小部件",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "删除小部件"
+            }
+        },
+        {
+            "iso": "zh-TW",
+            "translations": {
+                "ADF_COMMON_CLOSE": "關閉",
+                "ADF_COMMON_DELETE": "刪除",
+                "ADF_COMMON_TITLE": "標題",
+                "ADF_COMMON_CANCEL": "取消",
+                "ADF_COMMON_APPLY": "應用",
+                "ADF_COMMON_EDIT_DASHBOARD": "編輯儀表板",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "結構",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "添加新小部件",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "保存更改",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "啟用編輯模式",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "撤消更改",
+                "ADF_WIDGET_ADD_HEADER": "添加新小部件",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "您確定要刪除此小部件嗎？",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "重新加載小部件內容",
+                "ADF_WIDGET_TOOLTIP_MOVE": "更改小部件位置",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "折疊窗口小部件",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "展開小部件",
+                "ADF_WIDGET_TOOLTIP_EDIT": "編輯小部件配置",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "全屏幕小部件",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "刪除小部件"
+            }
+        }
+    ]
+}
