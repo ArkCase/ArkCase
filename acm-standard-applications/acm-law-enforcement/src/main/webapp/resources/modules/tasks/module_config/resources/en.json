@@ -23,7 +23,8 @@
         "state.label": "State",
         "overdue.tooltip": "Task is Overdue",
         "deadline.tooltip": "Deadline is Approaching",
-        "owningGroup.label": "Owning Group"
+        "owningGroup.label": "Owning Group",
+        "alertMessage": "Due date must be after the start date "
     },
     "tasks.comp.parentinfo": {
         "title": "Parent Info",

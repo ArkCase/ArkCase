@@ -1,8 +1,8 @@
-package com.armedia.acm.services.users.model;
+package com.armedia.acm.auth;
 
 /*-
  * #%L
- * ACM Service: Users
+ * ACM Service: User Login and Authentication
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,7 +27,18 @@ package com.armedia.acm.services.users.model;
  * #L%
  */
 
-public enum AcmUserRoleState
+public class AcmGrantedGroupAuthority extends AcmGrantedAuthority
 {
-    VALID, INVALID
+    private final Long groupId;
+
+    public AcmGrantedGroupAuthority(String authority, Long authorityId)
+    {
+        super(authority);
+        groupId = authorityId;
+    }
+
+    public Long getGroupId()
+    {
+        return groupId;
+    }
 }

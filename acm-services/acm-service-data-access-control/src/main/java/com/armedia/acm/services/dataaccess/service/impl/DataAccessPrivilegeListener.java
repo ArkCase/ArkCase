@@ -256,4 +256,5 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
     {
         this.documentACLEnabled = documentACLEnabled;
     }
+
 }

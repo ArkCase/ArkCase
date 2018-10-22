@@ -22,7 +22,8 @@
         "priority.label": "Priorität",
         "assignee.label": "Zugewiesen",
         "owningGroup.label": "Besitzgruppe",
-        "dueDate.label": "Fälligkeitsdatum"
+        "dueDate.label": "Fälligkeitsdatum",
+        "alertMessage": "de_Due date must be after the create date "
     },
     "complaints.comp.actions": {
         "title": "Aktionen",

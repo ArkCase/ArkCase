@@ -2,8 +2,9 @@
 
 angular.module('document-details').controller(
         'DocumentDetailsController',
-        [ '$scope', '$stateParams', '$sce', '$q', '$timeout', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Helper.LocaleService', 'Admin.TranscriptionManagementService', 'MessageService', 'UtilService', '$log',
-                function($scope, $stateParams, $sce, $q, $timeout, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, $log) {
+        [ '$rootScope', '$scope', '$stateParams', '$sce', '$q', '$timeout', '$window', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Helper.LocaleService', 'Admin.TranscriptionManagementService', 'MessageService', 'UtilService', 'Util.TimerService',
+                'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate',
+                function($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate) {
 
                     new LocaleHelper.Locale({
                         scope: $scope
@@ -17,7 +18,7 @@ angular.module('document-details').controller(
                         $scope.viewerOnly = false;
                     };
                     $scope.checkEscape = function(event) {
-                        if (27 == event.keyCode) { //27 is Escape key code
+                        if (27 == event.keyCode) { // 27 is Escape key code
                             $scope.viewerOnly = false;
                         }
                     };
@@ -81,7 +82,7 @@ angular.module('document-details').controller(
                             }
                         });
 
-                        //color the status
+                        // color the status
                         $scope.colorTranscribeStatus = function() {
                             switch ($scope.transcribeObjectModel.status) {
                             case 'QUEUED':
@@ -129,11 +130,11 @@ angular.module('document-details').controller(
                     }
 
                     /**
-                     * Builds the snowbound url based on the parameters passed into the controller state and opens the
-                     * specified document in an iframe which points to snowbound
+                     * Builds the snowbound url based on the parameters passed into the controller state and opens the specified document in
+                     * an iframe which points to snowbound
                      */
                     $scope.openSnowboundViewer = function() {
-                        var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.fileInfo);
+                        var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.fileInfo, !$scope.editingMode);
                         $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
                     };
 
@@ -178,12 +179,13 @@ angular.module('document-details').controller(
                         $scope.userId = data[1].userId;
                         $scope.userList = data[2];
                         $scope.ecmFileProperties = data[3];
+                        $scope.editingMode = !$scope.ecmFileProperties['ecm.viewer.snowbound.readonly.initialState'];
                         $scope.ecmFile = data[4];
                         $scope.ecmFileEvents = data[5];
                         $scope.ecmFileParticipants = data[6];
                         $scope.formsConfig = data[7];
                         $scope.transcriptionConfiguration = data[8];
-                        
+
                         // default view == snowbound
                         $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
 
@@ -201,10 +203,7 @@ angular.module('document-details').controller(
                             $scope.fileType = $scope.ecmFile.fileType;
                         }
 
-                        $scope.mediaType = $scope.ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 ? "video" : 
-                            ($scope.ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? "audio" : 
-                                $scope.ecmFile.fileActiveVersionMimeType.indexOf("application/pdf") === 0 ? "pdf" :
-                                "other");
+                        $scope.mediaType = $scope.ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 ? "video" : ($scope.ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? "audio" : $scope.ecmFile.fileActiveVersionMimeType.indexOf("application/pdf") === 0 ? "pdf" : "other");
 
                         if ($scope.mediaType === "video" || $scope.mediaType === "audio") {
                             $scope.config = {
@@ -222,12 +221,11 @@ angular.module('document-details').controller(
                             $scope.view = "modules/document-details/views/document-viewer-videogular.client.view.html";
                         } else if ($scope.mediaType === "pdf" && "pdfjs" === $scope.ecmFileProperties['ecm.viewer.pdfViewer']) {
                             $scope.config = {
-                                    src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId)
-                                };
+                                src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId)
+                            };
                             $scope.showPdfJs = true;
                             $scope.view = "modules/document-details/views/document-viewer-pdfjs.client.view.html";
-                        }
-                        else {
+                        } else {
                             // Opens the selected document in the snowbound viewer
                             $scope.openSnowboundViewer();
                         }
@@ -238,21 +236,71 @@ angular.module('document-details').controller(
                     $scope.onPlayerReady = function(API) {
                         $scope.videoAPI = API;
                     }
+
+                    $scope.enableEditing = function() {
+                        ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(function(lockedFile) {
+                            $scope.editingMode = true;
+                            $scope.openSnowboundViewer();
+                            
+                            // count user idle time. When user is idle for more then 1 minute, don't acquire lock
+                            $scope._idleSecondsCounter = 0;
+                            document.onclick = function() {
+                                $scope._idleSecondsCounter = 0;
+                            };
+                            document.onmousemove = function() {
+                                $scope._idleSecondsCounter = 0;
+                            };
+                            document.onkeypress = function() {
+                                $scope._idleSecondsCounter = 0;
+                            };                            
+                            function incrementIdleSecondsCounter() {
+                                $scope._idleSecondsCounter++;
+                            }
+                            window.setInterval(incrementIdleSecondsCounter, 1000);
+                            
+                            // Refresh editing lock on timer
+                            UtilTimerService.useTimer('refreshFileEditingLock', 60000 // every 1 minute
+                            , function() {
+                                if ($scope._idleSecondsCounter <= 60) {
+                                    ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(undefined, function(errorMessage) {
+                                        MessageService.error(errorMessage.data);
+                                    });
+                                }
+                                return true;
+                            });
+                        }, function(errorMessage) {
+                            MessageService.error(errorMessage.data);
+                        });
+
+                    }
+
+                    // Release editing lock on window unload, if acquired
+                    $window.addEventListener('beforeunload', function() {
+                        if ($scope.editingMode) {
+                            ObjectLockingService.unlockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE);
+                        }
+                    });
+
+                    $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function() {
+                        DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
+                            $scope.openSnowboundViewer();
+                        }); 
+                    });
                 } ]);
 
-
 /**
- * 2018-06-01 David Miller.  This block is needed to tell the PDF.js angular module, where the PDF.js 
- * library is.  Without this, on minified systems the PDF.js viewer will not work.  I copied this from the 
- * project web page, https://github.com/legalthings/angular-pdfjs-viewer#advanced-configuration.
+ * 2018-06-01 David Miller. This block is needed to tell the PDF.js angular module, where the PDF.js library is. Without this, on minified
+ * systems the PDF.js viewer will not work. I copied this from the project web page,
+ * https://github.com/legalthings/angular-pdfjs-viewer#advanced-configuration.
+ * 
  * @param pdfjsViewerConfigProvider
  * @returns
  */
-angular.module('document-details').config(function(pdfjsViewerConfigProvider)   {
+angular.module('document-details').config(function(pdfjsViewerConfigProvider) {
     pdfjsViewerConfigProvider.setWorkerSrc("lib/pdf.js-viewer/pdf.worker.js");
     pdfjsViewerConfigProvider.setCmapDir("lib/pdf.js-viewer/cmaps");
     pdfjsViewerConfigProvider.setImageDir("lib/pdf.js-viewer/images");
-    
-    //pdfjsViewerConfigProvider.disableWorker();
-    pdfjsViewerConfigProvider.setVerbosity("infos");  // "errors", "warnings" or "infos"
-  });
+
+    // pdfjsViewerConfigProvider.disableWorker();
+    pdfjsViewerConfigProvider.setVerbosity("infos"); // "errors", "warnings" or "infos"
+});

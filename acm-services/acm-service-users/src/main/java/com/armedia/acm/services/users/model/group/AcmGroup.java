@@ -42,11 +42,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -72,6 +74,10 @@ import java.util.stream.Stream;
 public class AcmGroup implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = -2729731595684630823L;
+
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, fetch = FetchType.LAZY)
+    @JoinColumn(name = "cm_identifier", referencedColumnName = "cm_id", nullable = false)
+    private AcmGroupIdentifier identifier = new AcmGroupIdentifier();
 
     @Id
     @Column(name = "cm_group_name")
@@ -237,6 +243,12 @@ public class AcmGroup implements Serializable, AcmEntity
     {
         memberOfGroups.forEach(memberOfGroup -> memberOfGroup.removeGroupMember(this));
         memberOfGroups.clear();
+    }
+
+    @JsonIgnore
+    public Long getIdentifier()
+    {
+        return identifier.getId();
     }
 
     public String getName()

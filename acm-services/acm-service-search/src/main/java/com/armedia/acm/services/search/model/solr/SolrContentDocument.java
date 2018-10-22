@@ -67,8 +67,14 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
     {
         Map<String, Object> values = new HashMap<>();
 
-        listToUrlValues(values, getAllow_acl_ss(), "allow_acl_ss");
-        listToUrlValues(values, getDeny_acl_ss(), "deny_acl_ss");
+        listToUrlValues(values, getAllow_group_ls(), "allow_group_ls");
+        listToUrlValues(values, getDeny_group_ls(), "deny_group_ls");
+        listToUrlValues(values, getAllow_user_ls(), "allow_user_ls");
+        listToUrlValues(values, getDeny_user_ls(), "deny_user_ls");
+        listToUrlValues(values, getParent_allow_group_ls(), "parent_allow_group_ls");
+        listToUrlValues(values, getParent_deny_group_ls(), "parent_deny_group_ls");
+        listToUrlValues(values, getParent_allow_user_ls(), "parent_allow_user_ls");
+        listToUrlValues(values, getParent_deny_user_ls(), "parent_deny_user_ls");
 
         values.put("literal.hidden_b", isHidden_b());
         values.put("literal.parent_ref_s", getParent_ref_s());
@@ -114,14 +120,16 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
      */
     public String buildUrlTemplate()
     {
-        final List<String> multivalueProperties = Arrays.asList("literal.allow_acl_ss", "literal.deny_acl_ss");
+        final List<String> multiValueProperties = Arrays.asList("literal.allow_user_ls", "literal.deny_user_ls",
+                "literal.allow_group_ls", "literal.deny_group_ls", "literal.parent_allow_group_ls", "literal.parent_deny_group_ls",
+                "literal.parent_allow_user_ls", "literal.parent_deny_user_ls");
         return buildUrlValues().keySet().stream().
-        // Solr multivalued elements are represented in the buildUrlValues map as e.g. "literal.allow_acl_ss.0",
-        // "literal.deny_acl_ss.1".
-        // We want the URL template to be e.g. "literal.allow_acl_ss={literal.allow_acl_ss.0}",
-        // "literal.deny_acl_ss={literal.deny_acl_ss.1"
+        // Solr multivalued elements are represented in the buildUrlValues map as e.g. "literal.allow_group_ls.0",
+        // "literal.deny_group_ls.1".
+        // We want the URL template to be e.g. "literal.allow_group_ls={literal.allow_group_ls.0}",
+        // "literal.deny_group_ls={literal.deny_group_ls.1}"
                 map(k -> String.format("%s={%s}",
-                        multivalueProperties.contains(StringUtils.substringBeforeLast(k, ".")) ? StringUtils.substringBeforeLast(k, ".")
+                        multiValueProperties.contains(StringUtils.substringBeforeLast(k, ".")) ? StringUtils.substringBeforeLast(k, ".")
                                 : k,
                         k))
                 .collect(Collectors.joining("&"));
@@ -136,31 +144,62 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
     @Deprecated
     public String getUrl()
     {
-        String url = "literal.allow_acl_ss=" + (getAllow_acl_ss() == null ? null : String.join("&literal.allow_acl_ss=", getAllow_acl_ss()))
-                +
-                "&literal.deny_acl_ss=" + (getDeny_acl_ss() == null ? null : String.join("&literal.deny_acl_ss=", getDeny_acl_ss())) +
-                "&literal.hidden_b=" + isHidden_b() +
-                "&literal.parent_ref_s=" + encode(getParent_ref_s()) +
-                "&literal.status_lcs=" + encode(getStatus_lcs()) +
-                "&literal.protected_object_b=" + isProtected_object_b() +
-                "&literal.public_doc_b=" + isPublic_doc_b() +
-                "&literal.id=" + encode(getId()) +
-                "&literal.object_type_s=" + encode(getObject_type_s()) +
-                "&literal.object_id_s=" + encode(getObject_id_s()) +
-                "&literal.modified_date_tdt=" + getModified_date_tdt() +
-                "&literal.modifier_lcs=" + encode(getModifier_lcs()) +
-                "&literal.create_date_tdt=" + getCreate_date_tdt() +
-                "&literal.creator_lcs=" + encode(getCreator_lcs()) +
-                "&literal.name=" + encode(getName()) +
-                "&literal.parent_id_s=" + encode(getParent_id_s()) +
-                "&literal.parent_type_s=" + encode(getParent_type_s()) +
-                "&literal.parent_number_lcs=" + encode(getParent_number_lcs()) +
-                "&literal.title_parseable=" + encode(getTitle_parseable()) +
-                "&literal.title_parseable_lcs=" + encode(getTitle_parseable_lcs()) +
-                "&literal.assignee_full_name_lcs=" + encode(getAssignee_full_name_lcs()) +
-                "&literal.type_lcs=" + encode(getType_lcs()) +
-                "&literal.ext_s=" + encode(getExt_s()) +
-                "&literal.mime_type_s=" + encode(getMime_type_s());
+        StringBuilder url = new StringBuilder(
+                "&literal.allow_user_ls="
+                        + (getAllow_user_ls() == null ? null
+                                : getAllow_user_ls().stream().map(Object::toString)
+                                        .collect(Collectors.joining("&literal.allow_user_ls=")))
+                        + "&literal.deny_user_ls="
+                        + (getDeny_user_ls() == null ? null
+                                : getDeny_user_ls().stream().map(Object::toString)
+                                        .collect(Collectors.joining("&literal.deny_user_ls=")))
+                        + "&literal.allow_group_ls="
+                        + (getAllow_group_ls() == null ? null
+                                : getAllow_group_ls().stream().map(Object::toString)
+                                        .collect(Collectors.joining("&literal.allow_group_ls")))
+                        + "&literal.deny_group_ls="
+                        + (getDeny_group_ls() == null ? null
+                                : getDeny_group_ls().stream().map(Object::toString)
+                                        .collect(Collectors.joining("&literal.deny_group_ls")))
+                        + "&literal.parent_allow_group_ls="
+                        + (getParent_allow_group_ls() == null ? null
+                                : getParent_allow_group_ls().stream().map(Object::toString)
+                                        .collect(Collectors.joining("&literal.parent_allow_group_ls")))
+                        + "&literal.parent_deny_group_ls="
+                        + (getParent_deny_group_ls() == null ? null
+                                : getParent_deny_group_ls().stream().map(Object::toString)
+                                        .collect(Collectors.joining("&literal.parent_deny_group_ls")))
+                        + "&literal.parent_allow_user_ls="
+                        + (getParent_allow_user_ls() == null ? null
+                                : getParent_allow_user_ls().stream().map(Object::toString)
+                                        .collect(Collectors.joining("&literal.parent_allow_user_ls")))
+                        + "&literal.parent_deny_user_ls="
+                        + (getParent_deny_user_ls() == null ? null
+                                : getParent_deny_user_ls().stream().map(Object::toString)
+                                        .collect(Collectors.joining("&literal.parent_deny_user_ls")))
+                        +
+                        "&literal.hidden_b=" + isHidden_b() +
+                        "&literal.parent_ref_s=" + encode(getParent_ref_s()) +
+                        "&literal.status_lcs=" + encode(getStatus_lcs()) +
+                        "&literal.protected_object_b=" + isProtected_object_b() +
+                        "&literal.public_doc_b=" + isPublic_doc_b() +
+                        "&literal.id=" + encode(getId()) +
+                        "&literal.object_type_s=" + encode(getObject_type_s()) +
+                        "&literal.object_id_s=" + encode(getObject_id_s()) +
+                        "&literal.modified_date_tdt=" + getModified_date_tdt() +
+                        "&literal.modifier_lcs=" + encode(getModifier_lcs()) +
+                        "&literal.create_date_tdt=" + getCreate_date_tdt() +
+                        "&literal.creator_lcs=" + encode(getCreator_lcs()) +
+                        "&literal.name=" + encode(getName()) +
+                        "&literal.parent_id_s=" + encode(getParent_id_s()) +
+                        "&literal.parent_type_s=" + encode(getParent_type_s()) +
+                        "&literal.parent_number_lcs=" + encode(getParent_number_lcs()) +
+                        "&literal.title_parseable=" + encode(getTitle_parseable()) +
+                        "&literal.title_parseable_lcs=" + encode(getTitle_parseable_lcs()) +
+                        "&literal.assignee_full_name_lcs=" + encode(getAssignee_full_name_lcs()) +
+                        "&literal.type_lcs=" + encode(getType_lcs()) +
+                        "&literal.ext_s=" + encode(getExt_s()) +
+                        "&literal.mime_type_s=" + encode(getMime_type_s()));
 
         if (getAdditionalProperties() != null)
         {
@@ -169,13 +208,13 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
                 if (getSkipAdditionalPropertiesInURL() != null && !getSkipAdditionalPropertiesInURL().contains(entry.getKey()))
                 {
 
-                    url += "&literal." + entry.getKey() + "="
-                            + (entry.getValue() instanceof String ? encode((String) entry.getValue()) : entry.getValue());
+                    url.append("&literal.").append(entry.getKey()).append("=")
+                            .append(entry.getValue() instanceof String ? encode((String) entry.getValue()) : entry.getValue());
                 }
             }
         }
 
-        return url;
+        return url.toString();
     }
 
     private String encode(String str)

@@ -976,7 +976,8 @@
                     "name": "rate",
                     "displayName": "admin.forms.timesheetConfiguration.rate",
                     "visible": true,
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.rate | currency}}</div>"
                 },
                 {
                     "name": "active",
