@@ -202,26 +202,35 @@
                 <div class="panel-body">
                     <div class="row" ng-repeat="approver in timesheet.participants">
                         <div class="col-sm-6 form-group">
-                            <input type="text" ng-model="approver.participantFullName" ng-click="searchApprover($index)"
-                                    class="input-md form-control"
-                                    placeholder="{{ 'timeTracking.comp.newTimesheet.approver.placeholder' | translate }}" required
-                                    readonly />
+                            <!--<input type="text" ng-model="approver.participantFullName" ng-click="searchApprover($index)"-->
+                                    <!--class="input-md form-control"-->
+                                    <!--placeholder="{{ 'timeTracking.comp.newTimesheet.approver.placeholder' | translate }}" required-->
+                                    <!--readonly />-->
+
+                            <label class="control-label">&nbsp;</label>
+                            <input type="text" ng-model="approver.participantFullName" class="input-md form-control"
+                                   placeholder="{{ 'timeTracking.comp.newTimesheet.approver.placeholder' | translate }}"
+                                   ng-click="userOrGroupSearch($index)" readonly>
                         </div>
-                        <div class="col-sm-2 form-group">
-                            <div class="pull-left">
-                                <button type="button" class="btn btn-link form-control" ng-click="addApprover();"
-                                        ng-disabled="!approver.participantFullName" ng-show="$last"
-                                        title="{{'timeTracking.comp.newTimesheet.approver.addBtn' | translate}}">
-                                    <i class="fa fa-plus text-success"></i>
-                                </button>
-                            </div>
-                            <div class="pull-right">
-                                <button type="button" class="btn btn-link form-control" ng-click="removeApprover(approver)"
-                                        ng-show="!$first" title="{{'timeTracking.comp.newTimesheet.approver.removeBtn' | translate}}">
-                                    <i class="fa fa-minus text-danger"></i>
-                                </button>
-                            </div>
+                        <div class="col-sm-6 form-group">
+                            <label for="owningGroup" translate> timeTracking.comp.newTimesheet.approver.owningGroup</label>
+                            <input type="text" id="owningGroup" ng-disabled="true" ng-model="groupName" class="input-md form-control">
                         </div>
+                        <!--<div class="col-sm-2 form-group">-->
+                            <!--<div class="pull-left">-->
+                                <!--<button type="button" class="btn btn-link form-control" ng-click="addApprover();"-->
+                                        <!--ng-disabled="!approver.participantFullName" ng-show="$last"-->
+                                        <!--title="{{'timeTracking.comp.newTimesheet.approver.addBtn' | translate}}">-->
+                                    <!--<i class="fa fa-plus text-success"></i>-->
+                                <!--</button>-->
+                            <!--</div>-->
+                            <!--<div class="pull-right">-->
+                                <!--<button type="button" class="btn btn-link form-control" ng-click="removeApprover(approver)"-->
+                                        <!--ng-show="!$first" title="{{'timeTracking.comp.newTimesheet.approver.removeBtn' | translate}}">-->
+                                    <!--<i class="fa fa-minus text-danger"></i>-->
+                                <!--</button>-->
+                            <!--</div>-->
+                        <!--</div>-->
                     </div>
                 </div>
             </div>
