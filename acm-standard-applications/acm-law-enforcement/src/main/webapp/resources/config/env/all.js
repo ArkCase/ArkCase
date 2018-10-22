@@ -13,8 +13,7 @@ module.exports = {
     },
 
     modules : {
-        defaultModulesFolder : 'modules/',
-        customModulesFolder : 'custom_modules/'
+        defaultModulesFolder : 'modules/'
     },
 
     homePage : {
@@ -68,19 +67,20 @@ module.exports = {
                     'lib/pdf.js-viewer/pdf.js',
                     'lib/angular-pdfjs-viewer/dist/angular-pdfjs-viewer.js']
         },
-        css : [ 'assets/css/application.css', 'modules/**/css/*.css', 'custom_modules/**/css/*.css', 'assets/css/arkcase-extension.css',
-                'custom_assets/css/arkcase-extension.css' ],
-        scss : [ 'modules/**/scss/*.scss', 'custom_modules/**/scss/*.scss' ],
+        css : [ 'assets/css/application.css', 'modules/**/css/*.css', 'assets/css/arkcase-extension.css'],
+        scss : [ 'modules/**/scss/*.scss'],
         js : [ 'config.js', 'application.js', 'scripts/*/**/*.js', 'services/*.js', // Includes services/services.client.module.js file only
         'directives/*.js', // Includes directives/directives.client.js file only
         'filters/*.js', 'filters/*/*.js' ],
         distJs : [ 'assets/dist/vendors.min.js', 'assets/dist/application.min.js' ],
         distCss : [ 'assets/dist/application.min.css' ], // Can't use this, because CSS has fonts and images dependencies
         jsModules : [ 'modules/*/*.js', 'modules/*/**/*.js' ],
-        jsCustomModules : [ 'custom_modules/*/*.js', 'custom_modules/*/**/*.js' ],
         jsDirectives : [ 'directives/*/*.js', 'directives/*/**/*.js' ],
-        jsCustomDirectives : [ 'custom_directives/*/*.js', 'custom_directives/*/**/*.js' ],
         jsServices : [ 'services/*/*.js', 'services/*/**/*.js' ],
-        jsCustomServices : [ 'custom_services/*/*.js', 'custom_services/*/**/*.js' ]
+        jsCustomModules : [ '_modules/*/*.js', '_modules/*/**/*.js' ],
+        jsCustomDirectives : [ '_directives/*/*.js', '_directives/*/**/*.js' ],
+        jsCustomServices : [ '_services/*/*.js', '_services/*/**/*.js' ],
+        jsCustomCss: [ '_modules/**/css/*.css', '_assets/css/arkcase-extension.css'],
+        jsCustomScss: ['_modules/**/scss/*.scss']
     }
 };

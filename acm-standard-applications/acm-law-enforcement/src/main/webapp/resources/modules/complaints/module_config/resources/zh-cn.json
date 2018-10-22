@@ -22,7 +22,8 @@
         "priority.label": "优先级别",
         "assignee.label": "指定人员",
         "owningGroup.label": "所属群体",
-        "dueDate.label": "到期日期"
+        "dueDate.label": "到期日期",
+        "alertMessage": "zh-cn_Due date must be after the create date "
     },
     "complaints.comp.actions": {
         "title": "行动",

@@ -35,6 +35,7 @@
     <bean id="documentRepositoryToSolrTransformer"
         class="com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryToSolrTransformer">
         <property name="userDao" ref="userJpaDao"/>
+       <property name="fileAclSolrUpdateHelper" ref="fileAclSolrUpdateHelper"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
         <property name="documentRepositoryDao" ref="documentRepositoryDao"/>
     </bean>

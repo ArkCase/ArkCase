@@ -21,9 +21,17 @@ angular.module('admin').controller('Admin.LoginConfigController',
                     ApplicationSettingsService.setProperty(ApplicationSettingsService.PROPERTIES.IDLE_LIMIT, $scope.idleLimit);
                     saved.idleLimit = $scope.idleLimit;
 
-                    DialogService.alert($translate.instant("admin.application.login.config.inform")).then(function() {
-                        //success
-                        messageService.succsessAction();
+                    //change for AFDP-6803
+                    bootbox.alert({
+                        message: $translate.instant("admin.application.login.config.inform"),
+                        buttons: {
+                            ok:{
+                                label: $translate.instant("admin.application.login.config.dialog.OKBtn")
+                            },
+                        },
+                        callback: function(result){
+                            messageService.succsessAction();
+                        }
                     });
                 }
             }

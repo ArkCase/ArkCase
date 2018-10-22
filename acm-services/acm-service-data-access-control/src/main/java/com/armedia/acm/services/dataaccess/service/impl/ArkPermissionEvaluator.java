@@ -1,6 +1,5 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.objectonverter.json.JSONMarshaller;
@@ -20,16 +19,14 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.metamodel.EntityType;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -104,8 +101,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
     private SpringContextHolder springContextHolder;
     private JSONMarshaller jsonMarshaller;
     private Set<String> assignedObjectTypes;
-    @PersistenceContext
-    private EntityManager entityManager;
+    private String packagesToScan;
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission)
@@ -118,7 +114,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
 
         if (!Long.class.isAssignableFrom(targetId.getClass()) && !List.class.isAssignableFrom(targetId.getClass()))
         {
-            log.error("The id type [] is not a List - denying access", targetId.getClass().getName());
+            log.error("The id type [{}] is not a List - denying access", targetId.getClass().getName());
             return false;
         }
 
@@ -341,14 +337,19 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
         try
         {
             boolean shouldIncludeACLFilter = isAssignedObjectType(objectType);
+            boolean filterParent = true;
+            boolean filterSubscriptionEvents = false;
+            boolean indent = true;
+
             // if the Solr search returns the object, the user has read access to it.
             String result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
-                    0, 1, "id asc", true, objectType, true,
-                    false, SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter);
+                    0, 1, "id asc", indent, objectType, filterParent,
+                    filterSubscriptionEvents, SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter);
+
             if (result.contains("numFound\":0"))
             {
                 result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0,
-                        1, "id asc", true, objectType, true, false,
+                        1, "id asc", indent, objectType, filterParent, filterSubscriptionEvents,
                         SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter);
             }
             return result;
@@ -476,22 +477,37 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
         return assignedObjectTypes;
     }
 
+    public String getPackagesToScan()
+    {
+        return packagesToScan;
+    }
+
+    public void setPackagesToScan(String packagesToScan)
+    {
+        this.packagesToScan = packagesToScan;
+    }
+
     @Override
     public void afterPropertiesSet()
     {
-        Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
+        Object[] packages = Arrays.stream(packagesToScan.split(","))
+                .map(it -> StringUtils.substringBeforeLast(it, ".*"))
+                .toArray();
 
-        assignedObjectTypes = entities.stream()
-                .filter(entityType -> AcmAssignedObject.class.isAssignableFrom(entityType.getJavaType()))
-                .peek(entityType -> log.debug("Found entity [{}]", entityType.getJavaType().getSimpleName()))
+        Reflections reflections = new Reflections(packages);
+
+        Set<Class<? extends AcmAssignedObject>> acmObjects = reflections.getSubTypesOf(AcmAssignedObject.class);
+
+        assignedObjectTypes = acmObjects.stream()
+                .peek(it -> log.debug("Found assigned object [{}]", it.getSimpleName()))
                 .map(it -> {
                     try
                     {
-                        return ((AcmObject) it.getJavaType().newInstance()).getObjectType();
+                        return it.newInstance().getObjectType();
                     }
                     catch (InstantiationException | IllegalAccessException e)
                     {
-                        log.warn("Can not determine object type for class [{}]", it.getJavaType().getSimpleName());
+                        log.warn("Can not determine object type for class [{}]", it.getSimpleName());
                     }
                     return null;
                 }).filter(Objects::nonNull)

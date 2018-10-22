@@ -72,7 +72,7 @@ module.exports = function(grunt) {
         },
 
         /////////////////////////////////////
-        // Developemnet tasks
+        // Development tasks
         /////////////////////////////////////
         concurrent : {
             default1 : {

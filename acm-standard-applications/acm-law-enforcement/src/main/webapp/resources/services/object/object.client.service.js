@@ -57,6 +57,17 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
         gotoState: function(objType, objId) {
             $log.warn("WARNING: Object.ObjectService.gotoState() is phasing out. Please use Object.ObjectService.showObject() instead");
             this.showObject(objType, objId);
+        },
+
+        transitionToState: function(objType, objId, state) {
+            var params = {
+                id: objId,
+                type: objType
+            };
+            $state.transitionTo(state, params, {
+                reload: true,
+                notify: true
+            });
         }
 
         /**

@@ -9,8 +9,12 @@ import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +83,8 @@ public class CorrespondenceGenerator
     private String correspondenceFolderName;
     private SpringContextHolder springContextHolder;
     private CorrespondenceService correspondenceService;
+    private LookupDao lookupDao;
+    private TranslationService translationService;
 
     /**
      * Generate correspondence based on the supplied template, and store the correspondence in the ECM repository under
@@ -193,11 +199,87 @@ public class CorrespondenceGenerator
 
             // Remove all HTML elements if the value is not null
             String columnValue = value == null ? null : Jsoup.parse(value.toString()).text();
+            if (columnValue != null && !columnValue.isEmpty())
+            {
+                columnValue = getTranslationService().translate(getLookupValue(columnValue));
+            }
             retval.put(mergeField.getFieldValue(), columnValue);
 
         }
 
         return retval;
+    }
+
+    private String getLookupValue(String key)
+    {
+        JSONObject jsonObject = new JSONObject(getLookupDao().getMergedLookups());
+
+        String lookupSearch = searchByLookupType("standardLookup", key, jsonObject);
+        if (!lookupSearch.equals(key))
+        {
+            return lookupSearch;
+        }
+        else
+        {
+            lookupSearch = searchByLookupType("nestedLookup", key, jsonObject);
+            if (!lookupSearch.equals(key))
+            {
+                return lookupSearch;
+            }
+            else
+            {
+                lookupSearch = searchByLookupType("inverseValuesLookup", key, jsonObject);
+                if (!lookupSearch.equals(key))
+                {
+                    return lookupSearch;
+                }
+            }
+        }
+        return key;
+    }
+
+    private String searchByLookupType(String lookupType, String key, JSONObject jsonObject)
+    {
+        if (jsonObject.get(lookupType) != null)
+        {
+            JSONArray lookupArray = jsonObject.getJSONArray(lookupType);
+            for (int i = 0; i < lookupArray.length(); i++)
+            {
+                if (((JSONObject) lookupArray.get(i)).get("entries") != null)
+                {
+                    JSONArray entries = ((JSONObject) lookupArray.get(i)).getJSONArray("entries");
+                    for (int j = 0; j < entries.length(); j++)
+                    {
+                        if (((JSONObject) entries.get(j)).get("key").equals(key))
+                        {
+                            return ((JSONObject) entries.get(j)).getString("value");
+                        }
+                        if (lookupType.equals("nestedLookup"))
+                        {
+                            if (((JSONObject) entries.get(j)).get("subLookup") != null)
+                            {
+                                JSONArray subLookup = ((JSONObject) entries.get(j)).getJSONArray("subLookup");
+                                for (int k = 0; k < subLookup.length(); k++)
+                                {
+                                    if (((JSONObject) subLookup.get(k)).get("key").equals(key))
+                                    {
+                                        return ((JSONObject) subLookup.get(k)).getString("value");
+                                    }
+                                }
+                            }
+                        }
+                        else if (lookupType.equals("inverseValuesLookup"))
+                        {
+                            if (((JSONObject) entries.get(j)).get("inverseKey").equals(key))
+                            {
+                                return ((JSONObject) entries.get(j)).getString("inverseValue");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return key;
     }
 
     private Object formatValue(Object result, Class toBeFormatted, Format format, CorrespondenceMergeField mergeField)
@@ -368,5 +450,39 @@ public class CorrespondenceGenerator
     public void setCorrespondenceService(CorrespondenceService correspondenceService)
     {
         this.correspondenceService = correspondenceService;
+    }
+
+    /**
+     * @return the lookupDao
+     */
+    public LookupDao getLookupDao()
+    {
+        return lookupDao;
+    }
+
+    /**
+     * @param lookupDao
+     *            the lookupDao to set
+     */
+    public void setLookupDao(LookupDao lookupDao)
+    {
+        this.lookupDao = lookupDao;
+    }
+
+    /**
+     * @return the translationService
+     */
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    /**
+     * @param translationService
+     *            the translationService to set
+     */
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

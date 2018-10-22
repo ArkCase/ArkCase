@@ -1,0 +1,462 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-01-alter-acm_case_file-for-foia-request" author="lazo.lazarev" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_received_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_final_reply_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_scanned_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_expedite_flag" type="VARCHAR(10)" defaultValue="false"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_fee_waiver_flag" type="VARCHAR(10)" defaultValue="false"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_litigation_flag" type="VARCHAR(10)" defaultValue="false"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_type" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_sub_type" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_category" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_return_reason" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_source" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="01-01-alter-acm_case_file-for-foia-request" author="lazo.lazarev" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_received_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_final_reply_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_scanned_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_expedite_flag" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_fee_waiver_flag" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_litigation_flag" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_type" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_sub_type" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_category" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_return_reason" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_source" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="01-02-create-table-foia_file_exemption_code" author="lazo.lazarev"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <createTable tableName="foia_file_exemption_code">
+            <column name="ecm_file_id" type="${idType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fo_exemption_code" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="foia_file_exemption_code" columnNames="ecm_file_id, fo_exemption_code"/>
+        <addForeignKeyConstraint baseTableName="foia_file_exemption_code" baseColumnNames="ecm_file_id"
+            constraintName="fk_foia_file_exemption_code_id" referencedTableName="acm_file" referencedColumnNames="cm_file_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="01-03-alter-acm_person_assoc-for-foia-request" author="lazo.lazarev"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_person_assoc">
+            <column name="fo_requester_source" type="varchar(128)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="02-acm-case-file-add-released-date-and-disposition-sub-type" author="lazo.lazarev" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_release_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_disposition_sub_type" type="VARCHAR(4000)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="02-acm-case-file-add-released-date-and-disposition-sub-type" author="lazo.lazarev" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_release_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_disposition_sub_type" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="03-acm-case-file-paid-flag" author="dmiller" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_paid_flag" type="VARCHAR(10)" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="03-acm-case-file-paid-flag" author="dmiller" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_paid_flag" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="04-acm-case-file-add-fo_billing_enter_date" author="lazo.lazarev"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_billing_enter_date" type="${timestampType}"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="05-acm-case-file-add-fo_hold_enter_date" author="lazo.lazarev"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_hold_enter_date" type="${timestampType}"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="06-foia-file-exemption-code-creator" author="dragan.simonovski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="foia_file_exemption_code">
+            <column name="fo_code_creator" type="VARCHAR(1024)"></column>
+        </addColumn>
+        <addColumn tableName="foia_file_exemption_code">
+            <column name="fo_code_created" type="${timestampType}"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="06-foia-file-exemption-code-creator" author="dragan.simonovski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="foia_file_exemption_code">
+            <column name="fo_code_creator" type="TEXT"></column>
+        </addColumn>
+        <addColumn tableName="foia_file_exemption_code">
+            <column name="fo_code_created" type="${timestampType}"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="07-exemption-code-report-functions" author="lazo.lazarev" dbms="postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <sql splitStatements="false" stripComments="false">
+            <![CDATA[
+/*
+ *  Function that queries exemption codes associated with a single request type. The result is obtained by left joining the exemption codes values with the result
+ *  of the query ofexemption codes for a given request type. By left joining them, '0' is inserted in the coresponding exemption code column, to prevent the columns
+ *  from colapsing when crosstab is performed.
+ *
+ *  @argument _request_type the type of the foia request.
+ *  @argument _start_date the date after which the exemption code was created.
+ *  @argument _end_date the date before which the exemption code was created.
+ *  @argument _date_format the format of the date in the _start_date and _end_date arguments.
+ */
+CREATE OR REPLACE FUNCTION foia_query_exemption_codes_by_request_type(_request_type character varying, _start_date character varying, _end_date character varying, _date_format character varying)
+    -- define return type
+    RETURNS TABLE (
+        sub_type character varying, exemption_code text, exemption_code_count bigint
+    ) AS
+$$
+BEGIN
+    RETURN QUERY
+    -- definition of the exemption codes values table, and the query returning exemption codes for a given request type in a format appropriate for the crosstab function
+    WITH exemption_codes AS (
+
+        SELECT * FROM (VALUES ('X1'), ('X2'), ('X3'), ('X4'), ('X5.1'), ('X5.2'), ('X5.3'), ('X6'), ('X7a'), ('X7b'), ('X7c'), ('X7d'), ('X7e'), ('X7f'), ('X8'), ('X9')) AS t(codes)
+
+    ), foia_requests AS (
+    
+        SELECT acm_case_file.fo_request_sub_type AS sub_type, foia_file_exemption_code.fo_exemption_code AS exemption_code, COUNT(foia_file_exemption_code.fo_exemption_code) AS exemption_code_count
+        FROM acm_case_file, acm_container, acm_file, foia_file_exemption_code
+        WHERE acm_case_file.cm_container_id = acm_container.cm_container_id
+              AND acm_container.cm_container_id = acm_file.cm_container_id 
+              AND acm_file.cm_file_id = foia_file_exemption_code.ecm_file_id
+              AND acm_case_file.fo_request_sub_type = _request_type
+              AND foia_file_exemption_code.fo_code_created
+            BETWEEN TO_TIMESTAMP(CONCAT(_start_date, ' 00:00:00'), CONCAT(_date_format, ' HH24:MI:SS'))
+            AND TO_TIMESTAMP(CONCAT(_end_date, ' 23:59:59'), CONCAT(_date_format, ' HH24:MI:SS')) 
+        GROUP BY sub_type, exemption_code
+        ORDER BY 1,2
+        
+    )
+
+    SELECT COALESCE(foia_requests.sub_type, _request_type) as request_type, exemption_codes.codes, COALESCE(foia_requests.exemption_code_count, 0)
+    FROM exemption_codes LEFT OUTER JOIN foia_requests ON foia_requests.exemption_code = exemption_codes.codes;
+END
+$$
+LANGUAGE plpgsql;
+
+/*
+ *  Function that queries exemption codes. The query is performed by calling the 'foia_query_exemption_codes_by_request_type' function. This function handles the special
+ *  case for 'All' type of request type, which requires union of the queries by each foia subtype. In case of any other specific foia subtype, this function only
+ *  delegates to 'foia_query_exemption_codes_by_request_type' function.
+ *
+ *  @argument _request_type the type of the foia request.
+ *  @argument _start_date the date after which the exemption code was created.
+ *  @argument _end_date the date before which the exemption code was created.
+ *  @argument _date_format the format of the date in the _start_date and _end_date arguments.
+ */
+CREATE OR REPLACE FUNCTION foia_query_exemption_codes(_request_type character varying, _start_date character varying, _end_date character varying, _date_format character varying)
+    -- define return type
+    RETURNS TABLE (
+        sub_type character varying, exemption_code text, exemption_code_count bigint
+    ) AS
+$$
+BEGIN
+    CASE _request_type
+        -- in case of 'All' request type, we need to make union of results by each request type
+        WHEN 'All' THEN
+            RETURN QUERY
+                SELECT * FROM foia_query_exemption_codes_by_request_type('Appeal', _start_date, _end_date, _date_format)
+                UNION ALL
+                SELECT * FROM foia_query_exemption_codes_by_request_type('FOIA', _start_date, _end_date, _date_format)
+                UNION ALL
+                SELECT * FROM foia_query_exemption_codes_by_request_type('PA', _start_date, _end_date, _date_format)
+                UNION ALL
+                SELECT * FROM foia_query_exemption_codes_by_request_type('PA Amendment', _start_date, _end_date, _date_format);
+        ELSE
+            RETURN QUERY
+            SELECT * FROM foia_query_exemption_codes_by_request_type(_request_type, _start_date, _end_date, _date_format);
+    END CASE;
+END
+$$
+LANGUAGE plpgsql;
+        ]]>
+        </sql>
+    </changeSet>
+
+    <changeSet id="08-add-queue-enter-date" author="riste.tutureski" logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_queue_enter_date" type="${timestampType}"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="09-add-previous-queue" author="riste.tutureski" logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_previous_queue_id" type="${idType}"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10-remove-columns-in-core" author="teng.wang" dbms="mysql" logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <dropColumn tableName="acm_case_file" columnName="fo_queue_enter_date"/>
+        <dropColumn tableName="acm_case_file" columnName="fo_previous_queue_id"/>
+    </changeSet>
+
+    <changeSet id="11-01-alter-acm_case_file-fdic-foia-request" author="sasko.tanaskoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_delivery_method_of_response" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_record_search_date_from" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_record_search_date_to" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_processing_fee_waive" type="DOUBLE"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_fee_waive_reason" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_pay_fee" type="DOUBLE"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_expedite_reason" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="11-02-alter-acm_case_file-fdic-foia-request" author="sasko.tanaskoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_delivery_method_of_response" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_record_search_date_from" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_record_search_date_to" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_processing_fee_waive" type="DOUBLE"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_fee_waive_reason" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_pay_fee" type="DOUBLE"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_expedite_reason" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="12-01-acm_case_file-add-column-fo_public_flag" author="sasko.tanaskoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_public_flag" type="VARCHAR(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="12-02-acm_case_file-add-column-fo_public_flag" author="sasko.tanaskoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_public_flag" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="13-01-acm_person-add-column-fo_position" author="sasko.tanaskoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_person">
+            <column name="fo_position" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="13-02-acm_person-add-column-fo_position" author="sasko.tanaskoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_person">
+            <column name="fo_position" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="14-01-acm_file-add-column-fo_public_flag" author="marko.stojanoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_file">
+            <column name="fo_public_flag" type="VARCHAR(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="14-02-acm_file-add-column-fo_public_flag" author="marko.stojanoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_file">
+            <column name="fo_public_flag" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="15-01-acm_case_file-add-column-fo_request_track" author="adrijana.maneva" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_track" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_other_reason" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="15-01-acm_case_file-add-column-fo_request_track" author="adrijana.maneva" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_track" type="VARCHAR(10)"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_other_reason" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="16-01-foia-file-exemption-code-statute" author="ana.serafimoska" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="foia_file_exemption_code">
+            <column name="fo_exemption_statute" type="TEXT"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="17-01-foia-file-exemption-code-statute" author="ana.serafimoska" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="foia_file_exemption_code">
+            <column name="fo_exemption_statute" type="VARCHAR(512)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="18-acm-case-file-component-agency-column" author="marko.stojanoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_component_agency" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="18-acm-case-file-component-agency-column" author="marko.stojanoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_component_agency" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="19-update-acm-case-file-component-agency" author="marko.stojanoski"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <update tableName="acm_case_file">
+            <column name="fo_component_agency" value="FOIA"/>
+            <where>fo_component_agency is null</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="20-acm-case-file-extension-column" author="bojan.milenkoski"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_extension" type="VARCHAR(10)" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="21-acm-case-file-add-notification-group-column" author="marko.stojanoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_notification_group" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="21-acm-case-file-add-notification-group-column-if-not-exists" author="marko.stojanoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <columnExists tableName="acm_case_file" columnName="fo_notification_group"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_notification_group" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="22-acm-case-file-change-column-pay-fee-type" author="adrijana.maneva"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <modifyDataType columnName="fo_pay_fee"
+            newDataType="VARCHAR(64)"
+            tableName="acm_case_file"/>
+    </changeSet>
+
+    <changeSet id="23-foia-file-exemption-code-version" author="nebojsha.davidovikj"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="foia_file_exemption_code">
+            <column name="ecm_file_version" type="VARCHAR(10)" defaultValue="0.0"></column>
+        </addColumn>
+        <!-- foreign key must be removed for mysql (not tested on another database) before we drop primary key-->
+        <dropForeignKeyConstraint baseTableName="foia_file_exemption_code" constraintName="fk_foia_file_exemption_code_id"/>
+        <dropPrimaryKey tableName="foia_file_exemption_code"/>
+        <addPrimaryKey tableName="foia_file_exemption_code" columnNames="ecm_file_id, ecm_file_version, fo_exemption_code"/>
+        <addForeignKeyConstraint baseTableName="foia_file_exemption_code" baseColumnNames="ecm_file_id"
+            constraintName="fk_foia_file_exemption_code_id" referencedTableName="acm_file" referencedColumnNames="cm_file_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+</databaseChangeLog>
+

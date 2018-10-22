@@ -62,10 +62,7 @@ public class AcmFolderDeclareRequestListener implements ApplicationListener<EcmF
 
         if (!ecmFolderDeclareRequestEvent.isSucceeded())
         {
-            if (log.isTraceEnabled())
-            {
-                log.trace("Returning - folder declaration request was not successful");
-            }
+            log.trace("Returning - folder declaration request was not successful");
             return;
         }
         if (null != ecmFolderDeclareRequestEvent.getSource())
@@ -74,34 +71,26 @@ public class AcmFolderDeclareRequestListener implements ApplicationListener<EcmF
             getAlfrescoRecordsService().declareAllFilesInFolderAsRecords(acmCmisObjectList, ecmFolderDeclareRequestEvent.getContainer(),
                     ecmFolderDeclareRequestEvent.getEventDate(), ecmFolderDeclareRequestEvent.getParentObjectName());
 
-            AcmFolder folder = getAcmFolderService().findById(acmCmisObjectList.getFolderId());
+            Long folderId = acmCmisObjectList.getFolderId();
+            AcmFolder folder = getAcmFolderService().findById(folderId);
             try
             {
                 if (folder == null)
                 {
-                    throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(), "Folder not found", null);
+                    throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId,
+                            "Folder not found", null);
                 }
                 else
                 {
                     folder.setStatus(EcmFileConstants.RECORD);
                     getAcmFolderDao().save(folder);
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("Folder with ID: " + folder.getId() + " Status is changed to " + EcmFileConstants.RECORD);
-                    }
+                    log.debug("Status is changed to:[{}] for folder with ID:[{}]", folder.getId(), EcmFileConstants.RECORD);
                 }
             }
             catch (Exception e)
             {
-                if (log.isErrorEnabled())
-                {
-                    log.error("Status change failed for " + folder.getName() + " folder" + e.getMessage(), e);
-                }
+                log.error("Status change failed for folder with id:[{}]. {}", folderId, e.getMessage(), e);
             }
-        }
-        else
-        {
-            return;
         }
     }
 

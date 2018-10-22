@@ -1,0 +1,8 @@
+<div ng-controller="Reports.TypeController" class="form-group">
+
+    <label for="selectTypeReports" ng-if="config.resetTypeValues.indexOf(data.reportSelected) == -1" translate>reports.selectType.label</label>
+    <select id="selectTypeReports" ng-model="data.typeSelected" ng-if="config.resetTypeValues.indexOf(data.reportSelected) == -1"
+            ng-options="option.id as option.name for option in config.types" class="form-control input-sm">
+        <option value="" translate>reports.selectType.placeholder</option>
+    </select>
+</div>
