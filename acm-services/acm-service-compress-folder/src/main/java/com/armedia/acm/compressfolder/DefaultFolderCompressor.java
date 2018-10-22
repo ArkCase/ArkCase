@@ -239,7 +239,7 @@ public class DefaultFolderCompressor implements FolderCompressor
 
                 String objectName = getUniqueObjectName(fileFolderList, format, c, childFolder.getName());
                 String entryName = concatStrings(parentPath, objectName, "/");
-                if(canFolderBeCompressed(compressNode, childFolder))
+                if(isFolderRequestedToBeCompressed(compressNode, childFolder))
                 {
                    fileFolderList.add(objectName);
                    zos.putNextEntry(new ZipEntry(entryName));
@@ -260,7 +260,7 @@ public class DefaultFolderCompressor implements FolderCompressor
 
     }
 
-    public boolean canFolderBeCompressed(CompressNode compressNode, AcmFolder childFolder)
+    public boolean isFolderRequestedToBeCompressed(CompressNode compressNode, AcmFolder childFolder)
     {
        if(Objects.nonNull(compressNode) && Objects.nonNull(childFolder))
        {
