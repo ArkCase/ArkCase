@@ -53,6 +53,7 @@ public interface LdapConfigurationProperties
     String LDAP_PROP_USER_DOMAIN = "ldapConfig.userDomain";
     String LDAP_PROP_USER_PREFIX = "ldapConfig.userPrefix";
     String LDAP_PROP_USER_CONTROL_GROUP = "ldapConfig.userControlGroup";
+    String LDAP_PROP_GROUP_CONTROL_GROUP = "ldapConfig.groupControlGroup";
     String LDAP_PROP_ENABLE_EDITING_LDAP_USERS = "ldapConfig.enableEditingLdapUsers";
     String LDAP_PROP_SYNC_ENABLED = "ldapConfig.syncEnabled";
     String LDAP_PROP_SYNC_PAGE_SIZE = "ldapConfig.syncPageSize";
