@@ -31,6 +31,7 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
@@ -62,6 +63,11 @@ public class SaveComplaintTransaction
         pipelineContext.setNewComplaint(complaint.getId() == null);
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         pipelineContext.setIpAddress(ipAddress);
+
+        //add for AFDP-6831. Set replaceChildrenParticipant to true to inheritance automatically.
+        for(AcmParticipant participant: complaint.getParticipants()){
+            participant.setReplaceChildrenParticipant(true);
+        }
 
         return pipelineManager.executeOperation(complaint, pipelineContext, () -> {
 

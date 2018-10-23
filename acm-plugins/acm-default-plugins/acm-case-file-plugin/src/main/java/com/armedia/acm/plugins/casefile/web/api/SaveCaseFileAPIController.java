@@ -35,6 +35,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
@@ -110,6 +111,11 @@ public class SaveCaseFileAPIController
             // fixes problem when some child objects are changed (e.g participants) and solr document is not updated
             in.setModifier(AuthenticationUtils.getUsername());
             in.setModified(new Date());
+
+            //add for AFDP-6831. Set replaceChildrenParticipant to true to inheritance automatically.
+            for(AcmParticipant participant: in.getParticipants()){
+                participant.setReplaceChildrenParticipant(true);
+            }
 
             CaseFile saved = getSaveCaseService().saveCase(in, files, auth, ipAddress);
 
