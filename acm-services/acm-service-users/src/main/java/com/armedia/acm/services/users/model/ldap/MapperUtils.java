@@ -166,9 +166,12 @@ public class MapperUtils
         return distinguishedName.toString();
     }
 
-    public static String buildGroupName(String name, Optional<String> domain)
+    public static String buildGroupName(String name, String domain)
     {
-        return String.format("%s%s", name, domain.map(it -> String.format("@%s", it)).orElse("")).toUpperCase();
+        Optional<String> optionalDomain = Optional.of(domain);
+        return String.format("%s%s", name, optionalDomain.map(it -> String.format("@%s", it))
+                .orElse(""))
+                .toUpperCase();
     }
 
     public static String buildUserId(String userId, String domain)
@@ -182,7 +185,7 @@ public class MapperUtils
         String userPrefix = ldapSyncConfig.getUserPrefix();
         if (StringUtils.isNotBlank(userPrefix) &&
                 ldapSyncConfig.getUserIdAttributeName().equalsIgnoreCase("samaccountname")
-            && !userId.startsWith(userPrefix))
+                && !userId.startsWith(userPrefix))
         {
             String username = String.format("%s.%s", userPrefix, userId);
             username = StringUtils.left(username, 20);
