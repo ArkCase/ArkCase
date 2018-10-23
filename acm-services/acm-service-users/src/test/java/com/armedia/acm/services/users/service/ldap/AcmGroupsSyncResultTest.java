@@ -74,16 +74,16 @@ public class AcmGroupsSyncResultTest
 
     /**
      * Group A ->
-     * member cn=1,cn=Users
-     * member cn=2,cn=Users
-     * member cn=B,cn=Groups
-     * member cn=C,cn=Groups
+     *       member cn=1,cn=Users
+     *       member cn=2,cn=Users
+     *       member cn=B,cn=Groups
+     *       member cn=C,cn=Groups
      * Group B ->
-     * member cn=3,cn=Users
-     * member cn=A,cn=Groups
-     * member cn=C,cn=Groups
+     *       member cn=3,cn=Users
+     *       member cn=A,cn=Groups
+     *       member cn=C,cn=Groups
      * Group C ->
-     * member cn=A,cn=Groups
+     *       member cn=A,cn=Groups
      */
     // @formatter:on
     @Test
@@ -124,18 +124,18 @@ public class AcmGroupsSyncResultTest
 
     // @formatter:off
 
-    /**
-     * ldap state db state
-     * Group A -> AcmGroup A ->
-     * member cn=1,cn=Users member cn=1,cn=Users
-     * member cn=2,cn=User member cn=2,cn=Users
-     * description 'Updated group' description ''
-     * Group B -> AcmGroup B ->
-     * member cn=3,cn=Users member cn=3,cn=Users
-     * member cn=C,cn=Groups member cn=C,cn=Groups
-     * Group C -> AcmGroup C ->
-     * member member
-     */
+     /**
+      * ldap state                        db state
+      * Group A ->                        AcmGroup A ->
+      *       member cn=1,cn=Users             member cn=1,cn=Users
+      *       member cn=2,cn=User              member cn=2,cn=Users
+      *       description 'Updated group'      description ''
+      * Group B ->                        AcmGroup B ->
+      *       member cn=3,cn=Users             member cn=3,cn=Users
+      *       member cn=C,cn=Groups            member cn=C,cn=Groups
+      * Group C ->                        AcmGroup C ->
+      *       member                           member
+      */
     // @formatter:on
     @Test
     public void syncOnlyOneChangedGroupWithUpdatedDescriptionTest()
@@ -182,15 +182,15 @@ public class AcmGroupsSyncResultTest
 
     // @formatter:off
 
-    /**
-     * Group A -> AcmGroup A ->
-     * member cn=1,cn=Users member cn=1,cn=Users
-     * member cn=4,cn=Users member cn=2,cn=Users
-     * Group B -> AcmGroup B ->
-     * member cn=3,cn=Users member cn=3,cn=Users
-     * Group C -> AcmGroup C ->
-     * member cn=4,cn=Users member cn=4,cn=Users
-     */
+     /**
+      * Group A ->                    AcmGroup A ->
+      *       member cn=1,cn=Users             member cn=1,cn=Users
+      *       member cn=4,cn=Users             member cn=2,cn=Users
+      * Group B ->                    AcmGroup B ->
+      *       member cn=3,cn=Users             member cn=3,cn=Users
+      * Group C ->                    AcmGroup C ->
+      *       member cn=4,cn=Users             member cn=4,cn=Users
+      */
     // @formatter:on
     @Test
     public void changedGroupsWithAddedAndRemovedUsersTest()
@@ -234,19 +234,19 @@ public class AcmGroupsSyncResultTest
     // @formatter:off
 
     /**
-     * ldap state db state
+     * ldap state                        db state
      *
-     * Group A -> AcmGroup A ->
-     * member cn=1,cn=Users member cn=1,cn=Users
-     * member cn=2,cn=Users member cn=2,cn=Users
-     * Group B -> AcmGroup B ->
-     * member cn=3,cn=Users member cn=3,cn=Users
-     * member cn=C,cn=Groups
-     * Group C -> AcmGroup C ->
-     * member cn=A,cn=Groups member
-     * member cn=D,cn=Groups
-     * Group D -> AcmGroup D ->
-     * member cn=A,cn=Groups member cn=A,cn=Groups
+     * Group A ->                        AcmGroup A ->
+     *       member cn=1,cn=Users             member cn=1,cn=Users
+     *       member cn=2,cn=Users             member cn=2,cn=Users
+     * Group B ->                        AcmGroup B ->
+     *       member cn=3,cn=Users             member cn=3,cn=Users
+     *                                        member cn=C,cn=Groups
+     * Group C ->                        AcmGroup C ->
+     *       member cn=A,cn=Groups            member
+     *       member cn=D,cn=Groups
+     * Group D ->                        AcmGroup D ->
+     *       member cn=A,cn=Groups            member cn=A,cn=Groups
      */
     // @formatter:on
     @Test
@@ -318,21 +318,21 @@ public class AcmGroupsSyncResultTest
 
     // @formatter:off
 
-    /**
-     * ldap state db state
-     * Group A -> AcmGroup A ->
-     * member cn=1,cn=Users member cn=1,cn=Users
-     * member cn=2,cn=User member cn=2,cn=Users
-     * description 'Updated group' description ''
-     * member cn=C,cn=Groups member cn=C,cn=Groups
-     * AcmGroup B ->
-     * member cn=3,cn=Users
-     * member cn=C,cn=Groups
-     * Group C -> AcmGroup C ->
-     * member member
-     * Group D ->
-     * member cn=A,cn=Groups
-     */
+   /**
+    * ldap state                        db state
+    * Group A ->                        AcmGroup A ->
+    *       member cn=1,cn=Users             member cn=1,cn=Users
+    *       member cn=2,cn=User              member cn=2,cn=Users
+    *       description 'Updated group'      description ''
+    *       member cn=C,cn=Groups            member cn=C,cn=Groups
+    *                                   AcmGroup B ->
+    *                                        member cn=3,cn=Users
+    *                                        member cn=C,cn=Groups
+    * Group C ->                        AcmGroup C ->
+    *       member                           member
+    * Group D ->
+    *       member cn=A,cn=Groups
+    */
     // @formatter:on
     @Test
     public void syncDeletedNewAndModifiedGroupTest()
@@ -390,23 +390,24 @@ public class AcmGroupsSyncResultTest
         assertThat("Ascendants string for group C should be", modifiedGroupsByName.get("C").getAscendantsList(), is("A,D"));
     }
 
+    // @formatter:off
     /**
-     * ldap state db state
-     *
-     * Group A -> AcmGroup A ->
-     * member cn=1,cn=Users member cn=1,cn=Users
-     * member cn=2,cn=Users member cn=2,cn=Users
-     * Group B -> AcmGroup B ->
-     * member cn=3,cn=Users member cn=3,cn=Users
-     * member cn=X,cn=Groups member cn=C,cn=Groups
-     * Group C -> AcmGroup C ->
-     * member cn=A,cn=Groups member
-     * member cn=D,cn=Groups
-     * Group D ->
-     * member cn=A,cn=Groups
-     * Group X ->
-     * member cn=D,cn=Groups
-     */
+    * ldap state                        db state
+    *
+    * Group A ->                        AcmGroup A ->
+    *       member cn=1,cn=Users             member cn=1,cn=Users
+    *       member cn=2,cn=Users             member cn=2,cn=Users
+    * Group B ->                        AcmGroup B ->
+    *       member cn=3,cn=Users             member cn=3,cn=Users
+    *       member cn=X,cn=Groups            member cn=C,cn=Groups
+    * Group C ->                        AcmGroup C ->
+    *       member cn=A,cn=Groups            member
+    *       member cn=D,cn=Groups
+    * Group D ->
+    *       member cn=A,cn=Groups
+    * Group X ->
+    *       member cn=D,cn=Groups
+    */
     // @formatter:on
     @Test
     public void syncTwoNewGroupsOneAddedInExistingAndRemovedGroupFromGroupTest()

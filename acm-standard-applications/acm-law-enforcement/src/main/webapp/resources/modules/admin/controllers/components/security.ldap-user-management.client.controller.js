@@ -117,10 +117,10 @@ angular.module('admin').controller(
                             currentAuthGroups = currentAuthGroups.concat(toBeAdded);
 
                             LdapUserManagementService.addGroupsToUser(selectedObject.key, toBeAdded, selectedObject.directory).then(function(data) {
-                                MessageService.succsessAction();
-                            }, function() {
+                                deferred.resolve(data);
+                            }, function(error) {
                                 //error adding group
-                                MessageService.errorAction();
+                                deferred.reject(error);
                             });
                             return deferred.promise;
                         }
@@ -131,13 +131,14 @@ angular.module('admin').controller(
                             });
 
                             LdapUserManagementService.removeGroupsFromUser(selectedObject.key, toBeRemoved, selectedObject.directory).then(function(data) {
-                                MessageService.succsessAction();
-                            }, function() {
+                                deferred.resolve(data);
+                            }, function(error) {
                                 //error adding group
-                                MessageService.errorAction();
+                                deferred.reject(error);
                             });
                             return deferred.promise;
                         }
+                        return deferred.promise;
                     }
 
                     function openCloneUserModal(userForm, usernameError) {

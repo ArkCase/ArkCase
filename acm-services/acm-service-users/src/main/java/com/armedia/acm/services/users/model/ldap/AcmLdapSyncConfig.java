@@ -35,6 +35,7 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String userDomain;
     private String userPrefix;
     private String userControlGroup;
+    private String groupControlGroup;
     private String userSearchBase;
     private String userSearchFilter;
     private String allUsersFilter;
@@ -108,6 +109,16 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setUserControlGroup(String userControlGroup)
     {
         this.userControlGroup = userControlGroup;
+    }
+
+    public String getGroupControlGroup()
+    {
+        return groupControlGroup;
+    }
+
+    public void setGroupControlGroup(String groupControlGroup)
+    {
+        this.groupControlGroup = groupControlGroup;
     }
 
     public String getUserSearchBase()
