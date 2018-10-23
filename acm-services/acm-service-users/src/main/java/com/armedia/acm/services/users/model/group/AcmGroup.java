@@ -61,6 +61,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -451,10 +452,9 @@ public class AcmGroup implements Serializable, AcmEntity
     public Set<String> getAscendants()
     {
         if (StringUtils.isBlank(ascendantsList))
-            return new HashSet<>();
+            return new TreeSet<>();
         return Arrays.stream(ascendantsList.split(","))
-                .sorted()
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     public void addAscendant(String ascendantGroup)
