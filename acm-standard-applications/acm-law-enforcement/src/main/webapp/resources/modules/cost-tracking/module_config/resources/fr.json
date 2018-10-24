@@ -121,7 +121,7 @@
                 "username": "fr_Username"
             }
         },
-        "userSearch.title": "fr_Search for User",
+        "userSearch.title": "fr_User/Group Search",
         "cost": {
             "title": "fr_Costs",
             "date": "fr_Date",
@@ -132,7 +132,8 @@
             "amount": "fr_Amount",
             "balance": "fr_Balance",
             "removeBtn": "fr_Remove Cost",
-            "addBtn": "fr_Add Another Cost"
+            "addBtn": "fr_Add Another Cost",
+            "owningGroup": "fr_Owning Group"
         },
         "details": "fr_Details",
         "approver": {
