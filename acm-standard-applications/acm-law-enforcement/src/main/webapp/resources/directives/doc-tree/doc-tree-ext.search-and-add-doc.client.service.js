@@ -46,6 +46,7 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
                 name: "searchDocument",
                 onAllowCmd: function(nodes, objectInfo) {
                     if(Util.isArray(nodes) && !Util.isEmpty(nodes) && nodes.length == 1 && !Util.isEmpty(nodes[0].data) && (nodes[0].data.objectType == ObjectService.ObjectTypes.FOLDER.toLowerCase() || nodes[0].data.root == true)) {
+                        objectInfo.container.folder.nodeId = nodes[0].data.objectId;
                         return PermissionsService.getActionPermission('allowCopyingFile', objectInfo.container.folder, {
                             objectType: ObjectService.ObjectTypes.FOLDER
                         }).then(function success(enabled) {
@@ -71,7 +72,7 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
             var params = {};
             params.parentType = DocTree._objType;
             params.parentId = DocTree._objId;
-            params.folderId = DocTree.objectInfo.container.id;
+            params.folderId = DocTree.objectInfo.container.folder.nodeId;
             params.filter = 'fq="object_type_s": FILE';
             params.header = $translate.instant("common.dialogObjectPicker.addDocument");
             params.config = Util.goodMapValue(DocTree.treeConfig, "dialogObjectPicker");
