@@ -1,0 +1,9 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-acm_postal_address-update-cm-region" author="ana.serafimoska" dbms="mssql,postgresql">
+        <sql>UPDATE acm_postal_address SET cm_region = CONCAT(cm_region, '_USA'), cm_address_modified = NOW() WHERE cm_country='USA' AND cm_region NOT LIKE '%_USA'</sql>
+    </changeSet>
+</databaseChangeLog>
