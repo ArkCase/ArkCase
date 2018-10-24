@@ -31,7 +31,6 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
-import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 

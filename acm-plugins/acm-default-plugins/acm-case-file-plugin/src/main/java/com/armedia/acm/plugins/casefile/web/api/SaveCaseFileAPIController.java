@@ -35,7 +35,6 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
-import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
