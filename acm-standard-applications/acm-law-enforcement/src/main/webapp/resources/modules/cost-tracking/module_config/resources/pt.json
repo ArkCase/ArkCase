@@ -121,7 +121,7 @@
                 "username": "pt_Username"
             }
         },
-        "userSearch.title": "pt_Search for User",
+        "userSearch.title": "pt_User/Group Search",
         "cost": {
             "title": "pt_Costs",
             "date": "pt_Date",
@@ -132,7 +132,8 @@
             "amount": "pt_Amount",
             "balance": "pt_Balance",
             "removeBtn": "pt_Remove Cost",
-            "addBtn": "pt_Add Another Cost"
+            "addBtn": "pt_Add Another Cost",
+            "owningGroup": "pt_Owning Group"
         },
         "details": "pt_Details",
         "approver": {

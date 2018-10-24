@@ -122,6 +122,10 @@ angular.module('services').factory('CostTracking.InfoService', [ '$resource', '$
         if (!Service.validateCostsheet(costsheetInfo)) {
             return Util.errorPromise($translate.instant("common.service.error.invalidData"));
         }
+        //we need to make one of the fields is changed in order to be sure that update will be executed
+        //if we change modified won't make any differences since is updated before update to database
+        //but update will be trigger
+        costsheetInfo.modified = null;
         return Util.serviceCall({
             service: Service.save,
             param: {
@@ -155,6 +159,10 @@ angular.module('services').factory('CostTracking.InfoService', [ '$resource', '$
         if (!Service.validateNewCostsheet(costsheetInfo)) {
             return Util.errorPromise($translate.instant("common.service.error.invalidData"));
         }
+        //we need to make one of the fields is changed in order to be sure that update will be executed
+        //if we change modified won't make any differences since is updated before update to database
+        //but update will be trigger
+        costsheetInfo.modified = null;
         return Util.serviceCall({
             service: Service.save,
             param: {

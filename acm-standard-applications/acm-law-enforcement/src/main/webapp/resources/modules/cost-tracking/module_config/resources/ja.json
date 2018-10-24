@@ -121,7 +121,7 @@
                 "username": "ja_Username"
             }
         },
-        "userSearch.title": "ja_Search for User",
+        "userSearch.title": "ja_User/Group Search",
         "cost": {
             "title": "ja_Costs",
             "date": "ja_Date",
@@ -132,7 +132,8 @@
             "amount": "ja_Amount",
             "balance": "ja_Balance",
             "removeBtn": "ja_Remove Cost",
-            "addBtn": "ja_Add Another Cost"
+            "addBtn": "ja_Add Another Cost",
+            "owningGroup": "ja_Owning Group"
         },
         "details": "ja_Details",
         "approver": {
