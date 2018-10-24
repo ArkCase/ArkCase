@@ -112,11 +112,6 @@ public class SaveCaseFileAPIController
             in.setModifier(AuthenticationUtils.getUsername());
             in.setModified(new Date());
 
-            //add for AFDP-6831. Set replaceChildrenParticipant to true to inheritance automatically.
-            for(AcmParticipant participant: in.getParticipants()){
-                participant.setReplaceChildrenParticipant(true);
-            }
-
             CaseFile saved = getSaveCaseService().saveCase(in, files, auth, ipAddress);
 
             // since the approver list is not persisted to the database, we want to send them back to the caller...

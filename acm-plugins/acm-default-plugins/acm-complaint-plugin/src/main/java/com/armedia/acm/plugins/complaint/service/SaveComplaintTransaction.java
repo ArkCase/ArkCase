@@ -64,11 +64,6 @@ public class SaveComplaintTransaction
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         pipelineContext.setIpAddress(ipAddress);
 
-        //add for AFDP-6831. Set replaceChildrenParticipant to true to inheritance automatically.
-        for(AcmParticipant participant: complaint.getParticipants()){
-            participant.setReplaceChildrenParticipant(true);
-        }
-
         return pipelineManager.executeOperation(complaint, pipelineContext, () -> {
 
             Complaint saved = complaintDao.save(complaint);
