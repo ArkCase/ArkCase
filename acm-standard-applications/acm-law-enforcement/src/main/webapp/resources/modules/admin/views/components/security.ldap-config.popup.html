@@ -121,6 +121,11 @@
                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userControlGroup' | translate }}">
         </div>
         <div class="form-group">
+            <label>{{ 'admin.security.ldapConfig.data.groupControlGroup' | translate }}</label>
+            <input class="form-control" type="text" ng-model="dir.groupControlGroup"
+                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.groupControlGroup' | translate }}">
+        </div>
+        <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.syncPageSize' | translate }}</label>
             <input class="form-control" type="text" ng-model="dir.syncPageSize"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.syncPageSize' | translate }}" required>

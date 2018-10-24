@@ -449,6 +449,9 @@ public class LdapConfigurationService implements InitializingBean
         props.put("userControlGroup", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_USER_CONTROL_GROUP)
                 ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_CONTROL_GROUP)
                 : "");
+        props.put("groupControlGroup", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_GROUP_CONTROL_GROUP)
+                ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_CONTROL_GROUP)
+                : "");
         return props;
     }
 
