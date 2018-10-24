@@ -121,7 +121,7 @@
                 "username": "hi_Username"
             }
         },
-        "userSearch.title": "hi_Search for User",
+        "userSearch.title": "hi_User/Group Search",
         "cost": {
             "title": "hi_Costs",
             "date": "hi_Date",
@@ -132,7 +132,8 @@
             "amount": "hi_Amount",
             "balance": "hi_Balance",
             "removeBtn": "hi_Remove Cost",
-            "addBtn": "hi_Add Another Cost"
+            "addBtn": "hi_Add Another Cost",
+            "owningGroup": "hi_Owning Group"
         },
         "details": "hi_Details",
         "approver": {

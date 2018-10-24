@@ -121,7 +121,7 @@
                 "username": "ru_Username"
             }
         },
-        "userSearch.title": "ru_Search for User",
+        "userSearch.title": "ru_User/Group Search",
         "cost": {
             "title": "ru_Costs",
             "date": "ru_Date",
@@ -132,7 +132,8 @@
             "amount": "ru_Amount",
             "balance": "ru_Balance",
             "removeBtn": "ru_Remove Cost",
-            "addBtn": "ru_Add Another Cost"
+            "addBtn": "ru_Add Another Cost",
+            "owningGroup": "ru_Owning Group"
         },
         "details": "ru_Details",
         "approver": {
