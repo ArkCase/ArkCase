@@ -10,7 +10,7 @@
  *
  * DocTree extensions for searching and adding documents.
  */
-angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '$modal', '$translate', 'UtilService', function($q, $modal, $translate, Util) {
+angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '$modal', '$translate', 'UtilService', 'PermissionsService', 'ObjectService', function($q, $modal, $translate, Util, PermissionsService, ObjectService) {
 
     var Documents = {
 
@@ -44,11 +44,26 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
         getCommandHandlers: function(DocTree) {
             return [ {
                 name: "searchDocument",
+                onAllowCmd: function(nodes, objectInfo) {
+                    if(Util.isArray(nodes) && !Util.isEmpty(nodes) && nodes.length == 1 && !Util.isEmpty(nodes[0].data) && (nodes[0].data.objectType == ObjectService.ObjectTypes.FOLDER.toLowerCase() || nodes[0].data.root == true)) {
+                        return PermissionsService.getActionPermission('allowCopyingFile', objectInfo.container.folder, {
+                            objectType: ObjectService.ObjectTypes.FOLDER
+                        }).then(function success(enabled) {
+                            return enabled ? 'visible' : 'invisible';
+                        }, function error() {
+                            return 'invisible';
+                        });
+                    }else {
+                        return 'invisible';
+                    }
+                },
                 execute: function() {
                     Documents.openModal(DocTree);
                 }
             } ];
+
         }
+
 
         ,
         openModal: function(DocTree) {
@@ -57,7 +72,7 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
             params.parentType = DocTree._objType;
             params.parentId = DocTree._objId;
             params.folderId = DocTree.objectInfo.container.id;
-            params.filter = '"Object Type": FILE';
+            params.filter = 'fq="object_type_s": FILE';
             params.header = $translate.instant("common.dialogObjectPicker.addDocument");
             params.config = Util.goodMapValue(DocTree.treeConfig, "dialogObjectPicker");
 
@@ -85,18 +100,23 @@ angular.module('directives').controller('directives.DocTreeSearchAndAddDocuments
         $scope.modalInstance = $modalInstance;
         $scope.filter = params.filter;
         $scope.config = params.config;
+        $scope.header = params.header;
 
         $scope.modalInstance.result.then(function(result) {
-            Util.serviceCall({
-                service: Ecm.copyFile,
-                param: {
-                    objType: params.parentType,
-                    objId: params.parentId
-                },
-                data: {
-                    id : parseInt(result.object_id_s),
-                    folderId : params.folderId
-                }
-            })
+            var docs = result;
+            angular.forEach(docs, function(doc) {
+                var documentId = doc.object_id_s;
+                Util.serviceCall({
+                    service: Ecm.copyFile,
+                    param: {
+                        objType: params.parentType,
+                        objId: params.parentId
+                    },
+                    data: {
+                        id : parseInt(documentId),
+                        folderId : params.folderId
+                    }
+                })
+            });
         });
     } ]);
