@@ -395,7 +395,8 @@
             "label": "fr_Approver",
             "addAnother": "fr_Add another",
             "remove": "fr_Remove Approver",
-            "pickerModal.header": "fr_Search for User"
+            "pickerModal.header": "fr_User/Group Search",
+            "owningGroup": "fr_Owning Group"
         },
         "button": {
             "cancel": "fr_Cancel",

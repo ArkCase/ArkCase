@@ -395,7 +395,8 @@
             "label": "pt_Approver",
             "addAnother": "pt_Add another",
             "remove": "pt_Remove Approver",
-            "pickerModal.header": "pt_Search for User"
+            "pickerModal.header": "pt_User/Group Search",
+            "owningGroup": "pt_Owning Group"
         },
         "button": {
             "cancel": "pt_Cancel",
