@@ -691,9 +691,16 @@
         "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$",
         "dialogObjectPicker": {
             "enableFiltering": false,
-            "multiSelect": false,
+            "multiSelect": true,
             "showFacets": false,
             "columnDefs": [
+                {
+                    "name": "checkbox",
+                    "displayName": "",
+                    "cellTemplate": "<input type='checkbox' ng-click='grid.appScope.onClick($event, row.entity)'/>",
+                    "width": "6%",
+                    "index": 0
+                },
                 {
                     "name": "object_id_s",
                     "displayName": "common.dialogObjectPicker.table.columns.id",
