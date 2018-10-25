@@ -37,11 +37,13 @@ import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 
+import com.armedia.acm.web.api.MDCConstants;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -85,6 +87,7 @@ public class PortalCreateRequestService
         getAuditPropertyEntityAdapter().setUserId(in.getUserId());
         String ipAddress = in.getIpAddress();
 
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, in.getUserId());
         Authentication auth = new UsernamePasswordAuthenticationToken(in.getUserId(), in.getUserId());
 
         SecurityContextHolder.getContext().setAuthentication(auth);
