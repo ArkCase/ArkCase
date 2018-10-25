@@ -196,8 +196,7 @@ angular.module('cost-tracking').controller(
                         }, 0);
                     };
 
-                    // ---------------------------            approver         --------------------------------------
-
+                    // ---------------------------            approver         -------------------------------------
                     $scope.userOrGroupSearch = function() {
                         var params = {};
                         params.header = $translate.instant("costTracking.comp.newCostsheet.userSearch.title");
@@ -239,6 +238,7 @@ angular.module('cost-tracking').controller(
                                         $scope.groupName = selectedGroup.name;
                                         addParticipantInCostsheet(participantTypeOwningGroup, selectedGroup.object_id_s);
                                     }
+
                                     updateIsApproverAdded($scope.costsheet.participants);
 
                                     return;
@@ -253,6 +253,7 @@ angular.module('cost-tracking').controller(
                                         $scope.approverName = selectedUser.name;
                                         addParticipantInCostsheet(participantTypeApprover, selectedUser.object_id_s);
                                     }
+
                                     updateIsApproverAdded($scope.costsheet.participants);
 
                                     return;
@@ -295,6 +296,7 @@ angular.module('cost-tracking').controller(
                         });
                         $scope.isApproverAdded = !Util.isEmpty(approver);
                     }
+
                     //-----------------------------------------------------------------------------------------------
 
                     $scope.save = function(submissionName) {
