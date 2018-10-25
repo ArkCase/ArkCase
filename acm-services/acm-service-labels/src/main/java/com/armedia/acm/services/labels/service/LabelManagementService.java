@@ -648,7 +648,7 @@ public class LabelManagementService
         {
             String configFileName = String.format(moduleConfigLocation, moduleName);
             JSONObject configResource = loadResource(configFileName);
-            if (configResource.has("menus"))
+            if (configResource != null && configResource.has("menus"))
             {
                 JSONObject moduleResource = getAdminResource(moduleName, lang, false);
 
