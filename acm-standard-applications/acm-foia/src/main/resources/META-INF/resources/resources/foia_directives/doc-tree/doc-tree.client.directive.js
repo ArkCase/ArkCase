@@ -1017,6 +1017,11 @@ angular
 
                             var containerObjectType = DocTree.getObjType();
                             var containerObjectId = DocTree.getObjId();
+                            var folderId = 0;
+                            if(!Util.isEmpty(DocTree.objectInfo) && !Util.isEmpty(DocTree.objectInfo.container) && !Util.isEmpty(DocTree.objectInfo.container.folder) && !Util.isEmpty(DocTree.objectInfo.container.folder.id))
+                            {
+                                folderId = DocTree.objectInfo.container.folder.id;
+                            }
                             if (!Util.isEmpty(containerObjectType) && !Util.isEmpty(containerObjectId)) {
                                 src = Util.FancyTreeBuilder.reset().addBranchLast({
                                     key : containerObjectType + "." + containerObjectId,
@@ -1026,7 +1031,7 @@ angular
                                     folder : true,
                                     lazy : true,
                                     cache : false,
-                                    objectId : 0,
+                                    objectId : folderId,
                                     root : true,
                                     startRow : 0,
                                     containerObjectType : containerObjectType,
@@ -2102,7 +2107,7 @@ angular
                                         var found = DocTree.Command.findHandler(item.cmd);
                                         var onAllowCmd = Util.goodMapValue(found, "onAllowCmd", null);
                                         if (onAllowCmd) {
-                                            allow = onAllowCmd(nodes);
+                                            allow = onAllowCmd(nodes, DocTree.objectInfo);
                                         }
                                     }
                                 }
