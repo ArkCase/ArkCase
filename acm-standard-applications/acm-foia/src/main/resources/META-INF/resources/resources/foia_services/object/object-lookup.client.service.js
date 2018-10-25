@@ -860,7 +860,7 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
      */
 
     Service.getStates = function() {
-        return Service.getLookupByLookupName('stateNewRequest');
+        return Service.getLookupByLookupName('states');
 
     };
 
