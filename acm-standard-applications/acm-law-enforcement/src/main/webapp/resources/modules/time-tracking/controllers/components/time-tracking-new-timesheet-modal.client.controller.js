@@ -470,7 +470,7 @@ angular.module('time-tracking').controller(
             }
 
             // ---------------------------            approver         --------------------------------------
-            $scope.userOrGroupSearch = function(index) {
+            $scope.userOrGroupSearch = function() {
                 var params = {};
                 params.header = $translate.instant("timeTracking.comp.newTimesheet.userSearch.title");
                 params.filter = "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)";
