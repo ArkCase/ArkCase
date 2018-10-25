@@ -564,16 +564,9 @@
             },
             "dialogObjectPicker": {
                 "enableFiltering": false,
-                "multiSelect": true,
+                "multiSelect": false,
                 "showFacets": false,
                 "columnDefs": [
-                    {
-                        "name": "checkbox",
-                        "displayName": "",
-                        "headTemplate": "<input type='checkbox'/>",
-                        "width": "6%",
-                        "index": 0
-                    },
                     {
                         "name": "name",
                         "displayName": "cases.dialogObjectPicker.table.columns.name",
