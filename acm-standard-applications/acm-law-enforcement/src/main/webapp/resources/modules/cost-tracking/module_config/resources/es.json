@@ -121,7 +121,7 @@
                 "username": "es_Username"
             }
         },
-        "userSearch.title": "es_Search for User",
+        "userSearch.title": "es_User/Group Search",
         "cost": {
             "title": "es_Costs",
             "date": "es_Date",
@@ -132,7 +132,8 @@
             "amount": "es_Amount",
             "balance": "es_Balance",
             "removeBtn": "es_Remove Cost",
-            "addBtn": "es_Add Another Cost"
+            "addBtn": "es_Add Another Cost",
+            "owningGroup": "es_Owning Group"
         },
         "details": "es_Details",
         "approver": {
