@@ -127,18 +127,19 @@ public class LdapUserService implements ApplicationEventPublisherAware
             user = userDto.updateAcmUser(user);
         }
 
+        String userIdNoDomain = StringUtils.substringBeforeLast(userId, "@");
         String dn = Directory.valueOf(ldapSyncConfig.getDirectoryType())
-                .buildDnForUserEntry(StringUtils.substringBeforeLast(userId, "@"), ldapSyncConfig);
+                .buildDnForUserEntry(userIdNoDomain, ldapSyncConfig);
         user.setDistinguishedName(dn);
         user.setUserDirectoryName(directoryName);
         user.setUserState(AcmUserState.VALID);
         if ("uid".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
-            user.setUid(userDto.getUserId());
+            user.setUid(userIdNoDomain);
         }
         else if ("sAMAccountName".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
-            user.setsAMAccountName(userDto.getUserId());
+            user.setsAMAccountName(userIdNoDomain);
         }
 
         Set<AcmGroup> groups = new HashSet<>();

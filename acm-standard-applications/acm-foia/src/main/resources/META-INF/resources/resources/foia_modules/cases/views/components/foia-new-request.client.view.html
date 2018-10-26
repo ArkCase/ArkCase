@@ -194,7 +194,7 @@
                         <div class="col-sm-4">
                             <select id="state" name="state"
                                     ng-model="config.data.originator.person.addresses[0].state"
-                                    ng-options="state.key as state.value for state in states"
+                                    ng-options="state.key as state.value | translate for state in states"
                                     class="form-control input-md" required>
                             </select>
                             <span class="text-danger" ng-if="stateEmpty && formInvalid" translate>

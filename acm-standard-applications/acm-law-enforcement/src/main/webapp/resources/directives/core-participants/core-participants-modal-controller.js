@@ -10,7 +10,8 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
         $modalInstance.close({
             participant: $scope.participantEdit,
             isEdit: $scope.isEdit,
-            selectedType: $scope.selectedType
+            selectedType: $scope.selectedType,
+            id: $scope.id
         });
     };
     $scope.onClickCancel = function() {

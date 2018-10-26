@@ -66,96 +66,115 @@
  </file>
  </example>
  */
-angular.module('directives').directive(
-        'objectAuthorization',
-        [
-                'Menus',
-                'MessageService',
-                '$http',
-                'UtilService',
-                '$injector',
-                function(Menus, messageService, $http, Util, $injector) {
-                    return {
-                        restrict : 'E',
-                        scope : {
-                            data : "=",
-                            onObjectSelected : "=",
-                            onAuthRoleChange : "=",
-                            objectDisplayName : "@",
-                            roleDisplayName : "@",
-                            objectTitle : "@",
-                            hideFilter : "=?",
-                            paginationDataControl : "=?",
-                            filterDataControl : "=?",
-                            selectedObject : "=?",
-                            member : "=?",
-                            objectType : '@'
-                        },
-                        templateUrl : 'directives/object-authorization/object.authorization.html',
-                        link : function(scope) {
-                            //authorize button is clicked
-                            scope.authorize = function() {
-                                //don't do anything if array null or empty
-                                if (scope.selectedNotAuthorized && scope.selectedNotAuthorized.length > 0) {
-                                    angular.forEach(scope.selectedNotAuthorized, function(sel) {
-                                        var indexOf = scope.data.selectedNotAuthorized.indexOf(sel);
-                                        scope.data.selectedNotAuthorized.splice(indexOf, 1);
-                                        scope.data.selectedAuthorized.push(sel);
-                                    });
-                                    scope.authRoleChange();
-                                }
-                            };
+angular.module('directives').directive('objectAuthorization', [ 'Menus', 'MessageService', '$q', function(Menus, messageService, $q) {
+    return {
+        restrict: 'E',
+        scope: {
+            data: "=",
+            onObjectSelected: "=",
+            onAuthRoleChange: "=",
+            objectDisplayName: "@",
+            roleDisplayName: "@",
+            objectTitle: "@",
+            hideFilter: "=?",
+            paginationDataControl: "=?",
+            filterDataControl: "=?",
+            selectedObject: "=?",
+            member: "=?",
+            objectType: '@'
+        },
+        templateUrl: 'directives/object-authorization/object.authorization.html',
+        link: function(scope) {
+            //authorize button is clicked
+            scope.authorize = function() {
+                //don't do anything if array null or empty
+                if (scope.selectedNotAuthorized && scope.selectedNotAuthorized.length > 0) {
+                    var toAdd = angular.copy(scope.selectedNotAuthorized);
+                    _authorize(toAdd, scope.data);
 
-                            //unauthorize button is clicked
-                            scope.unAuthorize = function() {
-                                //don't do anything if array null or empty
-                                if (scope.selectedAuthorized && scope.selectedAuthorized.length > 0) {
-                                    angular.forEach(scope.selectedAuthorized, function(sel) {
-                                        var indexOf = scope.data.selectedAuthorized.indexOf(sel);
-                                        scope.data.selectedAuthorized.splice(indexOf, 1);
-                                        scope.data.selectedNotAuthorized.push(sel);
-                                    });
-                                    scope.authRoleChange();
-                                }
-                            };
+                    scope.authRoleChange().then(function() {
+                    }, function() {
+                        //on error revert back changes
+                        _unAuthorize(toAdd, scope.data);
+                    });
+                }
+            };
 
-                            //object is selected event, call callback function
-                            scope.selectObject = function() {
-                                scope.data.selectedAuthorized = [];
-                                scope.data.selectedNotAuthorized = [];
-                                if (scope.selectedObject) {
-                                    scope.resetScrollOnSelect = true;
-                                    scope.onObjectSelected(scope.selectedObject);
-                                }
-                            };
+            var _unAuthorize = function(toRemove, data) {
+                angular.forEach(toRemove, function(sel) {
+                    var indexOf = data.selectedAuthorized.indexOf(sel);
+                    data.selectedAuthorized.splice(indexOf, 1);
+                    data.selectedNotAuthorized.push(sel);
+                });
+            };
 
-                            //roles has been changed, call callback function with changed values
-                            scope.authRoleChange = function() {
-                                scope.onAuthRoleChange(scope.selectedObject, scope.data.selectedAuthorized,
-                                        scope.data.selectedNotAuthorized).then(function() {
-                                    //success save
-                                    messageService.succsessAction();
-                                }, function() {
-                                    //error save
-                                    messageService.errorAction();
-                                });
+            var _authorize = function(toAdd, data) {
+                angular.forEach(toAdd, function(sel) {
+                    var indexOf = scope.data.selectedNotAuthorized.indexOf(sel);
+                    scope.data.selectedNotAuthorized.splice(indexOf, 1);
+                    scope.data.selectedAuthorized.push(sel);
+                });
+            };
 
-                                var allMenuObj = [];
-                                angular.forEach(Menus.allMenuObjects, function(menuO) {
-                                    allMenuObj.push(menuO);
-                                });
-                                Menus.allMenuObjects.splice(0, Menus.allMenuObjects.length);
-                                Menus.menus.leftnav.items.splice(0, Menus.menus.leftnav.items.length);
-                                Menus.menus.topbar.items.splice(0, Menus.menus.topbar.items.length);
-                                Menus.menus.usermenu.items.splice(0, Menus.menus.usermenu.items.length);
-                                for (var i = 0; i < allMenuObj.length; i++) {
-                                    var mO = [];
-                                    mO.push(allMenuObj[i]);
-                                    Menus.addMenuItems(mO);
-                                }
-                                scope.$bus.publish('refreshLeftMenu', null);
-                            };
+            //unauthorize button is clicked
+            scope.unAuthorize = function() {
+                //don't do anything if array null or empty
+                if (scope.selectedAuthorized && scope.selectedAuthorized.length > 0) {
+                    var toRemove = angular.copy(scope.selectedAuthorized);
+                    _unAuthorize(toRemove, scope.data);
 
-                        }
-                    };
-                } ]);
+                    scope.authRoleChange().then(function() {
+                    }, function() {
+                        //on error revert back changes
+                        _authorize(toRemove, scope.data);
+                    });
+                }
+            };
+
+            //object is selected event, call callback function
+            scope.selectObject = function() {
+                scope.data.selectedAuthorized = [];
+                scope.data.selectedNotAuthorized = [];
+                if (scope.selectedObject) {
+                    scope.resetScrollOnSelect = true;
+                    scope.onObjectSelected(scope.selectedObject);
+                }
+            };
+
+            //roles has been changed, call callback function with changed values
+            scope.authRoleChange = function() {
+                var deferred = $q.defer();
+                scope.onAuthRoleChange(scope.selectedObject, scope.data.selectedAuthorized, scope.data.selectedNotAuthorized).then(function(data) {
+                    //success save
+                    messageService.succsessAction();
+                    deferred.resolve();
+                }, function(error) {
+                    //error save
+                    deferred.reject();
+                    if (error.data.message) {
+                        messageService.error(error.data.message);
+                    } else {
+                        messageService.errorAction();
+                    }
+                });
+
+                var allMenuObj = [];
+                angular.forEach(Menus.allMenuObjects, function(menuO) {
+                    allMenuObj.push(menuO);
+                });
+                Menus.allMenuObjects.splice(0, Menus.allMenuObjects.length);
+                Menus.menus.leftnav.items.splice(0, Menus.menus.leftnav.items.length);
+                Menus.menus.topbar.items.splice(0, Menus.menus.topbar.items.length);
+                Menus.menus.usermenu.items.splice(0, Menus.menus.usermenu.items.length);
+                for (var i = 0; i < allMenuObj.length; i++) {
+                    var mO = [];
+                    mO.push(allMenuObj[i]);
+                    Menus.addMenuItems(mO);
+                }
+                scope.$bus.publish('refreshLeftMenu', null);
+                return deferred.promise;
+            };
+
+        }
+    };
+} ]);

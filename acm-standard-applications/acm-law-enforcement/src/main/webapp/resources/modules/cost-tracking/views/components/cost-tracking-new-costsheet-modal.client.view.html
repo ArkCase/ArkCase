@@ -148,26 +148,16 @@
             </div>
             <div id="collapseApprovers" class="panel-collapse">
                 <div class="panel-body">
-                    <div class="row" ng-repeat="approver in costsheet.participants">
+                    <div class="row">
                         <div class="col-sm-6 form-group">
-                            <input type="text" ng-model="approver.participantFullName" ng-click="searchApprover($index)"
-                                    class="input-md form-control"
-                                    placeholder="{{ 'costTracking.comp.newCostsheet.approver.placeholder' | translate }}" readonly />
+                            <label class="control-label">&nbsp;</label>
+                            <input type="text" ng-model="approverName" class="input-md form-control"
+                                   placeholder="{{ 'costTracking.comp.newCostsheet.approver.placeholder' | translate }}"
+                                   ng-click="userOrGroupSearch()" readonly>
                         </div>
-                        <div class="col-sm-2 form-group">
-                            <div class="pull-left">
-                                <button type="button" class="btn btn-link form-control" ng-click="addApprover();"
-                                        ng-disabled="!approver.participantFullName" ng-show="$last"
-                                        title="{{'costTracking.comp.newCostsheet.approver.addBtn' | translate}}">
-                                    <i class="fa fa-plus text-success"></i>
-                                </button>
-                            </div>
-                            <div class="pull-right">
-                                <button type="button" class="btn btn-link form-control" ng-click="removeApprover(approver)"
-                                        ng-show="!$first" title="{{'costTracking.comp.newCostsheet.approver.removeBtn' | translate}}">
-                                    <i class="fa fa-minus text-danger"></i>
-                                </button>
-                            </div>
+                        <div class="col-sm-6 form-group">
+                            <label for="owningGroup" translate>costTracking.comp.newCostsheet.approver.owningGroup</label>
+                            <input type="text" id="owningGroup" ng-disabled="true" ng-model="groupName" class="input-md form-control">
                         </div>
                     </div>
                 </div>
