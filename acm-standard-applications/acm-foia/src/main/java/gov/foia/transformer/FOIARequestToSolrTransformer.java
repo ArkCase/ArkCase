@@ -113,7 +113,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
      * @param requestIn
      * @param additionalProperties
      */
-    private void mapRequestProperties(FOIARequest requestIn, Map<String, Object> additionalProperties)
+    protected void mapRequestProperties(FOIARequest requestIn, Map<String, Object> additionalProperties)
     {
         additionalProperties.put("object_sub_type_s", "FOIA_REQUEST");
 
