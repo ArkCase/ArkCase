@@ -155,6 +155,10 @@ angular.module('services').factory('TimeTracking.InfoService', [ '$resource', '$
         if (!Service.validateTimesheet(timesheetInfo)) {
             return Util.errorPromise($translate.instant("common.service.error.invalidData"));
         }
+        //we need to make one of the fields is changed in order to be sure that update will be executed
+        //if we change modified won't make any differences since is updated before update to database
+        //but update will be trigger
+        timesheetInfo.modified = null;
         return Util.serviceCall({
             service: Service.save,
             data: timesheetInfo,
@@ -188,6 +192,10 @@ angular.module('services').factory('TimeTracking.InfoService', [ '$resource', '$
         if (!Service.validateNewTimesheet(timesheetInfo)) {
             return Util.errorPromise($translate.instant("common.service.error.invalidData"));
         }
+        //we need to make one of the fields is changed in order to be sure that update will be executed
+        //if we change modified won't make any differences since is updated before update to database
+        //but update will be trigger
+        timesheetInfo.modified = null;
         return Util.serviceCall({
             service: Service.save,
             data: timesheetInfo,

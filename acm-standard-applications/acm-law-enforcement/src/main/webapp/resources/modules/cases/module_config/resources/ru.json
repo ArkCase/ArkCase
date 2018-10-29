@@ -395,7 +395,8 @@
             "label": "ru_Approver",
             "addAnother": "ru_Add another",
             "remove": "ru_Remove Approver",
-            "pickerModal.header": "ru_Search for User"
+            "pickerModal.header": "ru_User/Group Search",
+            "owningGroup": "ru_Owning Group"
         },
         "button": {
             "cancel": "ru_Cancel",
