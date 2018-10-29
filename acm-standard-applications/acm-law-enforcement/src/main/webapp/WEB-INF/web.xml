@@ -29,8 +29,8 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:/spring/spring-library-*.xml,
-            classpath*:/spring/spring-library-extension-*.xml,
-            classpath*:/spring/spring-library-custom-*.xml
+            classpath*:/spring/spring-extension-library-*.xml,
+            classpath*:/spring/spring-custom-library-*.xml
             classpath:/spring/spring-security-config.xml,
             file:${user.home}/.arkcase/acm/spring-security/spring-security-config-*.xml
         </param-value>
@@ -129,8 +129,8 @@
             <param-value>
                 classpath:/spring/appServlet/servlet-context.xml
                 classpath*:spring/spring-web-*.xml
-                classpath*:spring/spring-web-extension-*.xml
-                classpath*:spring/spring-web-custom-*.xml
+                classpath*:spring/spring-extension-web-*.xml
+                classpath*:spring/spring-custom-web-*.xml
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
