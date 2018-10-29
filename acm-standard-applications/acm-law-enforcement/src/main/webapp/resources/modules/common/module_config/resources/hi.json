@@ -809,7 +809,8 @@
             "name": "नाम",
             "id": "आईडी",
             "title": "शीर्षक"
-        }
+        },
+        "addDocument": "HI_Choose document to add"
     },
     "common.addOrganization": {
         "title": "संगठन जोड़ें",
