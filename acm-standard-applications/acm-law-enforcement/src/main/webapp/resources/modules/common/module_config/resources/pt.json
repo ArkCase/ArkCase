@@ -809,7 +809,8 @@
             "name": "Nome",
             "id": "Identidade",
             "title": "Título"
-        }
+        },
+        "addDocument": "PT_Choose document to add"
     },
     "common.addOrganization": {
         "title": "Adicionar Organização",
