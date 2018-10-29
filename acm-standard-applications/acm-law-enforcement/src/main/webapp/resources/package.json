@@ -98,7 +98,8 @@
     "@bower_components/zeroclipboard": "zeroclipboard/zeroclipboard#^2.2.0",
     "@bower_components/angular-file-saver": "alferov/angular-file-saver#^1.1.3",
     "@bower_components/angular-pdfjs-viewer": "legalthings/angular-pdfjs-viewer#^0.8.1",
-    "@bower_components/pdf.js-viewer": "legalthings/pdf.js-viewer#^1.6.211"
+    "@bower_components/pdf.js-viewer": "legalthings/pdf.js-viewer#^1.6.211",
+    "@bower_components/ment.io": "jeff-collins/ment.io#~0.9.24"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
