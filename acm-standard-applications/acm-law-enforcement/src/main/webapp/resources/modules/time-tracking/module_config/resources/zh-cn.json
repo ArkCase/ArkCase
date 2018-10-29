@@ -127,13 +127,14 @@
             "removeBtn": "zh-cn_Remove",
             "addBtn": "zh-cn_Add"
         },
-        "userSearch.title": "zh-cn_Search for User",
+        "userSearch.title": "zh-cn_User/Group Search",
         "details": "zh-cn_Details",
         "approver": {
             "title": "zh-cn_Approver",
             "placeholder": "zh-cn_Select Approver",
             "removeBtn": "zh-cn_Remove Approver",
-            "addBtn": "zh-cn_Add Another Approver"
+            "addBtn": "zh-cn_Add Another Approver",
+            "owningGroup": "zh-cn_Owning Group"
         },
         "cancelButton": "zh-cn_Cancel",
         "saveButton": "zh-cn_Save",
