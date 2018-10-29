@@ -810,7 +810,8 @@
             "name": "Name",
             "id": "ICH WÜRDE",
             "title": "Titel"
-        }
+        },
+        "addDocument": "DE_Choose document to add"
     },
     "common.addOrganization": {
         "title": "Organisation hinzufügen",
