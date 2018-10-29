@@ -127,13 +127,14 @@
             "removeBtn": "fr_Remove",
             "addBtn": "fr_Add"
         },
-        "userSearch.title": "fr_Search for User",
+        "userSearch.title": "fr_User/Group Search",
         "details": "fr_Details",
         "approver": {
             "title": "fr_Approver",
             "placeholder": "fr_Select Approver",
             "removeBtn": "fr_Remove Approver",
-            "addBtn": "fr_Add Another Approver"
+            "addBtn": "fr_Add Another Approver",
+            "owningGroup": "fr_Owning Group"
         },
         "cancelButton": "fr_Cancel",
         "saveButton": "fr_Save",

@@ -356,7 +356,8 @@
             "label": "ja_Approver",
             "addAnother": "ja_Add another",
             "remove": "ja_Remove Approver",
-            "pickerModal.header": "ja_Search for User"
+            "pickerModal.header": "ja_User/Group Search",
+            "owningGroup": "ja_Owning Group"
         },
         "cancelButton": "ja_Cancel",
         "saveButton": "ja_Save Complaint"

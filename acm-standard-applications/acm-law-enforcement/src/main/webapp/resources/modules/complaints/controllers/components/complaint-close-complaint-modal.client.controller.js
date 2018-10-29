@@ -2,15 +2,14 @@
 
 angular.module('complaints').controller(
         'Complaints.CloseComplaintController',
-        [ '$scope', '$http', '$stateParams', '$translate', '$modalInstance', 'Complaint.InfoService', '$state', 'Object.LookupService', 'MessageService', 'UtilService', '$modal', 'ConfigService', 'ObjectService', 'modalParams', 'Case.InfoService',
-                function($scope, $http, $stateParams, $translate, $modalInstance, ComplaintInfoService, $state, ObjectLookupService, MessageService, Util, $modal, ConfigService, ObjectService, modalParams, CaseInfoService) {
+        [ '$scope', '$http', '$stateParams', '$translate', '$modalInstance', 'Complaint.InfoService', '$state', 'Object.LookupService', 'MessageService', 'UtilService', '$modal', 'ConfigService', 'ObjectService', 'modalParams', 'Case.InfoService', 'Object.ParticipantService',
+                function($scope, $http, $stateParams, $translate, $modalInstance, ComplaintInfoService, $state, ObjectLookupService, MessageService, Util, $modal, ConfigService, ObjectService, modalParams, CaseInfoService, ObjectParticipantService) {
 
                     $scope.modalParams = modalParams;
+                    $scope.approverName = "";
+                    $scope.groupName = "";
                     //Functions
                     $scope.dispositionTypeChanged = dispositionTypeChanged;
-                    $scope.addApprover = addApprover;
-                    $scope.addNewApprover = addNewApprover;
-                    $scope.removeApprover = removeApprover;
                     $scope.searchCase = searchCase;
                     $scope.save = save;
                     $scope.cancelModal = cancelModal;
@@ -37,7 +36,7 @@ angular.module('complaints').controller(
                         },
                         status: "IN APPROVAL",
                         objectType: "CLOSE_COMPLAINT_REQUEST",
-                        participants: [ {} ],
+                        participants: [],
                         created: null,
                         creator: null,
                         modified: null,
@@ -53,6 +52,9 @@ angular.module('complaints').controller(
                     $scope.futureTaskConfig = null;
                     $scope.isDescriptionRequired = false;
 
+                    var participantTypeApprover = 'approver';
+                    var participantTypeOwningGroup = "owning group";
+
                     ConfigService.getModuleConfig("complaints").then(function(moduleConfig) {
                         $scope.futureTaskConfig = _.find(moduleConfig.components, {
                             id: "newFutureTask"
@@ -62,7 +64,7 @@ angular.module('complaints').controller(
                     });
 
                     ConfigService.getComponentConfig("complaints", "participants").then(function(componentConfig) {
-                        $scope.config = componentConfig;
+                        $scope.participantsConfig = componentConfig;
                     });
 
                     ObjectLookupService.getDispositionTypes().then(function(dispositionTypes) {
@@ -119,65 +121,93 @@ angular.module('complaints').controller(
                         }
                     }
 
-                    function addNewApprover() {
-                        $scope.addApprover(-1);
-                    }
-
-                    function removeApprover(approver) {
-                        _.remove($scope.closeComplaintRequest.participants, function(object) {
-                            return object === approver;
-                        });
-                    }
-
-                    function addApprover(index) {
+                    // ---------------------------            approver         --------------------------------------
+                    $scope.userOrGroupSearch = function() {
                         var params = {};
-
                         params.header = $translate.instant("complaints.comp.closeComplaint.approver.pickerModal.header");
-                        params.filter = $scope.futureTaskConfig.userSearch.userFacetFilter;
-                        params.extraFilter = $scope.futureTaskConfig.userSearch.userFacetExtraFilter;
-                        params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
-                        params.modalInstance = $modalInstance;
+                        params.filter = "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)";
+                        params.extraFilter = "&fq=\"name\": ";
+                        params.config = Util.goodMapValue($scope.participantsConfig, "dialogUserPicker");
+                        params.secondGrid = 'true';
 
                         var modalInstance = $modal.open({
+                            templateUrl: "directives/core-participants/participants-user-group-search.client.view.html",
+                            controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+                                $scope.modalInstance = $modalInstance;
+                                $scope.header = params.header;
+                                $scope.filter = params.filter;
+                                $scope.config = params.config;
+                                $scope.secondGrid = params.secondGrid;
+                            } ],
                             animation: true,
-                            templateUrl: 'modules/complaints/views/components/complaint-approver-picker-search-modal.client.view.html',
-                            controller: 'Complaints.ApproverPickerController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
-                                modalParams: function() {
+                                params: function() {
                                     return params;
                                 }
                             }
                         });
 
-                        modalInstance.result.then(function(data) {
-                            if (data) {
-                                var approver = {
-                                    className: $scope.config.className,
-                                    objectType: null,
-                                    objectId: null,
-                                    participantType: "approver",
-                                    participantLdapId: data.email_lcs,
-                                    participantFullName: data.name,
-                                    created: null,
-                                    creator: null,
-                                    modified: null,
-                                    modifier: null,
-                                    privileges: [],
-                                    replaceChildrenParticipant: false,
-                                    isEditableUser: true,
-                                    isEditableType: true,
-                                    isDeletable: true
-                                };
-                                if (index > -1) {
-                                    $scope.closeComplaintRequest.participants[index] = approver;
-                                } else {
-                                    $scope.closeComplaintRequest.participants.push(approver);
+                        modalInstance.result.then(function(selection) {
+                            if (selection) {
+                                var selectedObjectType = selection.masterSelectedItem.object_type_s;
+                                if (selectedObjectType === 'USER') { // Selected user
+                                    var selectedUser = selection.masterSelectedItem;
+                                    var selectedGroup = selection.detailSelectedItems;
+
+                                    $scope.approverName = selectedUser.name;
+                                    addParticipantInCloseComplaint(participantTypeApprover, selectedUser.object_id_s);
+
+                                    if (selectedGroup) {
+                                        $scope.groupName = selectedGroup.name;
+                                        addParticipantInCloseComplaint(participantTypeOwningGroup, selectedGroup.object_id_s);
+                                    }
+
+                                    return;
+                                } else if (selectedObjectType === 'GROUP') { // Selected group
+                                    var selectedUser = selection.detailSelectedItems;
+                                    var selectedGroup = selection.masterSelectedItem;
+
+                                    $scope.groupName = selectedGroup.name;
+                                    addParticipantInCloseComplaint(participantTypeOwningGroup, selectedGroup.object_id_s);
+
+                                    if (selectedUser) {
+                                        $scope.approverName = selectedUser.name;
+                                        addParticipantInCloseComplaint(participantTypeApprover, selectedUser.object_id_s);
+                                    }
+
+                                    return;
                                 }
                             }
+
                         }, function() {
-                            return {};
+                            // Cancel button was clicked.
+                            return [];
                         });
+
+                    };
+
+                    function addParticipantInCloseComplaint(participantType, participantLdapId){
+                        var newParticipant = {};
+                        newParticipant.className = $scope.participantsConfig.className;
+                        newParticipant.participantType = participantType;
+                        newParticipant.participantLdapId = participantLdapId;
+
+                        if (ObjectParticipantService.validateParticipants([newParticipant], true)) {
+                            var participantExists = false;
+                            _.forEach($scope.closeComplaintRequest.participants, function (participant) {
+                                if(participant.participantType == participantType){
+                                    participantExists = true;
+                                    participant.participantLdapId = newParticipant.participantLdapId;
+                                    participant.replaceChildrenParticipant = true;
+                                    return false;
+                                }
+                            });
+                            if(!participantExists){
+                                $scope.closeComplaintRequest.participants.push(newParticipant);
+                            }
+                        }
                     }
 
                     function searchCase() {
