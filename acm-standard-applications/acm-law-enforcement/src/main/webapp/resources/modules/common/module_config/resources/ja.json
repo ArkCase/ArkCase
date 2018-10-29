@@ -809,7 +809,8 @@
             "name": "名前",
             "id": "識別",
             "title": "タイトル"
-        }
+        },
+        "addDocument": "JA_Choose document to add"
     },
     "common.addOrganization": {
         "title": "組織を追加する",
