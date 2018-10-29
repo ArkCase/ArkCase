@@ -118,6 +118,15 @@ angular.module('complaints').controller(
                         $scope.complaint.defaultAddress.creatorFullName = data.fullName;
                     });
 
+                    $scope.options = {
+
+                    };
+                    $scope.people = [
+                        { label: 'Joe'},
+                        { label: 'Mike'},
+                        { label: 'Diane'}
+                    ];
+
                     // ---------------------------            initiator         --------------------------------------
                     var newPersonAssociation = function() {
                         return {

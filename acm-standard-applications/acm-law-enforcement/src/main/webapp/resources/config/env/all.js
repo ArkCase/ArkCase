@@ -65,7 +65,8 @@ module.exports = {
                     'lib/ui-grid-draggable-rows/js/draggable-rows.js', 'lib/angular-cache/dist/angular-cache.min.js',
                     'lib/angular-file-saver/dist/angular-file-saver.bundle.js',
                     'lib/pdf.js-viewer/pdf.js',
-                    'lib/angular-pdfjs-viewer/dist/angular-pdfjs-viewer.js']
+                    'lib/angular-pdfjs-viewer/dist/angular-pdfjs-viewer.js',
+                    'lib/ment.io/dist/mentio.js']
         },
         css : [ 'assets/css/application.css', 'modules/**/css/*.css', 'assets/css/arkcase-extension.css'],
         scss : [ 'modules/**/scss/*.scss'],
