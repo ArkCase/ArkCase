@@ -269,12 +269,27 @@ public class DefaultFolderCompressor implements FolderCompressor
                    .stream()
                    .anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(childFolder.getId()) && fileFolderNode.isFolder())
                    ||
+                   isFolderParentSelected(compressNode, childFolder)
+                   ||
                    isRootFolderSelected(compressNode);
        }
        else
        {
            return true;
        }
+    }
+
+    private boolean isFolderParentSelected(CompressNode compressNode, AcmFolder childFolder)
+    {
+        if(childFolder.getParentFolder() != null)
+        {
+            if(compressNode.getSelectedNodes().stream().anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(childFolder.getParentFolder().getId())))
+            {
+                return true;
+            }
+           return isFolderParentSelected(compressNode, childFolder.getParentFolder());
+        }
+        return false;
     }
 
     /*
