@@ -132,15 +132,15 @@
             "amount": "en-in_Amount",
             "balance": "en-in_Balance",
             "removeBtn": "en-in_Remove Cost",
-            "addBtn": "en-in_Add Another Cost",
-            "owningGroup": "en-in_Owning Group"
+            "addBtn": "en-in_Add Another Cost"
         },
         "details": "en-in_Details",
         "approver": {
             "title": "en-in_Approver",
             "placeholder": "en-in_Select Approver",
             "removeBtn": "en-in_Remove Approver",
-            "addBtn": "en-in_Add Another Approver"
+            "addBtn": "en-in_Add Another Approver",
+            "owningGroup": "en-in_Owning Group"
         },
         "cancelButton": "en-in_Cancel",
         "saveButton": "en-in_Save",

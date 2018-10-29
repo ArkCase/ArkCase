@@ -356,7 +356,8 @@
             "label": "es_Approver",
             "addAnother": "es_Add another",
             "remove": "es_Remove Approver",
-            "pickerModal.header": "es_Search for User"
+            "pickerModal.header": "es_User/Group Search",
+            "owningGroup": "es_Owning Group"
         },
         "cancelButton": "es_Cancel",
         "saveButton": "es_Save Complaint"
