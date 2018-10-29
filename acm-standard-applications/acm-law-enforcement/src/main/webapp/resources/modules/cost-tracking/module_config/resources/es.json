@@ -132,15 +132,15 @@
             "amount": "es_Amount",
             "balance": "es_Balance",
             "removeBtn": "es_Remove Cost",
-            "addBtn": "es_Add Another Cost",
-            "owningGroup": "es_Owning Group"
+            "addBtn": "es_Add Another Cost"
         },
         "details": "es_Details",
         "approver": {
             "title": "es_Approver",
             "placeholder": "es_Select Approver",
             "removeBtn": "es_Remove Approver",
-            "addBtn": "es_Add Another Approver"
+            "addBtn": "es_Add Another Approver",
+            "owningGroup": "es_Owning Group"
         },
         "cancelButton": "es_Cancel",
         "saveButton": "es_Save",
