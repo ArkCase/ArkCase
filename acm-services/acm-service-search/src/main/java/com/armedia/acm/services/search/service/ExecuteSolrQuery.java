@@ -35,6 +35,7 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentsByQueryRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocumentsQuery;
 import com.armedia.acm.web.api.MDCConstants;
+import com.google.common.base.Strings;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
@@ -314,6 +315,14 @@ public class ExecuteSolrQuery
                 filterSubscriptionEvents, SearchConstants.DEFAULT_FIELD);
     }
 
+    public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
+            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents, String defaultField)
+            throws MuleException
+    {
+        return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, filterParentRef,
+                filterSubscriptionEvents, defaultField, null);
+    }
+
     /**
      * Executes solr queries and returns results as String
      *
@@ -343,12 +352,12 @@ public class ExecuteSolrQuery
      * @throws MuleException
      */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents,
-            String defaultField)
+            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents, String defaultField,
+            String fields)
             throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, filterParentRef,
-                filterSubscriptionEvents, defaultField, true);
+                filterSubscriptionEvents, defaultField, true, "");
     }
 
     /**
@@ -383,7 +392,7 @@ public class ExecuteSolrQuery
      */
     public String getResultsByPredefinedQuery(Authentication authentication, SolrCore core, String solrQuery, int firstRow, int maxRows,
             String sort, boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents,
-            String defaultField, boolean includeDACFilter) throws MuleException
+            String defaultField, boolean includeDACFilter, String fields) throws MuleException
     {
         AcmUserAuthorityContext authorityContext = (AcmUserAuthorityContext) authentication;
         Map<String, Object> headers = new HashMap<>();
@@ -399,12 +408,21 @@ public class ExecuteSolrQuery
         headers.put("includeDenyAccessFilter", isIncludeDenyAccessFilter());
         headers.put("indent", indent ? true : "");
         headers.put("df", defaultField);
+        if (!Strings.isNullOrEmpty(fields))
+        {
+            headers.put("fl", fields);
+        }
+        else
+        {
+            headers.put("fl", "");
+        }
         headers.put("includeDACFilter", includeDACFilter);
 
-        /* AFDP-7210 The Mule HTTP transport somehow clears the MDC context.  This send() call 
-           is the only use of Mule HTTP transport in ArkCase.  I fix the issue by saving and then 
-           restoring the MDC variables.  If we were going to keep Mule I would find a better 
-           solution.  But seeing this code will remind us to remove Mule from our solution.
+        /*
+         * AFDP-7210 The Mule HTTP transport somehow clears the MDC context. This send() call
+         * is the only use of Mule HTTP transport in ArkCase. I fix the issue by saving and then
+         * restoring the MDC variables. If we were going to keep Mule I would find a better
+         * solution. But seeing this code will remind us to remove Mule from our solution.
          */
         String alfrescoUser = MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY);
         String requestId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY);
