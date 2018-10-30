@@ -181,6 +181,12 @@
         <property name="timesheetResource" value="file:${user.home}/.arkcase/acm/timesheetConfiguration.json"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
+    <bean id="timesheetPropertiesService" class="com.armedia.acm.plugins.admin.service.TimesheetPropertiesService">
+        <property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/timesheetProperties.properties"/>
+    </bean>
+    <bean id="costsheetPropertiesService" class="com.armedia.acm.plugins.admin.service.CostsheetPropertiesService">
+        <property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/costsheetProperties.properties"/>
+    </bean>
     <bean id="holidayConfigurationService" class="com.armedia.acm.plugins.admin.service.HolidayConfigurationService">
         <property name="holidayFile" value="file:${user.home}/.arkcase/acm/holidayFile.json"/>
         <property name="objectConverter" ref="objectConverter"/>
