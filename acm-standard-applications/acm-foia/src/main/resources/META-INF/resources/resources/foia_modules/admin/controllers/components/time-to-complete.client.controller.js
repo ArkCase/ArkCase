@@ -17,7 +17,8 @@ angular.module('admin').controller(
                     };
 
                     $scope.checkInputValue = function(event){
-                        if(!(event.keyCode >= 48 && event.keyCode <= 57)){
+                        var numberRegExp = new RegExp("^[1-9][0-9]*$");
+                        if(event.key === '.' || !numberRegExp.test(event.key)){
                             event.preventDefault();
                         }
                     };
