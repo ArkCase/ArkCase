@@ -118,9 +118,13 @@ angular.module('complaints').controller(
                         $scope.complaint.defaultAddress.creatorFullName = data.fullName;
                     });
 
+                    // Obtains a list of all users in ArkCase
+                    var totalUsersInfo = LookupService.getUsers();
+
                     $scope.options = {
 
                     };
+
                     $scope.people = [
                         { label: 'Joe'},
                         { label: 'Mike'},
