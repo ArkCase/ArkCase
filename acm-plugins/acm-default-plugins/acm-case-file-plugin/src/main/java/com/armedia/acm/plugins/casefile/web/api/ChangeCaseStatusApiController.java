@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.casefile.web.api;
  */
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
+import com.armedia.acm.plugins.casefile.model.ChangeCaseStateContants;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService;
 
@@ -70,6 +71,7 @@ public class ChangeCaseStatusApiController
         {
             message = new HashMap<>();
             changeCaseFileStateService.save(form, auth, "");
+            message.put("info", "The case file is in approval mode");
         }
         catch (Exception e)
         {
@@ -78,7 +80,7 @@ public class ChangeCaseStatusApiController
             {
                 message.put("info", e.getMessage());
             }
-            AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Changing case status with id %d failed", "CHANGE_CASE_STATUS",
+            AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Changing case status with id %d failed", ChangeCaseStateContants.CHANGE_CASE_STATUS,
                     form.getCaseId().toString(), e);
             throw acmAppErrorJsonMsg;
         }
