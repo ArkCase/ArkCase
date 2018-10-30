@@ -132,15 +132,15 @@
             "amount": "zh-tw_Amount",
             "balance": "zh-tw_Balance",
             "removeBtn": "zh-tw_Remove Cost",
-            "addBtn": "zh-tw_Add Another Cost",
-            "owningGroup": "zh-tw_Owning Group"
+            "addBtn": "zh-tw_Add Another Cost"
         },
         "details": "zh-tw_Details",
         "approver": {
             "title": "zh-tw_Approver",
             "placeholder": "zh-tw_Select Approver",
             "removeBtn": "zh-tw_Remove Approver",
-            "addBtn": "zh-tw_Add Another Approver"
+            "addBtn": "zh-tw_Add Another Approver",
+            "owningGroup": "zh-tw_Owning Group"
         },
         "cancelButton": "zh-tw_Cancel",
         "saveButton": "zh-tw_Save",

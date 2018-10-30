@@ -71,6 +71,7 @@
         "menu": {
             "noop": "(Select Item)",
             "editWithWebDAV": "Edit",
+            "coEdit": "Co-Edit",
             "cancelEditing": "Cancel Editing",
             "newFolder": "New Folder",
             "newDocument": "New Document",
@@ -88,6 +89,7 @@
             "checkout": "Check Out",
             "checkin": "Check In",
             "declareRecord": "Declare As Record(s)",
+            "editWithOfficeOnline": "Open in Microsoft Office Online",
             "makePublic" : "Make Public",
             "makeAllPublic": "Make All Public",
             "makeNonPublic": "Make Non Public",
@@ -800,7 +802,8 @@
             "name": "Name",
             "id": "ID",
             "title": "Title"
-        }
+        },
+        "addDocument": "Choose document to add"
     },
     "common.addOrganization": {
         "title": "Add Organization",

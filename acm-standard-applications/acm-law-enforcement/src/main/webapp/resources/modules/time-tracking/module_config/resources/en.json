@@ -127,13 +127,14 @@
             "removeBtn": "Remove",
             "addBtn": "Add"
         },
-        "userSearch.title": "Search for User",
+        "userSearch.title": "User/Group Search",
         "details": "Details",
         "approver": {
             "title": "Approver",
             "placeholder": "Select Approver",
             "removeBtn": "Remove Approver",
-            "addBtn": "Add Another Approver"
+            "addBtn": "Add Another Approver",
+            "owningGroup": "Owning Group"
         },
         "cancelButton": "Cancel",
         "saveButton": "Save",

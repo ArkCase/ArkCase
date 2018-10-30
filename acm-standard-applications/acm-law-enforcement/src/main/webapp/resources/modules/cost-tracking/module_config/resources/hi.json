@@ -132,15 +132,15 @@
             "amount": "hi_Amount",
             "balance": "hi_Balance",
             "removeBtn": "hi_Remove Cost",
-            "addBtn": "hi_Add Another Cost",
-            "owningGroup": "hi_Owning Group"
+            "addBtn": "hi_Add Another Cost"
         },
         "details": "hi_Details",
         "approver": {
             "title": "hi_Approver",
             "placeholder": "hi_Select Approver",
             "removeBtn": "hi_Remove Approver",
-            "addBtn": "hi_Add Another Approver"
+            "addBtn": "hi_Add Another Approver",
+            "owningGroup": "hi_Owning Group"
         },
         "cancelButton": "hi_Cancel",
         "saveButton": "hi_Save",
