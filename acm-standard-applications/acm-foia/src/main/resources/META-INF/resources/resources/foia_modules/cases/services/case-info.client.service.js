@@ -156,6 +156,66 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
         });
     };
 
+
+    /**
+     * @ngdoc method
+     * @name saveCaseInfoNewCase
+     * @methodOf services:Case.InfoService
+     *
+     * @description
+     * Save case data
+     *
+     * @param {Object} caseInfo  Case data
+     *
+     * @returns {Object} Promise
+     */
+    Service.saveCaseInfoNewCase = function(caseInfo) {
+        if (!Service.validateCaseInfoNewCasefile(caseInfo)) {
+            return Util.errorPromise($translate.instant("common.service.error.invalidData"));
+        }
+        //we need to make one of the fields is changed in order to be sure that update will be executed
+        //if we change modified won't make any differences since is updated before update to database
+        //but update will be trigger
+        caseInfo.modified = null;
+        return Util.serviceCall({
+            service: Service.save,
+            data: JSOG.encode(caseInfo),
+            onSuccess: function(data) {
+                if (Service.validateCaseInfo(data)) {
+                    var caseInfo = data;
+                    if (caseInfo.id) {
+                        caseCache.put(caseGetUrl + caseInfo.id, caseInfo);
+                    }
+                    return caseInfo;
+                }
+            }
+        });
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name validateCaseInfoNewCasefile
+     * @methodOf services:Case.InfoService
+     *
+     * @description
+     * Validate case data when creating new casefile
+     *
+     * @param {Object} data  Data to be validated
+     *
+     * @returns {Boolean} Return true if data is valid
+     */
+    Service.validateCaseInfoNewCasefile = function(data) {
+        if (Util.isEmpty(data)) {
+            return false;
+        }
+        if (data.id) {
+            return false;
+        }
+        return true;
+    };
+
+
     /**
      * @ngdoc method
      * @name saveFoiaRequestInfo

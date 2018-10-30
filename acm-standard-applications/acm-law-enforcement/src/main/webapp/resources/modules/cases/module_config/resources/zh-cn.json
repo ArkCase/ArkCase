@@ -395,7 +395,8 @@
             "label": "zh-cn_Approver",
             "addAnother": "zh-cn_Add another",
             "remove": "zh-cn_Remove Approver",
-            "pickerModal.header": "zh-cn_Search for User"
+            "pickerModal.header": "zh-cn_User/Group Search",
+            "owningGroup": "zh-cn_Owning Group"
         },
         "button": {
             "cancel": "zh-cn_Cancel",

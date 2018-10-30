@@ -809,7 +809,8 @@
             "name": "Nombre",
             "id": "CARNÉ DE IDENTIDAD",
             "title": "Título"
-        }
+        },
+        "addDocument": "ES_Choose document to add"
     },
     "common.addOrganization": {
         "title": "Agregar organización",
