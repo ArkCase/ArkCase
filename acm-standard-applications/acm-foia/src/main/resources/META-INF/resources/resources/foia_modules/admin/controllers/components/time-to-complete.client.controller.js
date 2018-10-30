@@ -16,6 +16,12 @@ angular.module('admin').controller(
                         appeal: {}
                     };
 
+                    $scope.checkInputValue = function(event){
+                        if(!(event.keyCode >= 48 && event.keyCode <= 57)){
+                            event.preventDefault();
+                        }
+                    };
+
                     var queuesConfigurationPromise = AdminQueuesTimeToCompleteService.getQueuesConfig();
                     queuesConfigurationPromise.then(function(response) {
                         $scope.timeToComplete = response.data;
