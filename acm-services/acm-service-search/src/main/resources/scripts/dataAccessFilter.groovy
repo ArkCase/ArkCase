@@ -17,21 +17,22 @@ if (includeDACFilter) {
             || targetType.equals("FOLDER") || targetType.contentEquals("CONTAINER"))) {
         message.setInboundProperty("dataAccessFilter", "")
     } else {
-        String dataAccessFilter = "(protected_object_b:true AND (allow_user_ls:" + authenticatedUserId
+        StringBuilder dataAccessFilter = StringBuilder.newInstance();
+        dataAccessFilter.plus("(protected_object_b:true AND (allow_user_ls:").plus(authenticatedUserId)
 
         for (Long groupId : authenticatedUserGroupIds) {
             // include records where current user is in a group on allow_group_ls
-            dataAccessFilter += " OR allow_group_ls:" + groupId
+            dataAccessFilter.plus(" OR allow_group_ls:").plus(groupId)
         }
-        dataAccessFilter += ")) OR (public_doc_b:true OR protected_object_b:false OR (*:* -protected_object_b:[* TO *]) " +
-                "OR parent_allow_user_ls:" + authenticatedUserId
+        dataAccessFilter.plus(")) OR (public_doc_b:true OR protected_object_b:false OR (*:* -protected_object_b:[* TO *]) ").plus(
+                "OR parent_allow_user_ls:").plus(authenticatedUserId)
 
         for (Long groupId : authenticatedUserGroupIds) {
             // include records where current user is in a group on parent_allow_group_ls
-            dataAccessFilter += " OR parent_allow_group_ls:" + groupId
+            dataAccessFilter.plus(" OR parent_allow_group_ls:").plus(groupId)
         }
-        dataAccessFilter += ")"
-        message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter, StandardCharsets.UTF_8.displayName()))
+        dataAccessFilter.plus(")")
+        message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter.toString(), StandardCharsets.UTF_8.displayName()))
     }
 } else {
     message.setInboundProperty("dataAccessFilter", "")
@@ -39,18 +40,19 @@ if (includeDACFilter) {
 
 if (includeDenyAccessFilter) {
     // exclude records where the user is specifically locked out
-    String denyAccessFilter = "-deny_user_ls:" + authenticatedUserId
+    StringBuilder denyAccessFilter = StringBuilder.newInstance();
+    denyAccessFilter.plus("-deny_user_ls:").plus(authenticatedUserId)
     for (Long groupId : authenticatedUserGroupIds) {
         // exclude records where current user is in a locked-out group
-        denyAccessFilter += " AND -deny_group_ls:" + groupId
+        denyAccessFilter.plus(" AND -deny_group_ls:").plus(groupId)
     }
-    denyAccessFilter += " AND -deny_parent_user_ls:" + authenticatedUserId
+    denyAccessFilter.plus(" AND -deny_parent_user_ls:").plus(authenticatedUserId)
 
     for (Long groupId : authenticatedUserGroupIds) {
         // exclude records where current user is in a locked-out group
-        denyAccessFilter += " AND -deny_parent_group_ls:" + groupId
+        denyAccessFilter.plus(" AND -deny_parent_group_ls:").plus(groupId)
     }
-    message.setInboundProperty("denyAccessFilter", URLEncoder.encode(denyAccessFilter, StandardCharsets.UTF_8.displayName()))
+    message.setInboundProperty("denyAccessFilter", URLEncoder.encode(denyAccessFilter.toString(), StandardCharsets.UTF_8.displayName()))
 } else {
     message.setInboundProperty("denyAccessFilter", "")
 }
