@@ -809,7 +809,8 @@
             "name": "名称",
             "id": "识别号",
             "title": "标题"
-        }
+        },
+        "addDocument": "ZH_CN_Choose document to add"
     },
     "common.addOrganization": {
         "title": "添加组织",

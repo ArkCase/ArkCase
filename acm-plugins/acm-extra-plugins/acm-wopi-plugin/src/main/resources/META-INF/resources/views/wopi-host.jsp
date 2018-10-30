@@ -34,7 +34,7 @@
 
     <!-- Enable IE Standards mode -->
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Simultaneous editing</title>
+    <title>Office Online</title>
     <style type="text/css">
         body {
             margin: 0;
@@ -58,6 +58,6 @@
     </style>
 </head>
 <body>
-    <iframe id="office_frame" src="${url}"></iframe>
+    <iframe id="office_frame" src="${url}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-popups-to-escape-sandbox"></iframe>
 </body>
 </html>

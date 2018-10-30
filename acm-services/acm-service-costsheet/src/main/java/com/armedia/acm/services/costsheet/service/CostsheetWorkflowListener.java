@@ -38,6 +38,7 @@ import com.armedia.acm.services.costsheet.model.AcmCostsheetEvent;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.codehaus.plexus.util.StringUtils;
@@ -101,12 +102,14 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
 
         String author = event.getUserId();
         List<String> reviewers = findReviewers(event);
+        List<String> candidateGroups =  findCandidateGroups(event);
 
         String taskName = createName(costsheet);
 
         Map<String, Object> pvars = new HashMap<>();
 
         pvars.put("reviewers", reviewers);
+        pvars.put("candidateGroups", candidateGroups);
         pvars.put("taskName", taskName);
         pvars.put("documentAuthor", author);
         pvars.put("pdfRenditionId", event.getUploadedFiles().getPdfRendition().getFileId());
@@ -133,13 +136,28 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
 
         for (AcmParticipant participant : ((AcmCostsheet) event.getSource()).getParticipants())
         {
-            if ("approver".equals(participant.getParticipantType()))
+            if (ParticipantTypes.APPROVER.equals(participant.getParticipantType()))
             {
                 reviewers.add(participant.getParticipantLdapId());
             }
         }
 
         return reviewers;
+    }
+
+    private List<String> findCandidateGroups(AcmCostsheetEvent event)
+    {
+        List<String> candidateGroups = new ArrayList<>();
+
+        for (AcmParticipant participant : ((AcmCostsheet) event.getSource()).getParticipants())
+        {
+            if (ParticipantTypes.OWNING_GROUP.equals(participant.getParticipantType()))
+            {
+                candidateGroups.add(participant.getParticipantLdapId());
+            }
+        }
+
+        return candidateGroups;
     }
 
     public String createName(AcmCostsheet costsheet)

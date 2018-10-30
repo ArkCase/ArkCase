@@ -95,7 +95,7 @@
             "checkout": "Check Out",
             "checkin": "Check In",
             "declareRecord": "Declare As Record(s)",
-            "collaborate": "Collaborate",
+            "editWithOfficeOnline": "Open in Microsoft Office Online",
             "searchDocument": "Search Document(s)"
         },
         "table.columns": {
