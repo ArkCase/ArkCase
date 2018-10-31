@@ -14,6 +14,7 @@
     },
     "costTracking.comp.info": {
         "title": "情報",
+        "lastModified.label": "最終更新日",
         "incidentDate": "事件の日付",
         "priority": "優先",
         "assignedTo": "割り当て先",
