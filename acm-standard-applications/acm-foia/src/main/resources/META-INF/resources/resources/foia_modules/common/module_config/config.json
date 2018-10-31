@@ -245,6 +245,20 @@
                         "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))"
                     },
                     {
+                        "titleKey": "common.directive.docTree.menu.editWithOfficeOnline",
+                        "cmd": "collaborate",
+                        "uiIcon": "ui-icon-person",
+                        "disabledExpression": "!(new RegExp('\\.(docx|xlsx|pptx)$', 'i').test(nodes[0].data.ext))",
+                        "plugin": "WOPI"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.coEdit",
+                        "cmd": "co-edit",
+                        "uiIcon": "ui-icon-document",
+                        "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))",
+                        "plugin": "ONLY_OFFICE"
+                    },
+                    {
                         "titleKey": "common.directive.docTree.menu.email",
                         "cmd": "email",
                         "uiIcon": "ui-icon-mail-closed",
@@ -727,7 +741,7 @@
             "start": 0
         },
         "disabledFileCommandsOnLock": {
-            "WRITE":["editWithWebDAV","checkout","checkin","cancelEditing","cut","copy","paste","rename","remove","replace","declare","co-edit","collaborate"],
+            "WRITE":["editWithWebDAV","cut","copy","paste","rename","remove","replace","declare","co-edit","collaborate"],
             "SHARED_WRITE": ["editWithWebDAV","checkout","checkin","cancelEditing","cut","copy","paste","rename","remove","replace","declare"]
         }
     },
