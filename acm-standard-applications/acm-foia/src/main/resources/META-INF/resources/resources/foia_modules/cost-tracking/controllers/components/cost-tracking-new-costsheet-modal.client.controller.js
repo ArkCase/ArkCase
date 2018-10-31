@@ -3,7 +3,7 @@
 angular.module('cost-tracking').controller(
         'CostTracking.NewCostsheetController',
         [ '$scope', '$stateParams', '$translate', '$modalInstance', 'CostTracking.InfoService', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'ObjectService', 'modalParams', 'Person.InfoService', 'Object.ModelService', 'Object.ParticipantService',
-                'Profile.UserInfoService', 'Admin.CostsheetConfigurationService'
+                'Profile.UserInfoService', 'Admin.CostsheetConfigurationService',
                 function($scope, $stateParams, $translate, $modalInstance, CostTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService, UserInfoService, CostsheetConfigurationService) {
 
                     $scope.modalParams = modalParams;
@@ -111,18 +111,6 @@ angular.module('cost-tracking').controller(
                             });
                         }
 
-                        var statusIndexToRemove = [];
-                        for(var i=0; i<$scope.costsheetStatuses; i++) {
-                            if($scope.costsheetStatuses[i].key !== "DRAFT" && $scope.costsheetStatuses[i].key !== "FINAL") {
-                                statusIndexToRemove.push(i);
-                            }
-                        }
-                        if(statusIndexToRemove.length > 0) {
-                            for(var i=0; i<statusIndexToRemove.length; i++){
-                                $scope.costsheetStatuses.splice(statusIndexToRemove[i], 1);
-                            }
-                        }
-
                         $scope.costsheet = {
                             id: $scope.objectInfo.id,
                             user: $scope.objectInfo.user,
@@ -136,8 +124,6 @@ angular.module('cost-tracking').controller(
                         };
                     }
 
-                    //markotodo delete statuses other than DRAFT, FINAL
-
                     ObjectLookupService.getCostsheetTypes().then(function(costsheetTypes) {
                         $scope.costsheetTypes = costsheetTypes;
                     });
@@ -147,6 +133,12 @@ angular.module('cost-tracking').controller(
                     });
                     ObjectLookupService.getCostsheetStatuses().then(function(costsheetStatuses) {
                         $scope.costsheetStatuses = costsheetStatuses;
+
+                            for(var i = $scope.costsheetStatuses.length - 1; i >= 0; i--) {
+                                if($scope.costsheetStatuses[i].key !== "DRAFT" && $scope.costsheetStatuses[i].key !== "FINAL") {
+                                    $scope.costsheetStatuses.splice(i, 1);
+                                }
+                            }
                     });
 
                     UserInfoService.getUserInfo().then(function(infoData) {
@@ -159,8 +151,10 @@ angular.module('cost-tracking').controller(
                         } else {
                             $scope.isTypeSelected = true;
                         }
-                        $scope.costsheet.parentNumber = "";
+                        $scope.costsheet.parentNumber = ""
                     };
+
+
 
                     $scope.pickObject = function() {
 
@@ -343,6 +337,9 @@ angular.module('cost-tracking').controller(
                             checkForChanges($scope.objectInfo);
                             if (CostTrackingInfoService.validateCostsheet($scope.objectInfo)) {
                                 var objectInfo = Util.omitNg($scope.objectInfo);
+                                if($scope.objectInfo.status === "FINAL") {
+                                    submissionName = "SaveFinal";
+                                }
                                 promiseSaveInfo = CostTrackingInfoService.saveCostsheetInfo(objectInfo, submissionName);
                                 promiseSaveInfo.then(function(costsheetInfo) {
                                     $scope.$emit("report-object-updated", costsheetInfo);
@@ -380,6 +377,9 @@ angular.module('cost-tracking').controller(
                         }
                         if (objectInfo.details != $scope.costsheet.details) {
                             objectInfo.details = $scope.costsheet.details;
+                        }
+                        if (objectInfo.status != $scope.costsheet.status) {
+                            objectInfo.status = $scope.costsheet.status;
                         }
 
                         objectInfo.costs = $scope.costsheet.costs;

@@ -108,6 +108,11 @@
             <beans:property name="ecmFileService" ref="ecmFileService"/>
         </beans:bean>
 
+        <beans:bean id="foiaCostsheetBillingListener" class="gov.foia.listener.FOIACostsheetBillingListener">
+            <beans:property name="acmCostsheetDao" ref="acmCostsheetDao"/>
+            <beans:property name="billingService" ref="billingService"/>
+        </beans:bean>
+
         <beans:bean id="newRequestDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
             <beans:property name="type" value="New Request"/>
             <beans:property name="reqAck" value="REQ"/>
