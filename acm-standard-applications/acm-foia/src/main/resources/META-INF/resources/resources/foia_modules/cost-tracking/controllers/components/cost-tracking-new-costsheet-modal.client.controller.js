@@ -42,12 +42,17 @@ angular.module('cost-tracking').controller(
 
 
                             if(!Util.isEmpty($scope.modalParams.parentType) && !Util.isEmpty($scope.modalParams.parentNumber) && !Util.isEmpty($scope.modalParams.parentId)) {
-                                $scope.costsheet.parentId = $scope.modalParams.parentId;
-                                $scope.costsheet.parentType = $scope.modalParams.parentType;
-                                $scope.costsheet.parentNumber = $scope.modalParams.parentNumber;
-                                $scope.costsheet.title =  $scope.costsheet.user.fullName + " - " + $scope.modalParams.parentNumber;
-                                $scope.isTypeSelected = true;
-                                $scope.disableCostType = true;
+
+                               UserInfoService.getUserInfo().then(function(infoData) {
+                                   $scope.costsheet.user = infoData;
+
+                                   $scope.costsheet.parentId = $scope.modalParams.parentId;
+                                   $scope.costsheet.parentType = $scope.modalParams.parentType;
+                                   $scope.costsheet.parentNumber = $scope.modalParams.parentNumber;
+                                   $scope.costsheet.title =  $scope.costsheet.user.fullName + " - " + $scope.modalParams.parentNumber;
+                                   $scope.isTypeSelected = true;
+                                   $scope.disableCostType = true;
+                               });
                             }
                         }
 
@@ -139,10 +144,6 @@ angular.module('cost-tracking').controller(
                                     $scope.costsheetStatuses.splice(i, 1);
                                 }
                             }
-                    });
-
-                    UserInfoService.getUserInfo().then(function(infoData) {
-                        $scope.costsheet.user = infoData;
                     });
 
                     $scope.updateIsTypeSelected = function() {
