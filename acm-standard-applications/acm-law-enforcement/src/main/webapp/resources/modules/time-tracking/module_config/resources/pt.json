@@ -127,13 +127,14 @@
             "removeBtn": "pt_Remove",
             "addBtn": "pt_Add"
         },
-        "userSearch.title": "pt_Search for User",
+        "userSearch.title": "pt_User/Group Search",
         "details": "pt_Details",
         "approver": {
             "title": "pt_Approver",
             "placeholder": "pt_Select Approver",
             "removeBtn": "pt_Remove Approver",
-            "addBtn": "pt_Add Another Approver"
+            "addBtn": "pt_Add Another Approver",
+            "owningGroup": "pt_Owning Group"
         },
         "cancelButton": "pt_Cancel",
         "saveButton": "pt_Save",

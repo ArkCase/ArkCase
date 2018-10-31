@@ -33,9 +33,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ACM | ArkCase | User Interface</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <script src="<%= request.getContextPath()%>/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="<%= request.getContextPath()%>/node_modules/@bower_components/bootstrap/dist/js/bootstrap.js"></script>
 
-    <link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/node_modules/@bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/login.css">
     <!-- custom css-->
     <link rel="stylesheet" href="<%= request.getContextPath()%>/branding/customcss">

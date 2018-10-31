@@ -809,7 +809,8 @@
             "name": "名稱",
             "id": "識別號",
             "title": "標題"
-        }
+        },
+        "addDocument": "ZH_TW_Choose document to add"
     },
     "common.addOrganization": {
         "title": "添加組織",

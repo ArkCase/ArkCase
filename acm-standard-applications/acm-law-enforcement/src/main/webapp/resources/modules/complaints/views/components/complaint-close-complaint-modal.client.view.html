@@ -183,29 +183,16 @@
             </div>
             <div id="collapseApprovers" class="panel-collapse">
                 <div class="panel-body">
-                    <div class="" ng-repeat="participant in closeComplaintRequest.participants">
-                        <div class="row">
-                            <div class="col-sm-6 form-group">
-                                <input type="text" id="participant" ng-model="participant.participantFullName"
-                                        class="input-md form-control"
-                                        placeholder="{{ 'complaints.comp.closeComplaint.approver.placeholder' | translate }}"
-                                        ng-click="addApprover($index)" readonly required/>
-                            </div>
-                            <div class="col-sm-2 form-group">
-                                <div class="pull-left">
-                                    <button type="button" class="btn btn-link form-control" ng-click="removeApprover(participant)"
-                                            ng-show="!$first">
-                                        <i class="fa fa-minus text-danger"></i><span translate>complaints.comp.closeComplaint.approver.remove</span>
-                                    </button>
-                                </div>
-                                <div class="pull-left">
-                                    <button type="button" class="btn btn-link form-control" ng-click="addNewApprover()"
-                                            ng-disabled="!participant.participantLdapId" ng-show="$last">
-                                        <i class="fa fa-plus text-success"></i><span
-                                            translate>complaints.comp.closeComplaint.approver.addAnother</span>
-                                    </button>
-                                </div>
-                            </div>
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            <label class="control-label">&nbsp;</label>
+                            <input type="text" ng-model="approverName" class="input-md form-control"
+                                   placeholder="{{'complaints.comp.closeComplaint.approver.placeholder' | translate}}"
+                                   ng-click="userOrGroupSearch()" readonly required>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label for="owningGroup" translate>complaints.comp.closeComplaint.approver.owningGroup</label>
+                            <input type="text" id="owningGroup" ng-disabled="true" ng-model="groupName" class="input-md form-control">
                         </div>
                     </div>
                 </div>

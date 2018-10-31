@@ -809,7 +809,8 @@
             "name": "Имя",
             "id": "Я БЫ",
             "title": "Заглавие"
-        }
+        },
+        "addDocument": "RU_Choose document to add"
     },
     "common.addOrganization": {
         "title": "Добавить организацию",
