@@ -30,6 +30,7 @@ package com.armedia.acm.services.timesheet.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -87,6 +88,26 @@ public class TimesheetServiceImpl implements TimesheetService
     {
         TimesheetPipelineContext pipelineContext = new TimesheetPipelineContext();
         return pipelineManager.executeOperation(timesheet, pipelineContext, () -> getAcmTimesheetDao().save(timesheet));
+    }
+
+    @Override
+    @Transactional
+    public AcmTimesheet save(AcmTimesheet timesheet, Authentication authentication, String submissionName) throws PipelineProcessException
+    {
+        TimesheetPipelineContext pipelineContext = new TimesheetPipelineContext();
+        // populate the context
+        pipelineContext.setAuthentication(authentication);
+        pipelineContext.setNewTimesheet(timesheet.getId() == null);
+        pipelineContext.setSubmissonName(submissionName);
+        String ipAddress = AuthenticationUtils.getUserIpAddress();
+        pipelineContext.setIpAddress(ipAddress);
+
+        return pipelineManager.executeOperation(timesheet, pipelineContext, () -> {
+            timesheet.setStatus(getSubmissionStatusesMap().get(submissionName));
+            AcmTimesheet saved = getAcmTimesheetDao().save(timesheet);
+            LOG.info("Timesheet with id [{}] and title [{}] was saved", saved.getId(), saved.getTitle());
+            return saved;
+        });
     }
 
     @Override

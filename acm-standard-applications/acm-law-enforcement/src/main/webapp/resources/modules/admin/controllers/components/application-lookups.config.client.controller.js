@@ -72,7 +72,7 @@ angular.module('admin').controller('Admin.LookupsConfigController',
 
             };
 
-            $scope.deleteLookupFromExtLookups = function() {
+            function deleteLookupFromExtLookups() {
                 //delete function
                 var promise = LookupService.deleteLookup($scope.selectedLookupDef.name);
                 promise.then(function(success) {
@@ -130,5 +130,26 @@ angular.module('admin').controller('Admin.LookupsConfigController',
                 });
 
                 return promiseSaveInfo;
+            }
+
+            // Add method for AFDP-6803 to customize ok button
+            $scope.deleteLookUpsConfirm = function deleteLookUpsConfirm() {
+                bootbox.confirm({
+                    message: "<i class='fa fa-fw fa-exclamation-triangle text-danger'></i>" + $translate.instant("admin.application.lookups.config.deleteLookupMsg"),
+                    buttons: {
+                        confirm:{
+                            label: $translate.instant("admin.application.lookups.config.dialog.deleteLookupConfirm"),
+                            className :"btn btn-primary"
+                        },
+                        cancel: {
+                            label: $translate.instant("admin.application.lookups.config.dialog.cancel"),
+                        }
+                    },
+                    callback: function(result){
+                        if (result) {
+                            deleteLookupFromExtLookups();
+                        }
+                    }
+                })
             }
         } ]);

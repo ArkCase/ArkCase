@@ -11,6 +11,11 @@ var _ = require('lodash'), glob = require('glob');
 module.exports = _.extend(require('./env/all'));
 
 /**
+ * Load active profiles
+ */
+var activeProfiles = require('./../profiles');
+
+/**
  * Get files by glob patterns
  */
 module.exports.getGlobbedFiles = function(globPatterns, removeRoot) {
@@ -49,55 +54,65 @@ module.exports.getGlobbedFiles = function(globPatterns, removeRoot) {
  * Get the modules JavaScript files
  */
 module.exports.getJavaScriptAssets = function() {
-    var output = this.getGlobbedFiles(this.assets.lib.js.concat(this.assets.js, this.assets.lib.customJs), '');
-    return output;
+    return this.getGlobbedFiles(this.assets.lib.js.concat(this.assets.js, this.assets.lib.customJs), '');
 };
 
 module.exports.getModulesJavaScriptAssets = function() {
     var output = [];
+    var _this = this;
 
-    var jsModules = this.getGlobbedFiles(this.assets.jsModules, 'modules/');
-    var jsCustomModules = this.getGlobbedFiles(this.assets.jsCustomModules, 'custom_modules/');
-
-    var jsDirectives = this.getGlobbedFiles(this.assets.jsDirectives, 'directives/');
-    var jsCustomDirectives = this.getGlobbedFiles(this.assets.jsCustomDirectives, 'custom_directives/');
-
-    var jsServices = this.getGlobbedFiles(this.assets.jsServices, 'services/');
-    var jsCustomServices = this.getGlobbedFiles(this.assets.jsCustomServices, 'custom_services/');
-
-    //  Remove duplicated JS files from modules
-    jsModules = _.difference(jsModules, jsCustomModules);
-    jsDirectives = _.difference(jsDirectives, jsCustomDirectives);
-    jsServices = _.difference(jsServices, jsCustomServices);
-
-    _.forEach(jsModules, function(item, index, arr) {
-        item = 'modules/' + item;
-        arr[index] = item;
+    var jsModules = _this.getGlobbedFiles(this.assets.jsModules, 'modules/');
+    jsModules = _.map(jsModules, function(item) {
+        return 'modules/' + item;
     });
 
-    _.forEach(jsCustomModules, function(item, index, arr) {
-        item = 'custom_modules/' + item;
-        arr[index] = item;
+    var jsDirectives = _this.getGlobbedFiles(_this.assets.jsDirectives, 'directives/');
+    jsDirectives = _.map(jsDirectives, function(item) {
+        return 'directives/' + item;
     });
 
-    _.forEach(jsDirectives, function(item, index, arr) {
-        item = 'directives/' + item;
-        arr[index] = item;
+    var jsServices = _this.getGlobbedFiles(_this.assets.jsServices, 'services/');
+    jsServices = _.map(jsServices, function(item) {
+        return 'services/' + item;
     });
 
-    _.forEach(jsCustomDirectives, function(item, index, arr) {
-        item = 'custom_directives/' + item;
-        arr[index] = item;
-    });
+    var jsCustomModules = [];
+    var jsCustomDirectives = [];
+    var jsCustomServices = [];
 
-    _.forEach(jsServices, function(item, index, arr) {
-        item = 'services/' + item;
-        arr[index] = item;
-    });
+    _.forEach(activeProfiles, function(profile) {
+        var jsProfileModuleDirs = _.map(_this.assets.jsCustomModules, function(dir) {
+            return profile + dir;
+        });
+        var customModulesFiles = _this.getGlobbedFiles(jsProfileModuleDirs, profile + '_modules/');
+        jsModules = _.difference(jsModules, customModulesFiles);
 
-    _.forEach(jsCustomServices, function(item, index, arr) {
-        item = 'custom_services/' + item;
-        arr[index] = item;
+        var profileModulesFiles = _.map(customModulesFiles, function(item) {
+            return profile + '_modules/' + item;
+        });
+        jsCustomModules.concat(profileModulesFiles);
+
+        var jsProfileDirectiveDirs = _.map(_this.assets.jsCustomDirectives, function(dir) {
+            return profile + dir;
+        });
+        var customDirectivesFiles = _this.getGlobbedFiles(jsProfileDirectiveDirs, profile + '_directives/');
+        jsDirectives = _.difference(jsDirectives, customDirectivesFiles);
+
+        var profileDirectivesFiles = _.map(customDirectivesFiles, function(item) {
+            return profile + '_directives/' + item;
+        });
+        jsCustomDirectives.concat(profileDirectivesFiles);
+
+        var jsProfileServiceDirs = _.map(_this.assets.jsCustomServices, function(dir) {
+            return profile + dir;
+        });
+        var customServicesFiles = _this.getGlobbedFiles(jsProfileServiceDirs, profile + '_services/');
+        jsServices = _.difference(jsServices, customServicesFiles);
+
+        var profileServicesFiles = _.map(customServicesFiles, function(item) {
+            return profile + '_services/' + item;
+        });
+        jsCustomDirectives.concat(profileServicesFiles);
     });
 
     output = output.concat(jsModules);
@@ -113,5 +128,13 @@ module.exports.getModulesJavaScriptAssets = function() {
  * Get the modules CSS files
  */
 module.exports.getCSSAssets = function() {
-    return this.getGlobbedFiles(this.assets.lib.css.concat(this.assets.css), '');
+    var _this = this;
+    var cssResources = _this.assets.lib.css.concat(_this.assets.css);
+    _.forEach(activeProfiles, function(profile) {
+        var customCssResources = _.map(_this.assets.jsCustomCss, function(item) {
+            return profile + item;
+        });
+        cssResources.concat(customCssResources);
+    });
+    return this.getGlobbedFiles(cssResources, '');
 };

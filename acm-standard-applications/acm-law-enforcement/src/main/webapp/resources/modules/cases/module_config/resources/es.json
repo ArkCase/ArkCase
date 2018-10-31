@@ -26,6 +26,7 @@
         "assignee.label": "Asignado a",
         "owningGroup.label": "Grupo propietario",
         "dueDate.label": "Fecha de vencimiento",
+        "alertMessage": "es_Due date must be after the create date ",
         "priorities": {
             "low%": "Bajo",
             "medium%": "Medio",
@@ -261,6 +262,16 @@
             "title": "Título",
             "parent": "Padre",
             "modified": "Modificado"
+        },
+        "objectPicker": {
+            "title": "es_Search for object",
+            "table.columns": {
+                "name": "es_Name",
+                "type": "es_Type",
+                "title": "es_Title",
+                "id": "es_ID",
+                "username": "es_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {
@@ -364,6 +375,7 @@
     },
     "cases.comp.change.status": {
         "title": "es_Change Case Status",
+        "description.label": "es_Description",
         "information": {
             "title": "es_Change Case Status Information",
             "date": "es_Change Date",
@@ -380,10 +392,11 @@
         },
         "approver": {
             "placeholder": "es_Select Approver",
-            "label": "es_Select Approver",
+            "label": "es_Approver",
             "addAnother": "es_Add another",
             "remove": "es_Remove Approver",
-            "pickerModal.header": "es_Choose Approver"
+            "pickerModal.header": "es_User/Group Search",
+            "owningGroup": "es_Owning Group"
         },
         "button": {
             "cancel": "es_Cancel",

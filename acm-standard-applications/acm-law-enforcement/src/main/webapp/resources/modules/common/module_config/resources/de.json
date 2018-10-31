@@ -23,6 +23,22 @@
         "defaultDateUIFormat": "MM/tt/jjjj",
         "defaultDateTimeUIFormat": "MM/tt/jjjj UU:mm"
     },
+    "common.userOrGroupSearch": {
+        "id": "de_userSearch",
+        "title": "de_User/Group Search",
+        "search": {
+            "btn": "de_Search",
+            "placeholder": "de_Search for the user or group."
+        },
+        "cancelButton": "de_Cancel",
+        "confirmButton": "de_Confirm",
+        "assigneeGridColumns": {
+            "name": "de_Name",
+            "type": "de_Type",
+            "title": "de_Title",
+            "username": "de_Username"
+        }
+    },
     "common.frevvo": {
         "defaultDateFormat": "JJJJ-MM-TT"
     },
@@ -624,6 +640,16 @@
             "error.ownerUnique": "Nur ein Besitzer ist erlaubt."
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "Teilnehmer hinzufügen",
+        "editParticipant.label": "Datensatz bearbeiten",
+        "participantType.label": "Teilnehmertyp",
+        "participantName.label": "Teilnehmer name",
+        "btnOk.text": "Sparen",
+        "btnCancel.text": "Stornieren",
+        "dialogUserGroupPicker.header": "de_Search User/Group",
+        "replaceChildrenParticipant": "Ersetzen Kinder Teilnehmer"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "% Abgeschlossen"
     },
@@ -784,7 +810,8 @@
             "name": "Name",
             "id": "ICH WÜRDE",
             "title": "Titel"
-        }
+        },
+        "addDocument": "DE_Choose document to add"
     },
     "common.addOrganization": {
         "title": "Organisation hinzufügen",

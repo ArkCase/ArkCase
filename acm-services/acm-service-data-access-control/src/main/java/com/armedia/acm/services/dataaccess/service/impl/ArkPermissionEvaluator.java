@@ -1,6 +1,5 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.objectonverter.json.JSONMarshaller;
@@ -8,6 +7,7 @@ import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrAbstractDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -19,16 +19,14 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.metamodel.EntityType;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -103,8 +101,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
     private SpringContextHolder springContextHolder;
     private JSONMarshaller jsonMarshaller;
     private Set<String> assignedObjectTypes;
-    @PersistenceContext
-    private EntityManager entityManager;
+    private String packagesToScan;
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission)
@@ -135,7 +132,6 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
         // checking access to a single object
         if (Long.class.isAssignableFrom(targetId.getClass()))
         {
-
             return checkAccessForSingleObject(authentication, (Long) targetId, targetType, permission);
         }
 
@@ -150,11 +146,6 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
             }
         }
         return true;
-    }
-
-    protected boolean isAssignedObjectType(String objectType)
-    {
-        return assignedObjectTypes.contains(objectType);
     }
 
     protected <T> AcmObjectToSolrDocTransformer<T> findTransformerForEntity(Class<T> entityClass)
@@ -189,25 +180,22 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
 
         log.trace("Checking [{}] for [{}] on object of type [{}] with id [{}]", permission, authentication.getName(), targetType, id);
 
-        if (isAssignedObjectType(targetType))
+        String solrDocument = getSolrDocument(authentication, id, targetType);
+
+        if (solrDocument == null || !checkForReadAccess(solrDocument))
         {
-            String solrDocument = getSolrDocument(authentication, id, targetType);
-
-            if (solrDocument == null || !checkForReadAccess(solrDocument))
+            solrDocument = lookupAndConvertObjectFromDatabase(targetType, id);
+            if (solrDocument == null)
             {
-                solrDocument = lookupAndConvertObjectFromDatabase(targetType, id);
-                if (solrDocument == null)
-                {
-                    // there really is no such object, or else no DAO or no transformer
-                    return false;
-                }
+                // there really is no such object, or else no DAO or no transformer
+                return false;
             }
+        }
 
-            // break here and return true if any of AC rules match (see SBI-956)
-            if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission, solrDocument))
-            {
-                return true;
-            }
+        // break here and return true if any of AC rules match (see SBI-956)
+        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission, solrDocument))
+        {
+            return true;
         }
 
         return evaluateAccess(authentication, id, targetType, Arrays.asList(((String) permission).split("\\|")));
@@ -348,12 +336,22 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
 
         try
         {
+            boolean shouldIncludeACLFilter = isAssignedObjectType(objectType);
+            boolean filterParent = true;
+            boolean filterSubscriptionEvents = false;
+            boolean indent = true;
+
             // if the Solr search returns the object, the user has read access to it.
-            String result = getExecuteSolrQuery()
-                    .getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1, "id asc", objectType);
+            String result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
+                    0, 1, "id asc", indent, objectType, filterParent,
+                    filterSubscriptionEvents, SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter);
+
             if (result.contains("numFound\":0"))
-                result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0, 1, "id asc",
-                        objectType);
+            {
+                result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0,
+                        1, "id asc", indent, objectType, filterParent, filterSubscriptionEvents,
+                        SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter);
+            }
             return result;
         }
         catch (MuleException e)
@@ -367,6 +365,11 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
     {
         int numFound = getSearchResults().getNumFound(solrResponse);
         return numFound > 0;
+    }
+
+    protected boolean isAssignedObjectType(String objectType)
+    {
+        return assignedObjectTypes.contains(objectType);
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()
@@ -474,22 +477,37 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
         return assignedObjectTypes;
     }
 
+    public String getPackagesToScan()
+    {
+        return packagesToScan;
+    }
+
+    public void setPackagesToScan(String packagesToScan)
+    {
+        this.packagesToScan = packagesToScan;
+    }
+
     @Override
     public void afterPropertiesSet()
     {
-        Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
+        Object[] packages = Arrays.stream(packagesToScan.split(","))
+                .map(it -> StringUtils.substringBeforeLast(it, ".*"))
+                .toArray();
 
-        assignedObjectTypes = entities.stream()
-                .filter(entityType -> AcmAssignedObject.class.isAssignableFrom(entityType.getJavaType()))
-                .peek(entityType -> log.debug("Found entity [{}]", entityType.getJavaType().getSimpleName()))
+        Reflections reflections = new Reflections(packages);
+
+        Set<Class<? extends AcmAssignedObject>> acmObjects = reflections.getSubTypesOf(AcmAssignedObject.class);
+
+        assignedObjectTypes = acmObjects.stream()
+                .peek(it -> log.debug("Found assigned object [{}]", it.getSimpleName()))
                 .map(it -> {
                     try
                     {
-                        return ((AcmObject) it.getJavaType().newInstance()).getObjectType();
+                        return it.newInstance().getObjectType();
                     }
                     catch (InstantiationException | IllegalAccessException e)
                     {
-                        log.warn("Can not determine object type for class [{}]", it.getJavaType().getSimpleName());
+                        log.warn("Can not determine object type for class [{}]", it.getSimpleName());
                     }
                     return null;
                 }).filter(Objects::nonNull)

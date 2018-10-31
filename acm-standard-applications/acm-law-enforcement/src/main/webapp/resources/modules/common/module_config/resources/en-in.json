@@ -23,6 +23,22 @@
         "defaultDateUIFormat": "MM/dd/yyyy",
         "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
     },
+    "common.userOrGroupSearch": {
+        "id": "en-in_userSearch",
+        "title": "en-in_User/Group Search",
+        "search": {
+            "btn": "en-in_Search",
+            "placeholder": "en-in_Search for the user or group."
+        },
+        "cancelButton": "en-in_Cancel",
+        "confirmButton": "en-in_Confirm",
+        "assigneeGridColumns": {
+            "name": "en-in_Name",
+            "type": "en-in_Type",
+            "title": "en-in_Title",
+            "username": "en-in_Username"
+        }
+    },
     "common.frevvo": {
         "defaultDateFormat": "YYYY-MM-DD"
     },
@@ -203,7 +219,6 @@
         "selectedItemsGrid.label": "Selected entries",
         "notValidUser": "en-in_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
         "notValidGroup": "en-in_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
-
     },
     "common.directive.search": {
         "showMore.button.text": "Show More Values",
@@ -624,6 +639,16 @@
             "error.ownerUnique": "Only one owner is allowed."
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "Add Participant",
+        "editParticipant.label": "Edit Record",
+        "participantType.label": "Participant Type ",
+        "participantName.label": "Participant Name",
+        "btnOk.text": "Save",
+        "btnCancel.text": "Cancel",
+        "dialogUserGroupPicker.header": "en-in_Search User/Group",
+        "replaceChildrenParticipant": "replace children participant"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "% Complete"
     },
@@ -784,7 +809,8 @@
             "name": "Name",
             "id": "ID",
             "title": "Title"
-        }
+        },
+        "addDocument": "Choose document to add"
     },
     "common.addOrganization": {
         "title": "Add Organization",

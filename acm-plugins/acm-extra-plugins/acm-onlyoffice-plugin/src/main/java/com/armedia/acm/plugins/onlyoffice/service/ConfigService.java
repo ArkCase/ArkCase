@@ -28,14 +28,17 @@ package com.armedia.acm.plugins.onlyoffice.service;
  */
 
 import com.armedia.acm.plugins.onlyoffice.model.config.Config;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import org.springframework.security.core.Authentication;
 
 public interface ConfigService
 {
-    Config getConfig(Long fileId, Authentication auth);
+    Config getConfig(Long fileId, String mode, String lang, Authentication auth, String token, AcmUser user);
 
     String getDocumentServerUrlApi();
 
     String getArkcaseBaseUrl();
+
+    boolean isOutboundSignEnabled();
 }

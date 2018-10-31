@@ -85,6 +85,62 @@
             "status": "Положение дел"
         }
     },
+    "timeTracking.comp.newTimesheet": {
+        "title": "ru_Time Tracking",
+        "editCase.title": "ru_Edit Time Tracking",
+        "user": "ru_User",
+        "status": "ru_Status",
+        "objectPicker": {
+            "title": "ru_Search for object",
+            "table.columns": {
+                "name": "ru_Name",
+                "type": "ru_Type",
+                "title": "ru_Title",
+                "id": "ru_ID",
+                "username": "ru_Username"
+            }
+        },
+        "otherChargeCodePicker":{
+            "title": "ru_Search charge code",
+            "table.columns": {
+                "name": "ru_Name",
+                "type": "ru_Type"
+            },
+            "buttons":{
+                "cancel":"ru_Cancel",
+                "ok": "ru_OK"
+            }
+        },
+        "time": {
+            "title": "ru_Timesheet",
+            "date": "ru_Period",
+            "date.placeholder": "ru_Select week",
+            "date.close.button": "ru_Close",
+            "prevWeekBtn": "ru_Prev Week",
+            "nextWeekBtn": "ru_Next Week",
+            "type": "ru_Type",
+            "selectTypeMessage": "ru_You have to select 'Type', so that you can choose a 'Charge Code'.",
+            "chargeCode": "ru_Charge Code",
+            "chargeRole": "ru_Charge Role",
+            "total": "ru_Total",
+            "totalCost": "ru_Total Cost",
+            "removeBtn": "ru_Remove",
+            "addBtn": "ru_Add"
+        },
+        "userSearch.title": "ru_User/Group Search",
+        "details": "ru_Details",
+        "approver": {
+            "title": "ru_Approver",
+            "placeholder": "ru_Select Approver",
+            "removeBtn": "ru_Remove Approver",
+            "addBtn": "ru_Add Another Approver",
+            "owningGroup": "ru_Owning Group"
+        },
+        "cancelButton": "ru_Cancel",
+        "saveButton": "ru_Save",
+        "updateButton": "ru_Update",
+        "sendForApproval": "ru_Send for Approval"
+    },
     "timeTracking.tree": {
         "nodeTypes": {
             "details.label": "Детали",

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <beans:beans profile="extension-foia">
+        <beans:bean id="foiaPropertiesConfigurer"
+                    class="com.armedia.acm.crypto.properties.AcmEncryptablePropertySourcesPlaceholderConfigurer">
+            <!-- note: must leave "file:" at the start of the file name for spring
+                to be able to read the file; otherwise it will try to read from the
+                classpath -->
+            <beans:property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+            <beans:property name="ignoreResourceNotFound" value="true"/>
+            <beans:property name="localOverride" value="false"/>
+            <beans:property name="locations">
+                <beans:list>
+                    <beans:value>file:${user.home}/.arkcase/acm/foia.properties</beans:value>
+                </beans:list>
+            </beans:property>
+        </beans:bean>
+
+        <!-- needed for the UI  -->
+        <beans:bean id="foiaProperties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
+            <!-- note: must leave "file:" at the start of the file name for spring
+            to be able to read the file; otherwise it will try to read from the
+            classpath -->
+            <beans:property name="location" value="file:${user.home}/.arkcase/acm/foia.properties"/>
+            <beans:property name="ignoreResourceNotFound" value="true"/>
+            <beans:property name="localOverride" value="false"/>
+            <beans:property name="properties">
+                <beans:props></beans:props>
+            </beans:property>
+        </beans:bean>
+
+        <beans:bean id="foiaConfigListExtension" class="java.util.ArrayList">
+            <beans:constructor-arg>
+                <beans:list>
+                    <beans:bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                        <beans:property name="configName" value="foia"/>
+                        <beans:property name="configDescription" value="FOIA"/>
+                        <beans:property name="properties" ref="foiaProperties"/>
+                        <beans:property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                        <beans:property name="objectConverter" ref="objectConverter"/>
+                    </beans:bean>
+                </beans:list>
+            </beans:constructor-arg>
+        </beans:bean>
+
+        <beans:bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+            <beans:property name="targetObject" ref="configList"/>
+            <beans:property name="targetMethod" value="addAll"/>
+            <beans:property name="arguments" ref="foiaConfigListExtension"/>
+        </beans:bean>
+
+        <beans:bean id="caseFileStartBusinessProcessBusinessRule"
+                    class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-start-business-process-rules-foia.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="caseFileNextPossibleQueuesBusinessRule"
+                    class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-next-possible-queues-rules-foia.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="saveCaseFileBusinessRule" class="com.armedia.acm.plugins.casefile.service.SaveCaseFileBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-case-file-rules-foia.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="leaveCurrentQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.LeaveCurrentQueueBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-leave-current-queue-rules-foia.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="enterQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.EnterQueueBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-enter-queue-rules-foia.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="onLeaveQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.OnLeaveQueueBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-on-leave-queue-rules-foia.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="onEnterQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.OnEnterQueueBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-on-enter-queue-rules-foia.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="foiaExtensionHandler" class="gov.foia.pipeline.presave.FOIAExtensionHandler">
+            <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
+            <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
+            <beans:property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
+            <beans:property name="extensionWorkingDays" value="${request.extensionWorkingDays}"/>
+        </beans:bean>
+
+        <beans:bean id="foiaExtensionEmailHandler" class="gov.foia.pipeline.postsave.FOIAExtensionEmailHandler">
+            <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
+            <beans:property name="documentGenerator" ref="correspondenceDocumentGenerator"/>
+            <beans:property name="notificationSender" ref="notificationSender"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+        </beans:bean>
+
+        <beans:bean id="caseFilePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+            <beans:property name="preSaveHandlers">
+                <beans:list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                    <beans:ref bean="caseFileSetCreatorHandler"/>
+                    <beans:ref bean="foiaExtensionHandler"/>
+                </beans:list>
+            </beans:property>
+            <beans:property name="postSaveHandlers">
+                <beans:list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                    <beans:ref bean="caseFileRulesHandler"/>
+                    <beans:ref bean="caseFileContainerHandler"/>
+                    <beans:ref bean="caseFileEcmFolderHandler"/>
+                    <beans:ref bean="caseFileFolderStructureHandler"/>
+                    <beans:ref bean="caseFileEventHandler"/>
+                    <beans:ref bean="caseFileUploadAttachmentsHandler"/>
+                    <beans:ref bean="requestDocumentHandler"/>
+                    <beans:ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
+                    <beans:ref bean="foiaExtensionEmailHandler"/>
+                    <!--<ref beans:bean="caseFileAssignmentHandler"/>-->
+                </beans:list>
+            </beans:property>
+        </beans:bean>
+
+        <beans:bean id="foiaRequestToSolrTransformer" class="gov.foia.transformer.FOIARequestToSolrTransformer"
+                    parent="caseFileToSolrTransformer"/>
+
+        <beans:bean id="foiaPersonToSolrTransformer" class="gov.foia.transformer.FOIAPersonToSolrTransformer"
+                    parent="personToSolrTransformer"/>
+
+        <beans:bean id="foiaFileToSolrTransformer" class="gov.foia.transformer.FOIAFileToSolrTransformer"
+                    parent="ecmFileToSolrTrasnformer"/>
+
+        <beans:bean id="foiaRequestDao" class="gov.foia.dao.FOIARequestDao"/>
+
+        <beans:bean id="foiaRequesterAssociationToSolrTransformer" class="gov.foia.transformer.FOIARequesterAssociationToSolrTransformer"
+                    parent="personAssociationToSolrTransformer"/>
+
+        <beans:bean id="pdfDocumentGenerator" class="gov.foia.service.PDFDocumentGenerator">
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="pdfService" ref="pdfService"/>
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+        </beans:bean>
+
+        <beans:bean id="correspondenceDocumentGenerator" class="gov.foia.service.CorrespondenceDocumentGenerator">
+            <beans:property name="correspondenceService" ref="correspondenceService"/>
+        </beans:bean>
+
+        <beans:bean id="docxDocumentGenerator" class="gov.foia.service.DocxDocumentGenerator">
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="wordGenerator" ref="poiWordGenerator"/>
+        </beans:bean>
+
+        <beans:bean id="acknowledgementDocumentService" class="gov.foia.service.AcknowledgementDocumentService">
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
+            <beans:property name="documentGenerator" ref="correspondenceDocumentGenerator"/>
+            <beans:property name="notificationSender" ref="notificationSender"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+        </beans:bean>
+
+        <beans:bean id="documentGeneratorService" class="gov.foia.service.FOIADocumentGeneratorService">
+            <beans:property name="contextHolder" ref="acmContextHolder"/>
+        </beans:bean>
+
+        <beans:bean id="requestDocumentHandler" class="gov.foia.pipeline.postsave.RequestDocumentHandler">
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
+            <beans:property name="documentGenerator" ref="correspondenceDocumentGenerator"/>
+        </beans:bean>
+
+        <beans:bean id="scheduledBillingQueuePurger" class="gov.foia.service.ScheduledBillingQueuePurger">
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+            <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        </beans:bean>
+
+        <beans:bean id="scheduledHoldQueuePurger" class="gov.foia.service.ScheduledHoldQueuePurger">
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+            <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderConverterService" class="gov.foia.service.ResponseFolderConverterService">
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="converter" ref="folderConverter"/>
+            <beans:property name="responseFolderService" ref="responseFolderService"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderCompressorService" class="gov.foia.service.ResponseFolderCompressorService">
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="compressor" ref="folderCompressor"/>
+            <beans:property name="responseFolderService" ref="responseFolderService"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderNotifyService" class="gov.foia.service.ResponseFolderNotifyService">
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="compressor" ref="folderCompressor"/>
+            <beans:property name="notificationSender" ref="notificationSender"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="responseFolderService" ref="responseFolderService"/>
+            <beans:property name="acmAppConfiguration" ref="acmApplication"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderService" class="gov.foia.service.ResponseFolderService">
+            <beans:property name="folderService" ref="acmFolderService"/>
+            <beans:property name="responseFolderName" value="03 Response"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderFileUpdateService" class="gov.foia.service.ConvertAndCompressResponseFolderFileUpdateService">
+            <beans:property name="converter" ref="folderConverter"/>
+            <beans:property name="compressor" ref="folderCompressor"/>
+            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderFileAddedListener" class="gov.foia.listener.ResponseFolderFileAddedListener">
+            <beans:property name="responseFolderName" value="03 Response"/>
+            <beans:property name="releaseQueueName" value="Release"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="fileUpdateService" ref="responseFolderFileUpdateService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaQueueCorrespondenceService" class="gov.foia.service.FOIAQueueCorrespondenceService">
+            <beans:property name="notificationSender" ref="notificationSender"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="responseFolderService" ref="responseFolderService"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+            <beans:property name="documentGenerator" ref="correspondenceDocumentGenerator"/>
+            <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaFileService" class="gov.foia.service.FOIAFileService">
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+        </beans:bean>
+
+        <beans:bean id="requestAssignmentService" class="gov.foia.service.RequestAssignmentService">
+            <beans:property name="saveCaseService" ref="saveCaseService"/>
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+            <beans:property name="groupService" ref="groupService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaRequestService" class="gov.foia.service.FOIARequestService">
+            <beans:property name="saveCaseService" ref="saveCaseService"/>
+            <beans:property name="responseFolderCompressorService" ref="responseFolderCompressorService"/>
+            <beans:property name="foiaRequestFileBrokerClient" ref="foiaRequestFileBrokerClient"/>
+            <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="notificationSender" ref="notificationSender"/>
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="originalRequestFolderNameFormat" ref="originalRequestFolderNameFormat"/>
+            <beans:property name="appealTitleFormat" ref="appealTitleFormat"/>
+            <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
+        </beans:bean>
+
+        <beans:bean id="saveFOIARequestService" class="gov.foia.service.SaveFOIARequestService">
+            <beans:property name="foiaRequestService" ref="foiaRequestService"/>
+            <beans:property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+        </beans:bean>
+
+        <beans:bean id="originalRequestFolderNameFormat" class="java.lang.String">
+            <beans:constructor-arg value="FOIA Request (%s)"/>
+        </beans:bean>
+
+        <beans:bean id="appealTitleFormat" class="java.lang.String">
+            <beans:constructor-arg value=" (Appeal of %s)"/>
+        </beans:bean>
+
+    </beans:beans>
+</beans:beans>

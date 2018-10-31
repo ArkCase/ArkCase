@@ -1,0 +1,1328 @@
+{
+    "id": "people",
+    "title": "People",
+    "configurable": true,
+    "initialLinksShown": true,
+    "menus": [
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "people.main",
+            "menuItemTitle": "people.menus.leftnav.item",
+            "moduleId": "person",
+            "iconClass": "fa fa-user",
+            "position": 40
+        },
+        {
+            "menuId": "topbar",
+            "menuItemURL": "newPerson",
+            "menuItemTitle": "people.menus.topbar.item",
+            "moduleId": "person",
+            "modalDialog": {
+                "moduleName": "people",
+                "templateUrl": "modules/people/views/components/person-new-person.client.view.html",
+                "controllerName": "People.NewPersonController"
+            },
+            "iconClass": "fa fa-user",
+            "position": 30
+        }
+    ],
+    "tree": {
+        "pageSize": 32,
+        "filters": [
+            {
+                "desc": "people.tree.filters.iHaveCreated",
+                "name": "my-created",
+                "value": "fq=author_s:${user}"
+            },
+            {
+                "desc": "people.tree.filters.noFilter",
+                "name": "",
+                "value": ""
+            }
+        ],
+        "sorters": [
+            {
+                "desc": "people.tree.sorters.createdDateAsc",
+                "name": "sort-date-asc"
+            },
+            {
+                "desc": "people.tree.sorters.createdDateDesc",
+                "name": "sort-date-desc"
+            },
+            {
+                "desc": "people.tree.sorters.idAsc",
+                "name": "sort-by-id-asc"
+            },
+            {
+                "desc": "people.tree.sorters.idDesc",
+                "name": "sort-by-id-desc"
+            },
+            {
+                "desc": "people.tree.sorters.nameAsc",
+                "name": "sort-by-name-asc",
+                "default": true
+            },
+            {
+                "desc": "people.tree.sorters.nameDesc",
+                "name": "sort-by-name-desc"
+            }
+        ],
+        "nodeTypes": [
+            {
+                "type": "prev",
+                "icon": "fa fa-arrow-up"
+            },
+            {
+                "type": "next",
+                "icon": "fa fa-arrow-down"
+            },
+            {
+                "type": "p/PERSON",
+                "icon": "fa fa-user",
+                "components": [
+                    "details",
+                    "pictures",
+                    "addresses",
+                    "phones",
+                    "emails",
+                    "urls",
+                    "participants",
+                    "aliases",
+                    "organizations",
+                    "ids",
+                    "cases",
+                    "related",
+                    "history"
+                ]
+            },
+            {
+                "type": "p/PERSON/det",
+                "label": "people.tree.nodeTypes.details.label",
+                "icon": "fa fa-info-circle",
+                "components": [
+                    "details"
+                ]
+            },
+            {
+                "type": "p/PERSON/pic",
+                "label": "people.tree.nodeTypes.pictures.label",
+                "icon": "fa fa-picture-o",
+                "components": [
+                    "pictures"
+                ]
+            },
+            {
+                "type": "p/PERSON/add",
+                "label": "people.tree.nodeTypes.addresses.label",
+                "icon": "fa fa-map-marker",
+                "components": [
+                    "addresses"
+                ]
+            },
+            {
+                "type": "p/PERSON/pho",
+                "label": "people.tree.nodeTypes.phones.label",
+                "icon": "fa fa-phone",
+                "components": [
+                    "phones"
+                ]
+            },
+            {
+                "type": "p/PERSON/ema",
+                "label": "people.tree.nodeTypes.emails.label",
+                "icon": "fa fa-envelope",
+                "components": [
+                    "emails"
+                ]
+            },
+            {
+                "type": "p/PERSON/url",
+                "label": "people.tree.nodeTypes.urls.label",
+                "icon": "fa fa-link",
+                "components": [
+                    "urls"
+                ]
+            },
+            {
+                "type": "p/PERSON/par",
+                "label": "people.tree.nodeTypes.participants.label",
+                "icon": "fa fa-users",
+                "components": [
+                    "participants"
+                ]
+            },
+            {
+                "type": "p/PERSON/ali",
+                "label": "people.tree.nodeTypes.aliases.label",
+                "icon": "fa fa-eye",
+                "components": [
+                    "aliases"
+                ]
+            },
+            {
+                "type": "p/PERSON/org",
+                "label": "people.tree.nodeTypes.organizations.label",
+                "icon": "fa fa-building",
+                "components": [
+                    "organizations"
+                ]
+            },
+            {
+                "type": "p/PERSON/ids",
+                "label": "people.tree.nodeTypes.ids.label",
+                "icon": "fa fa-credit-card",
+                "components": [
+                    "ids"
+                ]
+            },
+            {
+                "type": "p/PERSON/cas",
+                "label": "people.tree.nodeTypes.cases.label",
+                "icon": "fa fa-folder",
+                "components": [
+                    "cases"
+                ]
+            },
+            {
+                "type": "p/PERSON/rel",
+                "label": "people.tree.nodeTypes.related.label",
+                "icon": "fa fa-exchange",
+                "components": [
+                    "related"
+                ]
+            },
+            {
+                "type": "p/PERSON/his",
+                "label": "people.tree.nodeTypes.history.label",
+                "icon": "fa fa-bell-o",
+                "components": [
+                    "history"
+                ]
+            },
+            {
+                "type": "p/ERROR",
+                "icon": "fa fa-question"
+            }
+        ]
+    },
+    "components": [
+        {
+            "id": "main",
+            "title": "people.comp.main.title",
+            "icon": "fa fa-tachometer",
+            "enabled": false,
+            "configurable": true,
+            "type": "empty",
+            "editable": false,
+            "widgets": [
+                {
+                    "id": "details",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "details",
+                            "displayName": "people.comp.details.table.columns.title",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
+                        },
+                        {
+                            "width": 150,
+                            "name": "modified",
+                            "displayName": "people.comp.details.table.columns.modified",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                        },
+                        {
+                            "width": 150,
+                            "name": "modifier",
+                            "displayName": "people.comp.details.table.columns.modifier",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        }
+                    ]
+                },
+                {
+                    "id": "pictures",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "thumbnail",
+                            "displayName": "people.comp.pictures.table.columns.thumbnail",
+                            "headerCellFilter": "translate",
+                            "enableCellEdit": false,
+                            "cellTemplate": "<center><img ng-src='{{row.entity.object_id_s | personPictureSrc}}' height='50px'></img></center>",
+                            "width": 100
+                        },
+                        {
+                            "name": "title_parseable",
+                            "displayName": "people.comp.pictures.table.columns.title",
+                            "headerCellFilter": "translate",
+                            "enableCellEdit": false,
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.title_parseable}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                        },
+                        {
+                            "name": "description_s",
+                            "displayName": "people.comp.pictures.table.columns.description",
+                            "enableCellEdit": false,
+                            "headerCellFilter": "translate"
+                        }
+                    ]
+                },
+                {
+                    "id": "addresses",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "type",
+                            "displayName": "people.comp.addresses.table.columns.type",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.addressTypes, row.entity.type) | translate }}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
+                            "width": "*"
+                        },
+                        {
+                            "name": "streetAddress",
+                            "displayName": "people.comp.addresses.table.columns.streetAddress",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a googlemaps-href is-primary-address='true' location-data='row.entity'>{{row.entity.streetAddress}}</a>"
+                        },
+                        {
+                            "name": "modified",
+                            "displayName": "people.comp.addresses.table.columns.modified",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                            "enableCellEdit": false
+                        },
+                        {
+                            "name": "modifier",
+                            "displayName": "people.comp.addresses.table.columns.modifier",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        }
+                    ]
+                },
+                {
+                    "id": "phones",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "subType",
+                            "displayName": "people.comp.phones.table.columns.type",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.phoneTypes, row.entity.subType) | translate }}</div>"
+                        },
+                        {
+                            "name": "value",
+                            "displayName": "people.comp.phones.table.columns.value",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                        },
+                        {
+                            "name": "modifier",
+                            "displayName": "people.comp.phones.table.columns.modifier",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        },
+                        {
+                            "name": "modified",
+                            "displayName": "people.comp.phones.table.columns.modified",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                            "headerCellFilter": "translate",
+                            "enableCellEdit": false,
+                            "width": 150
+                        }
+                    ]
+                },
+                {
+                    "id": "emails",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "subType",
+                            "displayName": "people.comp.emails.table.columns.type",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.emailTypes, row.entity.subType) | translate }}</div>"
+                        },
+                        {
+                            "name": "value",
+                            "displayName": "people.comp.emails.table.columns.value",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                        },
+                        {
+                            "name": "modifier",
+                            "displayName": "people.comp.emails.table.columns.modifier",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        },
+                        {
+                            "name": "modified",
+                            "displayName": "people.comp.emails.table.columns.modified",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                            "headerCellFilter": "translate",
+                            "enableCellEdit": false,
+                            "width": 150
+                        }
+                    ]
+                },
+                {
+                    "id": "urls",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "subType",
+                            "displayName": "people.comp.urls.table.columns.type",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents ui-grid-cell-anchor'>{{ grid.appScope.utils.getLookupValue(grid.appScope.urlTypes, row.entity.subType) | translate }}</div>"
+                        },
+                        {
+                            "name": "value",
+                            "displayName": "people.comp.urls.table.columns.value",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents ui-grid-cell-anchor'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                        },
+                        {
+                            "name": "modifier",
+                            "displayName": "people.comp.urls.table.columns.modifier",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        },
+                        {
+                            "name": "modified",
+                            "displayName": "people.comp.urls.table.columns.modified",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                            "headerCellFilter": "translate",
+                            "enableCellEdit": false,
+                            "width": 150
+                        }
+                    ]
+                },
+                {
+                    "id": "aliases",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "aliasValue",
+                            "displayName": "people.comp.aliases.table.columns.aliasValue",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.aliasValue}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                        },
+                        {
+                            "name": "aliasType",
+                            "field": "aliasType",
+                            "displayName": "people.comp.aliases.table.columns.type",
+                            "enableCellEdit": false,
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "modifier",
+                            "displayName": "people.comp.aliases.table.columns.modifier",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        },
+                        {
+                            "name": "modified",
+                            "displayName": "people.comp.aliases.table.columns.modified",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                            "headerCellFilter": "translate",
+                            "enableCellEdit": false,
+                            "width": 150
+                        }
+                    ]
+                },
+                {
+                    "id": "organizations",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "organization.organizationValue",
+                            "displayName": "people.comp.organizations.table.columns.value",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span>"
+                        },
+                        {
+                            "name": "organization.defaultIdentification.identificationNumber",
+                            "displayName": "people.comp.organizations.table.columns.identification",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<span>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</span>"
+                        },
+                        {
+                            "name": "organization.organizationToPersonAssociationType",
+                            "displayName": "people.comp.related.table.columns.type",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<span ng-bind=\"grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.organizationToPersonAssociationType) | translate\"></span>"
+                        },
+                        {
+                            "name": "organizationType",
+                            "displayName": "people.comp.organizations.table.columns.contact",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<span>{{grid.appScope.getPrimaryContact(row.entity)}}</span>"
+                        },
+                        {
+                            "name": "phone",
+                            "displayName": "people.comp.organizations.table.columns.phone",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<span>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.type + ']' : ''}}</span>"
+                        },
+                        {
+                            "name": "location",
+                            "displayName": "people.comp.organizations.table.columns.location",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.state ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : row.entity.organization.defaultAddress.city) : ''}}</span>"
+                        }
+                    ]
+                },
+                {
+                    "id": "ids",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "identificationType",
+                            "displayName": "people.comp.ids.table.columns.type",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.identificationTypes, row.entity.identificationType) | translate }}</div>"
+                        },
+                        {
+                            "name": "identificationNumber",
+                            "displayName": "people.comp.ids.table.columns.number",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.identificationNumber}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                        },
+                        {
+                            "name": "modifier",
+                            "displayName": "people.comp.ids.table.columns.modifier",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        },
+                        {
+                            "name": "modified",
+                            "displayName": "people.comp.ids.table.columns.modified",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                            "headerCellFilter": "translate",
+                            "enableCellEdit": false,
+                            "width": 150
+                        }
+                    ]
+                },
+                {
+                    "id": "cases",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "id",
+                            "field": "parent_object.object_id_s",
+                            "displayName": "people.comp.cases.table.columns.id",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
+                            "width": 130
+                        },
+                        {
+                            "name": "title",
+                            "field": "parent_object.title_parseable",
+                            "displayName": "people.comp.cases.table.columns.title",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
+                        },
+                        {
+                            "name": "status",
+                            "field": "parent_object.status_lcs",
+                            "displayName": "people.comp.cases.table.columns.status",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "width": 150,
+                            "name": "assignee",
+                            "field": "parent_object.assignee_id_lcs",
+                            "displayName": "people.comp.cases.table.columns.assignee",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        },
+                        {
+                            "width": 150,
+                            "name": "modified",
+                            "field": "parent_object.modified_date_tdt",
+                            "displayName": "people.comp.cases.table.columns.modified",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate) }}</div>"
+                        }
+                    ]
+                },
+                {
+                    "id": "related",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "association_type_s",
+                            "displayName": "people.comp.related.table.columns.type",
+                            "headerCellFilter": "translate",
+                            "lookup": "personTypes",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.relationshipTypes, row.entity.association_type_s) | translate }}</div>"
+                        },
+                        {
+                            "name": "firstName",
+                            "field": "target_object.first_name_lcs",
+                            "displayName": "people.comp.related.table.columns.firstName",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{COL_FIELD}}</a>"
+                        },
+                        {
+                            "name": "lastName",
+                            "field": "target_object.last_name_lcs",
+                            "displayName": "people.comp.related.table.columns.lastName",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{COL_FIELD}}</a>"
+                        },
+                        {
+                            "name": "organization",
+                            "field": "target_object.default_organization_s",
+                            "displayName": "people.comp.related.table.columns.organization",
+                            "headerCellFilter": "translate"
+                        }
+                    ]
+                },
+                {
+                    "id": "history",
+                    "type": "component"
+                },
+                {
+                    "id": "participants",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "participantType",
+                            "displayName": "people.comp.participants.table.columns.type",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
+                            "lookup": "participantTypes"
+                        },
+                        {
+                            "name": "participantLdapId",
+                            "displayName": "people.comp.participants.table.columns.name",
+                            "headerCellFilter": "translate",
+                            "lookup": "participantNames"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "info",
+            "title": "people.comp.info.title",
+            "enabled": false,
+            "configurable": true,
+            "type": "empty",
+            "editable": false
+        },
+        {
+            "id": "actions",
+            "title": "people.comp.actions.title",
+            "enabled": false,
+            "configurable": true,
+            "type": "empty",
+            "editable": false
+        },
+        {
+            "id": "details",
+            "title": "people.comp.details.title",
+            "configurable": true,
+            "icon": "fa fa-info-circle",
+            "enabled": true,
+            "type": "empty"
+        },
+        {
+            "id": "pictures",
+            "title": "people.comp.pictures.title",
+            "icon": "fa fa-picture-o",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "thumbnail",
+                    "displayName": "people.comp.pictures.table.columns.thumbnail",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "cellTemplate": "<center><img ng-src='{{row.entity.object_id_s | personPictureSrc}}' height='50px'></img></center>",
+                    "width": 100
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "people.comp.pictures.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.title_parseable}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                },
+                {
+                    "name": "description_s",
+                    "displayName": "people.comp.pictures.table.columns.description",
+                    "enableCellEdit": false,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "displayName": "people.comp.pictures.table.columns.created",
+                    "cellTemplate": "<div>{{ row.entity.create_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "width": 150
+                },
+                {
+                    "name": "author",
+                    "field": "creator_full_name_lcs",
+                    "displayName": "people.comp.pictures.table.columns.creator",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "width": 150
+                }
+            ]
+        },
+        {
+            "id": "addresses",
+            "title": "people.comp.addresses.title",
+            "icon": "fa fa-map-marker",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "type",
+                    "displayName": "people.comp.addresses.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.addressTypes, row.entity.type) | translate }}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
+                    "width": "*"
+                },
+                {
+                    "name": "streetAddress",
+                    "displayName": "people.comp.addresses.table.columns.streetAddress",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a googlemaps-href is-primary-address='true' location-data='row.entity'>{{row.entity.streetAddress}}</a>"
+                },
+                {
+                    "name": "streetAddress2",
+                    "displayName": "people.comp.addresses.table.columns.streetAddress2",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a googlemaps-href is-primary-address='false' location-data='row.entity'>{{row.entity.streetAddress2}}</a>"
+                },
+                {
+                    "name": "city",
+                    "displayName": "people.comp.addresses.table.columns.city",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "state",
+                    "displayName": "people.comp.addresses.table.columns.state",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "zip",
+                    "displayName": "people.comp.addresses.table.columns.zip",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "country",
+                    "displayName": "people.comp.addresses.table.columns.country",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.countries, row.entity.country) | translate }}</div>"
+                },
+                {
+                    "name": "modified",
+                    "displayName": "people.comp.addresses.table.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "enableCellEdit": false
+                },
+                {
+                    "name": "modifier",
+                    "displayName": "people.comp.addresses.table.columns.modifier",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                }
+            ]
+        },
+        {
+            "id": "phones",
+            "title": "people.comp.phones.title",
+            "icon": "fa fa-phone",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "subType",
+                    "displayName": "people.comp.phones.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.phoneTypes, row.entity.subType) | translate }}</div>"
+                },
+                {
+                    "name": "value",
+                    "displayName": "people.comp.phones.table.columns.value",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                },
+                {
+                    "name": "description",
+                    "displayName": "people.comp.phones.table.columns.description",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modifier",
+                    "displayName": "people.comp.phones.table.columns.modifier",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "modified",
+                    "displayName": "people.comp.phones.table.columns.modified",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "width": 150
+                }
+            ]
+        },
+        {
+            "id": "emails",
+            "title": "people.comp.emails.title",
+            "icon": "fa fa-envelope",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "subType",
+                    "displayName": "people.comp.emails.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.emailTypes, row.entity.subType) | translate }}</div>"
+                },
+                {
+                    "name": "value",
+                    "displayName": "people.comp.emails.table.columns.value",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                },
+                {
+                    "name": "description",
+                    "displayName": "people.comp.emails.table.columns.description",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modifier",
+                    "displayName": "people.comp.emails.table.columns.modifier",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "modified",
+                    "displayName": "people.comp.emails.table.columns.modified",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "width": 150
+                }
+            ]
+        },
+        {
+            "id": "urls",
+            "title": "people.comp.urls.title",
+            "icon": "fa fa-link",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "subType",
+                    "displayName": "people.comp.urls.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.urlTypes, row.entity.subType) | translate }}</div>"
+                },
+                {
+                    "name": "value",
+                    "displayName": "people.comp.urls.table.columns.value",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents ui-grid-cell-anchor'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                },
+                {
+                    "name": "description",
+                    "displayName": "people.comp.urls.table.columns.description",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modifier",
+                    "displayName": "people.comp.urls.table.columns.modifier",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "modified",
+                    "displayName": "people.comp.urls.table.columns.modified",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "width": 150
+                }
+            ]
+        },
+        {
+            "id": "participants",
+            "title": "people.comp.participants.title",
+            "icon": "fa fa-users",
+            "className": "com.armedia.acm.services.participants.model.AcmParticipant",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "typeNoAccess": "No Access",
+            "columnDefs": [
+                {
+                    "name": "participantType",
+                    "displayName": "people.comp.participants.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
+                    "lookup": "participantTypes"
+                },
+                {
+                    "name": "participantLdapId",
+                    "displayName": "people.comp.participants.table.columns.name",
+                    "headerCellFilter": "translate",
+                    "lookup": "participantNames"
+                }
+            ],
+            "dialogUserPicker": {
+                "enableFiltering": false,
+                "multiSelect": false,
+                "showFacets": false,
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "people.comp.participants.dialogUserPicker.table.columns.name",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_type_s",
+                        "displayName": "people.comp.participants.dialogUserPicker.table.columns.type",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "title",
+                        "displayName": "people.comp.participants.dialogUserPicker.table.columns.title",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_id_s",
+                        "displayName": "people.comp.participants.dialogUserPicker.table.columns.id",
+                        "headerCellFilter": "translate"
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 10,
+                "start": 0
+            },
+            "dialogGroupPicker": {
+                "enableFiltering": false,
+                "multiSelect": false,
+                "showFacets": false,
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "people.comp.participants.dialogGroupPicker.table.columns.name",
+                        "headerCellFilter": "translate"
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 10,
+                "start": 0
+            }
+        },
+        {
+            "id": "aliases",
+            "title": "people.comp.aliases.title",
+            "icon": "fa fa-eye",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "aliasValue",
+                    "displayName": "people.comp.aliases.table.columns.aliasValue",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.aliasValue}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                },
+                {
+                    "name": "aliasType",
+                    "field": "aliasType",
+                    "displayName": "people.comp.aliases.table.columns.type",
+                    "enableCellEdit": false,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.aliasTypes, row.entity.aliasType) | translate }}</div>"
+                },
+                {
+                    "name": "description",
+                    "displayName": "people.comp.aliases.table.columns.description",
+                    "enableCellEdit": false,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified",
+                    "displayName": "people.comp.aliases.table.columns.modified",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "width": 150
+                },
+                {
+                    "name": "modifier",
+                    "displayName": "people.comp.aliases.table.columns.modifier",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                }
+            ]
+        },
+        {
+            "id": "organizations",
+            "title": "people.comp.organizations.title",
+            "icon": "fa fa-building",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "multiSelect": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "organization.organizationValue",
+                    "displayName": "people.comp.organizations.table.columns.value",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span>"
+                },
+                {
+                    "name": "organization.defaultIdentification.identificationNumber",
+                    "displayName": "people.comp.organizations.table.columns.identification",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<span>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</span>"
+                },
+                {
+                    "name": "organization.organizationToPersonAssociationType",
+                    "displayName": "people.comp.related.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<span>{{grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.organizationToPersonAssociationType) | translate}}</span>"
+                },
+                {
+                    "name": "organizationType",
+                    "displayName": "people.comp.organizations.table.columns.contact",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<span>{{grid.appScope.getPrimaryContact(row.entity)}}</span>"
+                },
+                {
+                    "name": "phone",
+                    "displayName": "people.comp.organizations.table.columns.phone",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<span>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.type + ']' : ''}}</span>"
+                },
+                {
+                    "name": "location",
+                    "displayName": "people.comp.organizations.table.columns.location",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.state ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : row.entity.organization.defaultAddress.city) : ''}}</span>"
+                }
+            ]
+        },
+        {
+            "id": "ids",
+            "title": "people.comp.ids.title",
+            "icon": "fa fa-credit-card",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "identificationType",
+                    "displayName": "people.comp.ids.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.identificationTypes, row.entity.identificationType) | translate }}</div>"
+                },
+                {
+                    "name": "identificationNumber",
+                    "displayName": "people.comp.ids.table.columns.number",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.identificationNumber}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                },
+                {
+                    "name": "identificationIssuer",
+                    "displayName": "people.comp.ids.table.columns.issuer",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "identificationYearIssued",
+                    "displayName": "people.comp.ids.table.columns.yearIssued",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.identificationYearIssued | date : 'shortDate' }}</div>"
+                },
+                {
+                    "name": "modifier",
+                    "displayName": "people.comp.ids.table.columns.modifier",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "modified",
+                    "displayName": "people.comp.ids.table.columns.modified",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "width": 150
+                }
+            ]
+        },
+        {
+            "id": "cases",
+            "title": "people.comp.cases.title",
+            "icon": "fa fa-folder",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "type",
+                    "field": "type_lcs",
+                    "displayName": "people.comp.cases.table.columns.role",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.type_lcs) | translate }}</div>"
+                },
+                {
+                    "name": "priority",
+                    "field": "parent_object.priority_lcs",
+                    "displayName": "people.comp.cases.table.columns.priority",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "id",
+                    "field": "parent_object.object_id_s",
+                    "displayName": "people.comp.cases.table.columns.id",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
+                    "width": 130
+                },
+                {
+                    "name": "title",
+                    "field": "parent_object.title_parseable",
+                    "displayName": "people.comp.cases.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
+                },
+                {
+                    "name": "status",
+                    "field": "parent_object.status_lcs",
+                    "displayName": "people.comp.cases.table.columns.status",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "width": 150,
+                    "name": "assignee",
+                    "field": "parent_object.assignee_id_lcs",
+                    "displayName": "people.comp.cases.table.columns.assignee",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "width": 150,
+                    "name": "modified",
+                    "field": "parent_object.modified_date_tdt",
+                    "displayName": "people.comp.cases.table.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                }
+            ]
+        },
+        {
+            "id": "related",
+            "title": "people.comp.related.title",
+            "linkTitle": "people.comp.related.linkTitle",
+            "icon": "fa fa-exchange",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "association_type_s",
+                    "displayName": "people.comp.related.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "lookup": "personTypes",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.relationshipTypes, row.entity.association_type_s) | translate }}</div>"
+                },
+                {
+                    "name": "firstName",
+                    "field": "target_object.first_name_lcs",
+                    "displayName": "people.comp.related.table.columns.firstName",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{COL_FIELD}}</a>"
+                },
+                {
+                    "name": "lastName",
+                    "field": "target_object.last_name_lcs",
+                    "displayName": "people.comp.related.table.columns.lastName",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{COL_FIELD}}</a>"
+                },
+                {
+                    "name": "personDescription",
+                    "field": "description_s",
+                    "displayName": "people.comp.related.table.columns.description",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "organization",
+                    "field": "target_object.default_organization_s",
+                    "displayName": "people.comp.related.table.columns.organization",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "phone",
+                    "field": "target_object.default_phone_s",
+                    "displayName": "people.comp.related.table.columns.phone",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "location",
+                    "displayName": "people.comp.related.table.columns.location",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<span>{{grid.appScope.getLocation(row.entity.target_object.default_location_s)}}</span>"
+                }
+            ]
+        },
+        {
+            "id": "history",
+            "title": "people.comp.history.title",
+            "icon": "fa fa-bell-o",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "eventType",
+                    "displayName": "people.comp.history.table.columns.eventType",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}} {{'(' + (row.entity.diffDetailsAsJson ? row.entity.diffDetailsAsJson.length : '0') + ' Changes)'}}</div>"
+                },
+                {
+                    "name": "eventDate",
+                    "displayName": "people.comp.history.table.columns.eventDate",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.eventDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "userId",
+                    "displayName": "people.comp.history.table.columns.userId",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "details",
+                    "displayName": "",
+                    "cellTemplate": "<button ng-hide='!row.entity.diffDetailsAsJson || row.entity.diffDetailsAsJson.length < 1' ng-click='grid.appScope.showDetails(row.entity.diffDetailsAsJson)' translate>people.comp.history.table.columns.details.btn.text</button>"
+                }
+            ]
+        }
+    ]
+}

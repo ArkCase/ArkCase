@@ -6,22 +6,22 @@ package com.armedia.acm.services.search.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -78,7 +78,7 @@ public class CSVReportGenerator extends ReportGenerator
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public String generateReport(String[] requestedFields, String[] titles, String jsonData)
+    public String generateReport(String[] requestedFields, String[] titles, String jsonData, int timeZoneOffsetinMinutes)
     {
         JSONObject jsonResult = new JSONObject(jsonData);
         JSONObject jsonResponse = jsonResult.getJSONObject("response");
@@ -105,6 +105,7 @@ public class CSVReportGenerator extends ReportGenerator
 
             for (String field : requestedFields)
             {
+
                 if (data.has(field))
                 {
                     Object value = data.get(field);
@@ -112,6 +113,16 @@ public class CSVReportGenerator extends ReportGenerator
                     if (value instanceof String)
                     {
                         String stringValue = data.getString(field);
+                        // if related_object_number existed, use related_object_number instead of parent number. For AFDP-5767
+                        if (field.equals("parent_number_lcs") && data.has("related_object_number_s"))
+                        {
+                            value = data.get("related_object_number_s");
+                            if (value instanceof String)
+                            {
+                                stringValue = data.getString("related_object_number_s");
+                            }
+                        }
+
                         // check if this is Solr Date/Time field in expected format
                         if (field.endsWith("_tdt") && stringValue.matches(ISO8601_PATTERN))
                         {
@@ -119,7 +130,7 @@ public class CSVReportGenerator extends ReportGenerator
                             try
                             {
                                 LocalDateTime localDateTime = LocalDateTime.parse(stringValue, SOLR_DATE_TIME_PATTERN);
-                                stringValue = localDateTime.format(EXCEL_DATE_TIME_PATTERN);
+                                stringValue = timeZoneAdjust(localDateTime, timeZoneOffsetinMinutes);
                             }
                             catch (DateTimeException e)
                             {
@@ -170,11 +181,19 @@ public class CSVReportGenerator extends ReportGenerator
     }
 
     /**
+     * Override original generateReport, return a UTC Time value. Add for AFDP-5769
+     */
+    @Override
+    public String generateReport(String[] requestedFields, String[] titles, String jsonData)
+    {
+        return generateReport(requestedFields, titles, jsonData, 0);
+    }
+
+    /**
      * Encloses new lines or value if contains SEPARATOR or if value contains ".
      * for more information: https://tools.ietf.org/html/rfc4180
      *
-     * @param value
-     *            actual value
+     * @param value actual value
      * @return value with enclosed new lines, separator or ". If null or empty string returns as is
      */
     private String purifyForCSV(String value)
@@ -198,6 +217,20 @@ public class CSVReportGenerator extends ReportGenerator
             return String.format(ENCLOSE_FORMATTER, value);
         }
         return value;
+    }
+
+    /**
+     * Time zone process for AFDP-5769
+     *
+     * @param localDateTime           service time
+     * @param timeZoneOffsetinMinutes timeZone received from client. Should be format like"240" "-480"
+     */
+    private String timeZoneAdjust(LocalDateTime localDateTime, int timeZoneOffsetinMinutes)
+    {
+        int adjTimeZone = ~(timeZoneOffsetinMinutes / 60) + 1;
+        LocalDateTime adjDateTime = localDateTime.plusHours(adjTimeZone);
+
+        return adjDateTime.format(EXCEL_DATE_TIME_PATTERN);
     }
 
 }

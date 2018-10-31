@@ -42,6 +42,9 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Around aspect targeting annotation: {@link AcmAcquireAndReleaseObjectLock}
  * 
@@ -56,21 +59,11 @@ public class AcmAcquireAndReleaseObjectLockAspect
     private AcmObjectLockingManager objectLockingManager;
     private AcmObjectLockService objectLockService;
 
-    @Around(value = "@annotation(acmAcquireAndReleaseObjectLock)")
-    public Object aroundAcquireObjectLock(ProceedingJoinPoint pjp, AcmAcquireAndReleaseObjectLock acmAcquireAndReleaseObjectLock)
+    @Around(value = "@annotation(acmAcquireAndReleaseObjectLocks)")
+    public Object aroundAcquireObjectLock(ProceedingJoinPoint pjp, AcmAcquireAndReleaseObjectLock.List acmAcquireAndReleaseObjectLocks)
             throws Throwable, AcmObjectLockException
     {
         Object[] args = pjp.getArgs();
-        String objectType = acmAcquireAndReleaseObjectLock.objectType();
-        Long objectId = getObjectId(pjp, acmAcquireAndReleaseObjectLock, args);
-        String lockType = acmAcquireAndReleaseObjectLock.lockType();
-        boolean lockChildObjects = acmAcquireAndReleaseObjectLock.lockChildObjects();
-        boolean unlockChildObjects = acmAcquireAndReleaseObjectLock.unlockChildObjects();
-        Long lockId = acmAcquireAndReleaseObjectLock.lockIdArgIndex() != -1 ? (Long) args[acmAcquireAndReleaseObjectLock.lockIdArgIndex()]
-                : null;
-
-        boolean lockAquired = false;
-
         String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
         if (userId == null)
         {
@@ -79,22 +72,31 @@ public class AcmAcquireAndReleaseObjectLockAspect
             userId = "no-user-id";
         }
 
+        List<AcmAcquireAndReleaseObjectLock> acquiredLocks = new ArrayList<>();
         try
         {
-            AcmObjectLock objectLock = null;
-
-            // if objectId is null, probably we are trying to lock an object before it is persisted for the first time,
-            // we cannot lock such objects, but we don't raise an error
-            if (objectId != null)
+            for (AcmAcquireAndReleaseObjectLock acmAcquireAndReleaseObjectLock : acmAcquireAndReleaseObjectLocks.value())
             {
-                // acquire lock only if the user doesn't have the lock already
-                objectLock = objectLockService.findLock(objectId, objectType);
-                if (objectLock == null
-                        || (objectLock != null && objectLock.getLockType().equals(lockType) && !objectLock.getCreator().equals(userId)))
+                String objectType = acmAcquireAndReleaseObjectLock.objectType();
+                Long objectId = getObjectId(pjp, acmAcquireAndReleaseObjectLock, args);
+                String lockType = acmAcquireAndReleaseObjectLock.lockType();
+                boolean lockChildObjects = acmAcquireAndReleaseObjectLock.lockChildObjects();
+
+                AcmObjectLock objectLock = null;
+
+                // if objectId is null, probably we are trying to lock an object before it is persisted for the first
+                // time, we cannot lock such objects, but we don't raise an error
+                if (objectId != null)
                 {
-                    objectLockingManager.acquireObjectLock(objectId, objectType, lockType, null, lockChildObjects, userId);
+                    // acquire lock only if the user doesn't have the lock already
+                    objectLock = objectLockService.findLock(objectId, objectType);
+                    if (objectLock == null
+                            || (objectLock != null && objectLock.getLockType().equals(lockType) && !objectLock.getCreator().equals(userId)))
+                    {
+                        objectLockingManager.acquireObjectLock(objectId, objectType, lockType, null, lockChildObjects, userId);
+                    }
+                    acquiredLocks.add(acmAcquireAndReleaseObjectLock);
                 }
-                lockAquired = true;
             }
             Object ret = null;
             try
@@ -103,10 +105,20 @@ public class AcmAcquireAndReleaseObjectLockAspect
             }
             finally
             {
-                // release the lock only if it was acquired previously
-                if (objectId != null && lockAquired)
+                for (AcmAcquireAndReleaseObjectLock acmAcquireAndReleaseObjectLock : acmAcquireAndReleaseObjectLocks.value())
                 {
-                    objectLockingManager.releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId, lockId);
+                    String objectType = acmAcquireAndReleaseObjectLock.objectType();
+                    Long objectId = getObjectId(pjp, acmAcquireAndReleaseObjectLock, args);
+                    String lockType = acmAcquireAndReleaseObjectLock.lockType();
+                    boolean unlockChildObjects = acmAcquireAndReleaseObjectLock.unlockChildObjects();
+                    Long lockId = acmAcquireAndReleaseObjectLock.lockIdArgIndex() != -1
+                            ? (Long) args[acmAcquireAndReleaseObjectLock.lockIdArgIndex()]
+                            : null;
+                    // release the lock only if it was acquired previously
+                    if (objectId != null && acquiredLocks.contains(acmAcquireAndReleaseObjectLock))
+                    {
+                        objectLockingManager.releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId, lockId);
+                    }
                 }
             }
 

@@ -23,6 +23,11 @@
         <property name="eventPublisher" ref="complaintEventPublisher"/>
     </bean>
 
+    <bean id="closeComplaintAPIController"
+        class="com.armedia.acm.plugins.complaint.web.api.CloseComplaintFormAPIController">
+        <property name="closeComplaintService" ref="closeComplaint"/>
+    </bean>
+
     <bean id="findComplaintByIdAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindComplaintByIdAPIController">
         <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="eventPublisher" ref="complaintEventPublisher"/>

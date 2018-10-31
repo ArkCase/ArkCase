@@ -65,6 +65,27 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
 
         /**
          * @ngdoc method
+         * @name get
+         * @methodOf services:Case.InfoService
+         *
+         * @description
+         * Query case data from database.
+         *
+         * @param {String} caseNumber  caseNumber
+         * @param {Function} onSuccess (Optional)Callback function of success query.
+         * @param {Function} onError (Optional) Callback function when fail.
+         *
+         * @returns {Object} Object returned by $resource
+         */
+        getByNumber: {
+            method: 'GET',
+            url: caseUrl + "bynumber",
+            cache: false,
+            isArray: false
+        },
+
+        /**
+         * @ngdoc method
          * @name post
          * @methodOf services:Case.InfoService
          *
@@ -134,6 +155,32 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
             service: Service.get,
             param: {
                 id: id
+            },
+            onSuccess: function(data) {
+                if (Service.validateCaseInfo(data)) {
+                    return data;
+                }
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name getCaseInfoByNumber
+     * @methodOf services:Complaint.InfoService
+     *
+     * @description
+     * Query complaint data by number
+     *
+     * @param {String} caseNumber caseNumber
+     *
+     * @returns {Object} Promise
+     */
+    Service.getCaseInfoByNumber = function(caseNumber) {
+        return Util.serviceCall({
+            service: Service.getByNumber,
+            param: {
+                caseNumber: caseNumber
             },
             onSuccess: function(data) {
                 if (Service.validateCaseInfo(data)) {

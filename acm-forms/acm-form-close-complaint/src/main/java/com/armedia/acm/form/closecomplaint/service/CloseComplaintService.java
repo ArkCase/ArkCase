@@ -37,7 +37,7 @@ import com.armedia.acm.form.closecomplaint.model.ReferExternal;
 import com.armedia.acm.form.config.ResolveInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -183,11 +183,14 @@ public class CloseComplaintService extends FrevvoFormAbstractService
         }
 
         // Save attachments (or update XML form and PDF form if the mode is "edit")
-        String cmisFolderId = findFolderIdForAttachments(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
-        FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, cmisFolderId, FrevvoFormName.COMPLAINT.toUpperCase(),
+        String cmisFolderId = findFolderIdForAttachments(complaint.getContainer(), complaint.getObjectType(),
+                complaint.getId());
+        UploadedFiles uploadedFiles = saveAttachments(attachments, cmisFolderId,
+                FrevvoFormName.COMPLAINT.toUpperCase(),
                 complaint.getComplaintId());
 
-        CloseComplaintFormEvent event = new CloseComplaintFormEvent(complaint.getComplaintNumber(), complaint.getComplaintId(),
+        CloseComplaintFormEvent event = new CloseComplaintFormEvent(complaint.getComplaintNumber(),
+                complaint.getComplaintId(),
                 savedRequest, uploadedFiles, mode, getAuthentication().getName(), getUserIpAddress(), true);
         getApplicationEventPublisher().publishEvent(event);
 

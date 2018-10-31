@@ -9,7 +9,7 @@
  *
  * The Permissions service. Performs checking user permissions for action depends on user roles, and objectProperties, like orderInfo, queueInfo
  */
-angular.module('services').factory('PermissionsService', [ '$q', '$http', '$log', '$interpolate', 'Authentication', 'Object.ModelService', 'LookupService', function($q, $http, $log, $interpolate, Authentication, ObjectModelService, LookupService) {
+angular.module('services').factory('PermissionsService', [ '$q', '$http', '$log', '$interpolate', 'Authentication', 'Object.ModelService', 'LookupService', 'UtilService', function($q, $http, $log, $interpolate, Authentication, ObjectModelService, LookupService, Util) {
     // Initial rules loading
     var rules = queryRules();
     var userProfile = Authentication.queryUserInfo();
@@ -176,18 +176,20 @@ angular.module('services').factory('PermissionsService', [ '$q', '$http', '$log'
                     });
                 }
 
-                // Check userIsParticipantTypeAny
+                // Check userIsParticipantTypeAny... This code checks every partipant of the given type.
+                // If the object has four 'co-owner' participants, this code will check all of them, to see if
+                // the user matches any of them.
                 if (isEnabled && action.userIsParticipantTypeAny && action.userIsParticipantTypeAny.length > 0) {
                     var isUserParticipant = false;
                     _.forEach(action.userIsParticipantTypeAny, function(value) {
-                        var participant = ObjectModelService.getParticipantByType(objectProperties, value);
-                        if (participant) {
-                            isUserParticipant = (participant == userProfile.userId) || (_.includes(userProfile.authorities, participant));
-                            if (isUserParticipant) {
-                                // user found in participant's types
-                                return false;
+                        _.forEach(Util.goodMapValue(objectProperties, "participants", []), function(prt) {
+                            if ( prt.participantType === value ) {
+                                isUserParticipant = (prt.participantLdapId  == userProfile.userId) || (_.includes(userProfile.authorities, prt.participantLdapId));
+                                if (isUserParticipant) {
+                                    return false;
+                                }
                             }
-                        }
+                        });
                     });
                     isEnabled = isEnabled && isUserParticipant;
                 }

@@ -33,19 +33,14 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.pentaho.config.PentahoReportUrl;
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.model.Reports;
-import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Document;
@@ -62,8 +57,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class ReportServiceImpl implements ReportService
@@ -235,7 +237,6 @@ public class ReportServiceImpl implements ReportService
         return authorized;
     }
 
-
     private List<String> getApplicationRoles()
     {
         List<String> applicationRoles = new ArrayList<>();
@@ -369,7 +370,6 @@ public class ReportServiceImpl implements ReportService
         return obj;
     }
 
-
     private Map<String, String> prepareReportToRolesMapForSaving(Map<String, List<String>> reportsToRolesMap)
     {
         Map<String, String> retval = new HashMap<>();
@@ -466,7 +466,7 @@ public class ReportServiceImpl implements ReportService
         String reportUpdated = "";
         try
         {
-            reportUpdated += getPropertyFileManager().load(getReportToRolesMapPropertiesFileLocation(), reportName, null);
+            reportUpdated += getPropertyFileManager().load(getReportToRolesMapPropertiesFileLocation(), reportName, "");
             reportUpdated += (reportUpdated.isEmpty() ? "" : ",") + roles.stream().collect(Collectors.joining(","));
             getPropertyFileManager().store(reportName, reportUpdated, getReportToRolesMapPropertiesFileLocation(), false);
         }

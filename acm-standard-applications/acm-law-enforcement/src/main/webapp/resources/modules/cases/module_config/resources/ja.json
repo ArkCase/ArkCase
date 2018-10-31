@@ -26,6 +26,7 @@
         "assignee.label": "割り当て先",
         "owningGroup.label": "群に所属",
         "dueDate.label": "期限日",
+        "alertMessage": "ja_Due date must be after the create date ",
         "priorities": {
             "low%": "低い",
             "medium%": "中",
@@ -261,6 +262,16 @@
             "title": "タイトル",
             "parent": "親",
             "modified": "変更された"
+        },
+        "objectPicker": {
+            "title": "ja_Search for object",
+            "table.columns": {
+                "name": "ja_Name",
+                "type": "ja_Type",
+                "title": "ja_Title",
+                "id": "ja_ID",
+                "username": "ja_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {
@@ -364,6 +375,7 @@
     },
     "cases.comp.change.status": {
         "title": "ja_Change Case Status",
+        "description.label": "ja_Description",
         "information": {
             "title": "ja_Change Case Status Information",
             "date": "ja_Change Date",
@@ -380,10 +392,11 @@
         },
         "approver": {
             "placeholder": "ja_Select Approver",
-            "label": "ja_Select Approver",
+            "label": "ja_Approver",
             "addAnother": "ja_Add another",
             "remove": "ja_Remove Approver",
-            "pickerModal.header": "ja_Choose Approver"
+            "pickerModal.header": "ja_User/Group Search",
+            "owningGroup": "ja_Owning Group"
         },
         "button": {
             "cancel": "ja_Cancel",

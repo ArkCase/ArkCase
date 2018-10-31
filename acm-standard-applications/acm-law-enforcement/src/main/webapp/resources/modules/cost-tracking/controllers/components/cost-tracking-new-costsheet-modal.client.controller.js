@@ -11,6 +11,9 @@ angular.module('cost-tracking').controller(
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.isEdit = $scope.modalParams.isEdit;
                     $scope.sumAmount = 0;
+                    $scope.disableCostType = false;
+                    var participantTypeApprover = 'approver';
+                    var participantTypeOwningGroup = "owning group";
 
                     ConfigService.getModuleConfig("cost-tracking").then(function(moduleConfig) {
                         $scope.config = moduleConfig;
@@ -27,8 +30,21 @@ angular.module('cost-tracking').controller(
                                 parentNumber: '',
                                 details: '',
                                 costs: [ {} ],
-                                participants: [ {} ]
+                                participants: []
                             };
+
+                            $scope.approverName = "";
+                            $scope.groupName = "";
+
+
+                            if(!Util.isEmpty($scope.modalParams.parentType) && !Util.isEmpty($scope.modalParams.parentNumber) && !Util.isEmpty($scope.modalParams.parentId)) {
+                                $scope.costsheet.parentId = $scope.modalParams.parentId;
+                                $scope.costsheet.parentType = $scope.modalParams.parentType;
+                                $scope.costsheet.parentNumber = $scope.modalParams.parentNumber;
+                                $scope.costsheet.title =  $scope.costsheet.user.fullName + " - " + $scope.modalParams.parentNumber;
+                                $scope.isTypeSelected = true;
+                                $scope.disableCostType = true;
+                            }
                         }
 
                         $scope.newCostObjectPicker = _.find(moduleConfig.components, {
@@ -57,20 +73,24 @@ angular.module('cost-tracking').controller(
 
                     if ($scope.isEdit) {
                         $scope.isTypeSelected = true;
-                        $scope.objectInfo = $scope.modalParams.costsheet;
-                        var tmpCostsheet = $scope.modalParams.costsheet;
-                        $scope.isApproverAdded = !Util.isArrayEmpty($scope.objectInfo.participants);
+                        $scope.objectInfo = angular.copy($scope.modalParams.costsheet);
+                        var tmpCostsheet = angular.copy($scope.modalParams.costsheet);
+                        updateIsApproverAdded($scope.objectInfo.participants);
                         $scope.updateBalance($scope.objectInfo.costs);
 
                         if (tmpCostsheet.participants != undefined) {
                             if (!Util.isArrayEmpty(tmpCostsheet.participants)) {
                                 _.forEach(tmpCostsheet.participants, function(participant) {
-                                    UserInfoService.getUserInfoById(participant.participantLdapId).then(function(userInfo) {
-                                        participant.participantFullName = userInfo.fullName;
-                                    });
+                                    if(participant.participantType == participantTypeApprover){
+                                        UserInfoService.getUserInfoById(participant.participantLdapId).then(function(userInfo) {
+                                            $scope.approverName = userInfo.fullName;
+                                        });
+
+                                    }
+                                    if(participant.participantType == participantTypeOwningGroup){
+                                        $scope.groupName = participant.participantLdapId;
+                                    }
                                 });
-                            } else {
-                                tmpCostsheet.participants = [ {} ];
                             }
                         }
 
@@ -81,6 +101,7 @@ angular.module('cost-tracking').controller(
                         }
 
                         $scope.costsheet = {
+                            id: $scope.objectInfo.id,
                             user: $scope.objectInfo.user,
                             status: $scope.objectInfo.status,
                             parentId: $scope.objectInfo.parentId,
@@ -151,7 +172,7 @@ angular.module('cost-tracking').controller(
                             if (!Util.isEmpty(selected)) {
                                 $scope.costsheet.parentNumber = selected.name;
                                 $scope.costsheet.parentId = selected.object_id_s;
-                                $scope.costsheet.title = "Costsheet" + " " + selected.name;
+                                $scope.costsheet.title = $scope.costsheet.user.fullName + " - " + selected.name;
                             }
                         });
 
@@ -175,40 +196,23 @@ angular.module('cost-tracking').controller(
                         }, 0);
                     };
 
-                    // ---------------------------            approver         --------------------------------------
-                    var participantType = 'approver';
-
-                    $scope.addApprover = function() {
-                        $timeout(function() {
-                            $scope.searchApprover(-1);
-                        }, 0);
-                    };
-
-                    $scope.removeApprover = function(approver) {
-                        $timeout(function() {
-                            _.remove($scope.costsheet.participants, function(object) {
-                                return object === approver;
-                            });
-                            $scope.isApproverAdded = !Util.isArrayEmpty($scope.costsheet.participants);
-                        }, 0);
-                    };
-
-                    $scope.searchApprover = function(index) {
-                        var participant = index > -1 ? $scope.costsheet.participants[index] : {};
-
+                    // ---------------------------            approver         -------------------------------------
+                    $scope.userOrGroupSearch = function() {
                         var params = {};
-
                         params.header = $translate.instant("costTracking.comp.newCostsheet.userSearch.title");
-                        params.filter = 'fq="object_type_s": USER &fq="status_lcs": VALID';
+                        params.filter = "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)";
+                        params.extraFilter = "&fq=\"name\": ";
                         params.config = $scope.userSearchConfig;
+                        params.secondGrid = 'true';
 
                         var modalInstance = $modal.open({
-                            templateUrl: "directives/core-participants/core-participants-picker-modal.client.view.html",
+                            templateUrl: "directives/core-participants/participants-user-group-search.client.view.html",
                             controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
                                 $scope.modalInstance = $modalInstance;
                                 $scope.header = params.header;
                                 $scope.filter = params.filter;
                                 $scope.config = params.config;
+                                $scope.secondGrid = params.secondGrid;
                             } ],
                             animation: true,
                             size: 'lg',
@@ -219,23 +223,79 @@ angular.module('cost-tracking').controller(
                                 }
                             }
                         });
+
                         modalInstance.result.then(function(selection) {
                             if (selection) {
-                                participant.className = $scope.participantsConfig.className;
-                                participant.participantType = participantType;
-                                participant.participantLdapId = selection.object_id_s;
-                                participant.participantFullName = selection.name;
-                                if (ObjectParticipantService.validateParticipants([ participant ], true) && !_.includes($scope.costsheet.participants, participant)) {
-                                    $scope.costsheet.participants.push(participant);
-                                }
-                                if ($scope.isEdit) {
-                                    $scope.isApproverAdded = !Util.isArrayEmpty($scope.objectInfo.participants);
-                                } else {
-                                    $scope.isApproverAdded = !Util.isArrayEmpty($scope.costsheet.participants);
+                                var selectedObjectType = selection.masterSelectedItem.object_type_s;
+                                if (selectedObjectType === 'USER') { // Selected user
+                                    var selectedUser = selection.masterSelectedItem;
+                                    var selectedGroup = selection.detailSelectedItems;
+
+                                    $scope.approverName = selectedUser.name;
+                                    addParticipantInCostsheet(participantTypeApprover, selectedUser.object_id_s);
+
+                                    if (selectedGroup) {
+                                        $scope.groupName = selectedGroup.name;
+                                        addParticipantInCostsheet(participantTypeOwningGroup, selectedGroup.object_id_s);
+                                    }
+
+                                    updateIsApproverAdded($scope.costsheet.participants);
+
+                                    return;
+                                } else if (selectedObjectType === 'GROUP') { // Selected group
+                                    var selectedUser = selection.detailSelectedItems;
+                                    var selectedGroup = selection.masterSelectedItem;
+
+                                    $scope.groupName = selectedGroup.name;
+                                    addParticipantInCostsheet(participantTypeOwningGroup, selectedGroup.object_id_s);
+
+                                    if (selectedUser) {
+                                        $scope.approverName = selectedUser.name;
+                                        addParticipantInCostsheet(participantTypeApprover, selectedUser.object_id_s);
+                                    }
+
+                                    updateIsApproverAdded($scope.costsheet.participants);
+
+                                    return;
                                 }
                             }
+
+                        }, function() {
+                            // Cancel button was clicked.
+                            return [];
                         });
+
                     };
+
+                    function addParticipantInCostsheet(participantType, participantLdapId){
+                        var newParticipant = {};
+                        newParticipant.className = $scope.participantsConfig.className;
+                        newParticipant.participantType = participantType;
+                        newParticipant.participantLdapId = participantLdapId;
+
+                        if (ObjectParticipantService.validateParticipants([newParticipant], true)) {
+                            var participantExists = false;
+                            _.forEach($scope.costsheet.participants, function (participant, idx) {
+                                if(participant.participantType == participantType){
+                                    participantExists = true;
+                                    participant.participantLdapId = newParticipant.participantLdapId;
+                                    participant.replaceChildrenParticipant = true;
+                                    // $scope.costsheet.participants.splice(idx, 1, newParticipant);
+                                    return false;
+                                }
+                            });
+                            if(!participantExists){
+                                $scope.costsheet.participants.push(newParticipant);
+                            }
+                        }
+                    }
+
+                    function updateIsApproverAdded(participants){
+                        var approver = _.find(participants, function (participant) {
+                            return participant.participantType == participantTypeApprover;
+                        });
+                        $scope.isApproverAdded = !Util.isEmpty(approver);
+                    }
 
                     //-----------------------------------------------------------------------------------------------
 
@@ -252,7 +312,7 @@ angular.module('cost-tracking').controller(
                                 });
                                 MessageService.info(costsheetUpdatedMessage);
                                 ObjectService.showObject(ObjectService.ObjectTypes.COSTSHEET, objectInfo.id);
-                                $modalInstance.dismiss();
+                                $modalInstance.close(objectInfo);
                                 $scope.loading = false;
                                 $scope.loadingIcon = "fa fa-floppy-o";
                             }, function(error) {
@@ -282,7 +342,7 @@ angular.module('cost-tracking').controller(
                                         costsheetTitle: objectInfo.title
                                     });
                                     MessageService.info(costsheetUpdatedMessage);
-                                    $modalInstance.dismiss();
+                                    $modalInstance.close(objectInfo);
                                     $scope.loading = false;
                                     $scope.loadingIcon = "fa fa-floppy-o";
                                 }, function(error) {
@@ -311,6 +371,46 @@ angular.module('cost-tracking').controller(
                         if (objectInfo.details != $scope.costsheet.details) {
                             objectInfo.details = $scope.costsheet.details;
                         }
+
+                        objectInfo.costs = $scope.costsheet.costs;
+
+
+                        var addedApprover =  _.find($scope.costsheet.participants, function (participant) {
+                            return participant.participantType == participantTypeApprover;
+                        });
+
+                        if(!Util.isEmpty(addedApprover)){
+                            var hasApprover = false;
+                            _.forEach(objectInfo.participants, function (participant, idx) {
+                                if((participant.participantType == participantTypeApprover)){
+                                    hasApprover = true;
+                                    objectInfo.participants.splice(idx, 1, addedApprover);
+                                    return false;
+                                }
+                            });
+                            if(!hasApprover){
+                                objectInfo.participants.push(addedApprover);
+                            }
+                        }
+
+                        var addedOwningGroup =  _.find($scope.costsheet.participants, function (participant) {
+                            return participant.participantType == participantTypeOwningGroup;
+                        });
+
+                        if(!Util.isEmpty(addedOwningGroup)){
+                            var hasOwningGroup = false;
+                            _.forEach(objectInfo.participants, function (participant, idx) {
+                                if((participant.participantType == participantTypeOwningGroup)){
+                                    hasOwningGroup = true;
+                                    objectInfo.participants.splice(idx, 1, addedOwningGroup);
+                                    return false;
+                                }
+                            });
+                            if(!hasOwningGroup){
+                                objectInfo.participants.push(addedOwningGroup);
+                            }
+                        }
+
                         return objectInfo;
                     }
 
@@ -319,16 +419,6 @@ angular.module('cost-tracking').controller(
                         if (Util.isEmpty(costsheet.details)) {
                             costsheet.details = null;
                         }
-
-                        _.remove(costsheet.participants, function(participant) {
-                            if (!participant.participantFullName) {
-                                return true;
-                            } else {
-                                //remove temporary values
-                                delete participant['participantFullName'];
-                                return false;
-                            }
-                        });
 
                         return costsheet;
                     }
@@ -340,6 +430,10 @@ angular.module('cost-tracking').controller(
 
                     $scope.cancelModal = function() {
                         $modalInstance.dismiss();
+                    };
+
+                    $scope.refresh = function(id) {
+                        $scope.$emit('report-object-refreshed', id);
                     };
 
                 } ]);

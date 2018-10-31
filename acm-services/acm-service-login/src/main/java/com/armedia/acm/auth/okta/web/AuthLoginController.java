@@ -178,7 +178,8 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             // Update authentication with okta user details
             OktaAuthenticationDetails oktaAuthenticationDetails = new OktaAuthenticationDetails(user, request);
             AcmAuthentication acmAuthentication = new AcmAuthentication((Collection<AcmGrantedAuthority>) authentication.getAuthorities(),
-                    authentication.getCredentials(), oktaAuthenticationDetails, authentication.isAuthenticated(), authentication.getName());
+                    authentication.getCredentials(), oktaAuthenticationDetails, authentication.isAuthenticated(),
+                    authentication.getName(), dbUser.getIdentifier());
             SecurityContextHolder.getContext().setAuthentication(acmAuthentication);
 
             return new ModelAndView(getMultiFactorConfig().getSelectMethodTargetUrl(), model.asMap());
@@ -318,7 +319,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
                 {
                     grantSuccessAuthorities();
                     view = "redirect:/home.html#!/welcome";
-                    LOGGER.info("/verify status: " + status.name());
+                    LOGGER.info("/verify status: [{}]", status.name());
                 }
                 else
                 {
@@ -326,14 +327,9 @@ public class AuthLoginController implements ApplicationEventPublisherAware
                 }
             }
         }
-        catch (OktaException e)
-        {
-            LOGGER.error("Failed to execute 2nd factor challenge: " + e.getMessage(), e);
-            handleVerifyError(userId, factorId, model, e);
-        }
         catch (Exception ex)
         {
-            LOGGER.error("Failed to execute 2nd factor challenge: " + ex.getMessage(), ex);
+            LOGGER.error("Failed to execute 2nd factor challenge: [{}]", ex.getMessage(), ex);
             handleVerifyError(userId, factorId, model, ex);
         }
 
@@ -492,8 +488,10 @@ public class AuthLoginController implements ApplicationEventPublisherAware
                         && !OktaAPIConstants.ROLE_PRE_AUTHENTICATED.equalsIgnoreCase(auth.getAuthority()))
                 .map(AcmGrantedAuthority.class::cast).collect(Collectors.toList());
         newAuthorities.add(new AcmGrantedAuthority("ROLE_AUTHENTICATED"));
+
+        AcmUser dbUser = userDao.findByUserId(contextAuth.getName());
         AcmAuthentication acmAuthentication = new AcmAuthentication(newAuthorities, contextAuth.getCredentials(), contextAuth.getDetails(),
-                contextAuth.isAuthenticated(), contextAuth.getName());
+                contextAuth.isAuthenticated(), contextAuth.getName(), dbUser.getIdentifier());
         SecurityContextHolder.getContext().setAuthentication(acmAuthentication);
         // Publish login event on second factor auth success
         LoginEvent event = new LoginEvent(acmAuthentication);

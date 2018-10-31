@@ -22,7 +22,8 @@
         "priority.label": "प्राथमिकता",
         "assignee.label": "असाइन करने के लिए",
         "owningGroup.label": "स्वामी समूह",
-        "dueDate.label": "नियत दिनांक"
+        "dueDate.label": "नियत दिनांक",
+        "alertMessage": "hi_Due date must be after the create date "
     },
     "complaints.comp.actions": {
         "title": "क्रियाएं",
@@ -316,6 +317,50 @@
             "approverFullName": "अनुमोदक",
             "approverDecision": "अनुमोदन निर्णय"
         }
+    },
+    "complaints.comp.closeComplaint": {
+        "title": "hi_Close Complaint",
+        "info": "hi_Incident Information",
+        "description.label": "hi_Description",
+        "infoMessage": "hi_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "hi_Complaint Title",
+        "information": {
+            "title": "hi_Close Complaint Information",
+            "close.date": "hi_Complaint Close Date",
+            "complaint.number": "hi_Complaint Number",
+            "complaint.disposition": "hi_Complaint Disposition"
+        },
+        "add.existing.case": {
+            "title": "hi_Add Existing Case",
+            "search": "hi_Search",
+            "case": {
+                "number": "hi_Enter Case Number",
+                "title": "hi_Case Title",
+                "date": "hi_Case Creation Date",
+                "priority": "hi_Case Priority"
+            }
+        },
+        "refer.external": {
+            "title": "hi_Refer External",
+            "name": "hi_Name of Agency",
+            "date": "hi_Referral Date",
+            "contact": {
+                "title": "hi_Contact",
+                "name": "hi_Contact Name",
+                "type": "hi_Type",
+                "value": "hi_Value"
+            }
+        },
+        "approver": {
+            "placeholder": "hi_Select Approver",
+            "label": "hi_Approver",
+            "addAnother": "hi_Add another",
+            "remove": "hi_Remove Approver",
+            "pickerModal.header": "hi_User/Group Search",
+            "owningGroup": "hi_Owning Group"
+        },
+        "cancelButton": "hi_Cancel",
+        "saveButton": "hi_Save Complaint"
     },
     "complaints.comp.newComplaint": {
         "title": "hi_New Complaint",

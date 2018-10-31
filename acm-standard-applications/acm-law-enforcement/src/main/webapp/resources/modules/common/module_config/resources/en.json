@@ -23,6 +23,22 @@
         "defaultDateUIFormat": "MM/dd/yyyy",
         "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
     },
+    "common.userOrGroupSearch": {
+        "id": "userSearch",
+        "title": "User/Group Search",
+        "search": {
+            "btn": "Search",
+            "placeholder": "Search for the user or group."
+        },
+        "cancelButton": "Cancel",
+        "confirmButton": "Confirm",
+        "assigneeGridColumns": {
+            "name": "Name",
+            "type": "Type",
+            "title": "Title",
+            "username": "Username"
+        }
+    },
     "common.frevvo": {
         "defaultDateFormat": "YYYY-MM-DD"
     },
@@ -79,7 +95,7 @@
             "checkout": "Check Out",
             "checkin": "Check In",
             "declareRecord": "Declare As Record(s)",
-            "collaborate": "Collaborate",
+            "editWithOfficeOnline": "Open in Microsoft Office Online",
             "searchDocument": "Search Document(s)"
         },
         "table.columns": {
@@ -98,7 +114,7 @@
             "selFileTypes.label": "File Type:",
             "optFileType.prompt": "[choose file type]",
             "btnCancel.text": "Cancel",
-            "btnOk.text": "OK"
+            "btnOk.text": "Submit"
         },
         "emailDialog": {
             "title": "Email",
@@ -196,7 +212,7 @@
     "common.directive.searchModal": {
         "header": "Search",
         "btnSearch.text": "Search",
-        "btnOk.text": "OK",
+        "btnOk.text": "Submit Result",
         "btnConfirm.text": "Confirm",
         "btnCancel.text": "Cancel",
         "edtPlaceholder": "Type in to search",
@@ -626,6 +642,16 @@
             "error.ownerUnique": "Only one owner is allowed."
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "Add Participant",
+        "editParticipant.label": "Edit Record",
+        "participantType.label": "Participant Type",
+        "participantName.label": "Participant Name",
+        "btnOk.text": "Save",
+        "btnCancel.text": "Cancel",
+        "dialogUserGroupPicker.header": "Search User/Group",
+        "replaceChildrenParticipant": "replace children participant"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "% Complete"
     },
@@ -643,7 +669,9 @@
         }
     },
     "common.comp.acmLogin": {
-        "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in."
+        "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in.",
+        "logoutBtn" : "Logout",
+        "cancelBtn" : "Cancel"
     },
     "common.objectTypes": {
         "CASE_FILE": "Case File",
@@ -698,7 +726,8 @@
             "url": "URL",
             "url.placeholder": "Enter URL",
             "removeContactMethod": "Remove",
-            "urlType": "URL Type"
+            "urlType": "URL Type",
+            "validationMessage": "The Phone Number you entered is invalid. Should be in this format: xxx-xxx-xxxx"
         },
         "organizations": {
             "title": "Organizations",
@@ -789,7 +818,8 @@
             "name": "Name",
             "id": "ID",
             "title": "Title"
-        }
+        },
+        "addDocument": "Choose document to add"
     },
     "common.addOrganization": {
         "title": "Add Organization",

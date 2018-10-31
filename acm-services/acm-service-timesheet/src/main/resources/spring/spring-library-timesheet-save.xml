@@ -6,17 +6,43 @@
         <property name="timesheetBusinessRule" ref="saveTimesheetBusinessRule"/>
     </bean>
 
-    <bean id="timesheetContainerHandler" class="com.armedia.acm.services.timesheet.pipeline.postsave.TimesheetContainerHandler"/>
+    <bean id="timesheetContainerHandler" class="com.armedia.acm.services.timesheet.pipeline.postsave.TimesheetContainerHandler">
+        <property name="fileParticipantService" ref="fileParticipantService"/>
+    </bean>
+
+    <bean id="timesheetEcmFolderHandler" class="com.armedia.acm.services.timesheet.pipeline.postsave.TimesheetEcmFolderHandler">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="pdfTimesheetDocumentGenerator" class="com.armedia.acm.services.timesheet.service.PDFTimesheetDocumentGenerator"
+        parent="pdfDocumentGenerator">
+    </bean>
+
+    <bean id="timesheetDocumentHandler" class="com.armedia.acm.services.timesheet.pipeline.postsave.TimesheetDocumentHandler"
+        parent="pdfTimesheetDocumentGenerator">
+        <property name="dao" ref="acmTimesheetDao"/>
+        <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
+    </bean>
+
+    <bean id="timesheetEventHandler" class="com.armedia.acm.services.timesheet.pipeline.postsave.TimesheetEventHandler">
+        <property name="timesheetEventPublisher" ref="timesheetEventPublisher"/>
+        <property name="timesheetService" ref="timesheetService"/>
+        <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
 
     <bean id="timesheetPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
-                <ref bean="timesheetContainerHandler"/>
             </list>
         </property>
         <property name="postSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="timesheetRuleHandler"/>
+                <ref bean="timesheetContainerHandler"/>
+                <ref bean="timesheetEcmFolderHandler"/>
+                <ref bean="timesheetDocumentHandler"/>
+                <ref bean="timesheetEventHandler"/>
             </list>
         </property>
     </bean>

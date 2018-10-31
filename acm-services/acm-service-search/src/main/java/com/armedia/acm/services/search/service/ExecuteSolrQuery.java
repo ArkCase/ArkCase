@@ -6,27 +6,28 @@ package com.armedia.acm.services.search.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
 
+import com.armedia.acm.core.AcmUserAuthorityContext;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -41,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -61,7 +63,7 @@ public class ExecuteSolrQuery
 
     /**
      * Executes solr queries and returns results as String
-     * 
+     *
      * @param auth
      *            Authenticated user
      * @param core
@@ -85,7 +87,7 @@ public class ExecuteSolrQuery
 
     /**
      * Executes solr query asynchronously in separate thread and returns results as String
-     * 
+     *
      * @param auth
      *            Authenticated user
      * @param core
@@ -339,26 +341,67 @@ public class ExecuteSolrQuery
      * @throws MuleException
      */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents, String defaultField)
+            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents,
+            String defaultField)
             throws MuleException
     {
+        return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, filterParentRef,
+                filterSubscriptionEvents, defaultField, true);
+    }
+
+    /**
+     * Executes solr queries and returns results as String
+     *
+     * @param authentication
+     *            Authenticated user
+     * @param core
+     *            SolrCore could be quick or advanced search
+     * @param solrQuery
+     *            actual query
+     * @param firstRow
+     *            starting row
+     * @param maxRows
+     *            how many rows to return
+     * @param sort
+     *            sort by which field
+     * @param indent
+     *            boolean whether results should be indented
+     * @param rowQueryParameters
+     *            row query parameters
+     * @param filterParentRef
+     *            filterParentRef
+     * @param filterSubscriptionEvents
+     *            boolean whether should filter subscription events
+     * @param defaultField
+     *            which default filed to be set. Can be null(than default field defined in solrconfig.xml is used)
+     * @param includeDACFilter
+     *            boolean whether should add acl filters on solr query
+     * @return results as String
+     * @throws MuleException
+     */
+    public String getResultsByPredefinedQuery(Authentication authentication, SolrCore core, String solrQuery, int firstRow, int maxRows,
+            String sort, boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents,
+            String defaultField, boolean includeDACFilter) throws MuleException
+    {
+        AcmUserAuthorityContext authorityContext = (AcmUserAuthorityContext) authentication;
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", solrQuery);
         headers.put("firstRow", firstRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
-        headers.put("acmUser", auth);
-        headers.put("filterParentRef", filterParentRef);
+        headers.put("acmUser", authorityContext.getUserIdentity());
+        headers.put("acmUserGroupIds", authorityContext.getGroupAuthorities());
         headers.put("filterSubscriptionEvents", filterSubscriptionEvents);
         headers.put("rowQueryParametars", rowQueryParameters);
         headers.put("enableDocumentACL", isEnableDocumentACL());
         headers.put("includeDenyAccessFilter", isIncludeDenyAccessFilter());
-        headers.put("indent", indent ? indent : "");
+        headers.put("indent", indent ? true : "");
         headers.put("df", defaultField);
+        headers.put("includeDACFilter", includeDACFilter);
 
         MuleMessage response = getMuleContextManager().send(core.getMuleEndpointUrl(), "", headers);
 
-        log.debug("Response type: " + response.getPayload().getClass());
+        log.debug("Response type: {}", response.getPayload().getClass());
 
         if (response.getPayload() instanceof String)
         {

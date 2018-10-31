@@ -97,16 +97,20 @@ import java.util.UUID;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-file-lock.xml",        
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-email.xml",
         "/spring/spring-library-email-smtp.xml",
         "/spring/spring-library-event.xml",
         "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-form-configurations.xml",
+        "/spring/spring-library-forms-configuration.xml",
         "/spring/spring-library-merge-case-test-IT.xml",
         "/spring/spring-library-ms-outlook-integration.xml",
         "/spring/spring-library-ms-outlook-plugin.xml",
         "/spring/spring-library-note.xml",
         "/spring/spring-library-notification.xml",
+        "/spring/spring-library-object-converter.xml",        
         "/spring/spring-library-object-diff.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-object-association-plugin.xml",
@@ -122,8 +126,8 @@ import java.util.UUID;
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-task.xml",
         "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-object-converter.xml",
-        "/spring/spring-library-ecm-file-lock.xml" })
+        "/spring/spring-library-core-api.xml"        
+    })
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {
@@ -222,10 +226,13 @@ public class MergeCaseFileServiceIT
         mergeCaseOptions.setTargetCaseFileId(targetId);
 
         List<EcmFile> sourceFiles = ecmFileDao.findForContainer(sourceSaved.getContainer().getId());
-        assertEquals(2, sourceFiles.size());
+        // the case file pipeline generates a PDF representation of the case file, so we start with one file,
+        // and then we added two in this test.
+        assertEquals(3, sourceFiles.size());
 
         List<EcmFile> targetFiles = ecmFileDao.findForContainer(targetSaved.getContainer().getId());
-        assertEquals(0, targetFiles.size());
+        // target case file also got a PDF file, from the pipeline.
+        assertEquals(1, targetFiles.size());
 
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
 
@@ -233,7 +240,7 @@ public class MergeCaseFileServiceIT
         assertEquals(0, sourceFiles.size());
 
         targetFiles = ecmFileDao.findForContainer(targetSaved.getContainer().getId());
-        assertEquals(2, targetFiles.size());
+        assertEquals(4, targetFiles.size());
 
         CaseFile sourceCase = caseFileDao.find(sourceId);
         CaseFile targetCase = caseFileDao.find(targetId);

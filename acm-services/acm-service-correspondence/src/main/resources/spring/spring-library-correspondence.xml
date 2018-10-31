@@ -24,9 +24,12 @@
     <bean id="correspondenceGenerator" class="com.armedia.acm.correspondence.service.CorrespondenceGenerator">
         <property name="wordGenerator" ref="poiWordGenerator"/>
         <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="correspondenceService" ref="correspondenceService"/>
+        <property name="lookupDao" ref="lookupDao"/>
+        <property name="translationService" ref="translationService"/>
     </bean>
 
     <bean id="correspondenceService" class="com.armedia.acm.correspondence.service.CorrespondenceService">

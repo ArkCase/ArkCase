@@ -1,6 +1,7 @@
 {
     "id": "time-tracking",
     "title": "Time Tracking",
+    "className": "com.armedia.acm.services.timesheet.model.AcmTimesheet",
     "configurable": true,
     "initialLinksShown": true,
     "menus": [
@@ -18,7 +19,22 @@
             "menuItemTitle": "timeTracking.menus.topbar.item",
             "moduleId": "time",
             "iconClass": "fa fa-clock-o",
-            "position": 80
+            "position": 80,
+            "formsType": "frevvo"
+        },
+        {
+            "menuId": "topbar",
+            "menuItemURL": "newTimesheet",
+            "menuItemTitle": "timeTracking.menus.topbar.item",
+            "moduleId": "time",
+            "modalDialog": {
+                "moduleName": "time-tracking",
+                "templateUrl": "modules/time-tracking/views/components/time-tracking-new-timesheet-modal.client.view.html",
+                "controllerName": "TimeTracking.NewTimesheetController"
+            },
+            "iconClass": "fa fa-clock-o",
+            "position": 80,
+            "formsType": "angular"
         }
     ],
     "tree": {
@@ -136,7 +152,7 @@
                             "name": "modified",
                             "displayName": "timeTracking.comp.details.table.columns.modified",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         },
                         {
                             "name": "modifier",
@@ -178,7 +194,7 @@
                         {
                             "name": "created",
                             "displayName": "timeTracking.comp.tags.table.columns.created",
-                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate"
                         },
                         {
@@ -221,7 +237,7 @@
                             "field": "create_tdt",
                             "displayName": "timeTracking.comp.tasks.table.columns.created",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         },
                         {
                             "name": "priority",
@@ -234,7 +250,7 @@
                             "field": "due_tdt",
                             "displayName": "timeTracking.comp.tasks.table.columns.due",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
+                            "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         },
                         {
                             "name": "status",
@@ -299,6 +315,7 @@
         {
             "id": "person",
             "title": "timeTracking.comp.person.title",
+            "className": "com.armedia.acm.services.participants.model.AcmParticipant",
             "icon": "fa fa-user",
             "enabled": true,
             "configurable": true,
@@ -374,13 +391,13 @@
                     "name": "date",
                     "displayName": "timeTracking.comp.summary.table.columns.date",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.date | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.date | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "modified",
                     "displayName": "timeTracking.comp.summary.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 }
             ]
         },
@@ -410,7 +427,7 @@
                 {
                     "name": "created",
                     "displayName": "timeTracking.comp.tags.table.columns.created",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -467,7 +484,7 @@
                     "field": "create_tdt",
                     "displayName": "timeTracking.comp.tasks.table.columns.created",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "priority",
@@ -480,7 +497,7 @@
                     "field": "due_tdt",
                     "displayName": "timeTracking.comp.tasks.table.columns.due",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "status",
@@ -489,6 +506,128 @@
                     "headerCellFilter": "translate"
                 }
             ]
+        },
+        {
+            "id": "times",
+            "title": "timeTracking.comp.newTimesheet.time.title",
+            "className": "com.armedia.acm.services.timesheet.model.AcmTime",
+            "icon": "fa fa-check-circle",
+            "enabled": true
+        },
+        {
+            "id": "newTimeObjectPicker",
+            "title": "timeTracking.comp.newTimesheet.objectPicker.title",
+            "enabled": "true",
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "emptySearch": false,
+            "hideTypeahead": true,
+            "showFacets": false,
+            "multiSelect": false,
+            "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE",
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "timeTracking.comp.newTimesheet.objectPicker.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "timeTracking.comp.newTimesheet.objectPicker.table.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "timeTracking.comp.newTimesheet.objectPicker.table.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "timeTracking.comp.newTimesheet.objectPicker.table.columns.id",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        },
+        {
+            "id": "otherChargeCodePicker",
+            "title": "timeTracking.comp.newTimesheet.otherChargeCodePicker.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "otherTypeChargeCodes": [
+                {
+                    "name": "LEAP",
+                    "type": "OTHER"
+                },
+                {
+                    "name": "Training",
+                    "type": "OTHER"
+                },
+                {
+                    "name": "Conference",
+                    "type": "OTHER"
+                }
+            ],
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "timeTracking.comp.newTimesheet.otherChargeCodePicker.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "type",
+                    "displayName": "timeTracking.comp.newTimesheet.otherChargeCodePicker.table.columns.type",
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
+            "id": "userSearch",
+            "title": "timeTracking.comp.newTimesheet.userSearch.title",
+            "enableFiltering": false,
+            "configurable": true,
+            "multiSelect": false,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "timeTracking.comp.newTimesheet.objectPicker.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "timeTracking.comp.newTimesheet.objectPicker.table.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "timeTracking.comp.newTimesheet.objectPicker.table.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "timeTracking.comp.newTimesheet.objectPicker.table.columns.username",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
         }
     ]
 }

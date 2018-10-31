@@ -9,6 +9,7 @@
 
     <bean id="emailSenderConfigurationService" class="com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl">
         <property name="emailSenderPropertiesResource" value="file:${user.home}/.arkcase/acm/acmEmailSender.properties"/>
+        <property name="acmEncryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
     </bean>
 
     <bean id="emailSenderPropertyFileLocation" class="java.lang.String">
@@ -44,6 +45,7 @@
     <bean id="onForgotUsername" class="com.armedia.acm.services.email.service.OnForgotUsername">
         <property name="emailSenderService" ref="configurableEmailSenderService"/>
         <property name="acmAppConfiguration" ref="acmApplication"/>
+        <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
         <property name="forgotUsernameEmailBodyTemplate" value="${upcoming.forgotUsername.notification.body.template}"/>
         <property name="forgotUsernameEmailSubject" value="${upcoming.forgotUsername.notification.subject}"/>
     </bean>
@@ -60,9 +62,14 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="emailSenderService" ref="configurableEmailSenderService"/>
         <property name="acmAppConfiguration" ref="acmApplication"/>
+        <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
         <property name="passwordResetEmailBodyTemplate" value="${upcoming.password.notification.body.template}"/>
         <property name="passwordResetEmailSubject" value="${upcoming.password.notification.subject}"/>
         <property name="passwordResetLink" value="${upcoming.password.notification.resetPasswordLink}"/>
+        <property name="passwordResetTemplateContent" ref="passwordResetTemplateContent"/>
     </bean>
 
+    <bean id="passwordResetTemplateContent" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg value="file:${upcoming.password.notification.template.path}" type="java.io.InputStream" />
+    </bean>
 </beans>

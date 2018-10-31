@@ -88,6 +88,8 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     private Map<String, String> tikaMetadataToFilePropertiesMap;
     private Map<String, String> contentTypeFixes;
 
+    private final static String UNIX_EPOCH = "1970-01-01T00:00:00Z";
+
     @Override
     @Deprecated
     /**
@@ -265,7 +267,10 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
             }
         }
 
-        if (strCreated != null)
+        // In some videos, the create-date is set to the Unix time epoch (1 January 1970 at midnight).
+        // These movies obviously are created by software with some defect in the date setting routines,
+        // and we will ignore such create dates.
+        if (strCreated != null && !UNIX_EPOCH.equals(strCreated))
         {
             LocalDateTime created = LocalDateTime.parse(strCreated, DateTimeFormatter.ISO_DATE_TIME);
 

@@ -21,8 +21,10 @@ angular.module('cases').controller(
                 'Search.QueryBuilderService',
                 'Helper.ObjectBrowserService',
                 'Helper.UiGridService',
+                'Dialog.BootboxService',
+                '$filter',
                 function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService, SearchQueryBuilder,
-                        HelperObjectBrowserService, HelperUiGridService) {
+                        HelperObjectBrowserService, HelperUiGridService, DialogService, $filter) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -45,7 +47,7 @@ angular.module('cases').controller(
                     ConfigService.getComponentConfig("cases", "participants").then(function(componentConfig) {
                         $scope.config = componentConfig;
                     });
-                    ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
+                    ConfigService.getModuleConfig("common").then(function(moduleConfig) {
                         $scope.userOrGroupSearchConfig = _.find(moduleConfig.components, {
                             id: "userOrGroupSearch"
                         });
@@ -78,21 +80,18 @@ angular.module('cases').controller(
                         return caseStatuses;
                     });
 
-
-
                     $scope.userOrGroupSearch = function() {
-                        var assigneUserName = _.find($scope.userFullNames, function (user)
-                         {
-                             return user.name === $scope.assignee
+                        var assigneUserName = _.find($scope.userFullNames, function(user) {
+                            return user.id === $scope.assignee
                         });
                         var params = {
-                          owningGroup: $scope.owningGroup,
-                          assignee: assigneUserName
+                            owningGroup: $scope.owningGroup,
+                            assignee: assigneUserName
                         };
                         var modalInstance = $modal.open({
                             animation: $scope.animationsEnabled,
-                            templateUrl: 'modules/cases/views/components/case-user-group-picker-modal.client.view.html',
-                            controller: 'Cases.UserGroupPickerController',
+                            templateUrl: 'modules/common/views/user-group-picker-modal.client.view.html',
+                            controller: 'Common.UserGroupPickerController',
                             size: 'lg',
                             resolve: {
                                 $filter: function() {
@@ -104,7 +103,7 @@ angular.module('cases').controller(
                                 $config: function() {
                                     return $scope.userOrGroupSearchConfig;
                                 },
-                                $params: function () {
+                                $params: function() {
                                     return params;
                                 }
                             }
@@ -118,24 +117,46 @@ angular.module('cases').controller(
                                     var selectedUser = selection.masterSelectedItem;
                                     var selectedGroup = selection.detailSelectedItems;
 
-                                    $scope.assignee = selectedUser.name;
+                                    $scope.assignee = selectedUser.object_id_s;
                                     $scope.updateAssignee();
-                                    if (selectedGroup) {
-                                        $scope.owningGroup = selectedGroup.name;
-                                        $scope.updateOwningGroup();
 
+                                    //set for AFDP-6831 to inheritance in the Folder/file participants
+                                    var len = $scope.objectInfo.participants.length;
+                                    for (var i = 0; i < len; i++) {
+                                        if($scope.objectInfo.participants[i].participantType =='assignee'){
+                                            $scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                                        }
+                                    }
+                                    if (selectedGroup) {
+                                        $scope.owningGroup = selectedGroup.object_id_s;
+                                        $scope.updateOwningGroup();
+                                        $scope.saveCase();
+
+                                    } else {
+                                        $scope.saveCase();
                                     }
 
                                     return;
                                 } else if (selectedObjectType === 'GROUP') { // Selected group
                                     var selectedUser = selection.detailSelectedItems;
                                     var selectedGroup = selection.masterSelectedItem;
-                                    if (selectedUser) {
-                                        $scope.assignee = selectedUser.name;
-                                        $scope.updateAssignee();
-                                    }
-                                    $scope.owningGroup = selectedGroup.name;
+                                    $scope.owningGroup = selectedGroup.object_id_s;
                                     $scope.updateOwningGroup();
+
+                                    //set for AFDP-6831 to inheritance in the Folder/file participants
+                                    var len = $scope.objectInfo.participants.length;
+                                    for (var i = 0; i < len; i++) {
+                                        if($scope.objectInfo.participants[i].participantType =='owning group') {
+                                            $scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                                        }
+                                    }
+                                    if (selectedUser) {
+                                        $scope.assignee = selectedUser.object_id_s;
+                                        $scope.updateAssignee();
+                                        $scope.saveCase();
+                                    } else {
+                                        $scope.saveCase();
+                                    }
 
                                     return;
                                 }
@@ -148,10 +169,10 @@ angular.module('cases').controller(
 
                     };
 
-
                     var onObjectInfoRetrieved = function(data) {
                         $scope.dateInfo = $scope.dateInfo || {};
                         $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
+                        $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
                         $scope.owningGroup = ObjectModelService.getGroup(data);
                         $scope.assignee = ObjectModelService.getAssignee(data);
 
@@ -167,8 +188,6 @@ angular.module('cases').controller(
                             return approvers;
                         });
                     };
-
-
 
                     // Updates the ArkCase database when the user changes a case attribute
                     // in a case top bar menu item and clicks the save check button
@@ -189,16 +208,25 @@ angular.module('cases').controller(
                     };
                     $scope.updateOwningGroup = function() {
                         ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
-                        $scope.saveCase();
                     };
                     $scope.updateAssignee = function() {
                         ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
-                        $scope.saveCase();
                     };
-                    $scope.updateDueDate = function() {
-                        var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
-                        $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
-                        $scope.saveCase();
+                    $scope.updateDueDate = function(data) {
+                        if (!Util.isEmpty(data)) {
+                            var correctedDueDate = new Date(data);
+                            var startDate = new Date($scope.objectInfo.create_date_tdt);
+                            if(correctedDueDate < startDate){
+                                $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
+                                DialogService.alert($translate.instant("cases.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
+                            }else {
+                                $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
+                                $scope.saveCase();
+                            }
+                        }else {
+                            $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
+                            $scope.saveCase();
+                        }
                     };
 
                 } ]);

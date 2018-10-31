@@ -121,7 +121,7 @@
                 "username": "de_Username"
             }
         },
-        "userSearch.title": "de_Search for User",
+        "userSearch.title": "de_User/Group Search",
         "cost": {
             "title": "de_Costs",
             "date": "de_Date",
@@ -139,7 +139,8 @@
             "title": "de_Approver",
             "placeholder": "de_Select Approver",
             "removeBtn": "de_Remove Approver",
-            "addBtn": "de_Add Another Approver"
+            "addBtn": "de_Add Another Approver",
+            "owningGroup": "de_Owning Group"
         },
         "cancelButton": "de_Cancel",
         "saveButton": "de_Save",

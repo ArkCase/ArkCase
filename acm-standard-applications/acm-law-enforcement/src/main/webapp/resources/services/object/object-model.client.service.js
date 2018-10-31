@@ -54,6 +54,8 @@ angular.module('services').factory('Object.ModelService', [ '$q', '$resource', '
          * @param {String} participantType The type of participant (assignee, approver, ...) we are searching
          *
          * @returns {String} Participant LDAP ID, or 'null' if not found
+         * NOTE! The result is the first match the predicate returns truthy for.
+         * Use only when you're sure there is one participant of the required type (e.g. assignee)
          */
         getParticipantByType: function(objectInfo, participantType) {
             return _.result(_.find(Util.goodMapValue(objectInfo, "participants", []), {

@@ -35,6 +35,11 @@ import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.lock.FileLockType;
+import com.armedia.acm.plugins.wopi.model.WopiConfig;
+import com.armedia.acm.plugins.wopi.model.WopiFileInfo;
+import com.armedia.acm.plugins.wopi.model.WopiLockInfo;
+import com.armedia.acm.plugins.wopi.model.WopiSessionInfo;
+import com.armedia.acm.plugins.wopi.model.WopiUserInfo;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
@@ -42,11 +47,6 @@ import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.plugins.wopi.model.WopiConfig;
-import com.armedia.acm.plugins.wopi.model.WopiFileInfo;
-import com.armedia.acm.plugins.wopi.model.WopiLockInfo;
-import com.armedia.acm.plugins.wopi.model.WopiSessionInfo;
-import com.armedia.acm.plugins.wopi.model.WopiUserInfo;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -54,9 +54,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.security.core.Authentication;
 
-import javax.annotation.Nullable;
-
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Period;
@@ -118,7 +115,7 @@ public class WopiAcmService implements AcmConfigurablePlugin
         return new InputStreamResource(fileContent);
     }
 
-    public void putFile(Long id, @Nullable InputStreamResource resource, Authentication authentication)
+    public void putFile(Long id, InputStreamResource resource, Authentication authentication)
             throws AcmObjectNotFoundException, IOException, MuleException
     {
         EcmFile fileToBeReplaced = ecmFileService.findById(id);
@@ -126,14 +123,7 @@ public class WopiAcmService implements AcmConfigurablePlugin
         {
             throw new AcmObjectNotFoundException("FILE", id, "File not found");
         }
-        if (resource == null)
-        {
-            fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, new ByteArrayInputStream(new byte[0]));
-        }
-        else
-        {
-            fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, resource.getInputStream());
-        }
+        fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, resource.getInputStream());
     }
 
     public WopiLockInfo getSharedLock(Long fileId)

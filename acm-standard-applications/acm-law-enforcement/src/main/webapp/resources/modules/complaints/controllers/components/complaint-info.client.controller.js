@@ -21,8 +21,10 @@ angular.module('complaints').controller(
                 'Object.ParticipantService',
                 'SearchService',
                 'Search.QueryBuilderService',
+                'Dialog.BootboxService',
+                '$filter',
                 function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService, ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, ObjectParticipantService,
-                        SearchService, SearchQueryBuilder) {
+                        SearchService, SearchQueryBuilder, DialogService, $filter) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -72,139 +74,109 @@ angular.module('complaints').controller(
                         return complaintStatuses;
                     });
 
-                    $scope.picker = {
-                        opened: false
-                    };
-                    $scope.onPickerClick = function() {
-                        $scope.picker.opened = true;
-                    };
+                    ConfigService.getModuleConfig("common").then(function(moduleConfig) {
+                        $scope.userOrGroupSearchConfig = _.find(moduleConfig.components, {
+                            id: "userOrGroupSearch"
+                        });
+                    });
 
-                    $scope.openAssigneePickerModal = function() {
-                        var participant = {
-                            id: '',
-                            participantLdapId: '',
-                            config: $scope.config
+                    $scope.userOrGroupSearch = function() {
+                        var assigneUserName = _.find($scope.userFullNames, function(user) {
+                            return user.id === $scope.assignee
+                        });
+                        var params = {
+                            owningGroup: $scope.owningGroup,
+                            assignee: assigneUserName
                         };
-                        showModal(participant, false);
-                    };
-
-                    var showModal = function(participant, isEdit) {
-                        var modalScope = $scope.$new();
-                        modalScope.participant = participant || {};
-
                         var modalInstance = $modal.open({
-                            scope: modalScope,
-                            animation: true,
-                            templateUrl: "modules/complaints/views/components/complaint-assignee-picker-modal.client.view.html",
-                            controller: "Complaints.AssigneePickerController",
-                            size: 'md',
-                            backdrop: 'static',
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'modules/common/views/user-group-picker-modal.client.view.html',
+                            controller: 'Common.UserGroupPickerController',
+                            size: 'lg',
                             resolve: {
-                                owningGroup: function() {
-                                    return $scope.owningGroup;
+                                $filter: function() {
+                                    return $scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetFilter;
+                                },
+                                $extraFilter: function() {
+                                    return $scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetExtraFilter;
+                                },
+                                $config: function() {
+                                    return $scope.userOrGroupSearchConfig;
+                                },
+                                $params: function() {
+                                    return params;
                                 }
                             }
                         });
 
-                        modalInstance.result.then(function(data) {
-                            $scope.participant = {};
-                            if (data.participant.participantLdapId != '' && data.participant.participantLdapId != null) {
-                                $scope.participant.participantLdapId = data.participant.participantLdapId;
-                                $scope.assignee = data.participant.participantLdapId;
-                                $scope.updateAssignee();
-                            }
-                        }, function(error) {
-                        });
-                    };
+                        modalInstance.result.then(function(selection) {
 
-                    $scope.openGroupPickerModal = function() {
-                        var participant = {
-                            id: '',
-                            participantLdapId: '',
-                            config: $scope.config
-                        };
-                        showGroupModal(participant, false);
-                    };
+                            if (selection) {
+                                var selectedObjectType = selection.masterSelectedItem.object_type_s;
+                                if (selectedObjectType === 'USER') { // Selected user
+                                    var selectedUser = selection.masterSelectedItem;
+                                    var selectedGroup = selection.detailSelectedItems;
 
-                    var showGroupModal = function(participant, isEdit) {
-                        var modalScope = $scope.$new();
-                        modalScope.participant = participant || {};
+                                    $scope.assignee = selectedUser.object_id_s;
+                                    $scope.updateAssignee();
 
-                        var modalInstance = $modal.open({
-                            scope: modalScope,
-                            animation: true,
-                            templateUrl: "modules/complaints/views/components/complaint-group-picker-modal.client.view.html",
-                            controller: "Complaints.GroupPickerController",
-                            size: 'md',
-                            backdrop: 'static',
-                            resolve: {
-                                owningGroup: function() {
-                                    return $scope.owningGroup;
-                                }
-                            }
-                        });
-
-                        modalInstance.result.then(function(chosenGroup) {
-                            $scope.participant = {};
-
-                            if (chosenGroup.participant.participantLdapId != '' && chosenGroup.participant.participantLdapId != null) {
-                                $scope.participant.participantLdapId = chosenGroup.participant.participantLdapId;
-                                $scope.participant.object_type_s = chosenGroup.participant.object_type_s;
-
-                                var currentAssignee = $scope.assignee;
-                                var chosenOwningGroup = chosenGroup.participant.participantLdapId;
-                                $scope.assigneeOptions = [];
-                                $scope.iscurrentAssigneeInOwningGroup = false;
-                                var size = 20;
-                                var start = 0;
-                                var searchQuery = '*';
-                                var filter = 'fq=fq="object_type_s": USER' + '&fq="groups_id_ss": ' + chosenOwningGroup;
-
-                                var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(searchQuery, filter, size, start);
-                                if (query) {
-                                    SearchService.queryFilteredSearch({
-                                        query: query
-                                    }, function(data) {
-                                        var returnedUsers = data.response.docs;
-                                        // Going through th collection of returnedUsers to see if there is a match with the current assignee
-                                        // if there is a match that means the current assignee is within that owning group hence no
-                                        // changes to the current assignee is needed
-                                        _.each(returnedUsers, function(returnedUser) {
-                                            if (currentAssignee === returnedUser.object_id_s) {
-                                                $scope.iscurrentAssigneeInOwningGroup = true;
-                                            }
-                                        });
-
-                                        if ($scope.participant.participantLdapId && $scope.iscurrentAssigneeInOwningGroup) {
-                                            $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
-                                            $scope.updateOwningGroup();
-                                        } else {
-                                            $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
-                                            $scope.assignee = '';
-
-                                            var assigneeParticipantType = 'assignee';
-                                            // Iterating through the array to find the participant with the ParticipantType eqaul assignee
-                                            // then setiing the participantLdapId to empty string
-                                            _.each($scope.objectInfo.participants, function(participant) {
-                                                if (participant.participantType == assigneeParticipantType) {
-                                                    participant.participantLdapId = '';
-                                                }
-                                            });
-
-                                            $scope.updateOwningGroup();
-                                            $scope.updateAssignee();
+                                    //set for AFDP-6831 to inheritance in the Folder/file participants
+                                    var len = $scope.objectInfo.participants.length;
+                                    for (var i = 0; i < len; i++) {
+                                        if($scope.objectInfo.participants[i].participantType =='assignee'){
+                                            $scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                                         }
-                                    });
+                                    }
+
+                                    if (selectedGroup) {
+                                        $scope.owningGroup = selectedGroup.object_id_s;
+                                        $scope.updateOwningGroup();
+                                        $scope.saveComplaint()
+
+                                    } else {
+                                        $scope.saveComplaint();
+                                    }
+
+                                    return;
+                                } else if (selectedObjectType === 'GROUP') { // Selected group
+                                    var selectedUser = selection.detailSelectedItems;
+                                    var selectedGroup = selection.masterSelectedItem;
+
+                                    $scope.owningGroup = selectedGroup.object_id_s;
+                                    $scope.updateOwningGroup();
+
+                                    //set for AFDP-6831 to inheritance in the Folder/file participants
+                                    var len = $scope.objectInfo.participants.length;
+                                    for (var i = 0; i < len; i++) {
+                                        if($scope.objectInfo.participants[i].participantType =='owning group') {
+                                            $scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                                        }
+                                    }
+
+                                    if (selectedUser) {
+                                        $scope.assignee = selectedUser.object_id_s;
+                                        $scope.updateAssignee();
+                                        $scope.saveComplaint();
+                                    } else {
+                                        $scope.saveComplaint();
+                                    }
+
+                                    return;
                                 }
                             }
-                        }, function(error) {
+
+                        }, function() {
+                            // Cancel button was clicked.
+                            return [];
                         });
+
                     };
 
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
                         $scope.dateInfo = $scope.dateInfo || {};
                         $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
+                        $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
                         $scope.assignee = ObjectModelService.getAssignee(objectInfo);
                         $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
@@ -239,16 +211,25 @@ angular.module('complaints').controller(
                     };
                     $scope.updateOwningGroup = function() {
                         ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
-                        $scope.saveComplaint();
                     };
                     $scope.updateAssignee = function() {
                         ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
-                        $scope.saveComplaint();
                     };
-                    $scope.updateDueDate = function() {
-                        var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
-                        $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
-                        $scope.saveComplaint();
+                    $scope.updateDueDate = function(data) {
+                        if (!Util.isEmpty(data)) {
+                            var correctedDueDate = new Date(data);
+                            var startDate = new Date($scope.objectInfo.create_date_tdt);
+                            if(correctedDueDate < startDate){
+                                $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
+                                DialogService.alert($translate.instant("complaints.comp.info.alertMessage")+ $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
+                            }else {
+                                $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
+                                $scope.saveComplaint();
+                            }
+                        }else {
+                            $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
+                            $scope.saveComplaint();
+                        }
                     };
 
                 } ]);

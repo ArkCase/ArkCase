@@ -23,6 +23,22 @@
         "defaultDateUIFormat": "年月天",
         "defaultDateTimeUIFormat": "年月天 HH:mm"
     },
+    "common.userOrGroupSearch": {
+        "id": "zh-tw_userSearch",
+        "title": "zh-tw_User/Group Search",
+        "search": {
+            "btn": "zh-tw_Search",
+            "placeholder": "zh-tw_Search for the user or group."
+        },
+        "cancelButton": "zh-tw_Cancel",
+        "confirmButton": "zh-tw_Confirm",
+        "assigneeGridColumns": {
+            "name": "zh-tw_Name",
+            "type": "zh-tw_Type",
+            "title": "zh-tw_Title",
+            "username": "zh-tw_Username"
+        }
+    },
     "common.frevvo": {
         "defaultDateFormat": "年月天"
     },
@@ -203,7 +219,6 @@
         "selectedItemsGrid.label": "選定的條目",
         "notValidUser": "zh-tw_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
         "notValidGroup": "zh-tw_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
-
     },
     "common.directive.search": {
         "showMore.button.text": "顯示更多",
@@ -624,6 +639,16 @@
             "error.ownerUnique": "只有一個所有者是允許的。"
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "添加參與者",
+        "editParticipant.label": "編輯記錄",
+        "participantType.label": "參與者類型",
+        "participantName.label": "參與者名稱",
+        "btnOk.text": "保存",
+        "btnCancel.text": "取消",
+        "dialogUserGroupPicker.header": "zh-tw_Search User/Group",
+        "replaceChildrenParticipant": "替換子文檔參與者"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "完成百分百"
     },
@@ -784,7 +809,8 @@
             "name": "名稱",
             "id": "識別號",
             "title": "標題"
-        }
+        },
+        "addDocument": "ZH_TW_Choose document to add"
     },
     "common.addOrganization": {
         "title": "添加組織",

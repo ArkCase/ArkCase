@@ -26,6 +26,7 @@
         "assignee.label": "指定人員",
         "owningGroup.label": "所屬群體",
         "dueDate.label": "到期日期",
+        "alertMessage": "zh-tw_Due date must be after the create date ",
         "priorities": {
             "low%": "低級",
             "medium%": "中級",
@@ -261,6 +262,16 @@
             "title": "標題",
             "parent": "原屬",
             "modified": "更改"
+        },
+        "objectPicker": {
+            "title": "zh-tw_Search for object",
+            "table.columns": {
+                "name": "zh-tw_Name",
+                "type": "zh-tw_Type",
+                "title": "zh-tw_Title",
+                "id": "zh-tw_ID",
+                "username": "zh-tw_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {
@@ -364,6 +375,7 @@
     },
     "cases.comp.change.status": {
         "title": "zh-tw_Change Case Status",
+        "description.label": "zh-tw_Description",
         "information": {
             "title": "zh-tw_Change Case Status Information",
             "date": "zh-tw_Change Date",
@@ -380,10 +392,11 @@
         },
         "approver": {
             "placeholder": "zh-tw_Select Approver",
-            "label": "zh-tw_Select Approver",
+            "label": "zh-tw_Approver",
             "addAnother": "zh-tw_Add another",
             "remove": "zh-tw_Remove Approver",
-            "pickerModal.header": "zh-tw_Choose Approver"
+            "pickerModal.header": "zh-tw_User/Group Search",
+            "owningGroup": "zh-tw_Owning Group"
         },
         "button": {
             "cancel": "zh-tw_Cancel",

@@ -23,6 +23,22 @@
         "defaultDateUIFormat": "MM/dd/aaaa",
         "defaultDateTimeUIFormat": "MM/dd/aaaa HH:mm"
     },
+    "common.userOrGroupSearch": {
+        "id": "es_userSearch",
+        "title": "es_User/Group Search",
+        "search": {
+            "btn": "es_Search",
+            "placeholder": "es_Search for the user or group."
+        },
+        "cancelButton": "es_Cancel",
+        "confirmButton": "es_Confirm",
+        "assigneeGridColumns": {
+            "name": "es_Name",
+            "type": "es_Type",
+            "title": "es_Title",
+            "username": "es_Username"
+        }
+    },
     "common.frevvo": {
         "defaultDateFormat": "AAAA-MM-DD"
     },
@@ -203,7 +219,6 @@
         "selectedItemsGrid.label": "Entradas seleccionadas",
         "notValidUser": "es_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
         "notValidGroup": "es_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
-
     },
     "common.directive.search": {
         "showMore.button.text": "Mostrar más valores",
@@ -624,6 +639,16 @@
             "error.ownerUnique": "Solo se permite un dueño."
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "Añada participante",
+        "editParticipant.label": "Editar registro",
+        "participantType.label": "Tipo de participante",
+        "participantName.label": "Nombre del participante",
+        "btnOk.text": "Salvar",
+        "btnCancel.text": "Cancelar",
+        "dialogUserGroupPicker.header": "es_Search User/Group",
+        "replaceChildrenParticipant": "Reemplazar a los niños participantes"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "% Completado"
     },
@@ -784,7 +809,8 @@
             "name": "Nombre",
             "id": "CARNÉ DE IDENTIDAD",
             "title": "Título"
-        }
+        },
+        "addDocument": "ES_Choose document to add"
     },
     "common.addOrganization": {
         "title": "Agregar organización",

@@ -62,6 +62,12 @@
         <constructor-arg value="UTF-8"/>
     </bean>
 
+    <bean id="fiscalYearProperties"  class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="file:${user.home}/.arkcase/acm/fiscalYear.properties"/>
+        <property name="ignoreResourceNotFound" value="false"/>
+        <property name="localOverride" value="false"/>
+    </bean>
+    
     <bean id="configList" class="java.util.ArrayList">
         <constructor-arg>
             <list>
@@ -204,6 +210,11 @@
                     <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
                     <property name="objectConverter" ref="objectConverter"/>
                 </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="reportsParameters"/>
+                    <property name="configDescription" value="Reports parameters"/>
+                    <property name="json" ref="reportsParametersJsonConfig"/>
+                </bean>
                 <bean class="com.armedia.acm.services.config.model.PropertyConfig">
                     <property name="configName" value="acm-reports-server-config"/>
                     <property name="configDescription" value="Acm Reports Server config"/>
@@ -295,6 +306,13 @@
                     <property name="configName" value="languageSettings"/>
                     <property name="configDescription" value="Language Setting"/>
                     <property name="json" ref="languageJsonSettings"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="fiscalYear"/>
+                    <property name="configDescription" value="Fiscal year definition"/>
+                    <property name="properties" ref="fiscalYearProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                    <property name="objectConverter" ref="objectConverter"/>
                 </bean>
             </list>
         </constructor-arg>

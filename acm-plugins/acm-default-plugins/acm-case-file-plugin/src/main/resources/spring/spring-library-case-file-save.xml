@@ -21,6 +21,7 @@
                 <ref bean="caseFileEcmFolderHandler"/>
                 <ref bean="caseFileOutlookHandler"/>
                 <ref bean="caseFileFolderStructureHandler"/>
+                <ref bean="caseFileUploadAttachmentsHandler"/>
                 <ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
                 <ref bean="casefileDocumentHandler"/>
             </list>
@@ -51,9 +52,24 @@
         <property name="startBusinessProcessBusinessRule" ref="caseFileStartBusinessProcessBusinessRule"/>
         <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
     </bean>
+
+    <bean id="pdfCasefileDocumentGenerator"
+        class="com.armedia.acm.plugins.casefile.service.PDFCasefileDocumentGenerator"
+        parent="pdfDocumentGenerator">
+    </bean>
+
     <bean id="casefileDocumentHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CasefileDocumentHandler"
         parent="pdfCasefileDocumentGenerator">
         <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
         <property name="dao" ref="caseFileDao"/>
+    </bean>
+    
+    <bean id="caseFileAssignmentHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileAssignmentHandler">
+        <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
+        <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
+    </bean>
+
+    <bean id="caseFileUploadAttachmentsHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileUploadAttachmentsHandler">
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 </beans>

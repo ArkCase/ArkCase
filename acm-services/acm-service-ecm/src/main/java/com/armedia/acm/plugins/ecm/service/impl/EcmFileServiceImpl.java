@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -684,6 +684,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "CONTAINER", lockType = "READ", lockChildObjects = false, unlockChildObjects = false)
+    public AcmCmisObjectList listFlatSearchResultsAdvanced(Authentication auth, AcmContainer container, String category, String sortBy,
+            String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException
+    {
+        String query = String.format("(object_type_s:FILE AND parent_object_type_s:%s)",
+                container.getContainerObjectType());
+
+        String fq = String.format("fq=(%s) AND hidden_b:false", searchFilter);
+        return findObjects(auth, container, container.getFolder().getId(), category, query, fq, startRow, maxRows, sortBy, sortDirection);
+    }
+
+    @Override
     @PreAuthorize("hasPermission(#container.folder.id, 'FOLDER', 'read|group-read|write|group-write')")
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "CONTAINER", lockType = "READ", lockChildObjects = false, unlockChildObjects = false)
     public AcmCmisObjectList listFileFolderByCategory(Authentication auth, AcmContainer container, String sortBy, String sortDirection,
@@ -880,6 +892,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
@@ -902,6 +915,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public EcmFile copyFile(Long fileId, AcmFolder targetFolder, AcmContainer targetContainer)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
@@ -1260,6 +1274,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
@@ -1274,6 +1289,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
@@ -1348,8 +1364,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         boolean removeFileFromDatabase = allVersions || file.getVersions().size() < 2;
-        String versionToRemoveFromEcm = removeFileFromDatabase ?
-            file.getVersionSeriesId() : file.getVersions().get(file.getVersions().size() - 1).getVersionTag();
+        String versionToRemoveFromEcm = removeFileFromDatabase ? file.getVersionSeriesId()
+                : file.getVersions().get(file.getVersions().size() - 1).getVersionTag();
 
         Map<String, Object> props = new HashMap<>();
         props.put(EcmFileConstants.ECM_FILE_ID, versionToRemoveFromEcm);
@@ -1365,7 +1381,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
 
-            if ( removeFileFromDatabase )
+            if (removeFileFromDatabase)
             {
                 getEcmFileDao().deleteFile(objectId);
             }

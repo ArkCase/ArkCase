@@ -23,7 +23,8 @@
         "state.label": "Estado",
         "overdue.tooltip": "La tarea está atrasada",
         "deadline.tooltip": "La fecha límite es el acercamiento",
-        "owningGroup.label": "Grupo propietario"
+        "owningGroup.label": "Grupo propietario",
+        "alertMessage": "es_Due date must be after the start date "
     },
     "tasks.comp.parentinfo": {
         "title": "Información para Padres",
@@ -150,7 +151,7 @@
             "signedBy": "Firmado por"
         }
     },
-    "tasks.comp.docsreview": {
+    "tasks.comp.documentsunderreview": {
         "title": "Documentos bajo revisión",
         "table.columns": {
             "fileId": "CARNÉ DE IDENTIDAD",
@@ -158,7 +159,11 @@
             "created": "Creado",
             "creator": "Autor",
             "status": "Estado"
-        }
+        },
+        "searchInputPlaceholder": "Search",
+        "sendEmail": "Send Email",
+        "noDocsMessage": "No Documents for review",
+        "filterInputPlaceholder": "Filter"
     },
     "tasks.comp.history": {
         "title": "Historia",

@@ -29,7 +29,7 @@ package com.armedia.acm.plugins.casefile.pipeline.postsave;
 
 import static com.armedia.acm.auth.AuthenticationUtils.getUserIpAddress;
 
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseFileStatusEvent;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStateContants;
@@ -53,15 +53,15 @@ public class CreateTaskChangeCaseFileHandler
     {
         String mode = (String) ctx.getPropertyValue("mode");
         CaseFile caseFile = ctx.getCaseFile();
-        FrevvoUploadedFiles frevvoUploadedFile = new FrevvoUploadedFiles();
+        UploadedFiles uploadedFile = new UploadedFiles();
 
         EcmFile existing = ecmFileDao.findForContainerAttachmentFolderAndFileType(caseFile.getContainer().getId(),
                 caseFile.getContainer().getAttachmentFolder().getId(), ChangeCaseStateContants.CHANGE_CASE_STATUS);
 
-        frevvoUploadedFile.setPdfRendition(existing);
+        uploadedFile.setPdfRendition(existing);
 
         ChangeCaseFileStatusEvent event = new ChangeCaseFileStatusEvent(caseFile.getCaseNumber(), caseFile.getId(), form,
-                frevvoUploadedFile, mode, ctx.getAuthentication().getName(), getUserIpAddress(), true);
+                uploadedFile, mode, ctx.getAuthentication().getName(), getUserIpAddress(), true);
         getApplicationEventPublisher().publishEvent(event);
     }
 

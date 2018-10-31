@@ -70,11 +70,17 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
 
     public List<EcmFile> findForContainer(Long containerId)
     {
+        return findForContainer(containerId, FlushModeType.AUTO);
+    }
+
+    public List<EcmFile> findForContainer(Long containerId, FlushModeType flushModeType)
+    {
         String jpql = "SELECT e " +
                 "FROM EcmFile e " +
                 "WHERE e.container.id = :containerId";
         Query query = getEm().createQuery(jpql);
         query.setParameter("containerId", containerId);
+        query.setFlushMode(flushModeType);
 
         List<EcmFile> results = query.getResultList();
 
@@ -148,6 +154,55 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         query.setParameter("folderId", folderId);
 
         EcmFile file = query.getSingleResult();
+
+        return file;
+    }
+
+    /**
+     * Returns the single EcmFile that exist in selected folder. If none or more than one file exists, null value is
+     * returned.
+     *
+     * @param parentObjectType
+     *            type of parent object (ex. CASE_FILE)
+     * @param parentObjectId
+     *            id of parent object (ex. 101)
+     * @param targetFolderCmisId
+     *            cmisId string of selected or targeted folder (ex.
+     *            workspace://SpacesStore/a9715212-d6df-4dbf-933c-111cf31a5c8c)
+     * @param fileType
+     *            type of template file used for correspondence (ex. Denial Letter, Request Form, etc.)
+     * @return returns the file for selected criteria
+     */
+    public EcmFile findSingleFileByParentObjectAndFolderCmisIdAndFileType(String parentObjectType, Long parentObjectId,
+            String targetFolderCmisId,
+            String fileType)
+    {
+
+        String jpql = "SELECT e FROM EcmFile e " +
+                "WHERE e.container.containerObjectType = :parentObjectType " +
+                "AND e.container.containerObjectId = :parentObjectId " +
+                "AND e.folder.cmisFolderId = :targetFolderCmisId " +
+                "AND e.fileType = :fileType";
+
+        TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
+
+        query.setParameter("parentObjectType", parentObjectType);
+        query.setParameter("parentObjectId", parentObjectId);
+        query.setParameter("targetFolderCmisId", targetFolderCmisId);
+        query.setParameter("fileType", fileType);
+
+        EcmFile file = null;
+
+        try
+        {
+            file = query.getSingleResult();
+        }
+        catch (Exception e)
+        {
+            LOG.debug(
+                    "Cannot find single EcmFile for containerObjectType=[{}], containerObjectId=[{}], cmisRepositoryId=[{}] and fileType=[{}]",
+                    parentObjectType, parentObjectId, targetFolderCmisId, fileType, e);
+        }
 
         return file;
     }

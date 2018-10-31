@@ -5,8 +5,7 @@
                 <i class="fa fa-clone"></i>
                 <span translate>admin.security.ldap.user.management.cloneButton</span>
             </button>
-            <button class="btn btn-xs btn-link" ng-bootbox-confirm-action="deleteUser()" ng-bootbox-confirm="<i class='fa fa-fw fa-exclamation-triangle text-danger'></i>
-                    {{ 'admin.security.ldap.user.management.deleteUserMsg' | translate}}">
+            <button class="btn btn-xs btn-link" ng-click="deleteUserConfirm()">
                 <i class="fa fa-trash"></i>
                 <span translate>admin.security.ldap.user.management.deleteUserBtn</span>
             </button>
