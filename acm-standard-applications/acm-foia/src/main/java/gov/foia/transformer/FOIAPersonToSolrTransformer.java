@@ -116,7 +116,7 @@ public class FOIAPersonToSolrTransformer extends PersonToSolrTransformer
      * @param requestIn
      * @param additionalProperties
      */
-    private void mapRequestProperties(FOIAPerson personIn, Map<String, Object> additionalProperties)
+    protected void mapRequestProperties(FOIAPerson personIn, Map<String, Object> additionalProperties)
     {
         additionalProperties.put("object_sub_type_s", "FOIA_PERSON");
         additionalProperties.put("position_s", personIn.getPosition());

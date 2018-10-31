@@ -58,7 +58,7 @@ angular.module('complaints').controller(
                             ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId).then(function(costsheets) {
                                 componentHelper.promiseConfig.then(function(config) {
                                     for (var i = 0; i < costsheets.length; i++) {
-                                        costsheets[i].acm$_formName = $translate.instant("complaints.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
+                                        costsheets[i].acm$_formName = costsheets[i].user.fullName + " - " + costsheets[i].parentNumber;
                                         costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function(total, n) {
                                             return total + Util.goodValue(n.value, 0);
                                         }, 0);

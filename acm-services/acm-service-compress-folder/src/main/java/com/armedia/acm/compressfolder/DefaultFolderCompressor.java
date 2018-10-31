@@ -36,6 +36,7 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -117,6 +118,8 @@ public class DefaultFolderCompressor implements FolderCompressor
      * Size unit used to calculate the max compressed size in bytes.
      */
     private SizeUnit sizeUnit = DEFAULT_SIZE_UNIT;
+
+    private AcmFolderDao acmFolderDao;
 
     /*
      * (non-Javadoc)
@@ -269,12 +272,27 @@ public class DefaultFolderCompressor implements FolderCompressor
                    .stream()
                    .anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(childFolder.getId()) && fileFolderNode.isFolder())
                    ||
+                   isFolderParentSelected(compressNode, childFolder)
+                   ||
                    isRootFolderSelected(compressNode);
        }
        else
        {
            return true;
        }
+    }
+
+    private boolean isFolderParentSelected(CompressNode compressNode, AcmFolder childFolder)
+    {
+        if(childFolder.getParentFolder() != null)
+        {
+            if(compressNode.getSelectedNodes().stream().anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(childFolder.getParentFolder().getId())))
+            {
+                return true;
+            }
+           return isFolderParentSelected(compressNode, childFolder.getParentFolder());
+        }
+        return false;
     }
 
     /*
@@ -301,9 +319,12 @@ public class DefaultFolderCompressor implements FolderCompressor
 
     private boolean isFileParentFolderSelected(Long parentFolderId, CompressNode compressNode)
     {
+        AcmFolder parentFolder = getAcmFolderDao().find(parentFolderId);
         return compressNode.getSelectedNodes()
                 .stream()
-                .anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(parentFolderId) && fileFolderNode.isFolder());
+                .anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(parentFolderId) && fileFolderNode.isFolder())
+                ||
+                isFolderParentSelected(compressNode, parentFolder);
     }
 
     private boolean isRootFolderSelected(CompressNode compressNode)
@@ -408,4 +429,13 @@ public class DefaultFolderCompressor implements FolderCompressor
         this.sizeUnit = SizeUnit.valueOf(sizeUnit);
     }
 
+    public AcmFolderDao getAcmFolderDao()
+    {
+        return acmFolderDao;
+    }
+
+    public void setAcmFolderDao(AcmFolderDao acmFolderDao)
+    {
+        this.acmFolderDao = acmFolderDao;
+    }
 }

@@ -223,7 +223,7 @@
             "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))"
           },
           {
-            "titleKey": "common.directive.docTree.menu.collaborate",
+            "titleKey": "common.directive.docTree.menu.editWithOfficeOnline",
             "cmd": "collaborate",
             "uiIcon": "ui-icon-person",
             "disabledExpression": "!(new RegExp('\\.(docx|xlsx|pptx)$', 'i').test(nodes[0].data.ext))",

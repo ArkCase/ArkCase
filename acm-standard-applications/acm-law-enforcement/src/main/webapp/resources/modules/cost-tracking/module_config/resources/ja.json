@@ -132,15 +132,15 @@
             "amount": "ja_Amount",
             "balance": "ja_Balance",
             "removeBtn": "ja_Remove Cost",
-            "addBtn": "ja_Add Another Cost",
-            "owningGroup": "ja_Owning Group"
+            "addBtn": "ja_Add Another Cost"
         },
         "details": "ja_Details",
         "approver": {
             "title": "ja_Approver",
             "placeholder": "ja_Select Approver",
             "removeBtn": "ja_Remove Approver",
-            "addBtn": "ja_Add Another Approver"
+            "addBtn": "ja_Add Another Approver",
+            "owningGroup": "ja_Owning Group"
         },
         "cancelButton": "ja_Cancel",
         "saveButton": "ja_Save",

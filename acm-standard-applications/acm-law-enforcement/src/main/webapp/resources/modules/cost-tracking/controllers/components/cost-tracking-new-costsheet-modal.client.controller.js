@@ -75,7 +75,7 @@ angular.module('cost-tracking').controller(
                         $scope.isTypeSelected = true;
                         $scope.objectInfo = angular.copy($scope.modalParams.costsheet);
                         var tmpCostsheet = angular.copy($scope.modalParams.costsheet);
-                        $scope.isApproverAdded = !Util.isArrayEmpty($scope.objectInfo.participants) && $scope.objectInfo.participants[0].hasOwnProperty("id") ? true : false;
+                        updateIsApproverAdded($scope.objectInfo.participants);
                         $scope.updateBalance($scope.objectInfo.costs);
 
                         if (tmpCostsheet.participants != undefined) {
@@ -83,7 +83,6 @@ angular.module('cost-tracking').controller(
                                 _.forEach(tmpCostsheet.participants, function(participant) {
                                     if(participant.participantType == participantTypeApprover){
                                         UserInfoService.getUserInfoById(participant.participantLdapId).then(function(userInfo) {
-                                            participant.participantFullName = userInfo.fullName;
                                             $scope.approverName = userInfo.fullName;
                                         });
 
@@ -224,6 +223,7 @@ angular.module('cost-tracking').controller(
                                 }
                             }
                         });
+
                         modalInstance.result.then(function(selection) {
                             if (selection) {
                                 var selectedObjectType = selection.masterSelectedItem.object_type_s;
@@ -239,6 +239,8 @@ angular.module('cost-tracking').controller(
                                         addParticipantInCostsheet(participantTypeOwningGroup, selectedGroup.object_id_s);
                                     }
 
+                                    updateIsApproverAdded($scope.costsheet.participants);
+
                                     return;
                                 } else if (selectedObjectType === 'GROUP') { // Selected group
                                     var selectedUser = selection.detailSelectedItems;
@@ -251,6 +253,9 @@ angular.module('cost-tracking').controller(
                                         $scope.approverName = selectedUser.name;
                                         addParticipantInCostsheet(participantTypeApprover, selectedUser.object_id_s);
                                     }
+
+                                    updateIsApproverAdded($scope.costsheet.participants);
+
                                     return;
                                 }
                             }
@@ -259,6 +264,7 @@ angular.module('cost-tracking').controller(
                             // Cancel button was clicked.
                             return [];
                         });
+
                     };
 
                     function addParticipantInCostsheet(participantType, participantLdapId){
@@ -283,6 +289,14 @@ angular.module('cost-tracking').controller(
                             }
                         }
                     }
+
+                    function updateIsApproverAdded(participants){
+                        var approver = _.find(participants, function (participant) {
+                            return participant.participantType == participantTypeApprover;
+                        });
+                        $scope.isApproverAdded = !Util.isEmpty(approver);
+                    }
+
                     //-----------------------------------------------------------------------------------------------
 
                     $scope.save = function(submissionName) {
@@ -405,16 +419,6 @@ angular.module('cost-tracking').controller(
                         if (Util.isEmpty(costsheet.details)) {
                             costsheet.details = null;
                         }
-
-                        _.remove(costsheet.participants, function(participant) {
-                            if (!participant.participantFullName) {
-                                return true;
-                            } else {
-                                //remove temporary values
-                                delete participant['participantFullName'];
-                                return false;
-                            }
-                        });
 
                         return costsheet;
                     }

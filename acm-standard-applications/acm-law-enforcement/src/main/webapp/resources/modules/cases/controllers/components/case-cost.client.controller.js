@@ -58,7 +58,7 @@ angular.module('cases').controller(
                             };
                             ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(function(costsheets) {
                                 for (var i = 0; i < costsheets.length; i++) {
-                                    costsheets[i].acm$_formName = $translate.instant("cases.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
+                                    costsheets[i].acm$_formName = costsheets[i].user.fullName + " - " + costsheets[i].parentNumber;
                                     costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function(total, n) {
                                         return total + Util.goodValue(n.value, 0);
                                     }, 0);
