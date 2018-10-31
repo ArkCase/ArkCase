@@ -59,11 +59,12 @@ angular.module('cases').controller('RequestInfo.BillingController', ['$scope', '
                     $scope.objectInfo = objectInfo;
                 };
 
+                var invoiceData = {
+                    parentObjectId : $stateParams.id,
+                    parentObjectType : 'CASE_FILE'
+                };
+
                 $scope.emailInvoice = function(){
-                    var invoiceData = {
-                        parentObjectId : $stateParams.id,
-                        parentObjectType : 'CASE_FILE'
-                    };
                     CaseBillingService.sendBillingInvoiceByEmail(invoiceData).then(function() {
                         MessageService.succsessAction();
                     }, function() {
@@ -72,9 +73,6 @@ angular.module('cases').controller('RequestInfo.BillingController', ['$scope', '
                 };
 
                 $scope.generateInvoice = function(){
-                    var invoiceData = {};
-                    invoiceData.parentObjectId = $stateParams.id;
-                    invoiceData.parentObjectType = 'CASE_FILE';
                     CaseBillingService.createBillingInvoiceForRequest(invoiceData).then(function() {
                         MessageService.succsessAction();
                     }, function() {
