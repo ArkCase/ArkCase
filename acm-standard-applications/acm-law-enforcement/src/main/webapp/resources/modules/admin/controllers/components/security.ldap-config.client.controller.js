@@ -1,277 +1,354 @@
 'use strict';
 
 angular.module('admin').controller('Admin.LdapConfigController',
-        [ '$scope', 'Admin.LdapConfigService', '$modal', 'Helper.UiGridService', 'Admin.ModalDialogService', 'MessageService', '$translate', function($scope, ldapConfigService, $modal, HelperUiGridService, modalDialogService, messageService, $translate) {
+    [ '$scope', 'Admin.LdapConfigService', '$modal', 'Helper.UiGridService', 'Admin.ModalDialogService', 'MessageService', '$translate', function($scope, ldapConfigService, $modal, HelperUiGridService, modalDialogService, messageService, $translate) {
 
-            var gridHelper = new HelperUiGridService.Grid({
-                scope: $scope
+        var gridHelper = new HelperUiGridService.Grid({
+            scope: $scope
+        });
+
+        //get config and init grid settings
+        $scope.config.$promise.then(function(config) {
+            var componentConfig = _.find(config.components, {
+                id: 'securityLdapConfig'
             });
+            $scope.directoryTypes = componentConfig.directoryTypes;
+            var columnDefs = componentConfig.columnDefs;
+            var columnDef = addEditColumn();
+            var columnLdapUserTemplate = userTemplate();
+            var columnLdapGroupTemplate = groupTemplate();
+            var columnPartialSyncBtn = partialSyncBtn();
+            var columnEditPassword = addEditPasswordColumn();
 
-            //get config and init grid settings
-            $scope.config.$promise.then(function(config) {
-                var componentConfig = _.find(config.components, {
-                    id: 'securityLdapConfig'
-                });
-                $scope.directoryTypes = componentConfig.directoryTypes;
-                var columnDefs = componentConfig.columnDefs;
-                var columnDef = addEditColumn();
-                var columnLdapUserTemplate = userTemplate();
-                var columnLdapGroupTemplate = groupTemplate();
-                var columnPartialSyncBtn = partialSyncBtn();
+            columnDefs.push(columnPartialSyncBtn);
+            columnDefs.push(columnLdapGroupTemplate);
+            columnDefs.push(columnLdapUserTemplate);
+            columnDefs.push(columnDef);
+            columnDefs.push(columnEditPassword);
 
-                columnDefs.push(columnPartialSyncBtn);
-                columnDefs.push(columnLdapGroupTemplate);
-                columnDefs.push(columnLdapUserTemplate);
-                columnDefs.push(columnDef);
+            gridHelper.addDeleteButton(columnDefs, "grid.appScope.deleteRow(row.entity)");
 
-                gridHelper.addDeleteButton(columnDefs, "grid.appScope.deleteRow(row.entity)");
-
-                $scope.gridOptions = {
-                    enableColumnResizing: true,
-                    enableRowSelection: true,
-                    enableRowHeaderSelection: false,
-                    multiSelect: false,
-                    noUnselect: false,
-                    columnDefs: columnDefs,
-                    totalItems: 0,
-                    data: []
-                };
-
-                reloadGrid();
-            });
-
-            $scope.editRow = function(rowEntity) {
-                rowEntity.enableEditingLdapUsers = rowEntity.enableEditingLdapUsers === "true";
-                rowEntity.syncEnabled = rowEntity.syncEnabled === "true";
-                showModal(angular.copy(rowEntity), true);
+            $scope.gridOptions = {
+                enableColumnResizing: true,
+                enableRowSelection: true,
+                enableRowHeaderSelection: false,
+                multiSelect: false,
+                noUnselect: false,
+                columnDefs: columnDefs,
+                totalItems: 0,
+                data: []
             };
 
-            $scope.showUserTemplate = function(rowEntity) {
-                var modalScope = $scope.$new();
-                var attributes = [ rowEntity.addUserTemplate ];
-                removePrefixInKey(attributes);
-                modalScope.attributes = attributes[0];
-                $modal.open({
-                    scope: modalScope,
-                    templateUrl: 'modules/admin/views/components/security.ldap-config-user-template.popup.html',
-                    backdrop: 'static',
-                    controller: function($scope, $modalInstance) {
-                        $scope.ok = function() {
-                            $modalInstance.close({});
-                        };
-                        $scope.cancel = function() {
-                            $modalInstance.dismiss('cancel');
-                        }
-                    }
-                });
-            };
+            reloadGrid();
+        });
 
-            $scope.showGroupTemplate = function(rowEntity) {
-                var modalScope = $scope.$new();
-                var attributes = [ rowEntity.addGroupTemplate ];
-                removePrefixInKey(attributes);
-                modalScope.attributes = attributes[0];
-                $modal.open({
-                    scope: modalScope,
-                    templateUrl: 'modules/admin/views/components/security.ldap-config-group-template.popup.html',
-                    backdrop: 'static',
-                    controller: function($scope, $modalInstance) {
-                        $scope.ok = function() {
-                            $modalInstance.close({});
-                        };
-                        $scope.cancel = function() {
-                            $modalInstance.dismiss('cancel');
-                        }
-                    }
-                });
-            };
+        $scope.editRow = function(rowEntity) {
+            rowEntity.enableEditingLdapUsers = rowEntity.enableEditingLdapUsers === "true";
+            rowEntity.syncEnabled = rowEntity.syncEnabled === "true";
+            showModal(angular.copy(rowEntity), true);
+        };
 
-            $scope.deleteRow = function(rowEntity) {
-                $scope.deleteDir = rowEntity;
-                var modalOptions = {
-                    closeButtonText: $translate.instant('admin.security.ldapConfig.dialog.confirm.delete.cancelBtn'),
-                    actionButtonText: $translate.instant('admin.security.ldapConfig.dialog.confirm.delete.deleteBtn'),
-                    headerText: $translate.instant('admin.security.ldapConfig.dialog.confirm.delete.headerText'),
-                    bodyText: $translate.instant('admin.security.ldapConfig.dialog.confirm.delete.bodyText')
-                };
-                modalDialogService.showModal({}, modalOptions).then(function() {
-                    ldapConfigService.deleteDirectory($scope.deleteDir.id).then(function() {
-                        gridHelper.deleteRow($scope.deleteDir);
-                        messageService.info($translate.instant('admin.security.ldapConfig.messages.delete.success'));
-                    }, function() {
-                        messageService.error($translate.instant('admin.security.ldapConfig.messages.delete.error'));
-                    });
-                });
-            };
+        $scope.editPassword = function(rowEntity) {
+            showChagePasswordModal(angular.copy(rowEntity), true);
+        };
 
-            $scope.showModal = showModal;
 
-            function showModal(dir, isEdit) {
-                $scope.passwordErrorMessages = {
-                    notSamePasswordsMessage: ''
-                };
-                var modalScope = $scope.$new();
-                modalScope.dir = dir || {};
-                modalScope.isEdit = isEdit || false;
-                if (!modalScope.isEdit) {
-                    modalScope.dir.enableEditingLdapUsers = false;
-                    modalScope.dir.syncEnabled = false;
-                }
-                modalScope.directoryTypes = $scope.directoryTypes;
-
-                var modalInstance = $modal.open({
-                    scope: modalScope,
-                    templateUrl: 'modules/admin/views/components/security.ldap-config.popup.html',
-                    backdrop: 'static',
-                    controller: function($scope, $modalInstance) {
-                        $scope.ok = function() {
-                            $modalInstance.close({
-                                dir: $scope.dir,
-                                isEdit: $scope.isEdit
-                            });
-                        };
-                        $scope.cancel = function() {
-                            $modalInstance.dismiss('cancel');
-                        };
-                    }
-                });
-
-                modalInstance.result.then(function(data) {
-                    addPrefixInKey(data.dir, "ldapConfig");
-                    if (data.isEdit) {
-                        ldapConfigService.updateDirectory(data.dir).then(function() {
-                            reloadGrid();
-                            messageService.info($translate.instant('admin.security.ldapConfig.messages.update.success'));
-                        }, function() {
-                            messageService.error($translate.instant('admin.security.ldapConfig.messages.update.error'));
-                        });
-                    } else {
-                        ldapConfigService.createDirectory(data.dir).then(function() {
-                            reloadGrid();
-                            messageService.info($translate.instant('admin.security.ldapConfig.messages.insert.success'));
-                        }, function() {
-                            messageService.error($translate.instant('admin.security.ldapConfig.messages.insert.error'));
-                        });
-                    }
-                });
-            }
-
-            $scope.openSyncModal = function(rowEntity) {
-                var modalScope = $scope.$new();
-                var modalInstance = $modal.open({
-                    scope: modalScope,
-                    templateUrl: 'modules/admin/views/components/security.ldap-config-sync.popup.html',
-                    backdrop: 'static',
-                    controller: function($scope, $modalInstance) {
-                        $scope.ok = function() {
-                            $modalInstance.close({
-                                sync: $scope.sync
-                            });
-                        };
-                    }
-                });
-                modalInstance.result.then(function(data) {
-                    var syncInfo = {
-                        type: data.sync,
-                        dirId: rowEntity.id
+        $scope.showUserTemplate = function(rowEntity) {
+            var modalScope = $scope.$new();
+            var attributes = [ rowEntity.addUserTemplate ];
+            removePrefixInKey(attributes);
+            modalScope.attributes = attributes[0];
+            $modal.open({
+                scope: modalScope,
+                templateUrl: 'modules/admin/views/components/security.ldap-config-user-template.popup.html',
+                backdrop: 'static',
+                controller: function($scope, $modalInstance) {
+                    $scope.ok = function() {
+                        $modalInstance.close({});
                     };
-                    startSync(syncInfo);
-                });
+                    $scope.cancel = function() {
+                        $modalInstance.dismiss('cancel');
+                    }
+                }
+            });
+        };
+
+        $scope.showGroupTemplate = function(rowEntity) {
+            var modalScope = $scope.$new();
+            var attributes = [ rowEntity.addGroupTemplate ];
+            removePrefixInKey(attributes);
+            modalScope.attributes = attributes[0];
+            $modal.open({
+                scope: modalScope,
+                templateUrl: 'modules/admin/views/components/security.ldap-config-group-template.popup.html',
+                backdrop: 'static',
+                controller: function($scope, $modalInstance) {
+                    $scope.ok = function() {
+                        $modalInstance.close({});
+                    };
+                    $scope.cancel = function() {
+                        $modalInstance.dismiss('cancel');
+                    }
+                }
+            });
+        };
+
+        $scope.deleteRow = function(rowEntity) {
+            $scope.deleteDir = rowEntity;
+            var modalOptions = {
+                closeButtonText: $translate.instant('admin.security.ldapConfig.dialog.confirm.delete.cancelBtn'),
+                actionButtonText: $translate.instant('admin.security.ldapConfig.dialog.confirm.delete.deleteBtn'),
+                headerText: $translate.instant('admin.security.ldapConfig.dialog.confirm.delete.headerText'),
+                bodyText: $translate.instant('admin.security.ldapConfig.dialog.confirm.delete.bodyText')
             };
+            modalDialogService.showModal({}, modalOptions).then(function() {
+                ldapConfigService.deleteDirectory($scope.deleteDir.id).then(function() {
+                    gridHelper.deleteRow($scope.deleteDir);
+                    messageService.info($translate.instant('admin.security.ldapConfig.messages.delete.success'));
+                }, function() {
+                    messageService.error($translate.instant('admin.security.ldapConfig.messages.delete.error'));
+                });
+            });
+        };
 
-            function startSync(syncInfo) {
+        $scope.showModal = showModal;
 
-                function errorCallback(error) {
-                    if (error.data.message) {
-                        messageService.error(error.data.message);
-                    } else {
-                        messageService.errorAction();
-                    }
+        function showModal(dir, isEdit) {
+            $scope.passwordErrorMessages = {
+                notSamePasswordsMessage: ''
+            };
+            var modalScope = $scope.$new();
+            modalScope.dir = dir || {};
+            modalScope.isEdit = isEdit || false;
+            if (!modalScope.isEdit) {
+                modalScope.dir.enableEditingLdapUsers = false;
+                modalScope.dir.syncEnabled = false;
+            }
+            modalScope.directoryTypes = $scope.directoryTypes;
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                templateUrl: 'modules/admin/views/components/security.ldap-config.popup.html',
+                backdrop: 'static',
+                controller: function($scope, $modalInstance) {
+                    $scope.ok = function() {
+                        $modalInstance.close({
+                            dir: $scope.dir,
+                            isEdit: $scope.isEdit
+                        });
+                    };
+                    $scope.cancel = function() {
+                        $modalInstance.dismiss('cancel');
+                    };
                 }
+            });
 
-                if (syncInfo.type === "PARTIAL_SYNC") {
-                    ldapConfigService.startPartialSync(syncInfo.dirId).then(function() {
-                    }, errorCallback);
-                } else if (syncInfo.type === "FULL_SYNC") {
-                    ldapConfigService.startFullSync(syncInfo.dirId).then(function() {
-
-                    }, errorCallback);
-                }
-            }
-
-            function addEditColumn() {
-                return {
-                    name: "edit",
-                    cellEditableCondition: false,
-                    width: 40,
-                    cellClass: 'text-center',
-                    headerCellTemplate: "<span></span>",
-                    cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.editRow(row.entity)'></i></span>"
-                };
-            }
-
-            function userTemplate() {
-                return {
-                    name: "userTemplate",
-                    cellEditableCondition: false,
-                    width: 40,
-                    cellClass: 'text-center',
-                    headerCellTemplate: "<span></span>",
-                    cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.userAttributesConfig' | translate}}\">" + "<i class='fa fa-user fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.showUserTemplate(row.entity)'></i></span>"
-                };
-            }
-
-            function groupTemplate() {
-                return {
-                    name: "addGroupTemplate",
-                    cellEditableCondition: false,
-                    width: 40,
-                    cellClass: 'text-center',
-                    headerCellTemplate: "<span></span>",
-                    cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.groupAttributesConfig' | translate}}\">" + "<i class='fa fa-users fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.showGroupTemplate(row.entity)'></i></span>"
-                };
-            }
-
-            function partialSyncBtn() {
-                return {
-                    name: "initiatePartialSync",
-                    cellEditableCondition: false,
-                    width: 40,
-                    cellClass: 'text-center',
-                    headerCellTemplate: "<span></span>",
-                    cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.action.partialSync' | translate}}\">" + "<i class='fa fa-refresh fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.openSyncModal(row.entity)'></i></span>"
-                };
-            }
-
-            //we need this because key name contains '.'
-            function removePrefixInKey(data) {
-                angular.forEach(data, function(row, index) {
-                    angular.forEach(row, function(element, key) {
-                        if (key.match('.') !== -1) {
-                            delete row[key];
-                            var newKey = key.replace(/[a-zA-Z]*?\./, '');
-                            row[newKey] = element;
-                        }
+            modalInstance.result.then(function(data) {
+                addPrefixInKey(data.dir, "ldapConfig");
+                if (data.isEdit) {
+                    ldapConfigService.updateDirectory(data.dir).then(function() {
+                        reloadGrid();
+                        messageService.info($translate.instant('admin.security.ldapConfig.messages.update.success'));
+                    }, function() {
+                        messageService.error($translate.instant('admin.security.ldapConfig.messages.update.error'));
                     });
-                });
+                } else {
+                    ldapConfigService.createDirectory(data.dir).then(function() {
+                        reloadGrid();
+                        messageService.info($translate.instant('admin.security.ldapConfig.messages.insert.success'));
+                    }, function() {
+                        messageService.error($translate.instant('admin.security.ldapConfig.messages.insert.error'));
+                    });
+                }
+            });
+        }
+
+
+        function showChagePasswordModal(dir, isEdit) {
+            $scope.passwordErrorMessages = {
+                notSamePasswordsMessage: ''
+            };
+            var modalScope = $scope.$new();
+            modalScope.dir = dir || {};
+            dir.authUserPassword = '';
+            modalScope.isEdit = isEdit || false;
+            if (!modalScope.isEdit) {
+                modalScope.dir.enableEditingLdapUsers = false;
+                modalScope.dir.syncEnabled = false;
+            }
+            modalScope.directoryTypes = $scope.directoryTypes;
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                templateUrl: 'modules/admin/views/components/security.ldap-change-password.popup.html',
+                backdrop: 'static',
+                controller: function($scope, $modalInstance) {
+                    $scope.ok = function() {
+                        $modalInstance.close({
+                            dir: $scope.dir,
+                            isEdit: $scope.isEdit
+                        });
+                    };
+                    $scope.cancel = function() {
+                        $modalInstance.dismiss('cancel');
+                    };
+                }
+            });
+            modalInstance.result.then(function(data) {
+                addPrefixInKey(data.dir, "ldapConfig");
+
+                if (data.isEdit) {
+
+                        dir.authUserPassword = data.dir.authUserPassword;
+                        data.dir = dir;
+
+                    ldapConfigService.updateDirectory(data.dir).then(function() {
+                        reloadGrid();
+                        messageService.info($translate.instant('admin.security.ldapConfig.messages.update.success'));
+                    }, function() {
+                        messageService.error($translate.instant('admin.security.ldapConfig.messages.update.error'));
+                    });
+                } else {
+                    ldapConfigService.createDirectory(data.dir).then(function() {
+                        reloadGrid();
+                        messageService.info($translate.instant('admin.security.ldapConfig.messages.insert.success'));
+                    }, function() {
+                        messageService.error($translate.instant('admin.security.ldapConfig.messages.insert.error'));
+                    });
+                }
+            });
+        }
+
+
+        $scope.openSyncModal = function(rowEntity) {
+            var modalScope = $scope.$new();
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                templateUrl: 'modules/admin/views/components/security.ldap-config-sync.popup.html',
+                backdrop: 'static',
+                controller: function($scope, $modalInstance) {
+                    $scope.ok = function() {
+                        $modalInstance.close({
+                            sync: $scope.sync
+                        });
+                    };
+                }
+            });
+            modalInstance.result.then(function(data) {
+                var syncInfo = {
+                    type: data.sync,
+                    dirId: rowEntity.id
+                };
+                startSync(syncInfo);
+            });
+        };
+
+        function startSync(syncInfo) {
+
+            function errorCallback(error) {
+                if (error.data.message) {
+                    messageService.error(error.data.message);
+                } else {
+                    messageService.errorAction();
+                }
             }
 
-            //we need this because backend expects keys with prefix
-            function addPrefixInKey(dir, prefix) {
-                angular.forEach(dir, function(element, key) {
+            if (syncInfo.type === "PARTIAL_SYNC") {
+                ldapConfigService.startPartialSync(syncInfo.dirId).then(function() {
+                }, errorCallback);
+            } else if (syncInfo.type === "FULL_SYNC") {
+                ldapConfigService.startFullSync(syncInfo.dirId).then(function() {
+
+                }, errorCallback);
+            }
+        }
+
+        function addEditColumn() {
+            return {
+                name: "edit",
+                cellEditableCondition: false,
+                width: 40,
+                cellClass: 'text-center',
+                headerCellTemplate: "<span></span>",
+                cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.editRow(row.entity)'></i></span>"
+            };
+        }
+
+
+        function addEditPasswordColumn() {
+            return {
+                name: "editPassword",
+                cellEditableCondition: false,
+                width: 40,
+                cellClass: 'text-center',
+                headerCellTemplate: "<span></span>",
+                cellTemplate: "<span><i class='fa fa-lock fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.editPassword(row.entity)'></i></span>"
+            };
+        }
+
+        function userTemplate() {
+            return {
+                name: "userTemplate",
+                cellEditableCondition: false,
+                width: 40,
+                cellClass: 'text-center',
+                headerCellTemplate: "<span></span>",
+                cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.userAttributesConfig' | translate}}\">" + "<i class='fa fa-user fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.showUserTemplate(row.entity)'></i></span>"
+            };
+        }
+
+        function groupTemplate() {
+            return {
+                name: "addGroupTemplate",
+                cellEditableCondition: false,
+                width: 40,
+                cellClass: 'text-center',
+                headerCellTemplate: "<span></span>",
+                cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.groupAttributesConfig' | translate}}\">" + "<i class='fa fa-users fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.showGroupTemplate(row.entity)'></i></span>"
+            };
+        }
+
+        function partialSyncBtn() {
+            return {
+                name: "initiatePartialSync",
+                cellEditableCondition: false,
+                width: 40,
+                cellClass: 'text-center',
+                headerCellTemplate: "<span></span>",
+                cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.action.partialSync' | translate}}\">" + "<i class='fa fa-refresh fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.openSyncModal(row.entity)'></i></span>"
+            };
+        }
+
+        //we need this because key name contains '.'
+        function removePrefixInKey(data) {
+            angular.forEach(data, function(row, index) {
+                angular.forEach(row, function(element, key) {
                     if (key.match('.') !== -1) {
-                        delete dir[key];
-                        var newKey = prefix + '.' + key;
-                        dir[newKey] = element;
+                        delete row[key];
+                        var newKey = key.replace(/[a-zA-Z]*?\./, '');
+                        row[newKey] = element;
                     }
                 });
-            }
+            });
+        }
 
-            function reloadGrid() {
-                var tempLdapPromise = ldapConfigService.retrieveDirectories();
-                tempLdapPromise.then(function(directories) {
-                    removePrefixInKey(directories.data);
-                    $scope.gridOptions.data = directories.data;
-                });
-            }
-        } ]);
+        //we need this because backend expects keys with prefix
+        function addPrefixInKey(dir, prefix) {
+            angular.forEach(dir, function(element, key) {
+                if (key.match('.') !== -1) {
+                    delete dir[key];
+                    var newKey = prefix + '.' + key;
+                    dir[newKey] = element;
+                }
+            });
+        }
+
+        function reloadGrid() {
+            var tempLdapPromise = ldapConfigService.retrieveDirectories();
+            tempLdapPromise.then(function(directories) {
+                removePrefixInKey(directories.data);
+                $scope.gridOptions.data = directories.data;
+            });
+        }
+
+
+    } ]);
