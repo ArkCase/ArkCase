@@ -16,7 +16,7 @@ angular.module('admin').controller(
                         appeal: {}
                     };
 
-                    $scope.checkInputValue = function(event){
+                    $scope.ignoreNonDigits = function(event){
                         var numberRegExp = new RegExp("^[1-9][0-9]*$");
                         if(event.key === '.' || !numberRegExp.test(event.key)){
                             event.preventDefault();
