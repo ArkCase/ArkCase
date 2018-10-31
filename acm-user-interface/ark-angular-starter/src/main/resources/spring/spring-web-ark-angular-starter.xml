@@ -58,7 +58,7 @@
             <list>
                 <value>assets</value>
                 <value>directives</value>
-                <value>lib</value>
+                <value>node_modules</value>
                 <value>modules</value>
                 <value>modules_config</value>
                 <value>services</value>
