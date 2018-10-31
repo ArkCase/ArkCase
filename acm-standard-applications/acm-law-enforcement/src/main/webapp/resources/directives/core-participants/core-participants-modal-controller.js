@@ -10,7 +10,8 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
         $modalInstance.close({
             participant: $scope.participantEdit,
             isEdit: $scope.isEdit,
-            selectedType: $scope.selectedType
+            selectedType: $scope.selectedType,
+            id: $scope.id
         });
     };
     $scope.onClickCancel = function() {
@@ -54,11 +55,7 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
         });
         modalInstance.result.then(function(selected) {
             if (!Util.isEmpty(selected)) {
-                $scope.participant.participantLdapId = selected.object_id_s;
-                $scope.selectedType = selected.object_type_s;
-
                 $scope.participantEdit.participantLdapId = selected.object_id_s;
-                $scope.participantEdit.participantType = selected.object_type_s;
             }
         });
     };

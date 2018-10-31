@@ -10,7 +10,11 @@
             "name",
             "lastName",
             "defaultAttribute",
-            "attributeList"
+            "attributeList",
+            "dateOfBirth",
+            "employmentDate",
+            "completed",
+            "alarmTime"
         ]
     },
     {

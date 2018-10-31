@@ -30,7 +30,7 @@ package com.armedia.acm.services.timesheet.service;
  * #L%
  */
 
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
 
@@ -51,11 +51,11 @@ public class TimesheetEventPublisher implements ApplicationEventPublisherAware
     private ApplicationEventPublisher applicationEventPublisher;
 
     public void publishEvent(AcmTimesheet source, String userId, String ipAddress, boolean succeeded, String type,
-            FrevvoUploadedFiles frevvoUploadedFiles, boolean startWorkflow)
+            UploadedFiles uploadedFiles, boolean startWorkflow)
     {
         LOG.debug("Publishing AcmTimesheet event.");
 
-        AcmTimesheetEvent event = new AcmTimesheetEvent(source, userId, ipAddress, succeeded, type, frevvoUploadedFiles, startWorkflow);
+        AcmTimesheetEvent event = new AcmTimesheetEvent(source, userId, ipAddress, succeeded, type, uploadedFiles, startWorkflow);
 
         getApplicationEventPublisher().publishEvent(event);
     }

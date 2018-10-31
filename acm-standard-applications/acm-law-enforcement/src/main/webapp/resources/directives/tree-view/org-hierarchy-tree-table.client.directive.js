@@ -223,7 +223,7 @@ angular.module('directives').directive(
                                     messageService.succsessAction();
                                 }, function(error) {
                                     if (error != "cancel") {
-                                        messageService.errorAction();
+                                        messageService.error(error.data.message);
                                     }
                                 });
                             };
@@ -281,7 +281,7 @@ angular.module('directives').directive(
                                 }, function(error) {
                                     //error
                                     if (error != "cancel") {
-                                        messageService.errorAction();
+                                        messageService.error(error.data.message);
                                     }
                                 });
                             };

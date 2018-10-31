@@ -9,6 +9,10 @@ angular.module('people').controller('People.AddressesModalController', [ '$scope
         $scope.countries = countries;
     });
 
+    ObjectLookupService.getStates().then(function(states) {
+        $scope.states = states;
+    });
+
     $scope.address = params.address;
     $scope.isEdit = params.isEdit;
     $scope.isDefault = params.isDefault;

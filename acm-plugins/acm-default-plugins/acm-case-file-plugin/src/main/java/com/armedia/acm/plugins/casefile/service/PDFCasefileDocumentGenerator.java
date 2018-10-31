@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.service.PDFDocumentGenerator;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -49,7 +49,7 @@ public class PDFCasefileDocumentGenerator<D extends AcmAbstractDao, T extends Ca
 
     private D dao;
 
-    public void generatePdf(Long caseFileId, CaseFilePipelineContext ctx) throws ParserConfigurationException
+    public void generatePdf(Long caseFileId, CaseFilePipelineContext ctx) throws ParserConfigurationException, PipelineProcessException
     {
         String objectType = CaseFileConstants.OBJECT_TYPE;
         if (getDao().getSupportedObjectType().equals(objectType))
@@ -78,7 +78,12 @@ public class PDFCasefileDocumentGenerator<D extends AcmAbstractDao, T extends Ca
         addElement(document, rootElem, "caseType", caseFile.getCaseType(), true);
         addElement(document, rootElem, "caseDetails", caseFile.getDetails() != null ? caseFile.getDetails() : "N/A", false);
 
-        addElement(document, rootElem, "initiator", caseFile.getOriginator().getPerson().getFullName(), true);
+        String initiator = "Unknown";
+        if ( caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null && caseFile.getOriginator().getPerson().getFullName() != null )
+        {
+            initiator = caseFile.getOriginator().getPerson().getFullName();
+        }
+        addElement(document, rootElem, "initiator", initiator, true);
 
         if (!caseFile.getPersonAssociations().isEmpty())
         {
@@ -95,20 +100,8 @@ public class PDFCasefileDocumentGenerator<D extends AcmAbstractDao, T extends Ca
             }
         }
 
-        if (!caseFile.getParticipants().isEmpty())
-        {
-            Element participantsElement = document.createElement("participants");
-            rootElem.appendChild(participantsElement);
+        addParticipantsInXmlDocument(caseFile.getParticipants(), document, rootElem, "participantName", "participantType");
 
-            List<AcmParticipant> participants = caseFile.getParticipants();
-            for (AcmParticipant participant : participants)
-            {
-                Element participantElement = document.createElement("participant");
-                participantsElement.appendChild(participantElement);
-                addElement(document, participantElement, "participantType", participant.getParticipantType(), false);
-                addElement(document, participantElement, "participantName", participant.getParticipantLdapId(), false);
-            }
-        }
         return document;
     }
 

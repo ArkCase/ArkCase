@@ -166,15 +166,33 @@ public class MapperUtils
         return distinguishedName.toString();
     }
 
-    public static String buildGroupName(String name, Optional<String> domain)
+    public static String buildGroupName(String name, String domain)
     {
-        return String.format("%s%s", name, domain.map(it -> String.format("@%s", it)).orElse("")).toUpperCase();
+        Optional<String> optionalDomain = Optional.of(domain);
+        return String.format("%s%s", name, optionalDomain.map(it -> String.format("@%s", it))
+                .orElse(""))
+                .toUpperCase();
     }
 
     public static String buildUserId(String userId, String domain)
     {
 
         return String.format("%s@%s", userId, domain).toLowerCase();
+    }
+
+    public static String buildUserId(String userId, AcmLdapSyncConfig ldapSyncConfig)
+    {
+        String userPrefix = ldapSyncConfig.getUserPrefix();
+        if (StringUtils.isNotBlank(userPrefix) &&
+                ldapSyncConfig.getUserIdAttributeName().equalsIgnoreCase("samaccountname")
+                && !userId.startsWith(userPrefix))
+        {
+            String username = String.format("%s.%s", userPrefix, userId);
+            username = StringUtils.left(username, 20);
+            return buildUserId(username, ldapSyncConfig.getUserDomain());
+        }
+        return buildUserId(userId, ldapSyncConfig.getUserDomain());
+
     }
 
     public static byte[] encodeUTF16LE(String str) throws UnsupportedEncodingException

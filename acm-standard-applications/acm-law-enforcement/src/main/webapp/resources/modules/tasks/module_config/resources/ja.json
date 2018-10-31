@@ -23,7 +23,8 @@
         "state.label": "状態",
         "overdue.tooltip": "任務延滞",
         "deadline.tooltip": "締め切りが近づいています",
-        "owningGroup.label": "群に所属"
+        "owningGroup.label": "群に所属",
+        "alertMessage": "ja_Due date must be after the start date "
     },
     "tasks.comp.parentinfo": {
         "title": "任務の起源",
@@ -150,7 +151,7 @@
             "signedBy": "によって署名されました"
         }
     },
-    "tasks.comp.docsreview": {
+    "tasks.comp.documentsunderreview": {
         "title": "レビュー文書",
         "table.columns": {
             "fileId": "ID",
@@ -158,7 +159,11 @@
             "created": "作成した",
             "creator": "著者",
             "status": "状態"
-        }
+        },
+        "searchInputPlaceholder": "Search",
+        "sendEmail": "Send Email",
+        "noDocsMessage": "No Documents for review",
+        "filterInputPlaceholder": "Filter"
     },
     "tasks.comp.history": {
         "title": "歴史",

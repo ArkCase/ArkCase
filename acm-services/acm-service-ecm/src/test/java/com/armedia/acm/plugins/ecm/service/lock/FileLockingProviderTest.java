@@ -48,7 +48,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationEventPublisher;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -108,7 +107,7 @@ public class FileLockingProviderTest extends EasyMockSupport
             expect(objectLockDaoMock.findLock(objectId, objectType)).andReturn(null).anyTimes();
             expect(objectLockDaoMock.save(anyObject(AcmObjectLock.class)))
                     .andAnswer(() -> (AcmObjectLock) EasyMock.getCurrentArguments()[0]);
-            expect(objectLockDaoMock.getExpiredLocks()).andReturn(new ArrayList<>());
+
             applicationEventPublisherMock.publishEvent(anyObject(AcmObjectLockEvent.class));
             expectLastCall();
 
@@ -116,8 +115,8 @@ public class FileLockingProviderTest extends EasyMockSupport
             replayAll();
             AcmObjectLock objectLock = fileObjectLockingProvider.acquireObjectLock(objectId, objectType, lockType, null, false, userId);
 
-            // then
             verifyAll();
+            // then
             assertEquals(objectId, objectLock.getObjectId());
             assertEquals(objectType, objectLock.getObjectType());
             assertEquals(lockType, objectLock.getLockType());
@@ -182,7 +181,7 @@ public class FileLockingProviderTest extends EasyMockSupport
             existingObjectLock.setCreated(existingLockCreated);
 
             expect(objectLockDaoMock.findLock((Long) data[0], (String) data[1])).andReturn(existingObjectLock).anyTimes();
-            expect(objectLockDaoMock.getExpiredLocks()).andReturn(new ArrayList<>());
+
             if ((Boolean) data[8])
             {
                 expect(objectLockDaoMock.save(anyObject(AcmObjectLock.class)))

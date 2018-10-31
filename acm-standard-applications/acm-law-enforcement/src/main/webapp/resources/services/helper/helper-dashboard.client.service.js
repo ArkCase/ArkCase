@@ -52,9 +52,13 @@ angular.module('services').factory('Helper.DashboardService', [ '$timeout', '$tr
 
             DashboardService.localeUseTypical(that.scope);
 
-            DashboardService.getConfig({
+            var queryParameters = {
                 moduleName: that.dashboardName
-            }, function(data) {
+            };
+            if (that.dashboardName === "DASHBOARD") {
+                queryParameters['timestamp'] = new Date().getTime()
+            }
+            DashboardService.getConfig(queryParameters, function(data) {
                 that.scope.dashboard.model = angular.fromJson(data.dashboardConfig);
                 DashboardService.fixOldCode_removeLater(that.dashboardName, that.scope.dashboard.model);
                 if (arg.onDashboardConfigRetrieved) {

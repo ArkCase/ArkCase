@@ -26,6 +26,7 @@
         "assignee.label": "Назначено",
         "owningGroup.label": "Собственная группа",
         "dueDate.label": "Дата погашения",
+        "alertMessage": "ru_Due date must be after the create date ",
         "priorities": {
             "low%": "Низко",
             "medium%": "Средний",
@@ -261,6 +262,16 @@
             "title": "Заглавие",
             "parent": "Родитель",
             "modified": "Модифицированный"
+        },
+        "objectPicker": {
+            "title": "ru_Search for object",
+            "table.columns": {
+                "name": "ru_Name",
+                "type": "ru_Type",
+                "title": "ru_Title",
+                "id": "ru_ID",
+                "username": "ru_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {
@@ -364,6 +375,7 @@
     },
     "cases.comp.change.status": {
         "title": "ru_Change Case Status",
+        "description.label": "ru_Description",
         "information": {
             "title": "ru_Change Case Status Information",
             "date": "ru_Change Date",
@@ -380,10 +392,11 @@
         },
         "approver": {
             "placeholder": "ru_Select Approver",
-            "label": "ru_Select Approver",
+            "label": "ru_Approver",
             "addAnother": "ru_Add another",
             "remove": "ru_Remove Approver",
-            "pickerModal.header": "ru_Choose Approver"
+            "pickerModal.header": "ru_User/Group Search",
+            "owningGroup": "ru_Owning Group"
         },
         "button": {
             "cancel": "ru_Cancel",

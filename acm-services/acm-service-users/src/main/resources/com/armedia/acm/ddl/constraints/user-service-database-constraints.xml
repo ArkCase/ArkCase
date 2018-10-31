@@ -31,4 +31,16 @@
         <addUniqueConstraint tableName="acm_user" columnNames="cm_distinguished_name,cm_user_directory_name"/>
     </changeSet>
 
+    <changeSet id="06-add-user-identifier-fk-constraint" author="ncuculova">
+        <addForeignKeyConstraint baseTableName="acm_user" baseColumnNames="cm_identifier" constraintName="fk_identifier_id"
+                                 referencedTableName="acm_user_identifier" referencedColumnNames="cm_id" deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="07-add-group-identifier-fk-constraint" author="ncuculova">
+        <addForeignKeyConstraint baseTableName="acm_group" baseColumnNames="cm_identifier" constraintName="fk_group_identifier_id"
+                                 referencedTableName="acm_group_identifier" referencedColumnNames="cm_id" deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
 </databaseChangeLog>

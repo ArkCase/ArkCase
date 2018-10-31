@@ -23,6 +23,22 @@
         "defaultDateUIFormat": "年月日",
         "defaultDateTimeUIFormat": "年月日 HH:mm"
     },
+    "common.userOrGroupSearch": {
+        "id": "zh-cn_userSearch",
+        "title": "zh-cn_User/Group Search",
+        "search": {
+            "btn": "zh-cn_Search",
+            "placeholder": "zh-cn_Search for the user or group."
+        },
+        "cancelButton": "zh-cn_Cancel",
+        "confirmButton": "zh-cn_Confirm",
+        "assigneeGridColumns": {
+            "name": "zh-cn_Name",
+            "type": "zh-cn_Type",
+            "title": "zh-cn_Title",
+            "username": "zh-cn_Username"
+        }
+    },
     "common.frevvo": {
         "defaultDateFormat": "年月日"
     },
@@ -203,7 +219,6 @@
         "selectedItemsGrid.label": "选定的项目",
         "notValidUser": "zh-cn_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
         "notValidGroup": "zh-cn_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
-
     },
     "common.directive.search": {
         "showMore.button.text": "显示更多",
@@ -624,6 +639,16 @@
             "error.ownerUnique": "只有一个所有者允许."
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "添加参与者",
+        "editParticipant.label": "编辑记录",
+        "participantType.label": "参与者类型",
+        "participantName.label": "参与者名称",
+        "btnOk.text": "保存",
+        "btnCancel.text": "取消",
+        "dialogUserGroupPicker.header": "zh-cn_Search User/Group",
+        "replaceChildrenParticipant": "替换儿童参与者"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "完成百分百"
     },
@@ -784,7 +809,8 @@
             "name": "名称",
             "id": "识别号",
             "title": "标题"
-        }
+        },
+        "addDocument": "ZH_CN_Choose document to add"
     },
     "common.addOrganization": {
         "title": "添加组织",

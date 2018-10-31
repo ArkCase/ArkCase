@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="javascript:;">
+                    <a href="javascript:;" ng-click="userOrGroupSearch()">
                         <user-full-name userId="assignee" fallback="{{'common.value.none' | translate}}" />
                     </a>
                 </div>
@@ -32,7 +32,7 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <div class="h4 font-bold">
-                        <a href="javascript:;">
+                        <a href="javascript:;" ng-click="userOrGroupSearch()">
                             {{owningGroup || 'common.value.unknown' | translate}}
                         </a>
                     </div>
@@ -41,7 +41,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    {{ (objectInfo.modified | date: 'shortDate' ) || 'common.value.unknown' | translate }}
+                    {{ (objectInfo.modified | date: ('common.defaultDateTimeUIFormat' | translate) ) || 'common.value.unknown' | translate }}
                 </div>
                 <small class="text-muted"><span translate>document-repository.comp.info.modified.label</span></small>
             </div>

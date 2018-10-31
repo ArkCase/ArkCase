@@ -537,4 +537,11 @@
             </column>
         </addColumn>
     </changeSet>
+
+	<changeSet id="34-add-external-date-column" author="dimitar.stefanovski">
+        <addColumn tableName="acm_disposition">
+            <column name="cm_refer_ext_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

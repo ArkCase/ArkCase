@@ -121,7 +121,7 @@
                 "username": "zh-cn_Username"
             }
         },
-        "userSearch.title": "zh-cn_Search for User",
+        "userSearch.title": "zh-cn_User/Group Search",
         "cost": {
             "title": "zh-cn_Costs",
             "date": "zh-cn_Date",
@@ -139,7 +139,8 @@
             "title": "zh-cn_Approver",
             "placeholder": "zh-cn_Select Approver",
             "removeBtn": "zh-cn_Remove Approver",
-            "addBtn": "zh-cn_Add Another Approver"
+            "addBtn": "zh-cn_Add Another Approver",
+            "owningGroup": "zh-cn_Owning Group"
         },
         "cancelButton": "zh-cn_Cancel",
         "saveButton": "zh-cn_Save",

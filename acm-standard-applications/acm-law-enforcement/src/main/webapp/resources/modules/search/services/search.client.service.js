@@ -191,6 +191,9 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
         }
         url += "&export=" + exportType;
         url += "&reportName=" + reportName;
+        //add time-zone in exportUrl for AFDP-5769
+        var timeZone = new Date().getTimezoneOffset();
+        url += "&timeZone=" + encodeURI(timeZone.toString());
         return url;
     };
 

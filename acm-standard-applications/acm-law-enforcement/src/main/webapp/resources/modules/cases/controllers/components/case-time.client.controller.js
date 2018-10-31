@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
         'Cases.TimeController',
-        [ '$scope', '$stateParams', '$state', '$translate', 'UtilService', 'ObjectService', 'ConfigService', 'Object.TimeService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService',
-                function($scope, $stateParams, $state, $translate, Util, ObjectService, ConfigService, ObjectTimeService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService) {
+        [ '$scope', '$stateParams', '$state', '$modal', '$translate', 'UtilService', 'ObjectService', 'ConfigService', 'Object.TimeService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'FormsType.Service', 'TimeTracking.InfoService',
+                function($scope, $stateParams, $state, $modal, $translate, Util, ObjectService, ConfigService, ObjectTimeService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, FormsTypeService, TimeTrackingInfoService) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -24,6 +24,14 @@ angular.module('cases').controller(
                         scope: $scope
                     });
 
+                    FormsTypeService.isAngularFormType().then(function(isAngularFormType) {
+                        $scope.isAngularFormType = isAngularFormType;
+                    });
+
+                    FormsTypeService.isFrevvoFormType().then(function(isFrevvoFormType) {
+                        $scope.isFrevvoFormType = isFrevvoFormType;
+                    });
+
                     var onConfigRetrieved = function(config) {
                         gridHelper.setColumnDefs(config);
                         gridHelper.setBasicOptions(config);
@@ -39,26 +47,6 @@ angular.module('cases').controller(
                         }
                     };
 
-                    //if (Util.goodPositive(componentHelper.currentObjectId, false)) {
-                    //    ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, componentHelper.currentObjectId).then(
-                    //        function (timesheets) {
-                    //            componentHelper.promiseConfig.then(function (config) {
-                    //                for (var i = 0; i < timesheets.length; i++) {
-                    //                    timesheets[i].acm$_formName = $translate.instant("cases.comp.time.formNamePrefix") + " " + Util.goodValue(timesheets[i].startDate) + " - " + Util.goodValue(timesheets[i].endDate);
-                    //                    timesheets[i].acm$_hours = _.reduce(Util.goodArray(timesheets[i].times), function (total, n) {
-                    //                        return total + Util.goodValue(n.value, 0);
-                    //                    }, 0);
-                    //                }
-                    //
-                    //                $scope.gridOptions = $scope.gridOptions || {};
-                    //                $scope.gridOptions.data = timesheets;
-                    //                $scope.gridOptions.totalItems = Util.goodValue(timesheets.length, 0);
-                    //                return config;
-                    //            });
-                    //            return timesheets;
-                    //        }
-                    //    );
-                    //}
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
 
@@ -68,21 +56,15 @@ angular.module('cases').controller(
                                 _id: objectInfo.id,
                                 _type: ObjectService.ObjectTypes.CASE_FILE,
                                 _number: objectInfo.caseNumber
-                            }
+                            };
+
                             ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(function(timesheets) {
                                 for (var i = 0; i < timesheets.length; i++) {
                                     timesheets[i].acm$_formName = timesheets[i].title;
                                     timesheets[i].acm$_hours = _.reduce(Util.goodArray(timesheets[i].times), function(total, n) {
                                         return total + Util.goodValue(n.value, 0);
                                     }, 0);
-
-                                    var totalCost = 0.0;
-                                    for (var j = 0; j < timesheets[i].times.length; j++) {
-                                        if ($scope.newTimesheetParamsFromObject._type == timesheets[i].times[j].type && $scope.newTimesheetParamsFromObject._number == timesheets[i].times[j].code) {
-                                            totalCost += parseFloat(timesheets[i].times[j].totalCost);
-                                        }
-                                    }
-                                    timesheets[i].totalCost = totalCost;
+                                    timesheets[i].totalCost = calculateTotalCost(timesheets[i]);
                                 }
 
                                 $scope.gridOptions = $scope.gridOptions || {};
@@ -92,12 +74,79 @@ angular.module('cases').controller(
                             });
                         }
                     };
-                    $scope.editRow = function(rowEntity) {
-                        var frevvoDateFormat = $translate.instant("common.frevvo.defaultDateFormat");
-                        var startDate = moment(rowEntity.startDate).format(frevvoDateFormat);
 
-                        $state.go('frevvo.edit-timesheet', {
-                            period: startDate
+                    function calculateTotalCost(timesheet){
+                        var totalCost = 0.0;
+                        for (var j = 0; j < timesheet.times.length; j++) {
+                            if ($scope.newTimesheetParamsFromObject._type == timesheet.times[j].type && $scope.newTimesheetParamsFromObject._number == timesheet.times[j].code) {
+                                totalCost += parseFloat(timesheet.times[j].totalCost);
+                            }
+                        }
+                        return totalCost;
+                    }
+
+                    $scope.newTimesheet = function () {
+                        var params = {
+                            isEdit: false,
+                            timeType: $scope.newTimesheetParamsFromObject._type,
+                            timeNumber: $scope.newTimesheetParamsFromObject._number,
+                            timeId: $scope.newTimesheetParamsFromObject._id
+                        };
+                        showModal(params);
+                    };
+
+                    function showModal(params) {
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/time-tracking/views/components/time-tracking-new-timesheet-modal.client.view.html',
+                            controller: 'TimeTracking.NewTimesheetController',
+                            size: 'lg',
+                            resolve: {
+                                modalParams: function () {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function (data) {
+                            var addedTimesheet = data;
+                            addedTimesheet.acm$_formName = addedTimesheet.title;
+                            addedTimesheet.acm$_hours = _.reduce(Util.goodArray(addedTimesheet.times), function(total, n) {
+                                return total + Util.goodValue(n.value, 0);
+                            }, 0);
+                            addedTimesheet.totalCost = calculateTotalCost(addedTimesheet);
+
+                            if(params.isEdit){
+                                _.forEach($scope.gridOptions.data, function (timesheet, i) {
+                                    if (Util.compare(timesheet.id, addedTimesheet.id)) {
+                                        $scope.gridOptions.data.splice(i, 1, addedTimesheet);
+                                        return false;
+                                    }
+                                });
+                            }else {
+                                $scope.gridOptions.data.push(addedTimesheet);
+                            }
                         });
                     }
+
+                    $scope.editRow = function(rowEntity) {
+                        if($scope.isFrevvoFormType){
+                            var frevvoDateFormat = $translate.instant("common.frevvo.defaultDateFormat");
+                            var startDate = moment(rowEntity.startDate).format(frevvoDateFormat);
+
+                            $state.go('frevvo.edit-timesheet', {
+                                period: startDate
+                            });
+                        }else{
+                            TimeTrackingInfoService.getTimesheetInfo(rowEntity.id).then(function(timesheetInfo) {
+                                var timesheetInfo = timesheetInfo;
+                                $scope.editParams = {
+                                    isEdit: true,
+                                    timesheet: timesheetInfo
+                                };
+                                showModal($scope.editParams);
+                            });
+                        }
+                    };
+
                 } ]);

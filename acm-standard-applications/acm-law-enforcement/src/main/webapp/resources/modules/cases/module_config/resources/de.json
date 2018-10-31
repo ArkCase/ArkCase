@@ -26,6 +26,7 @@
         "assignee.label": "Zugewiesen",
         "owningGroup.label": "Besitzgruppe",
         "dueDate.label": "Fälligkeitsdatum",
+        "alertMessage": "de_Due date must be after the create date ",
         "priorities": {
             "low%": "Niedrig",
             "medium%": "Mittel",
@@ -261,6 +262,16 @@
             "title": "Titel",
             "parent": "Elternteil",
             "modified": "Geändert"
+        },
+        "objectPicker": {
+            "title": "de_Search for object",
+            "table.columns": {
+                "name": "de_Name",
+                "type": "de_Type",
+                "title": "de_Title",
+                "id": "de_ID",
+                "username": "de_Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {
@@ -364,6 +375,7 @@
     },
     "cases.comp.change.status": {
         "title": "de_Change Case Status",
+        "description.label": "de_Description",
         "information": {
             "title": "de_Change Case Status Information",
             "date": "de_Change Date",
@@ -380,10 +392,11 @@
         },
         "approver": {
             "placeholder": "de_Select Approver",
-            "label": "de_Select Approver",
+            "label": "de_Approver",
             "addAnother": "de_Add another",
             "remove": "de_Remove Approver",
-            "pickerModal.header": "de_Choose Approver"
+            "pickerModal.header": "de_User/Group Search",
+            "owningGroup": "de_Owning Group"
         },
         "button": {
             "cancel": "de_Cancel",

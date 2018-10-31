@@ -85,6 +85,62 @@
             "status": "Status"
         }
     },
+    "timeTracking.comp.newTimesheet": {
+        "title": "pt_Time Tracking",
+        "editCase.title": "pt_Edit Time Tracking",
+        "user": "pt_User",
+        "status": "pt_Status",
+        "objectPicker": {
+            "title": "pt_Search for object",
+            "table.columns": {
+                "name": "pt_Name",
+                "type": "pt_Type",
+                "title": "pt_Title",
+                "id": "pt_ID",
+                "username": "pt_Username"
+            }
+        },
+        "otherChargeCodePicker":{
+            "title": "pt_Search charge code",
+            "table.columns": {
+                "name": "pt_Name",
+                "type": "pt_Type"
+            },
+            "buttons":{
+                "cancel":"pt_Cancel",
+                "ok": "pt_OK"
+            }
+        },
+        "time": {
+            "title": "pt_Timesheet",
+            "date": "pt_Period",
+            "date.placeholder": "pt_Select week",
+            "date.close.button": "pt_Close",
+            "prevWeekBtn": "pt_Prev Week",
+            "nextWeekBtn": "pt_Next Week",
+            "type": "pt_Type",
+            "selectTypeMessage": "pt_You have to select 'Type', so that you can choose a 'Charge Code'.",
+            "chargeCode": "pt_Charge Code",
+            "chargeRole": "pt_Charge Role",
+            "total": "pt_Total",
+            "totalCost": "pt_Total Cost",
+            "removeBtn": "pt_Remove",
+            "addBtn": "pt_Add"
+        },
+        "userSearch.title": "pt_User/Group Search",
+        "details": "pt_Details",
+        "approver": {
+            "title": "pt_Approver",
+            "placeholder": "pt_Select Approver",
+            "removeBtn": "pt_Remove Approver",
+            "addBtn": "pt_Add Another Approver",
+            "owningGroup": "pt_Owning Group"
+        },
+        "cancelButton": "pt_Cancel",
+        "saveButton": "pt_Save",
+        "updateButton": "pt_Update",
+        "sendForApproval": "pt_Send for Approval"
+    },
     "timeTracking.tree": {
         "nodeTypes": {
             "details.label": "Detalhes",

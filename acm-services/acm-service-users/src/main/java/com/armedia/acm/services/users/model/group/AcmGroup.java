@@ -42,11 +42,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -59,6 +61,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -72,6 +75,10 @@ import java.util.stream.Stream;
 public class AcmGroup implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = -2729731595684630823L;
+
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, fetch = FetchType.LAZY)
+    @JoinColumn(name = "cm_identifier", referencedColumnName = "cm_id", nullable = false)
+    private AcmGroupIdentifier identifier = new AcmGroupIdentifier();
 
     @Id
     @Column(name = "cm_group_name")
@@ -237,6 +244,12 @@ public class AcmGroup implements Serializable, AcmEntity
     {
         memberOfGroups.forEach(memberOfGroup -> memberOfGroup.removeGroupMember(this));
         memberOfGroups.clear();
+    }
+
+    @JsonIgnore
+    public Long getIdentifier()
+    {
+        return identifier.getId();
     }
 
     public String getName()
@@ -439,10 +452,9 @@ public class AcmGroup implements Serializable, AcmEntity
     public Set<String> getAscendants()
     {
         if (StringUtils.isBlank(ascendantsList))
-            return new HashSet<>();
+            return new TreeSet<>();
         return Arrays.stream(ascendantsList.split(","))
-                .sorted()
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     public void addAscendant(String ascendantGroup)
@@ -468,7 +480,7 @@ public class AcmGroup implements Serializable, AcmEntity
         AcmGroup acmGroup = (AcmGroup) o;
         if (name != null)
         {
-            return name.equalsIgnoreCase(acmGroup.name);
+            return name.equals(acmGroup.name);
         }
         return acmGroup.name == null;
     }

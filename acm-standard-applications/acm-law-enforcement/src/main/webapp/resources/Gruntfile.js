@@ -18,6 +18,15 @@ module.exports = function(grunt) {
     } catch (ex) {
         console.log('Custom config does not exist..continuing..');
     }
+    // AFDP-6364 allow custom config to be loaded from ~/.arkcase/custom-js
+    try {
+        var externalCustomConfig = require('../custom-js/customConfig');
+        console.log('Found external custom config, merging it.');
+        _.merge(config, externalCustomConfig);
+    } catch (ex) {
+        console.log('External custom config does not exist..continuing..');
+    }
+
 
     grunt.initConfig({
         pkg : grunt.file.readJSON('package.json'),
@@ -63,7 +72,7 @@ module.exports = function(grunt) {
         },
 
         /////////////////////////////////////
-        // Developemnet tasks
+        // Development tasks
         /////////////////////////////////////
         concurrent : {
             default1 : {

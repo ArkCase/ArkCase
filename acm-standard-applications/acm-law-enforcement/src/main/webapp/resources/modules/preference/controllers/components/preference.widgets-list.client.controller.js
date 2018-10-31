@@ -74,7 +74,8 @@ angular.module('preference').controller('Preference.WidgetsListController', [ '$
 
     function enableWidget($event, widget, enable) {
         PreferenceService.getPreferredWidgets({
-            moduleName: $scope.moduleName
+            moduleName: $scope.moduleName,
+            timestamp:  new Date().getTime()
         }, function(preferredWidgets) {
             if (enable) {
                 if (!_.includes(preferredWidgets.preferredWidgets, widget.commonName)) {
@@ -96,7 +97,8 @@ angular.module('preference').controller('Preference.WidgetsListController', [ '$
 
             //set appropriate dashboardConfig to make note of appropriate widget
             DashboardService.getConfig({
-                moduleName: $scope.moduleName
+                moduleName: $scope.moduleName,
+                timestamp:  new Date().getTime()
             }, function(config) {
                 var model = angular.fromJson(config.dashboardConfig);
                 model.rows[0].columns[0].widgets = [];

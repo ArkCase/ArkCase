@@ -121,7 +121,7 @@
                 "username": "ru_Username"
             }
         },
-        "userSearch.title": "ru_Search for User",
+        "userSearch.title": "ru_User/Group Search",
         "cost": {
             "title": "ru_Costs",
             "date": "ru_Date",
@@ -139,7 +139,8 @@
             "title": "ru_Approver",
             "placeholder": "ru_Select Approver",
             "removeBtn": "ru_Remove Approver",
-            "addBtn": "ru_Add Another Approver"
+            "addBtn": "ru_Add Another Approver",
+            "owningGroup": "ru_Owning Group"
         },
         "cancelButton": "ru_Cancel",
         "saveButton": "ru_Save",

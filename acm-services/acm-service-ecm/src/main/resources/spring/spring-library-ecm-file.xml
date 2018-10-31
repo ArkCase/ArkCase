@@ -159,6 +159,106 @@
         <property name="ecmFileUploadPipelineManager" ref="ecmFileUploadPipelineManager"/>
         <property name="ecmFileUpdatePipelineManager" ref="ecmFileUpdatePipelineManager"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
+        <property name="mimeTypesByTika">
+            <map>
+                <entry key="text/plain">
+                    <list>
+                        <value>application/octet-stream</value>
+                    </list>
+                </entry>
+                <entry key="application/xml">
+                    <list>
+                        <value>text/xml</value>
+                        <value>application/octet-stream</value>
+                    </list>
+                </entry>
+                <entry key="application/xslt+xml">
+                    <list>
+                        <value>text/xml</value>
+                    </list>
+                </entry>
+                <entry key="application/x-dosexec">
+                    <list>
+                        <value>application/x-msdownload</value>
+                    </list>
+                </entry>
+                <entry key="video/x-msvideo">
+                    <list>
+                        <value>video/avi</value>
+                    </list>
+                </entry>
+                <entry key="video/x-m4v">
+                    <list>
+                        <value>video/mp4</value>
+                    </list>
+                </entry>
+                <entry key="model/vnd.mts">
+                    <list>
+                        <value>video/vnd.dlna.mpeg-tts</value>
+                    </list>
+                </entry>
+                <entry key="audio/mpeg">
+                    <list>
+                        <value>audio/mp3</value>
+                    </list>
+                </entry>
+                <entry key="audio/x-aac">
+                    <list>
+                        <value>audio/vnd.dlna.adts</value>
+                    </list>
+                </entry>
+                <entry key="audio/x-flac">
+                    <list>
+                        <value>audio/flac</value>
+                    </list>
+                </entry>
+                <entry key="audio/midi">
+                    <list>
+                        <value>audio/mid</value>
+                    </list>
+                </entry>
+                <entry key="application/octet-stream">
+                    <list>
+                        <value>audio/vnd.dolby.dd-raw</value>
+                    </list>
+                </entry>
+                <entry key="audio/x-oggflac">
+                    <list>
+                        <value>audio/ogg</value>
+                    </list>
+                </entry>
+                <entry key="audio/mp4">
+                    <list>
+                        <value>audio/x-m4a</value>
+                    </list>
+                </entry>
+                <entry key="audio/amr-wb">
+                    <list>
+                        <value>application/octet-stream</value>
+                    </list>
+                </entry>
+                <entry key="audio/x-aiff">
+                    <list>
+                        <value>audio/aiff</value>
+                    </list>
+                </entry>
+                <entry key="application/vnd.rn-realmedia">
+                    <list>
+                        <value>application/octet-stream</value>
+                    </list>
+                </entry>
+                <entry key="application/xhtml+xml">
+                    <list>
+                        <value>text/html</value>
+                    </list>
+                </entry>
+                <entry key="application/vnd.ms-outlook">
+                    <list>
+                        <value>application/octet-stream</value>
+                    </list>
+                </entry>
+            </map>
+        </property>
     </bean>
 
     <bean id="ecmFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl">
@@ -202,9 +302,11 @@
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
         <property name="enableContentFileIndexing" value="${solr.enableContentFileIndexing}"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+        <property name="acmDataService" ref="acmDataService"/>
     </bean>
 
     <bean id="acmContainerToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmContainerToSolrTransformer">
@@ -305,6 +407,13 @@
         <property name="pdfService" ref="pdfService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
+
+    <bean id="fileAclSolrUpdateHelper" class="com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper">
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
+        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+    </bean>
+
     <bean id="uploadService" class="com.armedia.acm.plugins.ecm.service.impl.UploadServiceImpl">
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileService" ref="ecmFileService"/>

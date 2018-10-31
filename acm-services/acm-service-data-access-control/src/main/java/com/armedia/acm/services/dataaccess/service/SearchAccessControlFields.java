@@ -29,9 +29,20 @@ package com.armedia.acm.services.dataaccess.service;
 
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
-import com.armedia.acm.services.search.util.AcmSolrUtil;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
+
+import javax.persistence.FlushModeType;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +51,8 @@ import java.util.stream.Collectors;
 public class SearchAccessControlFields
 {
     private ParticipantAccessChecker participantAccessChecker;
+    private UserDao userDao;
+    private GroupServiceImpl groupService;
 
     public void setAccessControlFields(SolrBaseDocument doc, AcmAssignedObject object)
     {
@@ -52,22 +65,91 @@ public class SearchAccessControlFields
         if (!publicDoc)
         {
             List<String> readers = getParticipantAccessChecker().getReaders(object);
+            Map<String, Long> readerUserIdMap = getParticipantsToUserIdMap(readers);
+            doc.setAllow_user_ls(new ArrayList<>(readerUserIdMap.values()));
 
-            // due to how Solr works we have to replace any spaces in the participant ids with an unusual character.
-            readers = encode(readers);
-            doc.setAllow_acl_ss(readers);
+            readers.removeAll(readerUserIdMap.keySet());
+            Map<String, Long> readerGroupIdMap = getParticipantsToGroupIdMap(readers);
+            doc.setAllow_group_ls(new ArrayList<>(readerGroupIdMap.values()));
         }
 
         List<String> denied = getParticipantAccessChecker().getDenied(object);
-        denied = encode(denied);
-        doc.setDeny_acl_ss(denied);
+        Map<String, Long> deniedUserIdMap = getParticipantsToUserIdMap(denied);
+        doc.setDeny_user_ls(new ArrayList<>(deniedUserIdMap.values()));
+
+        denied.removeAll(deniedUserIdMap.keySet());
+        Map<String, Long> deniedGroupId = getParticipantsToGroupIdMap(denied);
+        doc.setDeny_group_ls(new ArrayList<>(deniedGroupId.values()));
     }
 
-    private List<String> encode(List<String> toBeEncoded)
+    public void setParentAccessControlFields(SolrBaseDocument doc, AcmAssignedObject parentObject)
     {
-        return toBeEncoded.stream()
-                .map(s -> AcmSolrUtil.encodeSpecialCharactersForACL(s))
-                .collect(Collectors.toList());
+        List<String> readers = getParticipantAccessChecker().getReaders(parentObject);
+        Map<String, Long> readerUserIdMap = getParticipantsToUserIdMap(readers);
+        doc.setParent_allow_user_ls(new ArrayList<>(readerUserIdMap.values()));
+
+        readers.removeAll(readerUserIdMap.keySet());
+        Map<String, Long> readerGroupIdMap = getParticipantsToGroupIdMap(readers);
+        doc.setParent_allow_group_ls(new ArrayList<>(readerGroupIdMap.values()));
+
+        List<String> denied = getParticipantAccessChecker().getDenied(parentObject);
+        Map<String, Long> deniedUserIdMap = getParticipantsToUserIdMap(denied);
+        doc.setParent_deny_user_ls(new ArrayList<>(deniedUserIdMap.values()));
+
+        denied.removeAll(deniedUserIdMap.keySet());
+        Map<String, Long> deniedGroupId = getParticipantsToGroupIdMap(denied);
+        doc.setParent_deny_group_ls(new ArrayList<>(deniedGroupId.values()));
+    }
+
+    public JSONObject buildParentAccessControlFieldsUpdate(AcmAssignedObject parentObject, String docId)
+    {
+        JSONObject doc = new JSONObject();
+        doc.put("id", docId);
+
+        List<String> readers = getParticipantAccessChecker().getReaders(parentObject);
+        Map<String, Long> readerUserIdMap = getParticipantsToUserIdMap(readers);
+        JSONObject allowUser = new JSONObject();
+        allowUser.put("set", readerUserIdMap.values());
+        doc.put("parent_allow_user_ls", allowUser);
+
+        readers.removeAll(readerUserIdMap.keySet());
+        Map<String, Long> readerGroupIdMap = getParticipantsToGroupIdMap(readers);
+        JSONObject allowGroup = new JSONObject();
+        allowGroup.put("set", readerGroupIdMap.values());
+        doc.put("parent_allow_group_ls", allowGroup);
+
+        List<String> denied = getParticipantAccessChecker().getDenied(parentObject);
+        Map<String, Long> deniedUserIdMap = getParticipantsToUserIdMap(denied);
+        JSONObject denyUser = new JSONObject();
+        denyUser.put("set", deniedUserIdMap.values());
+        doc.put("parent_deny_user_ls", denyUser);
+
+        denied.removeAll(deniedUserIdMap.keySet());
+        Map<String, Long> deniedGroupId = getParticipantsToGroupIdMap(denied);
+        JSONObject denyGroup = new JSONObject();
+        denyGroup.put("set", deniedGroupId.values());
+        doc.put("parent_deny_group_ls", denyGroup);
+        return doc;
+    }
+
+    private Map<String, Long> getParticipantsToUserIdMap(List<String> participantsLdapIds)
+    {
+        return participantsLdapIds.stream()
+                .filter(StringUtils::isNotBlank)
+                .map(it -> userDao.findByUserId(it))
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toMap(AcmUser::getUserId, AcmUser::getIdentifier));
+    }
+
+    private Map<String, Long> getParticipantsToGroupIdMap(List<String> participantsLdapIds)
+    {
+        return participantsLdapIds.stream()
+                .filter(StringUtils::isNotBlank)
+                .map(it -> groupService.findByName(it, FlushModeType.COMMIT))
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toMap(AcmGroup::getName, AcmGroup::getIdentifier));
     }
 
     public ParticipantAccessChecker getParticipantAccessChecker()
@@ -78,5 +160,25 @@ public class SearchAccessControlFields
     public void setParticipantAccessChecker(ParticipantAccessChecker participantAccessChecker)
     {
         this.participantAccessChecker = participantAccessChecker;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
+    public GroupServiceImpl getGroupService()
+    {
+        return groupService;
+    }
+
+    public void setGroupService(GroupServiceImpl groupService)
+    {
+        this.groupService = groupService;
     }
 }

@@ -6,22 +6,22 @@ package com.armedia.acm.services.users.service.group;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -40,12 +40,13 @@ import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.HashSet;
 import java.util.Set;
 
 public class LdapGroupService
@@ -65,12 +66,18 @@ public class LdapGroupService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException
+    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException,
+            AcmObjectNotFoundException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
                 .get(String.format("%s_sync", directoryName));
 
-        String groupName = MapperUtils.buildGroupName(group.getName(), Optional.of(ldapSyncConfig.getUserDomain()));
+        if (StringUtils.isNotBlank(ldapSyncConfig.getGroupControlGroup()))
+        {
+            return createLdapSubgroup(group, ldapSyncConfig.getGroupControlGroup(), directoryName);
+        }
+
+        String groupName = MapperUtils.buildGroupName(group.getName(), ldapSyncConfig.getUserDomain());
 
         AcmGroup existingGroup = groupService.findByName(groupName);
         if (existingGroup != null && existingGroup.getStatus() == AcmGroupStatus.ACTIVE)
@@ -103,9 +110,10 @@ public class LdapGroupService
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
                 .get(String.format("%s_sync", directoryName));
+        Set<String> memberOfGroups = new HashSet<>();
 
         String givenName = group.getName();
-        String groupName = MapperUtils.buildGroupName(givenName, Optional.of(ldapSyncConfig.getUserDomain()));
+        String groupName = MapperUtils.buildGroupName(givenName, ldapSyncConfig.getUserDomain());
 
         AcmGroup existingGroup = groupService.findByName(groupName);
         if (existingGroup != null && existingGroup.getStatus() == AcmGroupStatus.ACTIVE)
@@ -120,52 +128,54 @@ public class LdapGroupService
             throw new AcmObjectNotFoundException("LDAP_GROUP", null, "Parent group not found");
         }
         log.debug("Found parent group [{}] for new LDAP sub-group [{}]", parentGroup.getName(), group.getName());
+        memberOfGroups.add(parentGroup.getDistinguishedName());
+
         AcmGroup acmGroup;
         String groupDN = buildDnForGroup(givenName, ldapSyncConfig);
         if (existingGroup == null)
         {
             acmGroup = new AcmGroup();
             acmGroup.setName(groupName);
-            acmGroup.setDisplayName(groupName);
-            acmGroup.setType(AcmGroupType.LDAP_GROUP);
-            acmGroup.setDescription(group.getDescription());
-            acmGroup.setDistinguishedName(groupDN);
-            acmGroup.setDirectoryName(directoryName);
-
-            Set<String> ancestors = parentGroup.getAscendants();
-            ancestors.add(parentGroupName);
-            acmGroup.setAscendantsList(AcmGroupUtils.getAscendantsString(ancestors));
-
-            parentGroup.addGroupMember(acmGroup);
-            log.debug("Updated parent-group [{}] with sub-group [{}] in database", parentGroup.getName(), acmGroup.getName());
-            groupService.saveAndFlush(parentGroup);
         }
         else
         {
             existingGroup.setStatus(AcmGroupStatus.ACTIVE);
-            existingGroup.setDisplayName(groupName);
-            existingGroup.setType(AcmGroupType.LDAP_GROUP);
-            existingGroup.setDescription(group.getDescription());
-            existingGroup.setDistinguishedName(groupDN);
-            existingGroup.setDirectoryName(directoryName);
-            Set<String> ancestors = parentGroup.getAscendants();
-            ancestors.add(parentGroupName);
-            existingGroup.setAscendantsList(AcmGroupUtils.getAscendantsString(ancestors));
-
-            parentGroup.addGroupMember(existingGroup);
-            log.debug("Updated parent-group [{}] with sub-group [{}] in database", existingGroup.getName(), existingGroup.getName());
-            groupService.saveAndFlush(parentGroup);
             acmGroup = existingGroup;
         }
+        acmGroup.setDisplayName(groupName);
+        acmGroup.setType(AcmGroupType.LDAP_GROUP);
+        acmGroup.setDescription(group.getDescription());
+        acmGroup.setDistinguishedName(groupDN);
+        acmGroup.setDirectoryName(directoryName);
 
-        log.debug("Saving sub-group [{}] with parent-group [{}] in LDAP server", acmGroup.getDistinguishedName(), parentGroup.getName());
+        Set<String> ancestors = parentGroup.getAscendants();
+        ancestors.add(parentGroupName);
+        acmGroup.setAscendantsList(AcmGroupUtils.getAscendantsString(ancestors));
+        parentGroup.addGroupMember(acmGroup);
+
+        String groupsControlGroupName = ldapSyncConfig.getGroupControlGroup();
+        if (StringUtils.isNotBlank(groupsControlGroupName) && !parentGroupName.equals(groupsControlGroupName))
+        {
+            AcmGroup groupsControlGroup = groupService.findByName(groupsControlGroupName);
+            acmGroup.addAscendant(groupsControlGroupName);
+            groupsControlGroup.addGroupMember(acmGroup);
+            log.debug("Updated groups control group [{}] with sub-group [{}] in database",
+                    groupsControlGroup.getName(), acmGroup.getName());
+            groupService.saveAndFlush(groupsControlGroup);
+            memberOfGroups.add(groupsControlGroup.getDistinguishedName());
+        }
+
+        log.debug("Updated parent-group [{}] with sub-group [{}] in database", parentGroup.getName(), acmGroup.getName());
+        groupService.saveAndFlush(parentGroup);
+
+        log.debug("Saving sub-group [{}] with parent groups [{}] in LDAP server", acmGroup.getDistinguishedName(), memberOfGroups);
         ldapGroupDao.createGroup(acmGroup, ldapSyncConfig);
         log.debug("Sub-group [{}] with DN [{}] saved in LDAP server", acmGroup.getName(), acmGroup.getDistinguishedName());
+
         try
         {
-            log.debug("Update parent-group [{}] with DN [{}] with the new member [{}] in LDAP server", parentGroup.getName(),
-                    parentGroup.getDistinguishedName(), acmGroup.getDistinguishedName());
-            ldapGroupDao.addMemberToGroup(acmGroup.getDistinguishedName(), parentGroup.getDistinguishedName(), ldapSyncConfig);
+            log.debug("Update parent groups with the new member [{}] in LDAP server", acmGroup.getDistinguishedName());
+            ldapGroupDao.addMemberToGroups(acmGroup.getDistinguishedName(), memberOfGroups, ldapSyncConfig);
         }
         catch (AcmLdapActionFailedException e)
         {
@@ -194,9 +204,19 @@ public class LdapGroupService
     public void removeGroupMembership(String groupName, String parentGroupName, String directoryName)
             throws AcmObjectNotFoundException, AcmLdapActionFailedException
     {
+        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
+
+        // prevent removing the user from the control group if configured
+        String controlGroup = ldapSyncConfig.getGroupControlGroup();
+        if (parentGroupName.equals(ldapSyncConfig.getGroupControlGroup()))
+        {
+            throw new AcmLdapActionFailedException(
+                    String.format("'%s' group is a required parent system group and group can't be removed from it.", controlGroup));
+        }
+
         AcmGroup acmGroup = groupService.removeGroupMembership(groupName, parentGroupName, true);
         AcmGroup parentGroup = groupService.findByName(parentGroupName);
-        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
+
         if (acmGroup.getStatus() == AcmGroupStatus.DELETE)
         {
             ldapGroupDao.deleteGroupEntry(acmGroup.getDistinguishedName(), ldapSyncConfig);

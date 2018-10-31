@@ -97,6 +97,8 @@ public class EcmFileMuleUtils
      */
     public Document addFile(EcmFile newEcmFile, String cmisFolderId, InputStream fileInputStream) throws MuleException
     {
+        // Mule does not support file names with trailing space(s)
+        newEcmFile.setFileName(newEcmFile.getFileName().trim());
         // Mule upload request payload setup (specifies the folder in which to upload the supplied content stream)
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("cmisFolderId", cmisFolderId);

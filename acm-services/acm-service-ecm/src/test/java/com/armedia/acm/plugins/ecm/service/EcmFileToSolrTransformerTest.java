@@ -83,6 +83,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         unit = new EcmFileToSolrTransformer();
         unit.setSearchAccessControlFields(mockSearchAccessControlFields);
         unit.setUserDao(mockUserDao);
+        unit.setEnableDocumentACL(true);
     }
 
     private void setupEcmFile(EcmFile in)
@@ -168,7 +169,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
     }
 
     @Test
-    public void toContentFileIndex() throws Exception
+    public void toContentFileIndex()
     {
         unit.setEnableContentFileIndexing(true);
 
@@ -187,7 +188,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
     }
 
     @Test
-    public void toSolrAdvancedSearch() throws Exception
+    public void toSolrAdvancedSearch()
     {
         unit.setEnableContentFileIndexing(false);
 
@@ -205,7 +206,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
     }
 
     @Test
-    public void toSolrQuickSearch() throws Exception
+    public void toSolrQuickSearch()
     {
         unit.setEnableContentFileIndexing(false);
 

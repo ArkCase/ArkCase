@@ -69,7 +69,7 @@ public class ReportOfInvestigationWorkflowListener implements ApplicationListene
 
     protected void handleReportOfInvestigation(ReportOfInvestigationFormEvent event)
     {
-        EcmFile pdfRendition = event.getFrevvoUploadedFiles().getPdfRendition();
+        EcmFile pdfRendition = event.getUploadedFiles().getPdfRendition();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
 
         configuration.setEcmFile(pdfRendition);
@@ -104,13 +104,13 @@ public class ReportOfInvestigationWorkflowListener implements ApplicationListene
         pvars.put(TaskConstants.VARIABLE_NAME_REVIEWERS, reviewers);
         pvars.put(TaskConstants.VARIABLE_NAME_TASK_NAME, taskName);
         pvars.put(TaskConstants.VARIABLE_NAME_DOC_AUTHOR, author);
-        pvars.put(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID, event.getFrevvoUploadedFiles().getPdfRendition().getFileId());
-        pvars.put(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID, event.getFrevvoUploadedFiles().getFormXml().getFileId());
+        pvars.put(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID, event.getUploadedFiles().getPdfRendition().getFileId());
+        pvars.put(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID, event.getUploadedFiles().getFormXml().getFileId());
 
         pvars.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, EcmFileConstants.OBJECT_FILE_TYPE);
-        pvars.put(TaskConstants.VARIABLE_NAME_OBJECT_ID, event.getFrevvoUploadedFiles().getPdfRendition().getId());
-        pvars.put(TaskConstants.VARIABLE_NAME_OBJECT_NAME, event.getFrevvoUploadedFiles().getPdfRendition().getFileName());
-        pvars.put(EcmFileConstants.OBJECT_FILE_TYPE, event.getFrevvoUploadedFiles().getPdfRendition().getId());
+        pvars.put(TaskConstants.VARIABLE_NAME_OBJECT_ID, event.getUploadedFiles().getPdfRendition().getId());
+        pvars.put(TaskConstants.VARIABLE_NAME_OBJECT_NAME, event.getUploadedFiles().getPdfRendition().getFileName());
+        pvars.put(EcmFileConstants.OBJECT_FILE_TYPE, event.getUploadedFiles().getPdfRendition().getId());
         pvars.put(TaskConstants.VARIABLE_NAME_REQUEST_TYPE, "ROI");
         pvars.put(TaskConstants.VARIABLE_NAME_REQUEST_ID, event.getObjectId());
 

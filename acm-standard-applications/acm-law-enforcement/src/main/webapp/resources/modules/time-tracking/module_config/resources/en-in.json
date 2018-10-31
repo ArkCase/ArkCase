@@ -85,6 +85,62 @@
             "status": "Status"
         }
     },
+    "timeTracking.comp.newTimesheet": {
+        "title": "en-in_Time Tracking",
+        "editCase.title": "en-in_Edit Time Tracking",
+        "user": "en-in_User",
+        "status": "en-in_Status",
+        "objectPicker": {
+            "title": "en-in_Search for object",
+            "table.columns": {
+                "name": "en-in_Name",
+                "type": "en-in_Type",
+                "title": "en-in_Title",
+                "id": "en-in_ID",
+                "username": "en-in_Username"
+            }
+        },
+        "otherChargeCodePicker":{
+            "title": "en-in_Search charge code",
+            "table.columns": {
+                "name": "en-in_Name",
+                "type": "en-in_Type"
+            },
+            "buttons":{
+                "cancel":"en-in_Cancel",
+                "ok": "en-in_OK"
+            }
+        },
+        "time": {
+            "title": "en-in_Timesheet",
+            "date": "en-in_Period",
+            "date.placeholder": "en-in_Select week",
+            "date.close.button": "en-in_Close",
+            "prevWeekBtn": "en-in_Prev Week",
+            "nextWeekBtn": "en-in_Next Week",
+            "type": "en-in_Type",
+            "selectTypeMessage": "en-in_You have to select 'Type', so that you can choose a 'Charge Code'.",
+            "chargeCode": "en-in_Charge Code",
+            "chargeRole": "en-in_Charge Role",
+            "total": "en-in_Total",
+            "totalCost": "en-in_Total Cost",
+            "removeBtn": "en-in_Remove",
+            "addBtn": "en-in_Add"
+        },
+        "userSearch.title": "en-in_User/Group Search",
+        "details": "en-in_Details",
+        "approver": {
+            "title": "en-in_Approver",
+            "placeholder": "en-in_Select Approver",
+            "removeBtn": "en-in_Remove Approver",
+            "addBtn": "en-in_Add Another Approver",
+            "owningGroup": "en-in_Owning Group"
+        },
+        "cancelButton": "en-in_Cancel",
+        "saveButton": "en-in_Save",
+        "updateButton": "en-in_Update",
+        "sendForApproval": "en-in_Send for Approval"
+    },
     "timeTracking.tree": {
         "nodeTypes": {
             "details.label": "Details",

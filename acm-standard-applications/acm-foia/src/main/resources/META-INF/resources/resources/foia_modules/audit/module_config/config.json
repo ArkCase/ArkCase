@@ -1,0 +1,47 @@
+{
+    "id": "audit",
+    "title": "Audit",
+    "configurable": true,
+    "menus": [
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "audit",
+            "menuItemTitle": "audit.menus.leftnav.item",
+            "moduleId": "audit",
+            "iconClass": "fa fa-bolt",
+            "position": 170
+        }
+    ],
+    "components": [
+        {
+            "id": "auditselection",
+            "title": "audit.comp.auditselection.title",
+            "enabled": true,
+            "configurable": true,
+            "auditDropdown": [
+                {
+                    "id": "",
+                    "name": "ALL"
+                },
+                {
+                    "id": "CASE_FILE",
+                    "name": "Requests"
+                },
+                {
+                    "id": "TASK",
+                    "name": "Tasks"
+                },
+                {
+                    "id": "FILE",
+                    "name": "Files"
+                }
+            ]
+        },
+        {
+            "id": "datepickers",
+            "title": "audit.comp.datepickers.title",
+            "enabled": true,
+            "configurable": true
+        }
+    ]
+}

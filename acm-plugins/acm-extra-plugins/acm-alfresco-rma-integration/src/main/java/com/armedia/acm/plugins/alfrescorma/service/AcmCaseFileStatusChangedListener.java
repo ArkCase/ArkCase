@@ -27,6 +27,8 @@ package com.armedia.acm.plugins.alfrescorma.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.auth.AcmAuthenticationManager;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
@@ -35,10 +37,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +52,7 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
     private transient Logger LOG = LoggerFactory.getLogger(getClass());
     private AlfrescoRecordsService alfrescoRecordsService;
     private List<String> caseClosedStatuses = new ArrayList<>();
+    private AcmAuthenticationManager authenticationManager;
 
     @Override
     public void onApplicationEvent(CaseFileModifiedEvent event)
@@ -66,10 +71,22 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
         {
             CaseFile caseFile = (CaseFile) event.getSource();
 
+            String principal = event.getUserId();
+            AcmAuthentication authentication;
+
             if (null != caseFile)
             {
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(event.getUserId(), event.getUserId());
-                getAlfrescoRecordsService().declareAllContainerFilesAsRecords(auth, caseFile.getContainer(),
+                try
+                {
+                    authentication = authenticationManager.getAcmAuthentication(
+                            new UsernamePasswordAuthenticationToken(principal, principal));
+                }
+                catch (AuthenticationServiceException e)
+                {
+                    authentication = new AcmAuthentication(Collections.emptySet(), principal, "",
+                            true, principal);
+                }
+                getAlfrescoRecordsService().declareAllContainerFilesAsRecords(authentication, caseFile.getContainer(),
                         event.getEventDate(), caseFile.getCaseNumber());
 
             }
@@ -94,7 +111,7 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception
+    public void afterPropertiesSet()
     {
         LOG.debug("Finding case closed statuses");
         String statuses = getAlfrescoRecordsService().getAlfrescoRmaProperties().getProperty("alfresco_rma_case_closed_statuses");
@@ -126,5 +143,15 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
     public void setCaseClosedStatuses(List<String> caseClosedStatuses)
     {
         this.caseClosedStatuses = caseClosedStatuses;
+    }
+
+    public AcmAuthenticationManager getAuthenticationManager()
+    {
+        return authenticationManager;
+    }
+
+    public void setAuthenticationManager(AcmAuthenticationManager authenticationManager)
+    {
+        this.authenticationManager = authenticationManager;
     }
 }

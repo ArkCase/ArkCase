@@ -50,7 +50,9 @@
             "groupSearchFilterForUser": "Group Search Filter For User",
             "userIdAttributeName": "User Id Attribute Name",
             "userDomain": "User domain",
-            "userDomainNote": "(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+            "userPrefix": "Username Prefix",
+            "userControlGroup": "User Control Group",
+            "groupControlGroup": "Group Control Group",
             "syncPageSize": "Sync Page Size",
             "groupSearchFilter": "Group Search Filter",
             "changedGroupSearchFilter": "Changed Group Search Filter",
@@ -60,7 +62,7 @@
             "enableEditingLdapUsers": "Enable managing users and groups",
             "syncEnabled": "Enable synchronize users",
             "cancel": "Cancel",
-            "ok": "OK"
+            "ok": "Save"
         },
         "menus": {
             "leftnav.item": "Admin"
@@ -83,6 +85,9 @@
             "groupSearchFilterForUser": "Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
             "userIdAttributeName": "Enter attribute used for user id (e.g. 'uid')",
             "userDomain": "Enter user domain",
+            "userPrefix": "Fill in the username prefix for SAML environment.",
+            "userControlGroup": "Fill in the user control group for SAML environment.",
+            "groupControlGroup": "Fill in the group control group for SAML environment.",
             "syncPageSize": "Enter paging size",
             "groupSearchFilter": "Enter search filter for groups (e.g. (objectClass=group))",
             "groupsSortingAttribute": "Enter attribute for sorting groups (e.g. 'gidNumber')",
@@ -103,7 +108,7 @@
         },
         "security.ldapConfig.dialog": {
             "cancel": "Cancel",
-            "ok": "OK",
+            "ok": "Save",
             "confirm.delete": {
                 "deleteBtn": "Delete",
                 "cancelBtn": "Cancel",
@@ -263,7 +268,8 @@
             "cloneButton": "Clone User",
             "deleteUserBtn": "Delete User",
             "deleteUserMsg": "Are you sure you want to delete this user?",
-            "user": "User"
+            "user": "User",
+            "cancelBtn" : "Cancel"
         },
         "security.group.management": {
             "title": "Group Management",
@@ -499,7 +505,8 @@
                 "filterStartDate": "Result Filter Start Date",
                 "filterEndDate": "Result Filter End Date",
                 "outputFormat": "Select Output Format",
-                "submit": "Submit"
+                "submit": "Submit",
+                "cancel": "Cancel"
             }
         },
         "forms.title": "Forms",
@@ -619,7 +626,12 @@
                 "deleteEntryMsg": "Are you sure you want to delete this entry?",
                 "delete.success": "Lookup is successfully deleted",
                 "delete.error": "Lookup can't be deleted",
-                "lookupExists.error": "Lookup with this name already exists"
+                "lookupExists.error": "Lookup with this name already exists",
+                "dialog":{
+                    "deleteEntryConfirm" :"Delete Entry",
+                    "deleteLookupConfirm" : "Delete Lookup",
+                    "cancel" : "Cancel"
+                }
             },
             "module.config": {
                 "title": "Module Configuration",
@@ -634,7 +646,7 @@
                 "apply": "Apply",
                 "modal.title": "Information",
                 "modal.info": "Settings will take effect after refresh",
-                "modal.ok": "OK"
+                "modal.ok": "Confirm"
             },
             "formsType.config": {
                 "title": "Forms Type Configuration",
@@ -643,19 +655,25 @@
                 "apply": "Apply",
                 "modal.title": "Information",
                 "modal.info": "Settings will take effect after refresh",
-                "modal.ok": "OK"
+                "modal.ok": "Confirm"
             },
             "login.config": {
                 "title": "Login Configuration",
                 "idleLimit.label": "Login idle limit (in milliseconds)",
                 "inform": "Settings will take effect for all new user sessions",
-                "apply.label": "Apply"
+                "apply.label": "Apply",
+                "dialog" : {
+                    "OKBtn": "Confirm"
+                }
             },
             "auditHistory.config": {
                 "title": "Audit History",
                 "historyDays.label": "Keep Audit and Notification events (in days)",
                 "inform": "Setting successfully saved",
-                "apply.label": "Apply"
+                "apply.label": "Apply",
+                "dialog" : {
+                    "OKBtn": "Confirm"
+                }
             },
             "holiday": {
                 "title": "Holiday Schedule",
@@ -737,7 +755,7 @@
                 "btnOk.text": "Upload Template"
             },
             "templates.version.modal": {
-                "btnOk.text": "OK"
+                "btnOk.text": "Confirm"
             },
             "mergefields": "Merge Fields Configuration",
             "mergefields.saveMergeFields": "Save",
@@ -780,7 +798,7 @@
                 "dialog": {
                     "testConnection": "Test Connection",
                     "cancel": "Cancel",
-                    "ok": "OK"
+                    "ok": "Save Configuration"
                 },
                 "guidelineMessage": {
                     "repositoryId": "For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
@@ -890,11 +908,11 @@
             }
         },
         "stateOfArkcase": {
-            "title": "State of Arkcase",
+            "title": "State of ArkCase",
             "pickDate": "Pick Date",
             "btn.download": "Download",
             "datePicker": {
-                "clear": "clear",
+                "clear": "Clear",
                 "current": "Current day",
                 "close": "Close"
             }

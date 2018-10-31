@@ -35,7 +35,7 @@ import com.armedia.acm.forms.roi.model.ReportInformation;
 import com.armedia.acm.forms.roi.model.ReportOfInvestigationFormEvent;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
@@ -156,7 +156,7 @@ public class ROIService extends FrevvoFormAbstractService
             getUserActionExecutor().execute(caseFile.getId(), AcmUserActionName.LAST_CASE_MODIFIED, getAuthentication().getName());
         }
 
-        FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, cmisFolderId, parentObjectType, parentObjectId);
+        UploadedFiles uploadedFiles = saveAttachments(attachments, cmisFolderId, parentObjectType, parentObjectId);
 
         ReportOfInvestigationFormEvent event = new ReportOfInvestigationFormEvent(forObjectType, forObjectNumber, parentObjectType,
                 parentObjectId, roiForm, uploadedFiles, getAuthentication().getName(), getUserIpAddress(), true);

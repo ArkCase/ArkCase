@@ -45,23 +45,22 @@ public class SolrContentDocumentTest
     public void listsToSolrMultivaluedElements()
     {
         SolrContentDocument scd = new SolrContentDocument();
-
-        scd.setAllow_acl_ss(Arrays.asList("ann", "brian", "charles"));
+        scd.setAllow_user_ls(Arrays.asList(100L, 101L, 102L));
 
         String urlTemplate = scd.buildUrlTemplate();
 
-        // we should have "allow_acl_ss={allow_acl_ss.1},allow_acl_ss={allow_acl_ss.2},allow_acl_ss={allow_acl_ss.3}"
-        assertEquals(scd.getAllow_acl_ss().size(), occurrencesOfStringInString(urlTemplate, "literal.allow_acl_ss="));
+        // we should have "allow_user_ls={allow_user_ls.1},allow_user_ls={allow_user_ls.2},allow_user_ls={allow_user_ls.3}"
+        assertEquals(scd.getAllow_user_ls().size(), occurrencesOfStringInString(urlTemplate, "literal.allow_user_ls="));
 
-        assertTrue(urlTemplate.contains("literal.allow_acl_ss={literal.allow_acl_ss.0}"));
-        assertTrue(urlTemplate.contains("literal.allow_acl_ss={literal.allow_acl_ss.1}"));
-        assertTrue(urlTemplate.contains("literal.allow_acl_ss={literal.allow_acl_ss.2}"));
+        assertTrue(urlTemplate.contains("literal.allow_user_ls={literal.allow_user_ls.0}"));
+        assertTrue(urlTemplate.contains("literal.allow_user_ls={literal.allow_user_ls.1}"));
+        assertTrue(urlTemplate.contains("literal.allow_user_ls={literal.allow_user_ls.2}"));
 
         Map<String, Object> urlValues = scd.buildUrlValues();
 
-        assertEquals(urlValues.get("literal.allow_acl_ss.0"), scd.getAllow_acl_ss().get(0));
-        assertEquals(urlValues.get("literal.allow_acl_ss.1"), scd.getAllow_acl_ss().get(1));
-        assertEquals(urlValues.get("literal.allow_acl_ss.2"), scd.getAllow_acl_ss().get(2));
+        assertEquals(urlValues.get("literal.allow_user_ls.0"), scd.getAllow_user_ls().get(0));
+        assertEquals(urlValues.get("literal.allow_user_ls.1"), scd.getAllow_user_ls().get(1));
+        assertEquals(urlValues.get("literal.allow_user_ls.2"), scd.getAllow_user_ls().get(2));
 
     }
 

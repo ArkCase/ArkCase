@@ -52,7 +52,7 @@ angular.module('services').factory('TimeTracking.InfoService', [ '$resource', '$
          */
         save: {
             method: 'POST',
-            url: 'api/v1/service/timesheet',
+            url: 'api/v1/service/timesheet/:submissionName',
             cache: false
         }
     });
@@ -151,13 +151,57 @@ angular.module('services').factory('TimeTracking.InfoService', [ '$resource', '$
      *
      * @returns {Object} Promise
      */
-    Service.saveTimesheetInfo = function(timesheetInfo) {
+    Service.saveTimesheetInfo = function(timesheetInfo, submissionName) {
         if (!Service.validateTimesheet(timesheetInfo)) {
             return Util.errorPromise($translate.instant("common.service.error.invalidData"));
         }
+        //we need to make one of the fields is changed in order to be sure that update will be executed
+        //if we change modified won't make any differences since is updated before update to database
+        //but update will be trigger
+        timesheetInfo.modified = null;
         return Util.serviceCall({
             service: Service.save,
             data: timesheetInfo,
+            param: {
+                submissionName: submissionName
+            },
+            onSuccess: function(data) {
+                if (Service.validateTimesheet(data)) {
+                    var timesheetInfo = data;
+                    var cacheTimesheetInfo = new Store.CacheFifo(Service.CacheNames.TIMESHEET_INFO);
+                    cacheTimesheetInfo.put(timesheetInfo.id, timesheetInfo);
+                    return data;
+                }
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name saveNewTimesheetInfo
+     * @methodOf service:TimeTracking.InfoService
+     *
+     * @description
+     * Save new timesheet data
+     *
+     * @param {Object} timesheetInfo  Timesheet data
+     *
+     * @returns {Object} Promise
+     */
+    Service.saveNewTimesheetInfo = function(timesheetInfo, submissionName) {
+        if (!Service.validateNewTimesheet(timesheetInfo)) {
+            return Util.errorPromise($translate.instant("common.service.error.invalidData"));
+        }
+        //we need to make one of the fields is changed in order to be sure that update will be executed
+        //if we change modified won't make any differences since is updated before update to database
+        //but update will be trigger
+        timesheetInfo.modified = null;
+        return Util.serviceCall({
+            service: Service.save,
+            data: timesheetInfo,
+            param: {
+                submissionName: submissionName
+            },
             onSuccess: function(data) {
                 if (Service.validateTimesheet(data)) {
                     var timesheetInfo = data;
@@ -207,6 +251,46 @@ angular.module('services').factory('TimeTracking.InfoService', [ '$resource', '$
             return false;
         }
         if (Util.isEmpty(data.creator)) {
+            return false;
+        }
+        return true;
+    };
+
+    /**
+     * @ngdoc method
+     * @name validateNewTimesheet
+     * @methodOf service:TimeTracking.InfoService
+     *
+     * @description
+     * Validate new timesheet
+     *
+     * @param {Object} data  Data to be validated
+     *
+     * @returns {Boolean} Return true if data is valid
+     */
+    Service.validateNewTimesheet = function(data) {
+        if (Util.isEmpty(data)) {
+            return false;
+        }
+        if (data.id) {
+            return false;
+        }
+        if (Util.isEmpty(data.user)) {
+            return false;
+        }
+        if (Util.isEmpty(data.user.userId)) {
+            return false;
+        }
+        if (Util.isEmpty(data.startDate)) {
+            return false;
+        }
+        if (Util.isEmpty(data.endDate)) {
+            return false;
+        }
+        if (!Util.isArray(data.times)) {
+            return false;
+        }
+        if (Util.isEmpty(data.status)) {
             return false;
         }
         return true;

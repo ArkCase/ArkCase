@@ -40,7 +40,14 @@ angular.module('complaints').config([ '$stateProvider', function($stateProvider)
 
     .state('complaints.cost', {
         url: '/:id/cost',
-        templateUrl: 'modules/complaints/views/components/complaint-cost.client.view.html'
+        templateUrl: 'modules/complaints/views/components/complaint-cost.client.view.html',
+        resolve: {
+            translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
+                $translatePartialLoader.addPart('common');
+                $translatePartialLoader.addPart('cost-tracking');
+                return $translate.refresh();
+            } ]
+        }
     })
 
     .state('complaints.details', {
@@ -93,7 +100,14 @@ angular.module('complaints').config([ '$stateProvider', function($stateProvider)
 
     .state('complaints.time', {
         url: '/:id/time',
-        templateUrl: 'modules/complaints/views/components/complaint-time.client.view.html'
+        templateUrl: 'modules/complaints/views/components/complaint-time.client.view.html',
+        resolve: {
+            translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
+                $translatePartialLoader.addPart('common');
+                $translatePartialLoader.addPart('time-tracking');
+                return $translate.refresh();
+            } ]
+        }
     })
 
     .state('complaints.addresses', {

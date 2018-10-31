@@ -56,11 +56,7 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
 
         if (!ecmFileAddedEvent.isSucceeded())
         {
-            if (log.isTraceEnabled())
-            {
-                log.trace("Returning - file creation was not successful");
-            }
-
+            log.trace("Returning - file creation was not successful");
             return;
         }
 

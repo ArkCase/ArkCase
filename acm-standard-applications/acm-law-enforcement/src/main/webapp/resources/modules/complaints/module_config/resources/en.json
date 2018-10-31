@@ -22,7 +22,8 @@
         "priority.label": "Priority",
         "assignee.label": "Assigned To",
         "owningGroup.label": "Owning Group",
-        "dueDate.label": "Due Date"
+        "dueDate.label": "Due Date",
+        "alertMessage": "Due date must be after the create date "
     },
     "complaints.comp.actions": {
         "title": "Actions",
@@ -63,8 +64,7 @@
                 "witnessInterview2%": "Witness Interview Request-2.0"
             }
         },
-        "newTask": "New Task",
-        "addDocument": "Choose document to add."
+        "newTask": "New Task"
     },
     "complaints.comp.people": {
         "title": "People",
@@ -347,6 +347,50 @@
             "approverDecision": "Approver Decision"
         }
     },
+    "complaints.comp.closeComplaint": {
+        "title": "Close Complaint",
+        "info": "Incident Information",
+        "description.label": "Description",
+        "infoMessage": "Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "Complaint Title",
+        "information": {
+            "title": "Close Complaint Information",
+            "close.date": "Complaint Close Date",
+            "complaint.number": "Complaint Number",
+            "complaint.disposition": "Complaint Disposition"
+        },
+        "add.existing.case": {
+            "title": "Add Existing Case",
+            "search": "Search",
+            "case": {
+                "number": "Enter Case Number",
+                "title": "Case Title",
+                "date": "Case Creation Date",
+                "priority": "Case Priority"
+            }
+        },
+        "refer.external": {
+            "title": "Refer External",
+            "name": "Name of Agency",
+            "date": "Referral Date",
+            "contact": {
+                "title": "Contact",
+                "name": "Contact Name",
+                "type": "Type",
+                "value": "Value"
+            }
+        },
+        "approver": {
+            "placeholder": "Select Approver",
+            "label": "Approver",
+            "addAnother": "Add another",
+            "remove": "Remove Approver",
+            "pickerModal.header": "User/Group Search",
+            "owningGroup": "Owning Group"
+        },
+        "cancelButton": "Cancel",
+        "saveButton": "Save Complaint"
+    },
     "complaints.comp.newComplaint": {
         "title": "New Complaint",
         "info": "Incident Information",
@@ -411,6 +455,15 @@
             "type": "Type",
             "title": "Title",
             "username": "Username"
+        }
+    },
+    "complaints.dialogObjectPicker": {
+        "header": "Search for document",
+        "table.columns": {
+            "name": "Name",
+            "type": "Type",
+            "title": "Title",
+            "id": "ID"
         }
     },
     "complaints.tree": {

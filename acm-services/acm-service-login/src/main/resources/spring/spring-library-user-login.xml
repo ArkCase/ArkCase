@@ -6,6 +6,7 @@
         <property name="applicationRoleToUserGroupProperties" ref="applicationRoleToUserGroupProperties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="roleToGroupMapping" ref="acmRoleToGroupConfig"/>
+        <property name="groupService" ref="groupService"/>
     </bean>
 
     <bean id="acmAuthenticationManager" class="com.armedia.acm.auth.AcmAuthenticationManager">
@@ -13,7 +14,6 @@
         <property name="authoritiesMapper" ref="acmAuthoritiesMapper"/>
         <property name="authenticationEventPublisher" ref="ssAuthenticationEventPublisher"/>
         <property name="userDao" ref="userJpaDao"/>
-        <property name="groupService" ref="groupService"/>
     </bean>
 
     <bean id="acmAuthenticationDetailsFactory" class="com.armedia.acm.auth.AcmAuthenticationDetailsFactory"/>
@@ -27,7 +27,7 @@
         <property name="loginSuccessEventListener" ref="acmLoginSuccessListener"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="acmGrantedAuthoritiesMapper" ref="acmAuthoritiesMapper"/>
-        <property name="groupService" ref="groupService"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <bean id="acmAuditPropertyInterceptor" class="com.armedia.acm.auth.AcmAuditPropertyInterceptor">
@@ -71,6 +71,7 @@
                 <value>/VirtualViewerJavaHTML5</value>
                 <value>/pentaho</value>
                 <value>/frevvo</value>
+                <value>/modules/core/img/brand/favicon.png</value>
             </list>
         </property>
     </bean>
@@ -112,7 +113,7 @@
         </bean>
     </beans>
 
-    <beans profile="ssoSaml">
+    <beans profile="ssoSaml,externalSaml">
         <bean id="ssoProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
             <!-- note: must leave "file:" at the start of the file name for spring
             to be able to read the file; otherwise it will try to read from the

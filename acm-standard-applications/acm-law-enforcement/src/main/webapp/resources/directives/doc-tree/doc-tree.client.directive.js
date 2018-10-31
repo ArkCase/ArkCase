@@ -967,6 +967,11 @@ angular
 
                             var containerObjectType = DocTree.getObjType();
                             var containerObjectId = DocTree.getObjId();
+                            var folderId = 0;
+                            if(!Util.isEmpty(DocTree.objectInfo) && !Util.isEmpty(DocTree.objectInfo.container) && !Util.isEmpty(DocTree.objectInfo.container.folder) && !Util.isEmpty(DocTree.objectInfo.container.folder.id))
+                            {
+                                folderId = DocTree.objectInfo.container.folder.id;
+                            }
                             if (!Util.isEmpty(containerObjectType) && !Util.isEmpty(containerObjectId)) {
                                 src = Util.FancyTreeBuilder.reset().addBranchLast({
                                     key : containerObjectType + "." + containerObjectId,
@@ -976,7 +981,7 @@ angular
                                     folder : true,
                                     lazy : true,
                                     cache : false,
-                                    objectId : 0,
+                                    objectId : folderId,
                                     root : true,
                                     startRow : 0,
                                     containerObjectType : containerObjectType,
@@ -1211,14 +1216,14 @@ angular
                                 {
                                     name : "created",
                                     renderer : function(element, node, columnDef, isReadOnly) {
-                                        var createDate = $filter("date")(node.data.created, "shortDate");
+                                        var createDate = $filter("date")(node.data.created, $translate.instant('common.defaultDateTimeUIFormat'));
                                         $(element).text(createDate);
                                     }
                                 },
                                 {
                                     name : "modified",
                                     renderer : function(element, node, columnDef, isReadOnly) {
-                                        var modifiedDate = $filter("date")(node.data.modified, "shortDate");
+                                        var modifiedDate = $filter("date")(node.data.modified, $translate.instant('common.defaultDateTimeUIFormat'));
                                         $(element).text(modifiedDate);
                                     }
                                 },
@@ -1711,11 +1716,6 @@ angular
                                         }
                                         return DocTree.uploadSetting.deferSelectFile.promise;
                                     }
-                                }, {
-                                    name: "searchDocument",
-                                    execute: function() {
-                                        DocTree.scope.$emit('onSearchDocumentsDocTree');
-                                    }
                                 }
 
                             ];
@@ -1971,7 +1971,7 @@ angular
                                 if (menuResource === "menu.basic.root" && DocTree.treeConfig.hideMenu) {
                                     return emptyArray;
                                 }
-                                menu = _.clone(menu);
+                                menu = _.cloneDeep(menu);
                                 var menuFileTypes = _.find(menu, {
                                     "cmd" : "subMenuFileTypes"
                                 });
@@ -2008,13 +2008,21 @@ angular
                                     newFolderMenu.disabledExpression = disabled || DocTree.readOnly;
                                     newFileMenu.disabledExpression = disabled || DocTree.readOnly;
                                 }
-                                //} else {
-                                //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
-                                //    menu = [{
-                                //        title: $translate.instant("common.directive.docTree.menu.noop"),
-                                //        cmd: "noop",
-                                //        uiIcon: ""
-                                //    }];
+                                
+                                // disable commands based on locks
+                                var currentNode = nodes[0];
+                                var lock = currentNode.data.lock;
+                                if(lock && lock !== "" && DocTree.treeConfig.disabledFileCommandsOnLock) {
+                                    var disableCommands = DocTree.treeConfig.disabledFileCommandsOnLock[lock.lockType];
+                                    _.each(disableCommands, function(dc) {
+                                        var cmdMenu = _.find(menu, {
+                                           cmd: dc
+                                        });
+                                        if (cmdMenu){
+                                            cmdMenu.disabledExpression = true;
+                                        }
+                                    });
+                                }
                             }
 
                             //Check to see if there is a global handling, if there is, it would override specific handler
@@ -2037,7 +2045,7 @@ angular
                                         var found = DocTree.Command.findHandler(item.cmd);
                                         var onAllowCmd = Util.goodMapValue(found, "onAllowCmd", null);
                                         if (onAllowCmd) {
-                                            allow = onAllowCmd(nodes);
+                                            allow = onAllowCmd(nodes, DocTree.objectInfo);
                                         }
                                     }
                                 }
@@ -2302,12 +2310,13 @@ angular
                     Op : {
                         retrieveFolderList : function(folderNode, callbackSuccess) {
                             var dfd = $.Deferred();
-                            var fetchData = Ecm.retrieveFolderList;
+                            var fetchData = Util.isEmpty(DocTree.treeConfig.ecmAPIName) ? Ecm.retrieveFolderList : Ecm[DocTree.treeConfig.ecmAPIName];
                             if (!DocTree.isFolderNode(folderNode)) {
                                 dfd.reject();
 
                             } else {
                                 var param = {};
+                                param.filter = DocTree.treeConfig.fqFilter;
                                 param.objType = DocTree.getObjType();
                                 param.objId = DocTree.getObjId();
                                 var folderId = Util.goodValue(folderNode.data.objectId, 0);
@@ -2328,7 +2337,7 @@ angular
                                 }
                                 if (setting.search.enabled) {
                                     if (setting.search.searchFilter.trim() !== "") {
-                                        fetchData = Ecm.retrieveFlatSearchResultList;
+                                        fetchData = Util.isEmpty(DocTree.treeConfig.ecmAPIName) ? Ecm.retrieveFlatSearchResultList : Ecm[DocTree.treeConfig.ecmAPIName];
                                         param.filter = setting.search.searchFilter;
                                     } else {
                                         setting.search.enabled = false;
@@ -3149,14 +3158,13 @@ angular
                         },
                         deleteFile : function(node) {
                             var dfd = $.Deferred();
-                            if (!DocTree.isFileNode(node)) {
+                                if (!DocTree.isFileNode(node) || node.data.lock !== "") {
                                 dfd.reject();
 
                             } else {
                                 var parent = node.parent;
                                 if (!Validator.validateNode(parent)) {
                                     dfd.reject();
-
                                 } else {
                                     var cacheKey = DocTree.getCacheKeyByNode(parent);
                                     var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();

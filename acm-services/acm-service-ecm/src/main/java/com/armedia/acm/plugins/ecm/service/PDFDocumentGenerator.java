@@ -32,9 +32,11 @@ import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -76,7 +78,7 @@ public abstract class PDFDocumentGenerator<T>
     public void generatePdf(String objectType, Long objectId, AbstractPipelineContext ctx, Authentication authentication,
             T businessObject, AcmContainer container,
             String stylesheet, String documentName, String fileNameFormat)
-            throws ParserConfigurationException
+            throws ParserConfigurationException, PipelineProcessException
     {
         if (businessObject != null)
         {
@@ -91,13 +93,15 @@ public abstract class PDFDocumentGenerator<T>
 
                 String arkcaseFilename = String.format(fileNameFormat, objectId);
 
+                AcmFolder targetFolder = container.getAttachmentFolder() == null
+                    ? container.getFolder() : container.getAttachmentFolder();
+                
+                String targetFolderId = targetFolder.getCmisFolderId();
+                Long targetFolderArkCaseId = targetFolder.getId();
+                
                 EcmFile existing = ecmFileDao.findForContainerAttachmentFolderAndFileType(container.getId(),
-                        container.getAttachmentFolder().getId(), documentName);
-
-                String targetFolderId = container.getAttachmentFolder() == null
-                        ? container.getFolder().getCmisFolderId()
-                        : container.getAttachmentFolder().getCmisFolderId();
-
+                        targetFolderArkCaseId, documentName);
+                
                 try (InputStream fis = new FileInputStream(filename))
                 {
                     if (existing == null)
@@ -135,7 +139,8 @@ public abstract class PDFDocumentGenerator<T>
         }
     }
 
-    public abstract Document buildXmlForPdfDocument(T businessObject, AbstractPipelineContext ctx) throws ParserConfigurationException;
+    public abstract Document buildXmlForPdfDocument(T businessObject, AbstractPipelineContext ctx)
+            throws ParserConfigurationException, PipelineProcessException;
 
     /**
      * A helper method that simplifies this class.

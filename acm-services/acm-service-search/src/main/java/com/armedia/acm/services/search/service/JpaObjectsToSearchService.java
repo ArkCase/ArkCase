@@ -37,6 +37,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocumentId;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -186,6 +187,21 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
                         catch (Exception e)
                         {
                             log.error("[{}]: unable to generate Quick search document for [{}]", transformer.getClass(),
+                                    jpaObject.toString());
+                        }
+
+                        try
+                        {
+                            JSONArray docUpdates = transformer.childrenUpdatesToSolr(jpaObject);
+                            if (docUpdates != null && docUpdates.length() != 0)
+                            {
+                                getSendToSolr().sendSolrDocuments("solrQuickSearch.in", docUpdates.toString());
+                                getSendToSolr().sendSolrDocuments("solrAdvancedSearch.in", docUpdates.toString());
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            log.error("[{}]: unable to add index updates for [{}]", transformer.getClass(),
                                     jpaObject.toString());
                         }
 

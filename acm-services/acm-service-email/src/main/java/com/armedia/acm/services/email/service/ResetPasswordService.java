@@ -28,8 +28,10 @@ package com.armedia.acm.services.email.service;
  */
 
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
+import com.armedia.acm.services.email.model.MessageBodyFactory;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
@@ -46,6 +48,7 @@ public class ResetPasswordService
     private UserDao userDao;
     private AcmApplication acmAppConfiguration;
     private AcmEmailSenderService emailSenderService;
+    private AcmSpringActiveProfile acmSpringActiveProfile;
     /**
      * Formatting string to be used for producing text to inserted as a body in the password reset email. The formatting
      * string accepts the password reset link string twice.
@@ -53,6 +56,7 @@ public class ResetPasswordService
      */
     private String passwordResetEmailBodyTemplate;
     private String passwordResetEmailSubject;
+    private String passwordResetTemplateContent;
     /**
      * Formatting string to be used for constructing the password reset link. The formatting
      * string accepts two parameters: base url and reset password token.
@@ -65,12 +69,18 @@ public class ResetPasswordService
     };
     private EmailBodyBuilder<AcmUser> emailBodyBuilder = (user) -> {
         String link = String.format(passwordResetLink, acmAppConfiguration.getBaseUrl(), user.getPasswordResetToken().getToken());
-        return String.format(passwordResetEmailBodyTemplate, link, link);
+        String messageBody = String.format(passwordResetEmailBodyTemplate, user.getUserId(), link);
+        return new MessageBodyFactory(passwordResetTemplateContent).buildMessageBodyFromTemplate(messageBody, "", "");
     };
 
     @Async
     public void sendPasswordResetEmail(AcmUser user)
     {
+        if (acmSpringActiveProfile.isSAMLEnabledEnvironment())
+        {
+            log.info("Won't send password reset email when SSO environment");
+            return;
+        }
         try
         {
             log.debug("Sending password reset email for user: [{}]", user.getUserId());
@@ -116,6 +126,17 @@ public class ResetPasswordService
         this.passwordResetEmailBodyTemplate = passwordResetEmailBodyTemplate;
     }
 
+    public String getPasswordResetTemplateContent()
+    {
+
+        return passwordResetTemplateContent;
+    }
+
+    public void setPasswordResetTemplateContent(String passwordResetTemplateContent)
+    {
+        this.passwordResetTemplateContent = passwordResetTemplateContent;
+    }
+
     public void setPasswordResetEmailSubject(String passwordResetEmailSubject)
     {
         this.passwordResetEmailSubject = passwordResetEmailSubject;
@@ -124,5 +145,15 @@ public class ResetPasswordService
     public void setPasswordResetLink(String passwordResetLink)
     {
         this.passwordResetLink = passwordResetLink;
+    }
+
+    public AcmSpringActiveProfile getAcmSpringActiveProfile()
+    {
+        return acmSpringActiveProfile;
+    }
+
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
+    {
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 }

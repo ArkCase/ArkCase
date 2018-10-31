@@ -22,7 +22,8 @@
         "priority.label": "Prioridad",
         "assignee.label": "Asignado a",
         "owningGroup.label": "Grupo propietario",
-        "dueDate.label": "Fecha de vencimiento"
+        "dueDate.label": "Fecha de vencimiento",
+        "alertMessage": "es_Due date must be after the create date "
     },
     "complaints.comp.actions": {
         "title": "Acciones",
@@ -316,6 +317,50 @@
             "approverFullName": "Aprobador",
             "approverDecision": "Decisión de aprobación"
         }
+    },
+    "complaints.comp.closeComplaint": {
+        "title": "es_Close Complaint",
+        "info": "es_Incident Information",
+        "description.label": "es_Description",
+        "infoMessage": "es_Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.",
+        "complaintTitle": "es_Complaint Title",
+        "information": {
+            "title": "es_Close Complaint Information",
+            "close.date": "es_Complaint Close Date",
+            "complaint.number": "es_Complaint Number",
+            "complaint.disposition": "es_Complaint Disposition"
+        },
+        "add.existing.case": {
+            "title": "es_Add Existing Case",
+            "search": "es_Search",
+            "case": {
+                "number": "es_Enter Case Number",
+                "title": "es_Case Title",
+                "date": "es_Case Creation Date",
+                "priority": "es_Case Priority"
+            }
+        },
+        "refer.external": {
+            "title": "es_Refer External",
+            "name": "es_Name of Agency",
+            "date": "es_Referral Date",
+            "contact": {
+                "title": "es_Contact",
+                "name": "es_Contact Name",
+                "type": "es_Type",
+                "value": "es_Value"
+            }
+        },
+        "approver": {
+            "placeholder": "es_Select Approver",
+            "label": "es_Approver",
+            "addAnother": "es_Add another",
+            "remove": "es_Remove Approver",
+            "pickerModal.header": "es_User/Group Search",
+            "owningGroup": "es_Owning Group"
+        },
+        "cancelButton": "es_Cancel",
+        "saveButton": "es_Save Complaint"
     },
     "complaints.comp.newComplaint": {
         "title": "es_New Complaint",

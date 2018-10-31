@@ -28,7 +28,67 @@ package com.armedia.acm.services.timesheet.pipeline;
  */
 
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
+import org.springframework.security.core.Authentication;
 
 public class TimesheetPipelineContext extends AbstractPipelineContext
 {
+    /**
+     * Spring authentication token.
+     */
+    private Authentication authentication;
+
+    /**
+     * Flag showing whether new timesheet is created.
+     */
+    private boolean newTimesheet;
+
+    /**
+     * IP Address.
+     */
+    private String ipAddress;
+
+    /**
+     * submissionName - value will be 'Save' or 'Submit'.
+     */
+    private String submissonName;
+
+    public String getIpAddress()
+    {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress)
+    {
+        this.ipAddress = ipAddress;
+    }
+
+    public Authentication getAuthentication()
+    {
+        return authentication;
+    }
+
+    public void setAuthentication(Authentication authentication)
+    {
+        this.authentication = authentication;
+    }
+
+    public boolean isNewTimesheet()
+    {
+        return newTimesheet;
+    }
+
+    public void setNewTimesheet(boolean newTimesheet)
+    {
+        this.newTimesheet = newTimesheet;
+    }
+
+    public String getSubmissonName()
+    {
+        return submissonName;
+    }
+
+    public void setSubmissonName(String submissonName)
+    {
+        this.submissonName = submissonName;
+    }
 }

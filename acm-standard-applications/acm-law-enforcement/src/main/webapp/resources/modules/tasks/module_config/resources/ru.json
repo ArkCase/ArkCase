@@ -23,7 +23,8 @@
         "state.label": "Состояние",
         "overdue.tooltip": "Задача просрочена",
         "deadline.tooltip": "Крайний срок приближается",
-        "owningGroup.label": "Собственная группа"
+        "owningGroup.label": "Собственная группа",
+        "alertMessage": "ru_Due date must be after the start date "
     },
     "tasks.comp.parentinfo": {
         "title": "Родительская информация",
@@ -150,7 +151,7 @@
             "signedBy": "Подписано"
         }
     },
-    "tasks.comp.docsreview": {
+    "tasks.comp.documentsunderreview": {
         "title": "Находящиеся на рассмотрении",
         "table.columns": {
             "fileId": "ID",
@@ -158,7 +159,11 @@
             "created": "Созданный",
             "creator": "Автор",
             "status": "Положение дел"
-        }
+        },
+        "searchInputPlaceholder": "Search",
+        "sendEmail": "Send Email",
+        "noDocsMessage": "No Documents for review",
+        "filterInputPlaceholder": "Filter"
     },
     "tasks.comp.history": {
         "title": "История",

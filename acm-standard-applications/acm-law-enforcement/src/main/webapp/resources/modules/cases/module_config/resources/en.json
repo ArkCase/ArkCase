@@ -26,6 +26,7 @@
         "assignee.label": "Assigned To",
         "owningGroup.label": "Owning Group",
         "dueDate.label": "Due Date",
+        "alertMessage": "Due date must be after the create date ",
         "priorities": {
             "low%": "Low",
             "medium%": "Medium",
@@ -108,8 +109,7 @@
                 "witnessInterview2%": "Witness Interview Request-2.0"
             }
         },
-        "newTask": "New Task",
-        "addDocument": "Choose document to add."
+        "newTask": "New Task"
     },
     "cases.comp.people": {
         "title": "People",
@@ -262,6 +262,16 @@
             "title": "Title",
             "parent": "Parent",
             "modified": "Modified"
+        },
+        "objectPicker": {
+            "title": "Search for object",
+            "table.columns": {
+                "name": "Name",
+                "type": "Type",
+                "title": "Title",
+                "id": "ID",
+                "username": "Username"
+            }
         }
     },
     "cases.comp.referenceSearchGrid": {
@@ -365,6 +375,7 @@
     },
     "cases.comp.change.status": {
         "title": "Change Case Status",
+        "description.label": "Description",
         "information": {
             "title": "Change Case Status Information",
             "date": "Change Date",
@@ -381,10 +392,11 @@
         },
         "approver": {
             "placeholder": "Select Approver",
-            "label": "Select Approver",
+            "label": "Approver",
             "addAnother": "Add another",
             "remove": "Remove Approver",
-            "pickerModal.header": "Choose Approver"
+            "pickerModal.header": "User/Group Search",
+            "owningGroup": "Owning Group"
         },
         "button": {
             "cancel": "Cancel",
@@ -434,6 +446,15 @@
             "username": "Username"
         }
     },
+    "cases.dialogObjectPicker": {
+        "header": "Search for document",
+        "table.columns": {
+            "name": "Name",
+            "type": "Type",
+            "title": "Title",
+            "id": "ID"
+        }
+    },
     "cases.tree": {
         "nodeTypes": {
             "details.label": "Details",
@@ -467,20 +488,5 @@
             "nameAsc": "Sort By Case Name Asc",
             "noSort": "(No Sort)"
         }
-    },
-  "cases.userOrGroupSearch": {
-    "title": "User/Group Search",
-    "cancelButton": "Cancel",
-    "confirmButton": "Confirm",
-    "search": {
-      "placeholder": "Search for user or group",
-      "btn": "Search"
-    },
-    "assigneeGridColumns": {
-      "name": "Name",
-      "type": "Type",
-      "title": "Title",
-      "username": "Username"
     }
-  }
 }

@@ -30,8 +30,6 @@ package com.armedia.acm.auth;
 import com.armedia.acm.auth.okta.model.OktaAPIConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -47,10 +45,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Cycle through the configured authentication provider. If one of them works, map the provider's groups to ACM groups.
@@ -61,7 +56,6 @@ public class AcmAuthenticationManager implements AuthenticationManager
     private AcmGrantedAuthoritiesMapper authoritiesMapper;
     private DefaultAuthenticationEventPublisher authenticationEventPublisher;
     private UserDao userDao;
-    private GroupService groupService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -149,14 +143,19 @@ public class AcmAuthenticationManager implements AuthenticationManager
         throw new NoProviderFoundException("Authentication problem. Please contact your administrator.");
     }
 
-    protected AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
+    public AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
     {
         AcmUser user = getUserDao().findByUserId(providerAuthentication.getName());
+
+        if (user == null)
+        {
+            throw new AuthenticationServiceException("Provided credentials are not valid");
+        }
 
         Collection<AcmGrantedAuthority> acmAuths = getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
 
         // Collection with LDAP and ADHOC authority groups that the user belongs to
-        Collection<AcmGrantedAuthority> acmAuthsGroups = getAuthorityGroups(user);
+        Collection<AcmGrantedAuthority> acmAuthsGroups = getAuthoritiesMapper().getAuthorityGroups(user);
 
         // Collection with application roles for LDAP and ADHOC groups/subgroups that the user belongs to
         Collection<AcmGrantedAuthority> acmAuthsRoles = getAuthoritiesMapper().mapAuthorities(acmAuthsGroups);
@@ -169,24 +168,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         acmAuths.add(new AcmGrantedAuthority(OktaAPIConstants.ROLE_PRE_AUTHENTICATED));
 
         return new AcmAuthentication(acmAuths, providerAuthentication.getCredentials(), providerAuthentication.getDetails(),
-                providerAuthentication.isAuthenticated(), user.getUserId());
-    }
-
-    protected Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)
-    {
-        // All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
-        List<AcmGroup> groups = getGroupService().findByUserMember(user);
-
-        Stream<AcmGrantedAuthority> authorityGroups = groups.stream()
-                .map(AcmGroup::getName)
-                .map(AcmGrantedAuthority::new);
-
-        Stream<AcmGrantedAuthority> authorityAscendantsGroups = groups.stream()
-                .flatMap(AcmGroup::getAscendantsStream)
-                .map(AcmGrantedAuthority::new);
-
-        return Stream.concat(authorityGroups, authorityAscendantsGroups)
-                .collect(Collectors.toSet());
+                providerAuthentication.isAuthenticated(), user.getUserId(), user.getIdentifier());
     }
 
     public SpringContextHolder getSpringContextHolder()
@@ -229,13 +211,4 @@ public class AcmAuthenticationManager implements AuthenticationManager
         this.userDao = userDao;
     }
 
-    public GroupService getGroupService()
-    {
-        return groupService;
-    }
-
-    public void setGroupService(GroupService groupService)
-    {
-        this.groupService = groupService;
-    }
 }

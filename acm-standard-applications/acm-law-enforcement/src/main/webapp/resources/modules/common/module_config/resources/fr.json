@@ -23,6 +23,22 @@
         "defaultDateUIFormat": "MM/jj/aaaa",
         "defaultDateTimeUIFormat": "MM/jj/aaaa HH:mm"
     },
+    "common.userOrGroupSearch": {
+        "id": "fr_userSearch",
+        "title": "fr_User/Group Search",
+        "search": {
+            "btn": "fr_Search",
+            "placeholder": "fr_Search for the user or group."
+        },
+        "cancelButton": "fr_Cancel",
+        "confirmButton": "fr_Confirm",
+        "assigneeGridColumns": {
+            "name": "fr_Name",
+            "type": "fr_Type",
+            "title": "fr_Title",
+            "username": "fr_Username"
+        }
+    },
     "common.frevvo": {
         "defaultDateFormat": "AAAA-MM-JJ"
     },
@@ -203,7 +219,6 @@
         "selectedItemsGrid.label": "Entrées sélectionnées",
         "notValidUser": "fr_The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
         "notValidGroup": "fr_The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
-
     },
     "common.directive.search": {
         "showMore.button.text": "Afficher plus de valeurs",
@@ -624,6 +639,16 @@
             "error.ownerUnique": "Un seul propriétaire est autorisé."
         }
     },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "Ajouter un participant",
+        "editParticipant.label": "Modifier l'enregistrement",
+        "participantType.label": "Type de participant",
+        "participantName.label": "Nom du participant",
+        "btnOk.text": "Sauvegarder",
+        "btnCancel.text": "Annuler",
+        "dialogUserGroupPicker.header": "fr_Search User/Group",
+        "replaceChildrenParticipant": "remplacer les enfants participants"
+    },
     "common.directive.progressIndicator": {
         "progressCompletion": "% Achevée"
     },
@@ -784,7 +809,8 @@
             "name": "Prénom",
             "id": "ID",
             "title": "Titre"
-        }
+        },
+        "addDocument": "FR_Choose document to add"
     },
     "common.addOrganization": {
         "title": "Ajouter une organisation",

@@ -92,6 +92,10 @@ angular.module('complaints').controller(
                         $scope.addressTypes = addressTypes;
                     });
 
+                    ObjectLookupService.getStates().then(function(states) {
+                        $scope.states = states;
+                    });
+
                     ObjectLookupService.getCountries().then(function(countries) {
                         $scope.countries = countries;
                     });
@@ -343,8 +347,8 @@ angular.module('complaints').controller(
                         var modalInstance = $modal.open({
                             scope: modalScope,
                             animation: true,
-                            templateUrl: "directives/core-participants/core-participants-modal.client.view.html",
-                            controller: "Directives.NewComplaintCaseCoreParticipantsModalController",
+                            templateUrl: "directives/core-participants/core-participants-create-new-object-modal.client.view.html",
+                            controller: "Directives.CoreParticipantsCreateNewObjectFormModalController",
                             size: 'lg',
                             backdrop: 'static',
                             resolve: {

@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
@@ -75,7 +76,7 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
 
     protected void startWorkflow(AcmTimesheetEvent event)
     {
-        EcmFile pdfRendition = event.getFrevvoUploadedFiles().getPdfRendition();
+        EcmFile pdfRendition = event.getUploadedFiles().getPdfRendition();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
 
         configuration.setEcmFile(pdfRendition);
@@ -107,12 +108,18 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
         String taskName = createName(timesheet);
 
         Map<String, Object> pvars = new HashMap<>();
+        List<String> candidateGroups =  findCandidateGroups(event);
 
         pvars.put("reviewers", reviewers);
+        pvars.put("candidateGroups", candidateGroups);
         pvars.put("taskName", taskName);
         pvars.put("documentAuthor", author);
-        pvars.put("pdfRenditionId", event.getFrevvoUploadedFiles().getPdfRendition().getFileId());
-        pvars.put("formXmlId", event.getFrevvoUploadedFiles().getFormXml().getFileId());
+        pvars.put("pdfRenditionId", event.getUploadedFiles().getPdfRendition().getFileId());
+
+        Long formXmlId = event.getUploadedFiles().getFormXml() != null
+                ? event.getUploadedFiles().getFormXml().getFileId()
+                : null;
+        pvars.put("formXmlId", formXmlId);
 
         pvars.put("OBJECT_TYPE", TimesheetConstants.OBJECT_TYPE);
         pvars.put("OBJECT_ID", timesheet.getId());
@@ -131,13 +138,28 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
 
         for (AcmParticipant participant : ((AcmTimesheet) event.getSource()).getParticipants())
         {
-            if ("approver".equals(participant.getParticipantType()))
+            if (ParticipantTypes.APPROVER.equals(participant.getParticipantType()))
             {
                 reviewers.add(participant.getParticipantLdapId());
             }
         }
 
         return reviewers;
+    }
+
+    private List<String> findCandidateGroups(AcmTimesheetEvent event)
+    {
+        List<String> candidateGroups = new ArrayList<>();
+
+        for (AcmParticipant participant : ((AcmTimesheet) event.getSource()).getParticipants())
+        {
+            if (ParticipantTypes.OWNING_GROUP.equals(participant.getParticipantType()))
+            {
+                candidateGroups.add(participant.getParticipantLdapId());
+            }
+        }
+
+        return candidateGroups;
     }
 
     public String createName(AcmTimesheet timesheet)
