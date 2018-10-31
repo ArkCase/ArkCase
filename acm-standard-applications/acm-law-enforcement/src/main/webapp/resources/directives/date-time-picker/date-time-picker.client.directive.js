@@ -1,35 +1,46 @@
-angular.module('directives').directive('dateTimePicker', ['moment', function(moment){
+angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateService', function(moment, UtilDateService){
     return{
         restrict: 'E',
         templateUrl: 'directives/date-time-picker/date-time-picker.client.directive.html',
         scope: {
-            date: '=',
+            data: '=',
+            property: '@',
             minDate: '='
         },
-        controller: function ($scope) {
+        link: function ($scope) {
             $scope.editable = false;
+            var prop = $scope.property;
+            var data = $scope.data;
+            var datum = data[prop];
+            $scope.today = moment(datum).format('MM/DD/YYYY HH:mm');
+            var minYear = datum.getFullYear();
+            var utcDate = moment.utc(UtilDateService.dateToIso(datum)).format();
+            var maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
 
-            $scope.today = moment().format('MM/DD/YY HH:mm');
-            // var minYear = $scope.minDate.getFullYear();
-            // var minMount = $scope.date.getMonth();
-            // var minDay = date.getDay();
-            // var minHour = date.getHours();
-            // var minMinute = date.getMinutes();
-
-            angular.element(document.getElementById('comboDate')).combodate({
+            $('#comboDateInput').combodate({
+                format: 'MM/DD/YYYY HH:mm',
+                template: 'DD / MM / YYYY HH:mm',
                 minuteStep: 1,
-                // minYear: minYear,
-                value: $scope.today
+                minYear: minYear,
+                maxYear: maxYear,
+                value: datum
             });
 
-            angular.element(document.getElementById('datePick')).popover(
-                {template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'}
-            );
+            $scope.saveDate = function () {
+                $scope.toggleEditable();
+                var editedDate = $('#comboDateInput').combodate('getValue', null);
+                $scope.today = moment(editedDate).format('MM/DD/YYYY HH:mm');
+                $scope.data[prop] = moment($scope.today).toDate();
+            };
+
+            $scope.cancel = function () {
+                $scope.toggleEditable();
+                $('#comboDateInput').combodate('setValue', $scope.today);
+            };
 
             $scope.toggleEditable = function () {
                 $scope.editable = !$scope.editable;
-
-            }
+            };
         }
     }
 }]);
