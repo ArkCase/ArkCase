@@ -16,6 +16,13 @@ angular.module('admin').controller(
                         appeal: {}
                     };
 
+                    $scope.checkInputValue = function(event){
+                        var numberRegExp = new RegExp("^[1-9][0-9]*$");
+                        if(event.key === '.' || !numberRegExp.test(event.key)){
+                            event.preventDefault();
+                        }
+                    };
+
                     var queuesConfigurationPromise = AdminQueuesTimeToCompleteService.getQueuesConfig();
                     queuesConfigurationPromise.then(function(response) {
                         $scope.timeToComplete = response.data;
