@@ -39,7 +39,7 @@ Time: 12:44
     <!-- Fav Icon -->
     <link href="<%= request.getContextPath()%>/modules/core/img/brand/favicon.png" rel="shortcut icon" type="image/x-png">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <script src="<%= request.getContextPath()%>/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="<%= request.getContextPath()%>/node_modules/@bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <c:if test="${warningEnabled}">
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
         <link rel="stylesheet"
@@ -59,7 +59,7 @@ Time: 12:44
         window.onload = addUrlHashToLocalStorage;
     </script>
 
-    <link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/node_modules/@bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/login.css">
     <!-- custom css-->
     <link rel="stylesheet" href="<%= request.getContextPath()%>/branding/customcss">
