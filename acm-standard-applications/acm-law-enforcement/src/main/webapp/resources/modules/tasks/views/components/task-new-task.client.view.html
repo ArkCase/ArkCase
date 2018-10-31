@@ -49,8 +49,9 @@
                     <span class="required-asterisk">*</span>
                     <div>
                         <div>
-                            <a ng-click="task.$show()" editable-combodate="config.data.taskStartDate"  e-init-date="config.data.taskStartDate" id="startDate"
-                                   e-min-date="minStartDate" e-minute-step="1" onaftersave="startDateChanged($data, config.data.taskStartDate)">{{config.data.taskStartDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</a>
+                            <date-time-picker data="config.data" property="taskStartDate" minDate="config.data.taskStartDate"></date-time-picker>
+                            <!--<a ng-click="task.$show()" editable-combodate="config.data.taskStartDate"  e-init-date="config.data.taskStartDate" id="startDate"-->
+                                   <!--e-min-date="minStartDate" e-minute-step="1" onaftersave="startDateChanged($data, config.data.taskStartDate)">{{config.data.taskStartDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</a>-->
                         </div>
                     </div>
                 </div>
@@ -59,7 +60,7 @@
                     <span class="required-asterisk">*</span>
                     <div>
                         <div>
-                            <date-time-picker data="config.data.dueDate" minDate="config.data.taskStartDate"></date-time-picker>
+                            <date-time-picker data="config.data" property="dueDate" minDate="config.data.taskStartDate"></date-time-picker>
                             <!--<a ng-click="$form.dueDate.$show()" editable-combodate="config.data.dueDate" id="dueDate" is-open="opened.openedEnd"-->
                                <!--min-date="minDueDate" onaftersave="dueDateChanged()" >{{config.data.dueDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</a>-->
                         </div>

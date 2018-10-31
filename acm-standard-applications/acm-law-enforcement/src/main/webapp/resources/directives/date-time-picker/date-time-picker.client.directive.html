@@ -1,18 +1,13 @@
-<a href="#" id="datePick" data-toggle="popover" title="Popover Header" data-content="Some content inside the popover">Toggle popover</a>
+<a ng-click="toggleEditable()">{{today}}</a>
 
-<input ng-show="!editable" ng-click="toggleEditable()" ng-model="today"/>
-<div ng-show="editable">
-    <input type="text" id="comboDate" data-format="DD-MM-YYYY h:mm a" data-template="DD / MM / YYYY hh:mm a"/>
+<div ng-show="editable" class="date-picker-popover">
+    <input type="text" id="comboDateInput"/>
+    <span>
+        <button ng-show="editable" type="button" class="btn btn-primary btn-sm" title="Submit" ng-click="saveDate()">
+            <span class="glyphicon glyphicon-ok"></span>
+        </button>
+        <button ng-show="editable" type="button" class="btn btn-default btn-sm" title="Cancel" ng-click="cancel()">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </span>
 </div>
-<span>
-    <button ng-show="editable" type="button" ng-click="toggleEditable()">yes</button>
-    <button ng-show="editable" type="button" ng-click="toggleEditable()">no</button>
-</span>
-
-<script type="text/ng-template" id="myPopoverTemplate.html">
-    <div>hihih</div>
-    <div class="form-group">
-        <label>Popup Title:</label>
-        <input type="text" class="form-control">
-    </div>
-</script>
