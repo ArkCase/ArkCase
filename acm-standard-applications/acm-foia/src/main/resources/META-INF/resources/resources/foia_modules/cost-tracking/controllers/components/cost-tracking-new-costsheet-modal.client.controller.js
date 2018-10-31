@@ -138,12 +138,11 @@ angular.module('cost-tracking').controller(
                     ObjectLookupService.getCostsheetStatuses().then(function(costsheetStatuses) {
                         $scope.costsheetStatuses = costsheetStatuses;
 
-                        for(var i = $scope.costsheetStatuses.length - 1; i >= 0; i--) {
-                            if($scope.costsheetStatuses[i].key !== "DRAFT" && $scope.costsheetStatuses[i].key !== "FINAL") {
-                                $scope.costsheetStatuses.splice(i, 1);
+                            for(var i = $scope.costsheetStatuses.length - 1; i >= 0; i--) {
+                                if($scope.costsheetStatuses[i].key !== "DRAFT" && $scope.costsheetStatuses[i].key !== "FINAL") {
+                                    $scope.costsheetStatuses.splice(i, 1);
+                                }
                             }
-                        }
-
                     });
 
                     $scope.updateIsTypeSelected = function() {
