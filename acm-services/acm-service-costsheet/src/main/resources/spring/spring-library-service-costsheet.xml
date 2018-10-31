@@ -24,6 +24,7 @@
         <property name="submissionStatusesMap">
             <map>
                 <entry key="Save" value="DRAFT"/>
+                <entry key="SaveFinal" value="FINAL"/>
                 <entry key="Submit" value="IN_APPROVAL"/>
             </map>
         </property>

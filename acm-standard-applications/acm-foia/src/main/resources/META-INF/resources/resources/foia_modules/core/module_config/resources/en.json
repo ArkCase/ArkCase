@@ -539,7 +539,8 @@
                 "statuses": {
                     "draft": "Draft",
                     "inapproval": "In Approval",
-                    "approved": "Approved"
+                    "approved": "Approved",
+                    "final": "Final"
                 },
                 "other": {
                     "leap": "LEAP",
