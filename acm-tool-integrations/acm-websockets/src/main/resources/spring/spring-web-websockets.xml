@@ -47,7 +47,7 @@
                 the path is relative to /sockjs/iframe.html, iframe URL created by sockjs
                 (make sure sockjs bower dependency is still copied there, it may change over time)
             -->
-            <websocket:sockjs websocket-enabled="true" client-library-url="../lib/sockjs-client/dist/sockjs.min.js"></websocket:sockjs>
+            <websocket:sockjs websocket-enabled="true" client-library-url="../node_modules/@bower_components/sockjs-client/dist/sockjs.min.js"></websocket:sockjs>
         </websocket:stomp-endpoint>
         <websocket:stomp-broker-relay prefix="/topic,/queue" relay-host="${acm.websockets.stomp_broker_relay.relay_host}"
             relay-port="${acm.websockets.stomp_broker_relay.relay_port}"
