@@ -43,16 +43,15 @@ angular.module('cost-tracking').controller(
 
                             if(!Util.isEmpty($scope.modalParams.parentType) && !Util.isEmpty($scope.modalParams.parentNumber) && !Util.isEmpty($scope.modalParams.parentId)) {
 
-                               UserInfoService.getUserInfo().then(function(infoData) {
-                                   $scope.costsheet.user = infoData;
-
-                                   $scope.costsheet.parentId = $scope.modalParams.parentId;
-                                   $scope.costsheet.parentType = $scope.modalParams.parentType;
-                                   $scope.costsheet.parentNumber = $scope.modalParams.parentNumber;
-                                   $scope.costsheet.title =  $scope.costsheet.user.fullName + " - " + $scope.modalParams.parentNumber;
-                                   $scope.isTypeSelected = true;
-                                   $scope.disableCostType = true;
-                               });
+                                UserInfoService.getUserInfo().then(function(infoData) {
+                                    $scope.costsheet.user = infoData;
+                                    $scope.costsheet.parentId = $scope.modalParams.parentId;
+                                        $scope.costsheet.parentType = $scope.modalParams.parentType;
+                                        $scope.costsheet.parentNumber = $scope.modalParams.parentNumber;
+                                        $scope.costsheet.title =  $scope.costsheet.user.fullName + " - " + $scope.modalParams.parentNumber;
+                                        $scope.isTypeSelected = true;
+                                        $scope.disableCostType = true;
+                                });
                             }
                         }
 
@@ -77,6 +76,7 @@ angular.module('cost-tracking').controller(
                         }
                     });
 
+
                     $scope.updateBalance = function(costs) {
                         $scope.sumAmount = 0;
                         _.forEach(costs, function(cost) {
@@ -90,7 +90,7 @@ angular.module('cost-tracking').controller(
                         $scope.isTypeSelected = true;
                         $scope.objectInfo = angular.copy($scope.modalParams.costsheet);
                         var tmpCostsheet = angular.copy($scope.modalParams.costsheet);
-                        $scope.isApproverAdded = !Util.isArrayEmpty($scope.objectInfo.participants) && $scope.objectInfo.participants[0].hasOwnProperty("id") ? true : false;
+                        updateIsApproverAdded($scope.objectInfo.participants);
                         $scope.updateBalance($scope.objectInfo.costs);
 
                         if (tmpCostsheet.participants != undefined) {
@@ -98,7 +98,6 @@ angular.module('cost-tracking').controller(
                                 _.forEach(tmpCostsheet.participants, function(participant) {
                                     if(participant.participantType == participantTypeApprover){
                                         UserInfoService.getUserInfoById(participant.participantLdapId).then(function(userInfo) {
-                                            participant.participantFullName = userInfo.fullName;
                                             $scope.approverName = userInfo.fullName;
                                         });
 
@@ -139,11 +138,12 @@ angular.module('cost-tracking').controller(
                     ObjectLookupService.getCostsheetStatuses().then(function(costsheetStatuses) {
                         $scope.costsheetStatuses = costsheetStatuses;
 
-                            for(var i = $scope.costsheetStatuses.length - 1; i >= 0; i--) {
-                                if($scope.costsheetStatuses[i].key !== "DRAFT" && $scope.costsheetStatuses[i].key !== "FINAL") {
-                                    $scope.costsheetStatuses.splice(i, 1);
-                                }
+                        for(var i = $scope.costsheetStatuses.length - 1; i >= 0; i--) {
+                            if($scope.costsheetStatuses[i].key !== "DRAFT" && $scope.costsheetStatuses[i].key !== "FINAL") {
+                                $scope.costsheetStatuses.splice(i, 1);
                             }
+                        }
+
                     });
 
                     $scope.updateIsTypeSelected = function() {
@@ -152,10 +152,8 @@ angular.module('cost-tracking').controller(
                         } else {
                             $scope.isTypeSelected = true;
                         }
-                        $scope.costsheet.parentNumber = ""
+                        $scope.costsheet.parentNumber = "";
                     };
-
-
 
                     $scope.pickObject = function() {
 
@@ -243,6 +241,7 @@ angular.module('cost-tracking').controller(
                                 }
                             }
                         });
+
                         modalInstance.result.then(function(selection) {
                             if (selection) {
                                 var selectedObjectType = selection.masterSelectedItem.object_type_s;
@@ -258,6 +257,8 @@ angular.module('cost-tracking').controller(
                                         addParticipantInCostsheet(participantTypeOwningGroup, selectedGroup.object_id_s);
                                     }
 
+                                    updateIsApproverAdded($scope.costsheet.participants);
+
                                     return;
                                 } else if (selectedObjectType === 'GROUP') { // Selected group
                                     var selectedUser = selection.detailSelectedItems;
@@ -270,6 +271,9 @@ angular.module('cost-tracking').controller(
                                         $scope.approverName = selectedUser.name;
                                         addParticipantInCostsheet(participantTypeApprover, selectedUser.object_id_s);
                                     }
+
+                                    updateIsApproverAdded($scope.costsheet.participants);
+
                                     return;
                                 }
                             }
@@ -278,6 +282,7 @@ angular.module('cost-tracking').controller(
                             // Cancel button was clicked.
                             return [];
                         });
+
                     };
 
                     function addParticipantInCostsheet(participantType, participantLdapId){
@@ -302,6 +307,14 @@ angular.module('cost-tracking').controller(
                             }
                         }
                     }
+
+                    function updateIsApproverAdded(participants){
+                        var approver = _.find(participants, function (participant) {
+                            return participant.participantType == participantTypeApprover;
+                        });
+                        $scope.isApproverAdded = !Util.isEmpty(approver);
+                    }
+
                     //-----------------------------------------------------------------------------------------------
 
                     $scope.save = function(submissionName) {
@@ -430,16 +443,6 @@ angular.module('cost-tracking').controller(
                         if (Util.isEmpty(costsheet.details)) {
                             costsheet.details = null;
                         }
-
-                        _.remove(costsheet.participants, function(participant) {
-                            if (!participant.participantFullName) {
-                                return true;
-                            } else {
-                                //remove temporary values
-                                delete participant['participantFullName'];
-                                return false;
-                            }
-                        });
 
                         return costsheet;
                     }
