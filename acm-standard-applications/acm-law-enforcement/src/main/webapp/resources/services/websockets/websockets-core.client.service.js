@@ -90,7 +90,7 @@ angular.module("services").factory("WebSocketsListener", [ '$q', '$timeout', 'We
             var timeout = Math.random() * (timeoutMax - timeoutMin) + timeoutMin;
             setTimeout(function() {
                 target.RECONNECT_ATTEMPTS++;
-                //target.connect();
+                target.connect();
             }, timeout > target.MAX_RECONNECT_INTERVAL ? target.MAX_RECONNECT_INTERVAL : timeout);
         }
     };
@@ -99,6 +99,6 @@ angular.module("services").factory("WebSocketsListener", [ '$q', '$timeout', 'We
 
 } ]).run(function(WebSocketsListener) {
     if (WebSocketsListener.shouldStart) {
-        //WebSocketsListener.connect();
+        WebSocketsListener.connect();
     }
 });

@@ -7,7 +7,7 @@
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
-        <property name="uploadService" ref="uploadService"/>
+        <property name="fileChunkService" ref="fileChunkService"/>
     </bean>
 
     <bean id="fileDownloadAPIController" class="com.armedia.acm.plugins.ecm.web.api.FileDownloadAPIController">

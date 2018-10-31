@@ -51,14 +51,6 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
             },
             isArray: true
         },
-        uploadChunkFiles: {
-            method: 'POST',
-            url: 'api/latest/service/ecm/uploadChunks',
-            headers: {
-                'Content-Type': undefined
-            },
-            isArray: true
-        },
         replaceFile: {
             method: 'POST',
             url: 'api/latest/service/ecm/replace/:fileId',
