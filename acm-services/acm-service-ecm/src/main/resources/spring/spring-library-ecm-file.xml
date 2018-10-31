@@ -414,7 +414,7 @@
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
 
-    <bean id="uploadService" class="com.armedia.acm.plugins.ecm.service.impl.UploadServiceImpl">
+    <bean id="fileChunkService" class="com.armedia.acm.plugins.ecm.service.impl.FileChunkServiceImpl">
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>

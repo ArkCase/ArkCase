@@ -40,7 +40,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFilePostUploadEvent;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.plugins.ecm.service.UploadService;
+import com.armedia.acm.plugins.ecm.service.FileChunkService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.json.JSONArray;
@@ -69,9 +69,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-@RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
-public class FileUploadAPIController implements ApplicationEventPublisherAware
-{
+@RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
+public class FileUploadAPIController implements ApplicationEventPublisherAware {
     private final String uploadFileType = "attachment";
     private Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileService ecmFileService;
@@ -79,7 +78,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
     private ObjectConverter objectConverter;
     private ArkPermissionEvaluator arkPermissionEvaluator;
     private ApplicationEventPublisher applicationEventPublisher;
-    private UploadService uploadService;
+    private FileChunkService fileChunkService;
 
     // #parentObjectType == 'USER_ORG' applies to uploading profile picture
     @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile') or #parentObjectType == 'USER_ORG'")
@@ -90,12 +89,10 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
                                     @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
                                     @RequestParam(value = "fileLang", required = false) String fileLang, MultipartHttpServletRequest request,
                                     Authentication authentication, HttpSession session)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException, AcmAccessControlException
-    {
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException, AcmAccessControlException {
         AcmFolder folder = getParentFolder(parentObjectType, parentObjectId, folderId);
 
-        if (!getArkPermissionEvaluator().hasPermission(authentication, folder.getId(), "FOLDER", "write|group-write"))
-        {
+        if (!getArkPermissionEvaluator().hasPermission(authentication, folder.getId(), "FOLDER", "write|group-write")) {
             throw new AcmAccessControlException(Arrays.asList(""),
                     "The user {" + authentication.getName() + "} is not allowed to write to folder with id=" + folder.getId());
         }
@@ -111,15 +108,13 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
             + MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String uploadFileForBrowsersWithoutFileUploadViaXHR(@RequestParam("parentObjectType") String parentObjectType,
-            @RequestParam("parentObjectId") Long parentObjectId, @RequestParam(value = "folderId", required = false) Long folderId,
-            @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
-            MultipartHttpServletRequest request, HttpServletResponse response, Authentication authentication, HttpSession session)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException, AcmAccessControlException
-    {
+                                                               @RequestParam("parentObjectId") Long parentObjectId, @RequestParam(value = "folderId", required = false) Long folderId,
+                                                               @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
+                                                               MultipartHttpServletRequest request, HttpServletResponse response, Authentication authentication, HttpSession session)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException, AcmAccessControlException {
         AcmFolder folder = getParentFolder(parentObjectType, parentObjectId, folderId);
 
-        if (!getArkPermissionEvaluator().hasPermission(authentication, folder.getId(), "FOLDER", "write|group-write"))
-        {
+        if (!getArkPermissionEvaluator().hasPermission(authentication, folder.getId(), "FOLDER", "write|group-write")) {
             throw new AcmAccessControlException(Arrays.asList(""),
                     "The user {" + authentication.getName() + "} is not allowed to write to folder with id=" + folder.getId());
         }
@@ -136,33 +131,27 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
     }
 
     protected List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
-            String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
-    {
+                                        String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException {
 
         return uploadFiles(authentication, parentObjectType, parentObjectId, fileType, null, folderCmisId, request, session);
     }
 
     protected List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
-            String fileLang, String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
-    {
+                                        String fileLang, String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException {
 
         // for multiple files
         MultiValueMap<String, MultipartFile> attachments = request.getMultiFileMap();
 
         List<EcmFile> uploadedFiles = new ArrayList<>();
 
-        if (attachments != null)
-        {
-            for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet())
-            {
+        if (attachments != null) {
+            for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet()) {
                 final List<MultipartFile> attachmentsList = entry.getValue();
 
-                if (attachmentsList != null && !attachmentsList.isEmpty())
-                {
-                    for (final MultipartFile attachment : attachmentsList)
-                    {
+                if (attachmentsList != null && !attachmentsList.isEmpty()) {
+                    for (final MultipartFile attachment : attachmentsList) {
                         AcmMultipartFile f = new AcmMultipartFile(attachment.getName(), attachment.getOriginalFilename(),
                                 attachment.getContentType(), attachment.isEmpty(), attachment.getSize(), attachment.getBytes(),
                                 attachment.getInputStream(), true);
@@ -182,10 +171,8 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
 
     @PreAuthorize("hasPermission(#ecmFileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{ecmFileId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteFile(@PathVariable("ecmFileId") String ecmFileId, Authentication authentication)
-    {
-        if (log.isInfoEnabled())
-        {
+    public ResponseEntity<String> deleteFile(@PathVariable("ecmFileId") String ecmFileId, Authentication authentication) {
+        if (log.isInfoEnabled()) {
             log.info("The user '" + authentication.getName() + "' deleted file: '" + ecmFileId + "'");
         }
 
@@ -206,23 +193,17 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
     }
 
     private AcmFolder getParentFolder(String parentObjectType, Long parentObjectId, Long folderId)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException
-    {
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException {
         AcmFolder folder = null;
-        if (folderId != null)
-        {
+        if (folderId != null) {
             folder = getAcmFolderService().findById(folderId);
-            if (folder == null)
-            {
+            if (folder == null) {
                 throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null,
                         "Destination Folder not found", null);
             }
-        }
-        else
-        {
+        } else {
             AcmContainer container = getEcmFileService().getOrCreateContainer(parentObjectType, parentObjectId);
-            if (container.getFolder() == null)
-            {
+            if (container.getFolder() == null) {
                 // not really possible since the cm_folder_id is not nullable. But we'll account for it anyway
                 throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
             }
@@ -234,7 +215,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
 
     @RequestMapping(value = "/uploadChunks", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
-    public String uploadChunks(HttpServletRequest request, Authentication authentication) throws Exception {
+    public FileChunkDetails uploadChunks(HttpServletRequest request, Authentication authentication) throws Exception {
         log.debug("Starting a file upload by user {}", authentication.getName());
 
         String dirPath = System.getProperty("java.io.tmpdir");
@@ -261,14 +242,13 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
                 }
             }
         } catch (Exception e) {
-            // Log errorse
+            log.error("File upload was unsuccessful.", e);
         }
 
-        JSONObject jsonObject = new JSONObject();
-        //todo map with unique key
-        jsonObject.put("name", fileName);
-        jsonObject.put("uuid", request.getParameter("uuid"));
-        return jsonObject.toString();
+        FileChunkDetails filechunkdetails = new FileChunkDetails();
+        filechunkdetails.setFileName(fileName);
+        filechunkdetails.setUuid(request.getParameter("uuid"));
+        return filechunkdetails;
     }
 
     @RequestMapping(value = "/mergeChunks", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
@@ -281,52 +261,43 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
             EcmFile existingEcmFile = getEcmFileService().findById(fileDetails.getExistingFileId());
             existingFile = (Document) getEcmFileService().findObjectById(existingEcmFile.getCmisRepositoryId(), existingEcmFile.getVersionSeriesId());
         }
-        getUploadService().mergeAndUploadFiles(fileDetails, folder, existingFile, authentication);
+        getFileChunkService().mergeAndUploadFiles(fileDetails, folder, existingFile, authentication);
     }
 
-    public AcmFolderService getAcmFolderService()
-    {
+    public AcmFolderService getAcmFolderService() {
         return acmFolderService;
     }
 
-    public void setAcmFolderService(AcmFolderService acmFolderService)
-    {
+    public void setAcmFolderService(AcmFolderService acmFolderService) {
         this.acmFolderService = acmFolderService;
     }
 
-    public EcmFileService getEcmFileService()
-    {
+    public EcmFileService getEcmFileService() {
         return ecmFileService;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService)
-    {
+    public void setEcmFileService(EcmFileService ecmFileService) {
         this.ecmFileService = ecmFileService;
     }
 
-    public ObjectConverter getObjectConverter()
-    {
+    public ObjectConverter getObjectConverter() {
         return objectConverter;
     }
 
-    public void setObjectConverter(ObjectConverter objectConverter)
-    {
+    public void setObjectConverter(ObjectConverter objectConverter) {
         this.objectConverter = objectConverter;
     }
 
-    public ArkPermissionEvaluator getArkPermissionEvaluator()
-    {
+    public ArkPermissionEvaluator getArkPermissionEvaluator() {
         return arkPermissionEvaluator;
     }
 
-    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
-    {
+    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator) {
         this.arkPermissionEvaluator = arkPermissionEvaluator;
     }
 
     @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
-    {
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -334,11 +305,11 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         return uploadFileType;
     }
 
-    public UploadService getUploadService() {
-        return uploadService;
+    public FileChunkService getFileChunkService() {
+        return fileChunkService;
     }
 
-    public void setUploadService(UploadService uploadService) {
-        this.uploadService = uploadService;
+    public void setFileChunkService(FileChunkService fileChunkService) {
+        this.fileChunkService = fileChunkService;
     }
 }

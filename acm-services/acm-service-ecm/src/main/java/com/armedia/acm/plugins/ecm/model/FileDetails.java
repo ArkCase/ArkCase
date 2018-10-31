@@ -35,7 +35,7 @@ public class FileDetails {
     private Long objectId;
     private String objectType;
     private Long folderId;
-    private List<String> parts;
+    private List<FileChunkDetails> parts;
     private String fileType;
     private String uuid;
     private Long existingFileId;
@@ -81,11 +81,11 @@ public class FileDetails {
         this.folderId = folderId;
     }
 
-    public List<String> getParts() {
+    public List<FileChunkDetails> getParts() {
         return parts;
     }
 
-    public void setParts(List<String> parts) {
+    public void setParts(List<FileChunkDetails> parts) {
         this.parts = parts;
     }
 
