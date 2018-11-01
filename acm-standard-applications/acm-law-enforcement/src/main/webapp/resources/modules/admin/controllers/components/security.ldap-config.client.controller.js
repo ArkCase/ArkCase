@@ -113,6 +113,8 @@ angular.module('admin').controller('Admin.LdapConfigController',
 
         $scope.showModal = showModal;
 
+            $scope.showModal = showModal;
+
         function showModal(dir, isEdit) {
             $scope.passwordErrorMessages = {
                 notSamePasswordsMessage: ''
@@ -169,14 +171,8 @@ angular.module('admin').controller('Admin.LdapConfigController',
                 notSamePasswordsMessage: ''
             };
             var modalScope = $scope.$new();
-            modalScope.dir = dir || {};
-            dir.authUserPassword = '';
-            modalScope.isEdit = isEdit || false;
-            if (!modalScope.isEdit) {
-                modalScope.dir.enableEditingLdapUsers = false;
-                modalScope.dir.syncEnabled = false;
-            }
-            modalScope.directoryTypes = $scope.directoryTypes;
+                modalScope.authUserPassword = {};
+
             var modalInstance = $modal.open({
                 scope: modalScope,
                 templateUrl: 'modules/admin/views/components/security.ldap-change-password.popup.html',
@@ -184,8 +180,7 @@ angular.module('admin').controller('Admin.LdapConfigController',
                 controller: function($scope, $modalInstance) {
                     $scope.ok = function() {
                         $modalInstance.close({
-                            dir: $scope.dir,
-                            isEdit: $scope.isEdit
+                                authUserPassword: modalScope.authUserPassword.value,
                         });
                     };
                     $scope.cancel = function() {
@@ -194,27 +189,18 @@ angular.module('admin').controller('Admin.LdapConfigController',
                 }
             });
             modalInstance.result.then(function(data) {
-                addPrefixInKey(data.dir, "ldapConfig");
 
-                if (data.isEdit) {
+                    dir.authUserPassword = data.authUserPassword;
 
-                        dir.authUserPassword = data.dir.authUserPassword;
-                        data.dir = dir;
-
-                    ldapConfigService.updateDirectory(data.dir).then(function() {
+                    addPrefixInKey(dir, "ldapConfig");
+                    ldapConfigService.updateDirectory(dir).then(function() {
                         reloadGrid();
                         messageService.info($translate.instant('admin.security.ldapConfig.messages.update.success'));
                     }, function() {
                         messageService.error($translate.instant('admin.security.ldapConfig.messages.update.error'));
                     });
-                } else {
-                    ldapConfigService.createDirectory(data.dir).then(function() {
-                        reloadGrid();
-                        messageService.info($translate.instant('admin.security.ldapConfig.messages.insert.success'));
-                    }, function() {
-                        messageService.error($translate.instant('admin.security.ldapConfig.messages.insert.error'));
-                    });
-                }
+
+                    
             });
         }
 
