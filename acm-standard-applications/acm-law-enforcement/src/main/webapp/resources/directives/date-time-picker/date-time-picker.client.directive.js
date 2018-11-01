@@ -41,6 +41,12 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 $scope.toggleEditable();
                 $(comboField).combodate('setValue', $scope.today);
             };
+        },
+        controller: function ($scope) {
+            $scope.$watch('data', function(){
+                //called any time $scope.data changes
+                $scope.today = moment($scope.data).format('MM/DD/YYYY HH:mm');
+            });
         }
     }
 }]);
