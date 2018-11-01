@@ -14,6 +14,7 @@
     },
     "costTracking.comp.info": {
         "title": "Informationen",
+        "lastModified.label": "Zuletzt bearbeitet",
         "incidentDate": "Vorfallsdatum",
         "priority": "Priorität",
         "assignedTo": "Zugewiesen",
