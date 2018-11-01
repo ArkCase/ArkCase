@@ -36,8 +36,8 @@ angular.module('reports').controller('ReportsController',
                             fiscalYearEndDate = moment();
                         }
                         $scope.data.fiscalYears.push({
-                            "id" : "FY" + fiscalYearStartDate.year(),
-                            "name" : "FY" + fiscalYearStartDate.year(),
+                            "id" : "FY" + (fiscalYearStartDate.year() + 1),
+                            "name" : "FY" + (fiscalYearStartDate.year() + 1),
                             "startDate" : fiscalYearStartDate.toDate(),
                             "endDate" : fiscalYearEndDate.toDate()
                         });

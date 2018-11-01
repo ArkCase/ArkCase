@@ -14,6 +14,7 @@
     },
     "costTracking.comp.info": {
         "title": "信息",
+        "lastModified.label": "上次更改時間",
         "incidentDate": "事件日期",
         "priority": "優先級別",
         "assignedTo": "指定人員",
