@@ -86,10 +86,14 @@ angular.module('tasks').controller(
                     $scope.saved = false;
                     $scope.minStartDate = new Date();
                     $scope.minDueDate = new Date();
-                 //   angular.element(document.getElementById('taskStartDate')).combodate({
-                 //       minuteStep: 1
-                 //   });
 
+                    $scope.onComboAfterSave = function(dateType){
+                        if(dateType == "startDate"){
+                            $scope.startDateChanged();
+                        }else if(dateType == "dueDate"){
+                            $scope.dueDateChanged();
+                        }
+                    };
 
                     $scope.startDateChanged = function() {
                         var todayDate = new Date();

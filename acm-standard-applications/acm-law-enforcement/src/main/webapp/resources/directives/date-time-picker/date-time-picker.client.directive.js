@@ -5,41 +5,41 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
         scope: {
             data: '=',
             property: '@',
-            minDate: '='
+            datePickerId: '@',
+            afterSave : '&onAfterSave'
         },
-        link: function ($scope) {
+        link: function ($scope, element) {
             $scope.editable = false;
-            var prop = $scope.property;
-            var data = $scope.data;
-            var datum = data[prop];
-            $scope.today = moment(datum).format('MM/DD/YYYY HH:mm');
-            var minYear = datum.getFullYear();
-            var utcDate = moment.utc(UtilDateService.dateToIso(datum)).format();
+            $scope.today = moment($scope.data).format('MM/DD/YYYY HH:mm');
+            var minYear = $scope.data.getFullYear();
+            var utcDate = moment.utc(UtilDateService.dateToIso($scope.data)).format();
             var maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
 
-            $('#comboDateInput').combodate({
+            $scope.toggleEditable = function () {
+                $scope.editable = !$scope.editable;
+            };
+
+            var comboField = element[0].children[1].firstElementChild;
+            $(comboField).combodate({
                 format: 'MM/DD/YYYY HH:mm',
                 template: 'DD / MM / YYYY HH:mm',
                 minuteStep: 1,
                 minYear: minYear,
                 maxYear: maxYear,
-                value: datum
+                smartDays: true,
+                value: $scope.data
             });
 
             $scope.saveDate = function () {
                 $scope.toggleEditable();
-                var editedDate = $('#comboDateInput').combodate('getValue', null);
+                var editedDate = $(comboField).combodate('getValue', null);
                 $scope.today = moment(editedDate).format('MM/DD/YYYY HH:mm');
-                $scope.data[prop] = moment($scope.today).toDate();
+                $scope.data = moment($scope.today).toDate();
             };
 
             $scope.cancel = function () {
                 $scope.toggleEditable();
-                $('#comboDateInput').combodate('setValue', $scope.today);
-            };
-
-            $scope.toggleEditable = function () {
-                $scope.editable = !$scope.editable;
+                $(comboField).combodate('setValue', $scope.today);
             };
         }
     }
