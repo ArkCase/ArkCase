@@ -1650,6 +1650,11 @@ a.primary {
     color: #000000;
 }
 
+/*Css style for scrolling issue on modal*/
+.form-overflow-scroll {
+    overflow-y: auto !important;
+}
+
 .pdfjs .toolbar {
 	z-index: 1048 !important;
 }
