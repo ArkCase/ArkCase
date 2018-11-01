@@ -55,4 +55,8 @@
         <property name="pluginName" value="Cost Tracking Service Plugin"/>
     </bean>
 
+    <bean id="costsheetConfigurationService" class="com.armedia.acm.services.costsheet.service.CostsheetConfigurationService">
+        <property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/costsheetProperties.properties"/>
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+    </bean>
 </beans>

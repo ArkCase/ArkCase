@@ -1,8 +1,8 @@
-package com.armedia.acm.plugins.admin.service;
+package com.armedia.acm.services.timesheet.model;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Default Plugin: admin
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,6 +27,20 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
-public class CostsheetPropertiesService extends AbstractPropertiesService
+import java.util.List;
+
+public class TimesheetConfig
 {
+
+    List<TimesheetChargeRoleConfigItem> chargeRoleItems;
+
+    public List<TimesheetChargeRoleConfigItem> getChargeRoleItems()
+    {
+        return chargeRoleItems;
+    }
+
+    public void setChargeRoleItems(List<TimesheetChargeRoleConfigItem> chargeRoleItems)
+    {
+        this.chargeRoleItems = chargeRoleItems;
+    }
 }

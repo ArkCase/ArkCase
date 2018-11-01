@@ -55,4 +55,11 @@
         <property name="pluginName" value="Time Tracking Service Plugin"/>
     </bean>
 
+    <bean id="timesheetConfigurationService" class="com.armedia.acm.services.timesheet.service.TimesheetConfigurationService">
+        <property name="configurationFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/timesheetConfiguration.json"/>
+        <property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/timesheetProperties.properties"/>
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="objectConverter" ref="objectConverter"/>
+    </bean>
+
 </beans>

@@ -1,8 +1,8 @@
-package com.armedia.acm.plugins.admin.service;
+package com.armedia.acm.services.costsheet.service;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Default Plugin: admin
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,39 +27,32 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
+import com.armedia.acm.files.propertymanager.PropertyFileManager;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public abstract class AbstractPropertiesService
+public class CostsheetConfigurationService
 {
     private String propertiesFile;
+    private PropertyFileManager propertyFileManager;
 
-    public void saveProperties(Map<String, String> properties) throws IOException
+    public void  saveProperties(Map<String, String> properties)
     {
-        try(FileOutputStream outputStream = new FileOutputStream(new File(getPropertiesFile())))
-        {
-            Properties props = new Properties();
-            props.putAll(properties);
-            props.store(outputStream, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
-        }
+        getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
     }
 
     public Map<String, String> loadProperties() throws IOException
     {
-        Map<String, String> properties = new HashMap<>();
-        try(FileInputStream inputStream = new FileInputStream(new File(getPropertiesFile())))
-        {
-            Properties props = new Properties();
-            props.load(inputStream);
-            props.forEach((o, o2) -> properties.put((String)o, (String)o2));
-        }
-        return properties;
+        Map<String, String> propertiesMap = new HashMap<>();
+
+        Properties properties =  getPropertyFileManager().readFromFile(new File(getPropertiesFile()));
+        properties.forEach((o, o2) -> propertiesMap.put((String)o, (String)o2));
+
+        return propertiesMap;
     }
 
     public String getPropertiesFile()
@@ -70,5 +63,15 @@ public abstract class AbstractPropertiesService
     public void setPropertiesFile(String propertiesFile)
     {
         this.propertiesFile = propertiesFile;
+    }
+
+    public PropertyFileManager getPropertyFileManager()
+    {
+        return propertyFileManager;
+    }
+
+    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
+    {
+        this.propertyFileManager = propertyFileManager;
     }
 }

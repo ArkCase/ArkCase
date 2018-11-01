@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.service;
+package com.armedia.acm.services.timesheet.service;
 
 /*-
  * #%L
@@ -27,26 +27,32 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
+import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.admin.model.TimesheetConfig;
-
+import com.armedia.acm.services.timesheet.model.TimesheetConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class TimesheetConfigurationService
 {
-
     private Logger log = LoggerFactory.getLogger(getClass());
-    private Resource timesheetResource;
+
+    private String configurationFile;
+    private String propertiesFile;
+
+    private PropertyFileManager propertyFileManager;
     private ObjectConverter objectConverter;
 
     private FileWriter fileWriter = null;
@@ -61,10 +67,10 @@ public class TimesheetConfigurationService
 
         try
         {
-            log.info("Trying to read from config file: " + getTimesheetResource().getFile().getAbsolutePath());
+            log.info("Trying to read from config file: " + getConfigurationFile());
 
             lock.readLock().lock();
-            fileReader = new FileReader(getTimesheetResource().getFile());
+            fileReader = new FileReader(new File(getConfigurationFile()));
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             while ((currentLine = bufferedReader.readLine()) != null)
@@ -93,9 +99,9 @@ public class TimesheetConfigurationService
 
         try
         {
-            log.info("Trying to write to config file: " + getTimesheetResource().getFile().getAbsolutePath());
+            log.info("Trying to write to config file: " + getConfigurationFile());
             lock.writeLock().lock();
-            fileWriter = new FileWriter(getTimesheetResource().getFile(), false);
+            fileWriter = new FileWriter(new File(getConfigurationFile()), false);
             fileWriter.write(timesheetConfigJson);
             fileWriter.close();
         }
@@ -109,14 +115,48 @@ public class TimesheetConfigurationService
         }
     }
 
-    public Resource getTimesheetResource()
+    public void  saveProperties(Map<String, String> properties)
     {
-        return timesheetResource;
+        getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
     }
 
-    public void setTimesheetResource(Resource timesheetResource)
+    public Map<String, String> loadProperties() throws IOException
     {
-        this.timesheetResource = timesheetResource;
+        Map<String, String> propertiesMap = new HashMap<>();
+
+        Properties properties =  getPropertyFileManager().readFromFile(new File(getPropertiesFile()));
+        properties.forEach((o, o2) -> propertiesMap.put((String)o, (String)o2));
+
+        return propertiesMap;
+    }
+
+    public String getConfigurationFile()
+    {
+        return configurationFile;
+    }
+
+    public void setConfigurationFile(String configurationFile)
+    {
+        this.configurationFile = configurationFile;
+    }
+
+    public String getPropertiesFile() {
+        return propertiesFile;
+    }
+
+    public void setPropertiesFile(String propertiesFile)
+    {
+        this.propertiesFile = propertiesFile;
+    }
+
+    public PropertyFileManager getPropertyFileManager()
+    {
+        return propertyFileManager;
+    }
+
+    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
+    {
+        this.propertyFileManager = propertyFileManager;
     }
 
     public ObjectConverter getObjectConverter()
