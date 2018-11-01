@@ -3,8 +3,8 @@
 angular.module('tasks').controller(
         'Tasks.NewTaskController',
         [ '$scope', '$state', '$sce', '$q', '$modal', 'ConfigService', 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService', 'Authentication', 'Util.DateService', 'Dialog.BootboxService', 'ObjectService', 'Object.LookupService',
-                'Admin.FunctionalAccessControlService', 'modalParams', 'moment',
-                function($scope, $state, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService, AdminFunctionalAccessControlService, modalParams, moment) {
+                'Admin.FunctionalAccessControlService', 'modalParams', 'moment', '$translate', '$filter',
+                function($scope, $state, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService, AdminFunctionalAccessControlService, modalParams, moment, $translate, $filter) {
 
                     $scope.modalParams = modalParams;
                     $scope.taskType = $scope.modalParams.taskType || 'ACM_TASK';
@@ -121,6 +121,8 @@ angular.module('tasks').controller(
 
                         if (moment($scope.config.data.dueDate).isBefore($scope.config.data.taskStartDate)) {
                             $scope.config.data.dueDate = UtilDateService.convertToCurrentTime($scope.config.data.taskStartDate);
+                            //it is commented because after showing the dialog the modal is not scrollable
+                            // DialogService.alert($translate.instant('tasks.comp.info.alertMessage' ) + $filter("date")($scope.config.data.taskStartDate, $translate.instant('common.defaultDateTimeUIFormat')));
                         }
 
                         $scope.config.data.taskStartDate = UtilDateService.setSameTime($scope.config.data.taskStartDate, $scope.config.data.dueDate);
