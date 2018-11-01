@@ -20,6 +20,7 @@
         <http security="none" pattern="/assets/css/login.css"/>
         <!-- All lib are public, no security needed -->
         <http security="none" pattern="/lib/**"/>
+        <http security="none" pattern="/node_modules/**"/>
     </beans:beans>
 
     <!-- no need to protect the Login page in LDAP- and Kerberos-based authentication -->
