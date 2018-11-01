@@ -66,7 +66,8 @@ module.exports = {
                     'node_modules/@bower_components/angular-file-saver/dist/angular-file-saver.bundle.js',
                     'node_modules/@bower_components/pdf.js-viewer/pdf.js',
                     'node_modules/@bower_components/angular-pdfjs-viewer/dist/angular-pdfjs-viewer.js',
-                    'node_modules/angular-aria/angular-aria.js']
+                    'node_modules/angular-aria/angular-aria.js',
+                    'node_modules/@bower_components/combodate/src/combodate.js']
         },
         css : [ 'assets/css/application.css', 'modules/**/css/*.css', 'assets/css/arkcase-extension.css'],
         scss : [ 'modules/**/scss/*.scss'],
