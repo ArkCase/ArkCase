@@ -23,4 +23,7 @@
         <property name="costsheetService" ref="costsheetService"/>
     </bean>
 
+    <bean id="costsheetConfigurationAPIController" class="com.armedia.acm.services.costsheet.web.CostsheetConfigurationAPIController">
+        <property name="costsheetConfigurationService" ref="costsheetConfigurationService"/>
+    </bean>
 </beans>

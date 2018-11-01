@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.web.api;
+package com.armedia.acm.services.costsheet.web;
 
 /*-
  * #%L
@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.plugins.admin.service.CostsheetPropertiesService;
+import com.armedia.acm.services.costsheet.service.CostsheetConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -46,18 +46,16 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/service/costsheet", "/api/latest/service/costsheet" })
 public class CostsheetConfigurationAPIController
 {
-
     private Logger log = LoggerFactory.getLogger(getClass());
-
-    private CostsheetPropertiesService costsheetPropertiesService;
-
+    private CostsheetConfigurationService costsheetConfigurationService;
 
     @RequestMapping(value = "/properties", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, String>> loadCostsheetProperties() throws IOException {
+    public ResponseEntity<Map<String, String>> loadCostsheetProperties() throws IOException
+    {
         try
         {
-            return new ResponseEntity<>(getCostsheetPropertiesService().loadProperties(), HttpStatus.OK);
+            return new ResponseEntity<>(getCostsheetConfigurationService().loadProperties(), HttpStatus.OK);
         }
         catch (IOException e)
         {
@@ -68,25 +66,18 @@ public class CostsheetConfigurationAPIController
 
     @RequestMapping(value = "/properties", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void saveCostsheetProperties(@RequestBody Map<String, String> costsheetProperties) throws IOException {
-        try
-        {
-            getCostsheetPropertiesService().saveProperties(costsheetProperties);
-        }
-        catch (IOException e)
-        {
-            log.error("Could not save Costsheet Properties File", e);
-            throw e;
-        }
+    public void saveCostsheetProperties(@RequestBody Map<String, String> costsheetProperties)
+    {
+        getCostsheetConfigurationService().saveProperties(costsheetProperties);
     }
 
-    public CostsheetPropertiesService getCostsheetPropertiesService()
+    public CostsheetConfigurationService getCostsheetConfigurationService()
     {
-        return costsheetPropertiesService;
+        return costsheetConfigurationService;
     }
 
-    public void setCostsheetPropertiesService(CostsheetPropertiesService costsheetPropertiesService)
+    public void setCostsheetConfigurationService(CostsheetConfigurationService costsheetConfigurationService)
     {
-        this.costsheetPropertiesService = costsheetPropertiesService;
+        this.costsheetConfigurationService = costsheetConfigurationService;
     }
 }

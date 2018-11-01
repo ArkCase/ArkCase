@@ -37,7 +37,7 @@ import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.objectonverter.DateFormats;
-import com.armedia.acm.plugins.admin.service.TimesheetConfigurationService;
+import com.armedia.acm.services.timesheet.service.TimesheetConfigurationService;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;

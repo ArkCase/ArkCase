@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.web.api;
+package com.armedia.acm.services.timesheet.web;
 
 /*-
  * #%L
@@ -27,10 +27,8 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.plugins.admin.model.TimesheetConfig;
-import com.armedia.acm.plugins.admin.service.TimesheetConfigurationService;
-
-import com.armedia.acm.plugins.admin.service.TimesheetPropertiesService;
+import com.armedia.acm.services.timesheet.model.TimesheetConfig;
+import com.armedia.acm.services.timesheet.service.TimesheetConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -49,18 +47,9 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/service/timesheet", "/api/latest/service/timesheet" })
 public class TimesheetConfigurationAPIController
 {
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private TimesheetConfigurationService timesheetConfigurationService;
-    private TimesheetPropertiesService timesheetPropertiesService;
-
-    @RequestMapping(value = "/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<TimesheetConfig> loadTimesheetConfiguration()
-    {
-        return new ResponseEntity<>(getTimesheetConfigurationService().getConfig(), HttpStatus.OK);
-    }
 
     @RequestMapping(value = "/config", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -69,12 +58,27 @@ public class TimesheetConfigurationAPIController
         getTimesheetConfigurationService().saveConfig(timesheetConfig);
     }
 
+    @RequestMapping(value = "/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<TimesheetConfig> loadTimesheetConfiguration()
+    {
+        return new ResponseEntity<>(getTimesheetConfigurationService().getConfig(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/properties", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void saveTimesheetProperties(@RequestBody Map<String, String> timesheetProperties)
+    {
+        getTimesheetConfigurationService().saveProperties(timesheetProperties);
+    }
+
     @RequestMapping(value = "/properties", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, String>> loadTimesheetProperties() throws IOException {
+    public ResponseEntity<Map<String, String>> loadTimesheetProperties() throws IOException
+    {
         try
         {
-            return new ResponseEntity<>(getTimesheetPropertiesService().loadProperties(), HttpStatus.OK);
+            return new ResponseEntity<>(getTimesheetConfigurationService().loadProperties(), HttpStatus.OK);
         }
         catch (IOException e)
         {
@@ -82,22 +86,6 @@ public class TimesheetConfigurationAPIController
             throw e;
         }
     }
-
-    @RequestMapping(value = "/properties", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public void saveTimesheetProperties(@RequestBody Map<String, String> timesheetProperties) throws IOException {
-        try
-        {
-            timesheetPropertiesService.saveProperties(timesheetProperties);
-        }
-        catch (IOException e)
-        {
-            log.error("Could not save Timesheet Properties File", e);
-            throw e;
-        }
-    }
-
-
 
     public TimesheetConfigurationService getTimesheetConfigurationService()
     {
@@ -107,15 +95,5 @@ public class TimesheetConfigurationAPIController
     public void setTimesheetConfigurationService(TimesheetConfigurationService timesheetConfigurationService)
     {
         this.timesheetConfigurationService = timesheetConfigurationService;
-    }
-
-    public TimesheetPropertiesService getTimesheetPropertiesService()
-    {
-        return timesheetPropertiesService;
-    }
-
-    public void setTimesheetPropertiesService(TimesheetPropertiesService timesheetPropertiesService)
-    {
-        this.timesheetPropertiesService = timesheetPropertiesService;
     }
 }
