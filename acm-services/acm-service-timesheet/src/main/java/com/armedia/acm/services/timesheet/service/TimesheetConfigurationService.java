@@ -99,7 +99,7 @@ public class TimesheetConfigurationService
 
         try
         {
-            log.info("Trying to write to config file: " + getConfigurationFile());
+            log.info("Trying to write to config file [{}]", getConfigurationFile());
             lock.writeLock().lock();
             fileWriter = new FileWriter(new File(getConfigurationFile()), false);
             fileWriter.write(timesheetConfigJson);
