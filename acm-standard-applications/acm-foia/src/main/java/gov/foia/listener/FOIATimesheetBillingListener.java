@@ -1,8 +1,8 @@
-package com.armedia.acm.services.billing.listener;
+package gov.foia.listener;
 
 /*-
  * #%L
- * ACM Service: Billing
+ * ACM Standard Application: Freedom of Information Act
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,61 +27,43 @@ package com.armedia.acm.services.billing.listener;
  * #L%
  */
 
-import com.armedia.acm.activiti.AcmTaskActivitiEvent;
 import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
-import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
-import com.armedia.acm.services.costsheet.model.AcmCost;
-import com.armedia.acm.services.costsheet.model.AcmCostsheet;
-import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
-import com.armedia.acm.services.timesheet.model.TimesheetConstants;
-
+import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
-import org.springframework.scheduling.annotation.Async;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author sasko.tanaskoski
- *
- */
-public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskActivitiEvent>
+public class FOIATimesheetBillingListener implements ApplicationListener<AcmTimesheetEvent>
 {
-
-    private AcmTimesheetDao acmTimesheetDao;
-    private AcmCostsheetDao acmCostsheetDao;
-    private BillingService billingService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @Override
-    @Async
-    public void onApplicationEvent(AcmTaskActivitiEvent event)
-    {
+    private AcmTimesheetDao acmTimesheetDao;
+    private BillingService billingService;
 
-        if (event.getTaskEvent().equals("complete"))
+    @Override
+    public void onApplicationEvent(AcmTimesheetEvent acmTimesheetEvent)
+    {
+        if (acmTimesheetEvent != null && !acmTimesheetEvent.isStartWorkflow())
         {
-            switch (event.getParentObjectType())
+            AcmTimesheet timesheet = (AcmTimesheet)acmTimesheetEvent.getSource();
+            if("FINAL".equals(timesheet.getStatus()))
             {
-            case TimesheetConstants.OBJECT_TYPE:
-                handleTimesheet(event);
-                break;
-            case CostsheetConstants.OBJECT_TYPE:
-                handleCostsheet(event);
+                generateBillingItems(acmTimesheetEvent);
             }
         }
-
     }
 
-    private void handleTimesheet(AcmTaskActivitiEvent event)
+    private void generateBillingItems(AcmTimesheetEvent event)
     {
-        AcmTimesheet timesheet = getAcmTimesheetDao().find(event.getParentObjectId());
+        AcmTimesheet timesheet = (AcmTimesheet)event.getSource();
 
         accumulateTimesheetByTypeAndChangeCode(timesheet).values().stream().forEach(acmTime -> {
             createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost());
@@ -110,14 +92,6 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
         return timesheetRowByTypeAndChangeCode;
     }
 
-    private void handleCostsheet(AcmTaskActivitiEvent event)
-    {
-        AcmCostsheet costsheet = getAcmCostsheetDao().find(event.getParentObjectId());
-
-        createBillingItem(event.getUserId(), costsheet.getTitle(), costsheet.getParentId(), costsheet.getParentType(),
-                costsheet.calculateBalance());
-    }
-
     private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance)
     {
         try
@@ -132,7 +106,7 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     }
 
     private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType,
-            Double itemAmount)
+                                            Double itemAmount)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator(creator);
@@ -144,55 +118,25 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
         return billingItem;
     }
 
-    /**
-     * @return the acmTimesheetDao
-     */
     public AcmTimesheetDao getAcmTimesheetDao()
     {
         return acmTimesheetDao;
     }
 
-    /**
-     * @param acmTimesheetDao
-     *            the acmTimesheetDao to set
-     */
     public void setAcmTimesheetDao(AcmTimesheetDao acmTimesheetDao)
     {
         this.acmTimesheetDao = acmTimesheetDao;
     }
 
-    /**
-     * @return the acmCostsheetDao
-     */
-    public AcmCostsheetDao getAcmCostsheetDao()
-    {
-        return acmCostsheetDao;
-    }
-
-    /**
-     * @param acmCostsheetDao
-     *            the acmCostsheetDao to set
-     */
-    public void setAcmCostsheetDao(AcmCostsheetDao acmCostsheetDao)
-    {
-        this.acmCostsheetDao = acmCostsheetDao;
-    }
-
-    /**
-     * @return the billingService
-     */
     public BillingService getBillingService()
     {
         return billingService;
     }
 
-    /**
-     * @param billingService
-     *            the billingService to set
-     */
     public void setBillingService(BillingService billingService)
     {
         this.billingService = billingService;
     }
+
 
 }

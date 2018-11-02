@@ -20,9 +20,29 @@ angular.module('admin').factory('Admin.TimesheetConfigurationService', [ '$http'
         });
     };
 
+    var _getProperties = function() {
+        return $http({
+            method: 'GET',
+            url: 'api/latest/service/timesheet/properties'
+        });
+    };
+
+    var _saveProperties = function(timesheetProperties) {
+        return $http({
+            method: 'POST',
+            url: 'api/latest/service/timesheet/properties',
+            data: timesheetProperties,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    };
+
     return {
         getConfig: _getConfig,
-        saveConfig: _saveConfig
+        saveConfig: _saveConfig,
+        getProperties: _getProperties,
+        saveProperties: _saveProperties
     };
 
 } ]);
