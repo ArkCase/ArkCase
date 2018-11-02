@@ -61,7 +61,7 @@ public class FOIACostsheetBillingListener implements ApplicationListener<AcmCost
     private void generateBillingItems(AcmCostsheetEvent acmCostsheetEvent)
     {
         AcmCostsheet costsheet = (AcmCostsheet)acmCostsheetEvent.getSource();
-        BillingItem costsheetBillingItem = populateBillingItem(acmCostsheetEvent.getUserId(), costsheet.getTitle(), costsheet.getParentId(), costsheet.getParentType(), calculateCostsheetBalance(costsheet));
+        BillingItem costsheetBillingItem = populateBillingItem(acmCostsheetEvent.getUserId(), costsheet.getTitle(), costsheet.getParentId(), costsheet.getParentType(), costsheet.calculateBalance());
 
         try
         {
@@ -74,8 +74,7 @@ public class FOIACostsheetBillingListener implements ApplicationListener<AcmCost
         }
     }
 
-    private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType,
-                                            Double itemAmount)
+    private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType, Double itemAmount)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator(creator);
@@ -84,20 +83,8 @@ public class FOIACostsheetBillingListener implements ApplicationListener<AcmCost
         billingItem.setParentObjectId(parentObjectId);
         billingItem.setParentObjectType(parentObjectType);
         billingItem.setItemAmount(itemAmount);
-        return billingItem;
-    }
 
-    private Double calculateCostsheetBalance(AcmCostsheet costsheet)
-    {
-        Double balance = 0.0;
-        for (AcmCost acmCost : costsheet.getCosts())
-        {
-            if (acmCost.getValue() > 0)
-            {
-                balance += acmCost.getValue();
-            }
-        }
-        return balance;
+        return billingItem;
     }
 
     public AcmCostsheetDao getAcmCostsheetDao()
@@ -119,6 +106,4 @@ public class FOIACostsheetBillingListener implements ApplicationListener<AcmCost
     {
         this.billingService = billingService;
     }
-
-
 }
