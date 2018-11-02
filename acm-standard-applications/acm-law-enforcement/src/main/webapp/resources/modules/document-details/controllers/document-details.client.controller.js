@@ -211,7 +211,7 @@ angular.module('document-details').controller(
                                     src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId),
                                     type: $scope.ecmFile.fileActiveVersionMimeType
                                 } ],
-                                theme: "lib/videogular-themes-default/videogular.css",
+                                theme: "node_modules/@bower_components/videogular-themes-default/videogular.css",
                                 plugins: {
                                     poster: "branding/loginlogo.png"
                                 },
@@ -297,9 +297,9 @@ angular.module('document-details').controller(
  * @returns
  */
 angular.module('document-details').config(function(pdfjsViewerConfigProvider) {
-    pdfjsViewerConfigProvider.setWorkerSrc("lib/pdf.js-viewer/pdf.worker.js");
-    pdfjsViewerConfigProvider.setCmapDir("lib/pdf.js-viewer/cmaps");
-    pdfjsViewerConfigProvider.setImageDir("lib/pdf.js-viewer/images");
+    pdfjsViewerConfigProvider.setWorkerSrc("node_modules/@bower_components/pdf.js-viewer/pdf.worker.js");
+    pdfjsViewerConfigProvider.setCmapDir("node_modules/@bower_components/pdf.js-viewer/cmaps");
+    pdfjsViewerConfigProvider.setImageDir("node_modules/@bower_components/pdf.js-viewer/images");
 
     // pdfjsViewerConfigProvider.disableWorker();
     pdfjsViewerConfigProvider.setVerbosity("infos"); // "errors", "warnings" or "infos"

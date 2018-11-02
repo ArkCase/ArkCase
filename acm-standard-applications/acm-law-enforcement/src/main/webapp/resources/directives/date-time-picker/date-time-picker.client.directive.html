@@ -1,0 +1,13 @@
+<a ng-click="toggleEditable()">{{today}}</a>
+
+<div ng-show="editable" class="date-picker-popover">
+    <input type="text" id="{{datePickerId}}"/>
+    <span>
+        <button ng-show="editable" type="button" class="btn btn-primary btn-sm" title="Submit" ng-mouseup="saveDate()" ng-click="afterSave({dateType:property})">
+            <span class="glyphicon glyphicon-ok"></span>
+        </button>
+        <button ng-show="editable" type="button" class="btn btn-default btn-sm" title="Cancel" ng-click="cancel()">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </span>
+</div>

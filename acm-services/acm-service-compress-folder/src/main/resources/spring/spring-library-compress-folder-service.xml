@@ -6,6 +6,7 @@
         <property name="folderService" ref="acmFolderService"/>
         <property name="fileService" ref="ecmFileService"/>
         <property name="compressedFileNameFormat" value="${compressor.fileNameFormat}"/>
+        <property name="acmFolderDao" ref="acmFolderDao"/>
     </bean>
 
 </beans>

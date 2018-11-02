@@ -83,8 +83,6 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private String details;
 
     private Date createDate;
-
-    @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
     private Date taskStartDate;
 
     @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
