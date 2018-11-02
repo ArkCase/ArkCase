@@ -251,10 +251,6 @@
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
     </bean>
 
-    <!-- Timehseet configuration API -->
-    <bean id="timesheetConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.TimesheetConfigurationAPIController">
-        <property name="timesheetConfigurationService" ref="timesheetConfigurationService"/>
-    </bean>
     <bean id="holidayConfigurationAPIController"
         class="com.armedia.acm.plugins.admin.web.api.HolidayConfigurationAPIController">
         <property name="holidayConfigurationService" ref="holidayConfigurationService"/>

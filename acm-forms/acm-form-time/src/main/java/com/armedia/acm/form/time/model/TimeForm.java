@@ -35,7 +35,7 @@ import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
 import com.armedia.acm.frevvo.model.FrevvoForm;
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
-import com.armedia.acm.plugins.admin.model.TimesheetConfig;
+import com.armedia.acm.services.timesheet.model.TimesheetConfig;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

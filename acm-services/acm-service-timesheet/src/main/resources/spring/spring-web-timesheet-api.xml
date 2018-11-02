@@ -23,4 +23,8 @@
         <property name="timesheetService" ref="timesheetService"/>
     </bean>
 
+    <bean id="timesheetConfigurationAPIController" class="com.armedia.acm.services.timesheet.web.TimesheetConfigurationAPIController">
+        <property name="timesheetConfigurationService" ref="timesheetConfigurationService"/>
+    </bean>
+
 </beans>

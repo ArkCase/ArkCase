@@ -36,6 +36,10 @@ angular.module('admin').controller('Admin.TimesheetController',
                 chargeRoleItems: []
             };
 
+            $scope.timesheetProperties = {
+                "useApprovalWorkflow": "false"
+            };
+
             $scope.chargeRoleDropdownOptions = [];
 
             var reloadGrid = function() {
@@ -53,8 +57,22 @@ angular.module('admin').controller('Admin.TimesheetController',
                 }
             });
 
+            TimesheetConfigurationService.getProperties().then(function(response) {
+                if (!Util.isEmpty(response.data)) {
+                    $scope.timesheetProperties = response.data;
+                }
+            });
+
             var saveConfig = function() {
                 TimesheetConfigurationService.saveConfig($scope.timesheetConfig).then(function(response) {
+                    MessageService.succsessAction();
+                }, function(reaspon) {
+                    MessageService.errorAction();
+                });
+            };
+
+            $scope.saveTimesheetProperties = function() {
+                TimesheetConfigurationService.saveProperties($scope.timesheetProperties).then(function(response) {
                     MessageService.succsessAction();
                 }, function(reaspon) {
                     MessageService.errorAction();
