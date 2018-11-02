@@ -73,8 +73,12 @@ angular.module('cases').controller(
                             $scope.owningGroup = ObjectModelService.getGroup(data);
                             $scope.assignee = ObjectModelService.getAssignee(data);
                             $scope.objectInfo.dueDate = UtilDateService.dateToIso(UtilDateService.isoToDate($scope.objectInfo.dueDate));
-                            $scope.daysLeft = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
-
+                            if(!$scope.includeWeekends) {
+                                $scope.daysLeft = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
+                            }
+                            else {
+                                $scope.daysLeft = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
+                            }
                             CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function(approvers) {
                                 var options = [];
                                 _.each(approvers, function(approver) {
@@ -224,7 +228,12 @@ angular.module('cases').controller(
 
                     function dueDateChanged(e, newDueDate) {
                         $scope.objectInfo.dueDate = UtilDateService.dateToIso(UtilDateService.isoToDate(newDueDate));
-                        $scope.daysLeft = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
+                        if(!$scope.includeWeekends) {
+                            $scope.daysLeft = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
+                        }
+                        else {
+                            $scope.daysLeft = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
+                        }
                     }
 
                     $scope.updateNotificationGroup = function() {
