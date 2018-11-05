@@ -649,7 +649,10 @@
                 "title": "Configuración de acceso",
                 "idleLimit.label": "Límite inactivo de inicio de sesión (en milisegundos)",
                 "inform": "La configuración tendrá efecto para todas las nuevas sesiones de usuario",
-                "apply.label": "Aplicar"
+                "apply.label": "Aplicar",
+                "dialog": {
+                    "OKBtn": "Confirmar"
+                }
             },
             "auditHistory.config": {
                 "title": "Historial de auditoría",

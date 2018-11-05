@@ -649,7 +649,10 @@
                 "title": "Login Configuration",
                 "idleLimit.label": "Login idle limit (in milliseconds)",
                 "inform": "Settings will take effect for all new user sessions",
-                "apply.label": "Apply"
+                "apply.label": "Apply",
+                "dialog": {
+                    "OKBtn": "Confirm"
+                }
             },
             "auditHistory.config": {
                 "title": "Audit History",
