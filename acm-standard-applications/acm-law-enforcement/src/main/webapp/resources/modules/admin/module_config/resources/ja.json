@@ -649,7 +649,10 @@
                 "title": "ログインの設定",
                 "idleLimit.label": "ログインアイドル制限（ミリ秒単位）",
                 "inform": "設定はすべての新しいユーザーセッションに有効になります",
-                "apply.label": "適用"
+                "apply.label": "適用",
+                "dialog": {
+                    "OKBtn": "確認"
+                }
             },
             "auditHistory.config": {
                 "title": "監査履歴",

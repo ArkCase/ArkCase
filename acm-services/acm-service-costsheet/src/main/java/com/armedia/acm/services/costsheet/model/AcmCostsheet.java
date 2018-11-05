@@ -423,4 +423,18 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
     {
         this.ecmFolderPath = ecmFolderPath;
     }
+
+    @JsonIgnore
+    public Double calculateBalance()
+    {
+        Double balance = 0.0;
+        for (AcmCost acmCost : getCosts())
+        {
+            if (acmCost.getValue() > 0)
+            {
+                balance += acmCost.getValue();
+            }
+        }
+        return balance;
+    }
 }

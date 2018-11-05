@@ -33,6 +33,7 @@ angular.module('document-details').controller(
 
                     $scope.acmTicket = '';
                     $scope.userId = '';
+                    $scope.userFullName = '';
                     $scope.ecmFileProperties = {};
                     $scope.snowboundUrl = '';
                     $scope.ecmFileEvents = [];
@@ -134,7 +135,7 @@ angular.module('document-details').controller(
                      * an iframe which points to snowbound
                      */
                     $scope.openSnowboundViewer = function() {
-                        var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.fileInfo, !$scope.editingMode);
+                        var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode);
                         $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
                     };
 
@@ -177,6 +178,7 @@ angular.module('document-details').controller(
                     $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise ]).then(function(data) {
                         $scope.acmTicket = data[0].data;
                         $scope.userId = data[1].userId;
+                        $scope.userFullName = data[1].fullName;
                         $scope.userList = data[2];
                         $scope.ecmFileProperties = data[3];
                         $scope.editingMode = !$scope.ecmFileProperties['ecm.viewer.snowbound.readonly.initialState'];
