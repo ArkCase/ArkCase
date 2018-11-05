@@ -85,7 +85,7 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
                 }
                 else
                 {
-                    timesheetRowByTypeAndChangeCode.put(acmTime.getType() + acmTime.getObjectId(), acmTime);
+                    timesheetRowByTypeAndChangeCode.put(timesheetKey, acmTime);
                 }
             }
         }

@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
         'Cases.TimeController',
-        [ '$scope', '$stateParams', '$state', '$modal', '$translate', 'UtilService', 'ObjectService', 'ConfigService', 'Object.TimeService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'FormsType.Service', 'TimeTracking.InfoService',
-                function($scope, $stateParams, $state, $modal, $translate, Util, ObjectService, ConfigService, ObjectTimeService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, FormsTypeService, TimeTrackingInfoService) {
+        [ '$scope', '$stateParams', '$state', '$modal', '$translate', 'UtilService', 'ObjectService', 'ConfigService', 'Object.TimeService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'FormsType.Service', 'TimeTracking.InfoService', 'Admin.TimesheetConfigurationService',
+                function($scope, $stateParams, $state, $modal, $translate, Util, ObjectService, ConfigService, ObjectTimeService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, FormsTypeService, TimeTrackingInfoService, TimesheetConfigurationService) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -32,8 +32,18 @@ angular.module('cases').controller(
                         $scope.isFrevvoFormType = isFrevvoFormType;
                     });
 
+                    $scope.timesheetProperties = {
+                        "useApprovalWorkflow": "true"
+                    };
+
+                    TimesheetConfigurationService.getProperties().then(function(response) {
+                        if (!Util.isEmpty(response.data)) {
+                            $scope.timesheetProperties = response.data;
+                        }
+                    });
+
                     $scope.isEditDisabled = function(rowEntity) {
-                        return rowEntity.status === "FINAL";
+                        return rowEntity.status === "FINAL" && $scope.timesheetProperties.useApprovalWorkflow === "false";
                     };
 
                     var onConfigRetrieved = function(config) {

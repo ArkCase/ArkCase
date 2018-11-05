@@ -37,7 +37,7 @@ angular.module('admin').controller('Admin.TimesheetController',
             };
 
             $scope.timesheetProperties = {
-                "useApprovalWorkflow": "false"
+                "useApprovalWorkflow": "true"
             };
 
             $scope.chargeRoleDropdownOptions = [];

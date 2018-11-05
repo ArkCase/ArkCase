@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
         'Cases.CostController',
-        [ '$scope', '$stateParams', '$translate', '$state', 'UtilService', 'ObjectService', 'ConfigService', 'Object.CostService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', "Config.LocaleService", '$modal', 'FormsType.Service',
-                function($scope, $stateParams, $translate, $state, Util, ObjectService, ConfigService, ObjectCostService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, LocaleService, $modal, FormsTypeService) {
+        [ '$scope', '$stateParams', '$translate', '$state', 'UtilService', 'ObjectService', 'ConfigService', 'Object.CostService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', "Config.LocaleService", '$modal', 'FormsType.Service', 'Admin.CostsheetConfigurationService',
+                function($scope, $stateParams, $translate, $state, Util, ObjectService, ConfigService, ObjectCostService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, LocaleService, $modal, FormsTypeService, CostsheetConfigurationService) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -32,8 +32,18 @@ angular.module('cases').controller(
                         $scope.isFrevvoFormType = isFrevvoFormType;
                     });
 
+                    $scope.costsheetProperties = {
+                        "useApprovalWorkflow": "true"
+                    };
+
+                    CostsheetConfigurationService.getProperties().then(function(response) {
+                        if (!Util.isEmpty(response.data)) {
+                            $scope.costsheetProperties = response.data;
+                        }
+                    });
+
                     $scope.isEditDisabled = function(rowEntity) {
-                        return rowEntity.status === "FINAL";
+                        return rowEntity.status === "FINAL" && $scope.costsheetProperties.useApprovalWorkflow === "false";
                     };
 
                     var onConfigRetrieved = function(config) {
