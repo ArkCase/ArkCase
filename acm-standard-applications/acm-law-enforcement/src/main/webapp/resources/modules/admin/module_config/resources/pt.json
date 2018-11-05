@@ -649,7 +649,10 @@
                 "title": "Configuração de login",
                 "idleLimit.label": "Inicie sessão no limite ocioso (em milissegundos)",
                 "inform": "As configurações entrarão em vigor para todas as novas sessões de usuários",
-                "apply.label": "Aplique"
+                "apply.label": "Aplique",
+                "dialog": {
+                    "OKBtn": "Confirme"
+                }
             },
             "auditHistory.config": {
                 "title": "Histórico de auditoria",

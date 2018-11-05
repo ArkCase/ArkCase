@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('RequestInfo.BillingController', ['$scope', '$modal', '$stateParams', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.BillingService',
-            function($scope, $modal, $stateParams, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, CaseBillingService){
+angular.module('cases').controller('RequestInfo.BillingController', ['$scope', '$modal', '$stateParams', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.BillingService', 'MessageService',
+            function($scope, $modal, $stateParams, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, CaseBillingService, MessageService){
 
                 new HelperObjectBrowserService.Component({
                     scope: $scope,
@@ -59,12 +59,25 @@ angular.module('cases').controller('RequestInfo.BillingController', ['$scope', '
                     $scope.objectInfo = objectInfo;
                 };
 
-                $scope.emailInvoice = function(){
+                var invoiceData = {
+                    parentObjectId : $stateParams.id,
+                    parentObjectType : 'CASE_FILE'
+                };
 
+                $scope.emailInvoice = function(){
+                    CaseBillingService.sendBillingInvoiceByEmail(invoiceData).then(function() {
+                        MessageService.succsessAction();
+                    }, function() {
+                        MessageService.errorAction();
+                    });
                 };
 
                 $scope.generateInvoice = function(){
-
+                    CaseBillingService.createBillingInvoiceForRequest(invoiceData).then(function() {
+                        MessageService.succsessAction();
+                    }, function() {
+                        MessageService.errorAction();
+                    });
                 };
 
                 $scope.addBillingItem = function(){

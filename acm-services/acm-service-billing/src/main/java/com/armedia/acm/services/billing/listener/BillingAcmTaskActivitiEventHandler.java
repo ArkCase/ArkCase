@@ -115,20 +115,7 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
         AcmCostsheet costsheet = getAcmCostsheetDao().find(event.getParentObjectId());
 
         createBillingItem(event.getUserId(), costsheet.getTitle(), costsheet.getParentId(), costsheet.getParentType(),
-                calculateCostsheetBalance(costsheet));
-    }
-
-    private Double calculateCostsheetBalance(AcmCostsheet costsheet)
-    {
-        Double balance = 0.0;
-        for (AcmCost acmCost : costsheet.getCosts())
-        {
-            if (acmCost.getValue() > 0)
-            {
-                balance += acmCost.getValue();
-            }
-        }
-        return balance;
+                costsheet.calculateBalance());
     }
 
     private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance)
