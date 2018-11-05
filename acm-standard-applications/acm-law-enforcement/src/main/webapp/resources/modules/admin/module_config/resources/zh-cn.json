@@ -649,7 +649,10 @@
                 "title": "登录配置",
                 "idleLimit.label": "登录空闲限制（以毫秒为单位）",
                 "inform": "设置将对所有新用户会话生效",
-                "apply.label": "应用"
+                "apply.label": "应用",
+                "dialog": {
+                    "OKBtn": "确认"
+                }
             },
             "auditHistory.config": {
                 "title": "审计历史",

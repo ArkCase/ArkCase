@@ -667,7 +667,9 @@
         }
     },
     "common.comp.acmLogin": {
-        "confirmLogout": "Zu Ihrem Schutz ist die Anwendung im Begriff, sich abzumelden. Klicken Sie auf Abbrechen, um angemeldet zu bleiben."
+        "confirmLogout": "Zu Ihrem Schutz ist die Anwendung im Begriff, sich abzumelden. Klicken Sie auf Abbrechen, um angemeldet zu bleiben.",
+        "logoutBtn": "Ausloggen",
+        "cancelBtn": "Stornieren"
     },
     "common.objectTypes": {
         "CASE_FILE": "Akte",
