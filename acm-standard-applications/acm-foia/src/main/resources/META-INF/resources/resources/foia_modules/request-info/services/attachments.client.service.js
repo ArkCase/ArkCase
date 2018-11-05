@@ -57,7 +57,7 @@ angular.module('request-info').factory(
                             }
                             return openDocIds;
                         },
-                        buildViewerUrlMultiple: function(ecmFileProperties, acmTicket, userId, files) {
+                        buildViewerUrlMultiple: function(ecmFileProperties, acmTicket, userId, userFullName, files) {
                             var viewerUrl = '';
                             if (files && files.length > 0) {
 
@@ -65,7 +65,7 @@ angular.module('request-info').factory(
                                 files[0].ecmFile.selectedIds = this.buildOpenDocumentIdString(files);
 
                                 // Generates the viewer url with the first document as the primary document
-                                var viewerUrl = SnowboundService.buildSnowboundUrl(ecmFileProperties, acmTicket, userId, files[0].ecmFile);
+                                var viewerUrl = SnowboundService.buildSnowboundUrl(ecmFileProperties, acmTicket, userId, userFullName, files[0].ecmFile);
                             }
                             return viewerUrl;
                         },
