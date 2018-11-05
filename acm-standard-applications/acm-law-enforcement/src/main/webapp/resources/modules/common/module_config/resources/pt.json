@@ -666,7 +666,9 @@
         }
     },
     "common.comp.acmLogin": {
-        "confirmLogout": "Para sua proteção, o aplicativo está prestes a sair. Clique em Cancelar para continuar logado."
+        "confirmLogout": "Para sua proteção, o aplicativo está prestes a sair. Clique em Cancelar para continuar logado.",
+        "logoutBtn": "sair",
+        "cancelBtn": "Cancelar"
     },
     "common.objectTypes": {
         "CASE_FILE": "Ficheiro",

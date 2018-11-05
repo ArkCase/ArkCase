@@ -666,7 +666,9 @@
         }
     },
     "common.comp.acmLogin": {
-        "confirmLogout": "保護のため、アプリケーションはログアウトしようとしています。ログインを維持するには、[キャンセル]をクリックしてください。"
+        "confirmLogout": "保護のため、アプリケーションはログアウトしようとしています。ログインを維持するには、[キャンセル]をクリックしてください。",
+        "logoutBtn": "ログアウト",
+        "cancelBtn": "キャンセル"
     },
     "common.objectTypes": {
         "CASE_FILE": "案件文書",
