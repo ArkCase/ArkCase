@@ -12,7 +12,7 @@
             exchange-pattern="request-response"/>
         <cmis:get-or-create-folder-by-path config-ref="#[message.inboundProperties.configRef]" folderPath="#[payload]"/>
     </flow>
-    
+
     <!-- since we are not using ActiveMQ for the VM transport, we need to setup a vm connector -->
     <vm:connector name="arkcase-vm-connector">
         <vm:queue-profile maxOutstandingMessages="500">
