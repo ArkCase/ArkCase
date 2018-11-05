@@ -69,36 +69,9 @@ public class FileChunkServiceImpl implements FileChunkService {
     @Transactional
     public void mergeAndUploadFiles(FileDetails fileDetails, AcmFolder folder, Document existingFile, Authentication authentication)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException {
-        // first call to the merge() which returns a sequence input stream
-        // then call to ecmFileService.upload method
-        /*
-         * if (fileDetails != null && fileDetails.getParts() != null && !fileDetails.getParts().isEmpty())
-         * {
-         * try (SequenceInputStream seq = new SequenceInputStream(getInputStreams(fileDetails.getParts())))
-         * {
-         * getAuditPropertyEntityAdapter().setUserId(authentication.getName());
-         * setRepositoryRequestUserAndId(authentication);
-         * String uniqueFileName = folderAndFilesUtils.createUniqueIdentificator(fileDetails.getName());
-         * EcmFile metadata = new EcmFile();
-         * metadata.setFileType(fileDetails.getFileType());
-         * metadata.setCategory("Document");
-         * metadata.setFileActiveVersionMimeType(fileDetails.getMimeType());
-         * metadata.setFileName(fileDetails.getName());
-         * metadata.setCmisRepositoryId(folder.getCmisRepositoryId());
-         * ecmFileService.upload(authentication, fileDetails.getObjectType(), fileDetails.getObjectId(),
-         * folder.getCmisFolderId(),
-         * uniqueFileName, seq, metadata, existingFile);
-         * }
-         * catch (IOException e)
-         * {
-         * log.error("Could not merge file chunks: {}", e.getMessage(), e);
-         * }
-         * finally
-         * {
-         * deleteFilesQuietly(fileDetails.getParts());
-         * }
-         * }
-         */
+
+        log.debug("Start merging {} file chunks", fileDetails);
+
         SequenceInputStream inputStream = mergeChunks(fileDetails);
         getAuditPropertyEntityAdapter().setUserId(authentication.getName());
         setRepositoryRequestUserAndId(authentication);
@@ -111,8 +84,12 @@ public class FileChunkServiceImpl implements FileChunkService {
         metadata.setFileName(fileDetails.getName());
         metadata.setCmisRepositoryId(folder.getCmisRepositoryId());
 
+        log.debug("Start uploading the file with name {}", uniqueFileName);
+
         ecmFileService.upload(authentication, fileDetails.getObjectType(), fileDetails.getObjectId(), folder.getCmisFolderId(),
                 uniqueFileName, inputStream, metadata, existingFile);
+
+        log.debug("Start deleting the temporary part from the file {}", fileDetails.getParts());
 
         deleteFilesQuietly(fileDetails.getParts());
 
@@ -139,21 +116,17 @@ public class FileChunkServiceImpl implements FileChunkService {
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
     }
 
-    private void deleteFilesQuietly(List<FileChunkDetails> parts)
-    {
+    private void deleteFilesQuietly(List<FileChunkDetails> parts) {
         String dirPath = System.getProperty("java.io.tmpdir");
-        for (FileChunkDetails part : parts)
-        {
+        for (FileChunkDetails part : parts) {
             org.mule.util.FileUtils.deleteQuietly(new File(dirPath + "/" + part.getFileName()));
         }
     }
 
-    private Enumeration<InputStream> getInputStreams(List<FileChunkDetails> parts) throws IOException
-    {
+    private Enumeration<InputStream> getInputStreams(List<FileChunkDetails> parts) throws IOException {
         String dirPath = System.getProperty("java.io.tmpdir");
         Vector<InputStream> inputStream = new Vector<>();
-        for (FileChunkDetails part : parts)
-        {
+        for (FileChunkDetails part : parts) {
             InputStream stream = org.mule.util.FileUtils.openInputStream(new File(dirPath + "/" + part.getFileName()));
             inputStream.addElement(stream);
         }

@@ -2008,7 +2008,7 @@ angular
                                     newFolderMenu.disabledExpression = disabled || DocTree.readOnly;
                                     newFileMenu.disabledExpression = disabled || DocTree.readOnly;
                                 }
-                                
+
                                 // disable commands based on locks
                                 var currentNode = nodes[0];
                                 var lock = currentNode.data.lock;
@@ -2016,7 +2016,7 @@ angular
                                     var disableCommands = DocTree.treeConfig.disabledFileCommandsOnLock[lock.lockType];
                                     _.each(disableCommands, function(dc) {
                                         var cmdMenu = _.find(menu, {
-                                           cmd: dc
+                                            cmd: dc
                                         });
                                         if (cmdMenu){
                                             cmdMenu.disabledExpression = true;
@@ -2498,9 +2498,6 @@ angular
                             return dfd.promise();
                         },
                         uploadChunkFile: function (files, folderId, fileType) {
-                            //todo local var to prepare object
-                            //map of files
-
                             DocTree.scope.startUpload = function (uuid) {
                                 DocTree.scope.uploadPart(uuid);
                             };
@@ -2560,13 +2557,53 @@ angular
                                 }, function (error) {
                                     // Do something when error is shown
                                 }, function (progress) {
-                                    DocTree.scope.hashMap[uuid].partProgress = progress.loaded;
 
-                                    var totalProgressPercentage = parseInt(100.0 * ((DocTree.scope.hashMap[uuid].progress + DocTree.scope.hashMap[uuid].partProgress) / DocTree.scope.hashMap[uuid].file.size));
-                                    console.log('Total Progress [' + uuid + ']: ' + totalProgressPercentage + '%'); // Show totalProgressPercentage on UI
+                                    var modalInstance = $modal.open({
+                                        templateUrl : "directives/doc-tree/upload-progress-bar.html",
+                                        controller : [ '$scope', '$modalInstance', 'progress', function($scope, $modalInstance) {
+                                            $scope.modalInstance = $modalInstance;
 
-                                    var partProgressPercentage = parseInt(100.0 * (DocTree.scope.hashMap[uuid].partProgress / progress.total));
-                                    console.log('Part ' + DocTree.scope.hashMap[uuid].part + ' Progress [' + uuid + ']: ' + partProgressPercentage + '%');
+                                            DocTree.scope.hashMap[uuid].partProgress = progress.loaded;
+                                            $scope.currentChunkUploadProgress = parseInt(100.0 * (DocTree.scope.hashMap[uuid].partProgress / progress.total));
+                                            $scope.currentTotalUploadProgress = parseInt(100.0 * ((DocTree.scope.hashMap[uuid].progress + DocTree.scope.hashMap[uuid].partProgress) / DocTree.scope.hashMap[uuid].file.size));
+
+                                            $scope.chunkUploadPercentage = {
+                                                width: $scope.currentChunkUploadProgress + '%'
+                                            };
+                                            $scope.totalUploadPercentage = {
+                                                width: $scope.currentTotalUploadProgress + '%'
+                                            };
+
+                                            $scope.fileUploadedSucessfully = false;
+
+                                            if($scope.currentTotalUploadProgress >= 100){
+                                                $timeout(function() {
+                                                    $scope.fileUploadedSucessfully = true;
+                                                    $modalInstance.close();
+                                                }, 3000);
+                                            }
+
+                                        } ],
+                                        animation : false,
+                                        size : 'lg',
+                                        resolve : {
+                                            progress : progress
+                                        }
+                                    });
+
+                                    modalInstance.result.then(function() {
+                                    });
+
+                                    //the following works fine, lets try with modal now
+                                    /* DocTree.scope.hashMap[uuid].partProgress = progress.loaded;
+
+                                     var totalProgressPercentage = parseInt(100.0 * ((DocTree.scope.hashMap[uuid].progress + DocTree.scope.hashMap[uuid].partProgress) / DocTree.scope.hashMap[uuid].file.size));
+                                     console.log('Total Progress [' + uuid + ']: ' + totalProgressPercentage + '%'); // Show totalProgressPercentage on UI
+
+
+
+                                     var partProgressPercentage = parseInt(100.0 * (DocTree.scope.hashMap[uuid].partProgress / progress.total));
+                                     console.log('Part ' + DocTree.scope.hashMap[uuid].part + ' Progress [' + uuid + ']: ' + partProgressPercentage + '%');*/
                                 });
                             };
 
@@ -3158,7 +3195,7 @@ angular
                         },
                         deleteFile : function(node) {
                             var dfd = $.Deferred();
-                                if (!DocTree.isFileNode(node) || node.data.lock !== "") {
+                            if (!DocTree.isFileNode(node) || node.data.lock !== "") {
                                 dfd.reject();
 
                             } else {
