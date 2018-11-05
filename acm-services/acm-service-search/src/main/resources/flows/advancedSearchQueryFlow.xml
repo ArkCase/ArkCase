@@ -27,7 +27,6 @@
 
         <logger category="com.armedia.acm.plugins.search" level="DEBUG"/>
 
-        
         <http:request config-ref="solr-advanced-search" path="/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.searchHandler}" method="POST">
             <http:request-builder>
                 <http:header headerName="Content-Type" value="application/x-www-form-urlencoded; charset=UTF-8"/>
