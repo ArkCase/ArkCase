@@ -649,7 +649,10 @@
             "title": "登錄配置",
             "idleLimit.label": "登錄空閒限制（以毫秒為單位）",
             "inform": "設置將對所有新用戶會話生效",
-            "apply.label": "應用"
+            "apply.label": "應用",
+            "dialog": {
+                "OKBtn": "確認"
+            }
         },
         "auditHistory.config": {
             "title": "審計歷史",
