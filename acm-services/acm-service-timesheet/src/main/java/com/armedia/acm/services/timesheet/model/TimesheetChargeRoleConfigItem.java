@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.model;
+package com.armedia.acm.services.timesheet.model;
 
 /*-
  * #%L
@@ -27,20 +27,41 @@ package com.armedia.acm.plugins.admin.model;
  * #L%
  */
 
-import java.util.List;
-
-public class TimesheetConfig
+public class TimesheetChargeRoleConfigItem
 {
 
-    List<TimesheetChargeRoleConfigItem> chargeRoleItems;
+    private String chargeRole;
+    private Long rate;
+    private String active;
 
-    public List<TimesheetChargeRoleConfigItem> getChargeRoleItems()
+    public String getChargeRole()
     {
-        return chargeRoleItems;
+        return chargeRole;
     }
 
-    public void setChargeRoleItems(List<TimesheetChargeRoleConfigItem> chargeRoleItems)
+    public void setChargeRole(String chargeRole)
     {
-        this.chargeRoleItems = chargeRoleItems;
+        this.chargeRole = chargeRole;
     }
+
+    public Long getRate()
+    {
+        return rate;
+    }
+
+    public void setRate(Long rate)
+    {
+        this.rate = rate;
+    }
+
+    public String getActive()
+    {
+        return active;
+    }
+
+    public void setActive(String active)
+    {
+        this.active = active;
+    }
+
 }

@@ -1699,3 +1699,28 @@ a.primary {
         width: 14.285714285714285714285714285714%;
     }
 }
+
+.date-picker-popover {
+    position: absolute;
+    margin-top: 10px;
+    background-color: #ebeceb;
+    border: 1px solid #AAA;
+    border-radius: 5px;
+    padding: 7px;
+    width: auto;
+    display: block;
+    z-index: 2000;
+    white-space: nowrap;
+}
+
+.date-picker-popover:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #AAA;
+    position: absolute;
+    top: -10px;
+    left: 10%;
+}

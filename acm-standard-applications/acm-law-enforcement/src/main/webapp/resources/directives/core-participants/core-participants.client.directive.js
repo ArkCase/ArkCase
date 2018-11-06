@@ -149,6 +149,14 @@ angular.module('directives').directive(
                                                 var selectedUser = selection.masterSelectedItem;
                                                 var selectedGroup = selection.detailSelectedItems;
 
+                                                //set for AFDP-6831 to inheritance in the Folder/file participants
+                                                var len = scope.objectInfo.participants.length;
+                                                for (var i = 0; i < len; i++) {
+                                                    if(scope.objectInfo.participants[i].participantType =='assignee'){
+                                                        scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                                                    }
+                                                }
+
                                                 scope.assignee = selectedUser.object_id_s;
                                                 scope.updateAssignee();
                                                 if (selectedGroup) {
@@ -166,6 +174,16 @@ angular.module('directives').directive(
                                                 var selectedGroup = selection.masterSelectedItem;
                                                 scope.owningGroup = selectedGroup.object_id_s;
                                                 scope.updateOwningGroup();
+
+                                                //set for AFDP-6831 to inheritance in the Folder/file participants
+                                                var len = scope.objectInfo.participants.length;
+                                                for (var i = 0; i < len; i++) {
+                                                    if(scope.objectInfo.participants[i].participantType =='owning group') {
+                                                        scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                                                    }
+                                                }
+
+
                                                 if (selectedUser) {
                                                     scope.assignee = selectedUser.object_id_s;
                                                     scope.updateAssignee();

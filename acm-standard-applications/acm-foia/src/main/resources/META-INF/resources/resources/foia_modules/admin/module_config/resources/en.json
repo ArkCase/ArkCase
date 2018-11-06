@@ -438,6 +438,8 @@
         },
         "forms.timesheetConfiguration": {
             "title": "Timesheet Configuration",
+            "chargeRole.title": "Charge Roles Configuration",
+            "workflow": "Approval Workflow Configuration",
             "chargeRole": "Charge Role",
             "chargeRole.placeholder": "Enter Charge Role",
             "rate": "Rate",
@@ -445,10 +447,16 @@
             "active": "Active/Inactive",
             "active.active": "Active",
             "active.inactive": "Inactive",
+            "useWorkflowCheckbox": "Use Approval Workflow",
             "modal": {
                 "button.save": "Save",
                 "button.cancel": "Cancel"
             }
+        },
+        "forms.costsheetConfiguration": {
+            "title": "Costsheet Configuration",
+            "workflow": "Approval Workflow Configuration",
+            "useWorkflowCheckbox": "Use Approval Workflow"
         },
         "dashboard.title": "Dashboard",
         "dashboard.config": "Dashboard Configuration",
@@ -649,7 +657,10 @@
                 "title": "Login Configuration",
                 "idleLimit.label": "Login idle limit (in milliseconds)",
                 "inform": "Settings will take effect for all new user sessions",
-                "apply.label": "Apply"
+                "apply.label": "Apply",
+                "dialog": {
+                    "OKBtn": "Confirm"
+                }
             },
             "auditHistory.config": {
                 "title": "Audit History",

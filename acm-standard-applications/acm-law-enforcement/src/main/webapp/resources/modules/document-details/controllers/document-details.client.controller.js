@@ -33,6 +33,7 @@ angular.module('document-details').controller(
 
                     $scope.acmTicket = '';
                     $scope.userId = '';
+                    $scope.userFullName = '';
                     $scope.ecmFileProperties = {};
                     $scope.snowboundUrl = '';
                     $scope.ecmFileEvents = [];
@@ -134,7 +135,7 @@ angular.module('document-details').controller(
                      * an iframe which points to snowbound
                      */
                     $scope.openSnowboundViewer = function() {
-                        var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.fileInfo, !$scope.editingMode);
+                        var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode);
                         $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
                     };
 
@@ -177,6 +178,7 @@ angular.module('document-details').controller(
                     $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise ]).then(function(data) {
                         $scope.acmTicket = data[0].data;
                         $scope.userId = data[1].userId;
+                        $scope.userFullName = data[1].fullName;
                         $scope.userList = data[2];
                         $scope.ecmFileProperties = data[3];
                         $scope.editingMode = !$scope.ecmFileProperties['ecm.viewer.snowbound.readonly.initialState'];
@@ -211,7 +213,7 @@ angular.module('document-details').controller(
                                     src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId),
                                     type: $scope.ecmFile.fileActiveVersionMimeType
                                 } ],
-                                theme: "lib/videogular-themes-default/videogular.css",
+                                theme: "node_modules/@bower_components/videogular-themes-default/videogular.css",
                                 plugins: {
                                     poster: "branding/loginlogo.png"
                                 },
@@ -297,9 +299,9 @@ angular.module('document-details').controller(
  * @returns
  */
 angular.module('document-details').config(function(pdfjsViewerConfigProvider) {
-    pdfjsViewerConfigProvider.setWorkerSrc("lib/pdf.js-viewer/pdf.worker.js");
-    pdfjsViewerConfigProvider.setCmapDir("lib/pdf.js-viewer/cmaps");
-    pdfjsViewerConfigProvider.setImageDir("lib/pdf.js-viewer/images");
+    pdfjsViewerConfigProvider.setWorkerSrc("node_modules/@bower_components/pdf.js-viewer/pdf.worker.js");
+    pdfjsViewerConfigProvider.setCmapDir("node_modules/@bower_components/pdf.js-viewer/cmaps");
+    pdfjsViewerConfigProvider.setImageDir("node_modules/@bower_components/pdf.js-viewer/images");
 
     // pdfjsViewerConfigProvider.disableWorker();
     pdfjsViewerConfigProvider.setVerbosity("infos"); // "errors", "warnings" or "infos"

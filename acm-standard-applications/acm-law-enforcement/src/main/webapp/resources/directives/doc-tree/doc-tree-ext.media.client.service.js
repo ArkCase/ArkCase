@@ -98,7 +98,7 @@ angular.module('directives').controller('directives.DocTreeMediaDialogController
             src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.nodes[0].data.objectId),
             type: $scope.nodes[0].data.mimeType
         } ],
-        theme: "lib/videogular-themes-default/videogular.css",
+        theme: "node_modules/@bower_components/videogular-themes-default/videogular.css",
         plugins: {
             poster: "branding/loginlogo.png"
         },
