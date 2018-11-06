@@ -1244,6 +1244,13 @@
                 ]
             },
             {
+                "type": "p/document/pdfConversion",
+                "label": "admin.documentManagement.pdfConversion.title",
+                "components": [
+                    "pdf-conversion"
+                ]
+            },
+            {
                 "type": "p/stateOfArkcase",
                 "label": "admin.stateOfArkcase.title",
                 "icon": "fa fa-wrench",
