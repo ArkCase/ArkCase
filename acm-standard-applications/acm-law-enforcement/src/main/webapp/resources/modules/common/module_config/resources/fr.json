@@ -666,7 +666,9 @@
         }
     },
     "common.comp.acmLogin": {
-        "confirmLogout": "Pour votre protection, l'application est sur le point de se déconnecter. Cliquez sur Annuler pour rester connecté."
+        "confirmLogout": "Pour votre protection, l'application est sur le point de se déconnecter. Cliquez sur Annuler pour rester connecté.",
+        "logoutBtn": "Connectez - Out",
+        "cancelBtn": "Annuler"
     },
     "common.objectTypes": {
         "CASE_FILE": "Dossier",

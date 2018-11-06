@@ -227,7 +227,7 @@ angular.module('tasks').controller(
                     $scope.validateStartDueDate = function() {
                         if (moment($scope.dateInfo.taskStartDate).isAfter($scope.dateInfo.dueDate)) {
                             $scope.dateInfo.dueDate = $scope.dateInfo.taskStartDate;
-                            $scope.updateDueDate();
+                            $scope.updateDueDate($scope.dateInfo.dueDate);
                         } else {
                             $scope.saveTask();
                         }
@@ -236,11 +236,10 @@ angular.module('tasks').controller(
                     $scope.updateStartDate = function(data) {
                         if (!Util.isEmpty(data)) {
                             var startDate = new Date(data);
-                            $scope.objectInfo.taskStartDate = $moment.utc(UtilDateService.dateToIso(startDate)).format();
+                            $scope.objectInfo.taskStartDate = moment.utc(UtilDateService.dateToIso(startDate)).format();
                             $scope.validateStartDueDate();
                         } else {
                             $scope.objectInfo.taskStartDate = $scope.taskStartDateBeforeChange;
-                            $scope.validateStartDueDate();
                         }
                     };
 

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('request-info').controller('RequestInfo.ExemptionController',
-        [ '$scope', '$stateParams', '$q', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ExemptionService', '$modal', 'Object.LookupService',
-                function($scope, $stateParams, $q, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, ExemptionService, $modal, ObjectLookupService) {
+        [ '$scope', '$stateParams', '$q', 'Case.InfoService', 'Profile.UserInfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ExemptionService', '$modal', 'Object.LookupService',
+                function($scope, $stateParams, $q, CaseInfoService, UserInfoService, HelperUiGridService, HelperObjectBrowserService, ExemptionService, $modal, ObjectLookupService) {
 
             var componentHelper = new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -86,9 +86,27 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 var promiseQueryCodes = ExemptionService.getExemptionCodes(params.caseId);
                 $q.all([ promiseQueryCodes ]).then(function(data) {
                     $scope.codes = data[0];
-                    $scope.gridOptions = $scope.gridOptions || {};
-                    $scope.gridOptions.data = $scope.codes.data;
-                    $scope.gridOptions.totalItems = $scope.codes.data.length;
+
+                    var userInfoPromises = [];
+                    for(var i = 0; i<$scope.codes.data.length; i++) {
+                        userInfoPromises.push(UserInfoService.getUserInfoById($scope.codes.data[i].creator));
+                    }
+
+                    $q.all(userInfoPromises).then(function (userInfo) {
+                        for(var j = 0; j < $scope.codes.data.length; j++) {
+                            for(var k = 0; k< userInfo.length; k++) {
+                                if($scope.codes.data[j].creator === userInfo[k].userId) {
+                                    //change creator user id with the user full name
+                                    $scope.codes.data[j].creator = userInfo[k].fullName;
+                                    break;
+                                }
+                            }
+                        }
+
+                        $scope.gridOptions = $scope.gridOptions || {};
+                        $scope.gridOptions.data = $scope.codes.data;
+                        $scope.gridOptions.totalItems = $scope.codes.data.length;
+                    });
                 });
             }
         } ]);

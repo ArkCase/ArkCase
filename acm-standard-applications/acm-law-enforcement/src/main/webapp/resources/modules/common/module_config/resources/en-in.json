@@ -666,7 +666,9 @@
         }
     },
     "common.comp.acmLogin": {
-        "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in."
+        "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in.",
+        "logoutBtn": "Logout",
+        "cancelBtn": "Cancel"
     },
     "common.objectTypes": {
         "CASE_FILE": "Case File",

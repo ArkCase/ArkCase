@@ -649,7 +649,10 @@
                 "title": "Configuration de connexion",
                 "idleLimit.label": "Limite d'inactivité de connexion (en millisecondes)",
                 "inform": "Les paramètres prendront effet pour toutes les nouvelles sessions utilisateur",
-                "apply.label": "Appliquer"
+                "apply.label": "Appliquer",
+                "dialog": {
+                    "OKBtn": "Confirmer"
+                }
             },
             "auditHistory.config": {
                 "title": "Historique d'audit",

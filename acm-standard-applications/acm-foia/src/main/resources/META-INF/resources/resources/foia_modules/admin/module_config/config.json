@@ -1096,10 +1096,17 @@
                 ]
             },
             {
-                "type": "p/forms/config",
+                "type": "p/forms/timesheetConfig",
                 "label": "admin.forms.timesheetConfiguration.title",
                 "components": [
                     "timesheet.config"
+                ]
+            },
+            {
+                "type": "p/forms/costsheetConfig",
+                "label": "admin.forms.costsheetConfiguration.title",
+                "components": [
+                    "costsheet.config"
                 ]
             },
             {
