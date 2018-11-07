@@ -28,6 +28,8 @@ package com.armedia.acm.plugins.admin.service;
  */
 
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +39,8 @@ import java.util.Properties;
 
 public class PDFConversionConfigurationService
 {
+    private Logger log = LoggerFactory.getLogger(getClass());
+
     private String propertiesFile;
     private PropertyFileManager propertyFileManager;
 
@@ -53,6 +57,34 @@ public class PDFConversionConfigurationService
         properties.forEach((o, o2) -> propertiesMap.put((String)o, (String)o2));
 
         return propertiesMap;
+    }
+
+    public Boolean isResponseFolderConversionEnabled()
+    {
+        Map<String, String> pdfProperties = new HashMap<>();
+
+        try
+        {
+            pdfProperties = loadProperties();
+        }
+        catch (IOException e)
+        {
+            log.warn("Could not load [{}] properties file", getPropertiesFile(), e);
+        }
+
+        if (pdfProperties.isEmpty())
+        {
+            return false;
+        }
+
+        if(pdfProperties.containsKey("responseFolderConversion"))
+        {
+            return "true".equals(pdfProperties.get("responseFolderConversion"));
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public String getPropertiesFile()

@@ -186,6 +186,7 @@
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="converter" ref="folderConverter"/>
             <beans:property name="responseFolderService" ref="responseFolderService"/>
+            <beans:property name="pdfConversionConfigurationService" ref="pdfConversionConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="responseFolderCompressorService" class="gov.foia.service.ResponseFolderCompressorService">

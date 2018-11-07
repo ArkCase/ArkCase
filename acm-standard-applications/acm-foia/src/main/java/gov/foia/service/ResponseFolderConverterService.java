@@ -31,6 +31,7 @@ import com.armedia.acm.convertfolder.ConversionException;
 import com.armedia.acm.convertfolder.FolderConverter;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.admin.service.PDFConversionConfigurationService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
@@ -47,11 +48,16 @@ public class ResponseFolderConverterService
 
     private ResponseFolderService responseFolderService;
 
+    private PDFConversionConfigurationService pdfConversionConfigurationService;
+
     public void convertResponseFolder(Long requestId, String username)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException, ConversionException
     {
-        CaseFile request = caseFileDao.find(requestId);
-        converter.convertFolder(responseFolderService.getResponseFolder(request).getId(), username);
+        if(getPdfConversionConfigurationService().isResponseFolderConversionEnabled())
+        {
+            CaseFile request = caseFileDao.find(requestId);
+            converter.convertFolder(responseFolderService.getResponseFolder(request).getId(), username);
+        }
     }
 
     /**
@@ -79,5 +85,15 @@ public class ResponseFolderConverterService
     public void setResponseFolderService(ResponseFolderService responseFolderService)
     {
         this.responseFolderService = responseFolderService;
+    }
+
+    public PDFConversionConfigurationService getPdfConversionConfigurationService()
+    {
+        return pdfConversionConfigurationService;
+    }
+
+    public void setPdfConversionConfigurationService(PDFConversionConfigurationService pdfConversionConfigurationService)
+    {
+        this.pdfConversionConfigurationService = pdfConversionConfigurationService;
     }
 }
