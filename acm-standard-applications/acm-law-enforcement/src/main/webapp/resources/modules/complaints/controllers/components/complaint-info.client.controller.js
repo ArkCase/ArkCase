@@ -178,6 +178,10 @@ angular.module('complaints').controller(
                         $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
                         $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
+                        var utcDate = moment.utc(UtilDateService.dateToIso(new Date(objectInfo.created))).format();
+                        $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+                        $scope.minYear = new Date(objectInfo.created).getFullYear();
+
                         $scope.assignee = ObjectModelService.getAssignee(objectInfo);
                         $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
 

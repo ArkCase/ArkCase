@@ -1724,3 +1724,15 @@ a.primary {
     top: -10px;
     left: 10%;
 }
+
+.popup-move-on-left > .editable + .form-inline{
+    right: 20%;
+}
+
+.popup-move-on-left > .editable + .form-inline:before {
+    left: 50%;
+}
+
+.popup-move-on-left > .editable + .form-inline:after {
+    left: 50%;
+}
