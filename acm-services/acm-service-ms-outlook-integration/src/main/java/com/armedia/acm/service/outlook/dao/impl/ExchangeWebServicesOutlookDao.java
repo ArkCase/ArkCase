@@ -27,24 +27,11 @@ package com.armedia.acm.service.outlook.dao.impl;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
-import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
-import com.armedia.acm.core.exceptions.AcmOutlookException;
-import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
-import com.armedia.acm.core.exceptions.AcmOutlookItemNotDeletedException;
-import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
-import com.armedia.acm.core.exceptions.AcmOutlookModifyItemFailedException;
+import com.armedia.acm.core.exceptions.*;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
-import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.ExchangeConfiguration;
-import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
-import com.armedia.acm.service.outlook.model.OutlookContactItem;
-import com.armedia.acm.service.outlook.model.OutlookFolder;
-import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
-import com.armedia.acm.service.outlook.model.OutlookItem;
-import com.armedia.acm.service.outlook.model.OutlookTaskItem;
+import com.armedia.acm.service.outlook.model.*;
 import com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl;
 
 import org.apache.commons.lang3.StringUtils;
@@ -56,23 +43,13 @@ import org.springframework.context.ApplicationListener;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion;
 import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
-import microsoft.exchange.webservices.data.core.enumeration.property.BasePropertySet;
-import microsoft.exchange.webservices.data.core.enumeration.property.EmailAddressKey;
-import microsoft.exchange.webservices.data.core.enumeration.property.PhoneNumberKey;
-import microsoft.exchange.webservices.data.core.enumeration.property.StandardUser;
-import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.enumeration.property.*;
 import microsoft.exchange.webservices.data.core.enumeration.search.SortDirection;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.enumeration.service.SendCancellationsMode;
@@ -87,11 +64,7 @@ import microsoft.exchange.webservices.data.core.service.schema.FolderSchema;
 import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
 import microsoft.exchange.webservices.data.credential.ExchangeCredentials;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
-import microsoft.exchange.webservices.data.property.complex.EmailAddress;
-import microsoft.exchange.webservices.data.property.complex.FolderId;
-import microsoft.exchange.webservices.data.property.complex.FolderPermission;
-import microsoft.exchange.webservices.data.property.complex.ItemId;
-import microsoft.exchange.webservices.data.property.complex.MessageBody;
+import microsoft.exchange.webservices.data.property.complex.*;
 import microsoft.exchange.webservices.data.property.complex.recurrence.pattern.Recurrence;
 import microsoft.exchange.webservices.data.property.complex.time.OlsonTimeZoneDefinition;
 import microsoft.exchange.webservices.data.property.definition.PropertyDefinition;
@@ -139,12 +112,11 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
             return (ExchangeService) found.get();
         }
 
-        ExchangeService service = new ExchangeService(getExchangeVersion());
         ExchangeCredentials credentials = new WebCredentials(user.getEmailAddress(), user.getOutlookPassword());
-        service.setCredentials(credentials);
 
-        try
+        try (ExchangeService service = new ExchangeService(getExchangeVersion()))
         {
+            service.setCredentials(credentials);
             if (isAutodiscoveryEnabled())
             {
                 service.autodiscoverUrl(user.getEmailAddress(), redirectionUrl -> true);

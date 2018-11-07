@@ -49,8 +49,6 @@ public class TimesheetConfigurationService
     private Resource timesheetResource;
     private ObjectConverter objectConverter;
 
-    private FileWriter fileWriter = null;
-    private FileReader fileReader = null;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public TimesheetConfig getConfig()
@@ -59,13 +57,12 @@ public class TimesheetConfigurationService
         String timesheetConfigJson = "";
         TimesheetConfig timesheetConfig = null;
 
-        try
+        try (FileReader fileReader = new FileReader(getTimesheetResource().getFile());
+                BufferedReader bufferedReader = new BufferedReader(fileReader))
         {
             log.info("Trying to read from config file: " + getTimesheetResource().getFile().getAbsolutePath());
 
             lock.readLock().lock();
-            fileReader = new FileReader(getTimesheetResource().getFile());
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             while ((currentLine = bufferedReader.readLine()) != null)
             {
@@ -91,13 +88,11 @@ public class TimesheetConfigurationService
     {
         String timesheetConfigJson = Objects.nonNull(config) ? getObjectConverter().getJsonMarshaller().marshal(config) : "";
 
-        try
+        try (FileWriter fileWriter = new FileWriter(getTimesheetResource().getFile(), false))
         {
             log.info("Trying to write to config file: " + getTimesheetResource().getFile().getAbsolutePath());
             lock.writeLock().lock();
-            fileWriter = new FileWriter(getTimesheetResource().getFile(), false);
             fileWriter.write(timesheetConfigJson);
-            fileWriter.close();
         }
         catch (IOException e)
         {

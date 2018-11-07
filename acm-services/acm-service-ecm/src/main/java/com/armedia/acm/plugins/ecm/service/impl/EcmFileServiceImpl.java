@@ -36,18 +36,7 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
-import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
@@ -87,14 +76,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by armdev on 5/1/14.
@@ -243,6 +225,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     public EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId, String targetCmisFolderId,
             String arkcaseFileName, InputStream fileContents, EcmFile metadata)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
@@ -251,6 +234,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     public EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId, String targetCmisFolderId,
             String arkcaseFileName, InputStream fileContents, EcmFile metadata, Document existingCmisDocument)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
@@ -291,6 +275,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     public EcmFile upload(Authentication authentication, MultipartFile file, String targetCmisFolderId, String parentObjectType,
             Long parentObjectId, EcmFile metadata) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
@@ -759,6 +744,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'read|group-read|write|group-write')")
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "WRITE")
     public void declareFolderAsRecord(Long folderId, Authentication authentication, String parentObjectType, Long parentObjectId)
@@ -913,6 +899,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
@@ -1295,6 +1282,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
@@ -1310,6 +1298,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
