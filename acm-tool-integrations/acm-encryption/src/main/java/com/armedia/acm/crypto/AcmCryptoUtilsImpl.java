@@ -34,15 +34,7 @@ import org.apache.commons.codec.Charsets;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.CompressionAlgorithmTags;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.openpgp.PGPCompressedData;
-import org.bouncycastle.openpgp.PGPCompressedDataGenerator;
-import org.bouncycastle.openpgp.PGPEncryptedDataGenerator;
-import org.bouncycastle.openpgp.PGPEncryptedDataList;
-import org.bouncycastle.openpgp.PGPException;
-import org.bouncycastle.openpgp.PGPLiteralData;
-import org.bouncycastle.openpgp.PGPLiteralDataGenerator;
-import org.bouncycastle.openpgp.PGPPBEEncryptedData;
-import org.bouncycastle.openpgp.PGPUtil;
+import org.bouncycastle.openpgp.*;
 import org.bouncycastle.openpgp.jcajce.JcaPGPObjectFactory;
 import org.bouncycastle.openpgp.operator.jcajce.JcaPGPDigestCalculatorProviderBuilder;
 import org.bouncycastle.openpgp.operator.jcajce.JcePBEDataDecryptorFactoryBuilder;
@@ -61,13 +53,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.SecureRandom;
-import java.security.Security;
+import java.security.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
@@ -344,7 +330,7 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
     public byte[] encryptWithPGP(byte[] clearData, char[] passPhrase, String fileName, int algorithm, boolean armor)
             throws AcmEncryptionBadKeyOrDataException
     {
-        try
+        try (ByteArrayOutputStream bOut = new ByteArrayOutputStream())
         {
             if (fileName == null)
             {
@@ -353,7 +339,6 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
 
             byte[] compressedData = compress(clearData, fileName, CompressionAlgorithmTags.ZIP);
 
-            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
 
             OutputStream out = bOut;
             if (armor)
@@ -365,10 +350,11 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
                     new JcePGPDataEncryptorBuilder(algorithm).setSecureRandom(new SecureRandom()).setProvider("BC"));
             encGen.addMethod(new JcePBEKeyEncryptionMethodGenerator(passPhrase).setProvider("BC"));
 
-            OutputStream encOut = encGen.open(out, compressedData.length);
 
-            encOut.write(compressedData);
-            encOut.close();
+            try (OutputStream encOut = encGen.open(out, compressedData.length))
+            {
+                encOut.write(compressedData);
+            }
 
             if (armor)
             {
@@ -393,24 +379,27 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
 
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();
         PGPCompressedDataGenerator comData = new PGPCompressedDataGenerator(algorithm);
-        OutputStream cos = comData.open(bOut); // open it with the final destination
+        // open it with the final destination
 
         PGPLiteralDataGenerator lData = new PGPLiteralDataGenerator();
 
         // we want to generate compressed data. This might be a user option later,
         // in which case we would pass in bOut.
-        OutputStream pOut = lData.open(cos, // the compressed output stream
+        try (OutputStream cos = comData.open(bOut);
+                OutputStream pOut = lData.open(cos, // the compressed output stream
                 PGPLiteralData.BINARY, fileName, // "filename" to store
                 clearData.length, // length of clear data
                 new Date() // current time
-        );
+                ))
+        {
+            pOut.write(clearData);
+            pOut.close();
 
-        pOut.write(clearData);
-        pOut.close();
+            comData.close();
 
-        comData.close();
+            return bOut.toByteArray();
+        }
 
-        return bOut.toByteArray();
     }
 
     /**

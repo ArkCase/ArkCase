@@ -29,13 +29,7 @@ package com.armedia.acm.service.outlook.service.impl;
 
 import static com.armedia.acm.service.outlook.service.impl.AcmRecreateOutlookFoldersProgressNotifierMessageBuilder.OBJECT_TYPE;
 
-import com.armedia.acm.calendar.config.service.CalendarAdminService;
-import com.armedia.acm.calendar.config.service.CalendarConfiguration;
-import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
-import com.armedia.acm.calendar.config.service.CalendarConfigurationExceptionMapper;
-import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
-import com.armedia.acm.calendar.config.service.EmailCredentials;
-import com.armedia.acm.calendar.config.service.EmailCredentialsVerifierService;
+import com.armedia.acm.calendar.config.service.*;
 import com.armedia.acm.calendar.service.CalendarServiceException;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
@@ -186,6 +180,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
      * service.outlook.model.AcmOutlookFolderCreator)
      */
     @Override
+    @Transactional
     public void updateFolderCreatorAndRecreateFoldersIfNecessary(AcmOutlookFolderCreator folderCreator, String userId)
     {
         recreateFoldersExecutor.execute(() -> {

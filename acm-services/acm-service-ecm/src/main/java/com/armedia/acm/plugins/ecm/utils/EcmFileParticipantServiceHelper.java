@@ -61,8 +61,13 @@ public class EcmFileParticipantServiceHelper
     @Async("fileParticipantsThreadPoolTaskExecutor")
     public void setParticipantsToFolderChildren(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
     {
-        setAuditPropertyEntityAdapterUserId();
 
+        setAuditPropertyEntityAdapterUserId();
+        setParticipantsToFolderChildrenRecursively(folder, participants, restricted);
+    }
+
+    private void setParticipantsToFolderChildrenRecursively(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
+    {
         for (AcmParticipant participant : participants)
         {
             if (participant.isReplaceChildrenParticipant())
@@ -138,7 +143,11 @@ public class EcmFileParticipantServiceHelper
     public void setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant, boolean restricted)
     {
         setAuditPropertyEntityAdapterUserId();
+        setParticipantToFolderChildrenRecursively(folder, participant, restricted);
+    }
 
+    private void setParticipantToFolderChildrenRecursively(AcmFolder folder, AcmParticipant participant, boolean restricted)
+    {
         // set participant to child folders
         List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
         if (subfolders != null)

@@ -53,20 +53,10 @@ import org.springframework.security.core.Authentication;
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.Unmarshaller;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by riste.tutureski on 10/8/2015.
@@ -133,10 +123,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     {
         DynamicEntity entity = null;
 
-        try
+        try (InputStream oxm = new FileInputStream(getOXMFilePath()))
         {
-            InputStream oxm = new FileInputStream(getOXMFilePath());
-
             Map<String, Object> properties = new HashMap<>();
             properties.put(JAXBContextProperties.OXM_METADATA_SOURCE, oxm);
             DynamicJAXBContext context = DynamicJAXBContextFactory.createContextFromOXM(getClass().getClassLoader(), properties);

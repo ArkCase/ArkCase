@@ -32,28 +32,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.w3c.dom.Comment;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 /**
  * Compare custom Spring bean configurations with built-in configurations.
@@ -118,23 +112,27 @@ public class ConfigurationComparator implements ApplicationContextAware
             NodeList builtinBeans = getBuiltinBeans();
 
             // retrieve all custom bean configurations
-            Files.walk(Paths.get(customFolderPath)).forEach(filePath -> {
-                if (Files.isRegularFile(filePath))
-                {
-                    try
+            try (Stream<Path> fileStream = Files.walk(Paths.get(customFolderPath)))
+            {
+                fileStream.forEach(filePath -> {
+                    if (Files.isRegularFile(filePath))
                     {
-                        // parse built-in version of the configuration file
-                        Document custom = docBuilder.parse(Files.newInputStream(filePath));
-                        NodeList customBeans = custom.getElementsByTagName("bean");
-                        // compare it to built-in beans
-                        compare(filePath + ".diff", customBeans, builtinBeans);
+                        try
+                        {
+                            // parse built-in version of the configuration file
+                            Document custom = docBuilder.parse(Files.newInputStream(filePath));
+                            NodeList customBeans = custom.getElementsByTagName("bean");
+                            // compare it to built-in beans
+                            compare(filePath + ".diff", customBeans, builtinBeans);
+                        }
+                        catch (SAXException | IOException e)
+                        {
+                            log.error("Unable to read and parse '{}'", filePath, e);
+                        }
                     }
-                    catch (SAXException | IOException e)
-                    {
-                        log.error("Unable to read and parse '{}'", filePath, e);
-                    }
-                }
-            });
+                });
+            }
+
         }
         catch (IOException e)
         {
@@ -157,27 +155,30 @@ public class ConfigurationComparator implements ApplicationContextAware
         allBuiltinBeans.appendChild(beans);
 
         // retrieve all built-in beans from all configurations
-        Files.walk(Paths.get(builtinFolderPath)).forEach(filePath -> {
-            if (Files.isRegularFile(filePath))
-            {
-                try
+        try (Stream<Path> fileStream = Files.walk(Paths.get(builtinFolderPath)))
+        {
+            fileStream.forEach(filePath -> {
+                if (Files.isRegularFile(filePath))
                 {
-                    // parse built-in version of the configuration file
-                    Document builtin = docBuilder.parse(Files.newInputStream(filePath));
-                    NodeList builtinBeans = builtin.getElementsByTagName("bean");
-                    for (int i = 0; i < builtinBeans.getLength(); i++)
+                    try
                     {
-                        Node builtinBean = builtinBeans.item(i);
-                        builtinBean = allBuiltinBeans.importNode(builtinBean, true);
-                        beans.appendChild(builtinBean);
+                        // parse built-in version of the configuration file
+                        Document builtin = docBuilder.parse(Files.newInputStream(filePath));
+                        NodeList builtinBeans = builtin.getElementsByTagName("bean");
+                        for (int i = 0; i < builtinBeans.getLength(); i++)
+                        {
+                            Node builtinBean = builtinBeans.item(i);
+                            builtinBean = allBuiltinBeans.importNode(builtinBean, true);
+                            beans.appendChild(builtinBean);
+                        }
+                    }
+                    catch (SAXException | IOException e)
+                    {
+                        log.error("Cannot parse configuration file '{}'", filePath, e);
                     }
                 }
-                catch (SAXException | IOException e)
-                {
-                    log.error("Cannot parse configuration file '{}'", filePath, e);
-                }
-            }
-        });
+            });
+        }
         return beans.getChildNodes();
     }
 

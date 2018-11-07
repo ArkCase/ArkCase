@@ -51,11 +51,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.persistence.FlushModeType;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -724,6 +721,7 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
+    @Transactional
     public boolean isUserMemberOfGroup(String userId, String groupName)
     {
         AcmUser user = userDao.findByUserId(userId);

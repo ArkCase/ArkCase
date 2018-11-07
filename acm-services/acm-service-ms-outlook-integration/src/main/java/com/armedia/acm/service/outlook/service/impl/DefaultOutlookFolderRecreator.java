@@ -40,8 +40,7 @@ import com.armedia.acm.service.outlook.service.impl.CalendarFolderHandler.Calend
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
-import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -50,6 +49,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 
 public class DefaultOutlookFolderRecreator implements OutlookFolderRecreator
 {
@@ -76,6 +78,7 @@ public class DefaultOutlookFolderRecreator implements OutlookFolderRecreator
     private String followerAccess;
 
     @Override
+    @Transactional
     public void recreateFolder(String objectType, Long objectId, AcmOutlookUser outlookUser) throws CalendarServiceException
     {
         CalendarFolderHandler handler = folderHandlers.get(objectType);

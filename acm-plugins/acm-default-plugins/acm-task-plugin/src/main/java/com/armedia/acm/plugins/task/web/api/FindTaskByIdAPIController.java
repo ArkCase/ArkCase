@@ -71,7 +71,7 @@ public class FindTaskByIdAPIController
             return task;
         }
 
-        log.error("Could not find task with id:'{}' {}");
+        log.error("Could not find task with id:'{}'", taskId);
         raiseFakeEvent(taskId, authentication, session);
         throw new AcmObjectNotFoundException("task", taskId, null);
     }
