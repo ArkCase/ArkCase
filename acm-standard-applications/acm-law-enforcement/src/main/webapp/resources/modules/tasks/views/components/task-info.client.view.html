@@ -50,7 +50,8 @@
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">
                     <a editable-combodate="dateInfo.taskStartDate" e-init-date="dateInfo.taskStartDate"
-                       e-min-date="minStartDate" e-minute-step="1" onaftersave="updateStartDate($data, dateInfo.taskStartDate)"
+                       e-min-year="{{minYear}}" e-max-year="{{maxYear}}" e-minute-step="1" e-template="MMM/DD/YYYY HH:mm"
+                       onaftersave="updateStartDate($data, dateInfo.taskStartDate)"
                        permission="editTask" permission-object-type="TASK"
                        permission-properties="objectInfo" permission-action="disable">
                         {{dateInfo.taskStartDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</a>
@@ -60,7 +61,8 @@
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">
                     <a editable-combodate="dateInfo.dueDate" e-init-date="dateInfo.dueDate" e-minute-step="1"
-                       e-min-date="dateInfo.taskStartDate" onaftersave="updateDueDate($data, dateInfo.dueDate)"
+                       e-min-year="{{minYear}}" e-max-year="{{maxYear}}" e-template="MMM/DD/YYYY HH:mm"
+                       onaftersave="updateDueDate($data, dateInfo.dueDate)"
                        permission="editTask" permission-object-type="TASK"
                             permission-properties="objectInfo" permission-action="disable" e-required>
                         {{ dateInfo.dueDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</a>

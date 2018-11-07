@@ -22,7 +22,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             var comboField = element[0].children[1].firstElementChild;
             $(comboField).combodate({
                 format: 'MM/DD/YYYY HH:mm',
-                template: 'DD / MM / YYYY HH:mm',
+                template: 'MMM / DD / YYYY HH:mm',
                 minuteStep: 1,
                 minYear: minYear,
                 maxYear: maxYear,
