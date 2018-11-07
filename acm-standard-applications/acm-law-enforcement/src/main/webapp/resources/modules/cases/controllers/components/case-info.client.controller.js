@@ -176,6 +176,10 @@ angular.module('cases').controller(
                         $scope.owningGroup = ObjectModelService.getGroup(data);
                         $scope.assignee = ObjectModelService.getAssignee(data);
 
+                        var utcDate = moment.utc(UtilDateService.dateToIso(new Date(data.created))).format();
+                        $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+                        $scope.minYear = new Date(data.created).getFullYear();
+
                         CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function(approvers) {
                             var options = [];
                             _.each(approvers, function(approver) {
