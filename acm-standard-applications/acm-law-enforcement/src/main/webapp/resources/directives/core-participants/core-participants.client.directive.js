@@ -152,9 +152,7 @@ angular.module('directives').directive(
                                                 //set for AFDP-6831 to inheritance in the Folder/file participants
                                                 var len = scope.objectInfo.participants.length;
                                                 for (var i = 0; i < len; i++) {
-                                                    if(scope.objectInfo.participants[i].participantType =='assignee'){
-                                                        scope.objectInfo.participants[i].replaceChildrenParticipant = true;
-                                                    }
+                                                    scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                                                 }
 
                                                 scope.assignee = selectedUser.object_id_s;
@@ -178,9 +176,7 @@ angular.module('directives').directive(
                                                 //set for AFDP-6831 to inheritance in the Folder/file participants
                                                 var len = scope.objectInfo.participants.length;
                                                 for (var i = 0; i < len; i++) {
-                                                    if(scope.objectInfo.participants[i].participantType =='owning group') {
-                                                        scope.objectInfo.participants[i].replaceChildrenParticipant = true;
-                                                    }
+                                                    scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                                                 }
 
 
