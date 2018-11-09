@@ -112,7 +112,7 @@ angular.module('cases').controller(
 
                         modalInstance.result.then(function(data) {
                             var addedCostsheet = data;
-                            addedCostsheet.acm$_formName = $translate.instant("cases.comp.cost.formNamePrefix") + " " + Util.goodValue(addedCostsheet.parentNumber);
+                            addedCostsheet.acm$_formName = addedCostsheet.user.fullName + " - " + addedCostsheet.parentNumber;
                             addedCostsheet.acm$_costs = _.reduce(Util.goodArray(addedCostsheet.costs), function(total, n) {
                                 return total + Util.goodValue(n.value, 0);
                             }, 0);
