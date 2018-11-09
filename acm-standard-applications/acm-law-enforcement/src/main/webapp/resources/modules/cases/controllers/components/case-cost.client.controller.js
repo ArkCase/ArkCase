@@ -32,11 +32,15 @@ angular.module('cases').controller(
                         $scope.isFrevvoFormType = isFrevvoFormType;
                     });
 
+                    $scope.isEditDisabled = function(rowEntity) {
+                        return rowEntity.status !== "DRAFT";
+                    };
+
                     var onConfigRetrieved = function(config) {
                         gridHelper.setColumnDefs(config);
                         gridHelper.setBasicOptions(config);
                         gridHelper.disableGridScrolling(config);
-                        gridHelper.addButton(config, "edit");
+                        gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
 
                         for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                             if ("name" == $scope.config.columnDefs[i].name) {
@@ -102,7 +106,20 @@ angular.module('cases').controller(
                             addedCostsheet.acm$_costs = _.reduce(Util.goodArray(addedCostsheet.costs), function(total, n) {
                                 return total + Util.goodValue(n.value, 0);
                             }, 0);
-                            $scope.gridOptions.data.push(addedCostsheet);
+
+                            var foundCostsheetIndex = -1;
+                            for(var i=0; i< $scope.gridOptions.data.length; i++){
+                                if($scope.gridOptions.data[i].id === addedCostsheet.id && $scope.gridOptions.data[i].parentId === addedCostsheet.parentId) {
+                                    foundCostsheetIndex = i;
+                                    break;
+                                }
+                            }
+                            if(foundCostsheetIndex === -1){
+                                $scope.gridOptions.data.push(addedCostsheet);
+                            }
+                            else {
+                                $scope.gridOptions.data[foundCostsheetIndex] = addedCostsheet;
+                            }
                         });
                     }
 
