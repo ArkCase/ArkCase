@@ -72,24 +72,35 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
 
     private Map<String, AcmTime> accumulateTimesheetByTypeAndChangeCode(AcmTimesheet timesheet)
     {
-        Map<String, AcmTime> timesheetRowByTypeAndChangeCode = new HashMap<>();
-        for (AcmTime acmTime : timesheet.getTimes())
-        {
-            if (acmTime.getType().equals("CASE_FILE") || acmTime.getType().equals("COMPLAINT"))
-            {
-                String timesheetKey = acmTime.getType() + "_" + acmTime.getObjectId();
-                if (timesheetRowByTypeAndChangeCode.containsKey(timesheetKey))
-                {
-                    AcmTime rowPerDay = timesheetRowByTypeAndChangeCode.get(timesheetKey);
-                    rowPerDay.setTotalCost(rowPerDay.getTotalCost() + acmTime.getTotalCost());
-                }
-                else
-                {
-                    timesheetRowByTypeAndChangeCode.put(timesheetKey, acmTime);
-                }
-            }
-        }
-        return timesheetRowByTypeAndChangeCode;
+       Map totalAcmTimesPerType = new HashMap<String, AcmTime>();
+
+       timesheet.getTimes().forEach(acmTime -> {
+           String timeKey = acmTime.getType() + "_" + acmTime.getObjectId();
+           if(totalAcmTimesPerType.containsKey(timeKey))
+           {
+               AcmTime finalAcmTime = (AcmTime) totalAcmTimesPerType.get(timeKey);
+               finalAcmTime.setTotalCost(finalAcmTime.getTotalCost() + acmTime.getTotalCost());
+           }
+           else
+           {
+               AcmTime totalAcmTime = new AcmTime();
+               totalAcmTime.setTotalCost(acmTime.getTotalCost());
+               totalAcmTime.setObjectId(acmTime.getObjectId());
+               totalAcmTime.setType(acmTime.getType());
+               totalAcmTimesPerType.put(timeKey, totalAcmTime);
+           }
+       });
+
+        return totalAcmTimesPerType;
+    }
+
+    private AcmTime createTotalAcmTimeFromOriginal(Long parentObjectId,  String objectType)
+    {
+        AcmTime totalAcmTime = new AcmTime();
+        totalAcmTime.setTotalCost(0.0);
+        totalAcmTime.setType(objectType);
+        totalAcmTime.setObjectId(parentObjectId);
+        return totalAcmTime;
     }
 
     private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance)

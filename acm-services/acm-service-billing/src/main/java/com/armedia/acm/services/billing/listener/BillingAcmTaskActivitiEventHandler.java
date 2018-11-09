@@ -90,24 +90,26 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
 
     private Map<String, AcmTime> accumulateTimesheetByTypeAndChangeCode(AcmTimesheet timesheet)
     {
-        Map<String, AcmTime> timesheetRowByTypeAndChangeCode = new HashMap<>();
-        for (AcmTime acmTime : timesheet.getTimes())
-        {
-            if (acmTime.getType().equals("CASE_FILE") || acmTime.getType().equals("COMPLAINT"))
+        Map totalAcmTimesPerType = new HashMap<String, AcmTime>();
+
+        timesheet.getTimes().forEach(acmTime -> {
+            String timeKey = acmTime.getType() + "_" + acmTime.getObjectId();
+            if(totalAcmTimesPerType.containsKey(timeKey))
             {
-                String timesheetKey = acmTime.getType() + "_" + acmTime.getObjectId();
-                if (timesheetRowByTypeAndChangeCode.containsKey(timesheetKey))
-                {
-                    AcmTime rowPerDay = timesheetRowByTypeAndChangeCode.get(timesheetKey);
-                    rowPerDay.setTotalCost(rowPerDay.getTotalCost() + acmTime.getTotalCost());
-                }
-                else
-                {
-                    timesheetRowByTypeAndChangeCode.put(acmTime.getType() + acmTime.getObjectId(), acmTime);
-                }
+                AcmTime finalAcmTime = (AcmTime) totalAcmTimesPerType.get(timeKey);
+                finalAcmTime.setTotalCost(finalAcmTime.getTotalCost() + acmTime.getTotalCost());
             }
-        }
-        return timesheetRowByTypeAndChangeCode;
+            else
+            {
+                AcmTime totalAcmTime = new AcmTime();
+                totalAcmTime.setTotalCost(acmTime.getTotalCost());
+                totalAcmTime.setObjectId(acmTime.getObjectId());
+                totalAcmTime.setType(acmTime.getType());
+                totalAcmTimesPerType.put(timeKey, totalAcmTime);
+            }
+        });
+
+        return totalAcmTimesPerType;
     }
 
     private void handleCostsheet(AcmTaskActivitiEvent event)
