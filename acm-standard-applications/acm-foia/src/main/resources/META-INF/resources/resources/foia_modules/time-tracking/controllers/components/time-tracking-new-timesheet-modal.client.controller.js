@@ -4,6 +4,7 @@ angular.module('time-tracking').controller(
     'TimeTracking.NewTimesheetController',
     [
         '$scope',
+        '$q',
         '$stateParams',
         '$translate',
         '$modalInstance',
@@ -23,7 +24,7 @@ angular.module('time-tracking').controller(
         'Profile.UserInfoService',
         'Helper.UiGridService',
         'Admin.TimesheetConfigurationService',
-        function ($scope, $stateParams, $translate, $modalInstance, TimeTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, UtilDateService, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService,
+        function ($scope, $q, $stateParams, $translate, $modalInstance, TimeTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, UtilDateService, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService,
                   UserInfoService, HelperUiGridService, TimesheetConfigurationService) {
 
             $scope.modalParams = modalParams;
@@ -98,9 +99,7 @@ angular.module('time-tracking').controller(
                 return moduleConfig;
             });
 
-            TimesheetConfigurationService.getConfig().then(function (response) {
-            	    $scope.timesheetConfiguration = response.data;
-            });
+            var timesheetConfig = TimesheetConfigurationService.getConfig();
 
             TimesheetConfigurationService.getProperties().then(function(response) {
                 if (!Util.isEmpty(response.data)) {
@@ -141,9 +140,13 @@ angular.module('time-tracking').controller(
             };
 
             $scope.updateTotalCost = function (timesForm) {
-                if (!Util.isEmpty(timesForm.chargeRole)) {
-                    timesForm.totalCost = fillTotalCost(timesForm.totalWeekHours, timesForm.chargeRole);
-                }
+                $q.when(timesheetConfig).then(function (response){
+                    $scope.timesheetConfiguration = response.data;
+
+                    if (!Util.isEmpty(timesForm.chargeRole)) {
+                        timesForm.totalCost = fillTotalCost(timesForm.totalWeekHours, timesForm.chargeRole);
+                    }
+                });
             };
 
             // ------------------------------------------ edit ----------------------------------------------
@@ -585,58 +588,28 @@ angular.module('time-tracking').controller(
             //-----------------------------------------------------------------------------------------------
 
             $scope.save = function (submissionName) {
+                $q.when(timesheetConfig).then(function (response){
+                    $scope.timesheetConfiguration = response.data;
 
-                if (!$scope.isEdit) {
-                    $scope.loading = true;
-                    $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                    fillTimes($scope.timesheet);
-                    TimeTrackingInfoService.saveNewTimesheetInfo(clearNotFilledElements(_.cloneDeep($scope.timesheet)), submissionName).then(function (objectInfo) {
-                        var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.TIMESHEET);
-                        var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} was created.', {
-                            objectType: objectTypeString,
-                            timesheetTitle: objectInfo.title
-                        });
-                        MessageService.info(timesheetUpdatedMessage);
-                        ObjectService.showObject(ObjectService.ObjectTypes.TIMESHEET, objectInfo.id);
-                        $modalInstance.close(objectInfo);
-                        $scope.loading = false;
-                        $scope.loadingIcon = "fa fa-floppy-o";
-                    }, function (error) {
-                        $scope.loading = false;
-                        $scope.loadingIcon = "fa fa-floppy-o";
-                        if (error.data && error.data.message) {
-                            $scope.error = error.data.message;
-                        } else {
-                            MessageService.error(error);
-                        }
-                    });
-                } else {
-                    // Updates the ArkCase database when the user changes a timesheet attribute
-                    // from the form accessed by clicking 'Edit' and then 'update timesheet button
-                    $scope.loading = true;
-                    $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                    var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-                    fillTimes($scope.objectInfo);
-                    checkForChanges($scope.objectInfo);
-                    if (TimeTrackingInfoService.validateTimesheet($scope.objectInfo)) {
-                        var objectInfo = Util.omitNg($scope.objectInfo);
-                        if($scope.objectInfo.status === "FINAL") {
+                    if (!$scope.isEdit) {
+                        $scope.loading = true;
+                        $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
+                        fillTimes($scope.timesheet);
+                        if($scope.timesheet.status === "FINAL") {
                             submissionName = "SaveFinal";
                         }
-                        promiseSaveInfo = TimeTrackingInfoService.saveTimesheetInfo(objectInfo, submissionName);
-                        promiseSaveInfo.then(function (timesheetInfo) {
-                            $scope.$emit("report-object-updated", timesheetInfo);
+                        TimeTrackingInfoService.saveNewTimesheetInfo(clearNotFilledElements(_.cloneDeep($scope.timesheet)), submissionName).then(function (objectInfo) {
                             var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.TIMESHEET);
-                            var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} was updated.', {
+                            var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} was created.', {
                                 objectType: objectTypeString,
-                                timesheetTitle: timesheetInfo.title
+                                timesheetTitle: objectInfo.title
                             });
                             MessageService.info(timesheetUpdatedMessage);
-                            $modalInstance.close(timesheetInfo);
+                            ObjectService.showObject(ObjectService.ObjectTypes.TIMESHEET, objectInfo.id);
+                            $modalInstance.close(objectInfo);
                             $scope.loading = false;
                             $scope.loadingIcon = "fa fa-floppy-o";
                         }, function (error) {
-                            $scope.$emit("report-object-update-failed", error);
                             $scope.loading = false;
                             $scope.loadingIcon = "fa fa-floppy-o";
                             if (error.data && error.data.message) {
@@ -645,9 +618,47 @@ angular.module('time-tracking').controller(
                                 MessageService.error(error);
                             }
                         });
+                    } else {
+                        // Updates the ArkCase database when the user changes a timesheet attribute
+                        // from the form accessed by clicking 'Edit' and then 'update timesheet button
+                        $scope.loading = true;
+                        $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
+                        var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+                        fillTimes($scope.objectInfo);
+                        checkForChanges($scope.objectInfo);
+                        if (TimeTrackingInfoService.validateTimesheet($scope.objectInfo)) {
+                            var objectInfo = Util.omitNg($scope.objectInfo);
+                            if($scope.objectInfo.status === "FINAL") {
+                                submissionName = "SaveFinal";
+                            }
+                            promiseSaveInfo = TimeTrackingInfoService.saveTimesheetInfo(objectInfo, submissionName);
+                            promiseSaveInfo.then(function (timesheetInfo) {
+                                $scope.$emit("report-object-updated", timesheetInfo);
+                                var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.TIMESHEET);
+                                var objectAction = $translate.instant('common.objectAction.updated');
+                                var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} {{action}}.', {
+                                    objectType: objectTypeString,
+                                    timesheetTitle: timesheetInfo.title,
+                                    action: objectAction
+                                });
+                                MessageService.info(timesheetUpdatedMessage);
+                                $modalInstance.close(timesheetInfo);
+                                $scope.loading = false;
+                                $scope.loadingIcon = "fa fa-floppy-o";
+                            }, function (error) {
+                                $scope.$emit("report-object-update-failed", error);
+                                $scope.loading = false;
+                                $scope.loadingIcon = "fa fa-floppy-o";
+                                if (error.data && error.data.message) {
+                                    $scope.error = error.data.message;
+                                } else {
+                                    MessageService.error(error);
+                                }
+                            });
+                        }
+                        return promiseSaveInfo;
                     }
-                    return promiseSaveInfo;
-                }
+                });
             };
 
             function checkForChanges(objectInfo) {

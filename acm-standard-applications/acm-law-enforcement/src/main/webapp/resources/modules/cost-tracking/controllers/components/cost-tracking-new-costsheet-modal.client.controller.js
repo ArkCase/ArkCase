@@ -334,11 +334,14 @@ angular.module('cost-tracking').controller(
                                 var objectInfo = Util.omitNg($scope.objectInfo);
                                 promiseSaveInfo = CostTrackingInfoService.saveCostsheetInfo(objectInfo, submissionName);
                                 promiseSaveInfo.then(function(costsheetInfo) {
+                                    objectInfo.modified = costsheetInfo.modified;
                                     $scope.$emit("report-object-updated", costsheetInfo);
                                     var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.COSTSHEET);
-                                    var costsheetUpdatedMessage = $translate.instant('{{objectType}} {{costsheetTitle}} was updated.', {
+                                    var objectAction = $translate.instant('common.objectAction.updated');
+                                    var costsheetUpdatedMessage = $translate.instant('{{objectType}} {{costsheetTitle}} {{action}}', {
                                         objectType: objectTypeString,
-                                        costsheetTitle: objectInfo.title
+                                        costsheetTitle: objectInfo.title,
+                                        action: objectAction
                                     });
                                     MessageService.info(costsheetUpdatedMessage);
                                     $modalInstance.close(objectInfo);
