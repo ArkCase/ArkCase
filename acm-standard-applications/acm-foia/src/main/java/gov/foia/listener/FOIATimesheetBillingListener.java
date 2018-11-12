@@ -72,15 +72,6 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
         });
     }
 
-    private AcmTime createTotalAcmTimeFromOriginal(Long parentObjectId,  String objectType)
-    {
-        AcmTime totalAcmTime = new AcmTime();
-        totalAcmTime.setTotalCost(0.0);
-        totalAcmTime.setType(objectType);
-        totalAcmTime.setObjectId(parentObjectId);
-        return totalAcmTime;
-    }
-
     private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance)
     {
         try
