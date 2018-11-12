@@ -49,7 +49,7 @@ public class PDFConversionConfigurationAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
     private PDFConversionConfigurationService pdfConversionConfigurationService;
 
-    @RequestMapping(value = "/pdfConversion/load", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/pdfConversion", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, String>> loadPDFConversionProperties() throws IOException
     {
@@ -64,7 +64,7 @@ public class PDFConversionConfigurationAPIController
         }
     }
 
-    @RequestMapping(value = "/pdfConversion/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/pdfConversion", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void savePDFConversionProperties(@RequestBody Map<String, String> costsheetProperties)
     {
