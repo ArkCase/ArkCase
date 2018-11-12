@@ -34,6 +34,7 @@ import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
+import com.armedia.acm.services.timesheet.service.TimesheetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -47,6 +48,7 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
 
     private AcmTimesheetDao acmTimesheetDao;
     private BillingService billingService;
+    private TimesheetService timesheetService;
 
     @Override
     public void onApplicationEvent(AcmTimesheetEvent acmTimesheetEvent)
@@ -65,33 +67,9 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
     {
         AcmTimesheet timesheet = (AcmTimesheet)event.getSource();
 
-        accumulateTimesheetByTypeAndChangeCode(timesheet).values().stream().forEach(acmTime -> {
+        getTimesheetService().accumulateTimesheetByTypeAndChangeCode(timesheet).values().stream().forEach(acmTime -> {
             createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost());
         });
-    }
-
-    private Map<String, AcmTime> accumulateTimesheetByTypeAndChangeCode(AcmTimesheet timesheet)
-    {
-       Map totalAcmTimesPerType = new HashMap<String, AcmTime>();
-
-       timesheet.getTimes().forEach(acmTime -> {
-           String timeKey = acmTime.getType() + "_" + acmTime.getObjectId();
-           if(totalAcmTimesPerType.containsKey(timeKey))
-           {
-               AcmTime finalAcmTime = (AcmTime) totalAcmTimesPerType.get(timeKey);
-               finalAcmTime.setTotalCost(finalAcmTime.getTotalCost() + acmTime.getTotalCost());
-           }
-           else
-           {
-               AcmTime totalAcmTime = new AcmTime();
-               totalAcmTime.setTotalCost(acmTime.getTotalCost());
-               totalAcmTime.setObjectId(acmTime.getObjectId());
-               totalAcmTime.setType(acmTime.getType());
-               totalAcmTimesPerType.put(timeKey, totalAcmTime);
-           }
-       });
-
-        return totalAcmTimesPerType;
     }
 
     private AcmTime createTotalAcmTimeFromOriginal(Long parentObjectId,  String objectType)
@@ -149,5 +127,13 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
         this.billingService = billingService;
     }
 
+    public TimesheetService getTimesheetService()
+    {
+        return timesheetService;
+    }
 
+    public void setTimesheetService(TimesheetService timesheetService)
+    {
+        this.timesheetService = timesheetService;
+    }
 }

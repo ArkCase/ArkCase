@@ -40,6 +40,7 @@ import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 
+import com.armedia.acm.services.timesheet.service.TimesheetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -58,6 +59,7 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     private AcmTimesheetDao acmTimesheetDao;
     private AcmCostsheetDao acmCostsheetDao;
     private BillingService billingService;
+    private TimesheetService timesheetService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -83,33 +85,9 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     {
         AcmTimesheet timesheet = getAcmTimesheetDao().find(event.getParentObjectId());
 
-        accumulateTimesheetByTypeAndChangeCode(timesheet).values().stream().forEach(acmTime -> {
+        getTimesheetService().accumulateTimesheetByTypeAndChangeCode(timesheet).values().stream().forEach(acmTime -> {
             createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost());
         });
-    }
-
-    private Map<String, AcmTime> accumulateTimesheetByTypeAndChangeCode(AcmTimesheet timesheet)
-    {
-        Map totalAcmTimesPerType = new HashMap<String, AcmTime>();
-
-        timesheet.getTimes().forEach(acmTime -> {
-            String timeKey = acmTime.getType() + "_" + acmTime.getObjectId();
-            if(totalAcmTimesPerType.containsKey(timeKey))
-            {
-                AcmTime finalAcmTime = (AcmTime) totalAcmTimesPerType.get(timeKey);
-                finalAcmTime.setTotalCost(finalAcmTime.getTotalCost() + acmTime.getTotalCost());
-            }
-            else
-            {
-                AcmTime totalAcmTime = new AcmTime();
-                totalAcmTime.setTotalCost(acmTime.getTotalCost());
-                totalAcmTime.setObjectId(acmTime.getObjectId());
-                totalAcmTime.setType(acmTime.getType());
-                totalAcmTimesPerType.put(timeKey, totalAcmTime);
-            }
-        });
-
-        return totalAcmTimesPerType;
     }
 
     private void handleCostsheet(AcmTaskActivitiEvent event)
@@ -197,4 +175,13 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
         this.billingService = billingService;
     }
 
+    public TimesheetService getTimesheetService()
+    {
+        return timesheetService;
+    }
+
+    public void setTimesheetService(TimesheetService timesheetService)
+    {
+        this.timesheetService = timesheetService;
+    }
 }
