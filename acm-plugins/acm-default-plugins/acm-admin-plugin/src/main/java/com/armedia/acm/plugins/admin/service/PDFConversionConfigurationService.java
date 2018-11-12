@@ -51,12 +51,7 @@ public class PDFConversionConfigurationService
 
     public Map<String, String> loadProperties() throws IOException
     {
-        Map<String, String> propertiesMap = new HashMap<>();
-
-        Properties properties =  getPropertyFileManager().readFromFile(new File(getPropertiesFile()));
-        properties.forEach((o, o2) -> propertiesMap.put((String)o, (String)o2));
-
-        return propertiesMap;
+        return getPropertyFileManager().readFromFileAsMap(new File(getPropertiesFile()));
     }
 
     public Boolean isResponseFolderConversionEnabled()
