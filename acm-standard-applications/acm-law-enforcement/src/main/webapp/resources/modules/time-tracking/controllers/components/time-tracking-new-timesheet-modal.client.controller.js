@@ -614,9 +614,11 @@ angular.module('time-tracking').controller(
                             promiseSaveInfo.then(function (timesheetInfo) {
                                 $scope.$emit("report-object-updated", timesheetInfo);
                                 var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.TIMESHEET);
-                                var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} was updated.', {
+                                var objectAction = $translate.instant('common.objectAction.updated');
+                                var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} {{action}}.', {
                                     objectType: objectTypeString,
-                                    timesheetTitle: timesheetInfo.title
+                                    timesheetTitle: timesheetInfo.title,
+                                    action: objectAction
                                 });
                                 MessageService.info(timesheetUpdatedMessage);
                                 $modalInstance.close(timesheetInfo);
