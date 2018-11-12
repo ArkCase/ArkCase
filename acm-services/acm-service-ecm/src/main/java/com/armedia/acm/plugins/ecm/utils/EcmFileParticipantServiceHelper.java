@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.ecm.utils;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -35,14 +35,13 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.web.api.MDCConstants;
-
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -63,11 +62,15 @@ public class EcmFileParticipantServiceHelper
     {
         setAuditPropertyEntityAdapterUserId();
 
+        List<AcmParticipant> participantReplacedList = new ArrayList<>();
+
         for (AcmParticipant participant : participants)
         {
             if (participant.isReplaceChildrenParticipant())
             {
                 setParticipantToFolderChildren(folder, participant, restricted);
+                // save replaced participant
+                participantReplacedList.add(participant);
             }
         }
 
@@ -123,6 +126,68 @@ public class EcmFileParticipantServiceHelper
                     }
                 }
 
+                if (fileParticipantsChanged)
+                {
+                    // modify the instance to trigger the Solr transformers
+                    file.setModified(new Date());
+                    getFileDao().save(file);
+                }
+            }
+        }
+        else if (!inheritAllParticipants && !inheritNoParticipants && folder.getId() != null)
+        {
+
+            List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
+            for (AcmFolder subFolder : subfolders)
+            {
+                // copy folder participants to a new list because the folder.getParticipants() list will be
+                // modified in removeParticipantFromFolderAndChildren() method and will cause
+                // ConcurrentModificationException
+                List<AcmParticipant> folderParticipants = subFolder.getParticipants().stream().collect(Collectors.toList());
+
+                for (AcmParticipant existingParticipant : folderParticipants)
+                {
+                    for (AcmParticipant participantReplaced : participantReplacedList)
+                    {
+                        //Only the existing participant which has the same type but different ladpId should be deleted
+                        if (participantReplaced.getParticipantType().equals(existingParticipant.getParticipantType()) && !participantReplaced
+                                .getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
+                        {
+                            removeParticipantFromFolderAndChildren(subFolder,
+                                    existingParticipant.getParticipantLdapId(), existingParticipant.getParticipantType());
+                        }
+
+                    }
+                }
+            }
+
+            // set participant to files in folder
+            List<EcmFile> files = getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT);
+            for (EcmFile file : files)
+            {
+                boolean fileParticipantsChanged = false;
+
+                // copy folder participants to a new list because the folder.getParticipants() list will be
+                // modified in removeParticipantFromFolderAndChildren() method and will cause
+                // ConcurrentModificationException
+                List<AcmParticipant> fileParticipants = file.getParticipants().stream().collect(Collectors.toList());
+
+                for (AcmParticipant existingParticipant : fileParticipants)
+                {
+                    for (AcmParticipant participantReplaced : participantReplacedList)
+                    {
+                        //Only the existing participant which has the same type but different ladpId should be deleted
+                        if (participantReplaced.getParticipantType().equals(existingParticipant.getParticipantType()) && !participantReplaced
+                                .getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
+                        {
+                            file.getParticipants().removeIf(
+                                    participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId())
+                                            && participant.getParticipantType().equals(existingParticipant.getParticipantType()));
+                            fileParticipantsChanged = true;
+                        }
+
+                    }
+                }
                 if (fileParticipantsChanged)
                 {
                     // modify the instance to trigger the Solr transformers

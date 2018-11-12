@@ -38,19 +38,12 @@ import com.armedia.acm.plugins.ecm.utils.EcmFileParticipantServiceHelper;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -232,6 +225,9 @@ public class EcmFileParticipantService
                 participant -> participant.getParticipantLdapId() != null && participant.getParticipantLdapId().trim().length() > 0)
                 .collect(Collectors.toList());
 
+        //check Participants which should be deleted
+        boolean existDeletedParticipants = checkDifferentParticipant(assignedObjectParticipants);
+
         boolean inheritAllParticipants = assignedObjectParticipants.stream()
                 .allMatch(participant -> participant.isReplaceChildrenParticipant());
 
@@ -247,12 +243,43 @@ public class EcmFileParticipantService
         }
         else
         {
-            // inherit participants where needed
-            assignedObjectParticipants.stream().filter(participant -> participant.isReplaceChildrenParticipant()).forEach(
-                    participant -> setParticipantToFolderAndChildren(folder,
-                            getDocumentParticipantFromAssignedObjectParticipant(participant), restricted));
+            if(existDeletedParticipants)
+            {
+                //if there is any participant should be deleted.
+                List<AcmParticipant> fileParticipants = assignedObjectParticipants.stream()
+                        .map(assignedObjectParticipant -> getDocumentParticipantFromAssignedObjectParticipant(assignedObjectParticipant))
+                        .collect(Collectors.toList());
+                setFolderParticipants(folder, fileParticipants, restricted);
+            }else
+            {
+                // inherit participants where needed
+                assignedObjectParticipants.stream().filter(participant -> participant.isReplaceChildrenParticipant()).forEach(
+                        participant -> setParticipantToFolderAndChildren(folder,
+                                getDocumentParticipantFromAssignedObjectParticipant(participant), restricted));
+            }
         }
     }
+
+    /**
+     *  Check wether there is any participant should be deleted
+     * @param assignedObjectParticipants
+     * @return
+     */
+    private boolean checkDifferentParticipant(List<AcmParticipant> assignedObjectParticipants)
+    {
+        boolean existDeletedParticipants = false;
+        for (AcmParticipant participant : assignedObjectParticipants)
+        {
+            if ((participant.getParticipantType().equals("assignee") || participant.getParticipantType().equals("owning group")) && participant
+                    .isReplaceChildrenParticipant())
+            {
+                existDeletedParticipants = true;
+            }
+        }
+
+        return existDeletedParticipants;
+    }
+
 
     private AcmParticipant getDocumentParticipantFromAssignedObjectParticipant(AcmParticipant participant)
     {
