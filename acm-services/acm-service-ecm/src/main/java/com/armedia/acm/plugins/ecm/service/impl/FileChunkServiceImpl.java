@@ -89,7 +89,7 @@ public class FileChunkServiceImpl implements FileChunkService {
         ecmFileService.upload(authentication, fileDetails.getObjectType(), fileDetails.getObjectId(), folder.getCmisFolderId(),
                 uniqueFileName, inputStream, metadata, existingFile);
 
-        log.debug("Start deleting the temporary part from the file {}", fileDetails.getParts());
+        log.debug("Start deleting the temporary parts from the file {}", fileDetails.getParts());
 
         deleteFilesQuietly(fileDetails.getParts());
 
@@ -97,7 +97,7 @@ public class FileChunkServiceImpl implements FileChunkService {
 
     @Override
     public SequenceInputStream mergeChunks(FileDetails fileDetails)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException {
+            throws IOException {
         SequenceInputStream inputStream = null;
         if (fileDetails != null && fileDetails.getParts() != null && !fileDetails.getParts().isEmpty()) {
             inputStream = new SequenceInputStream(getInputStreams(fileDetails.getParts()));

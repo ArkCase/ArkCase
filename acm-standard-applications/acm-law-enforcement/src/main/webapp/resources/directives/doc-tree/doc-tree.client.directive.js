@@ -106,8 +106,9 @@ angular
             '$timeout',
             'Upload',
             '$http',
+            'MessageService',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout, Upload, $http) {
+                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout, Upload, $http, MessageService) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -2498,15 +2499,18 @@ angular
                             return dfd.promise();
                         },
                         uploadChunkFile: function (files, folderId, fileType) {
+                            //define startUpload function
                             DocTree.scope.startUpload = function (uuid) {
                                 DocTree.scope.uploadPart(uuid);
                             };
 
+                            //define uploadPart function
                             DocTree.scope.uploadPart = function (uuid) {
                                 var file = DocTree.scope.getPartFile(uuid);
                                 DocTree.scope.uploadPartFile(file, uuid);
                             };
 
+                            //define getPartFile function
                             DocTree.scope.getPartFile = function (uuid) {
                                 var file = null;
 
@@ -2523,90 +2527,102 @@ angular
                                 return file;
                             };
 
+                            //define uploadPartFile function which uploads file chunks
                             DocTree.scope.uploadPartFile = function (file, uuid) {
-                                Upload.upload({
-                                    url: 'api/latest/service/ecm/uploadChunks',
-                                    file: file,
-                                    params: {
-                                        uuid: uuid
-                                    }
-                                }).then(function (result) {
-                                    var _uuid = result.data.uuid;
-                                    DocTree.scope.hashMap[_uuid].parts.push(result.data.name);
-                                    if (DocTree.scope.hashMap[_uuid].endByte < DocTree.scope.hashMap[_uuid].file.size) {
-                                        DocTree.scope.hashMap[_uuid].progress = DocTree.scope.hashMap[_uuid].progress + DocTree.scope.hashMap[_uuid].partProgress;
-                                        DocTree.scope.uploadPart(_uuid);
-                                    } else {
-                                        var data = {};
-                                        data.name = DocTree.scope.hashMap[_uuid].file.name;
-                                        data.mimeType = DocTree.scope.hashMap[_uuid].file.type;
-                                        data.objectId = DocTree.getObjId(); // Take <OBJECT_ID> from somewhere. <OBJECT_ID> is the ID of the object where file should be uploaded
-                                        data.objectType = DocTree.getObjType(); // Take <OBJECT_TYPE> from somewhere. <OBJECT_TYPE> is the type of the object where file should be uploaded (CASE_FILE, COMPLAINT, DOC_REPO, etc ...)
-                                        data.folderId = folderId; // Take <CMIS_FOLDER_ID> from somewhere. <CMIS_FOLDER_ID> is Alfresco folder ID. For example "workspace://SpacesStore/028102a9-55e8-41a7-aff7-d63e2dc662d4"
-                                        data.parts = DocTree.scope.hashMap[_uuid].parts;
-                                        data.fileType = fileType;
-                                        data.uuid = _uuid;
-                                        $http({
-                                            method: "POST",
-                                            url: 'api/latest/service/ecm/mergeChunks',
-                                            data: data
-                                        }).then(function (mergeResult) {
-                                            // Do something when merging is finished
-                                        });
-                                    }
-                                }, function (error) {
-                                    // Do something when error is shown
-                                }, function (progress) {
+                                DocTree.scope.currentProgress="";
+                                DocTree.scope.totalProgress="";
+                                DocTree.scope.chunkUploadPercentage="";
+                                DocTree.scope.totalUploadPercentage="";
 
-                                    var modalInstance = $modal.open({
-                                        templateUrl : "directives/doc-tree/upload-progress-bar.html",
-                                        controller : [ '$scope', '$modalInstance', 'progress', function($scope, $modalInstance) {
-                                            $scope.modalInstance = $modalInstance;
+                                var modalInstance = $modal.open({
+                                    templateUrl : "directives/doc-tree/upload-progress-bar.html",
+                                    controller : [ '$scope', '$modalInstance', 'result', function($scope, $modalInstance, result) {
+                                        $scope.currentChunkUploadProgress = DocTree.scope.currentProgress;
+                                        $scope.currentTotalUploadProgress = DocTree.scope.totalProgress;
 
-                                            DocTree.scope.hashMap[uuid].partProgress = progress.loaded;
-                                            $scope.currentChunkUploadProgress = parseInt(100.0 * (DocTree.scope.hashMap[uuid].partProgress / progress.total));
-                                            $scope.currentTotalUploadProgress = parseInt(100.0 * ((DocTree.scope.hashMap[uuid].progress + DocTree.scope.hashMap[uuid].partProgress) / DocTree.scope.hashMap[uuid].file.size));
+                                        $scope.chunkUploadPercentage = DocTree.scope.chunkUploadPercentage;
+                                        $scope.totalUploadPercentage = DocTree.scope.totalUploadPercentage;
 
-                                            $scope.chunkUploadPercentage = {
-                                                width: $scope.currentChunkUploadProgress + '%'
-                                            };
-                                            $scope.totalUploadPercentage = {
-                                                width: $scope.currentTotalUploadProgress + '%'
-                                            };
+                                        $scope.uploadRefactored = function(file, uuid){
+                                            Upload.upload({
+                                                url: 'api/latest/service/ecm/uploadChunks',
+                                                file: file,
+                                                params: {
+                                                    uuid: uuid
+                                                }
+                                            }).then(function (result) {
+                                                var _uuid = result.data.uuid;
+                                                $scope.currentChunkUploadProgress = DocTree.scope.currentProgress;
+                                                $scope.currentTotalUploadProgress = DocTree.scope.totalProgress;
 
-                                            $scope.fileUploadedSucessfully = false;
+                                                $scope.chunkUploadPercentage = DocTree.scope.chunkUploadPercentage;
+                                                $scope.totalUploadPercentage = DocTree.scope.totalUploadPercentage;
 
-                                            if($scope.currentTotalUploadProgress >= 100){
-                                                $timeout(function() {
-                                                    $scope.fileUploadedSucessfully = true;
+
+                                                DocTree.scope.hashMap[_uuid].parts.push(result.data.fileName);
+                                                if (DocTree.scope.hashMap[_uuid].endByte < DocTree.scope.hashMap[_uuid].file.size) {
+                                                    DocTree.scope.hashMap[_uuid].progress = DocTree.scope.hashMap[_uuid].progress + DocTree.scope.hashMap[_uuid].partProgress;
+                                                    var file = DocTree.scope.getPartFile(uuid);
+                                                    $scope.uploadRefactored(file, _uuid);
+                                                }else {
+                                                    //defined data Data object which will merge data.parts chunks into into one large file
+                                                    var data = {};
+                                                    data.name = DocTree.scope.hashMap[_uuid].file.name;
+                                                    data.mimeType = DocTree.scope.hashMap[_uuid].file.type;
+                                                    data.objectId = DocTree.getObjId();
+                                                    data.objectType = DocTree.getObjType();
+                                                    data.folderId = folderId;
+                                                    data.parts = DocTree.scope.hashMap[_uuid].parts;
+                                                    data.fileType = fileType;
+                                                    data.uuid = _uuid;
+                                                    $http({
+                                                        method: "POST",
+                                                        url: 'api/latest/service/ecm/mergeChunks',
+                                                        data: data
+                                                    }).then(function () {
+                                                        if($scope.currentTotalUploadProgress >= 100){
+                                                            $timeout(function() {
+                                                                $modalInstance.close();
+                                                            }, 2000);
+                                                        }
+                                                    });
+                                                }
+                                                $scope.onClickCancel = function() {
                                                     $modalInstance.close();
-                                                }, 3000);
-                                            }
+                                                };
 
-                                        } ],
-                                        animation : false,
-                                        size : 'lg',
-                                        resolve : {
-                                            progress : progress
-                                        }
-                                    });
+                                            }, function (error) {
+                                                MessageService.error($translate.instant('common.directive.docTree.progressBar.failed') + ": " + error);
+                                            }, function (progress) {
+                                                DocTree.scope.hashMap[uuid].partProgress = progress.loaded;
+                                                DocTree.scope.currentProgress = parseInt(100.0 * (DocTree.scope.hashMap[uuid].partProgress / progress.total));
+                                                DocTree.scope.totalProgress =  parseInt(100.0 * ((DocTree.scope.hashMap[uuid].progress + DocTree.scope.hashMap[uuid].partProgress) / DocTree.scope.hashMap[uuid].file.size));
 
-                                    modalInstance.result.then(function() {
-                                    });
+                                                DocTree.scope.chunkUploadPercentage = {
+                                                    width: DocTree.scope.currentProgress + '%'
+                                                };
+                                                DocTree.scope.totalUploadPercentage = {
+                                                    width: DocTree.scope.totalProgress + '%'
+                                                };
+                                            });
 
-                                    //the following works fine, lets try with modal now
-                                    /* DocTree.scope.hashMap[uuid].partProgress = progress.loaded;
+                                        };
 
-                                     var totalProgressPercentage = parseInt(100.0 * ((DocTree.scope.hashMap[uuid].progress + DocTree.scope.hashMap[uuid].partProgress) / DocTree.scope.hashMap[uuid].file.size));
-                                     console.log('Total Progress [' + uuid + ']: ' + totalProgressPercentage + '%'); // Show totalProgressPercentage on UI
+                                        $scope.uploadRefactored(result.file, result.uuid);
+                                    } ],
+                                    animation : false,
+                                    size : 'lg',
+                                    resolve : {
+                                        result: {uuid: uuid, file: file}
+                                    }
+                                });
 
-
-
-                                     var partProgressPercentage = parseInt(100.0 * (DocTree.scope.hashMap[uuid].partProgress / progress.total));
-                                     console.log('Part ' + DocTree.scope.hashMap[uuid].part + ' Progress [' + uuid + ']: ' + partProgressPercentage + '%');*/
+                                modalInstance.result.then(function() {
+                                    $modalInstance.close();
                                 });
                             };
 
+                            //create map structure consisted of fileDetails
                             DocTree.scope.hashMap = {};
 
                             for (var i = 0; i < files.length; i++) {
