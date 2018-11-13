@@ -1,0 +1,65 @@
+<div ng-controller="Admin.FoiaConfigController">
+    <ng-form name="foiaConfigurationForm">
+        <div class="panel panel-success panel-grid">
+            <div class="pull-right well">
+                <div class="btn-group">
+                    <button class="btn btn-xs btn-link" ng-click="saveChanges()" ng-disabled="foiaConfigurationForm.$invalid">
+                        <i class="fa fa-save"></i>
+                        <span translate>
+			            	admin.application.foia.config.save.btn
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <panel-view header="{{'admin.application.foia.config.title' | translate}}" collapsible="false">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label translate>admin.application.foia.config.labels.maxDaysBillingQueue</label>
+                    </div>
+                    <div class="col-lg-4">
+                        <label translate>admin.application.foia.config.labels.maxDaysHoldQueue</label>
+                    </div>
+                    <div class="col-lg-4">
+                        <label translate>admin.application.foia.config.labels.requestExtensionWorkingDays</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <input type="number" min="1" ng-model="configDataModel.maxDaysInBillingQueue" class="form-control">
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="number" min="1" ng-model="configDataModel.maxDaysInHoldQueue" class="form-control">
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="number" min="1" ng-model="configDataModel.requestExtensionWorkingDays" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.holdedAndAppealedRequestsDueDateUpdateEnabled" title="{{'admin.application.foia.config.labels.holdedAndAppealedRequestsDueDateUpdateEnabled.title' | translate}}">
+                                <span translate>
+                                    admin.application.foia.config.labels.holdedAndAppealedRequestsDueDateUpdateEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.dashboardBannerEnabled">
+                                <span translate>
+                                    admin.application.foia.config.labels.dashboardBannerEnable
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </panel-view>
+        </div>
+    </ng-form>
+</div>

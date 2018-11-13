@@ -1191,6 +1191,13 @@
                 ]
             },
             {
+                "type": "p/application/foiaConfig",
+                "label": "admin.application.foia.config.title",
+                "components": [
+                    "application-foia.config"
+                ]
+            },
+            {
                 "type": "p/branding",
                 "label": "admin.branding.title",
                 "icon": "fa fa-wrench",
