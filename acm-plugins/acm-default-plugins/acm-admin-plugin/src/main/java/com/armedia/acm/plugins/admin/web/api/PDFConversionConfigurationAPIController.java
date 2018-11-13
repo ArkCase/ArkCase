@@ -51,17 +51,9 @@ public class PDFConversionConfigurationAPIController
 
     @RequestMapping(value = "/pdfConversion", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, String>> loadPDFConversionProperties() throws IOException
+    public ResponseEntity<Map<String, String>> loadPDFConversionProperties()
     {
-        try
-        {
-            return new ResponseEntity<>(getPdfConversionConfigurationService().loadProperties(), HttpStatus.OK);
-        }
-        catch (IOException e)
-        {
-            log.error("Could not load PDF Conversion Properties File", e);
-            throw e;
-        }
+        return new ResponseEntity<>(getPdfConversionConfigurationService().loadProperties(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/pdfConversion", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

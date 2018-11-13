@@ -182,8 +182,8 @@
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
-    <bean id="pdfConversionConfigurationService" class="com.armedia.acm.plugins.admin.service.PDFConversionConfigurationService">
-        <property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/pdfConversionProperties.properties"/>
+    <bean id="pdfConversionConfigurationService" class="com.armedia.acm.plugins.admin.service.PDFConversionConfigurationService" init-method="initBean">
+        <property name="propertiesFile" value="#{ systemProperties ['user.home'] }\.arkcase\acm\pdfConversionProperties.properties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
 </beans>
