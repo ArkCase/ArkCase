@@ -38,6 +38,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Objects;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -57,7 +58,7 @@ public class TimesheetConfigurationService
         String timesheetConfigJson = "";
         TimesheetConfig timesheetConfig = null;
 
-        try (FileReader fileReader = new FileReader(getTimesheetResource().getFile());
+        try (Reader fileReader = new FileReader(getTimesheetResource().getFile());
                 BufferedReader bufferedReader = new BufferedReader(fileReader))
         {
             log.info("Trying to read from config file: " + getTimesheetResource().getFile().getAbsolutePath());
@@ -69,7 +70,6 @@ public class TimesheetConfigurationService
                 timesheetConfigJson += currentLine;
             }
 
-            fileReader.close();
             timesheetConfig = getObjectConverter().getJsonUnmarshaller().unmarshall(timesheetConfigJson, TimesheetConfig.class);
         }
         catch (IOException e)

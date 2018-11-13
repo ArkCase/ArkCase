@@ -31,7 +31,11 @@ package com.armedia.acm.frevvo.config;
  */
 
 import com.armedia.acm.frevvo.model.FrevvoFormConstants;
-import com.frevvo.forms.client.*;
+import com.frevvo.forms.client.ApplicationEntry;
+import com.frevvo.forms.client.FormTypeEntry;
+import com.frevvo.forms.client.FormTypeFeed;
+import com.frevvo.forms.client.FormsService;
+import com.frevvo.forms.client.SchemaEntry;
 
 import org.apache.activemq.util.ByteArrayInputStream;
 import org.apache.commons.io.Charsets;

@@ -49,9 +49,18 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
-import java.io.*;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -163,7 +172,7 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
             log.info("not deploying, since process already exists [{}]", bpmnId);
             return acmProcessDefinitionExisting;
         }
-        try (FileInputStream fis = new FileInputStream(processDefinitionFile))
+        try (InputStream fis = new FileInputStream(processDefinitionFile))
         {
             DeploymentBuilder deploymentBuilder = activitiRepositoryService.createDeployment();
 

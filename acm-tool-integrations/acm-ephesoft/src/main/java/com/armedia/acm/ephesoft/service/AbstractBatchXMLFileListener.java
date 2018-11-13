@@ -53,10 +53,20 @@ import org.springframework.security.core.Authentication;
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.Unmarshaller;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Created by riste.tutureski on 10/8/2015.
