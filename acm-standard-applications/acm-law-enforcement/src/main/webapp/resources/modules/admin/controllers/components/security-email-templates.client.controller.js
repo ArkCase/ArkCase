@@ -2,6 +2,7 @@
 
 angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
         [ '$scope', '$translate', '$modal', 'Admin.EmailTemplatesService', 'Helper.UiGridService', 'MessageService', 'Dialog.BootboxService', 'UtilService', function($scope, $translate, $modal, emailTemplatesService, HelperUiGridService, MessageService, DialogService, Util) {
+            $scope.emailReceiverConfiguration = {};
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
@@ -133,4 +134,24 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
                     $scope.gridOptions.data = templates;
                 });
             }
+
+            emailTemplatesService.getEmailReceiverConfiguration().then(function(result) {
+                $scope.emailReceiverConfiguration = result.data;
+                $scope.emailReceiverConfiguration.user = result.data.user.replace('%40', '@');
+            })
+
+            $scope.newEmailReceiverConfiguration = {};
+            $scope.save = function() {
+                $scope.newEmailReceiverConfiguration.user = $scope.emailReceiverConfiguration.user.replace('@', '%40');
+                $scope.newEmailReceiverConfiguration.password = $scope.emailReceiverConfiguration.pass;
+                emailTemplatesService.saveEmailReceiverConfiguration($scope.newEmailReceiverConfiguration).then(function(value) {
+                    MessageService.succsessAction();
+                }, function(err) {
+                    if (err.status === 400) {
+                        MessageService.errorAction();
+                    } else {
+                        MessageService.errorAction();
+                    }
+                });
+            };
         } ]);
