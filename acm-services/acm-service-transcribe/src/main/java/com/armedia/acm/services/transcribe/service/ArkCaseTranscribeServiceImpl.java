@@ -50,9 +50,22 @@ import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.transcribe.dao.TranscribeDao;
-import com.armedia.acm.services.transcribe.exception.*;
+import com.armedia.acm.services.transcribe.exception.CompileTranscribeException;
+import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
+import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
+import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
+import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
+import com.armedia.acm.services.transcribe.exception.SaveTranscribeException;
 import com.armedia.acm.services.transcribe.factory.TranscribeServiceFactory;
-import com.armedia.acm.services.transcribe.model.*;
+import com.armedia.acm.services.transcribe.model.Transcribe;
+import com.armedia.acm.services.transcribe.model.TranscribeActionType;
+import com.armedia.acm.services.transcribe.model.TranscribeBusinessProcessModel;
+import com.armedia.acm.services.transcribe.model.TranscribeBusinessProcessVariableKey;
+import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
+import com.armedia.acm.services.transcribe.model.TranscribeConstants;
+import com.armedia.acm.services.transcribe.model.TranscribeStatusType;
+import com.armedia.acm.services.transcribe.model.TranscribeType;
+import com.armedia.acm.services.transcribe.model.TranscribeUserType;
 import com.armedia.acm.services.transcribe.pipline.TranscribePipelineContext;
 import com.armedia.acm.services.transcribe.rules.TranscribeBusinessProcessRulesExecutor;
 import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
@@ -79,8 +92,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/28/2018
@@ -565,8 +585,8 @@ public class ArkCaseTranscribeServiceImpl implements ArkCaseTranscribeService
                     {
                         file = File.createTempFile(TranscribeConstants.TEMP_FILE_PREFIX, TranscribeConstants.TEMP_FILE_SUFFIX);
 
-                        try (FileInputStream in = new FileInputStream(file);
-                                FileOutputStream out = new FileOutputStream(file);
+                        try (InputStream in = new FileInputStream(file);
+                                OutputStream out = new FileOutputStream(file);
                                 XWPFDocument document = new XWPFDocument())
                         {
                             XWPFParagraph paragraph = document.createParagraph();

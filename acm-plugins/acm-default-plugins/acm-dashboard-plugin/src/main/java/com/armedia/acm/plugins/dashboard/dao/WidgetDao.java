@@ -29,7 +29,11 @@ package com.armedia.acm.plugins.dashboard.dao;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.plugins.dashboard.model.widget.*;
+import com.armedia.acm.plugins.dashboard.model.widget.RolesGroupByWidgetDto;
+import com.armedia.acm.plugins.dashboard.model.widget.Widget;
+import com.armedia.acm.plugins.dashboard.model.widget.WidgetRole;
+import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleName;
+import com.armedia.acm.plugins.dashboard.model.widget.WidgetRolePrimaryKey;
 import com.armedia.acm.services.users.model.AcmRole;
 
 import org.slf4j.Logger;

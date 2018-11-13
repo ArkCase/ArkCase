@@ -44,6 +44,7 @@ import javax.net.ssl.TrustManagerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -160,7 +161,7 @@ public class StompBrokerRelayMessageHandlerBeanPostProcessor implements BeanPost
 
                 TrustManager[] trustManagers = null;
 
-                try (FileInputStream trustStoreStream = new FileInputStream(new File(trustStore)))
+                try (InputStream trustStoreStream = new FileInputStream(new File(trustStore)))
                 {
                     tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
                     trustedCertStore = KeyStore.getInstance(trustStoreType);
