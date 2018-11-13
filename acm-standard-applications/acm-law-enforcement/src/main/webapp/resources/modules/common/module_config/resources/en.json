@@ -183,7 +183,9 @@
             "header": "Uploading Files...",
             "footer": "Files Upload Complete",
             "currentFileProgress": "Current File Progress",
-            "totalProgress": "Total Progress"
+            "totalProgress": "Total Progress",
+            "cancel": "Cancel",
+            "failed": "File upload failed!"
         }
     },
     "common.directive.objectTree": {
