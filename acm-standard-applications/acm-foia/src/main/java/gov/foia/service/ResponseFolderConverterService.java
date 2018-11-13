@@ -53,7 +53,7 @@ public class ResponseFolderConverterService
     public void convertResponseFolder(Long requestId, String username)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException, ConversionException
     {
-        if(getPdfConversionConfigurationService().isResponseFolderConversionEnabled())
+        if (getPdfConversionConfigurationService().isResponseFolderConversionEnabled())
         {
             CaseFile request = caseFileDao.find(requestId);
             converter.convertFolder(responseFolderService.getResponseFolder(request).getId(), username);

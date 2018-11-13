@@ -27,9 +27,11 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
+import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,49 +39,51 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class PDFConversionConfigurationService
+public class PDFConversionConfigurationService implements ApplicationListener<ConfigurationFileChangedEvent>
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private String propertiesFile;
     private PropertyFileManager propertyFileManager;
 
+    private Map<String, String> properties = new HashMap<>();
+
+    public void initBean()
+    {
+        try
+        {
+            properties = getPropertyFileManager().readFromFileAsMap(new File(getPropertiesFile()));
+        }
+        catch (IOException e)
+        {
+            log.error("Could not read properties file [{}]", propertiesFile);
+        }
+    }
+
+    @Override
+    public void onApplicationEvent(ConfigurationFileChangedEvent configurationFileChangedEvent)
+    {
+        if(configurationFileChangedEvent.getConfigFile().getAbsolutePath().equals(propertiesFile))
+        {
+            initBean();
+        }
+    }
+
     public void  saveProperties(Map<String, String> properties)
     {
         getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
     }
 
-    public Map<String, String> loadProperties() throws IOException
+    public Map<String, String> loadProperties()
     {
-        return getPropertyFileManager().readFromFileAsMap(new File(getPropertiesFile()));
+        return properties;
     }
 
     public Boolean isResponseFolderConversionEnabled()
     {
-        Map<String, String> pdfProperties = new HashMap<>();
+        Map<String, String> pdfProperties = loadProperties();
 
-        try
-        {
-            pdfProperties = loadProperties();
-        }
-        catch (IOException e)
-        {
-            log.warn("Could not load [{}] properties file", getPropertiesFile(), e);
-        }
-
-        if (pdfProperties.isEmpty())
-        {
-            return false;
-        }
-
-        if(pdfProperties.containsKey("responseFolderConversion"))
-        {
-            return "true".equals(pdfProperties.get("responseFolderConversion"));
-        }
-        else
-        {
-            return false;
-        }
+        return !pdfProperties.isEmpty() && pdfProperties.containsKey("responseFolderConversion") && "true".equals(pdfProperties.get("responseFolderConversion"));
     }
 
     public String getPropertiesFile()
