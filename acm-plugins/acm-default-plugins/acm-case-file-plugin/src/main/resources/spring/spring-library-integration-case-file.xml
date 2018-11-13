@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd"
-    xmlns:int="http://www.springframework.org/schema/integration">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
 
     <int:channel id="caseFileFilteredMailChannel"/>
 
@@ -22,7 +22,24 @@
 
     <int:service-activator input-channel="caseFileFilteredMailChannel" ref="caseFileMailHandler" method="handle"/>
 
-    <int:chain input-channel="mailChannel" output-channel="caseFileFilteredMailChannel">
+    <int:chain input-channel="mailChannelCaseFile" output-channel="caseFileFilteredMailChannel">
         <int:filter ref="caseFileMailFilter" throw-exception-on-rejection="false" method="accept"/>
+    </int:chain>
+
+
+    <!-- Create new CaseFile from incoming mail -->
+    <bean id="newCaseFileMailFilter" class="com.armedia.acm.services.email.filter.CaseFilePatternMailFilter">
+        <constructor-arg index="0" value=""/>
+        <constructor-arg index="1" value="${casefile.email.regex.object_type}"/>
+    </bean>
+
+    <bean id="newCaseFileMailHandler" class="com.armedia.acm.plugins.casefile.email.NewCaseFileMailHandler" parent="caseFileMailHandler">
+        <property name="saveCaseService" ref="saveCaseService"/>
+    </bean>
+
+    <int:service-activator input-channel="newCaseFileFilteredMailChannel" ref="newCaseFileMailHandler" method="handle"/>
+
+    <int:chain input-channel="mailChannelCaseFile" output-channel="newCaseFileFilteredMailChannel">
+        <int:filter ref="newCaseFileMailFilter" throw-exception-on-rejection="false" method="accept"/>
     </int:chain>
 </beans>
