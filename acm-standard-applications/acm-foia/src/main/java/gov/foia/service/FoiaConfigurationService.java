@@ -17,7 +17,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class FoiaConfigurationService implements FoiaConfigurationConstants
+public class FoiaConfigurationService
 {
     private PropertyFileManager propertyFileManager;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
