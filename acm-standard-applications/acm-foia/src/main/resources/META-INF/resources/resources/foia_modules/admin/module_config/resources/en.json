@@ -682,6 +682,19 @@
                     "name": "Enter Name of Holiday",
                     "date": "Enter Date of Holiday"
                 }
+            },
+            "foia.config": {
+                "title": "Foia Configuration",
+                "header": "Configure FOIA Application",
+                "labels": {
+                    "maxDaysBillingQueue": "Max days in Billing queue",
+                    "maxDaysHoldQueue": "Max days in Hold queue",
+                    "requestExtensionWorkingDays": "Request extension working days",
+                    "holdedAndAppealedRequestsDueDateUpdateEnabled": "Should time spent in 'Hold' and 'Appeal' queue affect the request due date",
+                    "dashboardBannerEnable": "Enable dashboard banner for browser support",
+                    "holdedAndAppealedRequestsDueDateUpdateEnabled.title": "If checked, each day spent in 'Hold' and 'Appeal' queue will advance the due date by one day"
+                },
+                "save.btn": "Save"
             }
         },
         "branding.title": "Branding",
