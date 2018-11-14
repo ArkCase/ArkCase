@@ -52,7 +52,11 @@ import org.springframework.util.Assert;
 
 import javax.persistence.FlushModeType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -266,7 +270,6 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    @Transactional
     public List<AcmGroup> findByUserMember(AcmUser user)
     {
         return groupDao.findByUserMember(user);
@@ -721,7 +724,6 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    @Transactional
     public boolean isUserMemberOfGroup(String userId, String groupName)
     {
         AcmUser user = userDao.findByUserId(userId);
