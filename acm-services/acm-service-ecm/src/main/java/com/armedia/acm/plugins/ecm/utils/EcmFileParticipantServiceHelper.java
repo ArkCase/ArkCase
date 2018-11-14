@@ -62,15 +62,11 @@ public class EcmFileParticipantServiceHelper
     {
         setAuditPropertyEntityAdapterUserId();
 
-        List<AcmParticipant> participantReplacedList = new ArrayList<>();
-
         for (AcmParticipant participant : participants)
         {
             if (participant.isReplaceChildrenParticipant())
             {
                 setParticipantToFolderChildren(folder, participant, restricted);
-                // save replaced participant
-                participantReplacedList.add(participant);
             }
         }
 
@@ -134,9 +130,31 @@ public class EcmFileParticipantServiceHelper
                 }
             }
         }
-        else if (!inheritAllParticipants && !inheritNoParticipants && folder.getId() != null)
-        {
+    }
 
+    /**
+     *
+     * @param folder
+     * @param participants
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Async("fileParticipantsThreadPoolTaskExecutor")
+    public void removeDeletedParticipantFromFolderChilder(AcmFolder folder, List<AcmParticipant> participants)
+    {
+
+        List<AcmParticipant> participantReplacedList = new ArrayList<>();
+
+        for (AcmParticipant participant : participants)
+        {
+            if (participant.isReplaceChildrenParticipant())
+            {
+                // save replaced participant
+                participantReplacedList.add(participant);
+            }
+        }
+
+        if (folder.getId() != null)
+        {
             List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
             for (AcmFolder subFolder : subfolders)
             {
@@ -150,7 +168,8 @@ public class EcmFileParticipantServiceHelper
                     for (AcmParticipant participantReplaced : participantReplacedList)
                     {
                         //Only the existing participant which has the same type but different ladpId should be deleted
-                        if (participantReplaced.getParticipantType().equals(existingParticipant.getParticipantType()) && !participantReplaced
+                        if (participantReplaced.getParticipantType().equals(existingParticipant.getParticipantType())
+                                && !participantReplaced
                                 .getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
                         {
                             removeParticipantFromFolderAndChildren(subFolder,
@@ -177,7 +196,8 @@ public class EcmFileParticipantServiceHelper
                     for (AcmParticipant participantReplaced : participantReplacedList)
                     {
                         //Only the existing participant which has the same type but different ladpId should be deleted
-                        if (participantReplaced.getParticipantType().equals(existingParticipant.getParticipantType()) && !participantReplaced
+                        if (participantReplaced.getParticipantType().equals(existingParticipant.getParticipantType())
+                                && !participantReplaced
                                 .getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
                         {
                             file.getParticipants().removeIf(
