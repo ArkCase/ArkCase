@@ -135,78 +135,44 @@ public class EcmFileParticipantServiceHelper
     /**
      *
      * @param folder
-     * @param participants
+     * @param deletedParticipants
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Async("fileParticipantsThreadPoolTaskExecutor")
-    public void removeDeletedParticipantFromFolderChilder(AcmFolder folder, List<AcmParticipant> participants)
+    public void removeDeletedParticipantFromFolderChilder(AcmFolder folder, List<AcmParticipant> deletedParticipants)
     {
 
         List<AcmParticipant> participantReplacedList = new ArrayList<>();
 
-        for (AcmParticipant participant : participants)
-        {
-            if (participant.isReplaceChildrenParticipant())
-            {
-                // save replaced participant
-                participantReplacedList.add(participant);
-            }
-        }
-
         if (folder.getId() != null)
         {
+            // delete non using participant in folder
             List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
             for (AcmFolder subFolder : subfolders)
             {
-                // copy folder participants to a new list because the folder.getParticipants() list will be
-                // modified in removeParticipantFromFolderAndChildren() method and will cause
-                // ConcurrentModificationException
-                List<AcmParticipant> folderParticipants = subFolder.getParticipants().stream().collect(Collectors.toList());
-
-                for (AcmParticipant existingParticipant : folderParticipants)
+                //delete the partipant according to the deleteList
+                for (AcmParticipant deletedParticipant : deletedParticipants)
                 {
-                    for (AcmParticipant participantReplaced : participantReplacedList)
-                    {
                         //Only the existing participant which has the same type but different ladpId should be deleted
-                        if (participantReplaced.getParticipantType().equals(existingParticipant.getParticipantType())
-                                && !participantReplaced
-                                .getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
-                        {
-                            removeParticipantFromFolderAndChildren(subFolder,
-                                    existingParticipant.getParticipantLdapId(), existingParticipant.getParticipantType());
-                        }
-
-                    }
+                        removeParticipantFromFolderAndChildren(subFolder,
+                                deletedParticipant.getParticipantLdapId(), deletedParticipant.getParticipantType());
                 }
             }
 
-            // set participant to files in folder
+            // delete non using participant in files
             List<EcmFile> files = getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT);
             for (EcmFile file : files)
             {
                 boolean fileParticipantsChanged = false;
 
-                // copy folder participants to a new list because the folder.getParticipants() list will be
-                // modified in removeParticipantFromFolderAndChildren() method and will cause
-                // ConcurrentModificationException
-                List<AcmParticipant> fileParticipants = file.getParticipants().stream().collect(Collectors.toList());
-
-                for (AcmParticipant existingParticipant : fileParticipants)
+               //delete the partipant according to the deleteList
+                for (AcmParticipant deletedParticipant : deletedParticipants)
                 {
-                    for (AcmParticipant participantReplaced : participantReplacedList)
-                    {
-                        //Only the existing participant which has the same type but different ladpId should be deleted
-                        if (participantReplaced.getParticipantType().equals(existingParticipant.getParticipantType())
-                                && !participantReplaced
-                                .getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
-                        {
-                            file.getParticipants().removeIf(
-                                    participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId())
-                                            && participant.getParticipantType().equals(existingParticipant.getParticipantType()));
-                            fileParticipantsChanged = true;
-                        }
+                    file.getParticipants().removeIf(
+                            participant -> participant.getParticipantLdapId().equals(deletedParticipant.getParticipantLdapId())
+                                    && participant.getParticipantType().equals(deletedParticipant.getParticipantType()));
+                    fileParticipantsChanged = true;
 
-                    }
                 }
                 if (fileParticipantsChanged)
                 {

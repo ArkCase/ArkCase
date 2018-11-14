@@ -231,9 +231,6 @@ public class EcmFileParticipantService
                 participant -> participant.getParticipantLdapId() != null && participant.getParticipantLdapId().trim().length() > 0)
                 .collect(Collectors.toList());
 
-        //check Participants which should be deleted
-        boolean existDeletedParticipants = checkDifferentParticipant(assignedObjectParticipants);
-
         boolean inheritAllParticipants = assignedObjectParticipants.stream()
                 .allMatch(participant -> participant.isReplaceChildrenParticipant());
 
@@ -254,14 +251,20 @@ public class EcmFileParticipantService
             assignedObjectParticipants.stream().filter(participant -> participant.isReplaceChildrenParticipant()).forEach(
                     participant -> setParticipantToFolderAndChildren(folder,
                             getDocumentParticipantFromAssignedObjectParticipant(participant), restricted));
-            if(existDeletedParticipants)
+
+
+            List<AcmParticipant> fileParticipants = assignedObjectParticipants.stream()
+                    .map(assignedObjectParticipant -> getDocumentParticipantFromAssignedObjectParticipant(assignedObjectParticipant))
+                    .collect(Collectors.toList());
+            //check Participants which should be deleted. Compare assignParticipants with the participants of folder
+            List<AcmParticipant> existDeletedParticipants = checkDifferentParticipant(fileParticipants, folder.getParticipants());
+
+            if(existDeletedParticipants.size() > 0)
             {
-                List<AcmParticipant> fileParticipants = assignedObjectParticipants.stream()
-                        .map(assignedObjectParticipant -> getDocumentParticipantFromAssignedObjectParticipant(assignedObjectParticipant))
-                        .collect(Collectors.toList());
+
                 setFolderParticipants(folder, fileParticipants, restricted);
 
-                getFileParticipantServiceHelper().removeDeletedParticipantFromFolderChilder(folder, fileParticipants);
+                getFileParticipantServiceHelper().removeDeletedParticipantFromFolderChilder(folder,existDeletedParticipants);
             }
 
         }
@@ -272,19 +275,32 @@ public class EcmFileParticipantService
      * @param assignedObjectParticipants
      * @return
      */
-    private boolean checkDifferentParticipant(List<AcmParticipant> assignedObjectParticipants)
+    private List<AcmParticipant> checkDifferentParticipant(List<AcmParticipant> assignedObjectParticipants, List<AcmParticipant> orignialObjectParticipants)
     {
-        boolean existDeletedParticipants = false;
-        for (AcmParticipant participant : assignedObjectParticipants)
+        List<AcmParticipant> deletedParticipantList = new ArrayList<>();
+
+
+        for (AcmParticipant originalParticipant : orignialObjectParticipants)
         {
-            if ( participant.isReplaceChildrenParticipant())
+            boolean found = false;
+            for (AcmParticipant assignedObjectParticipant : assignedObjectParticipants)
             {
-                existDeletedParticipants = true;
-                break;
+
+                if (assignedObjectParticipant.getParticipantLdapId().equals(originalParticipant.getParticipantLdapId()) &&
+                        assignedObjectParticipant.getParticipantType().equals(originalParticipant.getParticipantType()))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if(found == false){
+                //if the orginal participant is not in the assignedParticipant list
+                //add it to the delete list
+                deletedParticipantList.add(originalParticipant);
             }
         }
 
-        return existDeletedParticipants;
+        return deletedParticipantList;
     }
 
 
