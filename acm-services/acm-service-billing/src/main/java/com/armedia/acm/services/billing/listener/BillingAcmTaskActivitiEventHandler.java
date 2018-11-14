@@ -67,7 +67,7 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     public void onApplicationEvent(AcmTaskActivitiEvent event)
     {
 
-        if (event.getTaskEvent().equals("complete"))
+        if (event.getTaskEvent().equals("complete") && event.getProcessVariables().containsKey("reviewOutcome") && event.getProcessVariables().get("reviewOutcome").equals("APPROVE"))
         {
             switch (event.getParentObjectType())
             {
