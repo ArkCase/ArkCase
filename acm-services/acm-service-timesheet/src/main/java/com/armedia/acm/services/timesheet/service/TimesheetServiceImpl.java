@@ -50,10 +50,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author riste.tutureski
@@ -279,6 +276,30 @@ public class TimesheetServiceImpl implements TimesheetService
         String endDate = formatter.format(timesheet.getEndDate());
 
         return objectType + " " + startDate + "-" + endDate;
+    }
+
+    @Override
+    public Map<String, AcmTime> accumulateTimesheetByTypeAndChangeCode(AcmTimesheet timesheet)
+    {
+        Map totalAcmTimesPerType = new HashMap<String, AcmTime>();
+
+        timesheet.getTimes().forEach(acmTime -> {
+            String timeKey = acmTime.getType() + "_" + acmTime.getObjectId();
+            if(totalAcmTimesPerType.containsKey(timeKey))
+            {
+                AcmTime finalAcmTime = (AcmTime) totalAcmTimesPerType.get(timeKey);
+                finalAcmTime.setTotalCost(finalAcmTime.getTotalCost() + acmTime.getTotalCost());
+            }
+            else
+            {
+                AcmTime totalAcmTime = new AcmTime();
+                totalAcmTime.setTotalCost(acmTime.getTotalCost());
+                totalAcmTime.setObjectId(acmTime.getObjectId());
+                totalAcmTime.setType(acmTime.getType());
+                totalAcmTimesPerType.put(timeKey, totalAcmTime);
+            }
+        });
+        return totalAcmTimesPerType;
     }
 
     public AcmTimesheetDao getAcmTimesheetDao()

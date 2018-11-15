@@ -951,6 +951,9 @@
             }
         }
     },
+    "common.objectAction": {
+        "updated": "was updated"
+    },
     "common.multicorrespondence": {
         "modal": {
             "title": "Correspondence Templates",
