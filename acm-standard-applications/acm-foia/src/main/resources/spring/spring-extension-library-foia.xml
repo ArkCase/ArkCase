@@ -96,9 +96,9 @@
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
         </beans:bean>
 
-        <beans:bean id="foiaConfigurationService" class="gov.foia.service.FoiaConfigurationService">
-            <beans:property name="foiaPropertiesResource" value="file:${user.home}/.arkcase/acm/foia.properties"/>
+        <beans:bean id="foiaConfigurationService" class="gov.foia.service.FoiaConfigurationService" init-method="initBean">
             <beans:property name="propertyFileManager" ref="propertyFileManager"/>
+            <property name="propertiesFile" value="#{ systemProperties ['user.home'] }\.arkcase\acm\foia.properties"/>
         </beans:bean>
 
         <beans:bean id="ecmFileNewMetadataHandler" class="gov.foia.pipeline.presave.FOIAFileNewMetadataHandler">
