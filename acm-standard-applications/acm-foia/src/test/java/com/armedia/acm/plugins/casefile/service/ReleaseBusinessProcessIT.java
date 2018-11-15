@@ -52,6 +52,7 @@ import java.util.Map;
 import gov.foia.broker.FOIARequestFileBrokerClient;
 import gov.foia.model.FOIARequest;
 import gov.foia.service.ResponseFolderCompressorService;
+import gov.foia.service.ResponseFolderConverterService;
 import gov.foia.service.ResponseFolderNotifyService;
 
 /**
@@ -77,6 +78,10 @@ public class ReleaseBusinessProcessIT
     private QueueCaseService queueCaseService;
 
     @Autowired
+    @Qualifier("responseFolderConverterService")
+    private ResponseFolderConverterService responseFolderConverterService;
+    
+    @Autowired
     @Qualifier("responseFolderCompressorService")
     private ResponseFolderCompressorService responseFolderCompressorService;
 
@@ -92,7 +97,7 @@ public class ReleaseBusinessProcessIT
     public void setUp() throws Exception
     {
         // deploy
-        repo.createDeployment().addClasspathResource("activiti/foia-extension-release-process_v7.bpmn20.xml").deploy();
+        repo.createDeployment().addClasspathResource("activiti/foia-extension-release-process_v9.bpmn20.xml").deploy();
     }
 
     @After
@@ -110,6 +115,7 @@ public class ReleaseBusinessProcessIT
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
+        processVariables.put("USERNAME", "jgarcia");
 
         changeObjectStatusService.change(foiaId, objectType, "Released");
         expect(queueCaseService.enqueue(foiaId, "Release")).andReturn(new FOIARequest());
