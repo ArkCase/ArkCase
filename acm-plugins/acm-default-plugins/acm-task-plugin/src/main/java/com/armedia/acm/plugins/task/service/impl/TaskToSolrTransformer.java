@@ -204,13 +204,16 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
 
     private void mapParentAclProperties(SolrBaseDocument doc, AcmTask in)
     {
-        if (in.getParentObjectType() != null)
+        if (in.getParentObjectType() != null && in.getParentObjectId() != null)
         {
             AcmAbstractDao<AcmObject> parentDAO = acmDataService.getDaoByObjectType(in.getParentObjectType());
-            AcmObject parent = parentDAO.find(in.getParentObjectId());
-            if (parent instanceof AcmAssignedObject)
+            if ( parentDAO != null )
             {
-                getSearchAccessControlFields().setParentAccessControlFields(doc, (AcmAssignedObject) parent);
+                AcmObject parent = parentDAO.find(in.getParentObjectId());
+                if (parent instanceof AcmAssignedObject)
+                {
+                        getSearchAccessControlFields().setParentAccessControlFields(doc, (AcmAssignedObject) parent);
+                }
             }
         }
     }
