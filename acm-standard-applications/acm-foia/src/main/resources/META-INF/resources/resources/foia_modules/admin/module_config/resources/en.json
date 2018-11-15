@@ -869,6 +869,10 @@
                 "update.success": "Successfully updated configuration row.",
                 "update.error": "Error updating configuration row.",
                 "test.conection.success": "Successfully connected."
+            },
+            "pdfConversion": {
+                "title": "PDF Conversion",
+                "enableResponseFolderConversion.checkbox": "Convert to PDF the documents in the Response Folder"
             }
         },
         "stateOfArkcase": {
