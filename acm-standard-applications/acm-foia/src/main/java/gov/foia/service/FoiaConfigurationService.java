@@ -1,107 +1,76 @@
 package gov.foia.service;
 
+import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import gov.foia.model.FoiaConfiguration;
 import gov.foia.model.FoiaConfigurationConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
+import org.springframework.context.ApplicationListener;
 
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.HashMap;
+import java.util.Map;
 
-public class FoiaConfigurationService
+public class FoiaConfigurationService implements ApplicationListener<ConfigurationFileChangedEvent>
 {
     private PropertyFileManager propertyFileManager;
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
-    private Resource foiaPropertiesResource;
+    private String propertiesFile;
     private Logger log = LoggerFactory.getLogger(getClass());
+    private Map<String, String> foiaProperties = new HashMap<>();
+
+    public void initBean()
+    {
+        try
+        {
+          foiaProperties = getPropertyFileManager().readFromFileAsMap((new File(getPropertiesFile())));
+        }
+        catch(IOException e)
+        {
+            log.error("Could not read properties file [{}]", getPropertiesFile());
+        }
+    }
 
 
     public void writeConfiguration(FoiaConfiguration foiaConfiguration)
     {
-        Properties foiaProperties = new Properties();
-        foiaProperties.put(FoiaConfigurationConstants.MAX_DAYS_IN_BILLING_QUEUE, foiaConfiguration.getMaxDaysInBillingQueue().toString());
-        foiaProperties.put(FoiaConfigurationConstants.MAX_DAYS_IN_HOLD_QUEUE, foiaConfiguration.getMaxDaysInHoldQueue().toString());
-        foiaProperties.put(FoiaConfigurationConstants.HOLDED_AND_APPEALED_REQUESTS, foiaConfiguration.getHoldedAndAppealedRequestsDueDateUpdateEnabled().toString());
-        foiaProperties.put(FoiaConfigurationConstants.EXTENSTION_WORKING_DAYS, foiaConfiguration.getRequestExtensionWorkingDays().toString());
-        foiaProperties.put(FoiaConfigurationConstants.DASHBOARD_BANNER_ENABLED, foiaConfiguration.getDashboardBannerEnabled().toString());
+        Map<String,String> properties = new HashMap<>();
+        properties.put(FoiaConfigurationConstants.MAX_DAYS_IN_BILLING_QUEUE, foiaConfiguration.getMaxDaysInBillingQueue().toString());
+        properties.put(FoiaConfigurationConstants.MAX_DAYS_IN_HOLD_QUEUE, foiaConfiguration.getMaxDaysInHoldQueue().toString());
+        properties.put(FoiaConfigurationConstants.HOLDED_AND_APPEALED_REQUESTS, foiaConfiguration.getHoldedAndAppealedRequestsDueDateUpdateEnabled().toString());
+        properties.put(FoiaConfigurationConstants.EXTENSTION_WORKING_DAYS, foiaConfiguration.getRequestExtensionWorkingDays().toString());
+        properties.put(FoiaConfigurationConstants.DASHBOARD_BANNER_ENABLED, foiaConfiguration.getDashboardBannerEnabled().toString());
 
-        Lock writeLock = lock.writeLock();
-        writeLock.lock();
-
-        try (OutputStream propertyOutputStream = new FileOutputStream(foiaPropertiesResource.getFile()))
-        {
-            foiaProperties.store(propertyOutputStream, String.format("Stored properties %s", propertyOutputStream));
-        }
-        catch (IOException e)
-        {
-            log.error("Could not write properties to [{}] file.", foiaPropertiesResource.getFilename());
-        }
-        finally
-        {
-            writeLock.unlock();
-        }
-
+        getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
     }
 
     public FoiaConfiguration readConfiguration()
     {
         FoiaConfiguration foiaConfiguration = new FoiaConfiguration();
-        Properties foiaProperties = loadProperties();
-
-        Set<String> propertyNames = foiaProperties.stringPropertyNames();
-        for (String propertyName : propertyNames) {
-            String propertyValue = foiaProperties.getProperty(propertyName);
-            switch (propertyName) {
+        for (String property : foiaProperties.keySet())
+        {
+            switch (property)
+            {
                 case FoiaConfigurationConstants.MAX_DAYS_IN_BILLING_QUEUE:
-                    foiaConfiguration.setMaxDaysInBillingQueue(Integer.valueOf(propertyValue));
+                    foiaConfiguration.setMaxDaysInBillingQueue(Integer.valueOf(foiaProperties.get(property)));
                     break;
                 case FoiaConfigurationConstants.MAX_DAYS_IN_HOLD_QUEUE:
-                    foiaConfiguration.setMaxDaysInHoldQueue(Integer.valueOf(propertyValue));
+                    foiaConfiguration.setMaxDaysInHoldQueue(Integer.valueOf(foiaProperties.get(property)));
                     break;
                 case FoiaConfigurationConstants.HOLDED_AND_APPEALED_REQUESTS:
-                    foiaConfiguration.setHoldedAndAppealedRequestsDueDateUpdateEnabled(Boolean.valueOf(propertyValue));
+                    foiaConfiguration.setHoldedAndAppealedRequestsDueDateUpdateEnabled(Boolean.valueOf(foiaProperties.get(property)));
                     break;
                 case FoiaConfigurationConstants.EXTENSTION_WORKING_DAYS:
-                    foiaConfiguration.setRequestExtensionWorkingDays(Integer.valueOf(propertyValue));
+                    foiaConfiguration.setRequestExtensionWorkingDays(Integer.valueOf(foiaProperties.get(property)));
                     break;
                 case FoiaConfigurationConstants.DASHBOARD_BANNER_ENABLED:
-                    foiaConfiguration.setDashboardBannerEnabled(Boolean.valueOf(propertyValue));
+                    foiaConfiguration.setDashboardBannerEnabled(Boolean.valueOf(foiaProperties.get(property)));
             }
         }
+
         return foiaConfiguration;
     }
-
-
-    private Properties loadProperties()
-    {
-        Properties properties = new Properties();
-        Lock readLock = lock.readLock();
-        readLock.lock();
-        try (InputStream propertyInputStream = foiaPropertiesResource.getInputStream())
-        {
-            properties.load(propertyInputStream);
-        }
-        catch (IOException e)
-        {
-            log.error("Could not read properties from [{}] file.", foiaPropertiesResource.getFilename());
-        }
-        finally
-        {
-            readLock.unlock();
-
-        }
-        return properties;
-    }
-
 
     public PropertyFileManager getPropertyFileManager() {
         return propertyFileManager;
@@ -111,11 +80,21 @@ public class FoiaConfigurationService
         this.propertyFileManager = propertyFileManager;
     }
 
-    public Resource getFoiaPropertiesResource() {
-        return foiaPropertiesResource;
+    public String getPropertiesFile() {
+        return propertiesFile;
     }
 
-    public void setFoiaPropertiesResource(Resource foiaPropertiesResource) {
-        this.foiaPropertiesResource = foiaPropertiesResource;
+    public void setPropertiesFile(String propertiesFile) {
+        this.propertiesFile = propertiesFile;
+    }
+
+    @Override
+    public void onApplicationEvent(ConfigurationFileChangedEvent event)
+    {
+        if(event.getConfigFile().getAbsolutePath().equals(getPropertiesFile()))
+        {
+            initBean();
+        }
+
     }
 }
