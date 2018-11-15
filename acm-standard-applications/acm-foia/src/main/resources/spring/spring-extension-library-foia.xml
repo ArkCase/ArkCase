@@ -121,6 +121,7 @@
         <beans:bean id="foiaTimesheetBillingListener" class="gov.foia.listener.FOIATimesheetBillingListener">
             <beans:property name="acmTimesheetDao" ref="acmTimesheetDao"/>
             <beans:property name="billingService" ref="billingService"/>
+            <beans:property name="timesheetService" ref="timesheetService"/>
         </beans:bean>
 
         <beans:bean id="newRequestDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
