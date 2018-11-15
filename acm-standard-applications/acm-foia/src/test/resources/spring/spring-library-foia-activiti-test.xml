@@ -91,6 +91,21 @@
             <beans:constructor-arg ref="responseFolderCompressorServiceClass"/>
         </beans:bean>
 
+        <beans:bean id="responseFolderConverterServiceClass" class="java.lang.Class" factory-method="forName">
+            <beans:constructor-arg value="gov.foia.service.ResponseFolderConverterService"/>
+        </beans:bean>
+        <beans:bean id="responseFolderConverterService" class="org.easymock.EasyMock" factory-method="createMock">
+            <beans:constructor-arg ref="responseFolderConverterServiceClass"/>
+        </beans:bean>
+
+        <beans:bean id="foiaExecutiveGroupNotificationServiceClass" class="java.lang.Class" factory-method="forName">
+            <beans:constructor-arg value="gov.foia.service.FOIAExecutiveGroupNotificationService"/>
+        </beans:bean>
+        <beans:bean id="foiaExecutiveGroupNotificationService" class="org.easymock.EasyMock" factory-method="createMock">
+            <beans:constructor-arg ref="foiaExecutiveGroupNotificationServiceClass"/>
+        </beans:bean>
+
+        
         <beans:bean id="foiaRequestFileBrokerClientClass" class="java.lang.Class" factory-method="forName">
             <beans:constructor-arg value="gov.foia.broker.FOIARequestFileBrokerClient"/>
         </beans:bean>
