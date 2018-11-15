@@ -130,27 +130,32 @@
         </mvc:resource-chain>
     </mvc:resources>
 
+    <!--All files under /assets/dist  will be versioned, and we could cache as long as possible. If file is changed, newer version will be used.-->
     <mvc:resources mapping="/assets/dist/**" location="/assets/dist/">
-        <mvc:cache-control max-age="1800" cache-public="false" cache-private="true"/>
+        <mvc:cache-control max-age="2592000" cache-public="true" s-maxage="2592000" cache-private="true"/>
     </mvc:resources>
 
+    <!--Cache for 30 min, allow proxy to cache for 15 min-->
     <mvc:resources mapping="/assets/css/**" location="/assets/css/">
-        <mvc:cache-control max-age="1800" cache-public="false" cache-private="true"/>
+        <mvc:cache-control max-age="1800" cache-public="true" s-maxage="900" cache-private="true"/>
     </mvc:resources>
 
+    <!--Cache for 30 min, allow proxy to cache for 15 min-->
     <mvc:resources mapping="/assets/img/**" location="/assets/img/">
-        <mvc:cache-control max-age="1800" cache-public="false" cache-private="true"/>
+        <mvc:cache-control max-age="1800" cache-public="true" s-maxage="900" cache-private="true"/>
     </mvc:resources>
 
+    <!--Cache for 30 min, allow proxy to cache for 15 min-->
     <mvc:resources mapping="/modules_config/**" location="/modules_config/">
-        <mvc:cache-control max-age="1800" cache-public="false" cache-private="true"/>
+        <mvc:cache-control max-age="1800" cache-public="true" s-maxage="900" cache-private="true"/>
     </mvc:resources>
 
+    <!-- Cache external resources which are not possible to add version to the name of the file. Strategy is: Cache for 1 hour, and than check for etag if changed, if not cache for 1 more hour, etc...-->
     <mvc:resources mapping="/assets/js/**" location="/assets/js/">
-        <mvc:cache-control max-age="2592000" cache-public="false" cache-private="true"/>
+        <mvc:cache-control max-age="3600" cache-public="true" s-maxage="900" cache-private="true"/>
         <mvc:resource-chain resource-cache="true" auto-registration="false">
             <mvc:resolvers>
-                <bean class="org.springframework.web.servlet.resource.PathResourceResolver"/>
+                <bean class="com.armedia.acm.web.api.PathResourceResolverWithETag"/>
             </mvc:resolvers>
         </mvc:resource-chain>
     </mvc:resources>
