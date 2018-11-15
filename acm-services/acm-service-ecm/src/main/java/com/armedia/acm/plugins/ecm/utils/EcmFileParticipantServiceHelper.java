@@ -41,7 +41,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -133,53 +132,20 @@ public class EcmFileParticipantServiceHelper
     }
 
     /**
-     *
      * @param folder
      * @param deletedParticipants
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Async("fileParticipantsThreadPoolTaskExecutor")
-    public void removeDeletedParticipantFromFolderChilder(AcmFolder folder, List<AcmParticipant> deletedParticipants)
+    public void removeDeletedParticipantFromFolderChild(AcmFolder folder, List<AcmParticipant> deletedParticipants)
     {
-
-        List<AcmParticipant> participantReplacedList = new ArrayList<>();
 
         if (folder.getId() != null)
         {
-            // delete non using participant in folder
-            List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
-            for (AcmFolder subFolder : subfolders)
+            for (AcmParticipant deletdParticipant : deletedParticipants)
             {
-                //delete the partipant according to the deleteList
-                for (AcmParticipant deletedParticipant : deletedParticipants)
-                {
-                        //Only the existing participant which has the same type but different ladpId should be deleted
-                        removeParticipantFromFolderAndChildren(subFolder,
-                                deletedParticipant.getParticipantLdapId(), deletedParticipant.getParticipantType());
-                }
-            }
-
-            // delete non using participant in files
-            List<EcmFile> files = getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT);
-            for (EcmFile file : files)
-            {
-                boolean fileParticipantsChanged = false;
-
-               //delete the partipant according to the deleteList
-                for (AcmParticipant deletedParticipant : deletedParticipants)
-                {
-                    file.getParticipants().removeIf(
-                            participant -> participant.getParticipantLdapId().equals(deletedParticipant.getParticipantLdapId())
-                                    && participant.getParticipantType().equals(deletedParticipant.getParticipantType()));
-                    fileParticipantsChanged = true;
-
-                }
-                if (fileParticipantsChanged)
-                {
-                    // modify the instance to trigger the Solr transformers
-                    file.setModified(new Date());
-                    getFileDao().save(file);
-                }
+                removeParticipantFromFolderAndChildren(folder, deletdParticipant.getParticipantLdapId(),
+                        deletdParticipant.getParticipantType());
             }
         }
     }

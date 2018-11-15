@@ -261,10 +261,8 @@ public class EcmFileParticipantService
 
             if(existDeletedParticipants.size() > 0)
             {
-
                 setFolderParticipants(folder, fileParticipants, restricted);
-
-                getFileParticipantServiceHelper().removeDeletedParticipantFromFolderChilder(folder,existDeletedParticipants);
+                getFileParticipantServiceHelper().removeDeletedParticipantFromFolderChild(folder,existDeletedParticipants);
             }
 
         }
