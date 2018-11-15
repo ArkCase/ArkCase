@@ -99,13 +99,13 @@ public class SaveCaseServiceImpl implements SaveCaseService
             try
             {
                 saved = caseFileDao.save(caseFile);
+                log.info("Case saved '{}'", saved);
             }
             catch (Exception e)
             {
                 log.error("Case not saved", e);
             }
 
-            log.info("Case saved '{}'", saved);
             return saved;
 
         });
