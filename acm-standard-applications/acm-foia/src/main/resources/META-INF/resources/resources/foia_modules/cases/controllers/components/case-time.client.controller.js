@@ -43,7 +43,7 @@ angular.module('cases').controller(
                     });
 
                     $scope.isEditDisabled = function(rowEntity) {
-                        return rowEntity.status === "FINAL" && $scope.timesheetProperties.useApprovalWorkflow === "false";
+                        return rowEntity.status !== "DRAFT";
                     };
 
                     var onConfigRetrieved = function(config) {

@@ -38,6 +38,7 @@ import com.armedia.acm.core.exceptions.AcmParticipantsException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
@@ -81,12 +82,12 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         mockAuditPropertyEntityAdapter = createNiceMock(AuditPropertyEntityAdapter.class);
 
         fileServiceProperties = new Properties();
-        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.read", "");
-        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.write", "");
+        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.read", "reader");
+        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.write", "assignee,co-owner,supervisor,collaborator,owner");
         fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.no-access", "");
-        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.group-read", "");
-        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.group-write", "");
-        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.group-no-access", "");
+        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.group-read", "owning group");
+        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.group-write", "owning group");
+        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.group-no-access", "owning group");
 
         fileParticipantService.setFileDao(mockFileDao);
         fileParticipantService.setFolderDao(mockFolderDao);
@@ -895,5 +896,99 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
 
         // then
         fail("AcmParticipantsException should have been thrown!");
+    }
+
+    @Test
+    public void testinheritParticipantsFromAssignedObject() throws AcmParticipantsException
+    {
+
+        final Long objectId = 1L;
+        final Long childId = 2L;
+
+        final String participantLdapId = "userId2";
+        final String participantType = "write";
+
+        final String participantLdapId1 = "userId1";
+        final String participantType1 = "assignee";
+        final String participantLdapId2 = "userId2";
+        final String participantType2 = "assignee";
+        final String participantLdapId3 = "userId3";
+        final String participantType3 = "owning group";
+        List<AcmParticipant> participants = new ArrayList<>();
+
+        AcmParticipant participant1 = new AcmParticipant();
+        participant1.setParticipantLdapId(participantLdapId1);
+        participant1.setParticipantType(participantType1);
+        participant1.setReplaceChildrenParticipant(true);
+        participants.add(participant1);
+
+        AcmContainer acmContainer = new AcmContainer();
+        AcmFolder acmFolder = new AcmFolder();
+        acmFolder.setId(objectId);
+//        AcmFolder childFolder = new AcmFolder();
+//        childFolder.setId(childId);
+
+        acmContainer.setFolder(acmFolder);
+//        acmContainer.setd
+
+
+        List<AcmParticipant> assignedObjectParticipants = new ArrayList<>();
+        AcmParticipant participantAssign1 = new AcmParticipant();
+        participantAssign1.setParticipantLdapId(participantLdapId1);
+        participantAssign1.setParticipantType(participantType1);
+        participantAssign1.setReplaceChildrenParticipant(true);
+        assignedObjectParticipants.add(participantAssign1);
+
+        AcmParticipant participantAssign2 = new AcmParticipant();
+        participantAssign2.setParticipantLdapId(participantLdapId3);
+        participantAssign2.setParticipantType(participantType3);
+        participantAssign2.setReplaceChildrenParticipant(false);
+        assignedObjectParticipants.add(participantAssign2);
+
+        List<AcmParticipant> orignalObjectParticipants = new ArrayList<>();
+        AcmParticipant participantOrig1 = new AcmParticipant();
+        participantOrig1.setParticipantLdapId(participantLdapId2);
+        participantOrig1.setParticipantType(participantType2);
+        participantOrig1.setReplaceChildrenParticipant(false);
+        orignalObjectParticipants.add(participantOrig1);
+
+        AcmParticipant participantOrig2 = new AcmParticipant();
+        participantOrig2.setParticipantLdapId(participantLdapId3);
+        participantOrig2.setParticipantType(participantType3);
+        participantOrig2.setReplaceChildrenParticipant(false);
+        orignalObjectParticipants.add(participantOrig1);
+
+        EcmFile file = new EcmFile();
+        List<AcmParticipant> childFolderParticipants = new ArrayList<>();
+
+        AcmParticipant childFolderParticipant = new AcmParticipant();
+        childFolderParticipant.setParticipantLdapId(participantLdapId);
+        childFolderParticipant.setParticipantType(participantType);
+
+
+        expect(mockFileDao.findByFolderId(acmFolder.getId(), FlushModeType.COMMIT)).andReturn(Arrays.asList(file));
+//        expect(mockFileDao.findByFolderId(childFolder.getId(), FlushModeType.COMMIT)).andReturn(new ArrayList<>());
+        expect(mockFileDao.save(file)).andReturn(file);
+
+        expect(mockFolderDao.findSubFolders(objectId, FlushModeType.COMMIT)).andReturn(null);
+        expect(mockFolderDao.findSubFolders(objectId, FlushModeType.COMMIT)).andReturn(null);
+//        expect(mockFolderDao.findSubFolders(childId, FlushModeType.COMMIT)).andReturn(null);
+
+        expect(mockFileDao.findByFolderId(acmFolder.getId(), FlushModeType.COMMIT)).andReturn(Arrays.asList(file));
+        //        expect(mockFileDao.findByFolderId(childFolder.getId(), FlushModeType.COMMIT)).andReturn(new ArrayList<>());
+        expect(mockFileDao.save(file)).andReturn(file);
+
+        EntityManager em = mock(EntityManager.class);
+        expect(mockFolderDao.getEm()).andReturn(em).anyTimes();
+
+        expect(mockFolderDao.findSubFolders(objectId, FlushModeType.COMMIT)).andReturn(new ArrayList<>());
+        expect(mockFileDao.findByFolderId(acmFolder.getId(), FlushModeType.COMMIT)).andReturn(Arrays.asList(file));
+
+        // when
+        replayAll();
+        fileParticipantService.inheritParticipantsFromAssignedObject(assignedObjectParticipants,orignalObjectParticipants,acmContainer, false);
+
+        //then
+        assertEquals(participantLdapId1, file.getParticipants().get(0).getParticipantLdapId());
     }
 }

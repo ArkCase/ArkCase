@@ -96,6 +96,11 @@
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
         </beans:bean>
 
+        <beans:bean id="foiaConfigurationService" class="gov.foia.service.FoiaConfigurationService" init-method="initBean">
+            <beans:property name="propertyFileManager" ref="propertyFileManager"/>
+            <property name="propertiesFile" value="#{ systemProperties ['user.home'] }\.arkcase\acm\foia.properties"/>
+        </beans:bean>
+
         <beans:bean id="ecmFileNewMetadataHandler" class="gov.foia.pipeline.presave.FOIAFileNewMetadataHandler">
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="folderDao" ref="acmFolderDao"/>
@@ -116,6 +121,7 @@
         <beans:bean id="foiaTimesheetBillingListener" class="gov.foia.listener.FOIATimesheetBillingListener">
             <beans:property name="acmTimesheetDao" ref="acmTimesheetDao"/>
             <beans:property name="billingService" ref="billingService"/>
+            <beans:property name="timesheetService" ref="timesheetService"/>
         </beans:bean>
 
         <beans:bean id="newRequestDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
