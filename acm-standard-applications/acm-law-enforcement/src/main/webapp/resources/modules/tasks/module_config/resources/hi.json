@@ -23,7 +23,8 @@
         "state.label": "राज्य",
         "overdue.tooltip": "टास्क ओवरड्यू है",
         "deadline.tooltip": "डेडलाइन ही आ रही है",
-        "owningGroup.label": "स्वामी समूह"
+        "owningGroup.label": "स्वामी समूह",
+        "alertMessage": "hi_Due date must be after the start date "
     },
     "tasks.comp.parentinfo": {
         "title": "जनक जानकारी",

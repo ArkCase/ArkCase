@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!--suppress SpringFacetInspection -->
+<beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <beans:beans profile="extension-foia">
+        <beans:bean id="eventRaisingActivitiListener" class="com.armedia.acm.activiti.AcmProcessEventHandler">
+            <beans:property name="runtimeService" ref="runtimeService"/>
+            <beans:property name="historyService" ref="historyService"/>
+        </beans:bean>
+
+        <beans:bean id="acmActivitiListener_processStart" class="com.armedia.acm.activiti.AcmActivitiListener">
+            <beans:property name="event" value="start"/>
+            <beans:property name="implementationType" value="expression"/>
+            <beans:property name="implementation" value="eventRaisingActivitiListener.handleProcessEvent(execution.eventName, execution)"/>
+        </beans:bean>
+
+        <beans:bean id="acmActivitiListener_processEnd" class="com.armedia.acm.activiti.AcmActivitiListener">
+            <beans:property name="event" value="end"/>
+            <beans:property name="implementationType" value="expression"/>
+            <beans:property name="implementation" value="eventRaisingActivitiListener.handleProcessEvent(execution.eventName, execution)"/>
+        </beans:bean>
+
+        <beans:bean id="acmActivitiProcessHandler" class="com.armedia.acm.activiti.ActivitiProcessParseHandler">
+            <beans:property name="listenersToAdd">
+                <beans:list>
+                    <beans:ref bean="acmActivitiListener_processStart"/>
+                    <beans:ref bean="acmActivitiListener_processEnd"/>
+                </beans:list>
+            </beans:property>
+        </beans:bean>
+
+        <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+            <beans:property name="driverClass" value="org.h2.Driver"/>
+            <beans:property name="url" value="jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000"/>
+            <beans:property name="username" value="sa"/>
+            <beans:property name="password" value=""/>
+        </beans:bean>
+
+        <beans:bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <beans:property name="dataSource" ref="dataSource"/>
+        </beans:bean>
+
+        <beans:bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+            <beans:property name="dataSource" ref="dataSource"/>
+            <beans:property name="transactionManager" ref="transactionManager"/>
+            <beans:property name="databaseSchemaUpdate" value="true"/>
+            <beans:property name="jobExecutorActivate" value="false"/>
+            <beans:property name="preBpmnParseHandlers">
+                <beans:list>
+                    <beans:ref bean="acmActivitiProcessHandler"/>
+                </beans:list>
+            </beans:property>
+        </beans:bean>
+
+        <beans:bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+            <beans:property name="processEngineConfiguration" ref="processEngineConfiguration"/>
+        </beans:bean>
+
+        <beans:bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService"/>
+        <beans:bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService"/>
+        <beans:bean id="taskService" factory-bean="processEngine" factory-method="getTaskService"/>
+        <beans:bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService"/>
+
+        <!-- mock ArkCase objects -->
+        <beans:bean id="changeObjectStatusServiceClass" class="java.lang.Class" factory-method="forName">
+            <beans:constructor-arg value="com.armedia.acm.objectchangestatus.service.ChangeObjectStatusService"/>
+        </beans:bean>
+        <beans:bean id="changeObjectStatusService" class="org.easymock.EasyMock" factory-method="createMock">
+            <beans:constructor-arg ref="changeObjectStatusServiceClass"/>
+        </beans:bean>
+
+        <beans:bean id="acknowledgementDocumentServiceClass" class="java.lang.Class" factory-method="forName">
+            <beans:constructor-arg value="gov.foia.service.AcknowledgementDocumentService"/>
+        </beans:bean>
+        <beans:bean id="acknowledgementDocumentService" class="org.easymock.EasyMock" factory-method="createMock">
+            <beans:constructor-arg ref="acknowledgementDocumentServiceClass"/>
+        </beans:bean>
+
+        <beans:bean id="queueCaseServiceClass" class="java.lang.Class" factory-method="forName">
+            <beans:constructor-arg value="com.armedia.acm.plugins.casefile.service.QueueCaseService"/>
+        </beans:bean>
+        <beans:bean id="queueCaseService" class="org.easymock.EasyMock" factory-method="createMock">
+            <beans:constructor-arg ref="queueCaseServiceClass"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderCompressorServiceClass" class="java.lang.Class" factory-method="forName">
+            <beans:constructor-arg value="gov.foia.service.ResponseFolderCompressorService"/>
+        </beans:bean>
+        <beans:bean id="responseFolderCompressorService" class="org.easymock.EasyMock" factory-method="createMock">
+            <beans:constructor-arg ref="responseFolderCompressorServiceClass"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderConverterServiceClass" class="java.lang.Class" factory-method="forName">
+            <beans:constructor-arg value="gov.foia.service.ResponseFolderConverterService"/>
+        </beans:bean>
+        <beans:bean id="responseFolderConverterService" class="org.easymock.EasyMock" factory-method="createMock">
+            <beans:constructor-arg ref="responseFolderConverterServiceClass"/>
+        </beans:bean>
+
+        <beans:bean id="foiaExecutiveGroupNotificationServiceClass" class="java.lang.Class" factory-method="forName">
+            <beans:constructor-arg value="gov.foia.service.FOIAExecutiveGroupNotificationService"/>
+        </beans:bean>
+        <beans:bean id="foiaExecutiveGroupNotificationService" class="org.easymock.EasyMock" factory-method="createMock">
+            <beans:constructor-arg ref="foiaExecutiveGroupNotificationServiceClass"/>
+        </beans:bean>
+
+        
+        <beans:bean id="foiaRequestFileBrokerClientClass" class="java.lang.Class" factory-method="forName">
+            <beans:constructor-arg value="gov.foia.broker.FOIARequestFileBrokerClient"/>
+        </beans:bean>
+        <beans:bean id="foiaRequestFileBrokerClient" class="org.easymock.EasyMock" factory-method="createMock">
+            <beans:constructor-arg ref="foiaRequestFileBrokerClientClass"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderNotifyServiceClass" class="java.lang.Class" factory-method="forName">
+            <beans:constructor-arg value="gov.foia.service.ResponseFolderNotifyService"/>
+        </beans:bean>
+        <beans:bean id="responseFolderNotifyService" class="org.easymock.EasyMock" factory-method="createMock">
+            <beans:constructor-arg ref="responseFolderNotifyServiceClass"/>
+        </beans:bean>
+
+        <beans:bean id="correspondenceServiceClass" class="java.lang.Class" factory-method="forName">
+            <beans:constructor-arg value="com.armedia.acm.correspondence.service.CorrespondenceService"/>
+        </beans:bean>
+
+        <beans:bean id="correspondenceService" class="org.easymock.EasyMock" factory-method="createMock">
+            <beans:constructor-arg ref="correspondenceServiceClass"/>
+        </beans:bean>
+
+        <beans:bean id="correspondenceDocumentGenerator" class="gov.foia.service.CorrespondenceDocumentGenerator">
+            <beans:property name="correspondenceService" ref="correspondenceService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaQueueCorrespondenceServiceClass" class="java.lang.Class" factory-method="forName">
+            <beans:constructor-arg value="gov.foia.service.FOIAQueueCorrespondenceService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaQueueCorrespondenceService" class="org.easymock.EasyMock" factory-method="createMock">
+            <beans:constructor-arg ref="foiaQueueCorrespondenceServiceClass"/>
+        </beans:bean>
+    </beans:beans>
+</beans:beans>

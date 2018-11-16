@@ -32,6 +32,7 @@ import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
@@ -84,6 +85,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
         String author = closeComplaintEvent.getUserId();
         List<String> reviewers = findReviewers(closeComplaintEvent);
+        List<String> candidateGroups =  findCandidateGroups(closeComplaintEvent);
 
         // Default one if "closeComplaintTaskName" is null or empty
         String taskName = "Task " + closeComplaintEvent.getComplaintNumber();
@@ -97,6 +99,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         Map<String, Object> pvars = new HashMap<>();
 
         pvars.put("reviewers", reviewers);
+        pvars.put("candidateGroups", candidateGroups);
         pvars.put("taskName", taskName);
         pvars.put("documentAuthor", author);
         pvars.put("pdfRenditionId", closeComplaintEvent.getUploadedFiles().getPdfRendition().getFileId());
@@ -129,12 +132,27 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         List<String> reviewers = new ArrayList<>();
         for (AcmParticipant participant : closeComplaintEvent.getRequest().getParticipants())
         {
-            if ("approver".equals(participant.getParticipantType()))
+            if (ParticipantTypes.APPROVER.equals(participant.getParticipantType()))
             {
                 reviewers.add(participant.getParticipantLdapId());
             }
         }
         return reviewers;
+    }
+
+    private List<String> findCandidateGroups(CloseComplaintEvent closeComplaintEvent)
+    {
+        List<String> candidateGroups = new ArrayList<>();
+
+        for (AcmParticipant participant : closeComplaintEvent.getRequest().getParticipants())
+        {
+            if (ParticipantTypes.OWNING_GROUP.equals(participant.getParticipantType()))
+            {
+                candidateGroups.add(participant.getParticipantLdapId());
+            }
+        }
+
+        return candidateGroups;
     }
 
     public RuntimeService getActivitiRuntimeService()

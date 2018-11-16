@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <beans:beans profile="extension-foia">
+        <beans:bean id="exemptionCodesAPIController" class="gov.foia.web.api.ExemptionCodesAPIController">
+            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+            <beans:property name="userTrackerService" ref="userTrackerService"/>
+            <beans:property name="foiaFileService" ref="foiaFileService"/>
+        </beans:bean>
+
+        <beans:bean id="printDocumentsAPIController" class="gov.foia.web.api.PrintDocumentsAPIController">
+            <beans:property name="documentPrintingService" ref="foiaDocumentPrintService"/>
+        </beans:bean>
+
+        <beans:bean id="startWorkingOnRequestAPIController" class="gov.foia.web.api.StartWorkingOnRequestAPIController">
+            <beans:property name="requestAssignmentService" ref="requestAssignmentService"/>
+            <beans:property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+        </beans:bean>
+
+        <beans:bean id="portalRequestAPIController" class="gov.foia.web.api.PortalRequestAPIController">
+            <beans:property name="portalRequestService" ref="portalRequestService"/>
+        </beans:bean>
+
+        <beans:bean id="saveFOIARequestAPIController" class="gov.foia.web.api.SaveFOIARequestAPIController">
+            <beans:property name="saveFOIARequestService" ref="saveFOIARequestService"/>
+        </beans:bean>
+
+        <beans:bean id="queuesTimeToCompleteAPIController" class="gov.foia.web.api.QueuesTimeToCompleteAPIController">
+            <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
+        </beans:bean>
+
+        <beans:bean id="billingInvoiceEmailSenderAPIController" class="gov.foia.web.api.BillingInvoiceEmailSenderAPIController">
+            <beans:property name="billingInvoiceEmailSenderService" ref="billingInvoiceEmailSenderService"/>
+        </beans:bean>
+
+        <beans:bean id="publicFlagAPIController" class="gov.foia.web.api.PublicFlagAPIController">
+            <beans:property name="publicFlagService" ref="publicFlagService"/>
+        </beans:bean>
+
+        <beans:bean id="notificationGroupEmailSenderAPIController" class="gov.foia.web.api.NotificationGroupEmailSenderAPIController">
+            <beans:property name="notificationGroupEmailSenderService" ref="notificationGroupEmailSenderService"/>
+        </beans:bean>
+    </beans:beans>
+</beans:beans>

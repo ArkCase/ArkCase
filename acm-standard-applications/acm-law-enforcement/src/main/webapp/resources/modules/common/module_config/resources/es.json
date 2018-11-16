@@ -666,7 +666,9 @@
         }
     },
     "common.comp.acmLogin": {
-        "confirmLogout": "Para su protección, la aplicación está a punto de cerrar la sesión. Haga clic en Cancelar para permanecer conectado."
+        "confirmLogout": "Para su protección, la aplicación está a punto de cerrar la sesión. Haga clic en Cancelar para permanecer conectado.",
+        "logoutBtn": "Cerrar sesión",
+        "cancelBtn": "Cancelar"
     },
     "common.objectTypes": {
         "CASE_FILE": "Expediente",
@@ -809,7 +811,8 @@
             "name": "Nombre",
             "id": "CARNÉ DE IDENTIDAD",
             "title": "Título"
-        }
+        },
+        "addDocument": "ES_Choose document to add"
     },
     "common.addOrganization": {
         "title": "Agregar organización",

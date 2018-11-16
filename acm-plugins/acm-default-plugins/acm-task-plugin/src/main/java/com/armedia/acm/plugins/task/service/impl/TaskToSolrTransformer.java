@@ -27,15 +27,22 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
+import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.service.AcmDataService;
+import com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
+import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +58,8 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
     private final transient Logger log = LoggerFactory.getLogger(getClass());
     private UserDao userDao;
     private TaskDao taskDao;
+    private AcmDataService acmDataService;
+    private FileAclSolrUpdateHelper fileAclSolrUpdateHelper;
     private SearchAccessControlFields searchAccessControlFields;
 
     @Override
@@ -128,6 +137,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
             doc.setAdditionalProperty("outcome_value_ss", outcomeValues);
         }
 
+        mapParentAclProperties(doc, in);
         log.trace("returning an advanced search doc");
 
         return doc;
@@ -185,9 +195,37 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
             doc.setAdditionalProperty("outcome_value_ss", outcomeValues);
         }
 
+        mapParentAclProperties(doc, in);
+
         log.trace("returning a quick search doc");
 
         return doc;
+    }
+
+    private void mapParentAclProperties(SolrBaseDocument doc, AcmTask in)
+    {
+        if (in.getParentObjectType() != null && in.getParentObjectId() != null)
+        {
+            AcmAbstractDao<AcmObject> parentDAO = acmDataService.getDaoByObjectType(in.getParentObjectType());
+            if ( parentDAO != null )
+            {
+                AcmObject parent = parentDAO.find(in.getParentObjectId());
+                if (parent instanceof AcmAssignedObject)
+                {
+                        getSearchAccessControlFields().setParentAccessControlFields(doc, (AcmAssignedObject) parent);
+                }
+            }
+        }
+    }
+
+    @Override
+    public JSONArray childrenUpdatesToSolr(AcmTask in)
+    {
+        if (in.getContainer() != null)
+        {
+            return fileAclSolrUpdateHelper.buildFileAclUpdates(in.getContainer().getId(), in);
+        }
+        return new JSONArray();
     }
 
     @Override
@@ -230,5 +268,25 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
     public Class<?> getAcmObjectTypeSupported()
     {
         return AcmTask.class;
+    }
+
+    public FileAclSolrUpdateHelper getFileAclSolrUpdateHelper()
+    {
+        return fileAclSolrUpdateHelper;
+    }
+
+    public void setFileAclSolrUpdateHelper(FileAclSolrUpdateHelper fileAclSolrUpdateHelper)
+    {
+        this.fileAclSolrUpdateHelper = fileAclSolrUpdateHelper;
+    }
+
+    public AcmDataService getAcmDataService()
+    {
+        return acmDataService;
+    }
+
+    public void setAcmDataService(AcmDataService acmDataService)
+    {
+        this.acmDataService = acmDataService;
     }
 }

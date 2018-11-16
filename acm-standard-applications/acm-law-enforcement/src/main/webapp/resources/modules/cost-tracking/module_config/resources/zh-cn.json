@@ -14,6 +14,7 @@
     },
     "costTracking.comp.info": {
         "title": "信息",
+        "lastModified.label": "上次更改时间",
         "incidentDate": "事件日期",
         "priority": "优先级别",
         "assignedTo": "指定人员",
@@ -121,7 +122,7 @@
                 "username": "zh-cn_Username"
             }
         },
-        "userSearch.title": "zh-cn_Search for User",
+        "userSearch.title": "zh-cn_User/Group Search",
         "cost": {
             "title": "zh-cn_Costs",
             "date": "zh-cn_Date",
@@ -139,7 +140,8 @@
             "title": "zh-cn_Approver",
             "placeholder": "zh-cn_Select Approver",
             "removeBtn": "zh-cn_Remove Approver",
-            "addBtn": "zh-cn_Add Another Approver"
+            "addBtn": "zh-cn_Add Another Approver",
+            "owningGroup": "zh-cn_Owning Group"
         },
         "cancelButton": "zh-cn_Cancel",
         "saveButton": "zh-cn_Save",

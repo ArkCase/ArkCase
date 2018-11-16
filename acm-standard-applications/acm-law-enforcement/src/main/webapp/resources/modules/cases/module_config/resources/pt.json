@@ -26,6 +26,7 @@
         "assignee.label": "Atribuído a",
         "owningGroup.label": "O grupo pertence a",
         "dueDate.label": "Data de vencimento",
+        "alertMessage": "pt_Due date must be after the create date ",
         "priorities": {
             "low%": "Baixo",
             "medium%": "Médio",
@@ -394,7 +395,8 @@
             "label": "pt_Approver",
             "addAnother": "pt_Add another",
             "remove": "pt_Remove Approver",
-            "pickerModal.header": "pt_Search for User"
+            "pickerModal.header": "pt_User/Group Search",
+            "owningGroup": "pt_Owning Group"
         },
         "button": {
             "cancel": "pt_Cancel",

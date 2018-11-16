@@ -22,7 +22,8 @@
         "priority.label": "優先",
         "assignee.label": "割り当て先",
         "owningGroup.label": "群に所属",
-        "dueDate.label": "期限日"
+        "dueDate.label": "期限日",
+        "alertMessage": "ja_Due date must be after the create date "
     },
     "complaints.comp.actions": {
         "title": "操作",
@@ -355,7 +356,8 @@
             "label": "ja_Approver",
             "addAnother": "ja_Add another",
             "remove": "ja_Remove Approver",
-            "pickerModal.header": "ja_Search for User"
+            "pickerModal.header": "ja_User/Group Search",
+            "owningGroup": "ja_Owning Group"
         },
         "cancelButton": "ja_Cancel",
         "saveButton": "ja_Save Complaint"

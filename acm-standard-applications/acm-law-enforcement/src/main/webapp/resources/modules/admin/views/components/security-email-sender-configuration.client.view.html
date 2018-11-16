@@ -3,7 +3,7 @@
         <div class="pull-right well">
             <div class="btn-group">
                 <button class="btn btn-xs btn-link" ng-click="save()"
-                        ng-disabled="emailSenderConfigDataModel.allowDocuments && !(emailSenderConfigDataModel.allowAttachments || emailSenderConfigDataModel.allowHyperlinks)">
+                        ng-disabled="emailSenderConfigDataModel.allowDocuments && !(emailSenderConfigDataModel.allowAttachments || emailSenderConfigDataModel.allowHyperlinks) || securityEmailConfigurationForm.$invalid">
                     <i class="fa fa-save"></i>
                     <span translate>
                         admin.security.emailConfiguration.emailConfigForm.save.button
@@ -152,7 +152,7 @@
                             <label for="userFrom" translate>
                                 admin.security.emailConfiguration.emailConfigForm.userFrom.label
                             </label>
-                            <input name="userFrom" type="text"
+                            <input name="userFrom" type="email" required pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                     placeholder="{{'admin.security.emailConfiguration.emailConfigForm.userFrom.placeholder' | translate}}"
                                     ng-model="emailSenderConfigDataModel.userFrom" class="form-control"
                                     ng-disabled="emailSenderConfigDataModel.type !== 'smtp'" />

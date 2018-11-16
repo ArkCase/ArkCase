@@ -666,7 +666,9 @@
         }
     },
     "common.comp.acmLogin": {
-        "confirmLogout": "为了保护，应用程序即将注销。点击取消保持登录状态。"
+        "confirmLogout": "为了保护，应用程序即将注销。点击取消保持登录状态。",
+        "logoutBtn": "登出",
+        "cancelBtn": "取消"
     },
     "common.objectTypes": {
         "CASE_FILE": "案例文件",
@@ -809,7 +811,8 @@
             "name": "名称",
             "id": "识别号",
             "title": "标题"
-        }
+        },
+        "addDocument": "ZH_CN_Choose document to add"
     },
     "common.addOrganization": {
         "title": "添加组织",

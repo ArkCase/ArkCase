@@ -46,9 +46,21 @@ angular.module('services').factory('DocTreeExt.ReviewDoc', [ 'ModalDialogService
         },
         openModal: function(DocTree, nodes, config) {
             var params = {};
+
+            var parentObjectNumber = "";
+            if(DocTree._objType === ObjectService.ObjectTypes.CASE_FILE) {
+                parentObjectNumber = DocTree.objectInfo.caseNumber;
+            }
+            else if(DocTree._objType === ObjectService.ObjectTypes.COMPLAINT) {
+                parentObjectNumber = DocTree.objectInfo.complaintNumber;
+            }
+            else if(DocTree._objType === ObjectService.ObjectTypes.COSTSHEET) {
+                parentObjectNumber = DocTree.objectInfo.costsheetNumber;
+            }
+
             params.parentType = DocTree._objType;
             params.parentId = DocTree._objId;
-            params.parentObject = DocTree.objectInfo.number;
+            params.parentObject = parentObjectNumber;
             params.parentTitle = DocTree.objectInfo.title;
 
             params.documentsToReview = nodes;

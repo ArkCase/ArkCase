@@ -22,7 +22,8 @@
         "priority.label": "Priority",
         "assignee.label": "Assigned To",
         "owningGroup.label": "Owning Group",
-        "dueDate.label": "Due Date"
+        "dueDate.label": "Due Date",
+        "alertMessage": "Due date must be after the create date "
     },
     "complaints.comp.actions": {
         "title": "Actions",
@@ -384,7 +385,8 @@
             "label": "Approver",
             "addAnother": "Add another",
             "remove": "Remove Approver",
-            "pickerModal.header": "Search for User"
+            "pickerModal.header": "User/Group Search",
+            "owningGroup": "Owning Group"
         },
         "cancelButton": "Cancel",
         "saveButton": "Save Complaint"

@@ -1,4 +1,4 @@
-<form name="task" ng-submit="saveNewTask()">
+<form name="task" ng-submit="saveNewTask()" editable-form>
     <div class="modal-header">
         <h3><span translate>tasks.newTask.title</span></h3>
     </div>
@@ -45,39 +45,17 @@
 
             <div class="row">
                 <div class="col-sm-4 form-group">
-                    <label for="taskStartDate" translate> tasks.newTask.taskStartDate.label </label>
+                    <label translate> tasks.newTask.taskStartDate.label </label>
                     <span class="required-asterisk">*</span>
-                    <div>
-                        <div class="input-group">
-                            <input type="text" id="taskStartDate" ng-required="true" class="form-control" name="taskStartDate"
-                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="config.data.taskStartDate"
-                                    is-open="opened.openedStart" close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
-                                    min-date="minStartDate" ng-blur="startDateChanged()"
-                                    close-text="{{ 'tasks.newTask.datepicker.close' | translate }}" />
-                            <span class="input-group-btn">
-                              <button type="button" class="btn btn-default" ng-click="opened.openedStart = !opened.openedStart">
-                                <i class="fa fa-calendar"></i>
-                              </button>
-                            </span>
-                        </div>
+                    <div style="margin-top: 10px;">
+                        <date-time-picker data="config.data.taskStartDate" property="startDate" date-picker-id="comboDate1" on-after-save="onComboAfterSave(dateType)"></date-time-picker>
                     </div>
                 </div>
                 <div class="col-sm-4 form-group">
-                    <label for="dueDate" translate> tasks.newTask.dueDate.label </label>
+                    <label translate> tasks.newTask.dueDate.label </label>
                     <span class="required-asterisk">*</span>
-                    <div>
-                        <div class="input-group">
-                            <input type="text" id="dueDate" ng-required="true" class="form-control" name="dueDate"
-                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="config.data.dueDate"
-                                    is-open="opened.openedEnd" close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
-                                    min-date="minDueDate" ng-blur="dueDateChanged()"
-                                    close-text="{{ 'tasks.newTask.datepicker.close' | translate }}" />
-                            <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd">
-                              <i class="fa fa-calendar"></i>
-                            </button>
-                            </span>
-                        </div>
+                    <div style="margin-top: 10px;">
+                        <date-time-picker data="config.data.dueDate" property="dueDate" date-picker-id="comboDate2" on-after-save="onComboAfterSave(dateType)"></date-time-picker>
                     </div>
                 </div>
                 <div class="form-group col-sm-2" ng-if="taskType === 'ACM_TASK'">

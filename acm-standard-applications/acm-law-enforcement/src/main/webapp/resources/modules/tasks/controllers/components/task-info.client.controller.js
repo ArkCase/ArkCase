@@ -24,8 +24,9 @@ angular.module('tasks').controller(
                 'Complaint.InfoService',
                 'SearchService',
                 'Search.QueryBuilderService',
+                'Dialog.BootboxService',
                 function($scope, $stateParams, $translate, $filter, $modal, Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService, HelperObjectBrowserService, TaskAlertsService, ObjectService, HelperUiGridService, ObjectParticipantService,
-                        CaseInfoService, ComplaintInfoService, SearchService, SearchQueryBuilder) {
+                        CaseInfoService, ComplaintInfoService, SearchService, SearchQueryBuilder, DialogService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -85,7 +86,7 @@ angular.module('tasks').controller(
 
                     $scope.userOrGroupSearch = function() {
                         var assigneUserName = _.find($scope.userFullNames, function(user) {
-                            return user.name === $scope.assignee
+                            return user.id === $scope.assignee
                         });
                         var params = {
                             owningGroup: $scope.owningGroup,
@@ -168,11 +169,14 @@ angular.module('tasks').controller(
                         $scope.taskStartDateBeforeChange = $scope.dateInfo.taskStartDate;
                         $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
+                        var utcDate = moment.utc(UtilDateService.dateToIso(new Date($scope.dateInfo.taskStartDate))).format();
+                        $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+
                         var today = new Date();
                         if (moment($scope.dateInfo.taskStartDate).isAfter(today)) {
-                            $scope.minStartDate = new Date();
+                            $scope.minYear = today.getFullYear();
                         } else {
-                            $scope.minStartDate = $scope.dateInfo.taskStartDate;
+                            $scope.minYear = new Date($scope.dateInfo.taskStartDate).getFullYear();
                         }
 
                         var owningGroupParticipantType = 'owning group';
@@ -188,22 +192,9 @@ angular.module('tasks').controller(
                         }
                     };
 
-                    $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
-                    $scope.picker = {
-                        opened: false
-                    };
-
+                    $scope.defaultDatePickerFormat = UtilDateService.defaultDateTimeFormat;
                     $scope.taskStartDateBeforeChange = null;
                     $scope.dueDateBeforeChange = null;
-
-                    $scope.onPickerClick = function(data, form) {
-                        if (!Util.isEmpty(data)) {
-                            $scope.picker.opened = true;
-                            form.$setError(name, "");
-                        } else {
-                            form.$setError(name, "Format: M/d/yy");
-                        }
-                    };
 
                     $scope.validatePercentComplete = function(value) {
                         var pctCompleteValue = Util.goodValue(value, -1); // -1 instead of 0
@@ -236,56 +227,38 @@ angular.module('tasks').controller(
 
                     };
 
-                    $scope.convertToCorrectCurrentTime = function(from, to) {
-                        var correctedDate = null;
-                        if (!Util.isEmpty(to)) {
-                            correctedDate = UtilDateService.convertToCurrentTime(to);
-                        } else {
-                            correctedDate = UtilDateService.convertToCurrentTime(from);
-                        }
-                        return moment.utc(UtilDateService.dateToIso(correctedDate)).format();
-                    };
-
-                    $scope.onChange = function(data, form) {
-                        if (Util.isEmpty(data)) {
-                            $scope.picker.opened = false;
-                            form.$setError(name, "Format: M/d/yy");
-                        } else {
-                            form.$setError(name, "");
-                        }
-                    };
-
                     $scope.validateStartDueDate = function() {
                         if (moment($scope.dateInfo.taskStartDate).isAfter($scope.dateInfo.dueDate)) {
                             $scope.dateInfo.dueDate = $scope.dateInfo.taskStartDate;
-                            $scope.updateDueDate();
+                            $scope.updateDueDate($scope.dateInfo.dueDate);
                         } else {
                             $scope.saveTask();
                         }
                     };
 
-                    $scope.updateStartDate = function() {
-                        if (!Util.isEmpty($scope.dateInfo.taskStartDate)) {
-                            $scope.objectInfo.taskStartDate = $scope.convertToCorrectCurrentTime($scope.dateInfo.taskStartDate);
+                    $scope.updateStartDate = function(data) {
+                        if (!Util.isEmpty(data)) {
+                            var startDate = new Date(data);
+                            $scope.objectInfo.taskStartDate = moment.utc(UtilDateService.dateToIso(startDate)).format();
                             $scope.validateStartDueDate();
                         } else {
-                            var tempDate = new Date($scope.taskStartDateBeforeChange);
-                            $scope.dateInfo.taskStartDate = $scope.taskStartDateBeforeChange;
-                            $scope.objectInfo.taskStartDate = $scope.convertToCorrectCurrentTime($scope.dateInfo.taskStartDate, tempDate);
-                            $scope.validateStartDueDate();
+                            $scope.objectInfo.taskStartDate = $scope.taskStartDateBeforeChange;
                         }
                     };
 
-                    $scope.updateDueDate = function() {
-                        if (!Util.isEmpty($scope.dateInfo.dueDate)) {
-                            var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
-                            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
-                            $scope.saveTask();
+                    $scope.updateDueDate = function(data) {
+                        if (!Util.isEmpty(data)) {
+                            var dueDate = new Date(data);
+                            var startDate = new Date($scope.dateInfo.taskStartDate);
+                            if(dueDate < startDate){
+                                $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
+                                DialogService.alert($translate.instant('tasks.comp.info.alertMessage' ) + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
+                            }else {
+                                $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(dueDate)).format();
+                                $scope.saveTask();
+                            }
                         } else {
-                            var tempDate = new Date($scope.dueDateBeforeChange);
-                            $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
-                            var correctedDueDate = UtilDateService.convertToCurrentTime(tempDate);
-                            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
+                            $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
                             $scope.saveTask();
                         }
                     };

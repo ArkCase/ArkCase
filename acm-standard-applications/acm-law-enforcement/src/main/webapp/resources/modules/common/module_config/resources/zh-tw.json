@@ -666,7 +666,9 @@
         }
     },
     "common.comp.acmLogin": {
-        "confirmLogout": "為了保護，應用程序即將註銷。點擊取消保持登錄狀態。"
+        "confirmLogout": "為了保護，應用程序即將註銷。點擊取消保持登錄狀態。",
+        "logoutBtn": "登出",
+        "cancelBtn": "取消"
     },
     "common.objectTypes": {
         "CASE_FILE": "案例文件",
@@ -809,7 +811,8 @@
             "name": "名稱",
             "id": "識別號",
             "title": "標題"
-        }
+        },
+        "addDocument": "ZH_TW_Choose document to add"
     },
     "common.addOrganization": {
         "title": "添加組織",

@@ -666,7 +666,9 @@
         }
     },
     "common.comp.acmLogin": {
-        "confirmLogout": "आपकी सुरक्षा के लिए, एप्लिकेशन लॉगआउट के बारे में है लॉग इन रहने के लिए रद्द करें क्लिक करें"
+        "confirmLogout": "आपकी सुरक्षा के लिए, एप्लिकेशन लॉगआउट के बारे में है लॉग इन रहने के लिए रद्द करें क्लिक करें",
+        "logoutBtn": "लोग आउट",
+        "cancelBtn": "रद्द करना"
     },
     "common.objectTypes": {
         "CASE_FILE": "मुकदमे की फ़ाइल",
@@ -809,7 +811,8 @@
             "name": "नाम",
             "id": "आईडी",
             "title": "शीर्षक"
-        }
+        },
+        "addDocument": "HI_Choose document to add"
     },
     "common.addOrganization": {
         "title": "संगठन जोड़ें",

@@ -21,8 +21,10 @@ angular.module('complaints').controller(
                 'Object.ParticipantService',
                 'SearchService',
                 'Search.QueryBuilderService',
+                'Dialog.BootboxService',
+                '$filter',
                 function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService, ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, ObjectParticipantService,
-                        SearchService, SearchQueryBuilder) {
+                        SearchService, SearchQueryBuilder, DialogService, $filter) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -80,7 +82,7 @@ angular.module('complaints').controller(
 
                     $scope.userOrGroupSearch = function() {
                         var assigneUserName = _.find($scope.userFullNames, function(user) {
-                            return user.name === $scope.assignee
+                            return user.id === $scope.assignee
                         });
                         var params = {
                             owningGroup: $scope.owningGroup,
@@ -117,6 +119,15 @@ angular.module('complaints').controller(
 
                                     $scope.assignee = selectedUser.object_id_s;
                                     $scope.updateAssignee();
+
+                                    //set for AFDP-6831 to inheritance in the Folder/file participants
+                                    var len = $scope.objectInfo.participants.length;
+                                    for (var i = 0; i < len; i++) {
+                                        if($scope.objectInfo.participants[i].participantType =='assignee'){
+                                            $scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                                        }
+                                    }
+
                                     if (selectedGroup) {
                                         $scope.owningGroup = selectedGroup.object_id_s;
                                         $scope.updateOwningGroup();
@@ -133,6 +144,15 @@ angular.module('complaints').controller(
 
                                     $scope.owningGroup = selectedGroup.object_id_s;
                                     $scope.updateOwningGroup();
+
+                                    //set for AFDP-6831 to inheritance in the Folder/file participants
+                                    var len = $scope.objectInfo.participants.length;
+                                    for (var i = 0; i < len; i++) {
+                                        if($scope.objectInfo.participants[i].participantType =='owning group') {
+                                            $scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                                        }
+                                    }
+
                                     if (selectedUser) {
                                         $scope.assignee = selectedUser.object_id_s;
                                         $scope.updateAssignee();
@@ -156,6 +176,11 @@ angular.module('complaints').controller(
                         $scope.objectInfo = objectInfo;
                         $scope.dateInfo = $scope.dateInfo || {};
                         $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
+                        $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
+
+                        var utcDate = moment.utc(UtilDateService.dateToIso(new Date(objectInfo.created))).format();
+                        $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+                        $scope.minYear = new Date(objectInfo.created).getFullYear();
 
                         $scope.assignee = ObjectModelService.getAssignee(objectInfo);
                         $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
@@ -194,10 +219,21 @@ angular.module('complaints').controller(
                     $scope.updateAssignee = function() {
                         ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
                     };
-                    $scope.updateDueDate = function() {
-                        var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
-                        $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
-                        $scope.saveComplaint();
+                    $scope.updateDueDate = function(data) {
+                        if (!Util.isEmpty(data)) {
+                            var correctedDueDate = new Date(data);
+                            var startDate = new Date($scope.objectInfo.create_date_tdt);
+                            if(correctedDueDate < startDate){
+                                $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
+                                DialogService.alert($translate.instant("complaints.comp.info.alertMessage")+ $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
+                            }else {
+                                $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
+                                $scope.saveComplaint();
+                            }
+                        }else {
+                            $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
+                            $scope.saveComplaint();
+                        }
                     };
 
                 } ]);

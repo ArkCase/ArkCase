@@ -33,6 +33,7 @@ import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
@@ -90,6 +91,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
         String author = event.getUserId();
         List<String> reviewers = findReviewers(event);
+        List<String> candidateGroups =  findCandidateGroups(event);
 
         // Default one if "changeCaseStatusTaskName" is null or empty
         String taskName = "Task " + event.getCaseNumber();
@@ -103,6 +105,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         Map<String, Object> pvars = new HashMap<>();
 
         pvars.put("reviewers", reviewers);
+        pvars.put("candidateGroups", candidateGroups);
         pvars.put("taskName", taskName);
         pvars.put("documentAuthor", author);
         pvars.put("pdfRenditionId", event.getUploadedFiles().getPdfRendition().getFileId());
@@ -136,13 +139,28 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
         for (AcmParticipant participant : event.getRequest().getParticipants())
         {
-            if ("approver".equals(participant.getParticipantType()))
+            if (ParticipantTypes.APPROVER.equals(participant.getParticipantType()))
             {
                 reviewers.add(participant.getParticipantLdapId());
             }
         }
 
         return reviewers;
+    }
+
+    private List<String> findCandidateGroups(ChangeCaseFileStatusEvent event)
+    {
+        List<String> candidateGroups = new ArrayList<>();
+
+        for (AcmParticipant participant : event.getRequest().getParticipants())
+        {
+            if (ParticipantTypes.OWNING_GROUP.equals(participant.getParticipantType()))
+            {
+                candidateGroups.add(participant.getParticipantLdapId());
+            }
+        }
+
+        return candidateGroups;
     }
 
     public FileWorkflowBusinessRule getFileWorkflowBusinessRule()
