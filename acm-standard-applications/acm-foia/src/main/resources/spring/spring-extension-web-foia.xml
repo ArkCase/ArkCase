@@ -31,6 +31,10 @@
             <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
         </beans:bean>
 
+        <beans:bean id="foiaConfigurationAPIController" class="gov.foia.web.api.FoiaConfigurationAPIController">
+            <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
+        </beans:bean>
+
         <beans:bean id="billingInvoiceEmailSenderAPIController" class="gov.foia.web.api.BillingInvoiceEmailSenderAPIController">
             <beans:property name="billingInvoiceEmailSenderService" ref="billingInvoiceEmailSenderService"/>
         </beans:bean>

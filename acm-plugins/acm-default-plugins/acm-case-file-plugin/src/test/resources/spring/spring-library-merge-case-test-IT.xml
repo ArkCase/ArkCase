@@ -25,6 +25,10 @@
 
     <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>
 
+    <bean id="expiredUrl" class="java.lang.String">
+        <constructor-arg value="/expiredUrl"/>
+    </bean>
+
     <bean id="configList" class="java.util.ArrayList">
         <constructor-arg>
             <list/>

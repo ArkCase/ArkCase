@@ -256,4 +256,8 @@
         <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
     </bean>
 
+    <bean id="pdfConversionConfigurationAPIController"
+          class="com.armedia.acm.plugins.admin.web.api.PDFConversionConfigurationAPIController">
+        <property name="pdfConversionConfigurationService" ref="pdfConversionConfigurationService"/>
+    </bean>
 </beans>

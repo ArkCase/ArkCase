@@ -14,7 +14,7 @@
                     </div>
                     <div class="col-sm-6 form-group">
                         <label for="status" translate>timeTracking.comp.newTimesheet.status</label>
-                        <select id="status" ng-model="timesheet.status" class="form-control input-md" ng-disabled="timesheetProperties.useApprovalWorkflow === 'true' || !isEdit" required>
+                        <select id="status" ng-model="timesheet.status" class="form-control input-md" ng-disabled="timesheetProperties.useApprovalWorkflow === 'true'" required>
                             <option ng-repeat="option in timesheetStatuses" value="{{option.key}}">
                                 {{option.value | translate}}
                             </option>

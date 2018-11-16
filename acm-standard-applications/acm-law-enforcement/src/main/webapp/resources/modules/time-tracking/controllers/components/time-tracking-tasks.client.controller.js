@@ -40,6 +40,12 @@ angular.module('time-tracking').controller(
                             gridHelper.addButton(updatedConfig, "delete", null, null, "isDeleteDisabled");
                         });
 
+                        //default (init) sorting of tasks grid
+                        $scope.sort = {
+                            by: "create_tdt",
+                            dir: "desc"
+                        };
+                        
                         componentHelper.doneConfig(config);
                     };
 
