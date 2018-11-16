@@ -72,4 +72,11 @@
     <bean id="passwordResetTemplateContent" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg value="file:${upcoming.password.notification.template.path}" type="java.io.InputStream" />
     </bean>
+
+    <bean id="acmEmailMentionsService" class="com.armedia.acm.services.email.service.AcmEmailMentionsService">
+        <property name="emailSenderService" ref="configurableEmailSenderService"/>
+        <property name="acmAppConfiguration" ref="acmApplication"/>
+        <property name="mentionsEmailBodyTemplate" value="${mentions.email.body.template}"/>
+        <property name="mentionsEmailSubject" value="${mentions.email.subject}"/>
+    </bean>
 </beans>

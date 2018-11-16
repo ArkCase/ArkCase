@@ -27,18 +27,12 @@ package com.armedia.acm.services.email.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
-import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
-import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
-import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
-import com.armedia.acm.services.email.service.AcmEmailConfigurationException;
-import com.armedia.acm.services.email.service.AcmEmailSenderService;
-import com.armedia.acm.services.email.service.AcmEmailServiceException;
-import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
-import com.armedia.acm.services.email.service.EmailSource;
-import com.armedia.acm.services.email.service.EmailTemplateConfiguration;
+import com.armedia.acm.services.email.model.*;
+import com.armedia.acm.services.email.service.*;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -50,9 +44,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 20, 2017
@@ -65,6 +57,7 @@ public class AcmMailServiceAPIController
     private AcmMailTemplateConfigurationService templateService;
 
     private AcmEmailSenderService emailSenderService;
+    private AcmEmailMentionsService acmEmailMentionsService;
 
     @RequestMapping(value = "/withattachments/{objectType}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -181,9 +174,28 @@ public class AcmMailServiceAPIController
         return in;
     }
 
+    @RequestMapping(value = "/mentions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public EmailMentionsDTO createPlainEmail(@RequestBody EmailMentionsDTO in,
+                                                    Authentication authentication, HttpSession session)
+            throws AcmEmailServiceException
+    {
+        if (null == in)
+        {
+            throw new AcmEmailServiceException("Could not create email message, invalid input : " + in);
+        }
+
+        // the user is stored in the session during login.
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+        acmEmailMentionsService.setUser(user);
+        acmEmailMentionsService.sendMentionsEmail(in);
+
+        return in;
+    }
+
     /**
      * @param objectType
-     * @param emailAddresses
+     * @param emailAddress
      * @return
      * @throws AcmEmailConfigurationException
      */
@@ -218,4 +230,7 @@ public class AcmMailServiceAPIController
         this.emailSenderService = emailSenderService;
     }
 
+    public void setAcmEmailMentionsService(AcmEmailMentionsService acmEmailMentionsService) {
+        this.acmEmailMentionsService = acmEmailMentionsService;
+    }
 }
