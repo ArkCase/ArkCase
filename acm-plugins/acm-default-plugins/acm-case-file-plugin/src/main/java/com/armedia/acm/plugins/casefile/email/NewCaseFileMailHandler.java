@@ -93,8 +93,16 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
 
         if (addresses.length > 0)
         {
-            person.setGivenName(addresses[0].toString().split(" ")[0]);
-            person.setFamilyName(addresses[0].toString().split(" ")[1]);
+            if (addresses.toString().split(" ").length == 1)
+            {
+                person.setGivenName(addresses[0].toString().split(" ")[0]);
+                person.setFamilyName(addresses[0].toString().split(" ")[0]);
+            }
+            else
+            {
+                person.setGivenName(addresses[0].toString().split(" ")[0]);
+                person.setFamilyName(addresses[0].toString().split(" ")[1]);
+            }
         }
 
         PersonAssociation personAssociation = new PersonAssociation();
