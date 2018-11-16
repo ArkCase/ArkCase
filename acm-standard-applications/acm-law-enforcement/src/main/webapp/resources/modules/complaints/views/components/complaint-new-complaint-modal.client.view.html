@@ -15,8 +15,11 @@
                     <div class="col-sm-12 form-group">
                         <label for="complaintTitle" translate>complaints.comp.newComplaint.complaintTitle</label>
                         <span class="required-asterisk">*</span>
-                        <input id="complaintTitle" mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm" type="text" ng-model="complaint.complaintTitle" class="input-md form-control"
-                                placeholder="{{ 'complaints.comp.newComplaint.complaintTitle.placeholder' | translate }}" required>
+
+                        <input mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
+                               mentio-select="getMentionedUsers(item)" id="complaintTitle" ng-model="complaint.complaintTitle"
+                               class="input-md form-control" type="text" placeholder="{{ 'complaints.comp.newComplaint.complaintTitle.placeholder' | translate }}"
+                               required>
                     </div>
                 </div>
                 <div class="row">

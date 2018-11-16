@@ -22,10 +22,9 @@ angular.module('complaints').controller(
                 'Profile.UserInfoService',
                 'Object.ModelService',
                 'Object.ParticipantService',
-                'LookupService',
-                'Ecm.EmailService',
+                'Mentions.Service',
                 function($scope, $stateParams, $translate, $modalInstance, ComplaintInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, PersonInfoService, UserInfoService, ObjectModelService,
-                        ObjectParticipantService, LookupService, EcmEmailService) {
+                        ObjectParticipantService, MentionsService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -54,6 +53,11 @@ angular.module('complaints').controller(
                             personAssociations: [ {} ],
                             participants: []
                         };
+
+                        UserInfoService.getUserInfo().then(function(data) {
+                            $scope.complaint.defaultAddress.creator = data.userId;
+                            $scope.complaint.defaultAddress.creatorFullName = data.fullName;
+                        });
 
                         $scope.userSearchConfig = _.find(moduleConfig.components, {
                             id: "userSearch"
@@ -115,22 +119,18 @@ angular.module('complaints').controller(
                         $scope.complaintParticipantTypes = complaintParticipantTypes;
                     });
 
-                    UserInfoService.getUserInfo().then(function(data) {
-                        $scope.complaint.defaultAddress.creator = data.userId;
-                        $scope.complaint.defaultAddress.creatorFullName = data.fullName;
-                    });
+                    $scope.emailAddresses = [];
+                    $scope.usersMentioned = [];
 
                     // Obtains a list of all users in ArkCase
-                    LookupService.getUsers().then(function (users) {
-                        var users = users;
-                        _.forEach(users, function (user) {
-                            user.label = user.name;
-                        });
+                    MentionsService.getUsers().then(function (users) {
                         $scope.people = users;
                     });
 
-                    $scope.options = {
-
+                    $scope.getMentionedUsers = function (item) {
+                        $scope.emailAddresses.push(item.email_lcs);
+                        $scope.usersMentioned.push('@' + item.name);
+                        return '@' + item.name;
                     };
 
                     // ---------------------------            initiator         --------------------------------------
@@ -424,6 +424,7 @@ angular.module('complaints').controller(
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                         ComplaintInfoService.saveComplaintInfoNewComplaint(clearNotFilledElements(_.cloneDeep($scope.complaint))).then(function(objectInfo) {
                             var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.COMPLAINT);
+                            MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned, ObjectService.ObjectTypes.COMPLAINT, objectInfo.complaintId, objectInfo.complaintTitle);
                             var complaintCreatedMessage = $translate.instant('{{objectType}} {{complaintTitle}} was created.', {
                                 objectType: objectTypeString,
                                 complaintTitle: objectInfo.complaintTitle
@@ -445,7 +446,6 @@ angular.module('complaints').controller(
                     };
 
                     function clearNotFilledElements(complaint) {
-
                         //addresses
                         if (complaint.defaultAddress) {
                             if (!complaint.defaultAddress.streetAddress) {
@@ -490,38 +490,6 @@ angular.module('complaints').controller(
                         });
 
                         return complaint;
-                    }
-
-                    //use: extractMentionedUsersForSendingEmail([string, string]);
-                    function extractMentionedUsersForSendingEmail(placesWhereUserCanBeMentioned){
-                        var usersList = [];
-                        var emailsList = [];
-                        _.forEach(placesWhereUserCanBeMentioned, function (mention) {
-                            //zemi gi site podstringovi '@John Doe' ili '@johndoe'
-
-                            // usersList.push();
-                        });
-
-                        _.forEach($scope.people, function (mention) {
-                            //prebaraj vo people i zemi email za niv
-
-
-                            //emailsList.push();
-                        });
-                        return emailsList;
-                    }
-
-                    function sendEmailToRecipients(){
-                        $scope.emailDataModel.subject = DocTreeExtEmail._buildSubject($scope.DocTree);
-                        $scope.emailDataModel.footer = $translate.instant('common.directive.docTree.email.defaultFooter');
-                        $scope.emailDataModel.action = '';
-                        $scope.emailDataModel.deliveryMethod = 'SEND_HYPERLINKS';
-                        $scope.emailDataModel.recipients = ['ivana.shekerova@armedia.com'];
-                        $scope.emailDataModel.body = 'Sending you link to some object';
-
-                        var emailData = {};
-                        // emailData = Email._makeEmailDataForPlainEmail(DocTree, res);
-                        // EcmEmailService.sendEmail(emailData, DocTree.getObjType());
                     }
 
                     $scope.cancelModal = function() {
