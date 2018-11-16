@@ -26,6 +26,7 @@
         "assignee.label": "Назначено",
         "owningGroup.label": "Собственная группа",
         "dueDate.label": "Дата погашения",
+        "alertMessage": "ru_Due date must be after the create date ",
         "priorities": {
             "low%": "Низко",
             "medium%": "Средний",
@@ -394,7 +395,8 @@
             "label": "ru_Approver",
             "addAnother": "ru_Add another",
             "remove": "ru_Remove Approver",
-            "pickerModal.header": "ru_Search for User"
+            "pickerModal.header": "ru_User/Group Search",
+            "owningGroup": "ru_Owning Group"
         },
         "button": {
             "cancel": "ru_Cancel",

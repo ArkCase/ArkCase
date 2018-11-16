@@ -26,6 +26,7 @@
         "assignee.label": "Assigned To",
         "owningGroup.label": "Owning Group",
         "dueDate.label": "Due Date",
+        "alertMessage": "en-in_Due date must be after the create date ",
         "priorities": {
             "low%": "Low",
             "medium%": "Medium",
@@ -393,7 +394,8 @@
             "label": "Approver",
             "addAnother": "Add another",
             "remove": "Remove Approver",
-            "pickerModal.header": "Search for User"
+            "pickerModal.header": "User/Group Search",
+            "owningGroup": "Owning Group"
         },
         "button": {
             "cancel": "Cancel",

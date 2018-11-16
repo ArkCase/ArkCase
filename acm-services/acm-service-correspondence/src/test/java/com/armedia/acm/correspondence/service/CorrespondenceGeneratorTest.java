@@ -40,6 +40,8 @@ import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.easymock.Capture;
@@ -87,6 +89,8 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     private EcmFileDao mockEcmFileDao;
     private SpringContextHolder mockSpringContextHolder;
     private CorrespondenceService mockCorrespondenceService;
+    private LookupDao mockLookupDao;
+    private TranslationService mockTranslationService;
 
     private String key1;
     private String key2;
@@ -153,6 +157,11 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         return mergeFields;
     }
 
+    private String lookupData()
+    {
+        return "{\"standardLookup\":[{\"entries\": [{\"key\":\"key1\",\"value\":\"var1\"},{\"key\":\"key2\",\"value\":\"var2\"},{\"key\":\"key3\",\"value\":\"var3\"},{\"key\":\"key4\",\"value\":\"var4\"}]}],\"inverseValuesLookup\":[],\"nestedLookup\":[]}";
+    }
+
     private List<Object[]> resultsData()
     {
         List<Object[]> results = new ArrayList<>();
@@ -182,6 +191,8 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         mockEcmFileDao = createMock(EcmFileDao.class);
         mockSpringContextHolder = createMock(SpringContextHolder.class);
         mockCorrespondenceService = createMock(CorrespondenceService.class);
+        mockLookupDao = createMock(LookupDao.class);
+        mockTranslationService = createMock(TranslationService.class);
 
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
 
@@ -193,6 +204,8 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         unit.setCorrespondenceFolderName(correspondenceFolder);
         unit.setSpringContextHolder(mockSpringContextHolder);
         unit.setCorrespondenceService(mockCorrespondenceService);
+        unit.setLookupDao(mockLookupDao);
+        unit.setTranslationService(mockTranslationService);
 
         String doctype = "doctype";
         String templateName = "templateName";
@@ -257,6 +270,12 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         expect(mockCorrespondenceService.getActiveVersionMergeFieldsByType(correspondenceTemplate.getObjectType()))
                 .andReturn(mergeFieldsData());
 
+        expect(mockLookupDao.getMergedLookups()).andReturn(lookupData()).anyTimes();
+        for (String key : substitutionsData().keySet())
+        {
+            expect(mockTranslationService.translate(substitutionsData().get(key))).andReturn(substitutionsData().get(key));
+        }
+
         mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(substitutionsData()));
 
         expect(mockEcmFileDao.findSingleFileByParentObjectAndFolderCmisIdAndFileType(eq("CASE_FILE"), eq(500L), eq(targetFolderCmisId),
@@ -302,6 +321,12 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         expect(mockCorrespondenceService.getActiveVersionMergeFieldsByType(correspondenceTemplate.getObjectType()))
                 .andReturn(mergeFieldsData());
+
+        expect(mockLookupDao.getMergedLookups()).andReturn(lookupData()).anyTimes();
+        for (String key : substitutionsData().keySet())
+        {
+            expect(mockTranslationService.translate(substitutionsData().get(key))).andReturn(substitutionsData().get(key));
+        }
 
         mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(substitutionsData()));
 

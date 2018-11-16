@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <beans:beans profile="extension-foia">
+
+        <beans:bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+            <beans:property name="dataSource" ref="acmDataSource"/>
+            <beans:property name="changeLog" value="classpath:/com/armedia/acm/extension/foia/ddl/acm-extension-foia-database-changelog.xml"/>
+            <beans:property name="shouldRun" value="${schema.autoUpdate}"/>
+            <!--<property name="dropFirst" value="true"/>-->
+
+            <!--
+            contexts specifies the runtime contexts to use.
+            -->
+            <!--<property name="contexts" value="test, production" />-->
+        </beans:bean>
+
+        <beans:bean id="arkCaseBeanUtils" class="com.armedia.acm.objectonverter.ArkCaseBeanUtils">
+            <beans:property name="excludeFields">
+                <beans:list value-type="java.lang.String">
+                    <beans:value>className</beans:value>
+                </beans:list>
+            </beans:property>
+        </beans:bean>
+
+        <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
+            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+            <beans:property name="userTrackerService" ref="userTrackerService"/>
+            <beans:property name="saveFOIARequestService" ref="saveFOIARequestService"/>
+        </beans:bean>
+
+        <beans:bean id="portalRequestService" class="gov.foia.service.PortalRequestService">
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+            <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
+            <beans:property name="getCaseByNumberService" ref="getCaseByNumberService"/>
+        </beans:bean>
+
+        <beans:bean id="holdedAndAppealedRequestsDueDateUpdate" class="gov.foia.service.HoldedAndAppealedRequestsDueDateUpdate">
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        </beans:bean>
+
+        <beans:bean id="pdfConverter" class="com.armedia.acm.objectdataprocessing.PluggableDocumentConverter">
+            <beans:property name="outputMimeType" value="application/pdf"/>
+        </beans:bean>
+
+        <!-- <beans:bean id="folderNamePredicate" class="gov.foia.service.FolderNameEqualsPredicate">
+            <beans:property name="folderName" value="01 Request"/>
+        </beans:bean>
+
+        <beans:bean id="releaseFolderRule" class="java.io.File">
+            <beans:constructor-arg value="${user.home}/.arkcase/acm/foia-javascript-rules/releaseFolderRule.js"/>
+        </beans:bean>
+
+        <beans:bean id="folderNamePredicate" class="gov.foia.service.JavaScriptEvaluatingPredicate">
+            <beans:property name="javaScript" ref="releaseFolderRule"/>
+        </beans:bean> -->
+
+        <task:scheduler id="dueDateUpdateScheduler" pool-size="1"/>
+        <task:scheduled-tasks scheduler="dueDateUpdateScheduler">
+            <!-- updates due date of requests in appeal and hold queue at 00:00 AM-->
+            <task:scheduled ref="holdedAndAppealedRequestsDueDateUpdate" method="updateDueDate" cron="0 0 0 * * *"/>
+            <!-- <task:scheduled ref="holdedAndAppealedRequestsDueDateUpdate" method="updateDueDate" initial-delay="120000" fixed-rate="60000"/> -->
+        </task:scheduled-tasks>
+
+        <beans:bean id="foiaDocumentPrintService" class="gov.foia.service.FoiaDocumentPrintService">
+            <beans:property name="acmContainerDao" ref="acmContainerFolderDao"/>
+            <beans:property name="folderService" ref="acmFolderService"/>
+            <beans:property name="fileService" ref="ecmFileService"/>
+            <beans:property name="documentConverter" ref="pdfConverter"/>
+            <!-- <beans:property name="predicates">
+                <beans:list>
+                    <beans:ref bean="folderNamePredicate"/>
+                </list>
+            </beans:property> -->
+        </beans:bean>
+
+        <beans:bean id="foiaNotificationDataUpdateExecutor" class="gov.foia.service.dataupdate.FoiaNotificationDataUpdateExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaExtensionDataUpdateExecutor" class="gov.foia.service.dataupdate.FoiaExtensionDataUpdateExecutor">
+            <beans:property name="foiaDataUpdateExecutors">
+                <beans:list>
+                    <beans:ref bean="foiaNotificationDataUpdateExecutor"/>
+                </beans:list>
+            </beans:property>
+
+        </beans:bean>
+        <beans:bean id="queuesTimeToCompleteService" class="gov.foia.service.QueuesTimeToCompleteService">
+            <beans:property name="queueConfigFile" value="file:${user.home}/.arkcase/acm/queuesConfiguration.json"/>
+            <beans:property name="objectConverter" ref="objectConverter"/>
+            <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
+        </beans:bean>
+
+        <beans:bean id="ecmFileNewMetadataHandler" class="gov.foia.pipeline.presave.FOIAFileNewMetadataHandler">
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="folderDao" ref="acmFolderDao"/>
+            <beans:property name="pageCountService" ref="pageCountService"/>
+            <beans:property name="arkCaseBeanUtils" ref="arkCaseBeanUtils"/>
+        </beans:bean>
+
+        <beans:bean id="foiaFileUpdatedEventListener" class="gov.foia.listener.FOIAFileUpdatedEventListener">
+            <beans:property name="foiaRequestFileBrokerClient" ref="foiaRequestFileBrokerClient"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaCostsheetBillingListener" class="gov.foia.listener.FOIACostsheetBillingListener">
+            <beans:property name="acmCostsheetDao" ref="acmCostsheetDao"/>
+            <beans:property name="billingService" ref="billingService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaTimesheetBillingListener" class="gov.foia.listener.FOIATimesheetBillingListener">
+            <beans:property name="acmTimesheetDao" ref="acmTimesheetDao"/>
+            <beans:property name="billingService" ref="billingService"/>
+            <beans:property name="timesheetService" ref="timesheetService"/>
+        </beans:bean>
+
+        <beans:bean id="newRequestDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="New Request"/>
+            <beans:property name="reqAck" value="REQ"/>
+            <beans:property name="doctype" value="Request Form"/>
+            <beans:property name="filenameFormat" value="RequestForm-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Form"/>
+        </beans:bean>
+
+        <beans:bean id="newRequestAcknowledgementDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="New Request"/>
+            <beans:property name="reqAck" value="ACK"/>
+            <beans:property name="doctype" value="Request Acknowledgement Letter"/>
+            <beans:property name="filenameFormat" value="RequestAcknowledgementLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Acknowledgement Letter"/>
+        </beans:bean>
+
+        <beans:bean id="appealDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="Appeal"/>
+            <beans:property name="reqAck" value="REQ"/>
+            <beans:property name="doctype" value="Appeal Form"/>
+            <beans:property name="filenameFormat" value="AppealForm-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Appeal Form"/>
+        </beans:bean>
+
+        <beans:bean id="appealAcknowledgementDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="Appeal"/>
+            <beans:property name="reqAck" value="ACK"/>
+            <beans:property name="doctype" value="Appeal Acknowledgement Letter"/>
+            <beans:property name="filenameFormat" value="AppealAcknowledgementLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Appeal Acknowledgement Letter"/>
+        </beans:bean>
+
+        <beans:bean id="requestDenialLetterDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="New Request"/>
+            <beans:property name="reqAck" value="DENIAL"/>
+            <beans:property name="doctype" value="Denial Letter"/>
+            <beans:property name="filenameFormat" value="DenialLetter.docx-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Denial Letter"/>
+        </beans:bean>
+
+        <beans:bean id="appealDenialLetterDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="Appeal"/>
+            <beans:property name="reqAck" value="DENIAL"/>
+            <beans:property name="doctype" value="Denial Letter"/>
+            <beans:property name="filenameFormat" value="DenialLetter.docx-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Denial Letter"/>
+        </beans:bean>
+
+        <beans:bean id="requestDeleteDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="New Request"/>
+            <beans:property name="reqAck" value="REQ_DELETE"/>
+            <beans:property name="doctype" value="Request Delete Letter"/>
+            <beans:property name="filenameFormat" value="RequestDeleteCorrespondenceLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Delete Letter"/>
+        </beans:bean>
+
+        <beans:bean id="requestExtensionDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="New Request"/>
+            <beans:property name="reqAck" value="REQ_EXTENSION"/>
+            <beans:property name="doctype" value="Request Extension Letter"/>
+            <beans:property name="filenameFormat" value="ExtensionLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Extension Letter"/>
+        </beans:bean>
+
+        <beans:bean id="billingInvoiceCreatedHandler" class="gov.foia.listener.BillingInvoiceCreatedHandler">
+            <beans:property name="billingInvoiceDocumentGenerator" ref="billingInvoiceDocumentGenerator"/>
+        </beans:bean>
+
+        <beans:bean id="billingInvoiceDocumentGenerator" class="gov.foia.service.BillingInvoiceDocumentGenerator">
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="billingService" ref="billingService"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="billingInvoiceDao" ref="billingInvoiceDao"/>
+            <beans:property name="pdfService" ref="pdfService"/>
+        </beans:bean>
+
+        <beans:bean id="billingInvoiceEmailSenderService" class="gov.foia.service.BillingInvoiceEmailSenderService">
+            <beans:property name="emailSenderService" ref="smtpService"/>
+            <beans:property name="emailTemplate" value="file:${user.home}/.arkcase/acm/templates/ArkCaseEmailTemplate.html"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="billingService" ref="billingService"/>
+        </beans:bean>
+
+        <beans:bean id="publicFlagService" class="gov.foia.service.PublicFlagService">
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="acmFolderService" ref="acmFolderService"/>
+        </beans:bean>
+
+        <beans:bean id="notificationGroupEmailSenderService" class="gov.foia.service.NotificationGroupEmailSenderService">
+            <beans:property name="emailSenderService" ref="smtpService"/>
+            <beans:property name="emailTemplate" value="file:${user.home}/.arkcase/acm/templates/ArkCaseEmailTemplate.html"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="lookupDao" ref="lookupDao"/>
+        </beans:bean>
+
+        <beans:bean id="firstAssigneeOwningGroupNotify" class="gov.foia.service.FirstAssigneeOwningGroupNotify">
+            <beans:property name="emailSenderService" ref="smtpService"/>
+            <beans:property name="emailTemplate" value="file:${user.home}/.arkcase/acm/templates/ArkCaseEmailTemplate.html"/>
+            <beans:property name="groupService" ref="groupService"/>
+            <beans:property name="searchResults" ref="searchResults"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="notificationUtils" ref="notificationUtils"/>
+        </beans:bean>
+
+        <beans:bean id="foiaExecutiveGroupNotificationService" class="gov.foia.service.FOIAExecutiveGroupNotificationService">
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="notificationGroupEmailSenderService" ref="notificationGroupEmailSenderService"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+        </beans:bean>
+    </beans:beans>
+</beans:beans>

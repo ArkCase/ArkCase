@@ -65,17 +65,28 @@ var AcmLoginController = [ "$q", "$scope", "$document", "$state", "$translate", 
 
                 ctrl.waitConfirm = true;
                 AcmLoginService.setConfirmCanceled(false);
-                Dialog.confirm($translate.instant("common.comp.acmLogin.confirmLogout"), function(result) {
-                    UtilTimerService.removeListener("AboutToLogout");
-                    if (result) {
-                        UtilTimerService.removeListener("AutoLogout");
-                        AcmLoginService.logout();
-                    } else {
-                        AcmLoginService.setConfirmCanceled(true);
-                        AcmLoginService.setLastIdle();
+                bootbox.confirm({
+                    message: $translate.instant("common.comp.acmLogin.confirmLogout"),
+                    buttons: {
+                        confirm:{
+                            label:$translate.instant("common.comp.acmLogin.logoutBtn")
+                        },
+                        cancel: {
+                            label:$translate.instant("common.comp.acmLogin.cancelBtn")
+                        }
+                    },
+                    callback: function(result){
+                        UtilTimerService.removeListener("AboutToLogout");
+                        if (result) {
+                            UtilTimerService.removeListener("AutoLogout");
+                            AcmLoginService.logout();
+                        } else {
+                            AcmLoginService.setConfirmCanceled(true);
+                            AcmLoginService.setLastIdle();
+                        }
+                        ctrl.waitConfirm = false;
                     }
-                    ctrl.waitConfirm = false;
-                });
+                })
             };
 
             $document.on("mousemove", function(e) {

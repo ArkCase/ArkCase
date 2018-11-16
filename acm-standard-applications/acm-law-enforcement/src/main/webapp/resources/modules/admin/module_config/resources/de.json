@@ -649,7 +649,10 @@
                 "title": "Login-Konfiguration",
                 "idleLimit.label": "Login-Leerungslimit (in Millisekunden)",
                 "inform": "Einstellungen werden für alle neuen Benutzersitzungen wirksam",
-                "apply.label": "Sich bewerben"
+                "apply.label": "Sich bewerben",
+                "dialog": {
+                    "OKBtn": "Bestätigen"
+                }
             },
             "auditHistory.config": {
                 "title": "Audit-Verlauf",

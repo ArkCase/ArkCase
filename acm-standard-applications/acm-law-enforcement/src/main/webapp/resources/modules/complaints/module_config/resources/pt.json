@@ -22,7 +22,8 @@
         "priority.label": "Prioridade",
         "assignee.label": "Atribuído a",
         "owningGroup.label": "O grupo pertence a",
-        "dueDate.label": "Data de vencimento"
+        "dueDate.label": "Data de vencimento",
+        "alertMessage": "pt_Due date must be after the create date "
     },
     "complaints.comp.actions": {
         "title": "Ações",
@@ -355,7 +356,8 @@
             "label": "pt_Approver",
             "addAnother": "pt_Add another",
             "remove": "pt_Remove Approver",
-            "pickerModal.header": "pt_Search for User"
+            "pickerModal.header": "pt_User/Group Search",
+            "owningGroup": "pt_Owning Group"
         },
         "cancelButton": "pt_Cancel",
         "saveButton": "pt_Save Complaint"

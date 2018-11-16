@@ -58,9 +58,6 @@ public class LdapUser
     {
         AcmUser acmUser = new AcmUser();
         acmUser.setUserId(userId.toLowerCase());
-        acmUser.setUid(uid);
-        acmUser.setUserPrincipalName(userPrincipalName);
-        acmUser.setsAMAccountName(sAMAccountName);
         acmUser.setUserDirectoryName(directoryName);
         acmUser.setLang(defaultLang);
         return setAcmUserEditableFields(acmUser);
@@ -73,9 +70,21 @@ public class LdapUser
         acmUser.setUserState(AcmUserState.valueOf(state));
         acmUser.setMail(mail);
         acmUser.setFullName(fullName);
-        acmUser.setCompany(company);
-        acmUser.setCountry(country);
-        acmUser.setCountryAbbreviation(countryAbbreviation);
+        acmUser.setsAMAccountName(sAMAccountName);
+        acmUser.setUid(uid);
+        acmUser.setUserPrincipalName(userPrincipalName);
+        if (company != null)
+        {
+            acmUser.setCompany(company);
+        }
+        if (country != null)
+        {
+            acmUser.setCountry(country);
+        }
+        if (countryAbbreviation != null)
+        {
+            acmUser.setCountryAbbreviation(countryAbbreviation);
+        }
         acmUser.setPasswordExpirationDate(passwordExpirationDate);
         acmUser.setDistinguishedName(distinguishedName);
         return acmUser;
@@ -100,9 +109,13 @@ public class LdapUser
         boolean departmentChanged = objChanged(department, acmUser.getDepartment());
         boolean passwordExpirationDateChanged = objChanged(passwordExpirationDate, acmUser.getPasswordExpirationDate());
         boolean dnChanged = objChanged(distinguishedName, acmUser.getDistinguishedName());
+        boolean sAMAccountNameChanged = objChanged(sAMAccountName, acmUser.getsAMAccountName());
+        boolean uidChanged = objChanged(uid, acmUser.getUid());
+        boolean userPrincipalNameChanged = objChanged(userPrincipalName, acmUser.getUserPrincipalName());
         return directoryNameChanged || stateChanged || titleChanged || mailChanged || firstNameChanged
                 || lastNameChanged || companyChanged || countryChanged || countryAbbreviationChanged
-                || departmentChanged || passwordExpirationDateChanged || dnChanged;
+                || departmentChanged || passwordExpirationDateChanged || dnChanged || sAMAccountNameChanged
+                || uidChanged || userPrincipalNameChanged;
     }
 
     public String getUserId()

@@ -302,9 +302,11 @@
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
         <property name="enableContentFileIndexing" value="${solr.enableContentFileIndexing}"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+        <property name="acmDataService" ref="acmDataService"/>
     </bean>
 
     <bean id="acmContainerToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmContainerToSolrTransformer">
@@ -404,5 +406,11 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="pdfService" ref="pdfService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
+
+    <bean id="fileAclSolrUpdateHelper" class="com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper">
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
+        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
 </beans>

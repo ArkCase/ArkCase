@@ -26,6 +26,7 @@
         "assignee.label": "割り当て先",
         "owningGroup.label": "群に所属",
         "dueDate.label": "期限日",
+        "alertMessage": "ja_Due date must be after the create date ",
         "priorities": {
             "low%": "低い",
             "medium%": "中",
@@ -394,7 +395,8 @@
             "label": "ja_Approver",
             "addAnother": "ja_Add another",
             "remove": "ja_Remove Approver",
-            "pickerModal.header": "ja_Search for User"
+            "pickerModal.header": "ja_User/Group Search",
+            "owningGroup": "ja_Owning Group"
         },
         "button": {
             "cancel": "ja_Cancel",

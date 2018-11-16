@@ -46,11 +46,11 @@ import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import javax.persistence.FlushModeType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -70,6 +70,12 @@ public class GroupServiceImpl implements GroupService
     public AcmGroup findByName(String name)
     {
         return groupDao.findByName(name);
+    }
+
+    @Override
+    public AcmGroup findByName(String name, FlushModeType flushModeType)
+    {
+        return groupDao.findByName(name, flushModeType);
     }
 
     @Override
@@ -214,15 +220,15 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException
+    public String getLdapGroupsForUser(Authentication authentication) throws MuleException
     {
         log.info("Taking all groups and ascendant groups from Solr. Authenticated user is [{}]",
-                usernamePasswordAuthenticationToken.getName());
+                authentication.getName());
 
         String query = "object_type_s:GROUP AND object_sub_type_s:LDAP_GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
                 + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
-        return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken, SolrCore.ADVANCED_SEARCH, query, 0, 1000,
+        return executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1000,
                 "name asc");
     }
 

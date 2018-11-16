@@ -42,6 +42,9 @@ import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.exceptions.InvalidLookupException;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -184,6 +187,30 @@ public class AcmSpringMvcErrorManager
 
     protected void sendResponse(HttpStatus status, HttpServletResponse response, String message)
     {
+        // Make sure the error message doesn't look like JSON when it really isn't JON
+        // otherwise Angular will try to parse it and fail
+        
+        String jsonStart = "^(\\[|\\{)(.*)(\\]|\\})$";
+        if (message != null && message.matches(jsonStart))
+        {
+            try
+            {
+                new JSONObject(message);
+            }
+            catch (JSONException e)
+            {
+                // check JSON Array as well
+                try
+                {
+                    new JSONArray(message);
+                }
+                catch (JSONException e1)
+                {
+                    message = "." + message;
+                }
+            }
+        }
+        
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
         response.setStatus(status.value());
 

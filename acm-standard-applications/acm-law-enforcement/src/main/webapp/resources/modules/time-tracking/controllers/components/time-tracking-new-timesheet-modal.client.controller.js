@@ -4,6 +4,7 @@ angular.module('time-tracking').controller(
     'TimeTracking.NewTimesheetController',
     [
         '$scope',
+        '$q',
         '$stateParams',
         '$translate',
         '$modalInstance',
@@ -23,13 +24,16 @@ angular.module('time-tracking').controller(
         'Profile.UserInfoService',
         'Helper.UiGridService',
         'Admin.TimesheetConfigurationService',
-        function ($scope, $stateParams, $translate, $modalInstance, TimeTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, UtilDateService, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService,
+        function ($scope, $q, $stateParams, $translate, $modalInstance, TimeTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, UtilDateService, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService,
                   UserInfoService, HelperUiGridService, TimesheetConfigurationService) {
 
             $scope.modalParams = modalParams;
             $scope.loading = false;
             $scope.loadingIcon = "fa fa-floppy-o";
             $scope.isEdit = $scope.modalParams.isEdit;
+            var participantTypeApprover = 'approver';
+            var participantTypeOwningGroup = "owning group";
+
 
             ConfigService.getModuleConfig("time-tracking").then(function (moduleConfig) {
                 $scope.config = moduleConfig;
@@ -38,32 +42,40 @@ angular.module('time-tracking').controller(
                     id: "times"
                 });
 
-                if (!$scope.isEdit) {
-                    //new timesheet with predefined values
-                    $scope.isTypeSelected = false;
-                    $scope.timesheet = {
-                        className: $scope.config.className,
-                        status: 'DRAFT',
-                        times: [],
-                        participants: [{}]
-                    };
+                UserInfoService.getUserInfo().then(function (infoData) {
+                    if (!$scope.isEdit) {
+                        //new timesheet with predefined values
+                        $scope.isTypeSelected = false;
+                        $scope.isApproverAdded = false;
+                        $scope.timesheet = {
+                            className: $scope.config.className,
+                            status: 'DRAFT',
+                            times: [],
+                            participants: []
+                        };
+                        $scope.timesheet.user = infoData;
+                        $scope.approverName = "";
+                        $scope.groupName = "";
 
-                    $scope.selectedDate = new Date();
-                    $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
+                        $scope.selectedDate = new Date();
+                        $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
 
-                    $scope.timesForms = [{
-                        totalWeekHours: 0,
-                        totalCost: 0,
-                        dayHours: [0, 0, 0, 0, 0, 0, 0]
-                    }];
+                        $scope.timesForms = [{
+                            totalWeekHours: 0,
+                            totalCost: 0,
+                            dayHours: [0, 0, 0, 0, 0, 0, 0]
+                        }];
 
-                    if(!Util.isEmpty($scope.modalParams.timeType) && !Util.isEmpty($scope.modalParams.timeNumber) && !Util.isEmpty($scope.modalParams.timeId)) {
-                        $scope.timesForms[0].objectId = $scope.modalParams.timeId;
-                        $scope.timesForms[0].type = $scope.modalParams.timeType;
-                        $scope.timesForms[0].code = $scope.modalParams.timeNumber;
-                        $scope.isTypeSelected = true;
+                        if(!Util.isEmpty($scope.modalParams.timeType) && !Util.isEmpty($scope.modalParams.timeNumber) && !Util.isEmpty($scope.modalParams.timeId)) {
+                            $scope.timesForms[0].objectId = $scope.modalParams.timeId;
+                            $scope.timesForms[0].type = $scope.modalParams.timeType;
+                            $scope.timesForms[0].code = $scope.modalParams.timeNumber;
+                            $scope.isTypeSelected = true;
+                        }
                     }
-                }
+                });
+
+
 
                 $scope.newTimeObjectPicker = _.find(moduleConfig.components, {
                     id: "newTimeObjectPicker"
@@ -84,9 +96,17 @@ angular.module('time-tracking').controller(
                 return moduleConfig;
             });
 
-            TimesheetConfigurationService.getConfig().then(
-            	function (response) {
-            	    $scope.timesheetConfiguration = response.data;
+            var timesheetConfig = TimesheetConfigurationService.getConfig();
+
+            ObjectLookupService.getTimesheetTypes().then(function (timesheetTypes) {
+                $scope.timesheetTypes = timesheetTypes;
+            });
+
+            ObjectLookupService.getTimesheetChargeRoles().then(function (timesheetChargeRoles) {
+                $scope.timesheetChargeRoles = timesheetChargeRoles;
+            });
+            ObjectLookupService.getTimesheetStatuses().then(function (timesheetStatuses) {
+                $scope.timesheetStatuses = timesheetStatuses;
             });
 
             // ----------------------------- total ----------------------------------------------------------
@@ -105,26 +125,34 @@ angular.module('time-tracking').controller(
             };
 
             $scope.updateTotalCost = function (timesForm) {
-                if (!Util.isEmpty(timesForm.chargeRole)) {
-                    timesForm.totalCost = fillTotalCost(timesForm.totalWeekHours, timesForm.chargeRole);
-                }
+                $q.when(timesheetConfig).then(function (response) {
+                    $scope.timesheetConfiguration = response.data;
+
+                    if (!Util.isEmpty(timesForm.chargeRole)) {
+                        timesForm.totalCost = fillTotalCost(timesForm.totalWeekHours, timesForm.chargeRole);
+                    }
+                });
             };
 
             // ------------------------------------------ edit ----------------------------------------------
             if ($scope.isEdit) {
                 $scope.isTypeSelected = true;
-                $scope.objectInfo = $scope.modalParams.timesheet;
-                var tmpTimesheet = $scope.modalParams.timesheet;
+                $scope.objectInfo = angular.copy($scope.modalParams.timesheet);
+                var tmpTimesheet = angular.copy($scope.modalParams.timesheet);
+                updateIsApproverAdded($scope.objectInfo.participants);
 
                 if (tmpTimesheet.participants != undefined) {
                     if (!Util.isArrayEmpty(tmpTimesheet.participants)) {
                         _.forEach(tmpTimesheet.participants, function (participant) {
-                            UserInfoService.getUserInfoById(participant.participantLdapId).then(function (userInfo) {
-                                participant.participantFullName = userInfo.fullName;
-                            });
+                            if(participant.participantType == participantTypeApprover){
+                                UserInfoService.getUserInfoById(participant.participantLdapId).then(function(userInfo) {
+                                    $scope.approverName = userInfo.fullName;
+                                });
+                            }
+                            if(participant.participantType == participantTypeOwningGroup){
+                                $scope.groupName = participant.participantLdapId;
+                            }
                         });
-                    } else {
-                        tmpTimesheet.participants = [{}];
                     }
                 }
 
@@ -189,6 +217,7 @@ angular.module('time-tracking').controller(
                 }
 
                 $scope.timesheet = {
+                    id: $scope.objectInfo.id,
                     user: $scope.objectInfo.user,
                     status: $scope.objectInfo.status,
                     title: $scope.objectInfo.title,
@@ -202,21 +231,6 @@ angular.module('time-tracking').controller(
                 $scope.selectedDate = new Date($scope.objectInfo.startDate);
                 $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
             }
-
-            ObjectLookupService.getTimesheetTypes().then(function (timesheetTypes) {
-                $scope.timesheetTypes = timesheetTypes;
-            });
-
-            ObjectLookupService.getTimesheetChargeRoles().then(function (timesheetChargeRoles) {
-                $scope.timesheetChargeRoles = timesheetChargeRoles;
-            });
-            ObjectLookupService.getTimesheetStatuses().then(function (timesheetStatuses) {
-                $scope.timesheetStatuses = timesheetStatuses;
-            });
-
-            UserInfoService.getUserInfo().then(function (infoData) {
-                $scope.timesheet.user = infoData;
-            });
 
             //------------------------------------- selectedWeek ----------------------------------------------
             $scope.isDateBeforeTodaysDate = false;
@@ -261,7 +275,7 @@ angular.module('time-tracking').controller(
                 $scope.timesheet.endDate = endOfWeek.toDate();
 
                 if (!Util.isEmpty($scope.timesheet)) {
-                    $scope.timesheet.title = "Timesheet" + " " + startOfWeek.format("M/D/YYYY") + "-" + endOfWeek.format("M/D/YYYY");
+                    $scope.timesheet.title = $scope.timesheet.user.fullName + " - " + " " + startOfWeek.format("M/D/YYYY") + "-" + endOfWeek.format("M/D/YYYY");
                 }
 
                 setWeekDatesInCalendar(startOfWeek, endOfWeek);
@@ -459,113 +473,125 @@ angular.module('time-tracking').controller(
             }
 
             // ---------------------------            approver         --------------------------------------
-            var participantType = 'approver';
-
-            $scope.addApprover = function () {
-                $timeout(function () {
-                    $scope.searchApprover(-1);
-                }, 0);
-            };
-
-            $scope.removeApprover = function (approver) {
-                $timeout(function () {
-                    _.remove($scope.timesheet.participants, function (object) {
-                        return object === approver;
-                    });
-                }, 0);
-            };
-
-            $scope.searchApprover = function (index) {
-                var participant = index > -1 ? $scope.timesheet.participants[index] : {};
-
+            $scope.userOrGroupSearch = function() {
                 var params = {};
-
                 params.header = $translate.instant("timeTracking.comp.newTimesheet.userSearch.title");
-                params.filter = 'fq="object_type_s": USER &fq="status_lcs": VALID';
+                params.filter = "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)";
+                params.extraFilter = "&fq=\"name\": ";
                 params.config = $scope.userSearchConfig;
+                params.secondGrid = 'true';
 
                 var modalInstance = $modal.open({
-                    templateUrl: "directives/core-participants/core-participants-picker-modal.client.view.html",
-                    controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
+                    templateUrl: "directives/core-participants/participants-user-group-search.client.view.html",
+                    controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
                         $scope.modalInstance = $modalInstance;
                         $scope.header = params.header;
                         $scope.filter = params.filter;
                         $scope.config = params.config;
-                    }],
+                        $scope.secondGrid = params.secondGrid;
+                    } ],
                     animation: true,
                     size: 'lg',
                     backdrop: 'static',
                     resolve: {
-                        params: function () {
+                        params: function() {
                             return params;
                         }
                     }
                 });
-                modalInstance.result.then(function (selection) {
+
+                modalInstance.result.then(function(selection) {
                     if (selection) {
-                        participant.className = $scope.participantsConfig.className;
-                        participant.participantType = participantType;
-                        participant.participantLdapId = selection.object_id_s;
-                        participant.participantFullName = selection.name;
-                        if (ObjectParticipantService.validateParticipants([participant], true) && !_.includes($scope.timesheet.participants, participant)) {
-                            $scope.timesheet.participants.push(participant);
+                        var selectedObjectType = selection.masterSelectedItem.object_type_s;
+                        if (selectedObjectType === 'USER') { // Selected user
+                            var selectedUser = selection.masterSelectedItem;
+                            var selectedGroup = selection.detailSelectedItems;
+
+                            $scope.approverName = selectedUser.name;
+                            addParticipantInTimesheet(participantTypeApprover, selectedUser.object_id_s);
+
+                            if (selectedGroup) {
+                                $scope.groupName = selectedGroup.name;
+                                addParticipantInTimesheet(participantTypeOwningGroup, selectedGroup.object_id_s);
+                            }
+                            updateIsApproverAdded($scope.timesheet.participants);
+
+                            return;
+                        } else if (selectedObjectType === 'GROUP') { // Selected group
+                            var selectedUser = selection.detailSelectedItems;
+                            var selectedGroup = selection.masterSelectedItem;
+
+                            $scope.groupName = selectedGroup.name;
+                            addParticipantInTimesheet(participantTypeOwningGroup, selectedGroup.object_id_s);
+
+                            if (selectedUser) {
+                                $scope.approverName = selectedUser.name;
+                                addParticipantInTimesheet(participantTypeApprover, selectedUser.object_id_s);
+                            }
+                            updateIsApproverAdded($scope.timesheet.participants);
+
+                            return;
                         }
                     }
+
+                }, function() {
+                    // Cancel button was clicked.
+                    return [];
                 });
+
             };
+
+            function addParticipantInTimesheet(participantType, participantLdapId){
+                var newParticipant = {};
+                newParticipant.className = $scope.participantsConfig.className;
+                newParticipant.participantType = participantType;
+                newParticipant.participantLdapId = participantLdapId;
+
+                if (ObjectParticipantService.validateParticipants([newParticipant], true)) {
+                    var participantExists = false;
+                    _.forEach($scope.timesheet.participants, function (participant) {
+                        if(participant.participantType == participantType){
+                            participantExists = true;
+                            participant.participantLdapId = newParticipant.participantLdapId;
+                            participant.replaceChildrenParticipant = true;
+                            return false;
+                        }
+                    });
+                    if(!participantExists){
+                        $scope.timesheet.participants.push(newParticipant);
+                    }
+                }
+            }
+
+            function updateIsApproverAdded(participants){
+                var approver = _.find(participants, function (participant) {
+                    return participant.participantType == participantTypeApprover;
+                });
+                $scope.isApproverAdded = !Util.isEmpty(approver);
+            }
 
             //-----------------------------------------------------------------------------------------------
 
             $scope.save = function (submissionName) {
+                $q.when(timesheetConfig).then(function (response) {
+                    $scope.timesheetConfiguration = response.data;
 
-                if (!$scope.isEdit) {
-                    $scope.loading = true;
-                    $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                    fillTimes($scope.timesheet);
-                    TimeTrackingInfoService.saveNewTimesheetInfo(clearNotFilledElements(_.cloneDeep($scope.timesheet)), submissionName).then(function (objectInfo) {
-                        var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.TIMESHEET);
-                        var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} was created.', {
-                            objectType: objectTypeString,
-                            timesheetTitle: objectInfo.title
-                        });
-                        MessageService.info(timesheetUpdatedMessage);
-                        ObjectService.showObject(ObjectService.ObjectTypes.TIMESHEET, objectInfo.id);
-                        $modalInstance.close(objectInfo);
-                        $scope.loading = false;
-                        $scope.loadingIcon = "fa fa-floppy-o";
-                    }, function (error) {
-                        $scope.loading = false;
-                        $scope.loadingIcon = "fa fa-floppy-o";
-                        if (error.data && error.data.message) {
-                            $scope.error = error.data.message;
-                        } else {
-                            MessageService.error(error);
-                        }
-                    });
-                } else {
-                    // Updates the ArkCase database when the user changes a timesheet attribute
-                    // from the form accessed by clicking 'Edit' and then 'update timesheet button
-                    $scope.loading = true;
-                    $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                    var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-                    fillTimes($scope.objectInfo);
-                    checkForChanges($scope.objectInfo);
-                    if (TimeTrackingInfoService.validateTimesheet($scope.objectInfo)) {
-                        var objectInfo = Util.omitNg($scope.objectInfo);
-                        promiseSaveInfo = TimeTrackingInfoService.saveTimesheetInfo(objectInfo, submissionName);
-                        promiseSaveInfo.then(function (timesheetInfo) {
-                            $scope.$emit("report-object-updated", timesheetInfo);
+                    if (!$scope.isEdit) {
+                        $scope.loading = true;
+                        $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
+                        fillTimes($scope.timesheet);
+                        TimeTrackingInfoService.saveNewTimesheetInfo(clearNotFilledElements(_.cloneDeep($scope.timesheet)), submissionName).then(function (objectInfo) {
                             var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.TIMESHEET);
-                            var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} was updated.', {
+                            var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} was created.', {
                                 objectType: objectTypeString,
                                 timesheetTitle: objectInfo.title
                             });
                             MessageService.info(timesheetUpdatedMessage);
+                            ObjectService.showObject(ObjectService.ObjectTypes.TIMESHEET, objectInfo.id);
                             $modalInstance.close(objectInfo);
                             $scope.loading = false;
                             $scope.loadingIcon = "fa fa-floppy-o";
                         }, function (error) {
-                            $scope.$emit("report-object-update-failed", error);
                             $scope.loading = false;
                             $scope.loadingIcon = "fa fa-floppy-o";
                             if (error.data && error.data.message) {
@@ -574,9 +600,44 @@ angular.module('time-tracking').controller(
                                 MessageService.error(error);
                             }
                         });
+                    } else {
+                        // Updates the ArkCase database when the user changes a timesheet attribute
+                        // from the form accessed by clicking 'Edit' and then 'update timesheet button
+                        $scope.loading = true;
+                        $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
+                        var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+                        fillTimes($scope.objectInfo);
+                        checkForChanges($scope.objectInfo);
+                        if (TimeTrackingInfoService.validateTimesheet($scope.objectInfo)) {
+                            var objectInfo = Util.omitNg($scope.objectInfo);
+                            promiseSaveInfo = TimeTrackingInfoService.saveTimesheetInfo(objectInfo, submissionName);
+                            promiseSaveInfo.then(function (timesheetInfo) {
+                                $scope.$emit("report-object-updated", timesheetInfo);
+                                var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.TIMESHEET);
+                                var objectAction = $translate.instant('common.objectAction.updated');
+                                var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} {{action}}.', {
+                                    objectType: objectTypeString,
+                                    timesheetTitle: timesheetInfo.title,
+                                    action: objectAction
+                                });
+                                MessageService.info(timesheetUpdatedMessage);
+                                $modalInstance.close(timesheetInfo);
+                                $scope.loading = false;
+                                $scope.loadingIcon = "fa fa-floppy-o";
+                            }, function (error) {
+                                $scope.$emit("report-object-update-failed", error);
+                                $scope.loading = false;
+                                $scope.loadingIcon = "fa fa-floppy-o";
+                                if (error.data && error.data.message) {
+                                    $scope.error = error.data.message;
+                                } else {
+                                    MessageService.error(error);
+                                }
+                            });
+                        }
+                        return promiseSaveInfo;
                     }
-                    return promiseSaveInfo;
-                }
+                });
             };
 
             function checkForChanges(objectInfo) {
@@ -589,6 +650,43 @@ angular.module('time-tracking').controller(
                 if (objectInfo.details != $scope.timesheet.details) {
                     objectInfo.details = $scope.timesheet.details;
                 }
+
+                var addedApprover =  _.find($scope.timesheet.participants, function (participant) {
+                    return participant.participantType == participantTypeApprover;
+                });
+
+                if(!Util.isEmpty(addedApprover)){
+                    var hasApprover = false;
+                    _.forEach(objectInfo.participants, function (participant, idx) {
+                        if((participant.participantType == participantTypeApprover)){
+                            hasApprover = true;
+                            objectInfo.participants.splice(idx, 1, addedApprover);
+                            return false;
+                        }
+                    });
+                    if(!hasApprover){
+                        objectInfo.participants.push(addedApprover);
+                    }
+                }
+
+                var addedOwningGroup =  _.find($scope.timesheet.participants, function (participant) {
+                    return participant.participantType == participantTypeOwningGroup;
+                });
+
+                if(!Util.isEmpty(addedOwningGroup)){
+                    var hasOwningGroup = false;
+                    _.forEach(objectInfo.participants, function (participant, idx) {
+                        if((participant.participantType == participantTypeOwningGroup)){
+                            hasOwningGroup = true;
+                            objectInfo.participants.splice(idx, 1, addedOwningGroup);
+                            return false;
+                        }
+                    });
+                    if(!hasOwningGroup){
+                        objectInfo.participants.push(addedOwningGroup);
+                    }
+                }
+
                 return objectInfo;
             }
 
@@ -596,16 +694,6 @@ angular.module('time-tracking').controller(
                 if (Util.isEmpty(timesheet.details)) {
                     timesheet.details = null;
                 }
-
-                _.remove(timesheet.participants, function (participant) {
-                    if (!participant.participantFullName) {
-                        return true;
-                    } else {
-                        //remove temporary values
-                        delete participant['participantFullName'];
-                        return false;
-                    }
-                });
 
                 return timesheet;
             }

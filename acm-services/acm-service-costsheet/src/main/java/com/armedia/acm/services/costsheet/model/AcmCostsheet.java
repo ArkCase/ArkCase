@@ -34,8 +34,10 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -44,28 +46,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -81,7 +62,7 @@ import java.util.List;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.services.costsheet.model.AcmCostsheet")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStatefulEntity, AcmParentObjectInfo, AcmContainerEntity
+public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStatefulEntity, AcmParentObjectInfo, AcmContainerEntity, AcmAssignedObject
 {
 
     private static final long serialVersionUID = 6290288826480329085L;
@@ -134,6 +115,10 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
     @Column(name = "cm_costsheet_modified")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
+
+    @Column(name = "cm_costsheet_restricted_flag", nullable = false)
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean restricted = Boolean.FALSE;
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType;
@@ -358,11 +343,13 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
         this.modified = modified;
     }
 
+    @Override
     public List<AcmParticipant> getParticipants()
     {
         return participants;
     }
 
+    @Override
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
@@ -388,6 +375,17 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
     public void setClassName(String className)
     {
         this.className = className;
+    }
+
+    @Override
+    public Boolean getRestricted()
+    {
+        return restricted;
+    }
+
+    public void setRestricted(Boolean restricted)
+    {
+        this.restricted = restricted;
     }
 
     @Override
@@ -424,5 +422,19 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
     public void setEcmFolderPath(String ecmFolderPath)
     {
         this.ecmFolderPath = ecmFolderPath;
+    }
+
+    @JsonIgnore
+    public Double calculateBalance()
+    {
+        Double balance = 0.0;
+        for (AcmCost acmCost : getCosts())
+        {
+            if (acmCost.getValue() > 0)
+            {
+                balance += acmCost.getValue();
+            }
+        }
+        return balance;
     }
 }

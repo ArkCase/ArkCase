@@ -14,6 +14,7 @@
     },
     "costTracking.comp.info": {
         "title": "情報",
+        "lastModified.label": "最終更新日",
         "incidentDate": "事件の日付",
         "priority": "優先",
         "assignedTo": "割り当て先",
@@ -121,7 +122,7 @@
                 "username": "ja_Username"
             }
         },
-        "userSearch.title": "ja_Search for User",
+        "userSearch.title": "ja_User/Group Search",
         "cost": {
             "title": "ja_Costs",
             "date": "ja_Date",
@@ -139,7 +140,8 @@
             "title": "ja_Approver",
             "placeholder": "ja_Select Approver",
             "removeBtn": "ja_Remove Approver",
-            "addBtn": "ja_Add Another Approver"
+            "addBtn": "ja_Add Another Approver",
+            "owningGroup": "ja_Owning Group"
         },
         "cancelButton": "ja_Cancel",
         "saveButton": "ja_Save",

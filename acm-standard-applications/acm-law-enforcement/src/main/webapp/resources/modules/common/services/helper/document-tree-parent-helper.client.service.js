@@ -56,7 +56,7 @@ angular.module('common')
                                             that.scope.objectInfo.number = that.scope.objectInfo.caseNumber;
                                             that.scope.parentObject = that.scope.objectInfo.caseNumber;
                                         } else if (that.scope.objectType === ObjectService.ObjectTypes.COMPLAINT) {
-                                            that.scope.parentObject = that.scope.objectInfo.costsheetNumber;
+                                            that.scope.parentObject = that.scope.objectInfo.complaintNumber;
                                             that.scope.objectInfo.number = that.scope.objectInfo.complaintNumber;
                                             that.scope.objectInfo.title = that.scope.objectInfo.complaintTitle;
                                         }

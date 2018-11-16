@@ -22,7 +22,8 @@
         "priority.label": "優先級別",
         "assignee.label": "指定人員",
         "owningGroup.label": "所屬群體",
-        "dueDate.label": "到期日期"
+        "dueDate.label": "到期日期",
+        "alertMessage": "zh-tw_Due date must be after the create date "
     },
     "complaints.comp.actions": {
         "title": "行動",
@@ -355,7 +356,8 @@
             "label": "zh-tw_Approver",
             "addAnother": "zh-tw_Add another",
             "remove": "zh-tw_Remove Approver",
-            "pickerModal.header": "zh-tw_Search for User"
+            "pickerModal.header": "zh-tw_User/Group Search",
+            "owningGroup": "zh-tw_Owning Group"
         },
         "cancelButton": "zh-tw_Cancel",
         "saveButton": "zh-tw_Save Complaint"

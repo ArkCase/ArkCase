@@ -666,7 +666,9 @@
         }
     },
     "common.comp.acmLogin": {
-        "confirmLogout": "保護のため、アプリケーションはログアウトしようとしています。ログインを維持するには、[キャンセル]をクリックしてください。"
+        "confirmLogout": "保護のため、アプリケーションはログアウトしようとしています。ログインを維持するには、[キャンセル]をクリックしてください。",
+        "logoutBtn": "ログアウト",
+        "cancelBtn": "キャンセル"
     },
     "common.objectTypes": {
         "CASE_FILE": "案件文書",
@@ -809,7 +811,8 @@
             "name": "名前",
             "id": "識別",
             "title": "タイトル"
-        }
+        },
+        "addDocument": "JA_Choose document to add"
     },
     "common.addOrganization": {
         "title": "組織を追加する",

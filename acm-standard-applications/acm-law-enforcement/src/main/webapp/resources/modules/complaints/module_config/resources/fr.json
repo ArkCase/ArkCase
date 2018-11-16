@@ -22,7 +22,8 @@
         "priority.label": "Priorité",
         "assignee.label": "Assigné à",
         "owningGroup.label": "Appartenant au groupe",
-        "dueDate.label": "Date d'échéance"
+        "dueDate.label": "Date d'échéance",
+        "alertMessage": "fr_Due date must be after the create date "
     },
     "complaints.comp.actions": {
         "title": "Actes",
@@ -355,7 +356,8 @@
             "label": "fr_Approver",
             "addAnother": "fr_Add another",
             "remove": "fr_Remove Approver",
-            "pickerModal.header": "fr_Search for User"
+            "pickerModal.header": "fr_User/Group Search",
+            "owningGroup": "fr_Owning Group"
         },
         "cancelButton": "fr_Cancel",
         "saveButton": "fr_Save Complaint"

@@ -31,6 +31,8 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 
+import org.json.JSONArray;
+
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +52,11 @@ public interface AcmObjectToSolrDocTransformer<T extends Object>
     SolrAdvancedSearchDocument toSolrAdvancedSearch(T in);
 
     SolrDocument toSolrQuickSearch(T in);
+
+    default JSONArray childrenUpdatesToSolr(T in)
+    {
+        return null;
+    }
 
     default SolrContentDocument toContentFileIndex(T in)
     {

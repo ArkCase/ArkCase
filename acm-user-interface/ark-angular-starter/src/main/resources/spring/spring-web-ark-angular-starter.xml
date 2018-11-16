@@ -23,12 +23,12 @@
     </bean>
 
     <bean id="angularResourceCopier" class="com.armedia.acm.userinterface.angular.AngularResourceCopier">
+        <property name="springActiveProfile" ref="acmSpringActiveProfile"/>
         <property name="tempFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/tmp"/>
         <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/custom"/>
         <property name="frontEndCommandsToBeExecuted">
             <list>
-                <value>${frontEndCommandPrefix}yarn --no-progress --non-interactive install
-                </value>
+                <value>${frontEndCommandPrefix}yarn --no-progress --non-interactive install</value>
                 <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} --no-color</value>
             </list>
         </property>
@@ -45,11 +45,20 @@
                 <value>filters</value>
             </list>
         </property>
+        <property name="customResourceSourcesToCopyFromArchive">
+            <list>
+                <value>assets</value>
+                <value>config</value>
+                <value>directives</value>
+                <value>modules</value>
+                <value>services</value>
+            </list>
+        </property>
         <property name="assembledFoldersToCopyToDeployment">
             <list>
                 <value>assets</value>
                 <value>directives</value>
-                <value>lib</value>
+                <value>node_modules</value>
                 <value>modules</value>
                 <value>modules_config</value>
                 <value>services</value>

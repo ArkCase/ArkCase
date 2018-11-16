@@ -17,31 +17,7 @@ angular.module('cost-tracking').controller(
                         }
                     });
 
-                    $scope.parentInfo = {};
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
-
-                        if ($scope.objectInfo.parentType == ObjectService.ObjectTypes.CASE_FILE) {
-                            CaseInfoService.getCaseInfo($scope.objectInfo.parentId).then(function(caseInfo) {
-                                $scope.parentInfo.title = caseInfo.title;
-                                $scope.parentInfo.incidentDate = moment(caseInfo.created).format($scope.config.parentDateFormat);
-                                $scope.parentInfo.priortiy = caseInfo.priority;
-                                $scope.parentInfo.type = caseInfo.caseType;
-                                $scope.parentInfo.status = caseInfo.status;
-                            });
-
-                        } else if ($scope.objectInfo.parentType == ObjectService.ObjectTypes.COMPLAINT) {
-                            ComplaintInfoService.getComplaintInfo($scope.objectInfo.parentId).then(function(complaintInfo) {
-                                $scope.parentInfo.title = complaintInfo.complaintTitle;
-                                $scope.parentInfo.incidentDate = moment(complaintInfo.incidentDate).format($scope.config.parentDateFormat);
-                                $scope.parentInfo.priortiy = complaintInfo.priority;
-                                $scope.parentInfo.type = complaintInfo.complaintType;
-                                $scope.parentInfo.status = complaintInfo.status;
-                            });
-                        }
                     };
-
-                    $scope.onClickTitle = function() {
-                        ObjectService.showObject($scope.objectInfo.parentType, $scope.objectInfo.parentId);
-                    }
                 } ]);

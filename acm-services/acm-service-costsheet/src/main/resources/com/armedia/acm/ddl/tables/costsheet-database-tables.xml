@@ -242,4 +242,12 @@
     <changeSet id="14-require-costsheet-number" author="dmiller" failOnError="false">
         <addNotNullConstraint tableName="acm_costsheet" columnName="cm_costsheet_number" columnDataType="VARCHAR(1024)"/>
     </changeSet>
+
+    <changeSet id="15-add-restricted-flag" author="ivana.shekerova">
+        <addColumn tableName="acm_costsheet">
+            <column name="cm_costsheet_restricted_flag" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -96,93 +96,202 @@ angular.module('directives').directive(
                                 gridHelper.disableGridScrolling(config);
                                 gridHelper.setUserNameFilterToConfig(promiseUsers);
                             };
+                            ConfigService.getModuleConfig("common").then(function(moduleConfig) {
+                                scope.userOrGroupSearchConfig = _.find(moduleConfig.components, {
+                                    id: "userOrGroupSearch"
+                                });
+                            });
 
                             var showModal = function(participant, isEdit, showReplaceChildrenParticipants) {
-                                var modalScope = scope.$new();
-                                participant.replaceChildrenParticipant = true;
-                                modalScope.participant = participant || {};
-                                modalScope.isEdit = isEdit || false;
-                                modalScope.showReplaceChildrenParticipants = showReplaceChildrenParticipants || false;
-                                modalScope.selectedType = participant.selectedType ? participant.selectedType : "";
 
-                                var params = {};
+                                if (participant.participantType == "assignee" || participant.participantType == "owning group") {
+                                    var assignee = _.find(scope.objectInfo.participants, {
+                                        participantType: "assignee"
+                                    });
 
-                                params.owningGroup = ObjectModelService.getParticipantByType(scope.objectInfo, typeOwningGroup);
+                                    var assigneeObj = _.find(scope.userFullNames, function(user) {
+                                        return assignee.participantLdapId === user.id
+                                    });
 
-                                var modalInstance = $modal.open({
-                                    scope: modalScope,
-                                    animation: true,
-                                    templateUrl: "directives/core-participants/core-participants-modal.client.view.html",
-                                    controller: "Directives.CoreParticipantsModalController",
-                                    size: 'lg',
-                                    backdrop: 'static',
-                                    resolve: {
-                                        params: function() {
-                                            return params;
+                                    var owningGroup = _.find(scope.objectInfo.participants, {
+                                        participantType: "owning group"
+                                    });
+
+                                    var params = {
+                                        owningGroup: owningGroup.participantLdapId,
+                                        assignee: assigneeObj
+                                    };
+                                    var modalInstance = $modal.open({
+                                        animation: scope.animationsEnabled,
+                                        templateUrl: 'modules/common/views/user-group-picker-modal.client.view.html',
+                                        controller: 'Common.UserGroupPickerController',
+                                        size: 'lg',
+                                        resolve: {
+                                            $filter: function() {
+                                                return scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetFilter;
+                                            },
+                                            $extraFilter: function() {
+                                                return scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetExtraFilter;
+                                            },
+                                            $config: function() {
+                                                return scope.userOrGroupSearchConfig;
+                                            },
+                                            $params: function() {
+                                                return params;
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                    modalInstance.result.then(function(selection) {
 
-                                modalInstance.result.then(function(data) {
-                                    if (ObjectParticipantService.validateType(data.participant.participantLdapId, data.participant.participantType)) {
-                                        scope.participant.id = data.participant.id;
-                                        scope.participant.participantLdapId = data.participant.participantLdapId;
-                                        scope.participant.participantType = data.participant.participantType;
+                                        if (selection) {
+                                            var selectedObjectType = selection.masterSelectedItem.object_type_s;
+                                            if (selectedObjectType === 'USER') { // Selected user
+                                                var selectedUser = selection.masterSelectedItem;
+                                                var selectedGroup = selection.detailSelectedItems;
 
-                                        var assignee = ObjectModelService.getParticipantByType(scope.objectInfo, typeAssignee);
-                                        var owner = ObjectModelService.getParticipantByType(scope.objectInfo, typeOwner);
-                                        var owningGroup = "";
-
-                                        if (data.participant.participantType == typeOwningGroup) {
-                                            owningGroup = data.participant.participantLdapId;
-                                        }
-
-                                        var typeNoAccess = 'No Access';
-                                        if (scope.config.typeNoAccess) {
-                                            typeNoAccess = scope.config.typeNoAccess;
-                                        }
-
-                                        if (data.isEdit) {
-                                            var participant = _.find(scope.objectInfo.participants, function(pa) {
-                                                return Util.compare(pa.id, data.participant.id);
-                                            });
-                                            participant.participantLdapId = data.participant.participantLdapId;
-                                            participant.id = data.participant.id;
-
-                                            if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
-                                                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
-                                            } else {
-                                                participant.participantType = data.participant.participantType;
-                                                participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
-                                                var participantPerson = owner ? owner : assignee;
-                                                if (!Util.isEmpty(participantPerson) && !Util.isEmpty(owningGroup)) {
-                                                    if (!ObjectParticipantService.isParticipantMemberOfGroup(participantPerson, owningGroup)) {
-                                                        _.remove(scope.objectInfo.participants, function(p) {
-                                                            return p.participantLdapId == participantPerson && (p.participantType == "assignee" || p.participantType == "owner")
-                                                        });
+                                                //set for AFDP-6831 to inheritance in the Folder/file participants
+                                                var len = scope.objectInfo.participants.length;
+                                                for (var i = 0; i < len; i++) {
+                                                    if(scope.objectInfo.participants[i].participantType =='assignee'){
+                                                        scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                                                     }
                                                 }
-                                            }
-                                        } else {
-                                            var participant = {};
-                                            participant.participantLdapId = data.participant.participantLdapId;
 
-                                            if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
-                                                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
-                                            } else {
-                                                participant.participantType = data.participant.participantType;
-                                                participant.className = scope.config.className;
-                                                participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
-                                                scope.objectInfo.participants.push(participant);
+                                                scope.assignee = selectedUser.object_id_s;
+                                                scope.updateAssignee();
+                                                if (selectedGroup) {
+                                                    scope.owningGroup = selectedGroup.object_id_s;
+                                                    scope.updateOwningGroup();
+                                                    saveObjectInfoAndRefresh();
+
+                                                } else {
+                                                    saveObjectInfoAndRefresh();
+                                                }
+
+                                                return;
+                                            } else if (selectedObjectType === 'GROUP') { // Selected group
+                                                var selectedUser = selection.detailSelectedItems;
+                                                var selectedGroup = selection.masterSelectedItem;
+                                                scope.owningGroup = selectedGroup.object_id_s;
+                                                scope.updateOwningGroup();
+
+                                                //set for AFDP-6831 to inheritance in the Folder/file participants
+                                                var len = scope.objectInfo.participants.length;
+                                                for (var i = 0; i < len; i++) {
+                                                    if(scope.objectInfo.participants[i].participantType =='owning group') {
+                                                        scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                                                    }
+                                                }
+
+
+                                                if (selectedUser) {
+                                                    scope.assignee = selectedUser.object_id_s;
+                                                    scope.updateAssignee();
+                                                    saveObjectInfoAndRefresh();
+                                                } else {
+                                                    saveObjectInfoAndRefresh();
+                                                }
+
+                                                return;
                                             }
                                         }
-                                        if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants, scope.participantsInit.objectType != "FOLDER" && scope.participantsInit.objectType != "FILE")) {
-                                            saveObjectInfoAndRefresh();
-                                        } else {
-                                            refresh();
+
+                                    });
+                                } else {
+                                    var modalScope = scope.$new();
+                                    participant.replaceChildrenParticipant = true;
+                                    modalScope.participant = participant || {};
+                                    modalScope.isEdit = isEdit || false;
+                                    modalScope.showReplaceChildrenParticipants = showReplaceChildrenParticipants || false;
+                                    modalScope.selectedType = participant.selectedType ? participant.selectedType : "";
+                                    modalScope.id = participant.id;
+
+                                    var params = {};
+
+                                    params.owningGroup = ObjectModelService.getParticipantByType(scope.objectInfo, typeOwningGroup);
+
+                                    var modalInstance = $modal.open({
+                                        scope: modalScope,
+                                        animation: true,
+                                        templateUrl: "directives/core-participants/core-participants-modal.client.view.html",
+                                        controller: "Directives.CoreParticipantsModalController",
+                                        size: 'lg',
+                                        backdrop: 'static',
+                                        resolve: {
+                                            params: function() {
+                                                return params;
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+
+                                    modalInstance.result.then(function(data) {
+                                        if (ObjectParticipantService.validateType(data.participant.participantLdapId, data.participant.participantType)) {
+                                            scope.participant.id = data.id;
+                                            scope.participant.participantLdapId = data.participant.participantLdapId;
+                                            scope.participant.participantType = data.participant.participantType;
+
+                                            var assignee = ObjectModelService.getParticipantByType(scope.objectInfo, typeAssignee);
+                                            var owner = ObjectModelService.getParticipantByType(scope.objectInfo, typeOwner);
+                                            var owningGroup = "";
+
+                                            if (data.participant.participantType == typeOwningGroup) {
+                                                owningGroup = data.participant.participantLdapId;
+                                            }
+
+                                            var typeNoAccess = 'No Access';
+                                            if (scope.config.typeNoAccess) {
+                                                typeNoAccess = scope.config.typeNoAccess;
+                                            }
+
+                                            if (data.isEdit) {
+                                                var participant = _.find(scope.objectInfo.participants, function(pa) {
+                                                    return Util.compare(pa.id, data.id);
+                                                });
+                                                participant.participantLdapId = data.participant.participantLdapId;
+                                                participant.id = data.id;
+
+                                                if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
+                                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
+                                                } else {
+                                                    participant.participantType = data.participant.participantType;
+                                                    participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
+                                                    var participantPerson = owner ? owner : assignee;
+                                                    if (!Util.isEmpty(participantPerson) && !Util.isEmpty(owningGroup)) {
+                                                        if (!ObjectParticipantService.isParticipantMemberOfGroup(participantPerson, owningGroup)) {
+                                                            _.remove(scope.objectInfo.participants, function(p) {
+                                                                return p.participantLdapId == participantPerson && (p.participantType == "assignee" || p.participantType == "owner")
+                                                            });
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                var participant = {};
+                                                participant.participantLdapId = data.participant.participantLdapId;
+
+                                                if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
+                                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
+                                                } else {
+                                                    participant.participantType = data.participant.participantType;
+                                                    participant.className = scope.config.className;
+                                                    participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
+                                                    scope.objectInfo.participants.push(participant);
+                                                }
+                                            }
+                                            if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants, scope.participantsInit.objectType != "FOLDER" && scope.participantsInit.objectType != "FILE")) {
+                                                saveObjectInfoAndRefresh();
+                                            } else {
+                                                refresh();
+                                            }
+                                        }
+                                    });
+                                }
+                            };
+
+                            scope.updateOwningGroup = function() {
+                                ObjectModelService.setGroup(scope.objectInfo, scope.owningGroup);
+                            };
+                            scope.updateAssignee = function() {
+                                ObjectModelService.setAssignee(scope.objectInfo, scope.assignee);
                             };
 
                             var onObjectInfoRetrieved = function(objectInfo) {

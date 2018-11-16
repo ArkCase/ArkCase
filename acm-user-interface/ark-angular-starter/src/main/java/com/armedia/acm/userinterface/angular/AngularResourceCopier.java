@@ -6,7 +6,7 @@ package com.armedia.acm.userinterface.angular;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
+ * This file is part of the ArkCase software.
  * 
  * If the software was purchased under a paid ArkCase license, the terms of 
  * the paid license agreement will prevail.  Otherwise, the software is 
@@ -27,10 +27,13 @@ package com.armedia.acm.userinterface.angular;
  * #L%
  */
 
+import com.armedia.acm.core.AcmSpringActiveProfile;
+
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +55,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,6 +87,8 @@ public class AngularResourceCopier implements ServletContextAware
     private List<String> filesToCopyFromArchive;
     private List<String> assembledFilesToCopyToDeployment;
     private List<String> frontEndCommandsToBeExecuted;
+    private List<String> customResourceSourcesToCopyFromArchive;
+    private AcmSpringActiveProfile springActiveProfile;
 
     @Override
     public void setServletContext(ServletContext servletContext)
@@ -100,7 +107,6 @@ public class AngularResourceCopier implements ServletContextAware
             Resource modulesRoot = resolver.getResource(AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH);
             log.debug("modulesRoot: [{}]", modulesRoot);
             String rootPath = modulesRoot.getFile().getCanonicalPath();
-
             List<String> copiedFiles = new ArrayList<>();
 
             for (String resourceFolder : getResourceFoldersToCopyFromArchive())
@@ -115,12 +121,23 @@ public class AngularResourceCopier implements ServletContextAware
                 copiedFiles.add(copied);
             }
 
-            // custom_modules is copied specially since we have to squash it into modules folder
-            copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, "custom_modules", "modules"));
-            copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, "custom_assets", "assets"));
-            copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, "custom_config", "config"));
-            copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, "custom_directives", "directives"));
-            copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, "custom_services", "services"));
+            // add 'customer' as specific profile, so if any customer resources are present will come
+            // on top of core and extension resources
+            List<String> activeProfiles = springActiveProfile.getExtensionActiveProfile()
+                    .map(it -> Arrays.asList(it, "custom"))
+                    .orElse(Collections.singletonList("custom"));
+
+            for (String profile : activeProfiles)
+            {
+                log.debug("Copy resources for specific profile [{}]", profile);
+                for (String folder : customResourceSourcesToCopyFromArchive)
+                {
+                    String moduleRoot = String.format("%s_%s", profile, folder);
+                    copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, moduleRoot, folder));
+                }
+            }
+
+            copiedFiles.add(createProfilesJsFileInDir(activeProfiles, tmpDir));
 
             // delete all files that exist in the tmp dir, but we didn't copy them there; such files must have been
             // removed from the project. Exceptions are files managed by yarn and grunt: lib folder, node_modules
@@ -133,15 +150,17 @@ public class AngularResourceCopier implements ServletContextAware
             log.debug("Found {} files in tmp folder", tmpFilesFound.size());
 
             List<File> oldFilesInTmpFolder = tmpFilesFound.stream()
-                    .filter(p -> p.indexOf("node_modules") < 0)
-                    .filter(p -> p.indexOf("bower_components") < 0)
+                    .filter(p -> !p.contains("node_modules"))
+                    .filter(p -> !p.contains("bower_components"))
                     .filter(p -> !p.endsWith("yarn.lock"))
                     .filter(p -> !p.startsWith(libFolderPath))
                     .filter(p -> !copiedFiles.contains(p))
                     .map(File::new)
                     .collect(Collectors.toList());
             log.debug("Found {} files to be removed from tmp folder", oldFilesInTmpFolder.size());
-            oldFilesInTmpFolder.stream().peek(f -> log.debug("Removing tmp file [{}]", f.toPath())).forEach(File::delete);
+            oldFilesInTmpFolder.stream()
+                    .peek(f -> log.debug("Removing tmp file [{}]", f.toPath()))
+                    .forEach(File::delete);
 
             for (String frontEndCommand : getFrontEndCommandsToBeExecuted())
             {
@@ -168,6 +187,17 @@ public class AngularResourceCopier implements ServletContextAware
             // it doesn't deploy.
             throw new RuntimeException("Could not assemble Angular webapp: " + e.getMessage(), e);
         }
+    }
+
+    private String createProfilesJsFileInDir(List<String> profiles, File parentDir) throws IOException
+    {
+        String exportProfiles = String.format("module.exports = %s", profiles.stream()
+                .map(it -> String.format("'%s'", it))
+                .collect(Collectors.joining(", ", "{ profiles: [ ", " ] };")));
+        File target = new File(parentDir, "profiles.js");
+        Files.copy(IOUtils.toInputStream(exportProfiles), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        target.setLastModified(new Date().getTime());
+        return target.getCanonicalPath();
     }
 
     private List<String> findAllFilesInFolder(File folder)
@@ -497,4 +527,23 @@ public class AngularResourceCopier implements ServletContextAware
         this.frontEndCommandsToBeExecuted = frontEndCommandsToBeExecuted;
     }
 
+    public List<String> getCustomResourceSourcesToCopyFromArchive()
+    {
+        return customResourceSourcesToCopyFromArchive;
+    }
+
+    public void setCustomResourceSourcesToCopyFromArchive(List<String> customResourceSourcesToCopyFromArchive)
+    {
+        this.customResourceSourcesToCopyFromArchive = customResourceSourcesToCopyFromArchive;
+    }
+
+    public AcmSpringActiveProfile getSpringActiveProfile()
+    {
+        return springActiveProfile;
+    }
+
+    public void setSpringActiveProfile(AcmSpringActiveProfile springActiveProfile)
+    {
+        this.springActiveProfile = springActiveProfile;
+    }
 }

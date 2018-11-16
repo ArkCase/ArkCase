@@ -976,7 +976,8 @@
                     "name": "rate",
                     "displayName": "admin.forms.timesheetConfiguration.rate",
                     "visible": true,
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.rate | currency}}</div>"
                 },
                 {
                     "name": "active",
@@ -1161,10 +1162,17 @@
                 "components": []
             },
             {
-                "type": "p/forms/config",
+                "type": "p/forms/timesheetConfig",
                 "label": "admin.forms.timesheetConfiguration.title",
                 "components": [
                     "timesheet.config"
+                ]
+            },
+            {
+                "type": "p/forms/costsheetConfig",
+                "label": "admin.forms.costsheetConfiguration.title",
+                "components": [
+                    "costsheet.config"
                 ]
             },
             {

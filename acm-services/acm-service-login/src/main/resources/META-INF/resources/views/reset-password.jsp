@@ -32,7 +32,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ACM | ArkCase | User Interface</title>
 
-    <link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/node_modules/@bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/login.css">
     <!-- custom css-->
     <link rel="stylesheet" href="<%= request.getContextPath()%>/branding/customcss">

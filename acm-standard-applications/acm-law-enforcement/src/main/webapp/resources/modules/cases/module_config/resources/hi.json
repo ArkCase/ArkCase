@@ -26,6 +26,7 @@
         "assignee.label": "असाइन करने के लिए",
         "owningGroup.label": "स्वामी समूह",
         "dueDate.label": "नियत दिनांक",
+        "alertMessage": "hi_Due date must be after the create date ",
         "priorities": {
             "low%": "निचे",
             "medium%": "मध्यम",
@@ -394,7 +395,8 @@
             "label": "hi_Approver",
             "addAnother": "hi_Add another",
             "remove": "hi_Remove Approver",
-            "pickerModal.header": "hi_Search for User"
+            "pickerModal.header": "hi_User/Group Search",
+            "owningGroup": "hi_Owning Group"
         },
         "button": {
             "cancel": "hi_Cancel",

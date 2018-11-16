@@ -37,14 +37,14 @@
             <input class="form-control" type="text" ng-model="dir.authUserDn"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.authUserDn' | translate }}" required>
         </div>
-        <div class="form-group" ng-class="{ 'has-error' : errorMessage}">
+        <div class="form-group" ng-class="{ 'has-error' : errorMessage}" ng-if="!isEdit">
             <label for="newPass">{{ 'admin.security.ldapConfig.data.authUserPassword' | translate }}</label>
             <input id="newPass" class="form-control" type="password" ng-model="dir.authUserPassword" class="form-control"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.authUserPassword' | translate }}" name="newPassword"
                     required>
             <p class="help-block" ng-bind-html="errorMessage"></p>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-if="!isEdit">
             <label for="confirmNewPass">{{ 'admin.security.ldapConfig.data.confirmAuthUserPassword' | translate }}</label>
             <input id="confirmNewPass" class="form-control" type="password" ng-model="confirmNewPassword"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.confirmAuthUserPassword' | translate }}"
@@ -113,12 +113,17 @@
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.userPrefix' | translate }}</label>
             <input class="form-control" type="text" ng-model="dir.userPrefix"
-                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userPrefix' | translate }}">
+                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userPrefix' | translate }}">
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.userControlGroup' | translate }}</label>
             <input class="form-control" type="text" ng-model="dir.userControlGroup"
-                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userControlGroup' | translate }}">
+                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userControlGroup' | translate }}">
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.security.ldapConfig.data.groupControlGroup' | translate }}</label>
+            <input class="form-control" type="text" ng-model="dir.groupControlGroup"
+                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.groupControlGroup' | translate }}">
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.syncPageSize' | translate }}</label>

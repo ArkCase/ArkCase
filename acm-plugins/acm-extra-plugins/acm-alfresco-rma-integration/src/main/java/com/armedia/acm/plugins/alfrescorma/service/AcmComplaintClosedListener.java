@@ -30,6 +30,8 @@ package com.armedia.acm.plugins.alfrescorma.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.auth.AcmAuthenticationManager;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
@@ -37,7 +39,10 @@ import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+import java.util.Collections;
 
 /**
  * @author riste.tutureski
@@ -48,6 +53,7 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
 
     private transient Logger LOG = LoggerFactory.getLogger(getClass());
     private AlfrescoRecordsService alfrescoRecordsService;
+    private AcmAuthenticationManager authenticationManager;
 
     @Override
     public void onApplicationEvent(ComplaintClosedEvent event)
@@ -62,11 +68,7 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
 
         if (!event.isSucceeded())
         {
-            if (LOG.isTraceEnabled())
-            {
-                LOG.trace("Returning - closing complaint was not successful");
-            }
-
+            LOG.trace("Returning - closing complaint was not successful");
             return;
         }
 
@@ -74,8 +76,20 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
 
         if (null != complaint)
         {
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(event.getUserId(), event.getUserId());
-            getAlfrescoRecordsService().declareAllContainerFilesAsRecords(auth, complaint.getContainer(),
+
+            String principal = event.getUserId();
+            AcmAuthentication authentication;
+            try
+            {
+                authentication = authenticationManager.getAcmAuthentication(
+                        new UsernamePasswordAuthenticationToken(principal, principal));
+            }
+            catch (AuthenticationServiceException e)
+            {
+                authentication = new AcmAuthentication(Collections.emptySet(), principal, "",
+                        true, principal);
+            }
+            getAlfrescoRecordsService().declareAllContainerFilesAsRecords(authentication, complaint.getContainer(),
                     event.getEventDate(), complaint.getComplaintNumber());
         }
 
@@ -89,5 +103,15 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
     public void setAlfrescoRecordsService(AlfrescoRecordsService alfrescoRecordsService)
     {
         this.alfrescoRecordsService = alfrescoRecordsService;
+    }
+
+    public AcmAuthenticationManager getAuthenticationManager()
+    {
+        return authenticationManager;
+    }
+
+    public void setAuthenticationManager(AcmAuthenticationManager authenticationManager)
+    {
+        this.authenticationManager = authenticationManager;
     }
 }

@@ -70,11 +70,17 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
 
     public List<EcmFile> findForContainer(Long containerId)
     {
+        return findForContainer(containerId, FlushModeType.AUTO);
+    }
+
+    public List<EcmFile> findForContainer(Long containerId, FlushModeType flushModeType)
+    {
         String jpql = "SELECT e " +
                 "FROM EcmFile e " +
                 "WHERE e.container.id = :containerId";
         Query query = getEm().createQuery(jpql);
         query.setParameter("containerId", containerId);
+        query.setFlushMode(flushModeType);
 
         List<EcmFile> results = query.getResultList();
 
