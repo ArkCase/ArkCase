@@ -57,9 +57,9 @@ angular.module('cases').controller(
                             ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId, Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodMapValue($scope.sort, "by"), Util.goodMapValue($scope.sort, "dir")).then(function(data) {
                                 var tasks = data.response.docs;
                                 angular.forEach(tasks, function(task) {
-                                    //calculate to show alert icons if task is in overdue or deadline is approaching
-                                    task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
-                                    task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
+                                    //calculate to show alert icons if task is in overdue or deadline is approaching if the status of the task is in different state than CLOSED.
+                                    task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt)) && !(task.status_s === "CLOSED");
+                                    task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt)) && !(task.status_s === "CLOSED");
                                 });
                                 $scope.gridOptions = $scope.gridOptions || {};
                                 $scope.gridOptions.data = tasks;
