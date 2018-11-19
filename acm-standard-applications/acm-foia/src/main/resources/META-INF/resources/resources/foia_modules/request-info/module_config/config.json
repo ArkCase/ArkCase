@@ -1213,7 +1213,7 @@
         {
             "id": "exemption",
             "title": "Exemption Codes",
-            "icon": "fa fa-comments",
+            "icon": "fa fa-code",
             "enabled": true,
             "type": "grid",
             "enableFiltering": true,
