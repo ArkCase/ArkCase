@@ -87,7 +87,7 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
         LocalDate actualResult = holidayConfigurationService.addWorkingDaysToDate(LocalDate.parse("20181122", DateTimeFormatter.BASIC_ISO_DATE),
                 6);
 
-        LocalDate expectedResult = LocalDate.parse("20181203", DateTimeFormatter.BASIC_ISO_DATE);
+        LocalDate expectedResult = LocalDate.parse("20181130", DateTimeFormatter.BASIC_ISO_DATE);
         assertEquals(actualResult, expectedResult);
 
     }
