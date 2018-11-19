@@ -51,6 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.persistence.FlushModeType;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -269,7 +270,6 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    @Transactional
     public List<AcmGroup> findByUserMember(AcmUser user)
     {
         return groupDao.findByUserMember(user);

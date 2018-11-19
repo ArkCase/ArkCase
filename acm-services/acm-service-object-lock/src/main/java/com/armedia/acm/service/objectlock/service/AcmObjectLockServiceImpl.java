@@ -68,12 +68,18 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Long expiry, Authentication auth)
     {
-        return createLock(objectId, objectType, lockType, expiry, Boolean.TRUE, auth.getName());
+        return createLockInternal(objectId, objectType, lockType, expiry, Boolean.TRUE, auth.getName());
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Long expiry, Boolean lockInDB, String userId)
+    {
+        return createLockInternal(objectId, objectType, lockType, expiry, lockInDB, userId);
+    }
+
+    private AcmObjectLock createLockInternal(Long objectId, String objectType, String lockType, Long expiry, Boolean lockInDB,
+            String userId)
     {
         log.debug("[{}] about to create object lock[objectId={}, objectType={}, lockType={}]", userId, objectId, objectType,
                 lockType);
@@ -118,19 +124,24 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Long expiry, String userId)
     {
-        return createLock(objectId, objectType, lockType, expiry, Boolean.TRUE, userId);
+        return createLockInternal(objectId, objectType, lockType, expiry, Boolean.TRUE, userId);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Long expiry, Boolean lockInDB, Authentication auth)
     {
-        return createLock(objectId, objectType, lockType, expiry, lockInDB, auth.getName());
+        return createLockInternal(objectId, objectType, lockType, expiry, lockInDB, auth.getName());
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void removeLock(Long objectId, String objectType, String lockType, String userId)
+    {
+        removeLockInternal(objectId, objectType, lockType, userId);
+    }
+
+    private void removeLockInternal(Long objectId, String objectType, String lockType, String userId)
     {
         AcmObjectLock objectLock = acmObjectLockDao.findLock(objectId, objectType);
 
@@ -164,7 +175,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void removeLock(Long objectId, String objectType, String lockType, Authentication auth)
     {
-        removeLock(objectId, objectType, lockType, auth.getName());
+        removeLockInternal(objectId, objectType, lockType, auth.getName());
     }
 
     @Override

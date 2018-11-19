@@ -763,6 +763,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @Transactional
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "CONTAINER", lockType = "DELETE")
     public void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException
     {
