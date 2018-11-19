@@ -175,7 +175,12 @@ public class UserOrgServiceImpl implements UserOrgService
             catch (MuleException e)
             {
                 log.error("UserOrg for user [{}] was not saved. {}", userId, e);
+                AcmUser user = new AcmUser();
+                user.setUserId(userId);
+                user.setFullName(userId);
+                userOrg.setUser(user);
                 getEventPublisher().publishProfileEvent(userOrg, authentication, true, false);
+                return createProfileDTO(userOrg, user.getGroups());
             }
         }
 
