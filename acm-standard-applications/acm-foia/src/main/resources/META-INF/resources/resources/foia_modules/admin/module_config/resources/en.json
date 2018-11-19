@@ -438,6 +438,8 @@
         },
         "forms.timesheetConfiguration": {
             "title": "Timesheet Configuration",
+            "chargeRole.title": "Charge Roles Configuration",
+            "workflow": "Approval Workflow Configuration",
             "chargeRole": "Charge Role",
             "chargeRole.placeholder": "Enter Charge Role",
             "rate": "Rate",
@@ -445,10 +447,16 @@
             "active": "Active/Inactive",
             "active.active": "Active",
             "active.inactive": "Inactive",
+            "useWorkflowCheckbox": "Use Approval Workflow",
             "modal": {
                 "button.save": "Save",
                 "button.cancel": "Cancel"
             }
+        },
+        "forms.costsheetConfiguration": {
+            "title": "Costsheet Configuration",
+            "workflow": "Approval Workflow Configuration",
+            "useWorkflowCheckbox": "Use Approval Workflow"
         },
         "dashboard.title": "Dashboard",
         "dashboard.config": "Dashboard Configuration",
@@ -674,6 +682,19 @@
                     "name": "Enter Name of Holiday",
                     "date": "Enter Date of Holiday"
                 }
+            },
+            "foia.config": {
+                "title": "Foia Configuration",
+                "header": "Configure FOIA Application",
+                "labels": {
+                    "maxDaysBillingQueue": "Max days in Billing queue",
+                    "maxDaysHoldQueue": "Max days in Hold queue",
+                    "requestExtensionWorkingDays": "Request extension working days",
+                    "holdedAndAppealedRequestsDueDateUpdateEnabled": "Should time spent in 'Hold' and 'Appeal' queue affect the request due date",
+                    "dashboardBannerEnable": "Enable dashboard banner for browser support",
+                    "holdedAndAppealedRequestsDueDateUpdateEnabled.title": "If checked, each day spent in 'Hold' and 'Appeal' queue will advance the due date by one day"
+                },
+                "save.btn": "Save"
             }
         },
         "branding.title": "Branding",
@@ -861,6 +882,10 @@
                 "update.success": "Successfully updated configuration row.",
                 "update.error": "Error updating configuration row.",
                 "test.conection.success": "Successfully connected."
+            },
+            "pdfConversion": {
+                "title": "PDF Conversion",
+                "enableResponseFolderConversion.checkbox": "Convert to PDF the documents in the Response Folder"
             }
         },
         "stateOfArkcase": {

@@ -27,9 +27,9 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.plugins.admin.model.TimesheetConfig;
-import com.armedia.acm.plugins.admin.service.TimesheetConfigurationService;
-
+import com.armedia.acm.plugins.admin.service.PDFConversionConfigurationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,34 +39,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.util.Map;
+
 @Controller
-@RequestMapping({ "/api/v1/service/timesheet/config", "/api/latest/service/timesheet/config" })
-public class TimesheetConfigurationAPIController
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
+public class PDFConversionConfigurationAPIController
 {
+    private Logger log = LoggerFactory.getLogger(getClass());
+    private PDFConversionConfigurationService pdfConversionConfigurationService;
 
-    private TimesheetConfigurationService timesheetConfigurationService;
-
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/pdfConversion", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<TimesheetConfig> getTimesheetConfig()
+    public ResponseEntity<Map<String, String>> loadPDFConversionProperties()
     {
-        return new ResponseEntity<>(getTimesheetConfigurationService().getConfig(), HttpStatus.OK);
+        return new ResponseEntity<>(getPdfConversionConfigurationService().loadProperties(), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/pdfConversion", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void updateTimesheetConfig(@RequestBody TimesheetConfig timesheetConfig)
+    public void savePDFConversionProperties(@RequestBody Map<String, String> costsheetProperties)
     {
-        getTimesheetConfigurationService().saveConfig(timesheetConfig);
+        getPdfConversionConfigurationService().saveProperties(costsheetProperties);
     }
 
-    public TimesheetConfigurationService getTimesheetConfigurationService()
+    public PDFConversionConfigurationService getPdfConversionConfigurationService()
     {
-        return timesheetConfigurationService;
+        return pdfConversionConfigurationService;
     }
 
-    public void setTimesheetConfigurationService(TimesheetConfigurationService timesheetConfigurationService)
+    public void setPdfConversionConfigurationService(PDFConversionConfigurationService pdfConversionConfigurationService)
     {
-        this.timesheetConfigurationService = timesheetConfigurationService;
+        this.pdfConversionConfigurationService = pdfConversionConfigurationService;
     }
 }

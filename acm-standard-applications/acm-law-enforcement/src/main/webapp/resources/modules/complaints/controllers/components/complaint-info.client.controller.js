@@ -123,7 +123,7 @@ angular.module('complaints').controller(
                                     //set for AFDP-6831 to inheritance in the Folder/file participants
                                     var len = $scope.objectInfo.participants.length;
                                     for (var i = 0; i < len; i++) {
-                                        if($scope.objectInfo.participants[i].participantType =='assignee'){
+                                        if($scope.objectInfo.participants[i].participantType =='assignee'|| $scope.objectInfo.participants[i].participantType =='owning group'){
                                             $scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                                         }
                                     }
@@ -148,7 +148,7 @@ angular.module('complaints').controller(
                                     //set for AFDP-6831 to inheritance in the Folder/file participants
                                     var len = $scope.objectInfo.participants.length;
                                     for (var i = 0; i < len; i++) {
-                                        if($scope.objectInfo.participants[i].participantType =='owning group') {
+                                        if($scope.objectInfo.participants[i].participantType =='owning group'|| $scope.objectInfo.participants[i].participantType =='assignee') {
                                             $scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                                         }
                                     }
@@ -177,6 +177,10 @@ angular.module('complaints').controller(
                         $scope.dateInfo = $scope.dateInfo || {};
                         $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
                         $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
+
+                        var utcDate = moment.utc(UtilDateService.dateToIso(new Date(objectInfo.created))).format();
+                        $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+                        $scope.minYear = new Date(objectInfo.created).getFullYear();
 
                         $scope.assignee = ObjectModelService.getAssignee(objectInfo);
                         $scope.owningGroup = ObjectModelService.getGroup(objectInfo);

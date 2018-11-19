@@ -1096,10 +1096,17 @@
                 ]
             },
             {
-                "type": "p/forms/config",
+                "type": "p/forms/timesheetConfig",
                 "label": "admin.forms.timesheetConfiguration.title",
                 "components": [
                     "timesheet.config"
+                ]
+            },
+            {
+                "type": "p/forms/costsheetConfig",
+                "label": "admin.forms.costsheetConfiguration.title",
+                "components": [
+                    "costsheet.config"
                 ]
             },
             {
@@ -1184,6 +1191,13 @@
                 ]
             },
             {
+                "type": "p/application/foiaConfig",
+                "label": "admin.application.foia.config.title",
+                "components": [
+                    "application-foia.config"
+                ]
+            },
+            {
                 "type": "p/branding",
                 "label": "admin.branding.title",
                 "icon": "fa fa-wrench",
@@ -1234,6 +1248,13 @@
                 "label": "admin.documentManagement.cmisConfiguration",
                 "components": [
                     "cmis-configuration"
+                ]
+            },
+            {
+                "type": "p/document/pdfConversion",
+                "label": "admin.documentManagement.pdfConversion.title",
+                "components": [
+                    "pdf-conversion"
                 ]
             },
             {
