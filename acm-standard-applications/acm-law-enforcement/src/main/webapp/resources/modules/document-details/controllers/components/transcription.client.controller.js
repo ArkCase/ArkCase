@@ -156,7 +156,7 @@ angular.module('document-details').controller('Document.TranscriptionController'
                                     callback: function(result) {
                                         if (result) {
                                             $scope.transcribeDataModel.status = 'PROCESSING';
-                                            createManualTranscription(activeVersion.id);
+                                            createManualTranscription();
                                         }
                                     }
                                 },
@@ -166,7 +166,7 @@ angular.module('document-details').controller('Document.TranscriptionController'
                                     callback: function(result) {
                                         if (result) {
                                             $scope.transcribeDataModel.status = 'COMPLETED';
-                                            createManualTranscription(activeVersion.id);
+                                            createManualTranscription();
                                         }
                                     }
                                 }

@@ -149,7 +149,11 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
         byte[] keyBytes = new byte[keySize];
         if (truncate)
         {
-            System.arraycopy(passPhrase, 0, keyBytes, 0, truncate ? keyBytes.length : passPhrase.length);
+            System.arraycopy(passPhrase, 0, keyBytes, 0, keyBytes.length);
+        }
+        else
+        {
+            System.arraycopy(passPhrase, 0, keyBytes, 0, passPhrase.length);
         }
 
         return new SecretKeySpec(keyBytes, CryptoConstants.KEY_ALGORITHM);

@@ -42,8 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;

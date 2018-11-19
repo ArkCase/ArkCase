@@ -27,10 +27,10 @@ package com.armedia.acm.plugins.wopi.api;
  * #L%
  */
 
-import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.plugins.wopi.model.WopiSessionInfo;
 import com.armedia.acm.plugins.wopi.model.WopiUserInfo;
 import com.armedia.acm.plugins.wopi.service.WopiAcmService;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

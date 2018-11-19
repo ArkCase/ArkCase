@@ -74,10 +74,6 @@ public class TemplateDownloadControllerAPI
         try
         {
             File file = new File(templateFile.getURI());
-            if (file == null)
-            {
-                fileNotFound(response);
-            }
             String name = file.getName();
             fileIs = new FileInputStream(file);
             if (!isInline)

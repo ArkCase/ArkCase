@@ -62,6 +62,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -319,9 +320,18 @@ public class ConfigLookupDao implements LookupDao
                     .filter(AcmLookupEntry::isReadonly)
                     .collect(Collectors.toList());
 
-            List<StandardLookupEntry> subEntries = entries.stream().filter(entry -> entry.getKey().equals(protectedMainEntry.getKey()))
-                    .findFirst().get().getSubLookup();
-
+            Optional<NestedLookupEntry> optionalNestedLookupEntry = entries.stream()
+                    .filter(entry -> entry.getKey().equals(protectedMainEntry.getKey()))
+                    .findFirst();
+            List<StandardLookupEntry> subEntries = null;
+            if (optionalNestedLookupEntry.isPresent())
+            {
+                subEntries = optionalNestedLookupEntry.get().getSubLookup();
+            }
+            else
+            {
+                throw new AcmResourceNotModifiableException("Entries can't be reached");
+            }
             for (StandardLookupEntry protectedSubEntry : protectedSubEntries)
             {
                 if (subEntries.stream().noneMatch(entry -> entry.getKey().equals(protectedSubEntry.getKey())))
