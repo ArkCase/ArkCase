@@ -13,9 +13,8 @@
         <div>
             <label for="notesText"><span translate>common.directive.coreNotes.modal.notes.label</span><span
                     class="required-asterisk">*</span></label>
-            <textarea id="notesText" ng-model="note.note" required class="form-control">
-
-            </textarea>
+            <textarea mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
+                      mentio-select="getMentionedUsers(item)" id="notesText" ng-model="note.note" required class="form-control"></textarea>
         </div>
     </form>
 </div>

@@ -36,7 +36,8 @@
         <div class="row">
             <div class="col-sm-12 form-group">
                 <label for="faxDescription" translate>organizations.comp.faxes.modal.description</label>
-                <textarea id="faxDescription" class="input-md form-control" ng-model="fax.description"></textarea>
+                <textarea mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
+                          mentio-select="getMentionedUsers(item)" id="faxDescription" class="input-md form-control" ng-model="fax.description"></textarea>
             </div>
         </div>
     </form>

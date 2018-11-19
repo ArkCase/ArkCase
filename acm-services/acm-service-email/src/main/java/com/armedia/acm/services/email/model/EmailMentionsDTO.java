@@ -12,6 +12,7 @@ import java.util.List;
 public class EmailMentionsDTO extends MessageBodyFactory
 {
     private String objectType;
+    private String subType;
     private Long objectId;
     private String subject;
     private String header;
@@ -86,6 +87,14 @@ public class EmailMentionsDTO extends MessageBodyFactory
     public void setObjectType(String objectType)
     {
         this.objectType = objectType;
+    }
+
+    public String getSubType() {
+        return subType;
+    }
+
+    public void setSubType(String subType) {
+        this.subType = subType;
     }
 
     public Long getObjectId()

@@ -44,7 +44,8 @@
         <div class="row">
             <div class="col-sm-12 form-group">
                 <label for="emailDescription" translate>people.comp.emails.modal.description</label>
-                <textarea class="input-md form-control" id="emailDescription" ng-model="email.description"></textarea>
+                <textarea mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
+                          mentio-select="getMentionedUsers(item)" class="input-md form-control" id="emailDescription" ng-model="email.description"></textarea>
             </div>
         </div>
 

@@ -39,7 +39,8 @@
         <div class="row">
             <div class="col-sm-12 form-group">
                 <label for="phoneDescription" translate>people.comp.pictures.dialog.description</label>
-                <textarea id="phoneDescription" class="input-md form-control" ng-model="image.description"></textarea>
+                <textarea mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
+                          mentio-select="getMentionedUsers(item)" id="phoneDescription" class="input-md form-control" ng-model="image.description"></textarea>
             </div>
         </div>
     </div>

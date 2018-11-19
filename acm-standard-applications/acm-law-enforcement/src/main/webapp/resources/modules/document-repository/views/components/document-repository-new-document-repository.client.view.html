@@ -34,7 +34,8 @@
                 <div class="col-sm-12 form-group" ng-class="{ 'has-error' : error }">
                     <label for="name" translate>document-repository.newRepository.nameLabel</label>
                     <span class="required-asterisk">*</span>
-                    <input type="text" id="name" ng-model="docRepo.name" class="input-md form-control"
+                    <input mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
+                           mentio-select="getMentionedUsers(item)" type="text" id="name" ng-model="docRepo.name" class="input-md form-control"
                             placeholder="{{ 'document-repository.newRepository.name.placeholder' | translate }}" required>
                     <p class="help-block" ng-show="error">
                         {{ error }} </p>
@@ -43,7 +44,8 @@
             <div class="row">
                 <div class="col-sm-12 form-group">
                     <label translate>document-repository.newRepository.descriptionLabel</label>
-                    <textarea class="form-control" rows="3" ng-model="docRepo.description"
+                    <textarea mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
+                              mentio-select="getMentionedUsersDescription(item)" class="form-control" rows="3" ng-model="docRepo.description"
                             placeholder="{{ 'document-repository.newRepository.description.placeholder' | translate}}"></textarea>
                 </div>
             </div>

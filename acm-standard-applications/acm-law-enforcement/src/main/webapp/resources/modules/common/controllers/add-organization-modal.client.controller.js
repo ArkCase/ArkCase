@@ -1,5 +1,5 @@
 angular.module('common').controller('Common.AddOrganizationModalController',
-        [ '$scope', '$modal', '$modalInstance', '$translate', 'Object.LookupService', 'UtilService', 'ConfigService', 'Organization.InfoService', 'params', function($scope, $modal, $modalInstance, $translate, ObjectLookupService, Util, ConfigService, OrganizationInfoService, params) {
+        [ '$scope', '$modal', '$modalInstance', '$translate', 'Object.LookupService', 'UtilService', 'ConfigService', 'Organization.InfoService', 'params', 'Mentions.Service', function($scope, $modal, $modalInstance, $translate, ObjectLookupService, Util, ConfigService, OrganizationInfoService, params, MentionsService) {
 
             ConfigService.getModuleConfig("common").then(function(moduleConfig) {
                 $scope.config = moduleConfig;
@@ -59,6 +59,22 @@ angular.module('common').controller('Common.AddOrganizationModalController',
             }
             $scope.isNew = params.isNew;
 
+            // ---------------------   mention   ---------------------------------
+            $scope.emailAddresses = [];
+            $scope.usersMentioned = [];
+
+            // Obtains a list of all users in ArkCase
+            MentionsService.getUsers().then(function (users) {
+                $scope.people = users;
+            });
+
+            $scope.getMentionedUsers = function (item) {
+                $scope.emailAddresses.push(item.email_lcs);
+                $scope.usersMentioned.push('@' + item.name);
+                return '@' + item.name;
+            };
+            // -----------------------  end mention   ----------------------------
+
             $scope.onClickCancel = function() {
                 if ($scope.isSelectedParent && !!$scope.organization.parentOrganization && !(!!$scope.organization.parentOrganization.organizationId)) {
                     $scope.organization.parentOrganization = null;
@@ -82,6 +98,8 @@ angular.module('common').controller('Common.AddOrganizationModalController',
                 }
                 if ($scope.showDescription) {
                     retValue.description = $scope.description;
+                    retValue.emailAddresses = $scope.emailAddresses;
+                    retValue.usersMentioned = $scope.usersMentioned;
                 }
                 if ($scope.returnValueValidationFunction) {
                     var validationResult = $scope.returnValueValidationFunction(retValue);

@@ -44,9 +44,9 @@ public class AcmEmailMentionsService {
     private String buildObjectUrl(EmailMentionsDTO in) {
         String baseUrl = acmAppConfiguration.getBaseUrl();
         String objectUrl = acmAppConfiguration.getObjectTypes().stream()
-                .filter(acmObjectType -> acmObjectType.getName().equals(in.getObjectType()))
-                .map(acmObjectType -> acmObjectType.getUrl().get(acmObjectType.getName()))
-                .collect(Collectors.toList()).get(0);
+                    .filter(acmObjectType -> acmObjectType.getName().equals(in.getObjectType()))
+                    .map(acmObjectType -> acmObjectType.getUrl().get(in.getSubType()))
+                    .collect(Collectors.toList()).get(0);
         return baseUrl + String.format(objectUrl, in.getObjectId());
     }
 
@@ -60,7 +60,7 @@ public class AcmEmailMentionsService {
         return emailBodyBuilder;
     }
 
-    public void sendMentionsEmail(EmailMentionsDTO in) {
+    public void sendMentionsEmail(EmailMentionsDTO in) throws AcmEmailServiceException{
         EmailBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBuilder = buildEmail(in);
         EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBodyBuilder = buildEmailBody(in);
 
@@ -75,6 +75,10 @@ public class AcmEmailMentionsService {
                 emailSenderService.sendPlainEmail(Stream.of(emailUserData), emailBuilder, emailBodyBuilder);
             } catch (Exception e) {
                 log.error("Email with username was not sent to address: [{}]", emailAddress);
+                throw new AcmEmailServiceException(
+                        "Could not send emails with attachment, among other things check your request body. Exception message is : "
+                                + e.getMessage(),
+                        e);
             }
         }
     }
