@@ -71,6 +71,16 @@ public class PropertyFileManager
         }
     }
 
+    public Map<String, String> readFromFileAsMap(File propertiesFile) throws IOException
+    {
+        Map<String, String> propertiesMap = new HashMap<>();
+
+        Properties properties =  readFromFile(propertiesFile);
+        properties.forEach((o, o2) -> propertiesMap.put((String)o, (String)o2));
+
+        return propertiesMap;
+    }
+
     public void store(String key, String value, String fileName)
     {
         Properties p = new Properties();

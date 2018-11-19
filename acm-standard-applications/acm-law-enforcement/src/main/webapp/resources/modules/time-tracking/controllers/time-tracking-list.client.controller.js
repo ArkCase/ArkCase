@@ -2,8 +2,8 @@
 
 angular.module('time-tracking').controller(
         'TimeTrackingListController',
-        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'Authentication', 'UtilService', 'ObjectService', 'Helper.ObjectBrowserService', 'TimeTracking.ListService', 'TimeTracking.InfoService', 'ServCommService',
-                function($scope, $state, $stateParams, $q, $translate, Authentication, Util, ObjectService, HelperObjectBrowserService, TimeTrackingListService, TimeTrackingInfoService, ServCommService) {
+        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'Authentication', 'UtilService', 'MessageService', 'ObjectService', 'Helper.ObjectBrowserService', 'TimeTracking.ListService', 'TimeTracking.InfoService', 'ServCommService',
+                function($scope, $state, $stateParams, $q, $translate, Authentication, Util, MessageService, ObjectService, HelperObjectBrowserService, TimeTrackingListService, TimeTrackingInfoService, ServCommService) {
 
                     /*//
                      // Check to see if complaint page is shown as a result returned by Frevvo

@@ -1650,6 +1650,11 @@ a.primary {
     color: #000000;
 }
 
+/*Css style for scrolling issue on modal*/
+.form-overflow-scroll {
+    overflow-y: auto !important;
+}
+
 .pdfjs .toolbar {
 	z-index: 1048 !important;
 }
@@ -1723,4 +1728,16 @@ a.primary {
     position: absolute;
     top: -10px;
     left: 10%;
+}
+
+.popup-move-on-left > .editable + .form-inline{
+    right: 20%;
+}
+
+.popup-move-on-left > .editable + .form-inline:before {
+    left: 50%;
+}
+
+.popup-move-on-left > .editable + .form-inline:after {
+    left: 50%;
 }

@@ -19,6 +19,11 @@ angular.module('request-info').controller(
                     $scope.openAbstractDocuments = [];
                     $scope.openAttachmentDocuments = [];
 
+                    $scope.acmTicket = '';
+                    $scope.ecmFileConfig = {};
+                    $scope.userId = '';
+                    $scope.userFullName = '';
+
                     $scope.$sce = $sce; // used to allow snowbound url (on a different domain) to be injected by angular
 
                     $scope.config = ConfigService.getModule({
@@ -49,12 +54,16 @@ angular.module('request-info').controller(
                     // Retrieves the properties from the ecmFileService.properties file (including Snowbound configuration)
                     var ecmFileInfo = LookupService.getConfig('ecmFileService');
 
-                    $q.all([ $scope.config.$promise, requestInfo.$promise, documentInfo.$promise, ticketInfo, ecmFileInfo ]).then(function(data) {
+                    var promiseUserInfo = Authentication.queryUserInfo();
+
+                    $q.all([ $scope.config.$promise, requestInfo.$promise, documentInfo.$promise, ticketInfo, ecmFileInfo, promiseUserInfo ]).then(function(data) {
                         var config = data[0];
                         var requestInfo = data[1];
                         var documentInfo = data[2];
                         $scope.acmTicket = data[3].data;
                         $scope.ecmFileConfig = data[4];
+                        $scope.userId = data[5].userId;
+                        $scope.userFullName = data[5].fullName;
 
                         $scope.requestInfo = requestInfo;
 
@@ -116,7 +125,7 @@ angular.module('request-info').controller(
 
                         // Generates and loads a url that will open the selected documents in the viewer
                         if (allOpenDocuments.length > 0) {
-                            var snowUrl = AttachmentsService.buildViewerUrlMultiple($scope.ecmFileConfig, $scope.acmTicket, $scope.userId, allOpenDocuments);
+                            var snowUrl = AttachmentsService.buildViewerUrlMultiple($scope.ecmFileConfig, $scope.acmTicket, $scope.userId, $scope.userFullName, allOpenDocuments);
                             $scope.loadViewerIframe(snowUrl);
                         } else {
                             $scope.loadViewerIframe('about:blank');

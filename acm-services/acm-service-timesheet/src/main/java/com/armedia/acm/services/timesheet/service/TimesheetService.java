@@ -28,12 +28,14 @@ package com.armedia.acm.services.timesheet.service;
  */
 
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public interface TimesheetService
@@ -63,4 +65,6 @@ public interface TimesheetService
     boolean checkWorkflowStartup(String type);
 
     String createName(AcmTimesheet timesheet);
+
+    Map<String, AcmTime> accumulateTimesheetByTypeAndChangeCode(AcmTimesheet timesheet);
 }
