@@ -96,11 +96,7 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
 
     function retrieveDataScroll(data, methodName, panelName) {
         ReportsConfigService[methodName](data).then(function(response) {
-            if (_.isArray(response.data)) {
-                $scope.fillList($scope.reportsData[panelName], response.data);
-            } else {
-                $scope.fillList($scope.reportsData[panelName], response.data);
-            }
+            $scope.fillList($scope.reportsData[panelName], response.data);
             if (panelName === "selectedAuthorized") {
                 currentAuthRoles = [];
                 _.forEach($scope.reportsData[panelName], function(obj) {
@@ -163,7 +159,6 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
 
         var data = {};
         data.report = selectedObject;
-        $scope.lastSelectedReport = [];
         $scope.lastSelectedReport = selectedObject;
         data.isAuthorized = false;
         var unAuthorizedRolesForReport = ReportsConfigService.getRolesForReport(data);

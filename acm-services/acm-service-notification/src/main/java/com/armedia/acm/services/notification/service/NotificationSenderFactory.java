@@ -27,7 +27,6 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;

@@ -826,19 +826,21 @@ angular.module('directives').factory(
                          */
                         var regex = /.*(<body.*body>).*/gm;
                         var resultArray = regex.exec(cleanHtmlCode);
-                        if (resultArray.length > 1)
+                        if (resultArray.length > 1) {
                             details = resultArray[resultArray.length - 1];
-                        /*
-                        remove all html tags and you're left with only displayable text
-                         */
-                        details = details.replace(/<[^>]+>/gm, '');
-                        var detailsSummary = details.slice(0, characters);
-                        /*
-                         Add "..." to indicate text continuation
-                         */
-                        if (details.length > characters)
-                            detailsSummary = detailsSummary + '...';
-                        return detailsSummary;
+                            /*
+                            remove all html tags and you're left with only displayable text
+                             */
+                            details = details.replace(/<[^>]+>/gm, '');
+                            var detailsSummary = details.slice(0, characters);
+                            /*
+                             Add "..." to indicate text continuation
+                             */
+                            if (details.length > characters)
+                                detailsSummary = detailsSummary + '...';
+                            return detailsSummary;
+                        }
+
                     }
                     /**
 

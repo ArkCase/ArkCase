@@ -34,6 +34,7 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -151,7 +152,8 @@ public class FOIAQueueCorrespondenceService
     }
 
     private EcmFile generateCorrespondenceLetter(FOIARequest request, FOIADocumentDescriptor documentDescriptor)
-            throws AcmObjectNotFoundException, DocumentGeneratorException, AcmFolderException, AcmUserActionFailedException
+            throws AcmObjectNotFoundException, DocumentGeneratorException, AcmFolderException, AcmUserActionFailedException,
+            CorrespondenceMergeFieldVersionException
     {
         String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
 

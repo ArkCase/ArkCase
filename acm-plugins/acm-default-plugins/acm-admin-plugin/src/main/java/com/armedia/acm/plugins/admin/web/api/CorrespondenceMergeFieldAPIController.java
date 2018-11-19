@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldVersion;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
@@ -79,7 +80,7 @@ public class CorrespondenceMergeFieldAPIController
     @RequestMapping(value = "/mergefields/active/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(@PathVariable(value = "objectType") String objectType)
-            throws IOException
+            throws IOException, CorrespondenceMergeFieldVersionException
     {
         return correspondenceService.getActiveVersionMergeFieldsByType(objectType);
     }
@@ -87,7 +88,7 @@ public class CorrespondenceMergeFieldAPIController
     @RequestMapping(value = "/mergefields", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<CorrespondenceMergeField> saveMergeFieldsData(@RequestBody List<CorrespondenceMergeField> mergeFields, Authentication auth)
-            throws IOException
+            throws IOException, CorrespondenceMergeFieldVersionException
     {
         return correspondenceService.saveMergeFieldsData(mergeFields, auth);
     }
@@ -95,7 +96,7 @@ public class CorrespondenceMergeFieldAPIController
     @RequestMapping(value = "/mergefields/version/active", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CorrespondenceMergeFieldVersion setActiveMergingVersion(@RequestBody CorrespondenceMergeFieldVersion mergeFieldVersion,
-            Authentication auth) throws IOException
+            Authentication auth) throws IOException, CorrespondenceMergeFieldVersionException
     {
         return correspondenceService.setActiveMergingVersion(mergeFieldVersion, auth);
     }

@@ -25,7 +25,6 @@ angular.module('frevvo').controller(
                     var promiseConfig = ConfigService.getModuleConfig("frevvo");
                     var promiseTicket = TicketService.getArkCaseTicket();
                     var acmFormsInfo = LookupService.getConfig("acm-forms", [ "frevvo.admin.user", "frevvo.admin.password" ]);
-                    $scope.userSearchConfig = null;
                     $scope.userSearchConfig = _.find(promiseConfig.components, {
                         id: "userSearch"
                     });

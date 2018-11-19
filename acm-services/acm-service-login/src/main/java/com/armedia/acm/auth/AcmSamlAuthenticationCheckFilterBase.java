@@ -77,46 +77,52 @@ abstract class AcmSamlAuthenticationCheckFilterBase extends GenericFilterBean
 
         log.debug("AcmSamlAuthenticationCheckFilter started!");
 
-        // filter is executing, set FILTER_APPLIED to true
-        request.setAttribute(FILTER_APPLIED, Boolean.TRUE);
-
-        if (!userAuthenticated())
+        if (request != null)
         {
-            // all non authenticated requests should be redirected to '/samllogin' in order to save the hash in session
-            // storage on the
-            // client browser. This is used for non-Rest calls. See: AcmSamlAuthenticationCheckFilter class
-            if (!((HttpServletRequest) request).getRequestURI().equals(request.getServletContext().getContextPath() + "/samllogin")
-                    && !((HttpServletRequest) request).getRequestURI().startsWith(request.getServletContext().getContextPath() + "/saml/"))
+            // filter is executing, set FILTER_APPLIED to true
+            request.setAttribute(FILTER_APPLIED, Boolean.TRUE);
+
+            if (!userAuthenticated())
             {
-                if (shouldRedirectToLoginPage())
+                // all non authenticated requests should be redirected to '/samllogin' in order to save the hash in
+                // session
+                // storage on the
+                // client browser. This is used for non-Rest calls. See: AcmSamlAuthenticationCheckFilter class
+                if (!((HttpServletRequest) request).getRequestURI().equals(request.getServletContext().getContextPath() + "/samllogin")
+                        && !((HttpServletRequest) request).getRequestURI()
+                                .startsWith(request.getServletContext().getContextPath() + "/saml/"))
                 {
-                    // save last requested URL in session
-                    requestCache.saveRequest((HttpServletRequest) request, (HttpServletResponse) response);
-                    ((HttpServletResponse) response).sendRedirect(request.getServletContext().getContextPath() + "/samllogin");
-                    return;
+                    if (shouldRedirectToLoginPage())
+                    {
+                        // save last requested URL in session
+                        requestCache.saveRequest((HttpServletRequest) request, (HttpServletResponse) response);
+                        ((HttpServletResponse) response).sendRedirect(request.getServletContext().getContextPath() + "/samllogin");
+                        return;
+                    }
                 }
+
+                chain.doFilter(request, response);
+                return;
+            }
+
+            LocalDateTime now = LocalDateTime.now();
+            log.debug("Now: {}", now.toString());
+
+            HttpSession session = ((HttpServletRequest) request).getSession();
+
+            setLastAuthenticationCheckTime(session, now);
+
+            // check user authentication against IDP only on GET methods and when LAST_AUTHENTICATION_CHECK has expired
+            if ("GET".equalsIgnoreCase(((HttpServletRequest) request).getMethod()) && timeToReauthenticate(session, now))
+            {
+                log.debug("Reauthenticating user!");
+                session.setAttribute(LAST_AUTHENTICATION_CHECK, LocalDateTime.now());
+                SecurityContextHolder.getContext().setAuthentication(null);
             }
 
             chain.doFilter(request, response);
-            return;
         }
 
-        LocalDateTime now = LocalDateTime.now();
-        log.debug("Now: {}", now.toString());
-
-        HttpSession session = ((HttpServletRequest) request).getSession();
-
-        setLastAuthenticationCheckTime(session, now);
-
-        // check user authentication against IDP only on GET methods and when LAST_AUTHENTICATION_CHECK has expired
-        if ("GET".equalsIgnoreCase(((HttpServletRequest) request).getMethod()) && timeToReauthenticate(session, now))
-        {
-            log.debug("Reauthenticating user!");
-            session.setAttribute(LAST_AUTHENTICATION_CHECK, LocalDateTime.now());
-            SecurityContextHolder.getContext().setAuthentication(null);
-        }
-
-        chain.doFilter(request, response);
     }
 
     private boolean timeToReauthenticate(HttpSession session, LocalDateTime now)

@@ -1,8 +1,8 @@
-package com.armedia.acm.plugins.stateofarkcaseplugin.service;
+package com.armedia.acm.core.exceptions;
 
 /*-
  * #%L
- * ACM Plugins: Plugin State of Arkcase
+ * ACM Core API
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,15 +27,9 @@ package com.armedia.acm.plugins.stateofarkcaseplugin.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmStateOfArkcaseGenerateReportException;
-
-import java.io.File;
-import java.time.LocalDate;
-
-public interface AcmStateOfArkcaseService
+public class CorrespondenceMergeFieldVersionException extends Exception
 {
-    /**
-     * Generates state of Arkcase report as zip file
-     */
-    File generateReportForDay(LocalDate day) throws AcmStateOfArkcaseGenerateReportException;
+    public CorrespondenceMergeFieldVersionException(String message) {
+        super(message);
+    }
 }
