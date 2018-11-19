@@ -209,18 +209,17 @@ public class FrevvoServiceImpl implements FrevvoService
     @Override
     public String getFormKey(SchemaEntry schema)
     {
-        try
+        if (schema != null && schema.getXmlBlob() != null && schema.getXmlBlob().getBlob() != null
+                && !schema.getXmlBlob().getBlob().isEmpty())
         {
-            if (schema != null && schema.getXmlBlob() != null && schema.getXmlBlob().getBlob() != null
-                    && !schema.getXmlBlob().getBlob().isEmpty())
+            String blob = schema.getXmlBlob().getBlob();
+
+            // Blob is string in XML format but it not contains root element. For that reason it cannot be parsed.
+            // Here I am adding root element just to be able to parse below
+            blob = FrevvoFormConstants.ROOT_START + blob + FrevvoFormConstants.ROOT_END;
+
+            try (InputStream stream = new ByteArrayInputStream(blob.getBytes(Charsets.UTF_8)))
             {
-                String blob = schema.getXmlBlob().getBlob();
-
-                // Blob is string in XML format but it not contains root element. For that reason it cannot be parsed.
-                // Here I am adding root element just to be able to parse below
-                blob = FrevvoFormConstants.ROOT_START + blob + FrevvoFormConstants.ROOT_END;
-
-                InputStream stream = new ByteArrayInputStream(blob.getBytes(Charsets.UTF_8));
 
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
@@ -239,11 +238,12 @@ public class FrevvoServiceImpl implements FrevvoService
                     }
                 }
             }
+            catch (Exception e)
+            {
+                LOG.error("Cannot take Form id.", e);
+            }
         }
-        catch (Exception e)
-        {
-            LOG.error("Cannot take Form id.", e);
-        }
+
         return null;
     }
 

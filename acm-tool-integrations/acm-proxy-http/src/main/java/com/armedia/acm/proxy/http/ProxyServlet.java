@@ -351,6 +351,7 @@ public class ProxyServlet extends HttpServlet
                 }
                 // leading %, 0 padded, width 2, capital hex
                 formatter.format("%%%02X", (int) c);// TODO
+                formatter.close();
             }
         }
         return outBuf != null ? outBuf : in;
