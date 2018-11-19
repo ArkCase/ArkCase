@@ -87,10 +87,6 @@ public class HolidayConfigurationService
     public LocalDate addWorkingDaysToDate(LocalDate date, int workingDays)
     {
         LocalDate returnDate = date;
-        while(isHoliday(returnDate) || isWeekendNonWorkingDay(returnDate))
-        {
-            returnDate = returnDate.plusDays(1);
-        }
         for (int i = 0; i < workingDays;)
         {
             returnDate = returnDate.plusDays(1);
