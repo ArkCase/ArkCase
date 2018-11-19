@@ -70,14 +70,17 @@ angular.module('cases').controller(
                             $scope.holidays = response.data.holidays;
                             $scope.includeWeekends = response.data.includeWeekends;
 
+                            $scope.calculateOverdueObj = {};
                             $scope.owningGroup = ObjectModelService.getGroup(data);
                             $scope.assignee = ObjectModelService.getAssignee(data);
                             $scope.objectInfo.dueDate = UtilDateService.dateToIso(UtilDateService.isoToDate($scope.objectInfo.dueDate));
                             if(!$scope.includeWeekends) {
                                 $scope.daysLeft = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
+                                $scope.calculateOverdueObj = DueDateService.calculateOverdueDays(new Date($scope.objectInfo.dueDate), $scope.daysLeft, $scope.holidays);
                             }
                             else {
                                 $scope.daysLeft = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
+                                $scope.calculateOverdueObj = DueDateService.calculateOverdueDaysWithWeekends(new Date($scope.objectInfo.dueDate), $scope.daysLeft, $scope.holidays);
                             }
                             CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function(approvers) {
                                 var options = [];

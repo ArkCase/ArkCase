@@ -18,7 +18,9 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
         workingDays: workingDays,
         workingDaysWithWeekends: workingDaysWithWeekends,
         daysLeft: daysLeft,
-        daysLeftWithWeekends: daysLeftWithWeekends
+        daysLeftWithWeekends: daysLeftWithWeekends,
+        calculateOverdueDays: calculateOverdueDays,
+        calculateOverdueDaysWithWeekends: calculateOverdueDaysWithWeekends
     });
 
     function dueDateWorkingDays(startDate, days, holidays) {
@@ -112,5 +114,49 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
             return holiday.holidayDate === momentObject.format($translate.instant("common.frevvo.defaultDateFormat"));
         }) !== undefined;
     }
+
+    function calculateOverdueDays(dueDate, remainingDays, holidays){
+        var today = moment(new Date());
+        var momentDueDate = moment(dueDate);
+        var countOverdueDays = 0;
+        while (momentDueDate.isBefore(today, 'day')) {
+            momentDueDate.add(1, 'days');
+            if (!isWeekend(momentDueDate) && !isHoliday(holidays, momentDueDate)) {
+                countOverdueDays += 1;
+            }
+        }
+        if(countOverdueDays < 1){
+            return false;
+        }
+        else {
+            return {
+                countOverdueDays: countOverdueDays,
+                isOverdue: true
+            };
+        }
+    }
+
+    function calculateOverdueDaysWithWeekends(dueDate, remainingDays, holidays){
+        var today = moment(new Date());
+        var momentDueDate = moment(dueDate);
+        var countOverdueDays = 0;
+        while (momentDueDate.isBefore(today, 'day')) {
+            momentDueDate.add(1, 'days');
+            if (!isHoliday(holidays, momentDueDate)) {
+                countOverdueDays += 1;
+            }
+        }
+        if(countOverdueDays < 1){
+            return false;
+        }
+        else {
+            return {
+                countOverdueDays: countOverdueDays,
+                isOverdue: true
+            };
+        }
+    }
+
+
 
 } ]);
