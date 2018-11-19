@@ -54,7 +54,8 @@ angular.module('directives').directive(
                 'Helper.NoteService',
                 'Object.NoteService',
                 'UtilService',
-                function($q, $modal, $translate, Authentication, HelperUiGridService, HelperNoteService, ObjectNoteService, Util) {
+                'Mentions.Service',
+                function($q, $modal, $translate, Authentication, HelperUiGridService, HelperNoteService, ObjectNoteService, Util, MentionsService) {
                     return {
                         restrict: 'E',
                         scope: {
@@ -171,6 +172,22 @@ angular.module('directives').directive(
                                 modalScope.note = note || {};
                                 modalScope.isEdit = isEdit || false;
 
+                                // ---------------------   mention   ---------------------------------
+                                scope.emailAddresses = [];
+                                scope.usersMentioned = [];
+
+                                // Obtains a list of all users in ArkCase
+                                MentionsService.getUsers().then(function (users) {
+                                    scope.people = users;
+                                });
+
+                                scope.getMentionedUsers = function (item) {
+                                    scope.emailAddresses.push(item.email_lcs);
+                                    scope.usersMentioned.push('@' + item.name);
+                                    return '@' + item.name;
+                                };
+                                // -----------------------  end mention   ----------------------------
+
                                 var modalInstance = $modal.open({
                                     scope: modalScope,
                                     animation: true,
@@ -191,7 +208,18 @@ angular.module('directives').directive(
                                 });
 
                                 modalInstance.result.then(function(data) {
-                                    ObjectNoteService.saveNote(data.note).then(function() {
+                                    ObjectNoteService.saveNote(data.note).then(function(note) {
+                                        var noteParentType = "";
+                                        if(note.type == "REJECT_COMMENT"){
+                                            noteParentType = "TASK_REJECT_COMMENT"
+                                        }else if(note.type == "REJECT_COMMENT"){
+                                            noteParentType = "TASK_REJECT_COMMENT"
+                                        }
+                                        else {
+                                            noteParentType = note.parentType;
+                                        }
+                                        MentionsService.sendEmailToMentionedUsers(scope.emailAddresses, scope.usersMentioned,
+                                            "NOTE", noteParentType, note.parentId, note.note);
                                         scope.retrieveGridData();
                                     }, function() {
                                     });

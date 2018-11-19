@@ -38,7 +38,8 @@
         <div class="row">
             <div class="col-sm-12 form-group">
                 <label for="urlDescription" translate>organizations.comp.urls.modal.description</label>
-                <textarea id="urlDescription" class="input-md form-control" ng-model="url.description"></textarea>
+                <textarea mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
+                          mentio-select="getMentionedUsers(item)" id="urlDescription" class="input-md form-control" ng-model="url.description"></textarea>
             </div>
         </div>
     </form>

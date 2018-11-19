@@ -54,7 +54,6 @@ angular.module('services').factory('Mentions.Service', [ '$q', 'UtilService', 'L
      */
     function checkIfMentionedUsersStillExist(emailAddresses, usersMentioned, textMentioned){
         _.forEach(usersMentioned, function (user, index) {
-            // var words = textMentioned.split(" ");
             if(!_.includes(textMentioned, user)){
                 emailAddresses.splice(index, 1);
             }
@@ -78,15 +77,14 @@ angular.module('services').factory('Mentions.Service', [ '$q', 'UtilService', 'L
      *
      * @returns {Object} Promise
      */
-    function sendEmailToMentionedUsers(emailAddresses, usersMentioned, objectType, objectId, textMentioned){
+    function sendEmailToMentionedUsers(emailAddresses, usersMentioned, objectType, subType, objectId, textMentioned){
         if(!Util.isEmpty(emailAddresses)){
             var emailData = {};
             emailData.objectType = objectType;
+            emailData.subType = subType;
             emailData.objectId = objectId;
             emailData.textMentioned = textMentioned;
-            emailAddresses = checkIfMentionedUsersStillExist(emailAddresses, usersMentioned, textMentioned);
-            emailAddresses.push('ivana.shekerova@armedia.com');
-            emailData.emailAddresses = emailAddresses;
+            emailData.emailAddresses = checkIfMentionedUsersStillExist(emailAddresses, usersMentioned, textMentioned);
             EcmEmailService.sendMentionsEmail(emailData);
         }
     }

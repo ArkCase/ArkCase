@@ -1,5 +1,5 @@
 angular.module('common').controller('Common.AddObjectAssociationModalController',
-        [ '$scope', '$modal', '$modalInstance', '$translate', 'Object.LookupService', 'UtilService', 'ConfigService', 'params', function($scope, $modal, $modalInstance, $translate, ObjectLookupService, Util, ConfigService, params) {
+        [ '$scope', '$modal', '$modalInstance', '$translate', 'Object.LookupService', 'UtilService', 'ConfigService', 'params', 'Mentions.Service', function($scope, $modal, $modalInstance, $translate, ObjectLookupService, Util, ConfigService, params, MentionsService) {
 
             ConfigService.getModuleConfig("common").then(function(moduleConfig) {
                 $scope.config = moduleConfig;
@@ -29,13 +29,31 @@ angular.module('common').controller('Common.AddObjectAssociationModalController'
                 return type.key == params.type;
             });
 
+            // ---------------------   mention   ---------------------------------
+            $scope.emailAddresses = [];
+            $scope.usersMentioned = [];
+
+            // Obtains a list of all users in ArkCase
+            MentionsService.getUsers().then(function (users) {
+                $scope.people = users;
+            });
+
+            $scope.getMentionedUsers = function (item) {
+                $scope.emailAddresses.push(item.email_lcs);
+                $scope.usersMentioned.push('@' + item.name);
+                return '@' + item.name;
+            };
+            // -----------------------  end mention   ----------------------------
+
             $scope.onClickCancel = function() {
                 $modalInstance.dismiss('Cancel');
             };
 
             $scope.onClickOk = function() {
                 var retValue = {
-                    solrDocument: $scope.solrDocument
+                    solrDocument: $scope.solrDocument,
+                    emailAddresses: $scope.emailAddresses,
+                    usersMentioned: $scope.usersMentioned
                 };
                 if ($scope.types && $scope.type) {
                     retValue.type = $scope.type.key;

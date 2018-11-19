@@ -10,7 +10,8 @@
                     <div class="col-sm-12 form-group">
                         <label for="title" translate>cases.comp.newCase.caseTitle</label>
                         <span class="required-asterisk">*</span>
-                        <input id="title" type="text" ng-model="casefile.title" class="input-md form-control"
+                        <input mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
+                               mentio-select="getMentionedUsers(item)" id="title" type="text" ng-model="casefile.title" class="input-md form-control"
                                 placeholder="{{ 'cases.comp.newCase.caseTitle.placeholder' | translate }}" required>
                     </div>
                 </div>

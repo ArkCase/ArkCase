@@ -2,8 +2,8 @@
 
 angular.module('people').controller(
         'Person.PicturesController',
-        [ '$scope', '$stateParams', '$translate', '$modal', '$timeout', 'UtilService', 'ConfigService', 'Person.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', 'Person.PicturesService', 'EcmService', 'ObjectService', 'PermissionsService',
-                function($scope, $stateParams, $translate, $modal, $timeout, Util, ConfigService, PersonInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, PersonPicturesService, EcmService, ObjectService, PermissionsService) {
+        [ '$scope', '$stateParams', '$translate', '$modal', '$timeout', 'UtilService', 'ConfigService', 'Person.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', 'Person.PicturesService', 'EcmService', 'ObjectService', 'PermissionsService', 'Mentions.Service',
+                function($scope, $stateParams, $translate, $modal, $timeout, Util, ConfigService, PersonInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, PersonPicturesService, EcmService, ObjectService, PermissionsService, MentionsService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -91,6 +91,22 @@ angular.module('people').controller(
                         params.isEdit = isEdit || false;
                         params.isDefault = $scope.isDefault(image);
 
+                        // ---------------------   mention   ---------------------------------
+                        $scope.emailAddresses = [];
+                        $scope.usersMentioned = [];
+
+                        // Obtains a list of all users in ArkCase
+                        MentionsService.getUsers().then(function (users) {
+                            $scope.people = users;
+                        });
+
+                        $scope.getMentionedUsers = function (item) {
+                            $scope.emailAddresses.push(item.email_lcs);
+                            $scope.usersMentioned.push('@' + item.name);
+                            return '@' + item.name;
+                        };
+                        // -----------------------  end mention   ----------------------------
+
                         var modalInstance = $modal.open({
                             animation: true,
                             templateUrl: "modules/people/views/components/person-pictures-upload.dialog.view.html",
@@ -109,10 +125,12 @@ angular.module('people').controller(
 
                             if (data.isEdit) {
                                 data.image.modified = null;
-                                PersonPicturesService.savePersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image).then(function() {
+                                PersonPicturesService.savePersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image).then(function(picture) {
                                     if (data.isDefault) {
                                         $scope.objectInfo.defaultPicture = data.image;
                                     }
+                                    MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned,
+                                        ObjectService.ObjectTypes.PERSON, "PICTURE", $scope.objectInfo.id, data.image.description);
                                     MessageService.succsessAction();
                                     $scope.$emit("report-object-updated", $scope.objectInfo);
                                 }, function() {
@@ -131,7 +149,8 @@ angular.module('people').controller(
                                 } else {
                                     PersonPicturesService.insertPersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image.description).then(function(returnResponse) {
                                         var uploadedPictureId = returnResponse.data.fileId;
-
+                                        MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned,
+                                            ObjectService.ObjectTypes.PERSON, "PICTURE", $scope.objectInfo.id, data.image.description);
                                         MessageService.succsessAction();
                                         EcmService.getFile({
                                             fileId: uploadedPictureId

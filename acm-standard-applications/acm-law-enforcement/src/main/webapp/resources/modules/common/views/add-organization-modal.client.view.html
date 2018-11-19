@@ -68,7 +68,8 @@
         <div class="row" ng-show="showDescription">
             <div class="col-sm-12 form-group">
                 <label for="description" translate>common.addOrganization.description</label>
-                <textarea id="description" class="input-md form-control" ng-model="description"></textarea>
+                <textarea mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
+                          mentio-select="getMentionedUsers(item)" id="description" class="input-md form-control" ng-model="description"></textarea>
             </div>
         </div>
     </form>
