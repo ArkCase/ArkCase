@@ -211,7 +211,6 @@
         <beans:bean id="responseFolderService" class="gov.foia.service.ResponseFolderService">
             <beans:property name="folderService" ref="acmFolderService"/>
             <beans:property name="responseFolderName" value="03 Response"/>
-            <beans:property name="requestFolderName" value="01 Request"/>
         </beans:bean>
 
         <beans:bean id="responseFolderFileUpdateService" class="gov.foia.service.ConvertAndCompressResponseFolderFileUpdateService">
