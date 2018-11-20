@@ -692,7 +692,8 @@
                     "requestExtensionWorkingDays": "Request extension working days",
                     "holdedAndAppealedRequestsDueDateUpdateEnabled": "Should time spent in 'Hold' and 'Appeal' queue affect the request due date",
                     "dashboardBannerEnable": "Enable dashboard banner for browser support",
-                    "holdedAndAppealedRequestsDueDateUpdateEnabled.title": "If checked, each day spent in 'Hold' and 'Appeal' queue will advance the due date by one day"
+                    "holdedAndAppealedRequestsDueDateUpdateEnabled.title": "If checked, each day spent in 'Hold' and 'Appeal' queue will advance the due date by one day",
+                    "receivedDateEnabled": "Automatically set Request Received Date to be same as Request Created Date"
                 },
                 "save.btn": "Save"
             }
