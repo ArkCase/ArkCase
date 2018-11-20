@@ -147,11 +147,7 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
                 emailTemplatesService.saveEmailReceiverConfiguration($scope.newEmailReceiverConfiguration).then(function(value) {
                     MessageService.succsessAction();
                 }, function(err) {
-                    if (err.status === 400) {
-                        MessageService.errorAction();
-                    } else {
-                        MessageService.errorAction();
-                    }
+                    MessageService.errorAction();
                 });
             };
         } ]);
