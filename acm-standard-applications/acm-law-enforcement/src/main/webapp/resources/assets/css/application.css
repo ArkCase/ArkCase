@@ -1741,3 +1741,8 @@ a.primary {
 .popup-move-on-left > .editable + .form-inline:after {
     left: 50%;
 }
+
+.userModal {
+    margin-right: 6px;
+    margin-left: 6px;
+}
