@@ -93,15 +93,16 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
 
         if (addresses.length > 0)
         {
-            if (addresses.toString().split(" ").length == 1)
+            String[] splitedAddress = addresses[0].toString().split(" ");
+            if (splitedAddress.length == 1)
             {
-                person.setGivenName(addresses[0].toString().split(" ")[0]);
-                person.setFamilyName(addresses[0].toString().split(" ")[0]);
+                person.setGivenName(splitedAddress[0]);
+                person.setFamilyName(splitedAddress[0]);
             }
             else
             {
-                person.setGivenName(addresses[0].toString().split(" ")[0]);
-                person.setFamilyName(addresses[0].toString().split(" ")[1]);
+                person.setGivenName(splitedAddress[0]);
+                person.setFamilyName(splitedAddress[1]);
             }
         }
 
@@ -149,12 +150,12 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
     private String setCaseFileType()
     {
         List<StandardLookupEntry> caseTypeLookup = (List<StandardLookupEntry>) getLookupDao().getLookupByName("caseFileTypes").getEntries();
-        StandardLookupEntry caseFileType = caseTypeLookup
+        return caseTypeLookup
                 .stream()
                 .filter(standardLookupEntry -> standardLookupEntry.getKey().equals("Generated from Email"))
                 .findFirst()
+                .map(StandardLookupEntry::getKey)
                 .orElse(null);
-        return caseFileType.getKey();
     }
 
     @Transactional
