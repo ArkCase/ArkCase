@@ -503,6 +503,10 @@
                     "success": "Schedule deleted successfully",
                     "error": "Failed to delete schedule"
                 },
+                "update": {
+                    "success": "Schedule updated successfully",
+                    "error": "Failed to update schedule"
+                },
                 "createScheduleSuccess": "Schedule created successfully",
                 "createScheduleFailure": "Failed to create schedule",
                 "enterFutureDate": "Enter a start time in the future",
@@ -635,10 +639,10 @@
                 "delete.success": "Lookup is successfully deleted",
                 "delete.error": "Lookup can't be deleted",
                 "lookupExists.error": "Lookup with this name already exists",
-                "dialog":{
-                    "deleteEntryConfirm" :"Delete Entry",
-                    "deleteLookupConfirm" : "Delete Lookup",
-                    "cancel" : "Cancel"
+                "dialog": {
+                    "deleteEntryConfirm": "Delete Entry",
+                    "deleteLookupConfirm": "Delete Lookup",
+                    "cancel": "Cancel"
                 }
             },
             "module.config": {
@@ -670,7 +674,7 @@
                 "idleLimit.label": "Login idle limit (in milliseconds)",
                 "inform": "Settings will take effect for all new user sessions",
                 "apply.label": "Apply",
-                "dialog" : {
+                "dialog": {
                     "OKBtn": "Confirm"
                 }
             },
@@ -679,7 +683,7 @@
                 "historyDays.label": "Keep Audit and Notification events (in days)",
                 "inform": "Setting successfully saved",
                 "apply.label": "Apply",
-                "dialog" : {
+                "dialog": {
                     "OKBtn": "Confirm"
                 }
             },
