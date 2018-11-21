@@ -1,0 +1,26 @@
+<div class="modal-container">
+    <div class="modal-header">
+        <h3 translate>core.progressBar.header</h3>
+    </div>
+    <div class="modal-body">
+        <h4 translate>core.progressBar.totalProgress</h4>
+        <div class="row" ng-show="!hideProgressbar">
+            <div class="col-sm-9">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{currentTotalUploadProgress}}" aria-valuemin="0" aria-valuemax="100" ng-style="totalUploadPercentage">
+                        {{ currentTotalUploadProgress }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3"><button ng-click="onClickHideTheUploadedFile()" ng-show="currentTotalUploadProgress >= 100"><i class="fa fa-times"></i></button></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" ng-click="onClickAddMoreFiles()">
+            <span translate>core.progressBar.addMoreFiles</span>
+        </button>
+        <button class="btn btn-primary" ng-click="onClickHideModal()">
+            <span translate>core.progressBar.hide</span>
+        </button>
+    </div>
+</div>
