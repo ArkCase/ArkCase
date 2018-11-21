@@ -607,6 +607,18 @@
             "search.placeholder": "Search ArkCase",
             "locale.updateList": "Refresh Above List"
         },
+        "progressBar": {
+            "header": "Uploading Details...",
+            "viewDetails": "View details",
+            "addMoreFiles": "Add more files",
+            "currentFileProgress": "Current File Progress",
+            "totalProgress": "Total Progress",
+            "hide": "Hide",
+            "footer": "File Upload Completed",
+            "done": "Done",
+            "cancel": "Cancel",
+            "failed": "File upload failed!"
+        },
         "loginWarning": {
             "btnOK.text": "OK",
             "btnCancel.text": "Cancel",
