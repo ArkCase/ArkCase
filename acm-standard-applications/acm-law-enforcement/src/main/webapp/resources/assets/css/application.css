@@ -1724,3 +1724,17 @@ a.primary {
     top: -10px;
     left: 10%;
 }
+
+.arkcase-snackbar {
+     bottom: 0px;
+     position: fixed;
+     background-color: #2d343e;
+     color: #fff;
+     margin: 0 auto;
+     border-radius: 5px 5px 5px 5px;
+     border-top: 1px solid #ddd;
+     border-left: 1px solid #ddd;
+     border-bottom: 1px solid #ddd;
+     border-right: 1px solid #ddd;
+     z-index: 2000;
+}
