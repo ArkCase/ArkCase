@@ -1741,3 +1741,8 @@ a.primary {
 .popup-move-on-left > .editable + .form-inline:after {
     left: 50%;
 }
+
+/* wrap large text in ui grid cell template*/
+.ui-grid-cell-wrap {
+    white-space: normal !important;
+}

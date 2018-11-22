@@ -329,7 +329,10 @@
             "exemptionCode": "Exemption Code",
             "statute": "Statute",
             "creator": "Creator"
-        }
+        },
+        "description": "Description",
+        "exemptionCodesDescription": "Exemption Codes Description",
+        "modal.close.btn": "Close"
     },
     "cases.comp.billing": {
         "title": "Billing",
