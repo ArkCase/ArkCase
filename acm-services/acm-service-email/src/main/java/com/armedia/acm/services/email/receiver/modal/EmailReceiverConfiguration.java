@@ -32,6 +32,11 @@ public class EmailReceiverConfiguration
 
     private boolean debug;
 
+    private String user_complaint;
+
+    @JsonIgnore
+    private String password_complaint;
+
     /**
      * @return the email
      */
@@ -219,5 +224,41 @@ public class EmailReceiverConfiguration
     public void setDebug(boolean debug)
     {
         this.debug = debug;
+    }
+
+    /**
+     * @return the email address for complaint
+     */
+    public String getUser_complaint()
+    {
+        return user_complaint;
+    }
+
+    /**
+     * @param user_complaint
+     *            email address for complaint to set
+     */
+    public void setUser_complaint(String user_complaint)
+    {
+        this.user_complaint = user_complaint;
+    }
+
+    /**
+     * @return the password of complaint email address
+     */
+    @JsonIgnore
+    public String getPassword_complaint()
+    {
+        return password_complaint;
+    }
+
+    /**
+     * @param password_complaint
+     *            the password for complaint to set
+     */
+    @JsonProperty
+    public void setPassword_complaint(String password_complaint)
+    {
+        this.password_complaint = password_complaint;
     }
 }

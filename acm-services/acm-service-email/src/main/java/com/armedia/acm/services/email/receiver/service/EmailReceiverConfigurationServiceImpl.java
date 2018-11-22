@@ -45,15 +45,15 @@ public class EmailReceiverConfigurationServiceImpl implements EmailReceiverConfi
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.MAX_MESSAGES_PER_POLL,
                 Integer.toString(configuration.getMaxMessagePerPoll()));
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.FIXED_RATE, Long.toString(configuration.getFixedRate()));
-        emailReceiverProperties.put(EmailReceiverConfigurationConstants.EMAIL, emailReceiverConfiguration.getUser());
+        emailReceiverProperties.put(EmailReceiverConfigurationConstants.EMAIL_CASE, emailReceiverConfiguration.getUser());
         if (emailReceiverConfiguration.getPassword() == null)
         {
-            emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD,
+            emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD_CASE,
                     acmEncryptablePropertyUtils.encryptPropertyValue(configuration.getPassword()));
         }
         else
         {
-            emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD,
+            emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD_CASE,
                     acmEncryptablePropertyUtils.encryptPropertyValue(emailReceiverConfiguration.getPassword()));
         }
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.PROTOCOL, configuration.getProtocol());
@@ -61,6 +61,17 @@ public class EmailReceiverConfigurationServiceImpl implements EmailReceiverConfi
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.HOST, configuration.getHost());
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.PORT, Integer.toString(configuration.getPort()));
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.DEBUG, Boolean.toString(configuration.isDebug()));
+        emailReceiverProperties.put(EmailReceiverConfigurationConstants.EMAIL_COMPLAINT, emailReceiverConfiguration.getUser_complaint());
+        if (emailReceiverConfiguration.getPassword_complaint() == null)
+        {
+            emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD_COMPLAINT,
+                    acmEncryptablePropertyUtils.encryptPropertyValue(configuration.getPassword_complaint()));
+        }
+        else
+        {
+            emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD_COMPLAINT,
+                    acmEncryptablePropertyUtils.encryptPropertyValue(emailReceiverConfiguration.getPassword_complaint()));
+        }
 
         Lock writeLock = lock.writeLock();
         writeLock.lock();
@@ -108,10 +119,10 @@ public class EmailReceiverConfigurationServiceImpl implements EmailReceiverConfi
             case EmailReceiverConfigurationConstants.FIXED_RATE:
                 emailReceiverConfiguration.setFixedRate(Long.valueOf(propertyValue));
                 break;
-            case EmailReceiverConfigurationConstants.EMAIL:
+            case EmailReceiverConfigurationConstants.EMAIL_CASE:
                 emailReceiverConfiguration.setUser(propertyValue);
                 break;
-            case EmailReceiverConfigurationConstants.PASSWORD:
+            case EmailReceiverConfigurationConstants.PASSWORD_CASE:
                 emailReceiverConfiguration.setPassword(propertyValue);
                 break;
             case EmailReceiverConfigurationConstants.PROTOCOL:
@@ -128,6 +139,12 @@ public class EmailReceiverConfigurationServiceImpl implements EmailReceiverConfi
                 break;
             case EmailReceiverConfigurationConstants.DEBUG:
                 emailReceiverConfiguration.setDebug(Boolean.valueOf(propertyValue));
+                break;
+            case EmailReceiverConfigurationConstants.EMAIL_COMPLAINT:
+                emailReceiverConfiguration.setUser_complaint(propertyValue);
+                break;
+            case EmailReceiverConfigurationConstants.PASSWORD_COMPLAINT:
+                emailReceiverConfiguration.setPassword_complaint(propertyValue);
             }
         }
 
