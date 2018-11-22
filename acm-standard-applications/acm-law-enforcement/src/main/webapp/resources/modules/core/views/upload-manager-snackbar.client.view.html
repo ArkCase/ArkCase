@@ -1,15 +1,13 @@
 <div ng-controller="UploadManagerController">
-    <div class="tabbed-footer-center" ng-show="!hideUploadSnackbar">
-        <ul class="nav nav-tabs overview-tabs">
+    <div class="arkcase-snackbar" ng-show="!hideUploadSnackbar">
+        <ul class="nav nav-main">
             <li>
-                <i class="fa fa-refresh fa-spin fa-fw"></i>
+                <i class="navigation-icon fa fa-refresh fa-spin fa-fw"></i>
+                <span style="margin: 34px;" translate>Uploading...</span>
+                <button class="btn btn-secondary color: #000000;" ng-click="onClickViewDetailsModal()">
+                    <span translate>core.progressBar.viewDetails</span>
+                </button>
             </li>
-            <li>
-                <p translate>Uploading...</p>
-            </li>
-            <button class="btn btn-secondary" ng-click="onClickViewDetailsModal()">
-                <span translate>core.progressBar.viewDetails</span>
-            </button>
         </ul>
     </div>
 </div>

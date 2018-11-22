@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('core').controller(
-    'UploadManagerController',
+    'UploadManagerModalController',
     [ '$scope', '$q', '$state', '$translate', '$modal', '$http', '$timeout', '$document', 'Upload', 'MessageService',
         function($scope, $q, $state, $translate, $modal, $http, $timeout, $document, Upload, MessageService) {
 
-        $scope.hideUploadSnackbar = true;
+        /*$scope.hideUploadSnackbar = true;
 
         $scope.onClickViewDetailsModal = function(){
             $scope.hideUploadSnackbar = true;
@@ -66,9 +66,9 @@ angular.module('core').controller(
                                 $scope.hideProgressbar = true;
                             };
 
-                            /*$scope.onClickAddMoreFiles = function(){
+                            /!*$scope.onClickAddMoreFiles = function(){
                             //TODO: IMPLEMENT SO THAT, WHEN THIS IS EXECUTED A NEW FILE UPLOAD FORM(windows os component) WILL BE OPENED AND THE FILE CAN BE SELECTED. THIS WILL TRIGGER FILEUPLOADCHUNKS YET AGAIN
-                            };*/
+                            };*!/
 
                             $scope.uploadChunks = function (file, uuid) {
                                 Upload.upload({
@@ -107,9 +107,9 @@ angular.module('core').controller(
                                             data: data
                                         }).then(function () {
                                             if ($scope.currentTotalUploadProgress >= 100) {
-                                                /*$timeout(function() {
+                                                /!*$timeout(function() {
                                                     $modalInstance.close();
-                                                }, 2000);*/
+                                                }, 2000);*!/
                                             }
                                         });
                                     }
@@ -124,9 +124,9 @@ angular.module('core').controller(
                                     //$scope.currentChunkUploadProgress = parseInt(100.0 * ($scope.hashMap[uuid].partProgress / progress.total));
                                     $scope.currentTotalUploadProgress = parseInt(100.0 * (($scope.hashMap[uuid].progress + $scope.hashMap[uuid].partProgress) / $scope.hashMap[uuid].file.size));
 
-                                    /*$scope.chunkUploadPercentage = {
+                                    /!*$scope.chunkUploadPercentage = {
                                         width: $scope.currentChunkUploadProgress + '%'
-                                    };*/
+                                    };*!/
                                     $scope.totalUploadPercentage = {
                                         width: $scope.currentTotalUploadProgress + '%'
                                     };
@@ -186,5 +186,5 @@ angular.module('core').controller(
 
                 $scope.startUpload(uuid);
             }
-        });
+        });*/
         } ]);
