@@ -12,6 +12,8 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('cases');
                 $translatePartialLoader.addPart('request-info');
+                $translatePartialLoader.addPart('time-tracking');
+                $translatePartialLoader.addPart('cost-tracking');
                 return $translate.refresh();
             } ]
         }
