@@ -4,7 +4,7 @@
         <h3 ng-show="isEdit"><span translate>timeTracking.comp.newTimesheet.editCase.title</span></h3>
     </div>
     <div class="modal-body">
-        <div style="margin-right: 6px; margin-left: 6px;">
+        <div class="userModal">
             <div class="row well-sm">
                 <div class="row">
                     <div class="col-sm-6 form-group">
@@ -25,15 +25,14 @@
         </div>
 
         <div class="row">
-            <div class="row" style="padding: 0px 15px;">
+            <div class="row chargeDetails">
                 <div class="col-sm-4 form-group">
-                    <label style="font-size: 16px;">&nbsp;</label><br />
-                    <label style="text-align: center; padding-top: 15px;">{{selectedWeek}}</label>
+                    <label class="labelChargeDetails">&nbsp;</label><br />
+                    <label class="selectedWeekLabel">{{selectedWeek}}</label>
                 </div>
                 <div class="col-sm-2 form-group">
-                    <label style="font-size: 16px;">&nbsp;</label><br />
-                    <button type="button" class="btn" ng-click="prevWeek()"
-                            style="background-color: #fcfcfd; border: 1px solid #d2dae1; width: 100%;">
+                    <label class="labelChargeDetails">&nbsp;</label><br />
+                    <button type="button" class="btn prevNextWeekButton" ng-click="prevWeek()">
                         <i class="fa fa-arrow-circle-left"></i>
                         <span translate>timeTracking.comp.newTimesheet.time.prevWeekBtn</span>
                     </button>
@@ -55,19 +54,18 @@
                     </p>
                 </div>
                 <div class="col-sm-2 form-group">
-                    <label style="font-size: 16px;">&nbsp;</label><br />
-                    <button type="button" class="btn" ng-click="nextWeek()" ng-show="isDateBeforeTodaysDate"
-                            style="background-color: #fcfcfd; border: 1px solid #d2dae1; width: 100%;">
+                    <label class="labelChargeDetails">&nbsp;</label><br />
+                    <button type="button" class="btn prevNextWeekButton" ng-click="nextWeek()" ng-show="isDateBeforeTodaysDate">
                         <span translate>timeTracking.comp.newTimesheet.time.nextWeekBtn</span>
                         <i class="fa fa-arrow-circle-right"></i>
                     </button>
                 </div>
             </div>
-            <div class="row" style="margin: 0px 15px;">
+            <div class="row chargeCodeDetailsGrid">
                 <div ng-repeat="time in timesForms">
-                    <div style="border: 1px solid #ccc; border-radius: 9px; padding: 10px 0px 0px 10px; margin-bottom: 7px">
+                    <div class="chargeCodeDetailsBorder">
                         <div class="row">
-                            <div class="col-sm-11" style="padding-right: 0px">
+                            <div class="col-sm-11 timeTrackingPanel">
                                 <div class="row">
                                     <div class="col-sm-4 form-group">
                                         <label for="type" translate>timeTracking.comp.newTimesheet.time.type</label>
@@ -89,79 +87,77 @@
                                         <label for="role" translate>timeTracking.comp.newTimesheet.time.chargeRole</label>
                                         <span class="required-asterisk">*</span>
                                         <select id="role" ng-model="time.chargeRole" class="form-control input-md" ng-change="updateTotalCost(time)" required>
-                                        <option ng-repeat="option in timesheetChargeRoles" value="{{option.key}}">
-                                            {{option.value | translate}}
-                                        </option>
-                                    </select>
+                                            <option ng-repeat="option in timesheetChargeRoles" value="{{option.key}}">
+                                                {{option.value | translate}}
+                                            </option>
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="row form-group" style="padding: 0px 15px;">
-                                    <div class="col-sm-8 seven-cols" style="padding: 0px;">
-                                        <div class="col-sm-1" style="padding: 0px;">
+                                <div class="row form-group chargeDetails">
+                                    <div class="col-sm-8 seven-cols expandableRow">
+                                        <div class="col-sm-1 expandableRow">
                                             <div>{{formatedWeekDates[0]}}</div>
                                             <div>
                                                 <input id="sun" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[0]" class="input-md form-control" ng-blur="updateTotalWeekHours(time)"/>
                                             </div>
                                         </div>
-                                        <div class="col-sm-1" style="padding: 0px;">
+                                        <div class="col-sm-1 expandableRow">
                                             <div>{{formatedWeekDates[1]}}</div>
                                             <div>
                                                 <input id="mon" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[1]" class="input-md form-control" ng-blur="updateTotalWeekHours(time)"/>
                                             </div>
                                         </div>
-                                        <div class="col-sm-1" style="padding: 0px;">
+                                        <div class="col-sm-1 expandableRow">
                                             <div>{{formatedWeekDates[2]}}</div>
                                             <div>
                                                 <input id="tue" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[2]" class="input-md form-control" ng-blur="updateTotalWeekHours(time)"/>
                                             </div>
                                         </div>
-                                        <div class="col-sm-1" style="padding: 0px;">
+                                        <div class="col-sm-1 expandableRow">
                                             <div>{{formatedWeekDates[3]}}</div>
                                             <div>
                                                 <input id="wed" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[3]" class="input-md form-control" ng-blur="updateTotalWeekHours(time)"/>
                                             </div>
                                         </div>
-                                        <div class="col-sm-1" style="padding: 0px;">
+                                        <div class="col-sm-1 expandableRow">
                                             <div>{{formatedWeekDates[4]}}</div>
                                             <div>
                                                 <input id="thu" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[4]" class="input-md form-control" ng-blur="updateTotalWeekHours(time)"/>
                                             </div>
                                         </div>
-                                        <div class="col-sm-1" style="padding: 0px;">
+                                        <div class="col-sm-1 expandableRow">
                                             <div>{{formatedWeekDates[5]}}</div>
                                             <div>
                                                 <input id="fri" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[5]" class="input-md form-control" ng-blur="updateTotalWeekHours(time)"/>
                                             </div>
                                         </div>
-                                        <div class="col-sm-1" style="padding: 0px;">
+                                        <div class="col-sm-1 expandableRow">
                                             <div>{{formatedWeekDates[6]}}</div>
                                             <div>
                                                 <input id="sat" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[6]" class="input-md form-control" ng-blur="updateTotalWeekHours(time)"/>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2" style="padding: 0px;">
+                                    <div class="col-sm-2 expandableRow">
                                         <b>Total</b>
-                                        <div style="border: 1px solid #ccc; height: 34px; padding: 7px;">{{time.totalWeekHours | number:2}}</div>
+                                        <div class="totalCost">{{time.totalWeekHours | number:2}}</div>
                                     </div>
-                                    <div class="col-sm-2" style="padding: 0px;">
+                                    <div class="col-sm-2 expandableRow">
                                         <b>Total Cost</b>
-                                        <div style="border: 1px solid #ccc; height: 34px; padding: 7px;">{{time.totalCost | number:2}}</div>
+                                        <div class="totalCost">{{time.totalCost | number:2}}</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-1" style="padding-left: 0px; text-align: center;">
+                            <div class="col-sm-1 addTimerRow">
                                 <label class="control-label">&nbsp;</label>
                                 <div>
-                                    <button type="button" class="btn btn-link" ng-click="addTimeRow();" ng-show="$last"
-                                            style="padding-left: 0px; padding-right: 0px;"
+                                    <button type="button" class="btn btn-link addRemoveRow" ng-click="addTimeRow();" ng-show="$last"
                                             title="{{'timeTracking.comp.newTimesheet.time.addBtn' | translate}}">
                                         <i class="fa fa-plus text-success"></i>
                                     </button>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-link" ng-click="removeTimeRow(time)"
-                                            style="padding-left: 0px; padding-right: 0px;" ng-show="!$first"
+                                    <button type="button" class="btn btn-link addRemoveRow" ng-click="removeTimeRow(time)" ng-show="!$first"
                                             title="{{'timeTracking.comp.newTimesheet.time.removeBtn' | translate}}">
                                         <i class="fa fa-minus text-danger"></i>
                                     </button>
@@ -171,7 +167,7 @@
                     </div>
                 </div>
                 <div class="row form-group" ng-if="!isTypeSelected">
-                    <div class="alert alert-danger" style="padding: 7px 12px; font-size: 14px; margin: 0px 15px;">
+                    <div class="alert alert-danger newTimeSheetSelectType">
                         <span translate>timeTracking.comp.newTimesheet.time.selectTypeMessage</span>
                     </div>
                 </div>
@@ -204,8 +200,8 @@
                         <div class="col-sm-6 form-group">
                             <label class="control-label">&nbsp;</label>
                             <input type="text" ng-model="approverName" class="input-md form-control"
-                                   placeholder="{{ 'timeTracking.comp.newTimesheet.approver.placeholder' | translate }}"
-                                   ng-click="userOrGroupSearch()" readonly>
+                                    placeholder="{{ 'timeTracking.comp.newTimesheet.approver.placeholder' | translate }}"
+                                    ng-click="userOrGroupSearch()" readonly>
                         </div>
                         <div class="col-sm-6 form-group">
                             <label for="owningGroup" translate> timeTracking.comp.newTimesheet.approver.owningGroup</label>

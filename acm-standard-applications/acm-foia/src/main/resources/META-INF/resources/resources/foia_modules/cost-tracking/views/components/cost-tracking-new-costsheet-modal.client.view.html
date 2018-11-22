@@ -5,6 +5,7 @@
     </div>
     <div class="modal-body">
         <div class="userModal">
+            <div class="row well-sm">
                 <div class="row">
                     <div class="col-sm-6 form-group">
                         <label for="user" translate>costTracking.comp.newCostsheet.user</label>
@@ -37,9 +38,9 @@
                         <input id="code" type="text" ng-model="costsheet.parentNumber" ng-click="pickObject()" class="input-md form-control"
                                 ng-disabled="!isTypeSelected" readonly required />
                     </div>
-                    <div class="row" ng-if="!isTypeSelected">
-                        <div class="col-sm-12" style="padding-left: 30px; padding-right: 30px;">
-                            <div class="alert alert-danger" style="padding: 12px; font-size: 14px;">
+                    <div ng-if="!isTypeSelected">
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger selectedType">
                                 <span translate>costTracking.comp.newCostsheet.selectTypeMessage</span>
                             </div>
                         </div>
@@ -57,7 +58,7 @@
                 <div class="panel-body">
                     <div ng-repeat="cost in costsheet.costs">
                         <div class="row">
-                            <div class="col-sm-3" style="padding-left: 0px;">
+                            <div class="col-sm-3 costSheetDate">
                                 <label translate>costTracking.comp.newCostsheet.cost.date</label>
                                 <span class="required-asterisk">*</span>
                                 <p class="input-group">
@@ -74,7 +75,7 @@
                                     </span>
                                 </p>
                             </div>
-                            <div class="col-sm-2 form-group" style="padding-left: 0px;">
+                            <div class="col-sm-2 form-group costSheetDate">
                                 <label for="costTitle" translate>costTracking.comp.newCostsheet.cost.costTitle</label>
                                 <span class="required-asterisk">*</span>
                                 <select id="costTitle" ng-model="cost.title" class="form-control input-md" required>
@@ -83,26 +84,26 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-sm-4 form-group" style="padding-left: 0px;">
+                            <div class="col-sm-4 form-group costSheetDate">
                                 <label for="costDescription" translate>costTracking.comp.newCostsheet.cost.description</label>
                                 <input id="costDescription" type="text" ng-model="cost.description" class="input-md form-control" />
                             </div>
-                            <div class="col-sm-2 form-group" style="padding-left: 0px;">
+                            <div class="col-sm-2 form-group costSheetDate">
                                 <label translate>costTracking.comp.newCostsheet.cost.amount</label>
                                 <span class="required-asterisk">*</span>
                                 <input type="number" step=".01" class="form-control" ng-model="cost.value"
                                         ng-blur="updateBalance(costsheet.costs)" required />
                             </div>
-                            <div class="col-sm-1 form-group" style="padding-left: 0px;">
+                            <div class="col-sm-1 form-group costSheetDate">
                                 <label class="control-label">&nbsp;</label>
                                 <div>
-                                    <button type="button" class="btn btn-link pull-right" ng-click="removeCost(cost)"
-                                            style="padding-left: 0px; padding-right: 0px;" ng-show="!$first"
+                                    <button type="button" class="btn btn-link pull-right balanceAndAmount" ng-click="removeCost(cost)"
+                                            ng-show="!$first"
                                             title="{{'costTracking.comp.newCostsheet.cost.removeBtn' | translate}}">
                                         <i class="fa fa-minus text-danger"></i>
                                     </button>
-                                    <button type="button" class="btn btn-link pull-left" ng-click="addCost();" ng-show="$last"
-                                            style="padding-left: 0px; padding-right: 0px;"
+                                    <button type="button" class="btn btn-link pull-left balanceAndAmount" ng-click="addCost();"
+                                            ng-show="$last"
                                             title="{{'costTracking.comp.newCostsheet.cost.addBtn' | translate}}" ng-disabled="!cost.value">
                                         <i class="fa fa-plus text-success"></i>
                                     </button>
@@ -111,13 +112,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-9 form-group" style="padding-left: 0px;">
-                            <div style="border: 1px solid #ccc; text-align: right; background-color: #f5f5f5;">
-                                <label style="margin: 5px;" translate>costTracking.comp.newCostsheet.cost.balance</label>
+                        <div class="col-sm-9 form-group costSheetDate">
+                            <div class="sumCostBalance">
+                                <label class="labelBalance" translate>costTracking.comp.newCostsheet.cost.balance</label>
                             </div>
                         </div>
-                        <div class="col-sm-2 form-group" style="padding-left: 0px;">
-                            <div style="border: 1px solid #ccc; padding: 5px;">
+                        <div class="col-sm-2 form-group costSheetDate">
+                            <div class="sumCostAmount">
                                 {{sumAmount | number:2}}
                             </div>
                         </div>
@@ -151,8 +152,8 @@
                         <div class="col-sm-6 form-group">
                             <label class="control-label">&nbsp;</label>
                             <input type="text" ng-model="approverName" class="input-md form-control"
-                                   placeholder="{{ 'costTracking.comp.newCostsheet.approver.placeholder' | translate }}"
-                                   ng-click="userOrGroupSearch()" readonly>
+                                    placeholder="{{ 'costTracking.comp.newCostsheet.approver.placeholder' | translate }}"
+                                    ng-click="userOrGroupSearch()" readonly>
                         </div>
                         <div class="col-sm-6 form-group">
                             <label for="owningGroup" translate>costTracking.comp.newCostsheet.approver.owningGroup</label>
