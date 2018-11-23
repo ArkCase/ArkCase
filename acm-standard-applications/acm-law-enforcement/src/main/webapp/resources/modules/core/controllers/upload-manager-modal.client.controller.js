@@ -2,17 +2,18 @@
 
 angular.module('core').controller(
     'UploadManagerModalController',
-    [ '$scope', '$q', '$state', '$translate', '$modal', '$http', '$timeout', '$document', 'Upload', 'MessageService',
-        function($scope, $q, $state, $translate, $modal, $http, $timeout, $document, Upload, MessageService) {
+    ['$scope', '$modalInstance', '$http', '$translate', 'Upload', 'MessageService', function ($scope, $modalInstance, $http, $translate, Upload, MessageService) {
+        $scope.hashMap = {};
 
-        /*$scope.hideUploadSnackbar = true;
-
-        $scope.onClickViewDetailsModal = function(){
-            $scope.hideUploadSnackbar = true;
-            $scope.modalInstance.show();
+        $scope.onClickHideModal = function () {
+            $scope.$bus.publish('upload-manager-hide');
         };
 
-        $scope.getPartFile = function (uuid) {
+        $scope.onClickHideTheUploadedFile = function () {
+            $scope.hideProgressbar = true;
+        };
+
+        function getPartFile(uuid) {
             $scope.hashMap[uuid].part++;
             $scope.hashMap[uuid].startByte = $scope.hashMap[uuid].endByte;
             $scope.hashMap[uuid].endByte = $scope.hashMap[uuid].endByte + $scope.hashMap[uuid].partBytes;
@@ -24,152 +25,66 @@ angular.module('core').controller(
             file.name = $scope.hashMap[uuid].file.name + "_" + $scope.hashMap[uuid].part + "_" + Date.now();
 
             return file;
+        }
+
+        function startUpload(uuid) {
+            uploadPart(uuid);
         };
 
-        $scope.startUpload = function (uuid) {
-            $scope.uploadPart(uuid);
+        function uploadPart(uuid) {
+            var file = getPartFile(uuid);
+            uploadChunks(file, uuid);
         };
 
-        $scope.uploadPart = function (uuid) {
-            var file = $scope.getPartFile(uuid);
-            $scope.uploadPartFile(file, uuid);
-        };
-
-        $scope.modalInstance = null;
-
-        $scope.$bus.subscribe('upload-chunk-file', function(fileDetails){
-
-            $scope.uploadPartFile = function (file, uuid) {
-                //$scope.currentChunkUploadProgress="";
-                $scope.currentTotalUploadProgress="";
-                //$scope.chunkUploadPercentage="";
-                $scope.totalUploadPercentage="";
-
-                if ($scope.modalInstance === null) {
-                    $scope.modalInstance = $modal.open({
-                        templateUrl: "modules/core/views/upload-progress-bar-modal.html",
-                        controller: ['$scope', '$modalInstance', 'result', function ($scope, $modalInstance, result) {
-                            $scope.hashMap = result.hashMap;
-
-                            //$scope.currentChunkUploadProgress = $scope.currentChunkUploadProgress;
-                            $scope.currentTotalUploadProgress = $scope.currentTotalUploadProgress;
-                            //$scope.chunkUploadPercentage = $scope.chunkUploadPercentage;
-                            $scope.totalUploadPercentage = $scope.totalUploadPercentage;
-
-                            $scope.getPartFile = result.getPartFile;
-
-                            $scope.onClickHideModal = function () {
-                                $scope.$bus.publish('upload-manager-hide');
-                            };
-
-                            $scope.onClickHideTheUploadedFile = function () {
-                                $scope.hideProgressbar = true;
-                            };
-
-                            /!*$scope.onClickAddMoreFiles = function(){
-                            //TODO: IMPLEMENT SO THAT, WHEN THIS IS EXECUTED A NEW FILE UPLOAD FORM(windows os component) WILL BE OPENED AND THE FILE CAN BE SELECTED. THIS WILL TRIGGER FILEUPLOADCHUNKS YET AGAIN
-                            };*!/
-
-                            $scope.uploadChunks = function (file, uuid) {
-                                Upload.upload({
-                                    url: 'api/latest/service/ecm/uploadChunks',
-                                    file: file,
-                                    params: {
-                                        uuid: uuid
-                                    }
-                                }).then(function (result) {
-                                    var _uuid = result.data.uuid;
-                                    //$scope.currentChunkUploadProgress = $scope.currentChunkUploadProgress;
-                                    $scope.currentTotalUploadProgress = $scope.currentTotalUploadProgress;
-
-                                    //$scope.chunkUploadPercentage = $scope.chunkUploadPercentage;
-                                    $scope.totalUploadPercentage = $scope.totalUploadPercentage;
-
-
-                                    $scope.hashMap[_uuid].parts.push(result.data.fileName);
-                                    if ($scope.hashMap[_uuid].endByte < $scope.hashMap[_uuid].file.size) {
-                                        $scope.hashMap[_uuid].progress = $scope.hashMap[_uuid].progress + $scope.hashMap[_uuid].partProgress;
-                                        var file = $scope.getPartFile(uuid);
-                                        $scope.uploadChunks(file, _uuid);
-                                    } else {
-                                        var data = {};
-                                        data.name = $scope.hashMap[_uuid].file.name;
-                                        data.mimeType = $scope.hashMap[_uuid].file.type;
-                                        data.objectId = fileDetails.originObjectId;
-                                        data.objectType = fileDetails.originObjectType;
-                                        data.folderId = fileDetails.folderId;
-                                        data.parts = $scope.hashMap[_uuid].parts;
-                                        data.fileType = fileDetails.fileType;
-                                        data.uuid = _uuid;
-                                        $http({
-                                            method: "POST",
-                                            url: 'api/latest/service/ecm/mergeChunks',
-                                            data: data
-                                        }).then(function () {
-                                            if ($scope.currentTotalUploadProgress >= 100) {
-                                                /!*$timeout(function() {
-                                                    $modalInstance.close();
-                                                }, 2000);*!/
-                                            }
-                                        });
-                                    }
-                                    $scope.onClickCancel = function () {
-                                        $modalInstance.dismiss('cancel');
-                                    };
-
-                                }, function (error) {
-                                    MessageService.error($translate.instant('common.directive.docTree.progressBar.failed') + ": " + error);
-                                }, function (progress) {
-                                    $scope.hashMap[uuid].partProgress = progress.loaded;
-                                    //$scope.currentChunkUploadProgress = parseInt(100.0 * ($scope.hashMap[uuid].partProgress / progress.total));
-                                    $scope.currentTotalUploadProgress = parseInt(100.0 * (($scope.hashMap[uuid].progress + $scope.hashMap[uuid].partProgress) / $scope.hashMap[uuid].file.size));
-
-                                    /!*$scope.chunkUploadPercentage = {
-                                        width: $scope.currentChunkUploadProgress + '%'
-                                    };*!/
-                                    $scope.totalUploadPercentage = {
-                                        width: $scope.currentTotalUploadProgress + '%'
-                                    };
-                                });
-
-                            };
-
-                            $scope.uploadChunks(result.file, result.uuid);
-                        }],
-                        size: 'lg',
-                        backdrop: 'static',
-                        keyboard: false,
-                        resolve: {
-                            result: {
-                                file: file,
-                                uuid: uuid,
-                                hashMap: $scope.hashMap,
-                                getPartFile: $scope.getPartFile
-                            }
-                        },
-                        backdropClass: "uploadManagerComponent",
-                        windowClass: "uploadManagerComponent"
-                    });
-
-                    $scope.modalInstance.hide = function () {
-                        var elements = $('.uploadManagerComponent');
-                        $('.uploadManagerComponent').hide();
-                        $scope.hideUploadSnackbar = false;
-                    };
-
-                    $scope.modalInstance.show = function () {
-                        var elements = $('.uploadManagerComponent');
-                        $('.uploadManagerComponent').show();
-                    };
-
-                    $scope.$bus.subscribe('upload-manager-hide', $scope.modalInstance.hide);
-                } else {
-                    $scope.modalInstance.show();
+        function uploadChunks(file, uuid) {
+            $scope.hashMap[uuid].status = "IN_PROGRESS";
+            Upload.upload({
+                url: 'api/latest/service/ecm/uploadChunks',
+                file: file,
+                params: {
+                    uuid: uuid
                 }
-            };
+            }).then(function (result) {
+                var _uuid = result.data.uuid;
 
-            $scope.hashMap = {};
+                $scope.hashMap[_uuid].parts.push(result.data.fileName);
+                if ($scope.hashMap[_uuid].endByte < $scope.hashMap[_uuid].file.size) {
+                    $scope.hashMap[_uuid].progress = $scope.hashMap[_uuid].progress + $scope.hashMap[_uuid].partProgress;
+                    uploadPart(_uuid);
+                } else {
+                    $scope.hashMap[_uuid].status = "FINISHED";
+                    var data = {};
+                    data.name = $scope.hashMap[_uuid].file.name;
+                    data.mimeType = $scope.hashMap[_uuid].file.type;
+                    data.objectId = $scope.hashMap[_uuid].objectId;
+                    data.objectType = $scope.hashMap[_uuid].objectType;
+                    data.folderId = $scope.hashMap[_uuid].folderId;
+                    data.parts = $scope.hashMap[_uuid].parts;
+                    data.fileType = $scope.hashMap[_uuid].fileType;
+                    data.uuid = _uuid;
+                    $http({
+                        method: "POST",
+                        url: 'api/latest/service/ecm/mergeChunks',
+                        data: data
+                    }).then(function () {
 
+                    });
+                }
+                $scope.onClickClose = function () {
+                    $modalInstance.dismiss('close');
+                };
+
+            }, function (error) {
+                $scope.hashMap[uuid].status = "FAILED";
+                MessageService.error($translate.instant('common.directive.docTree.progressBar.failed') + ": " + error);
+            }, function (progress) {
+                $scope.hashMap[uuid].partProgress = progress.loaded;
+                $scope.hashMap[uuid].currentProgress = parseInt(100.0 * (($scope.hashMap[uuid].progress + $scope.hashMap[uuid].partProgress) / $scope.hashMap[uuid].file.size));
+            });
+
+        }
+
+        $scope.$bus.subscribe('start-upload-chunk-file', function (fileDetails) {
             for (var i = 0; i < fileDetails.files.length; i++) {
                 var details = {};
                 details.parts = [];
@@ -180,11 +95,17 @@ angular.module('core').controller(
                 details.startByte = 0;
                 details.endByte = 0;
                 details.file = fileDetails.files[i];
+                details.status = "READY"; // "READY", "IN_PROGRESS", "FINISHED", "FAILED"
+                details.objectId = fileDetails.originObjectId;
+                details.objectType = fileDetails.originObjectType;
+                details.folderId = fileDetails.folderId;
+                details.fileType = fileDetails.fileType;
+                details.currentProgress = 0;
 
                 var uuid = Date.now();
                 $scope.hashMap[uuid] = details;
-
-                $scope.startUpload(uuid);
+                startUpload(uuid);
             }
-        });*/
-        } ]);
+        });
+    }
+    ]);
