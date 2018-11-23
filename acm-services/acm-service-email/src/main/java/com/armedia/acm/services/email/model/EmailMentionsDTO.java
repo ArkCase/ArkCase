@@ -43,19 +43,23 @@ public class EmailMentionsDTO extends MessageBodyFactory
         this.body = body;
     }
 
-    public String getTextMentioned() {
+    public String getTextMentioned()
+    {
         return textMentioned;
     }
 
-    public void setTextMentioned(String textMentioned) {
+    public void setTextMentioned(String textMentioned)
+    {
         this.textMentioned = textMentioned;
     }
 
-    public String getUrl() {
+    public String getUrl()
+    {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(String url)
+    {
         this.url = url;
     }
 
@@ -89,11 +93,13 @@ public class EmailMentionsDTO extends MessageBodyFactory
         this.objectType = objectType;
     }
 
-    public String getSubType() {
+    public String getSubType()
+    {
         return subType;
     }
 
-    public void setSubType(String subType) {
+    public void setSubType(String subType)
+    {
         this.subType = subType;
     }
 
