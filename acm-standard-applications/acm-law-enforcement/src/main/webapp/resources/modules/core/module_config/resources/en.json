@@ -616,7 +616,7 @@
             "hide": "Hide",
             "footer": "File Upload Completed",
             "done": "Done",
-            "cancel": "Cancel",
+            "close": "Close",
             "failed": "File upload failed!"
         },
         "loginWarning": {

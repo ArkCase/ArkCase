@@ -4,11 +4,11 @@
     </div>
     <div class="modal-body">
         <h4 translate>core.progressBar.totalProgress</h4>
-        <div class="row" ng-show="!hideProgressbar">
+        <div class="row" ng-show="!hideProgressbar" ng-repeat="element in hashMap">
             <div class="col-sm-9">
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="{{currentTotalUploadProgress}}" aria-valuemin="0" aria-valuemax="100" ng-style="totalUploadPercentage">
-                        {{ currentTotalUploadProgress }}
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ element.currentProgress }}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: element.currentProgress + '%'}">
+                        {{element.currentProgress}}
                     </div>
                 </div>
             </div>
@@ -19,8 +19,8 @@
         <button class="btn btn-secondary" ng-click="onClickAddMoreFiles()">
             <span translate>core.progressBar.addMoreFiles</span>
         </button>
-        <button class="btn btn-secondary" ng-click="onClickCancel()">
-            <span translate>core.progressBar.cancel</span>
+        <button class="btn btn-secondary" ng-click="onClickClose()">
+            <span translate>core.progressBar.close</span>
         </button>
         <button class="btn btn-primary" ng-click="onClickHideModal()">
             <span translate>core.progressBar.hide</span>
