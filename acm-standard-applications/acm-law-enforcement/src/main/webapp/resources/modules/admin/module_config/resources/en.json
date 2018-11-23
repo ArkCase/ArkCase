@@ -368,7 +368,15 @@
             }
         },
         "security.emailTemplates": {
-            "title": "Email Templates",
+            "title": "Email Configuration",
+            "table.title": "Email Templates",
+            "settings":{
+                "email.label": "Email Receiver CaseFile",
+                "password.label": "Password",
+                "email.placeholder": "Enter Email address",
+                "password.placeholder": "Enter Password",
+                "btnSave": "Save"
+            },
             "table.columns": {
                 "templateName": "Template Name",
                 "emailPattern": "Email Pattern",

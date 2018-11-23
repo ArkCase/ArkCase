@@ -1,4 +1,4 @@
-package gov.foia.web.api;
+package gov.foia.pipeline.presave;
 
 /*-
  * #%L
@@ -27,44 +27,42 @@ package gov.foia.web.api;
  * #L%
  */
 
-import gov.foia.model.FoiaConfiguration;
+import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+import gov.foia.model.FOIARequest;
 import gov.foia.service.FoiaConfigurationService;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-@Controller
-@RequestMapping({"api/v1/service/foia/configuration", "api/latest/service/foia/configuration"})
-public class FoiaConfigurationAPIController {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class FOIAConfigurationHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext> {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private FoiaConfigurationService foiaConfigurationService;
 
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public void updateFoiaConfigurationFile(@RequestBody FoiaConfiguration foiaConfiguration)
-    {
-        foiaConfigurationService.writeConfiguration(foiaConfiguration);
+
+    @Override
+    public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException {
+        log.debug("FOIARequest configuration pre save handler called");
+
+        if (entity.getId() == null) {
+            entity.setFoiaConfiguration(foiaConfigurationService.readConfiguration());
+        }
+
+        log.debug("FOIARequest configuration pre save handler ended");
     }
 
-
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public FoiaConfiguration getFoiaConfigurationFile()
-    {
-        return getFoiaConfigurationService().readConfiguration();
+    @Override
+    public void rollback(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException {
+        //nothing to do
     }
 
-    public FoiaConfigurationService getFoiaConfigurationService()
-    {
+    public FoiaConfigurationService getFoiaConfigurationService() {
         return foiaConfigurationService;
     }
 
-    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService)
-    {
+    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService) {
         this.foiaConfigurationService = foiaConfigurationService;
     }
-
 }
