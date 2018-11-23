@@ -178,6 +178,7 @@
                 "extortion": "Extortion",
                 "fraud": "Fraud",
                 "government": "Government",
+                "generatedFromEmail": "Generated from Email",
                 "investorComplaint": "Investor Complaint",
                 "laborRacketeering": "Labor Racketeering",
                 "local": "Local",
