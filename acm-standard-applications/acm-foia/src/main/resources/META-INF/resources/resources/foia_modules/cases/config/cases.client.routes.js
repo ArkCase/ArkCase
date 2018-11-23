@@ -12,8 +12,6 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('cases');
                 $translatePartialLoader.addPart('request-info');
-                $translatePartialLoader.addPart('time-tracking');
-                $translatePartialLoader.addPart('cost-tracking');
                 return $translate.refresh();
             } ]
         }
@@ -100,12 +98,26 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
 
     .state('cases.cost', {
         url: '/:id/cost',
-        templateUrl: 'modules/cases/views/components/case-cost.client.view.html'
+        templateUrl: 'modules/cases/views/components/case-cost.client.view.html',
+        resolve: {
+            translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
+                $translatePartialLoader.addPart('common');
+                $translatePartialLoader.addPart('cost-tracking');
+                return $translate.refresh();
+            } ]
+        }
     })
 
     .state('cases.time', {
         url: '/:id/time',
-        templateUrl: 'modules/cases/views/components/case-time.client.view.html'
+        templateUrl: 'modules/cases/views/components/case-time.client.view.html',
+        resolve: {
+            translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
+                $translatePartialLoader.addPart('common');
+                $translatePartialLoader.addPart('time-tracking');
+                return $translate.refresh();
+            } ]
+        }
     })
 
     .state('cases.approvalrouting', {
