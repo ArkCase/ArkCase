@@ -1,4 +1,4 @@
-package gov.foia.pipeline.presave;
+package gov.foia.pipeline.postsave;
 
 /*-
  * #%L
@@ -30,39 +30,42 @@ package gov.foia.pipeline.presave;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-import gov.foia.model.FOIARequest;
-import gov.foia.service.FoiaConfigurationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FOIAConfigurationHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext> {
+import gov.foia.model.FOIARequest;
+import gov.foia.service.FoiaConfigurationService;
+
+public class FOIAConfigurationHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext>
+{
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private FoiaConfigurationService foiaConfigurationService;
 
-
     @Override
-    public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException {
+    public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
+    {
         log.debug("FOIARequest configuration pre save handler called");
 
-        if (entity.getId() == null) {
-            entity.setFoiaConfiguration(foiaConfigurationService.readConfiguration());
-        }
+        entity.setFoiaConfiguration(foiaConfigurationService.readConfiguration());
 
         log.debug("FOIARequest configuration pre save handler ended");
     }
 
     @Override
-    public void rollback(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException {
-        //nothing to do
+    public void rollback(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
+    {
+        // nothing to do
     }
 
-    public FoiaConfigurationService getFoiaConfigurationService() {
+    public FoiaConfigurationService getFoiaConfigurationService()
+    {
         return foiaConfigurationService;
     }
 
-    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService) {
+    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService)
+    {
         this.foiaConfigurationService = foiaConfigurationService;
     }
 }

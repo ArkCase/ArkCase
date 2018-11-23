@@ -88,7 +88,7 @@
             <beans:property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
             <beans:property name="extensionWorkingDays" value="${request.extensionWorkingDays}"/>
         </beans:bean>
-        <beans:bean id="foiaConfigurationHandler" class="gov.foia.pipeline.presave.FOIAConfigurationHandler">
+        <beans:bean id="foiaConfigurationHandler" class="gov.foia.pipeline.postsave.FOIAConfigurationHandler">
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
 
@@ -105,11 +105,11 @@
                 <beans:list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                     <beans:ref bean="caseFileSetCreatorHandler"/>
                     <beans:ref bean="foiaExtensionHandler"/>
-                    <beans:ref bean="foiaConfigurationHandler"/>
                 </beans:list>
             </beans:property>
             <beans:property name="postSaveHandlers">
                 <beans:list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                    <beans:ref bean="foiaConfigurationHandler"/>
                     <beans:ref bean="caseFileRulesHandler"/>
                     <beans:ref bean="caseFileContainerHandler"/>
                     <beans:ref bean="caseFileEcmFolderHandler"/>
