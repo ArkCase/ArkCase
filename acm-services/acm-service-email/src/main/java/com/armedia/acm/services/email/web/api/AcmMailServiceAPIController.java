@@ -27,12 +27,20 @@ package com.armedia.acm.services.email.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.email.model.*;
-import com.armedia.acm.services.email.service.*;
+import com.armedia.acm.services.email.model.EmailMentionsDTO;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.services.email.service.AcmEmailConfigurationException;
+import com.armedia.acm.services.email.service.AcmEmailMentionsService;
+import com.armedia.acm.services.email.service.AcmEmailSenderService;
+import com.armedia.acm.services.email.service.AcmEmailServiceException;
+import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
+import com.armedia.acm.services.email.service.EmailSource;
+import com.armedia.acm.services.email.service.EmailTemplateConfiguration;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -44,7 +52,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 20, 2017
@@ -177,7 +187,7 @@ public class AcmMailServiceAPIController
     @RequestMapping(value = "/mentions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EmailMentionsDTO createPlainEmail(@RequestBody EmailMentionsDTO in,
-                                                    Authentication authentication, HttpSession session)
+            Authentication authentication, HttpSession session)
             throws AcmEmailServiceException
     {
         if (null == in)
@@ -230,7 +240,8 @@ public class AcmMailServiceAPIController
         this.emailSenderService = emailSenderService;
     }
 
-    public void setAcmEmailMentionsService(AcmEmailMentionsService acmEmailMentionsService) {
+    public void setAcmEmailMentionsService(AcmEmailMentionsService acmEmailMentionsService)
+    {
         this.acmEmailMentionsService = acmEmailMentionsService;
     }
 }
