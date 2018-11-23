@@ -4,46 +4,40 @@
         <h3 ng-show="isEdit"><span translate>costTracking.comp.newCostsheet.editCase.title</span></h3>
     </div>
     <div class="modal-body">
-        <div class="userModal">
-            <div class="row well-sm">
-                <div class="row">
-                    <div class="col-sm-6 form-group">
-                        <label for="user" translate>costTracking.comp.newCostsheet.user</label>
-                        <input id="user" type="text" ng-model="costsheet.user.fullName" class="input-md form-control" ng-disabled="true"
-                                required />
-                    </div>
-                    <div class="col-sm-6 form-group">
-                        <label for="status" translate>costTracking.comp.newCostsheet.status</label>
-                        <select id="status" ng-model="costsheet.status" class="form-control input-md" ng-disabled="costsheetProperties.useApprovalWorkflow === 'true' || !isEdit" required>
-                            <option ng-repeat="option in costsheetStatuses" value="{{option.key}}">
-                                {{option.value | translate}}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6 form-group">
-                        <label for="costType" translate>costTracking.comp.newCostsheet.costType</label>
-                        <span class="required-asterisk">*</span>
-                        <select id="costType" ng-model="costsheet.parentType" class="form-control input-md"
-                                ng-change="updateIsTypeSelected()" ng-disabled="disableCostType" required>
-                            <option ng-repeat="option in costsheetTypes" value="{{option.key}}">
-                                {{option.value | translate}}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-sm-6 form-group">
-                        <label for="code" translate>costTracking.comp.newCostsheet.code</label>
-                        <span class="required-asterisk">*</span>
-                        <input id="code" type="text" ng-model="costsheet.parentNumber" ng-click="pickObject()" class="input-md form-control"
-                                ng-disabled="!isTypeSelected" readonly required />
-                    </div>
-                    <div ng-if="!isTypeSelected">
-                        <div class="col-sm-12">
-                            <div class="alert alert-danger selectedType">
-                                <span translate>costTracking.comp.newCostsheet.selectTypeMessage</span>
-                            </div>
-                        </div>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="user" translate>costTracking.comp.newCostsheet.user</label>
+                <input id="user" type="text" ng-model="costsheet.user.fullName" class="input-md form-control" ng-disabled="true" required />
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="status" translate>costTracking.comp.newCostsheet.status</label>
+                <select id="status" ng-model="costsheet.status" class="form-control input-md"
+                        ng-disabled="costsheetProperties.useApprovalWorkflow === 'true' || !isEdit" required>
+                    <option ng-repeat="option in costsheetStatuses" value="{{option.key}}">
+                        {{option.value | translate}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="costType" translate>costTracking.comp.newCostsheet.costType</label>
+                <span class="required-asterisk">*</span>
+                <select id="costType" ng-model="costsheet.parentType" class="form-control input-md" ng-change="updateIsTypeSelected()"
+                        ng-disabled="disableCostType" required>
+                    <option ng-repeat="option in costsheetTypes" value="{{option.key}}">
+                        {{option.value | translate}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="code" translate>costTracking.comp.newCostsheet.code</label>
+                <span class="required-asterisk">*</span>
+                <input id="code" type="text" ng-model="costsheet.parentNumber" ng-click="pickObject()" class="input-md form-control"
+                        ng-disabled="!isTypeSelected" readonly required />
+            </div>
+            <div ng-if="!isTypeSelected">
+                <div class="col-sm-12">
+                    <div class="alert alert-danger">
+                        <span translate>costTracking.comp.newCostsheet.selectTypeMessage</span>
                     </div>
                 </div>
             </div>
@@ -58,7 +52,7 @@
                 <div class="panel-body">
                     <div ng-repeat="cost in costsheet.costs">
                         <div class="row">
-                            <div class="col-sm-3 costSheetDate">
+                            <div class="col-sm-3">
                                 <label translate>costTracking.comp.newCostsheet.cost.date</label>
                                 <span class="required-asterisk">*</span>
                                 <p class="input-group">
@@ -75,7 +69,7 @@
                                     </span>
                                 </p>
                             </div>
-                            <div class="col-sm-2 form-group costSheetDate">
+                            <div class="col-sm-2 form-group">
                                 <label for="costTitle" translate>costTracking.comp.newCostsheet.cost.costTitle</label>
                                 <span class="required-asterisk">*</span>
                                 <select id="costTitle" ng-model="cost.title" class="form-control input-md" required>
@@ -84,25 +78,25 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-sm-4 form-group costSheetDate">
+                            <div class="col-sm-3 form-group">
                                 <label for="costDescription" translate>costTracking.comp.newCostsheet.cost.description</label>
                                 <input id="costDescription" type="text" ng-model="cost.description" class="input-md form-control" />
                             </div>
-                            <div class="col-sm-2 form-group costSheetDate">
+                            <div class="col-sm-2 form-group">
                                 <label translate>costTracking.comp.newCostsheet.cost.amount</label>
                                 <span class="required-asterisk">*</span>
                                 <input type="number" step=".01" class="form-control" ng-model="cost.value"
                                         ng-blur="updateBalance(costsheet.costs)" required />
                             </div>
-                            <div class="col-sm-1 form-group costSheetDate">
+                            <div class="col-sm-2 form-group">
                                 <label class="control-label">&nbsp;</label>
                                 <div>
-                                    <button type="button" class="btn btn-link pull-right balanceAndAmount" ng-click="removeCost(cost)"
+                                    <button type="button" class="btn btn-link" ng-click="removeCost(cost)"
                                             ng-show="!$first"
                                             title="{{'costTracking.comp.newCostsheet.cost.removeBtn' | translate}}">
                                         <i class="fa fa-minus text-danger"></i>
                                     </button>
-                                    <button type="button" class="btn btn-link pull-left balanceAndAmount" ng-click="addCost();"
+                                    <button type="button" class="btn btn-link pull-left" ng-click="addCost();"
                                             ng-show="$last"
                                             title="{{'costTracking.comp.newCostsheet.cost.addBtn' | translate}}" ng-disabled="!cost.value">
                                         <i class="fa fa-plus text-success"></i>
@@ -112,15 +106,12 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-9 form-group costSheetDate">
-                            <div class="sumCostBalance">
-                                <label class="labelBalance" translate>costTracking.comp.newCostsheet.cost.balance</label>
-                            </div>
+                        <div class="col-sm-8 form-group">
+                            <input readonly class="input-md form-control"
+                                    placeholder="{{'costTracking.comp.newCostsheet.cost.balance' | translate}}" />
                         </div>
-                        <div class="col-sm-2 form-group costSheetDate">
-                            <div class="sumCostAmount">
-                                {{sumAmount | number:2}}
-                            </div>
+                        <div class="col-sm-2 form-group">
+                            <input readonly class="input-md form-control" ng-value="sumAmount | number:2" />
                         </div>
                     </div>
                 </div>
