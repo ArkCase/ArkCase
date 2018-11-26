@@ -54,11 +54,13 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-2">
-                <div class="h4 font-bold">
-                  {{ objectInfo.requestCategory ||
-                        'common.value.unknown' | translate}}</a>
+                <div class="h4 font-bold no-margin">
+                <a editable-combodate="today" e-date="today"
+                   e-min-year="{{minYear}}" e-max-year="{{maxYear}}" e-minute-step="1" e-template="MMM/DD/YYYY HH:mm"
+                   onaftersave="setReceivedDate($data, objectInfo.receivedDate)"edit-disabled="disabledLink" ng-class="{'disabledLink': disabledLink}">
+                    {{ (objectInfo.receivedDate | date: ('common.defaultDateTimeUIFormat' | translate)) || ('common.value.unknown' | translate) }}</a>
                 </div>
-                <small class="text-muted"><span translate>cases.comp.info.category.label</span></small>
+                <small class="text-muted"><span translate>cases.comp.info.receivedDate.label</span></small>
             </div>
             <div class="col-xs-12 col-md-2">
                 <div class="h4 font-bold">

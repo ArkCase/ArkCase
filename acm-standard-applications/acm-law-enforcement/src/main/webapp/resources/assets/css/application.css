@@ -1741,6 +1741,11 @@ a.primary {
 .popup-move-on-left > .editable + .form-inline:after {
     left: 50%;
 }
+.disabledLink {
+    color: #788288 !important;
+    cursor: auto;
+    border-bottom: none !important;
+}
 
 .timesheetModalselectedWeekLabel {
     text-align: center;
