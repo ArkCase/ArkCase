@@ -1310,6 +1310,13 @@
                 ]
             },
             {
+                "type": "p/document/fileUploader",
+                "label": "admin.documentManagement.fileUploader",
+                "components": [
+                    "file-uploader"
+                ]
+            },
+            {
                 "type": "p/transcription",
                 "label": "admin.transcription.title",
                 "icon": "fa fa-wrench",
