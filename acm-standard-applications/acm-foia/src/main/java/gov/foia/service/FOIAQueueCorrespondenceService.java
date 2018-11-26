@@ -152,7 +152,8 @@ public class FOIAQueueCorrespondenceService
 
     }
 
-    public void handleFulfillCorrespondenceLetter(String objectType, Long requestId){
+    public void handleFulfillCorrespondenceLetter(String objectType, Long requestId)
+    {
         FOIARequest request = requestDao.find(requestId);
         LocalDateTime receivedDate = request.getReceivedDate();
         if (request.getQueue().getName().equals("Fulfill") && request.getPreviousQueue().getName().equals("Intake")
@@ -162,26 +163,21 @@ public class FOIAQueueCorrespondenceService
 
     }
 
-    public void handleRequestReceivedAcknowledgementLetter(Long requestId){
+    public void handleRequestReceivedAcknowledgementLetter(Long requestId)
+    {
         FOIARequest request = requestDao.find(requestId);
             try {
-                FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RACK);
+                FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RECEIVE_ACK );
 
                 String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
                 String targetFolderId = request.getContainer().getAttachmentFolder() == null
                         ? request.getContainer().getFolder().getCmisFolderId()
                         : request.getContainer().getAttachmentFolder().getCmisFolderId();
 
-
                 FOIAFile letter =  (FOIAFile) documentGenerator.generateAndUpload(documentDescriptor, request,
                         targetFolderId, arkcaseFilename, documentGeneratorService.getReportSubstitutions(request));
 
                 emailCorrespondenceLetter(request, letter);
-
-
-
-
-
             }
             catch (Exception e) {
                 log.error("Unable to generate and email Correspondence Letter for {} [{}]", request.getRequestType(), request.getId(), e);

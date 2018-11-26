@@ -144,7 +144,7 @@
 
         <beans:bean id="requestReceivedAcknowledgementDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
             <beans:property name="type" value="New Request"/>
-            <beans:property name="reqAck" value="RACK"/>
+            <beans:property name="reqAck" value="RECEIVE_ACK"/>
             <beans:property name="doctype" value="Request Received Acknowledgement Letter"/>
             <beans:property name="filenameFormat" value="RequestReceivedAcknowledgementLetter-%s.docx"/>
             <beans:property name="targetFileExtension" value="docx"/>
