@@ -126,11 +126,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group col-sm-3">
+                    <label class="control-label" translate>cases.comp.info.category.label</label>
+                    <select id="requestCategory" ng-model="objectInfo.requestCategory"
+                            ng-options="category.key as category.value for category in requestCategory"
+                            class="form-control input-md" ng-disabled="true">
+                    </select>
+                </div>
                 <div class="col-sm-3">
-                    <label for="processingFeeWaive" translate> cases.comp.main.processingFeeWaive.label </label> <input type="text"
-                                                                                                                        id="processingFeeWaive" ng-model="objectInfo.processingFeeWaive" name="processingFeeWaive" class="input-md form-control"
-                                                                                                                        placeholder="{{ 'cases.comp.main.processingFeeWaive.placeholder'  | translate }}" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
-                                                                                                                        permission-action="disable"/>
+                    <label for="processingFeeWaive" translate> cases.comp.main.processingFeeWaive.label </label>
+                    <input type="text" id="processingFeeWaive" ng-model="objectInfo.processingFeeWaive" name="processingFeeWaive"
+                           class="input-md form-control" placeholder="{{ 'cases.comp.main.processingFeeWaive.placeholder'  | translate }}"
+                           permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                           permission-action="disable"/>
                 </div>
                 <div class="form-group col-sm-3">
                     <label class="control-label" translate> cases.comp.main.payFee.label </label>

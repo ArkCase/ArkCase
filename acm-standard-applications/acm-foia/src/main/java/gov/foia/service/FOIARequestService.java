@@ -84,6 +84,7 @@ public class FOIARequestService
     private String originalRequestFolderNameFormat;
     private String appealTitleFormat;
     private QueuesTimeToCompleteService queuesTimeToCompleteService;
+    private FoiaConfigurationService foiaConfigurationService;
 
     @Transactional
     public CaseFile saveRequest(CaseFile in, List<MultipartFile> files, Authentication auth, String ipAddress)
@@ -116,7 +117,8 @@ public class FOIARequestService
                     }
                 }
 
-                if (foiaRequest.getId() == null)
+                if ((foiaRequest.getId() != null && foiaRequest.getStatus().equalsIgnoreCase("In Review") && foiaConfigurationService.readConfiguration().getReceivedDateEnabled() == false) ||
+                        (foiaRequest.getId() == null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled()))
                 {
                     // calculate due date from time to complete configuration
                     // override if any due date is set from UI
@@ -457,4 +459,11 @@ public class FOIARequestService
         return queuesTimeToCompleteService;
     }
 
+    public FoiaConfigurationService getFoiaConfigurationService() {
+        return foiaConfigurationService;
+    }
+
+    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService) {
+        this.foiaConfigurationService = foiaConfigurationService;
+    }
 }
