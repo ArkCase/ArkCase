@@ -96,8 +96,8 @@ angular.module('cases').controller(
                                 return approvers;
                             });
                             $scope.today = new Date();
-                            $scope.minYear = $scope.today.getFullYear();
-                            $scope.maxYear = moment($scope.today).add(1, 'years').toDate().getFullYear();
+                            $scope.receivedDateMinYear = $scope.today.getFullYear();
+                            $scope.receivedDateMaxYear = moment($scope.today).add(1, 'years').toDate().getFullYear();
                         });
 
                         $scope.notificationGroup = null;
@@ -116,9 +116,9 @@ angular.module('cases').controller(
                             $scope.foiaConfig = response.data;
                             $scope.foiaConfig.receivedDateEnabled = response.data.receivedDateEnabled;
                             if ($scope.foiaConfig.receivedDateEnabled || $scope.objectInfo.status !='In Review'){
-                                $scope.disabledLink = true;
+                                $scope.receivedDateDisabledLink = true;
                             }else {
-                                $scope.disabledLink = false;
+                                $scope.receivedDateDisabledLink = false;
                             }
                         });
 
