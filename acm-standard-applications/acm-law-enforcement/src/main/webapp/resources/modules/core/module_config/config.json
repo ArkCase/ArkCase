@@ -18,7 +18,8 @@
             "title": "",
             "idleLimit": 600000,
             "idlePull": 5000,
-            "idleConfirm": 15000
+            "idleConfirm": 15000,
+            "uploadFileSizeLimit": 52428800
         }
     ],
     "fullScreenPathExpressions": [
