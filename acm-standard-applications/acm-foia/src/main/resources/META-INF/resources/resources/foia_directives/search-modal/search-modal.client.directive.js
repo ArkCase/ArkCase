@@ -220,7 +220,7 @@ angular.module('directives').directive('searchModal',
                             });
                         }
                     }
-
+                    //foia changes start here
                     function changeReferenceType(searchResult) {
                         searchResult = searchResult.map(function(value) {
                             ObjectLookupService.getObjectTypes().then(function(item) {
@@ -236,6 +236,7 @@ angular.module('directives').directive('searchModal',
                         });
                         return searchResult;
                     }
+                    //end of foia changes
 
                     scope.setSecondGridData = function() {
                         if (scope.selectedItem.object_type_s === 'USER') { // Selected a user
