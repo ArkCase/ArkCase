@@ -104,8 +104,9 @@ angular
             'Admin.EmailSenderConfigurationService',
             'Helper.LocaleService',
             '$timeout',
+            'ObjectService',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout) {
+                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout, ObjectService) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -3853,12 +3854,24 @@ angular
                             DocTree.Op.uploadChunkFile(files, folderNode.data.objectId, fileType);*/
 
                             //DocTree.scope.$bus.publish('upload-chunk-file', files, folderNode.data.objectId, fileType);
+                            var parentObjectNumber ="";
+                            if(DocTree._objType === ObjectService.ObjectTypes.CASE_FILE) {
+                                parentObjectNumber = DocTree.objectInfo.caseNumber;
+                            }
+                            else if(DocTree._objType === ObjectService.ObjectTypes.COMPLAINT) {
+                                parentObjectNumber = DocTree.objectInfo.complaintNumber;
+                            }
+                            else if(DocTree._objType === ObjectService.ObjectTypes.COSTSHEET) {
+                                parentObjectNumber = DocTree.objectInfo.costsheetNumber;
+                            }
+
                             var fileDetails = {
                                 files: files,
                                 fileType: fileType,
                                 folderId: folderNode.data.objectId,
                                 originObjectType: folderNode.data.containerObjectType,
-                                originObjectId: folderNode.data.containerObjectId
+                                originObjectId: folderNode.data.containerObjectId,
+                                parentObjectNumber: parentObjectNumber,
                                 //TODO: originComponent = 'Documents' component node under Case/complaint
                                 //originObjectId caseId complaintId taskId
                                 //originObjectType so that the origin component doctree is updated with the correct info after the file has been uploaded to that caseFile Complaint(event based after compliting each phase)

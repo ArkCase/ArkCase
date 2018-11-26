@@ -33,8 +33,10 @@ angular.module('core').controller(
 
                 modalInstance.show = function () {
                     $('.uploadManagerComponent').show();
+                    $scope.hideUploadSnackbar = true;
                 };
 
+                $scope.$bus.subscribe('upload-manager-show', modalInstance.show);
                 $scope.$bus.subscribe('upload-manager-hide', modalInstance.hide);
             } else {
                 modalInstance.show();
@@ -42,6 +44,10 @@ angular.module('core').controller(
             }
 
         });
+
+        $scope.onClickViewDetailsModal = function () {
+            $scope.$bus.publish('upload-manager-show');
+        };
 
         function startUploadChunkFile(fileDetails) {
             if (!Util.isEmpty(fileDetails)) {

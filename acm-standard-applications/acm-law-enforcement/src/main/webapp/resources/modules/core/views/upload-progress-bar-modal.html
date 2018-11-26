@@ -3,22 +3,22 @@
         <h3 translate>core.progressBar.header</h3>
     </div>
     <div class="modal-body">
-        <h4 translate>core.progressBar.totalProgress</h4>
         <div class="row" ng-show="!hideProgressbar" ng-repeat="element in hashMap">
+            <div class="text-left"><strong>{{ element.objectType }}</strong> / <strong>{{ element.parentObjectNumber }}</strong> / <strong>{{ element.file.name }}</strong></div>
             <div class="col-sm-9">
                 <div class="progress">
                     <div class="progress-bar" role="progressbar" aria-valuenow="{{ element.currentProgress }}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: element.currentProgress + '%'}">
-                        {{element.currentProgress}}
+                        {{element.currentProgress + ' %'}}
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3"><button ng-click="onClickHideTheUploadedFile()" ng-show="currentTotalUploadProgress >= 100"><i class="fa fa-times"></i></button></div>
+            <div class="col-sm-3"><button ng-click="onClickHideTheUploadedFile()" ng-show="element.currentProgress >= 100"><i class="fa fa-times"></i></button></div>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-secondary" ng-click="onClickAddMoreFiles()">
+        <!--<button class="btn btn-secondary" ng-click="onClickAddMoreFiles()">
             <span translate>core.progressBar.addMoreFiles</span>
-        </button>
+        </button>-->
         <button class="btn btn-secondary" ng-click="onClickClose()">
             <span translate>core.progressBar.close</span>
         </button>
