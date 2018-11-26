@@ -3815,6 +3815,7 @@ angular
                     }
                     ,
                     doSubmitFormUploadFile : function(files, fileLang) {
+
                         if (!DocTree.uploadSetting) {
                             return Util.errorPromise("upload file error");
                         }
@@ -3841,42 +3842,56 @@ angular
                             }
                         }
 
-                        var cacheKey = DocTree.getCacheKeyByNode(folderNode);
-                        if (DocTree.uploadSetting.uploadFileNew) {
-                            /*         DocTree.Op.uploadFiles(fd, folderNode, names, fileType, fileLang).then(function(data) {
-                                         _.each(data.nodes, function(node) {
-                                             DocTree.markNodeOk(node)
-                                         });
-                                         dfd.resolve(data);
-                                     }, function(error) {
-                                         dfd.reject(error);
-                                     });
-                            DocTree.Op.uploadChunkFile(files, folderNode.data.objectId, fileType);*/
-
-                            //DocTree.scope.$bus.publish('upload-chunk-file', files, folderNode.data.objectId, fileType);
-                            var parentObjectNumber ="";
-                            if(DocTree._objType === ObjectService.ObjectTypes.CASE_FILE) {
+                        function getParentObjectNumber() {
+                            var parentObjectNumber = "";
+                            if (DocTree._objType === ObjectService.ObjectTypes.CASE_FILE) {
                                 parentObjectNumber = DocTree.objectInfo.caseNumber;
                             }
-                            else if(DocTree._objType === ObjectService.ObjectTypes.COMPLAINT) {
+                            else if (DocTree._objType === ObjectService.ObjectTypes.COMPLAINT) {
                                 parentObjectNumber = DocTree.objectInfo.complaintNumber;
                             }
-                            else if(DocTree._objType === ObjectService.ObjectTypes.COSTSHEET) {
+                            else if (DocTree._objType === ObjectService.ObjectTypes.COSTSHEET) {
                                 parentObjectNumber = DocTree.objectInfo.costsheetNumber;
                             }
+                            return parentObjectNumber;
+                        }
 
-                            var fileDetails = {
-                                files: files,
-                                fileType: fileType,
-                                folderId: folderNode.data.objectId,
-                                originObjectType: folderNode.data.containerObjectType,
-                                originObjectId: folderNode.data.containerObjectId,
-                                parentObjectNumber: parentObjectNumber,
-                                //TODO: originComponent = 'Documents' component node under Case/complaint
-                                //originObjectId caseId complaintId taskId
-                                //originObjectType so that the origin component doctree is updated with the correct info after the file has been uploaded to that caseFile Complaint(event based after compliting each phase)
-                            };
-                            DocTree.scope.$bus.publish('upload-chunk-file', fileDetails);
+                        var cacheKey = DocTree.getCacheKeyByNode(folderNode);
+                        if (DocTree.uploadSetting.uploadFileNew) {
+
+                            var regularSizeFile = 52428800; //50 mb file
+                            for (i = 0; i< files.length; i++){
+                                if(files[i].size < regularSizeFile){
+                                    var useRegularFileUpload = true;
+                                }
+                            }
+
+                            if (useRegularFileUpload) {
+                                DocTree.Op.uploadFiles(fd, folderNode, names, fileType, fileLang).then(function(data) {
+                                     _.each(data.nodes, function(node) {
+                                         DocTree.markNodeOk(node)
+                                     });
+                                     dfd.resolve(data);
+                                 }, function(error) {
+                                         dfd.reject(error);
+                                     });
+                             }
+                                else {
+
+                                    var parentObjectNumber = getParentObjectNumber();
+
+                                    var fileDetails = {
+                                        files: files,
+                                        fileType: fileType,
+                                        folderId: folderNode.data.objectId,
+                                        originObjectType: folderNode.data.containerObjectType,
+                                        originObjectId: folderNode.data.containerObjectId,
+                                        parentObjectNumber: parentObjectNumber
+                                    };
+
+                                    DocTree.scope.$bus.publish('upload-chunk-file', fileDetails);
+
+                                }
 
                         } else {
                             var replaceNode = DocTree.uploadSetting.replaceFileNode;
