@@ -3,9 +3,9 @@
 angular.module('cases').controller(
         'Cases.InfoController',
         [ '$scope', '$stateParams', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
-                'MessageService', '$modal', 'LookupService',
+                'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService',
 
-                function($scope, $stateParams, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService) {
+                function($scope, $stateParams, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -17,6 +17,12 @@ angular.module('cases').controller(
                         onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
+                    });
+
+                    AdminFoiaConfigService.getFoiaConfig().then(function(response){
+                        $scope.isNotificationGroupEnabled = response.data.notificationGroupsEnabled;
+                    },function(err){
+                        MessageService.errorAction();
                     });
 
                      LookupService.getUserFullNames().then(function(userFullNames) {
