@@ -2,12 +2,13 @@
 
 angular.module('core').controller(
     'UploadManagerModalController',
-    ['$scope', '$modalInstance', '$http', '$translate', 'Upload', 'MessageService', function ($scope, $modalInstance, $http, $translate, Upload, MessageService) {
+    ['$scope', '$modalInstance', '$http', '$translate', 'Upload', 'MessageService', 'ObjectService', function ($scope, $modalInstance, $http, $translate, Upload, MessageService, ObjectService) {
         $scope.hashMap = {};
 
         $scope.onClickHideModal = function () {
             $scope.$bus.publish('upload-manager-hide');
         };
+
 
         $scope.onClickHideTheUploadedFile = function () {
             $scope.hideProgressbar = true;
@@ -37,7 +38,7 @@ angular.module('core').controller(
         };
 
         function uploadChunks(file, uuid) {
-            $scope.hashMap[uuid].status = "IN_PROGRESS";
+            $scope.hashMap[uuid].status = ObjectService.UploadFileStatus.IN_PROGRESS;
             Upload.upload({
                 url: 'api/latest/service/ecm/uploadChunks',
                 file: file,
@@ -52,7 +53,7 @@ angular.module('core').controller(
                     $scope.hashMap[_uuid].progress = $scope.hashMap[_uuid].progress + $scope.hashMap[_uuid].partProgress;
                     uploadPart(_uuid);
                 } else {
-                    $scope.hashMap[_uuid].status = "FINISHED";
+                    $scope.hashMap[_uuid].status = ObjectService.UploadFileStatus.FINISHED;
                     var data = {};
                     data.name = $scope.hashMap[_uuid].file.name;
                     data.mimeType = $scope.hashMap[_uuid].file.type;
@@ -75,7 +76,7 @@ angular.module('core').controller(
                 };
 
             }, function (error) {
-                $scope.hashMap[uuid].status = "FAILED";
+                $scope.hashMap[uuid].status = ObjectService.UploadFileStatus.FAILED;
                 MessageService.error($translate.instant('common.directive.docTree.progressBar.failed') + ": " + error);
             }, function (progress) {
                 $scope.hashMap[uuid].partProgress = progress.loaded;
@@ -95,12 +96,13 @@ angular.module('core').controller(
                 details.startByte = 0;
                 details.endByte = 0;
                 details.file = fileDetails.files[i];
-                details.status = "READY"; // "READY", "IN_PROGRESS", "FINISHED", "FAILED"
+                details.status = ObjectService.UploadFileStatus.READY;
                 details.objectId = fileDetails.originObjectId;
                 details.objectType = fileDetails.originObjectType;
                 details.folderId = fileDetails.folderId;
                 details.fileType = fileDetails.fileType;
                 details.currentProgress = 0;
+                details.parentObjectNumber = fileDetails.parentObjectNumber;
 
                 var uuid = Date.now();
                 $scope.hashMap[uuid] = details;
