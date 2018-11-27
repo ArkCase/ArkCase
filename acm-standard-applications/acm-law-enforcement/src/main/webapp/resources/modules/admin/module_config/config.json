@@ -1311,7 +1311,7 @@
             },
             {
                 "type": "p/document/fileUploader",
-                "label": "admin.documentManagement.fileUploader",
+                "label": "admin.documentManagement.fileUploader.title",
                 "components": [
                     "file-uploader"
                 ]
