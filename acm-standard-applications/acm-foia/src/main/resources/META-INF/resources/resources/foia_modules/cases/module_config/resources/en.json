@@ -46,7 +46,8 @@
         "daysOverdue.label": "Days overdue",
         "notificationGroup": "Executive Group",
         "modified": "Last Modified Date and Time",
-        "modifier": "Last Modified By"
+        "modifier": "Last Modified By",
+        "receivedDate.label": "Received Date and Time"
     },
     "cases.comp.actions": {
         "title": "Actions",
