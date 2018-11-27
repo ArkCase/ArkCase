@@ -227,9 +227,8 @@ angular.module('directives').directive('searchModal',
                                 var referenceType = _.find(item, {
                                     key: "CASE_FILE"
                                 });
-                                scope.refTypes = referenceType
                                 if (value.object_type_s == "CASE_FILE") {
-                                    value.object_type_s = scope.refTypes.description.toUpperCase();
+                                    value.object_type_s = referenceType.description.toUpperCase();
                                 }
                                 return value;
                             });
