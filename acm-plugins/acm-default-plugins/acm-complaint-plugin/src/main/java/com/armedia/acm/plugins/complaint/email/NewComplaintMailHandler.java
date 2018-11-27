@@ -30,6 +30,8 @@ package com.armedia.acm.plugins.complaint.email;
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmNameDao;
+import com.armedia.acm.files.ConfigurationFileChangedEvent;
+import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -45,7 +47,7 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.core.io.Resource;
+import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,15 +64,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class NewComplaintMailHandler extends AcmObjectMailHandler
+public class NewComplaintMailHandler extends AcmObjectMailHandler implements ApplicationListener<ConfigurationFileChangedEvent>
 {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -78,11 +79,27 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler
     private SaveComplaintTransaction saveComplaintTransaction;
     private LookupDao lookupDao;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
-    private Resource emailReceiverPropertiesResource;
+    private String emailReceiverPropertiesFile;
+    private Map<String, String> emailReceiverProperties = new HashMap<>();
+    private PropertyFileManager propertyFileManager;
 
     public NewComplaintMailHandler(AcmNameDao dao)
     {
         super(dao);
+    }
+
+    public void initBean()
+    {
+        try
+        {
+            emailReceiverProperties = getPropertyFileManager()
+                    .readFromFileAsMap((new File(getEmailReceiverPropertiesFile())));
+        }
+        catch (IOException e)
+        {
+            log.error("Could not read properties file [{}]", getEmailReceiverPropertiesFile());
+        }
+
     }
 
     private PersonAssociation createInitiator(Message message) throws MessagingException
@@ -114,50 +131,16 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler
         return personAssociation;
     }
 
-    private String setUserId()
-    {
-
-        String userId = null;
-        Properties emailReceiverProperties = new Properties();
-
-        Lock readLock = lock.readLock();
-        readLock.lock();
-
-        try (InputStream propertyInputStream = emailReceiverPropertiesResource.getInputStream())
-        {
-            emailReceiverProperties.load(propertyInputStream);
-        }
-        catch (IOException e)
-        {
-            log.error("Could not read properties from [{}] file.", emailReceiverPropertiesResource.getFilename());
-        }
-        finally
-        {
-            readLock.unlock();
-        }
-        Set<String> propertyNames = emailReceiverProperties.stringPropertyNames();
-        for (String propertyName : propertyNames)
-        {
-            String propertyValue = emailReceiverProperties.getProperty(propertyName);
-            if (propertyName.equals("email.userId"))
-            {
-                userId = propertyValue;
-            }
-        }
-        return userId;
-
-    }
-
     private String setComplaintType()
     {
         List<StandardLookupEntry> caseTypeLookup = (List<StandardLookupEntry>) getLookupDao().getLookupByName("complaintTypes")
                 .getEntries();
-        StandardLookupEntry caseFileType = caseTypeLookup
+        return caseTypeLookup
                 .stream()
                 .filter(standardLookupEntry -> standardLookupEntry.getKey().equals("Generated from Email"))
                 .findFirst()
+                .map(StandardLookupEntry::getKey)
                 .orElse(null);
-        return caseFileType.getKey();
     }
 
     @Transactional
@@ -169,7 +152,7 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler
         complaint.setOriginator(createInitiator(message));
         complaint.setComplaintType(setComplaintType());
 
-        AcmAuthentication acmAuthentication = new AcmAuthentication(null, null, null, true, "mail-service");
+        AcmAuthentication acmAuthentication = new AcmAuthentication(null, null, null, true, emailReceiverProperties.get("email.userId"));
 
         try
         {
@@ -196,7 +179,7 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler
             return;
         }
 
-        String userId = setUserId();
+        String userId = emailReceiverProperties.get("email.userId");
         getAuditPropertyEntityAdapter().setUserId(userId);
 
         // set the Alfresco user id, so we can attach the incoming message to the parent object.
@@ -276,13 +259,32 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler
         this.lookupDao = lookupDao;
     }
 
-    public Resource getEmailReceiverPropertiesResource()
+    public String getEmailReceiverPropertiesFile()
     {
-        return emailReceiverPropertiesResource;
+        return emailReceiverPropertiesFile;
     }
 
-    public void setEmailReceiverPropertiesResource(Resource emailReceiverPropertiesResource)
+    public void setEmailReceiverPropertiesFile(String emailReceiverPropertiesFile)
     {
-        this.emailReceiverPropertiesResource = emailReceiverPropertiesResource;
+        this.emailReceiverPropertiesFile = emailReceiverPropertiesFile;
+    }
+
+    public PropertyFileManager getPropertyFileManager()
+    {
+        return propertyFileManager;
+    }
+
+    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
+    {
+        this.propertyFileManager = propertyFileManager;
+    }
+
+    @Override
+    public void onApplicationEvent(ConfigurationFileChangedEvent event)
+    {
+        if (event.getConfigFile().getAbsolutePath().equals(getEmailReceiverPropertiesFile()))
+        {
+            initBean();
+        }
     }
 }

@@ -126,24 +126,30 @@ public class ComplaintDao extends AcmAbstractDao<Complaint> implements AcmNotifi
         return results;
     }
 
-    public Complaint findByComplaintNumber(String complaintNumber)
+    public Complaint quietFindByComplaintNumber(String complaintNumber)
     {
         Complaint complaint = null;
+        try
+        {
+            complaint = findByComplaintNumber(complaintNumber);
+        }
+        catch (Exception e)
+        {
+            LOG.warn("No complaint has complaint number {}", complaintNumber);
+        }
+
+        return complaint;
+    }
+
+    public Complaint findByComplaintNumber(String complaintNumber)
+    {
 
         String queryText = "SELECT c FROM Complaint c WHERE c.complaintNumber = :complaintNumber";
 
         TypedQuery<Complaint> findByNumberQuery = getEm().createQuery(queryText, Complaint.class);
         findByNumberQuery.setParameter("complaintNumber", complaintNumber);
 
-        try
-        {
-            complaint = findByNumberQuery.getSingleResult();
-        }
-        catch (Exception e)
-        {
-            LOG.warn("No complaint has complaint number {}", complaintNumber);
-        }
-        return complaint;
+        return findByNumberQuery.getSingleResult();
     }
 
     @Transactional
@@ -197,6 +203,6 @@ public class ComplaintDao extends AcmAbstractDao<Complaint> implements AcmNotifi
     @Override
     public AcmObject findByName(String name)
     {
-        return findByComplaintNumber(name);
+        return quietFindByComplaintNumber(name);
     }
 }
