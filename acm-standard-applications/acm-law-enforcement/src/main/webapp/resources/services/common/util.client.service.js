@@ -911,6 +911,33 @@ angular.module('services').factory('UtilService', [ '$q', '$log', '$filter', fun
                 return searchObj;
             }
         }
+
+
+        /**
+         * @ngdoc method
+         * @name convertBytesToSize
+         * @methodOf services.service:UtilService
+         *
+         * @description
+         * Converts value from bytes to another bigger size
+         *
+         * @param {Number} bytes which should be converted to a more human readable value
+         * @param {String} precision a bigger value to which the converted size should be calculated. Use 'KB', 'MB', 'GB', 'TB', 'PB' for it's corresponding values.
+         * @Returns {Object} value of the converted value in the chosen size for example 50 MB, 1 GB, etc.
+         */
+        ,
+        convertBytesToSize: function(bytes, precision){
+            if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
+                return '';
+            }
+            if (typeof precision === 'undefined') {
+                precision = 1;
+            }
+            var units = [ 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB' ];
+            var number = Math.floor(Math.log(bytes) / Math.log(1024));
+
+            return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) + ' ' + units[number];
+        }
     };
 
     return Util;
