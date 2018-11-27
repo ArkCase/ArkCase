@@ -1777,3 +1777,8 @@ a.primary {
     font-size: 14px;
     margin: 0px 15px;
 }
+
+/* wrap large text in ui grid cell template*/
+.ui-grid-cell-wrap {
+    white-space: normal !important;
+}

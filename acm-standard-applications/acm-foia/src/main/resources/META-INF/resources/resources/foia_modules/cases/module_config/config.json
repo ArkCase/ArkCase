@@ -1422,6 +1422,27 @@
                 }
 
             ]
+        },
+        {
+            "id": "exemptionCodesDescription",
+            "enabled": "true",
+            "title": "cases.comp.exemption.exemptionCodesDescription",
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "name": "key",
+                    "displayName": "cases.comp.exemption.table.columns.exemptionCode",
+                    "headerCellFilter": "translate",
+                    "width": 150
+                },
+                {
+                    "name": "value",
+                    "displayName": "cases.comp.exemption.description",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-wrap' translate>{{row.entity.value}}</div>"
+                }
+            ]
         }
     ]
 }
