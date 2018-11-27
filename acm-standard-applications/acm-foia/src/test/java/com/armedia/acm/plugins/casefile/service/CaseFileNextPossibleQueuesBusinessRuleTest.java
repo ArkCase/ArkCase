@@ -109,145 +109,125 @@ public class CaseFileNextPossibleQueuesBusinessRuleTest
     public void nextQueuesAfterIntakeQueue() throws Exception
     {
         FOIARequest fr = buildFOIARequest("Intake");
-        verifyNextQueues(fr, "Fulfill,Suspend,Hold,Delete", "Fulfill", null);
+        verifyNextQueues(fr, "Fulfill,Hold,Approve", "Fulfill", null);
     }
 
     @Test
     public void nextQueuesAfterFulfillQueue() throws Exception
     {
         FOIARequest fr = buildFOIARequest("Fulfill");
-        verifyNextQueues(fr, "Suspend,Approve,Hold", "Approve", null);
+        verifyNextQueues(fr, "Hold,Approve", "Approve", null);
     }
 
     @Test
     public void nextQueuesAfterHoldQueue() throws Exception
     {
         FOIARequest fr = buildFOIARequest("Hold");
-        verifyNextQueues(fr, "Fulfill", "Fulfill", null);
+        verifyNextQueues(fr, "Fulfill,Approve", "Fulfill", null);
     }
 
     @Test
-    public void nextQueuesAfterSuspendQueue() throws Exception
+    public void nextQueuesAfterAppealQueue() throws Exception
     {
-        FOIARequest fr = buildFOIARequest("Suspend");
-        verifyNextQueues(fr, "Fulfill", "Fulfill", null);
+        FOIARequest fr = buildFOIARequest("Appeal");
+        verifyNextQueues(fr, "Fulfill,Approve", "Fulfill", null);
     }
 
     @Test
-    public void nextQueuesAfterApproveQueue_litigationAndNotAppealAndNotFeeWaiver_generalCounsel() throws Exception
-    {
-        FOIARequest fr = buildFOIARequest("Approve");
-
-        fr.setLitigationFlag(Boolean.TRUE);
-        fr.setRequestSubType("New Request");
-        fr.setFeeWaiverFlag(Boolean.TRUE);
-
-        verifyNextQueues(fr, "General Counsel,Hold", "General Counsel", "Fulfill");
-    }
-
-    @Test
-    public void nextQueuesAfterApproveQueue_notLitigationAndAppealAndNotFeeWaiver_generalCounsel() throws Exception
-    {
-        FOIARequest fr = buildFOIARequest("Approve");
-
-        fr.setLitigationFlag(Boolean.FALSE);
-        fr.setRequestSubType("Appeal");
-        fr.setFeeWaiverFlag(Boolean.TRUE);
-
-        verifyNextQueues(fr, "General Counsel,Hold", "General Counsel", "Fulfill");
-    }
-
-    @Test
-    public void nextQueuesAfterApproveQueue_litigationAndAppealAndFeeWaiver_generalCounsel() throws Exception
+    public void nextQueuesAfterApproveQueue_litigationAndNotDeniedFlag_generalCounsel() throws Exception
     {
         FOIARequest fr = buildFOIARequest("Approve");
 
         fr.setLitigationFlag(Boolean.TRUE);
-        fr.setRequestSubType("Appeal");
-        fr.setFeeWaiverFlag(Boolean.FALSE);
+        fr.setDeniedFlag(Boolean.FALSE);
 
-        verifyNextQueues(fr, "General Counsel,Hold", "General Counsel", "Fulfill");
+        verifyNextQueues(fr, "General Counsel,Hold,Fulfill", "General Counsel", "Fulfill");
     }
 
     @Test
-    public void nextQueuesAfterApproveQueue_notLitigationAndNotAppealAndFeeWaiver_billing() throws Exception
+    public void nextQueuesAfterApproveQueue_deniedFlag_release() throws Exception
+    {
+        FOIARequest fr = buildFOIARequest("Approve");
+
+        fr.setDeniedFlag(Boolean.TRUE);
+
+        verifyNextQueues(fr, "Release,Fulfill", "Release", "Fulfill");
+    }
+
+    @Test
+    public void nextQueuesAfterApproveQueue_notLitigationAndFeeWaiverAndNotDeniedFlag_release() throws Exception
     {
         FOIARequest fr = buildFOIARequest("Approve");
 
         fr.setLitigationFlag(Boolean.FALSE);
-        fr.setRequestSubType("New Request");
-        fr.setFeeWaiverFlag(Boolean.FALSE);
+        fr.setFeeWaiverFlag(Boolean.TRUE);
+        fr.setDeniedFlag(Boolean.FALSE);
 
-        verifyNextQueues(fr, "Billing,Hold", "Billing", "Fulfill");
+        verifyNextQueues(fr, "Release,Hold,Fulfill", "Release", "Fulfill");
     }
 
     @Test
-    public void nextQueuesAfterApproveQueue_straightToRelease() throws Exception
+    public void nextQueuesAfterApproveQueue_notLitigationAndNotFeeWaiverAndNotDeniedFlag_billing() throws Exception
     {
         FOIARequest fr = buildFOIARequest("Approve");
 
         fr.setLitigationFlag(Boolean.FALSE);
-        fr.setRequestSubType("New Request");
-        fr.setFeeWaiverFlag(Boolean.TRUE);
-
-        verifyNextQueues(fr, "Release,Hold", "Release", "Fulfill");
+        fr.setFeeWaiverFlag(Boolean.FALSE);
+        fr.setDeniedFlag(Boolean.FALSE);
+        verifyNextQueues(fr, "Billing,Hold,Fulfill", "Billing", "Fulfill");
     }
 
     @Test
-    public void nextQueuesAfterGeneralCounselQueue_billing() throws Exception
+    public void nextQueuesAfterGeneralCounselQueue_deniedFlag_approve() throws Exception
+    {
+        FOIARequest fr = buildFOIARequest("General Counsel");
+
+        fr.setDeniedFlag(Boolean.TRUE);
+
+        verifyNextQueues(fr, "Approve,Fulfill", "Approve", "Fulfill");
+    }
+
+    @Test
+    public void nextQueuesAfterGeneralCounselQueue_notFeeWaiverAndNotDeniedFlag_billing() throws Exception
     {
         FOIARequest fr = buildFOIARequest("General Counsel");
 
         fr.setFeeWaiverFlag(Boolean.FALSE);
+        fr.setDeniedFlag(Boolean.FALSE);
 
-        verifyNextQueues(fr, "Billing,Hold", "Billing", "Fulfill");
+        verifyNextQueues(fr, "Billing,Hold,Fulfill,Approve", "Billing", "Fulfill");
     }
 
     @Test
-    public void nextQueuesAfterGeneralCounselQueue_release() throws Exception
+    public void nextQueuesAfterGeneralCounselQueue_FeeWaiverAndNotDeniedFlag_release() throws Exception
     {
         FOIARequest fr = buildFOIARequest("General Counsel");
 
         fr.setFeeWaiverFlag(Boolean.TRUE);
+        fr.setDeniedFlag(Boolean.FALSE);
 
-        verifyNextQueues(fr, "Release,Hold", "Release", "Fulfill");
+        verifyNextQueues(fr, "Release,Hold,Fulfill,Approve", "Release", "Fulfill");
     }
 
     @Test
-    public void nextQueuesAfterBillingQueue_paid_release() throws Exception
+    public void nextQueuesAfterBillingQueue_deniedFlag_approve() throws Exception
     {
         FOIARequest fr = buildFOIARequest("Billing");
 
-        fr.setPaidFlag(Boolean.TRUE);
+        fr.setDeniedFlag(Boolean.TRUE);
 
-        verifyNextQueues(fr, "Release", "Release", "Fulfill");
+        verifyNextQueues(fr, "Approve,Fulfill", "Approve", "Fulfill");
     }
 
     @Test
-    public void nextQueuesAfterBillingQueue_notPaid_hold() throws Exception
+    public void nextQueuesAfterBillingQueue_notDeniedFlag_release() throws Exception
     {
         FOIARequest fr = buildFOIARequest("Billing");
+        fr.setDeniedFlag(Boolean.FALSE);
 
-        fr.setPaidFlag(Boolean.FALSE);
-
-        verifyNextQueues(fr, "Hold", "Hold", "Fulfill");
+        verifyNextQueues(fr, "Release,Fulfill,Approve", "Release", "Fulfill");
     }
 
-    @Test
-    public void nextQueuesAfterBillingQueue_release_noQueues() throws Exception
-    {
-        FOIARequest fr = buildFOIARequest("Release");
-
-        verifyNextQueues(fr, null, null, null);
-    }
-
-    @Test
-    public void nextQueuesAfterBillingQueue_delete_release() throws Exception
-    {
-        FOIARequest fr = buildFOIARequest("Delete");
-
-        verifyNextQueues(fr, "Release", "Release", null);
-    }
 
     private void verifyNextQueues(FOIARequest foiaRequest, String expectedNextQueues, String defaultNextQueue, String defaultReturnQueue)
     {
