@@ -12,6 +12,7 @@ angular.module('core').controller(
 
         $scope.onClickHideTheUploadedFile = function () {
             $scope.hideProgressbar = true;
+            $scope.hashMap[uuid].delete();
         };
 
         function getPartFile(uuid) {
