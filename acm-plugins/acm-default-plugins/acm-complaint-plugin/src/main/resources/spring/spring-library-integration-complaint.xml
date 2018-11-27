@@ -35,11 +35,13 @@
     </bean>
 
     <bean id="newComplaintMailHandler" class="com.armedia.acm.plugins.complaint.email.NewComplaintMailHandler"
-          parent="complaintMailHandler">
+          parent="complaintMailHandler" init-method="initBean">
         <property name="objectTypeRegexPattern" value="${complaint.email.regex.object_type}"/>
         <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
         <property name="lookupDao" ref="lookupDao"/>
-        <property name="emailReceiverPropertiesResource" value="file:${user.home}/.arkcase/acm/acmEmailReceiver.properties"/>
+        <property name="emailReceiverPropertiesFile"
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/acmEmailReceiver.properties"/>
+        <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
 
     <int:service-activator input-channel="newComplaintFilteredMailChannel" ref="newComplaintMailHandler" method="handle"/>
