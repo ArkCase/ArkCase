@@ -1585,6 +1585,27 @@
                     "width": "20%"
                 }
             ]
+        },
+        {
+            "id": "exemptionCodesDescription",
+            "enabled": "true",
+            "title": "requests.comp.exemption.exemptionCodesDescription",
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "name": "key",
+                    "displayName": "requests.comp.exemption.table.columns.exemptionCode",
+                    "headerCellFilter": "translate",
+                    "width": 150
+                },
+                {
+                    "name": "value",
+                    "displayName": "requests.comp.exemption.description",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-wrap' translate>{{row.entity.value}}</div>"
+                }
+            ]
         }
     ]
 }
