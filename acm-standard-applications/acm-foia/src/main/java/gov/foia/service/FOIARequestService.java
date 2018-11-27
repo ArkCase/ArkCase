@@ -57,6 +57,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -117,8 +118,11 @@ public class FOIARequestService
                     }
                 }
 
-                if ((foiaRequest.getId() != null && foiaRequest.getStatus().equalsIgnoreCase("In Review") && foiaConfigurationService.readConfiguration().getReceivedDateEnabled() == false) ||
-                        (foiaRequest.getId() == null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled()))
+                if (foiaRequest.getId() != null && foiaRequest.getStatus().equalsIgnoreCase("In Review") && !foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+                {
+                    in.setDueDate(getQueuesTimeToCompleteService().addWorkingDaysToDate(Date.from(foiaRequest.getReceivedDate().atZone(ZoneId.systemDefault()).toInstant()), foiaRequest.getRequestType()));
+                }
+                else if(foiaRequest.getId() == null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
                 {
                     // calculate due date from time to complete configuration
                     // override if any due date is set from UI

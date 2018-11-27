@@ -67,7 +67,8 @@ public class AcknowledgementDocumentService
 
     public void emailAcknowledgement(Long requestId)
     {
-        if(!foiaConfigurationService.readConfiguration().getReceivedDateEnabled()) {
+        if(!foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+        {
             FOIARequest request = getRequestDao().find(requestId);
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
             if (emailAddress != null) {
@@ -105,19 +106,26 @@ public class AcknowledgementDocumentService
 
     public void generateAndUpload(String objectType, Long requestId) throws DocumentGeneratorException
     {
-        if(foiaConfigurationService.readConfiguration().getReceivedDateEnabled()){
+        if(foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+        {
             foiaQueueCorrespondenceService.handleRequestReceivedAcknowledgementLetter(requestId);
         }
-        else{
-            FOIARequest request = requestDao.find(requestId);
-            FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
-            String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
-            String targetFolderId = request.getContainer().getAttachmentFolder() == null
-                    ? request.getContainer().getFolder().getCmisFolderId()
-                    : request.getContainer().getAttachmentFolder().getCmisFolderId();
-            documentGenerator.generateAndUpload(documentDescriptor, request, targetFolderId, arkcaseFilename,
-                    documentGeneratorService.getReportSubstitutions(request));
+        else
+        {
+            generateAndUploadACK(requestId);
         }
+    }
+
+    private void generateAndUploadACK(Long requestId)throws DocumentGeneratorException
+    {
+        FOIARequest request = requestDao.find(requestId);
+        FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
+        String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
+        String targetFolderId = request.getContainer().getAttachmentFolder() == null
+                ? request.getContainer().getFolder().getCmisFolderId()
+                : request.getContainer().getAttachmentFolder().getCmisFolderId();
+        documentGenerator.generateAndUpload(documentDescriptor, request, targetFolderId, arkcaseFilename,
+                documentGeneratorService.getReportSubstitutions(request));
     }
 
     public NotificationSender getNotificationSender()
@@ -180,19 +188,23 @@ public class AcknowledgementDocumentService
         this.documentGenerator = documentGenerator;
     }
 
-    public FoiaConfigurationService getFoiaConfigurationService() {
+    public FoiaConfigurationService getFoiaConfigurationService()
+    {
         return foiaConfigurationService;
     }
 
-    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService) {
+    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService)
+    {
         this.foiaConfigurationService = foiaConfigurationService;
     }
 
-    public FOIAQueueCorrespondenceService getFoiaQueueCorrespondenceService() {
+    public FOIAQueueCorrespondenceService getFoiaQueueCorrespondenceService()
+    {
         return foiaQueueCorrespondenceService;
     }
 
-    public void setFoiaQueueCorrespondenceService(FOIAQueueCorrespondenceService foiaQueueCorrespondenceService) {
+    public void setFoiaQueueCorrespondenceService(FOIAQueueCorrespondenceService foiaQueueCorrespondenceService)
+    {
         this.foiaQueueCorrespondenceService = foiaQueueCorrespondenceService;
     }
 }
