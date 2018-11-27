@@ -99,9 +99,11 @@ angular.module('cases').controller(
                             var parent = $scope.objectInfo;
                             var target = chosenReference;
                             if (target) {
+                                //foia changes start here
                                 if (target.object_type_s == "REQUEST") {
                                     target.object_type_s = ObjectService.ObjectTypes.CASE_FILE;
                                 }
+                                //end of foia changes
                                 var association = ObjectAssociationService.createAssociationInfo(parent.id, ObjectService.ObjectTypes.CASE_FILE, parent.title, parent.caseNumber, target.object_id_s, target.object_type_s, target.title_parseable, target.name, 'REFERENCE', 'REFERENCE');
                                 ObjectAssociationService.saveObjectAssociation(association).then(function(payload) {
                                     //success
@@ -110,6 +112,7 @@ angular.module('cases').controller(
                                     }, 2000);
 
                                     //append new entity as last item in the grid
+                                    //foia changes start here
                                     ObjectLookupService.getObjectTypes().then(function(value) {
                                         var referenceType = _.find(value, {
                                             key: "CASE_FILE"
@@ -117,6 +120,7 @@ angular.module('cases').controller(
                                         if (target.object_type_s == ObjectService.ObjectTypes.CASE_FILE) {
                                             target.object_type_s = referenceType.description.toUpperCase();
                                         }
+                                        //end of foia changes
                                         var rowEntity = {
                                             object_id_s: payload.associationId,
                                             target_object: {
@@ -145,6 +149,7 @@ angular.module('cases').controller(
                     };
                     function refreshGridData(objectId) {
                         ObjectAssociationService.getObjectAssociations(objectId, ObjectService.ObjectTypes.CASE_FILE, null).then(function(response) {
+                            //foia changes start here
                             ObjectLookupService.getObjectTypes().then(function(value) {
                                 var referenceType = _.find(value, {
                                     key: "CASE_FILE"
@@ -158,6 +163,7 @@ angular.module('cases').controller(
                                 });
                                 $scope.gridOptions.data = response.response.docs;
                             });
+                            //end of foia changes
                         });
                     }
 
