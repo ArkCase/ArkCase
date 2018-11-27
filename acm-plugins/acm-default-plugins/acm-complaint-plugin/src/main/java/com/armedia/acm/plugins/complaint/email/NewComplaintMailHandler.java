@@ -32,6 +32,7 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -68,8 +69,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class NewComplaintMailHandler extends AcmObjectMailHandler implements ApplicationListener<ConfigurationFileChangedEvent>
 {
@@ -78,10 +77,10 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler implements App
     private String objectTypeRegexPattern;
     private SaveComplaintTransaction saveComplaintTransaction;
     private LookupDao lookupDao;
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
     private String emailReceiverPropertiesFile;
     private Map<String, String> emailReceiverProperties = new HashMap<>();
     private PropertyFileManager propertyFileManager;
+    private ComplaintDao complaintDao;
 
     public NewComplaintMailHandler(AcmNameDao dao)
     {
@@ -187,7 +186,7 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler implements App
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
         String entityId = extractIdFromSubject(message);
-        AcmObject entity = getEntityDao().findByName(entityId);
+        AcmObject entity = complaintDao.quietFindByComplaintNumber(entityId);
         Complaint complaint = null;
 
         if (entityId == null || entity == null)
@@ -277,6 +276,16 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler implements App
     public void setPropertyFileManager(PropertyFileManager propertyFileManager)
     {
         this.propertyFileManager = propertyFileManager;
+    }
+
+    public ComplaintDao getComplaintDao()
+    {
+        return complaintDao;
+    }
+
+    public void setComplaintDao(ComplaintDao complaintDao)
+    {
+        this.complaintDao = complaintDao;
     }
 
     @Override

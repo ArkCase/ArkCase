@@ -42,6 +42,7 @@
         <property name="emailReceiverPropertiesFile"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/acmEmailReceiver.properties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
 
     <int:service-activator input-channel="newComplaintFilteredMailChannel" ref="newComplaintMailHandler" method="handle"/>

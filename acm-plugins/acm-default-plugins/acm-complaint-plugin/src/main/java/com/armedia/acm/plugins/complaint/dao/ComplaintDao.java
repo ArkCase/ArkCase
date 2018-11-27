@@ -203,6 +203,6 @@ public class ComplaintDao extends AcmAbstractDao<Complaint> implements AcmNotifi
     @Override
     public AcmObject findByName(String name)
     {
-        return quietFindByComplaintNumber(name);
+        return findByComplaintNumber(name);
     }
 }
