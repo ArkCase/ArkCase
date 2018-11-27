@@ -6,22 +6,22 @@ package com.armedia.acm.services.timesheet.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -30,6 +30,7 @@ package com.armedia.acm.services.timesheet.service;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.timesheet.model.TimesheetConfig;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -54,9 +56,6 @@ public class TimesheetConfigurationService
 
     private PropertyFileManager propertyFileManager;
     private ObjectConverter objectConverter;
-
-    private FileWriter fileWriter = null;
-    private FileReader fileReader = null;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public TimesheetConfig getConfig()
@@ -65,13 +64,12 @@ public class TimesheetConfigurationService
         String timesheetConfigJson = "";
         TimesheetConfig timesheetConfig = null;
 
-        try
+        try (Reader fileReader = new FileReader(new File(getConfigurationFile()));
+                BufferedReader bufferedReader = new BufferedReader(fileReader))
         {
             log.info("Trying to read from config file: " + getConfigurationFile());
 
             lock.readLock().lock();
-            fileReader = new FileReader(new File(getConfigurationFile()));
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             while ((currentLine = bufferedReader.readLine()) != null)
             {
@@ -97,13 +95,11 @@ public class TimesheetConfigurationService
     {
         String timesheetConfigJson = Objects.nonNull(config) ? getObjectConverter().getJsonMarshaller().marshal(config) : "";
 
-        try
+        try (FileWriter fileWriter = new FileWriter(new File(getConfigurationFile()), false))
         {
             log.info("Trying to write to config file [{}]", getConfigurationFile());
             lock.writeLock().lock();
-            fileWriter = new FileWriter(new File(getConfigurationFile()), false);
             fileWriter.write(timesheetConfigJson);
-            fileWriter.close();
         }
         catch (IOException e)
         {
@@ -115,7 +111,7 @@ public class TimesheetConfigurationService
         }
     }
 
-    public void  saveProperties(Map<String, String> properties)
+    public void saveProperties(Map<String, String> properties)
     {
         getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
     }
@@ -124,8 +120,8 @@ public class TimesheetConfigurationService
     {
         Map<String, String> propertiesMap = new HashMap<>();
 
-        Properties properties =  getPropertyFileManager().readFromFile(new File(getPropertiesFile()));
-        properties.forEach((o, o2) -> propertiesMap.put((String)o, (String)o2));
+        Properties properties = getPropertyFileManager().readFromFile(new File(getPropertiesFile()));
+        properties.forEach((o, o2) -> propertiesMap.put((String) o, (String) o2));
 
         return propertiesMap;
     }
@@ -140,7 +136,8 @@ public class TimesheetConfigurationService
         this.configurationFile = configurationFile;
     }
 
-    public String getPropertiesFile() {
+    public String getPropertiesFile()
+    {
         return propertiesFile;
     }
 

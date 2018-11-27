@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
-
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.IOUtils;
@@ -127,9 +127,11 @@ public class PortalCreateRequestService
         FileItem fileItem = new DiskFileItem("", requestFile.getContentType(), false, file.getName(), (int) file.length(),
                 file.getParentFile());
 
-        InputStream input = new FileInputStream(file);
-        OutputStream os = fileItem.getOutputStream();
-        IOUtils.copy(input, os);
+        try (InputStream input = new FileInputStream(file))
+        {
+            OutputStream os = fileItem.getOutputStream();
+            IOUtils.copy(input, os);
+        }
 
         return new CommonsMultipartFile(fileItem);
 

@@ -131,18 +131,12 @@ public class ObjectConverter
         this.xmlUnmarshaller = xmlUnmarshaller;
     }
 
-    public JSONMarshaller getIndentedJsonMarshaller()
+    public synchronized JSONMarshaller getIndentedJsonMarshaller()
     {
         if (indentedJsonMarshaller == null)
         {
-            synchronized (ObjectConverter.class)
-            {
-                if (indentedJsonMarshaller == null)
-                {
-                    indentedJsonMarshaller = new JSONMarshaller();
-                    indentedJsonMarshaller.setMapper(getJsonMarshaller().getMapper().copy().enable(SerializationFeature.INDENT_OUTPUT));
-                }
-            }
+            indentedJsonMarshaller = new JSONMarshaller();
+            indentedJsonMarshaller.setMapper(getJsonMarshaller().getMapper().copy().enable(SerializationFeature.INDENT_OUTPUT));
         }
         return indentedJsonMarshaller;
     }

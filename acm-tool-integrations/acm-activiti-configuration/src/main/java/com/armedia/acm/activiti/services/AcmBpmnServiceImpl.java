@@ -172,9 +172,8 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
             log.info("not deploying, since process already exists [{}]", bpmnId);
             return acmProcessDefinitionExisting;
         }
-        try
+        try (InputStream fis = new FileInputStream(processDefinitionFile))
         {
-            FileInputStream fis = new FileInputStream(processDefinitionFile);
             DeploymentBuilder deploymentBuilder = activitiRepositoryService.createDeployment();
 
             Deployment deployment = deploymentBuilder.enableDuplicateFiltering().addInputStream(name, fis).name(name)
