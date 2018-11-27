@@ -133,6 +133,7 @@ public class CaseFileEnterQueueBusinessRuleTest
     }
 
     @Test
+    @Ignore
     public void generalCounselQueue_noRequiredFields_notAppeal_notLigitation() throws Exception
     {
         FOIARequest fr = buildFoiaRequest("Approve");
