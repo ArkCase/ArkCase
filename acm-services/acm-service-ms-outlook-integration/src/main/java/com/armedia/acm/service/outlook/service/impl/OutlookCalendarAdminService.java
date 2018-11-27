@@ -186,6 +186,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
      * service.outlook.model.AcmOutlookFolderCreator)
      */
     @Override
+    @Transactional
     public void updateFolderCreatorAndRecreateFoldersIfNecessary(AcmOutlookFolderCreator folderCreator, String userId)
     {
         recreateFoldersExecutor.execute(() -> {

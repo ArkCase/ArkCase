@@ -133,10 +133,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     {
         DynamicEntity entity = null;
 
-        try
+        try (InputStream oxm = new FileInputStream(getOXMFilePath()))
         {
-            InputStream oxm = new FileInputStream(getOXMFilePath());
-
             Map<String, Object> properties = new HashMap<>();
             properties.put(JAXBContextProperties.OXM_METADATA_SOURCE, oxm);
             DynamicJAXBContext context = DynamicJAXBContextFactory.createContextFromOXM(getClass().getClassLoader(), properties);

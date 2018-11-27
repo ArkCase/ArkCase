@@ -181,6 +181,9 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Transient
     private String originalRequestNumber;
 
+    @Transient
+    private FoiaConfiguration foiaConfiguration;
+
     /**
      * @return the receivedDate
      */
@@ -637,6 +640,14 @@ public class FOIARequest extends CaseFile implements FOIAObject
     public void setNotificationGroup(String notificationGroup)
     {
         this.notificationGroup = notificationGroup;
+    }
+
+    public FoiaConfiguration getFoiaConfiguration() {
+        return foiaConfiguration;
+    }
+
+    public void setFoiaConfiguration(FoiaConfiguration foiaConfiguration) {
+        this.foiaConfiguration = foiaConfiguration;
     }
 
     @Override

@@ -92,6 +92,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -583,9 +585,10 @@ public class ArkCaseTranscribeServiceImpl implements ArkCaseTranscribeService
                     {
                         file = File.createTempFile(TranscribeConstants.TEMP_FILE_PREFIX, TranscribeConstants.TEMP_FILE_SUFFIX);
 
-                        try (FileInputStream in = new FileInputStream(file); FileOutputStream out = new FileOutputStream(file))
+                        try (InputStream in = new FileInputStream(file);
+                                OutputStream out = new FileOutputStream(file);
+                                XWPFDocument document = new XWPFDocument())
                         {
-                            XWPFDocument document = new XWPFDocument();
                             XWPFParagraph paragraph = document.createParagraph();
                             XWPFRun run = paragraph.createRun();
                             run.setText(TranscribeUtils.getText(transcribe.getTranscribeItems()));
@@ -666,7 +669,7 @@ public class ArkCaseTranscribeServiceImpl implements ArkCaseTranscribeService
             transcribeBusinessProcessModel.setType(transcribe.getType());
 
             LOG.debug("Executing Drools Business rules for [{}] Transcribe with ID=[{}], MEDIA_FILE_ID=[{}] and MEDIA_FILE_VERSION_ID=[{}]",
-                    transcribe.getType(), transcribe.getMediaEcmFileVersion().getFile().getId(),
+                    transcribe.getType(), transcribe.getId(), transcribe.getMediaEcmFileVersion().getFile().getId(),
                     transcribe.getMediaEcmFileVersion().getId());
 
             transcribeBusinessProcessModel = getTranscribeBusinessProcessRulesExecutor().applyRules(transcribeBusinessProcessModel);

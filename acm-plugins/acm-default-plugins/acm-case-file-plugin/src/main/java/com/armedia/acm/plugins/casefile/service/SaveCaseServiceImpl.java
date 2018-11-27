@@ -38,6 +38,7 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -67,11 +68,12 @@ public class SaveCaseServiceImpl implements SaveCaseService
         {
             saved = saveCase(in, null, auth, ipAddress);
         }
-        catch (AcmUserActionFailedException | AcmCreateObjectFailedException |AcmUpdateObjectFailedException | AcmObjectNotFoundException | IOException e)
+        catch (AcmUserActionFailedException | AcmCreateObjectFailedException | AcmUpdateObjectFailedException | AcmObjectNotFoundException
+                | IOException e)
         {
             log.error("Error in saving Case File");
         }
-        return  saved;
+        return saved;
     }
 
     @Override
@@ -86,23 +88,32 @@ public class SaveCaseServiceImpl implements SaveCaseService
         pipelineContext.setNewCase(caseFile.getId() == null);
         pipelineContext.setAuthentication(authentication);
         pipelineContext.setIpAddress(ipAddress);
-        if(Objects.nonNull(files))
+        if (Objects.nonNull(files))
         {
             pipelineContext.addProperty("attachmentFiles", files);
         }
 
         return pipelineManager.executeOperation(caseFile, pipelineContext, () -> {
 
-            CaseFile saved = caseFileDao.save(caseFile);
+            CaseFile saved = null;
+            try
+            {
+                saved = caseFileDao.save(caseFile);
+                log.info("Case saved '{}'", saved);
+            }
+            catch (Exception e)
+            {
+                log.error("Case not saved", e);
+            }
 
-            log.info("Case saved '{}'", saved);
             return saved;
 
         });
     }
 
     @Override
-    public CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress, SaveCaseServiceCaller caller) throws PipelineProcessException
+    public CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress, SaveCaseServiceCaller caller)
+            throws PipelineProcessException
     {
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
