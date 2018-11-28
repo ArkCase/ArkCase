@@ -109,6 +109,7 @@ public class FrevvoServiceImpl implements FrevvoService
         {
             LOG.debug("Logout from Frevvo server.");
             service.get().logout();
+            service.remove();
         }
         catch (Exception e)
         {
