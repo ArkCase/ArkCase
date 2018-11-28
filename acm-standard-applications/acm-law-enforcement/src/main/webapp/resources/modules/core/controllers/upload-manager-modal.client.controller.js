@@ -12,6 +12,7 @@ angular.module('core').controller(
 
         $scope.onClickHideTheUploadedFile = function () {
             $scope.hideProgressbar = true;
+            //TODO: FIXME to remove the element from the hashMap
             $scope.hashMap[uuid].delete();
         };
 
