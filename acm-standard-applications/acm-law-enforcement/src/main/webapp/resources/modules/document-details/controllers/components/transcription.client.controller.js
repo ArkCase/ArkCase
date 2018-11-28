@@ -117,7 +117,7 @@ angular.module('document-details').controller('Document.TranscriptionController'
                 });
             };
 
-            var createManualTranscription = function() {
+            var createManualTranscription = function(activeVersionId) {
                 $scope.isSaveLoading = true;
                 TranscriptionAppService.createTranscription($scope.transcribeDataModel).then(function(data) {
                     $scope.isSaveLoading = false;
@@ -156,7 +156,7 @@ angular.module('document-details').controller('Document.TranscriptionController'
                                     callback: function(result) {
                                         if (result) {
                                             $scope.transcribeDataModel.status = 'PROCESSING';
-                                            createManualTranscription();
+                                            createManualTranscription(activeVersion.id);
                                         }
                                     }
                                 },
@@ -166,7 +166,7 @@ angular.module('document-details').controller('Document.TranscriptionController'
                                     callback: function(result) {
                                         if (result) {
                                             $scope.transcribeDataModel.status = 'COMPLETED';
-                                            createManualTranscription();
+                                            createManualTranscription(activeVersion.id);
                                         }
                                     }
                                 }

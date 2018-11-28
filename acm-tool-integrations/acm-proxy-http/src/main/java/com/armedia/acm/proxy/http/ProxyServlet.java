@@ -219,9 +219,7 @@ public class ProxyServlet extends HttpServlet
     {
         asciiQueryChars = new BitSet(128);
 
-        "_-!.~'()*".chars().forEach(asciiQueryChars::set);
-        ",;:$&+=".chars().forEach(asciiQueryChars::set);
-        "?/[]@".chars().forEach(asciiQueryChars::set);
+        "_-!.~'()*,;:$&+=?/[]@".chars().forEach(asciiQueryChars::set);
 
         IntStream.rangeClosed('a', 'z').forEach(asciiQueryChars::set);
         IntStream.rangeClosed('A', 'Z').forEach(asciiQueryChars::set);
