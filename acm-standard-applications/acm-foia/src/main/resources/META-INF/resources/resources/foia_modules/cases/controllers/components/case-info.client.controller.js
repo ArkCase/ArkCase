@@ -18,6 +18,12 @@ angular.module('cases').controller(
                         }
                     });
 
+                    AdminFoiaConfigService.getFoiaConfig().then(function(response){
+                        $scope.isNotificationGroupEnabled = response.data.notificationGroupsEnabled;
+                    },function(err){
+                        MessageService.errorAction();
+                    });
+
                     LookupService.getUserFullNames().then(function (userFullNames) {
                         $scope.userFullNames = userFullNames;
                         return userFullNames;
