@@ -75,7 +75,7 @@
                     "minWidth": 67
                 },
                 {
-                    "name": "title_parseable",
+                    "name": "title_parseable_lcs",
                     "displayName": "queues.table.header.title",
                     "headerCellFilter": "translate",
                     "headerTooltip": "queues.table.headerTooltip.title",
@@ -162,6 +162,7 @@
                     "displayName": "queues.table.header.days",
                     "headerCellFilter": "translate",
                     "headerTooltip": "queues.table.headerTooltip.daysInQueue",
+                    "enableFiltering": false,
                     "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;' class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
                     "minWidth": 120
                 },
@@ -170,6 +171,7 @@
                     "displayName": "queues.table.header.daysToComplete",
                     "headerCellFilter": "translate",
                     "headerTooltip": "queues.table.headerTooltip.daysToComplete",
+                    "enableFiltering": false,
                     "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;' class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
                     "minWidth": 135
                 },
