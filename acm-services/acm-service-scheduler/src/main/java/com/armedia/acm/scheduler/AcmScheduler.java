@@ -399,7 +399,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
                 catch (InterruptedException e)
                 {
                     log.error("Configuration update thread was interrupted prematurely with exception {}.", e);
-                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
                 }
                 finally
                 {

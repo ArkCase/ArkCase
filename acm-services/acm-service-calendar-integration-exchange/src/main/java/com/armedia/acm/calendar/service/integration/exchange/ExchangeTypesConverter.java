@@ -229,7 +229,7 @@ public class ExchangeTypesConverter
                 }
                 break;
             default:
-                throw new CalendarRecurrenceTypeException("Calendar recurrence type unknown: " + rc.getRecurrenceType());
+                throw new CalendarRecurrenceTypeException(String.format("Calendar recurrence type unknown: %s", rc.getRecurrenceType()));
             }
             Integer endAfterOccurrances = rc.getEndAfterOccurrances();
             if (recurrence != null)

@@ -50,6 +50,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 6/3/14.
@@ -193,7 +194,7 @@ public class AcmLoginSuccessOperations
 
         // we have to put a map in the session because of how JSTL works. It's easier to check for
         // a map entry than to see if an element exists in a list.
-        HashMap<String, Boolean> privilegeMap = new HashMap<>();
+        Map<String, Boolean> privilegeMap = new HashMap<>();
         for (String privilege : allPrivileges)
         {
             privilegeMap.put(privilege, Boolean.TRUE);
