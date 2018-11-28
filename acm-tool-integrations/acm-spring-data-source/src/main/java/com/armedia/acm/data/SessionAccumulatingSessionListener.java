@@ -55,6 +55,7 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
 
         event.getSession().setName(name);
         descriptorListener.getChangesBySession().put(name, new AcmObjectChangelist());
+        descriptorListener.getRollbackChangesBySession().put(name, new AcmObjectRollbacklist());
     }
 
     @Override
@@ -64,6 +65,7 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
         log.trace("releasing session: {}", event.getSession().getName());
 
         descriptorListener.getChangesBySession().remove(event.getSession().getName());
+        descriptorListener.getRollbackChangesBySession().remove(event.getSession().getName());
     }
 
     @Override
@@ -94,9 +96,23 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
     public void postRollbackTransaction(SessionEvent event)
     {
         super.postRollbackTransaction(event);
-        log.trace("Rollback: {}", event.getSession().getName());
-        log.debug("Not raising database event: {}",
-                getDescriptorListener().getChangesBySession().get(event.getSession().getName()));
+
+        String sessionName = event.getSession().getName();
+
+        log.trace("Rollback: {}", sessionName);
+        log.debug("Raising rollback database event: {}",
+                getDescriptorListener().getRollbackChangesBySession().get(sessionName));
+
+        AcmObjectRollbacklist rollbackChangelist = getDescriptorListener().getRollbackChangesBySession().get(sessionName);
+
+        if (rollbackChangelist != null)
+        {
+            boolean raiseEvent = !rollbackChangelist.getPreInsertObjects().isEmpty();
+            if (raiseEvent)
+            {
+                getApplicationEventPublisher().publishEvent(new AcmDatabaseRollbackChangesEvent(rollbackChangelist));
+            }
+        }
     }
 
     public ObjectChangesBySessionAccumulator getDescriptorListener()

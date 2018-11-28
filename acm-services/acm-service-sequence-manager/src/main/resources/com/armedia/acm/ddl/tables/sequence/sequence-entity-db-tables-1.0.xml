@@ -1,0 +1,78 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-create-sequence-table" author="sasko.tanaskoski">
+        <createTable tableName="acm_sequence">
+<!--             <column name="cm_sequence_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_sequence"/>
+            </column> -->
+            <column name="cm_sequence_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_sequence_part_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_sequence_part_value" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_sequence_part_lock" type="INTEGER" defaultValue="1">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+<!--         <addUniqueConstraint tableName="acm_sequence" columnNames="cm_sequence_name, cm_sequence_part_name" constraintName="uk_sequence_and_part_name"/> -->
+        <addPrimaryKey tableName="acm_sequence" columnNames="cm_sequence_name, cm_sequence_part_name"/>
+    </changeSet>
+    <changeSet id="02-create-sequence-registry-table" author="sasko.tanaskoski">
+        <createTable tableName="acm_sequence_registry">
+<!--             <column name="cm_sequence_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_sequence"/>
+            </column> -->
+            <column name="cm_sequence_value" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_sequence_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_sequence_part_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_sequence_part_value" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_sequence_part_value_used_flag" type="VARCHAR(10)" defaultValue="true"/>
+        </createTable>
+        <addPrimaryKey tableName="acm_sequence_registry" columnNames="cm_sequence_value, cm_sequence_name, cm_sequence_part_name"/>
+    </changeSet>
+<!--     <changeSet id="02-create-sequence-id-table" author="sasko.tanaskoski">
+        <createTable tableName="acm_sequence_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_sequence_id">
+            <column name="cm_seq_num" value="1"></column>
+            <column name="cm_seq_name" value="acm_sequence"></column>
+        </insert>
+    </changeSet> -->
+    <changeSet id="03-create-sequence-reset-table" author="sasko.tanaskoski">
+        <createTable tableName="acm_sequence_reset">
+<!--             <column name="cm_sequence_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_sequence"/>
+            </column> -->
+            <column name="cm_sequence_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_sequence_part_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_reset_date" type="${timestampType}"/>
+            <column name="cm_reset_executed_date" type="${timestampType}"/>
+            <column name="cm_reset_executed_flag" type="VARCHAR(10)" defaultValue="false"/>
+            <column name="cm_reset_repeatable_flag" type="VARCHAR(10)" defaultValue="false"/>
+            <column name="cm_reset_repeatable_period" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="acm_sequence_reset" columnNames="cm_sequence_name, cm_sequence_part_name"/>
+    </changeSet>
+</databaseChangeLog>
