@@ -38,6 +38,7 @@
                                             <label for="email" translate>
                                                 admin.security.calendarConfiguration.calendarConfigForm.email.label
                                             </label>
+											<span ng-show="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled" class="required-asterisk">*</span>
                                             <input type="email" required id="email{{configurableObjectType.id}}"
                                                     placeholder="{{'admin.security.calendarConfiguration.calendarConfigForm.email.placeholder' | translate}}"
                                                     ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].systemEmail"
@@ -64,6 +65,7 @@
                                             <label for="password" translate>
                                                 admin.security.calendarConfiguration.calendarConfigForm.password.label
                                             </label>
+                                            <span ng-show="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled" class="required-asterisk">*</span>
                                             <div ng-show="calendarConfigDataModel.configurationsByType[configurableObjectType.id].isPasswordSet === true">
                                                 <button class="btn btn-sm btn-primary"
                                                         ng-click="calendarConfigDataModel.configurationsByType[configurableObjectType.id].isPasswordSet = false; passwordRequirementByObjectType[configurableObjectType.id]=true">

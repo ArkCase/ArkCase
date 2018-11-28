@@ -4,7 +4,6 @@ angular.module('cases').controller(
         'Cases.InfoController',
         [ '$scope', '$stateParams', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
                 'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService',
-
                 function($scope, $stateParams, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService) {
 
                     new HelperObjectBrowserService.Component({
@@ -14,7 +13,7 @@ angular.module('cases').controller(
                         componentId: "info",
                         retrieveObjectInfo: CaseInfoService.getCaseInfo,
                         validateObjectInfo: CaseInfoService.validateCaseInfo,
-                        onObjectInfoRetrieved: function(objectInfo) {
+                        onObjectInfoRetrieved: function (objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
@@ -25,18 +24,18 @@ angular.module('cases').controller(
                         MessageService.errorAction();
                     });
 
-                     LookupService.getUserFullNames().then(function(userFullNames) {
-                         $scope.userFullNames = userFullNames;
+                    LookupService.getUserFullNames().then(function (userFullNames) {
+                        $scope.userFullNames = userFullNames;
                         return userFullNames;
                     });
-                    ObjectLookupService.getLookupByLookupName("priorities").then(function(priorities) {
+                    ObjectLookupService.getLookupByLookupName("priorities").then(function (priorities) {
                         $scope.priorities = priorities;
                         return priorities;
                     });
 
-                    ObjectLookupService.getGroups().then(function(groups) {
+                    ObjectLookupService.getGroups().then(function (groups) {
                         var options = [];
-                        _.each(groups, function(group) {
+                        _.each(groups, function (group) {
                             options.push({
                                 value: group.name,
                                 text: group.name
@@ -46,9 +45,9 @@ angular.module('cases').controller(
                         return groups;
                     });
 
-                    CaseLookupService.getCaseTypes().then(function(caseTypes) {
+                    CaseLookupService.getCaseTypes().then(function (caseTypes) {
                         var options = [];
-                        _.forEach(caseTypes, function(item) {
+                        _.forEach(caseTypes, function (item) {
                             options.push({
                                 value: item,
                                 text: item
@@ -57,22 +56,24 @@ angular.module('cases').controller(
                         $scope.caseTypes = options;
                         return caseTypes;
                     });
-                    ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
+                    ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
                         var config = _.find(moduleConfig.components, {
                             id: "requests"
                         });
 
                         $scope.categories = config.categories;
                     });
-                    ConfigService.getModuleConfig("common").then(function(moduleConfig) {
+                    ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                         $scope.userOrGroupSearchConfig = _.find(moduleConfig.components, {
                             id: "userOrGroupSearch"
                         });
                     });
+                    $scope.foiaConfig = {};
 
 
-                    var onObjectInfoRetrieved = function(data) {
-                        AdminHolidayService.getHolidays().then(function(response) {
+
+                    var onObjectInfoRetrieved = function (data) {
+                        AdminHolidayService.getHolidays().then(function (response) {
                             $scope.holidays = response.data.holidays;
                             $scope.includeWeekends = response.data.includeWeekends;
 
@@ -80,7 +81,8 @@ angular.module('cases').controller(
                             $scope.owningGroup = ObjectModelService.getGroup(data);
                             $scope.assignee = ObjectModelService.getAssignee(data);
                             $scope.objectInfo.dueDate = UtilDateService.dateToIso(UtilDateService.isoToDate($scope.objectInfo.dueDate));
-                            if(!$scope.includeWeekends) {
+                            $scope.objectInfo.receivedDate = UtilDateService.dateTimeToIso(UtilDateService.isoToDate($scope.objectInfo.receivedDate));
+                            if (!$scope.includeWeekends) {
                                 $scope.daysLeft = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
                                 $scope.calculateOverdueObj = DueDateService.calculateOverdueDays(new Date($scope.objectInfo.dueDate), $scope.daysLeft, $scope.holidays);
                             }
@@ -88,9 +90,9 @@ angular.module('cases').controller(
                                 $scope.daysLeft = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
                                 $scope.calculateOverdueObj = DueDateService.calculateOverdueDaysWithWeekends(new Date($scope.objectInfo.dueDate), $scope.daysLeft, $scope.holidays);
                             }
-                            CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function(approvers) {
+                            CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function (approvers) {
                                 var options = [];
-                                _.each(approvers, function(approver) {
+                                _.each(approvers, function (approver) {
                                     options.push({
                                         id: approver.userId,
                                         name: approver.fullName
@@ -99,22 +101,34 @@ angular.module('cases').controller(
                                 $scope.assignees = options;
                                 return approvers;
                             });
+                            $scope.today = new Date();
+                            $scope.receivedDateMinYear = $scope.today.getFullYear();
+                            $scope.receivedDateMaxYear = moment($scope.today).add(1, 'years').toDate().getFullYear();
                         });
 
                         $scope.notificationGroup = null;
-                        ObjectLookupService.getLookupByLookupName("notificationGroups").then(function(notificationGroups) {
+                        ObjectLookupService.getLookupByLookupName("notificationGroups").then(function (notificationGroups) {
                             $scope.notificationGroups = notificationGroups;
-                            if($scope.objectInfo.hasOwnProperty('notificationGroup')) {
+                            if ($scope.objectInfo.hasOwnProperty('notificationGroup')) {
                                 var notification = _.find($scope.notificationGroups, {
                                     key: $scope.objectInfo.notificationGroup
                                 });
-                                if(typeof notification !== "undefined") {
+                                if (typeof notification !== "undefined") {
                                     $scope.notificationGroup = notification.value;
                                 }
                             }
                         });
-                    };
+                        AdminFoiaConfigService.getFoiaConfig().then(function (response) {
+                            $scope.foiaConfig = response.data;
+                            $scope.foiaConfig.receivedDateEnabled = response.data.receivedDateEnabled;
+                            if ($scope.foiaConfig.receivedDateEnabled || $scope.objectInfo.status !='In Review'){
+                                $scope.receivedDateDisabledLink = true;
+                            }else {
+                                $scope.receivedDateDisabledLink = false;
+                            }
+                        });
 
+                    };
                     $scope.userOrGroupSearch = function() {
                         var assigneUserName = _.find($scope.userFullNames, function (user)
                         {
@@ -254,5 +268,13 @@ angular.module('cases').controller(
                         }
                         saveCase();
                     };
+                    $scope.setReceivedDate = function(data){
+                        if (!Util.isEmpty(data)) {
+                            var receivedDate = new Date(data);
+                            $scope.objectInfo.receivedDate = UtilDateService.dateTimeToIso(UtilDateService.isoToDate(receivedDate));
+                            $scope.saveCase();
+                        } else {
+                        }
+                    }
 
                 } ]);

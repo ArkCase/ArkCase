@@ -273,7 +273,10 @@
                 "modal.buttons": {
                     "cancel": "Cancel",
                     "save": "Save"
-                }
+                },
+                "description": "Description",
+                "exemptionCodesDescription": "Exemption Codes Description",
+                "modal.close.btn": "Close"
             },
             "requestAuthorization": {
                 "title": "Authorization",
