@@ -12,7 +12,7 @@ angular.module('cases').controller('Cases.ExemptionCodesDescriptionModalControll
             noUnselect: false,
             totalItems: 0,
             data: [],
-            rowHeight: 60
+            rowHeight: 95
         };
         
         ConfigService.getModuleConfig('cases').then(function(moduleConfig){
