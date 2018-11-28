@@ -3860,6 +3860,12 @@ angular
                         if (DocTree.uploadSetting.uploadFileNew) {
 
                             var regularSizeFile = 52428800; //50 mb file
+                            //dose not seems to subscribe TODO CHECK THE ISSUE
+                            DocTree.scope.$bus.subscribe('upload-file-size-limit-changed', function(data){
+                                regularSizeFile = data.uploadFileSizeLimit;
+                            });
+
+
                             for (i = 0; i< files.length; i++){
                                 if(files[i].size < regularSizeFile){
                                     var useRegularFileUpload = true;

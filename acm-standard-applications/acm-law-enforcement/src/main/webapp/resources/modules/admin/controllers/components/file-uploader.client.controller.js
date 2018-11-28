@@ -12,10 +12,13 @@ angular.module('admin').controller('Admin.FileUploaderController',
 
         $scope.applyChanges = function() {
             if (saved.uploadFileSizeLimit != $scope.uploadFileSizeLimit) {
-
                 $scope.uploadFileSizeLimit = Util.bytes($scope.uploadFileSizeLimit);
                 ApplicationSettingsService.setProperty(ApplicationSettingsService.PROPERTIES.UPLOAD_FILE_SIZE_LIMIT, $scope.uploadFileSizeLimit);
                 saved.uploadFileSizeLimit = $scope.uploadFileSizeLimit;
+                //TODO: event publish from here to the doc-tree controller, so that it knows that the limit has been changed
+                $scope.$bus.publish('upload-file-size-limit-changed', {
+                    uploadFileSizeLimit: $scope.uploadFileSizeLimit
+                });
 
                 bootbox.alert({
                     message: $translate.instant("admin.documentManagement.fileUploader.inform"),
