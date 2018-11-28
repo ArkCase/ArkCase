@@ -66,12 +66,29 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
                 return replacedWith;
             }
         }
-        //, dateToIso: function(d, replacement) {
-        //    if (Util.isEmpty(d)) {
-        //        return Util.goodValue(d, replacement);
-        //    }
-        //    return moment(d).format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
-        //}
+        ,
+        /**
+         * @ngdoc method
+         * @name dateTimeToIso
+         * @methodOf services:Util.DateService
+         *
+         * @description
+         * Converts a date object into an DateTimeFormat.ISO.DATE_TIME format string
+         *
+         * @param {Date} date object
+         * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
+         *
+         * @Returns {String} ISO formatted date string YYYY-MM-DDTHH:mm:ss
+         */
+        dateTimeToIso: function(date, replacement) {
+            var replacedWith = (undefined === replacement) ? "" : replacement;
+
+            if (date && date instanceof Date) {
+                return moment(date).format("YYYY-MM-DDTHH:mm:ss");
+            } else {
+                return replacedWith;
+            }
+        }
 
         /**
          * @ngdoc method
