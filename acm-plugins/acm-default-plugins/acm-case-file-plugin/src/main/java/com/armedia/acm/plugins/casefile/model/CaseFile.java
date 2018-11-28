@@ -46,6 +46,7 @@ import com.armedia.acm.service.milestone.model.AcmMilestone;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -116,6 +117,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     private Long id;
 
     @Column(name = "cm_case_number")
+    @AcmSequence(sequenceName = "caseFileSeq")
     private String caseNumber;
 
     @Column(name = "cm_case_type")
