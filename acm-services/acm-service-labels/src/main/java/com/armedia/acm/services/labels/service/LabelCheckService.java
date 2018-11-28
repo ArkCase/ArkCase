@@ -30,6 +30,8 @@ package com.armedia.acm.services.labels.service;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,7 +40,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -49,7 +53,7 @@ import java.util.stream.Collectors;
 
 public class LabelCheckService
 {
-    //    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger(getClass());
     private String modulesLocation_;
     private String resourcesLocation_;
 
@@ -59,24 +63,22 @@ public class LabelCheckService
         this.resourcesLocation_ = resourcesLocation;
     }
 
-    public static void main(String[] args)
-    {
-        String userHome = System.getProperty("user.home");
-        String modulesLocation = userHome + "/.arkcase/custom/modules/";
-        String resourceLocation = userHome + "/.arkcase/acm/resources/resources/";
+    public LabelCheckService(){
 
-        LabelCheckService labelCheckService = new LabelCheckService(modulesLocation, resourceLocation);
-        labelCheckService.checkLabel();
     }
 
+    /**
+     * find the missing label
+     * @return missing label result
+     */
     public List<String> checkLabel()
     {
 
         File[] files = new File(getResourcesLocation()).listFiles();
         List<String> labelList = labelRetrievalProcess();
 
-        List<JSONObject> translationList = new ArrayList<>();
-        List<String> checkAnswer = new ArrayList<>();
+        Set<JSONObject> translationList = new HashSet<>();
+        Set<String> checkAnswer = new HashSet<>();
 
         for (File file : files)
         {
@@ -94,28 +96,25 @@ public class LabelCheckService
                 if (resource.has(label))
                 {
                     isFound = true;
-                    System.out.println(label + ": " + resource.get(label));
                     break;
                 }
             }
-            if (isFound == true)
+            if (isFound)
             {
                 isFound = false;
-                continue;
             }
             else
             {
                 checkAnswer.add(label);
             }
         }
-        checkAnswer = checkAnswer.stream().distinct().collect(Collectors.toList());
-        Collections.sort(checkAnswer);
-        System.out.println("Missing Label:");
+        List<String> resultObject = new ArrayList<>();
         for (String answer : checkAnswer)
         {
-            System.out.println(answer);
+            resultObject.add(answer);
+
         }
-        return checkAnswer;
+        return resultObject;
     }
 
     /**
@@ -137,7 +136,7 @@ public class LabelCheckService
         }
         catch (Exception e)
         {
-            //            log.warn(String.format("Failed to read file %s", name));
+            log.warn("Failed to read file [{}]", name, e);
             return null;
         }
     }
@@ -263,11 +262,11 @@ public class LabelCheckService
             }
             catch (FileNotFoundException e)
             {
-                System.out.println("Can not find file " + file.getName());
+                log.warn("Can not find file [{}]", file.getName(), e);
             }
             catch (IOException e)
             {
-                System.out.println("IO Exception " + file.getName());
+                log.warn("IO Exception [{}]", file.getName(), e);
             }
             finally
             {
@@ -277,7 +276,7 @@ public class LabelCheckService
                 }
                 catch (IOException e)
                 {
-                    System.out.println("IO Exception " + file.getName());
+                    log.warn("IO Exception [{}]", file.getName(), e);
                 }
             }
         }
@@ -317,11 +316,11 @@ public class LabelCheckService
             }
             catch (FileNotFoundException e)
             {
-                System.out.println("Can not find file " + file.getName());
+                log.warn("Can not find file [{}]", file.getName(), e);
             }
             catch (IOException e)
             {
-                System.out.println("IO Exception " + file.getName());
+                log.warn("IO Exception [{}]", file.getName(), e);
             }
             finally
             {
@@ -331,7 +330,7 @@ public class LabelCheckService
                 }
                 catch (IOException e)
                 {
-                    System.out.println("IO Exception " + file.getName());
+                    log.warn("IO Exception [{}]", file.getName(), e);
                 }
             }
         }
