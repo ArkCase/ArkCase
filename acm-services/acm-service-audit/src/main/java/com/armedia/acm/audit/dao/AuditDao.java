@@ -27,6 +27,7 @@ package com.armedia.acm.audit.dao;
  * #L%
  */
 
+import com.armedia.acm.audit.model.AcmAuditLookup;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.data.AcmAbstractDao;
 
@@ -37,6 +38,13 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -102,47 +110,76 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
             String sort, String direction)
     {
 
-        // lets change order by string because of sql injection
-        if (!direction.toUpperCase().equals("ASC"))
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<AuditEvent> auditEventCriteriaQuery = builder.createQuery(AuditEvent.class);
+        Root<AuditEvent> auditEventRoot = auditEventCriteriaQuery.from(AuditEvent.class);
+
+        Subquery<Long> subquery = auditEventCriteriaQuery.subquery(Long.class);
+        Root<AuditEvent> rootSubquery = subquery.from(AuditEvent.class);
+
+        subquery.where(
+                builder.notEqual(rootSubquery.get("status"), "DELETE"),
+                builder.and(
+                        builder.and(
+                                builder.equal(rootSubquery.get("objectType"), objectType),
+                                builder.equal(rootSubquery.get("objectId"), objectId)),
+                        builder.or(
+                                builder.and(
+                                        builder.equal(rootSubquery.get("parentObjectType"), objectType),
+                                        builder.equal(rootSubquery.get("cm_parent_object_id"), objectId)))));
+
+        if (eventTypes != null && eventTypes.size() > 0)
         {
-            direction = "DESC";
+            subquery.where(
+                    rootSubquery.get("fullEventType").in(eventTypes.stream().map(et -> "'" + et + "'").collect(Collectors.joining(","))));
+        }
+        subquery.where(builder.equal(rootSubquery.get("eventResult"), "success"));
+
+        auditEventCriteriaQuery.select(auditEventRoot);
+        subquery.select(rootSubquery.get("id"));
+
+        Join<AuditEvent, AuditEvent> join = rootSubquery.join("id", JoinType.INNER);
+        join.on(builder.equal(auditEventRoot.get("id"), rootSubquery.get("id")));
+
+        Root<AcmAuditLookup> acmAuditLookupRoot = auditEventCriteriaQuery.from(AcmAuditLookup.class);
+
+        Join<AuditEvent, AcmAuditLookup> leftJoin = rootSubquery.join("auditLookupId", JoinType.LEFT);
+        leftJoin.on(builder.equal(auditEventRoot.get("auditLookup").get("auditLookupId"), acmAuditLookupRoot.get("auditLookupId")));
+
+        if (direction.equals("DESC"))
+        {
+            switch (sort)
+            {
+            case "eventType":
+                auditEventCriteriaQuery.orderBy(
+                        builder.desc(builder.coalesce(acmAuditLookupRoot.get("auditBuisinessName"), auditEventRoot.get("fullEventType"))));
+                break;
+            case "userId":
+                auditEventCriteriaQuery.orderBy(builder.desc(auditEventRoot.get("userId")));
+                break;
+            default:
+                auditEventCriteriaQuery.orderBy(builder.desc(auditEventRoot.get("eventDate")));
+                break;
+            }
+        }
+        else
+        {
+            switch (sort)
+            {
+            case "eventType":
+                auditEventCriteriaQuery.orderBy(
+                        builder.asc(builder.coalesce(acmAuditLookupRoot.get("auditBuisinessName"), auditEventRoot.get("fullEventType"))));
+                break;
+            case "userId":
+                auditEventCriteriaQuery.orderBy(builder.asc(auditEventRoot.get("userId")));
+                break;
+            default:
+                auditEventCriteriaQuery.orderBy(builder.desc(auditEventRoot.get("eventDate")));
+                break;
+            }
         }
 
-        String sortBy;
-        switch (sort)
-        {
-        case "eventType":
-            sortBy = "COALESCE(lu.cm_value, al.cm_audit_activity)";
-            break;
-        case "userId":
-            sortBy = "al.cm_audit_user";
-            break;
-        default:
-            sortBy = "al.cm_audit_datetime";
-            break;
-        }
-
-        /*
-         * we need to create native query because of nesting queries.
-         * Because of MySQL "late row lookup" problem for slow performance when using order by and limit
-         * we need to use this trick to increase performance when there are lot of rows.
-         */
-        String queryText = "SELECT al.* " +
-                "FROM (SELECT ae.cm_audit_id AS id" +
-                " FROM acm_audit_log ae" +
-                " WHERE ae.cm_audit_status != 'DELETE'" +
-                " AND ((ae.cm_object_type = ?2 AND ae.cm_object_id = ?1) OR" +
-                " (ae.cm_parent_object_type = ?2 AND ae.cm_parent_object_id = ?1))" +
-                (eventTypes != null && eventTypes.size() > 0 ? "      AND ae.cm_audit_activity IN ("
-                        + eventTypes.stream().map(et -> "'" + et + "'").collect(Collectors.joining(",")) + ")" : "")
-                +
-                "      AND ae.cm_audit_activity_result = 'success'" +
-                "  ) tmp" +
-                " JOIN acm_audit_log al" +
-                "    ON al.cm_audit_id = tmp.id" +
-                "  LEFT OUTER JOIN acm_audit_event_type_lu lu ON al.cm_audit_activity = lu.cm_key" +
-                " ORDER BY " + sortBy + " " + direction + ", al.cm_audit_id " + direction;
-        Query query = getEm().createNativeQuery(queryText, AuditEvent.class);
+        TypedQuery<AuditEvent> query = getEm().createQuery(auditEventCriteriaQuery);
         query.setFirstResult(startRow);
         query.setMaxResults(maxRows);
         query.setParameter(1, objectId);
@@ -154,15 +191,32 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
 
     public int countAll(Long objectId, String objectType, List<String> eventTypes)
     {
-        String queryText = "SELECT COUNT(ae.fullEventType) " +
-                "FROM   AuditEvent ae " +
-                "WHERE  ae.status != 'DELETE' " +
-                "AND ((ae.objectType = :objectType AND ae.objectId = :objectId) " +
-                "OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) " +
-                (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
-                "AND ae.eventResult = 'success'";
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> auditEventCriteriaQuery = builder.createQuery(Long.class);
+        Root<AuditEvent> auditEventRoot = auditEventCriteriaQuery.from(AuditEvent.class);
+        if (eventTypes == null)
+        {
+            auditEventCriteriaQuery.select(builder.count(auditEventRoot.get("fullEventType"))).where(
+                    builder.and(builder.notEqual(auditEventRoot.get("status"), "DELETE")),
+                    builder.equal(auditEventRoot.get("objectType"), objectType),
+                    builder.equal(auditEventRoot.get("objectId"), objectId),
+                    builder.or(builder.and(builder.equal(auditEventRoot.get("objectType"), objectType),
+                            builder.equal(auditEventRoot.get("parentObjectId"), objectId))),
+                    builder.and(builder.equal(auditEventRoot.get("eventResult"), "success")));
+        }
+        else
+        {
+            auditEventCriteriaQuery.select(builder.count(auditEventRoot.get("fullEventType"))).where(
+                    builder.and(builder.notEqual(auditEventRoot.get("status"), "DELETE")),
+                    builder.equal(auditEventRoot.get("objectType"), objectType),
+                    builder.equal(auditEventRoot.get("objectId"), objectId),
+                    builder.or(builder.and(builder.equal(auditEventRoot.get("objectType"), objectType),
+                            builder.equal(auditEventRoot.get("parentObjectId"), objectId))),
+                    builder.and(auditEventRoot.get("fullEventType").in(eventTypes)),
+                    builder.and(builder.equal(auditEventRoot.get("eventResult"), "success")));
+        }
 
-        Query query = getEm().createQuery(queryText);
+        Query query = getEm().createQuery(auditEventCriteriaQuery);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
         if (eventTypes != null)
@@ -177,17 +231,28 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
 
     public List<AuditEvent> findPage(int startRow, int maxRows, String sortBy, String sort)
     {
-        String queryText = "SELECT ae " +
-                "FROM   AuditEvent ae " +
-                "WHERE ae.status != 'DELETE' " +
-                "ORDER BY ae." + sortBy + " " + sort + ", ae.id " + sort;
-        Query query = getEm().createQuery(queryText);
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<AuditEvent> criteriaQuery = builder.createQuery(AuditEvent.class);
+        Root<AuditEvent> auditEvent = criteriaQuery.from(AuditEvent.class);
+
+        criteriaQuery.where(builder.notEqual(auditEvent.<Long> get("status"), "DELETE"));
+
+        if (sort.toUpperCase().equals("ASC"))
+        {
+            criteriaQuery.orderBy(builder.asc(auditEvent.get(sortBy)));
+            criteriaQuery.orderBy(builder.asc(auditEvent.<Long> get("id")));
+        }
+        else
+        {
+            criteriaQuery.orderBy(builder.desc(auditEvent.get(sortBy)));
+            criteriaQuery.orderBy(builder.desc(auditEvent.<Long> get("id")));
+        }
+
+        TypedQuery<AuditEvent> query = getEm().createQuery(criteriaQuery);
         query.setFirstResult(startRow);
         query.setMaxResults(maxRows);
 
-        List<AuditEvent> results = query.getResultList();
-
-        return results;
+        return query.getResultList();
 
     }
 
