@@ -260,4 +260,8 @@
           class="com.armedia.acm.plugins.admin.web.api.PDFConversionConfigurationAPIController">
         <property name="pdfConversionConfigurationService" ref="pdfConversionConfigurationService"/>
     </bean>
+
+    <bean id="missingLabelCheckController" class="com.armedia.acm.plugins.admin.web.api.MissingLabelCheckControllerAPI">
+        <property name="labelCheckService" ref="labelCheckService"/>
+    </bean>
 </beans>
