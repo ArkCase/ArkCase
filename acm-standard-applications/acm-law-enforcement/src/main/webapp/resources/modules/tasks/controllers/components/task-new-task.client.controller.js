@@ -2,9 +2,29 @@
 
 angular.module('tasks').controller(
         'Tasks.NewTaskController',
-        [ '$scope', '$state', '$sce', '$q', '$modal', 'ConfigService', 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService', 'Authentication', 'Util.DateService', 'Dialog.BootboxService', 'ObjectService', 'Object.LookupService',
-                'Admin.FunctionalAccessControlService', 'modalParams', 'moment', 'Mentions.Service',
-                function($scope, $state, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService, AdminFunctionalAccessControlService, modalParams, moment, MentionsService) {
+        [
+                '$scope',
+                '$state',
+                '$sce',
+                '$q',
+                '$modal',
+                'ConfigService',
+                'UtilService',
+                'TicketService',
+                'LookupService',
+                'Frevvo.FormService',
+                'Task.NewTaskService',
+                'Authentication',
+                'Util.DateService',
+                'Dialog.BootboxService',
+                'ObjectService',
+                'Object.LookupService',
+                'Admin.FunctionalAccessControlService',
+                'modalParams',
+                'moment',
+                'Mentions.Service',
+                function($scope, $state, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService, AdminFunctionalAccessControlService, modalParams, moment,
+                        MentionsService) {
 
                     $scope.modalParams = modalParams;
                     $scope.taskType = $scope.modalParams.taskType || 'ACM_TASK';
@@ -16,10 +36,6 @@ angular.module('tasks').controller(
 
                     $scope.groupTask = false;
                     $scope.chosenGroup = '';
-
-                    $scope.options = {
-                        focus: true
-                    };
 
                     if ($scope.taskType === 'REVIEW_DOCUMENT') {
                         $scope.documentsToReview = $scope.modalParams.documentsToReview;
@@ -90,23 +106,50 @@ angular.module('tasks').controller(
                     // ---------------------   mention   ---------------------------------
                     $scope.emailAddresses = [];
                     $scope.usersMentioned = [];
+                    $scope.emailAddressesSummernote = [];
+                    $scope.usersMentionedSummernote = [];
 
                     // Obtains a list of all users in ArkCase
-                    MentionsService.getUsers().then(function (users) {
+                    MentionsService.getUsers().then(function(users) {
                         $scope.people = users;
+                        $scope.peopleSummernote = [];
+                        $scope.peopleEmailsSummernote = [];
+                        _.forEach(users, function(user) {
+                            $scope.peopleSummernote.push(user.name);
+                            $scope.peopleEmailsSummernote.push(user.email_lcs);
+                        });
                     });
 
-                    $scope.getMentionedUsers = function (item) {
+                    $scope.getMentionedUsers = function(item) {
                         $scope.emailAddresses.push(item.email_lcs);
                         $scope.usersMentioned.push('@' + item.name);
                         return '@' + item.name;
                     };
+
+                    $scope.options = {
+                        dialogsInBody: true,
+                        hint: {
+                            mentions: $scope.peopleSummernote,
+                            match: /\B@(\w*)$/,
+                            search: function(keyword, callback) {
+                                callback($.grep($scope.peopleSummernote, function(item) {
+                                    return item.indexOf(keyword) == 0;
+                                }));
+                            },
+                            content: function(item) {
+                                var index = $scope.peopleSummernote.indexOf(item);
+                                $scope.emailAddressesSummernote.push($scope.peopleEmailsSummernote[index]);
+                                $scope.usersMentionedSummernote.push('@' + item);
+                                return '@' + item;
+                            }
+                        }
+                    };
                     // -----------------------  end mention   ----------------------------
 
-                    $scope.onComboAfterSave = function(dateType){
-                        if(dateType == "startDate"){
+                    $scope.onComboAfterSave = function(dateType) {
+                        if (dateType == "startDate") {
                             $scope.startDateChanged();
-                        }else if(dateType == "dueDate"){
+                        } else if (dateType == "dueDate") {
                             $scope.dueDateChanged();
                         }
                     };
@@ -168,16 +211,16 @@ angular.module('tasks').controller(
                     function reviewDocumentTaskSuccessCallback(data) {
                         $scope.saved = false;
                         $scope.loading = false;
-                        MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned,
-                            ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
+                        MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned, ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
+                        MentionsService.sendEmailToMentionedUsers($scope.emailAddressesSummernote, $scope.usersMentionedSummernote, ObjectService.ObjectTypes.TASK, "DETAILS", data.data.taskId, data.data.details);
                         $scope.onModalClose();
                     }
 
                     function saveNewTaskSuccessCallback(data) {
                         $scope.saved = false;
                         $scope.loading = false;
-                        MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned,
-                            ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
+                        MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned, ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
+                        MentionsService.sendEmailToMentionedUsers($scope.emailAddressesSummernote, $scope.usersMentionedSummernote, ObjectService.ObjectTypes.TASK, "DETAILS", data.data.taskId, data.data.details);
                         if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ':returnState') {
                             $state.go($scope.modalParams.returnState, {
                                 type: $scope.modalParams.parentType,

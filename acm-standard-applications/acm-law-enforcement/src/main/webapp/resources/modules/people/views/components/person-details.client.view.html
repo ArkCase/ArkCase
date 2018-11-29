@@ -10,11 +10,8 @@
                 </div>
             </div>
         </div>
-        <div class="panel-body">
-            <!-- TODO: "disable" doesn't work on summernote  -->
-            <summernote permission="editPerson" permission-properties="objectInfo" permission-action="disable" config="options"
-                    ng-model="objectInfo.details"></summernote>
+        <div class="panel-body remove-margin-bottom-from-summernote">
+            <summernote on-init="init()" editor="editor" config="options" ng-model="objectInfo.details"></summernote>
         </div>
     </div>
-
 </div>
