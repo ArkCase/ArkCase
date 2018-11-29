@@ -54,18 +54,8 @@ import java.util.stream.Collectors;
 public class LabelCheckService
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private String modulesLocation_;
-    private String resourcesLocation_;
-
-    public LabelCheckService(String modulesLocation, String resourcesLocation)
-    {
-        this.modulesLocation_ = modulesLocation;
-        this.resourcesLocation_ = resourcesLocation;
-    }
-
-    public LabelCheckService(){
-
-    }
+    private String modulesLocation;
+    private String resourcesLocation;
 
     /**
      * find the missing label
@@ -339,21 +329,21 @@ public class LabelCheckService
 
     public String getModulesLocation()
     {
-        return modulesLocation_;
+        return modulesLocation;
     }
 
     public void setModulesLocation(String modulesLocation)
     {
-        this.modulesLocation_ = modulesLocation;
+        this.modulesLocation = modulesLocation;
     }
 
     public String getResourcesLocation()
     {
-        return resourcesLocation_;
+        return resourcesLocation;
     }
 
     public void setResourcesLocation(String resourcesLocation)
     {
-        this.resourcesLocation_ = resourcesLocation;
+        this.resourcesLocation = resourcesLocation;
     }
 }
