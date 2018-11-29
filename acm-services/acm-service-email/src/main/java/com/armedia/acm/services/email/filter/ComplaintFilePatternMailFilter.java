@@ -38,25 +38,21 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CaseFilePatternMailFilter extends AcmObjectPatternMailFilter
+public class ComplaintFilePatternMailFilter extends AcmObjectPatternMailFilter
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-
     private String objectTypeRegexPattern;
 
-    public CaseFilePatternMailFilter(String objectIdRegexPattern, String objectTypeRegexPattern)
+    public ComplaintFilePatternMailFilter(String objectIdRegexPattern, String objectTypeRegexPattern)
     {
-
         super(objectIdRegexPattern, objectTypeRegexPattern);
         this.objectTypeRegexPattern = objectTypeRegexPattern;
-
     }
 
     @Override
     public boolean accept(Message message) throws MessagingException, IOException
     {
-
         boolean matchesFilter = false;
         Pattern pattern = Pattern.compile(String.format("%s", objectTypeRegexPattern));
 
@@ -70,6 +66,5 @@ public class CaseFilePatternMailFilter extends AcmObjectPatternMailFilter
         }
 
         return matchesFilter;
-
     }
 }

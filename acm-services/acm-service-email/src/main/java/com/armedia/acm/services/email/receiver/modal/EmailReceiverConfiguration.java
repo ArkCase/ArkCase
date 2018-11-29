@@ -1,5 +1,32 @@
 package com.armedia.acm.services.email.receiver.modal;
 
+/*-
+ * #%L
+ * ACM Service: Email
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,6 +58,11 @@ public class EmailReceiverConfiguration
     private int port;
 
     private boolean debug;
+
+    private String user_complaint;
+
+    @JsonIgnore
+    private String password_complaint;
 
     /**
      * @return the email
@@ -219,5 +251,41 @@ public class EmailReceiverConfiguration
     public void setDebug(boolean debug)
     {
         this.debug = debug;
+    }
+
+    /**
+     * @return the email address for complaint
+     */
+    public String getUser_complaint()
+    {
+        return user_complaint;
+    }
+
+    /**
+     * @param user_complaint
+     *            email address for complaint to set
+     */
+    public void setUser_complaint(String user_complaint)
+    {
+        this.user_complaint = user_complaint;
+    }
+
+    /**
+     * @return the password of complaint email address
+     */
+    @JsonIgnore
+    public String getPassword_complaint()
+    {
+        return password_complaint;
+    }
+
+    /**
+     * @param password_complaint
+     *            the password for complaint to set
+     */
+    @JsonProperty
+    public void setPassword_complaint(String password_complaint)
+    {
+        this.password_complaint = password_complaint;
     }
 }

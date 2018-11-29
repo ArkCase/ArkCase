@@ -62,49 +62,61 @@ public class AcknowledgementDocumentService
     private FOIARequestDao requestDao;
     private FOIADocumentGeneratorService documentGeneratorService;
     private DocumentGenerator documentGenerator;
+    private FoiaConfigurationService foiaConfigurationService;
+    private FOIAQueueCorrespondenceService foiaQueueCorrespondenceService;
 
     public void emailAcknowledgement(Long requestId)
     {
-        FOIARequest request = getRequestDao().find(requestId);
-        String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
-        if (emailAddress != null)
+        if(!foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
         {
-            EmailWithAttachmentsDTO emailData = new EmailWithAttachmentsDTO();
-            emailData.setEmailAddresses(Arrays.asList(emailAddress));
+            FOIARequest request = getRequestDao().find(requestId);
+            String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
+            if (emailAddress != null) {
+                EmailWithAttachmentsDTO emailData = new EmailWithAttachmentsDTO();
+                emailData.setEmailAddresses(Arrays.asList(emailAddress));
 
-            emailData.setSubject(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
-            emailData.setHeader(EMAIL_HEADER_ATTACHMENT);
-            emailData.setBody(EMAIL_BODY_ATTACHMENT);
-            emailData.setFooter(EMAIL_FOOTER_ATTACHMENT);
+                emailData.setSubject(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
+                emailData.setHeader(EMAIL_HEADER_ATTACHMENT);
+                emailData.setBody(EMAIL_BODY_ATTACHMENT);
+                emailData.setFooter(EMAIL_FOOTER_ATTACHMENT);
 
-            FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
+                FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
 
-            EcmFile ackFile = getEcmFileDao().findForContainerAttachmentFolderAndFileType(request.getContainer().getId(),
-                    request.getContainer().getAttachmentFolder().getId(), documentDescriptor.getDoctype());
-            emailData.setAttachmentIds(Arrays.asList(ackFile.getFileId()));
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                EcmFile ackFile = getEcmFileDao().findForContainerAttachmentFolderAndFileType(request.getContainer().getId(),
+                        request.getContainer().getAttachmentFolder().getId(), documentDescriptor.getDoctype());
+                emailData.setAttachmentIds(Arrays.asList(ackFile.getFileId()));
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-            String userIdOrName = request.getCreator();
-            try
-            {
-                if (request.isExternal()) // request from external portal
-                {
-                    getNotificationSender().sendEmailWithAttachments(emailData, auth, userIdOrName);
+                String userIdOrName = request.getCreator();
+                try {
+                    if (request.isExternal()) // request from external portal
+                    {
+                        getNotificationSender().sendEmailWithAttachments(emailData, auth, userIdOrName);
+                    } else // request from foia app
+                    {
+                        getNotificationSender().sendEmailWithAttachments(emailData, auth, getUserDao().findByUserId(userIdOrName));
+                    }
+
+                } catch (Exception e) {
+                    log.error("Unable to email {} for {} [{}]", request.getRequestType(), documentDescriptor.getDoctype(), requestId, e);
                 }
-                else // request from foia app
-                {
-                    getNotificationSender().sendEmailWithAttachments(emailData, auth, getUserDao().findByUserId(userIdOrName));
-                }
-
-            }
-            catch (Exception e)
-            {
-                log.error("Unable to email {} for {} [{}]", request.getRequestType(), documentDescriptor.getDoctype(), requestId, e);
             }
         }
     }
 
     public void generateAndUpload(String objectType, Long requestId) throws DocumentGeneratorException
+    {
+        if(foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+        {
+            foiaQueueCorrespondenceService.handleRequestReceivedAcknowledgementLetter(requestId);
+        }
+        else
+        {
+            generateAndUploadACK(requestId);
+        }
+    }
+
+    private void generateAndUploadACK(Long requestId)throws DocumentGeneratorException
     {
         FOIARequest request = requestDao.find(requestId);
         FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
@@ -176,4 +188,23 @@ public class AcknowledgementDocumentService
         this.documentGenerator = documentGenerator;
     }
 
+    public FoiaConfigurationService getFoiaConfigurationService()
+    {
+        return foiaConfigurationService;
+    }
+
+    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService)
+    {
+        this.foiaConfigurationService = foiaConfigurationService;
+    }
+
+    public FOIAQueueCorrespondenceService getFoiaQueueCorrespondenceService()
+    {
+        return foiaQueueCorrespondenceService;
+    }
+
+    public void setFoiaQueueCorrespondenceService(FOIAQueueCorrespondenceService foiaQueueCorrespondenceService)
+    {
+        this.foiaQueueCorrespondenceService = foiaQueueCorrespondenceService;
+    }
 }

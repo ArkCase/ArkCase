@@ -11,22 +11,22 @@
 
     <div class="modal-body">
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.id.label' | translate }}</label>
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.id.label' | translate }}</label><span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="cmisConfig.id"
                     placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.id.placeholder' | translate }}" required>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.baseUrl.label' | translate }}</label>
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.baseUrl.label' | translate }}</label><span class="required-asterisk">*</span>
             <input class="form-control" type="url" ng-model="cmisConfig.baseUrl"
                     placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.baseUrl.placeholder' | translate }}" required>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.username.label' | translate }}</label>
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.username.label' | translate }}</label><span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="cmisConfig.username"
                     placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.username.placeholder' | translate }}" required>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.password.label' | translate }}</label>
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.password.label' | translate }}</label><span class="required-asterisk">*</span>
             <input class="form-control" type="password" ng-model="cmisConfig.password"
                     placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.password.placeholder' | translate }}" required>
         </div>
@@ -38,46 +38,46 @@
             </label>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.maxIdle.label' | translate }}</label>
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.maxIdle.label' | translate }}</label><span class="required-asterisk">*</span>
             <input class="form-control" type="number" id="number" min="1" ng-model="cmisConfig.maxIdle"
                     placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.maxIdle.placeholder' | translate }}" required>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.maxActive.label' | translate }}</label>
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.maxActive.label' | translate }}</label><span class="required-asterisk">*</span>
             <input class="form-control" type="number" min="1" ng-model="cmisConfig.maxActive"
                     placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.maxActive.placeholder' | translate }}" required>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.maxWait.label' | translate }}</label>
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.maxWait.label' | translate }}</label><span class="required-asterisk">*</span>
             <input class="form-control" type="number" min="1" ng-model="cmisConfig.maxWait"
                     placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.maxWait.placeholder' | translate }}" required>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.minEvictionMillis.label' | translate }}</label>
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.minEvictionMillis.label' | translate }}</label><span class="required-asterisk">*</span>
             <input class="form-control" type="number" min="1" ng-model="cmisConfig.minEvictionMillis"
                     placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.minEvictionMillis.placeholder' | translate }}"
                     required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.documentManagement.cmisConfiguration.data.evictionCheckIntervalMillis.label' | translate
-                }}</label>
+                }}</label><span class="required-asterisk">*</span>
             <input class="form-control" type="number" min="1" ng-model="cmisConfig.evictionCheckIntervalMillis"
                     placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.evictionCheckIntervalMillis.placeholder' | translate }}"
                     required>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.reconnectCount.label' | translate }}</label>
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.reconnectCount.label' | translate }}</label><span class="required-asterisk">*</span>
             <input class="form-control" type="number" min="1" ng-model="cmisConfig.reconnectCount"
                     placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.reconnectCount.placeholder' | translate }}" required>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.reconnectFrequency.label' | translate }}</label>
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.reconnectFrequency.label' | translate }}</label><span class="required-asterisk">*</span>
             <input class="form-control" type="number" min="1" ng-model="cmisConfig.reconnectFrequency"
                     placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.reconnectFrequency.placeholder' | translate }}"
                     required>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.cmisVersioningState.label' | translate }}</label>
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.cmisVersioningState.label' | translate }}</label><span class="required-asterisk">*</span>
             <select class="form-control" type="text" ng-model="cmisConfig.cmisVersioningState" required>
                 <option ng-repeat="option in cmisVersioningState" value="{{option.key}}">
                     {{option.value | translate}}

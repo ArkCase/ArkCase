@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$scope', 'ConfigService', 'Dashboard.DashboardService', 'Helper.DashboardService', '$modal', '$state', 'Admin.FoiaConfigService', function($rootScope, $scope, ConfigService, DashboardService, DashboardHelper, $modal, $state, AdminFoiaConfigService) {
+angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$scope', 'ConfigService', 'Dashboard.DashboardService', 'Helper.DashboardService', '$modal', '$state', 'Admin.FoiaConfigService', 'MessageService', function($rootScope, $scope, ConfigService, DashboardService, DashboardHelper, $modal, $state, AdminFoiaConfigService, MessageService) {
 
     new DashboardHelper.Dashboard({
         scope: $scope,

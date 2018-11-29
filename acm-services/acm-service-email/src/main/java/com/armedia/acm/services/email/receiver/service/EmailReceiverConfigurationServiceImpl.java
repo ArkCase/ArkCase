@@ -1,5 +1,32 @@
 package com.armedia.acm.services.email.receiver.service;
 
+/*-
+ * #%L
+ * ACM Service: Email
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtilsImpl;
 import com.armedia.acm.services.email.receiver.modal.EmailReceiverConfiguration;
@@ -45,15 +72,15 @@ public class EmailReceiverConfigurationServiceImpl implements EmailReceiverConfi
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.MAX_MESSAGES_PER_POLL,
                 Integer.toString(configuration.getMaxMessagePerPoll()));
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.FIXED_RATE, Long.toString(configuration.getFixedRate()));
-        emailReceiverProperties.put(EmailReceiverConfigurationConstants.EMAIL, emailReceiverConfiguration.getUser());
+        emailReceiverProperties.put(EmailReceiverConfigurationConstants.EMAIL_CASE, emailReceiverConfiguration.getUser());
         if (emailReceiverConfiguration.getPassword() == null)
         {
-            emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD,
+            emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD_CASE,
                     acmEncryptablePropertyUtils.encryptPropertyValue(configuration.getPassword()));
         }
         else
         {
-            emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD,
+            emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD_CASE,
                     acmEncryptablePropertyUtils.encryptPropertyValue(emailReceiverConfiguration.getPassword()));
         }
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.PROTOCOL, configuration.getProtocol());
@@ -61,6 +88,17 @@ public class EmailReceiverConfigurationServiceImpl implements EmailReceiverConfi
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.HOST, configuration.getHost());
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.PORT, Integer.toString(configuration.getPort()));
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.DEBUG, Boolean.toString(configuration.isDebug()));
+        emailReceiverProperties.put(EmailReceiverConfigurationConstants.EMAIL_COMPLAINT, emailReceiverConfiguration.getUser_complaint());
+        if (emailReceiverConfiguration.getPassword_complaint() == null)
+        {
+            emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD_COMPLAINT,
+                    acmEncryptablePropertyUtils.encryptPropertyValue(configuration.getPassword_complaint()));
+        }
+        else
+        {
+            emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD_COMPLAINT,
+                    acmEncryptablePropertyUtils.encryptPropertyValue(emailReceiverConfiguration.getPassword_complaint()));
+        }
 
         Lock writeLock = lock.writeLock();
         writeLock.lock();
@@ -108,10 +146,10 @@ public class EmailReceiverConfigurationServiceImpl implements EmailReceiverConfi
             case EmailReceiverConfigurationConstants.FIXED_RATE:
                 emailReceiverConfiguration.setFixedRate(Long.valueOf(propertyValue));
                 break;
-            case EmailReceiverConfigurationConstants.EMAIL:
+            case EmailReceiverConfigurationConstants.EMAIL_CASE:
                 emailReceiverConfiguration.setUser(propertyValue);
                 break;
-            case EmailReceiverConfigurationConstants.PASSWORD:
+            case EmailReceiverConfigurationConstants.PASSWORD_CASE:
                 emailReceiverConfiguration.setPassword(propertyValue);
                 break;
             case EmailReceiverConfigurationConstants.PROTOCOL:
@@ -128,6 +166,12 @@ public class EmailReceiverConfigurationServiceImpl implements EmailReceiverConfi
                 break;
             case EmailReceiverConfigurationConstants.DEBUG:
                 emailReceiverConfiguration.setDebug(Boolean.valueOf(propertyValue));
+                break;
+            case EmailReceiverConfigurationConstants.EMAIL_COMPLAINT:
+                emailReceiverConfiguration.setUser_complaint(propertyValue);
+                break;
+            case EmailReceiverConfigurationConstants.PASSWORD_COMPLAINT:
+                emailReceiverConfiguration.setPassword_complaint(propertyValue);
             }
         }
 
