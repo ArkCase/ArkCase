@@ -316,45 +316,38 @@ public class ProxyServlet extends HttpServlet
     protected static CharSequence encodeUriQuery(CharSequence in)
     {
         // Note that I can't simply use URI.java to encode because it will escape pre-existing escaped things.
-        StringBuilder outBuf = null;
-        Formatter formatter = null;
-        for (int i = 0; i < in.length(); i++)
+        StringBuilder outBuf = new StringBuilder(in.length() + 5 * 3); 
+        try ( Formatter formatter = new Formatter(outBuf) )
         {
-            char c = in.charAt(i);
-            boolean escape = true;
-            if (c < 128)
+            for (int i = 0; i < in.length(); i++)
             {
-                if (asciiQueryChars.get(c))
+                char c = in.charAt(i);
+                boolean escape = true;
+                if (c < 128)
                 {
+                    if (asciiQueryChars.get(c))
+                    {
+                        escape = false;
+                    }
+                }
+                else if (!Character.isISOControl(c) && !Character.isSpaceChar(c))
+                {// not-ascii
                     escape = false;
                 }
-            }
-            else if (!Character.isISOControl(c) && !Character.isSpaceChar(c))
-            {// not-ascii
-                escape = false;
-            }
-            if (!escape)
-            {
-                if (outBuf != null)
+                if (!escape)
                 {
                     outBuf.append(c);
                 }
-            }
-            else
-            {
-                // escape
-                if (outBuf == null)
+                else
                 {
-                    outBuf = new StringBuilder(in.length() + 5 * 3);
+                    // escape
                     outBuf.append(in, 0, i);
-                    formatter = new Formatter(outBuf);
+                    // leading %, 0 padded, width 2, capital hex
+                    formatter.format("%%%02X", (int) c);// TODO
                 }
-                // leading %, 0 padded, width 2, capital hex
-                formatter.format("%%%02X", (int) c);// TODO
-                formatter.close();
             }
+            return outBuf.toString();
         }
-        return outBuf != null ? outBuf : in;
     }
 
     @Override
