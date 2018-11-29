@@ -127,7 +127,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         expect(mockRequest.getProtocol()).andReturn(protocol);
         expect(mockRequest.getRequestURI()).andReturn(uri);
         expect(mockRequest.getQueryString()).andReturn(queryString).anyTimes();
-        // expect(mockRequest.getRequestedSessionId()).andReturn(sessionId).anyTimes();
         Capture<AuditEvent> capturedAuditEvent = newCapture();
         mockAuditService.audit(capture(capturedAuditEvent));
         expectLastCall();

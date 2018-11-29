@@ -51,7 +51,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 9/4/14.
@@ -131,7 +130,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         if (eventTypes != null && eventTypes.size() > 0)
         {
             subquery.where(
-                    rootSubquery.get("fullEventType").in(eventTypes.stream().map(et -> "'" + et + "'").collect(Collectors.joining(","))));
+                    rootSubquery.get("fullEventType").in(eventTypes));
         }
         subquery.where(builder.equal(rootSubquery.get("eventResult"), "success"));
 
@@ -191,32 +190,17 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
 
     public int countAll(Long objectId, String objectType, List<String> eventTypes)
     {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<Long> auditEventCriteriaQuery = builder.createQuery(Long.class);
-        Root<AuditEvent> auditEventRoot = auditEventCriteriaQuery.from(AuditEvent.class);
+        String queryText = null;
         if (eventTypes == null)
         {
-            auditEventCriteriaQuery.select(builder.count(auditEventRoot.get("fullEventType"))).where(
-                    builder.and(builder.notEqual(auditEventRoot.get("status"), "DELETE")),
-                    builder.equal(auditEventRoot.get("objectType"), objectType),
-                    builder.equal(auditEventRoot.get("objectId"), objectId),
-                    builder.or(builder.and(builder.equal(auditEventRoot.get("objectType"), objectType),
-                            builder.equal(auditEventRoot.get("parentObjectId"), objectId))),
-                    builder.and(builder.equal(auditEventRoot.get("eventResult"), "success")));
+            queryText = "SELECT COUNT(ae.fullEventType) FROM AuditEvent ae WHERE ae.status != 'DELETE' AND ((ae.objectType = :objectType AND ae.objectId = :objectId) OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) AND ae.eventResult = 'success'";
         }
         else
         {
-            auditEventCriteriaQuery.select(builder.count(auditEventRoot.get("fullEventType"))).where(
-                    builder.and(builder.notEqual(auditEventRoot.get("status"), "DELETE")),
-                    builder.equal(auditEventRoot.get("objectType"), objectType),
-                    builder.equal(auditEventRoot.get("objectId"), objectId),
-                    builder.or(builder.and(builder.equal(auditEventRoot.get("objectType"), objectType),
-                            builder.equal(auditEventRoot.get("parentObjectId"), objectId))),
-                    builder.and(auditEventRoot.get("fullEventType").in(eventTypes)),
-                    builder.and(builder.equal(auditEventRoot.get("eventResult"), "success")));
+            queryText = "SELECT COUNT(ae.fullEventType) FROM AuditEvent ae WHERE ae.status != 'DELETE' AND ((ae.objectType = :objectType AND ae.objectId = :objectId) OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) AND ae.fullEventType IN :eventTypes AND ae.eventResult = 'success'";
         }
 
-        Query query = getEm().createQuery(auditEventCriteriaQuery);
+        Query query = getEm().createQuery(queryText);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
         if (eventTypes != null)
