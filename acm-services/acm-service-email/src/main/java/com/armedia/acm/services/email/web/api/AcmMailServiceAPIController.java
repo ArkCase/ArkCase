@@ -197,8 +197,7 @@ public class AcmMailServiceAPIController
 
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        acmEmailMentionsService.setUser(user);
-        acmEmailMentionsService.sendMentionsEmail(in);
+        acmEmailMentionsService.sendMentionsEmail(in, user.getFullName());
 
         return in;
     }
