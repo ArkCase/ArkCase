@@ -122,16 +122,43 @@ angular.module('complaints').controller(
                     // ---------------------   mention   ---------------------------------
                     $scope.emailAddresses = [];
                     $scope.usersMentioned = [];
+                    $scope.emailAddressesSummernote = [];
+                    $scope.usersMentionedSummernote = [];
 
                     // Obtains a list of all users in ArkCase
-                    MentionsService.getUsers().then(function (users) {
+                    MentionsService.getUsers().then(function(users) {
                         $scope.people = users;
+                        $scope.peopleSummernote = [];
+                        $scope.peopleEmailsSummernote = [];
+                        _.forEach(users, function(user) {
+                            $scope.peopleSummernote.push(user.name);
+                            $scope.peopleEmailsSummernote.push(user.email_lcs);
+                        });
                     });
 
-                    $scope.getMentionedUsers = function (item) {
+                    $scope.getMentionedUsers = function(item) {
                         $scope.emailAddresses.push(item.email_lcs);
                         $scope.usersMentioned.push('@' + item.name);
                         return '@' + item.name;
+                    };
+
+                    $scope.options = {
+                        dialogsInBody: true,
+                        hint: {
+                            mentions: $scope.peopleSummernote,
+                            match: /\B@(\w*)$/,
+                            search: function(keyword, callback) {
+                                callback($.grep($scope.peopleSummernote, function(item) {
+                                    return item.indexOf(keyword) == 0;
+                                }));
+                            },
+                            content: function(item) {
+                                var index = $scope.peopleSummernote.indexOf(item);
+                                $scope.emailAddressesSummernote.push($scope.peopleEmailsSummernote[index]);
+                                $scope.usersMentionedSummernote.push('@' + item);
+                                return '@' + item;
+                            }
+                        }
                     };
                     // -----------------------  end mention   ----------------------------
 
@@ -426,8 +453,8 @@ angular.module('complaints').controller(
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                         ComplaintInfoService.saveComplaintInfoNewComplaint(clearNotFilledElements(_.cloneDeep($scope.complaint))).then(function(objectInfo) {
                             var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.COMPLAINT);
-                            MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned,
-                                ObjectService.ObjectTypes.COMPLAINT, ObjectService.ObjectTypes.COMPLAINT, objectInfo.complaintId, objectInfo.complaintTitle);
+                            MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned, ObjectService.ObjectTypes.COMPLAINT, ObjectService.ObjectTypes.COMPLAINT, objectInfo.complaintId, objectInfo.complaintTitle);
+                            MentionsService.sendEmailToMentionedUsers($scope.emailAddressesSummernote, $scope.usersMentionedSummernote, ObjectService.ObjectTypes.COMPLAINT, "DETAILS", objectInfo.complaintId, objectInfo.details);
                             var complaintCreatedMessage = $translate.instant('{{objectType}} {{complaintTitle}} was created.', {
                                 objectType: objectTypeString,
                                 complaintTitle: objectInfo.complaintTitle
