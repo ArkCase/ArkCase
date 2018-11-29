@@ -116,18 +116,21 @@
                     <div class="row form-group">
                         <div class="col-sm-4">
                             <label translate>complaints.comp.newComplaint.location.streetAddress</label>
+							<span class="required-asterisk" ng-show="isAddressTypeSelected">*</span>
                             <input type="text" ng-model="complaint.defaultAddress.streetAddress" class="input-md form-control"
                                     placeholder="{{ 'complaints.comp.newComplaint.location.streetAddress.placeholder' | translate }}"
                                     ng-required="isAddressTypeSelected">
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.newComplaint.location.city</label>
+							<span class="required-asterisk" ng-show="isAddressTypeSelected">*</span>
                             <input type="text" ng-model="complaint.defaultAddress.city" class="input-md form-control"
                                     placeholder="{{ 'complaints.comp.newComplaint.location.city.placeholder' | translate }}"
                                     ng-required="isAddressTypeSelected">
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.newComplaint.location.state</label>
+							<span class="required-asterisk" ng-show="isAddressTypeSelected">*</span>
                             <select ng-model="complaint.defaultAddress.state" class="form-control input-md" ng-required="isAddressTypeSelected">
                                 <option ng-repeat="option in states" value="{{option.key}}">
                                     {{option.value | translate}}
@@ -138,6 +141,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <label translate>complaints.comp.newComplaint.location.zip</label>
+							<span class="required-asterisk" ng-show="isAddressTypeSelected">*</span>
                             <input type="text" ng-model="complaint.defaultAddress.zip" class="input-md form-control"
                                     placeholder="{{ 'complaints.comp.newComplaint.location.zip.placeholder' | translate }}"
                                     ng-required="isAddressTypeSelected">

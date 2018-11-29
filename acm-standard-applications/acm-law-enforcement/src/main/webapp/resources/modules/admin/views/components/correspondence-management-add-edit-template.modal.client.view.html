@@ -26,6 +26,7 @@
             <div class="row">
                 <label class="control-label">{{ 'admin.correspondenceManagement.templates.modal.objectTypes.label' |
                     translate}}
+                    <span class="required-asterisk">*</span>
                     <select ng-model="template.objectType" ng-disabled="selectedRows.length > 0"
                             ng-options="objectType.id as objectType.name for objectType in objectTypes" class="form-control input-md"
                             required>

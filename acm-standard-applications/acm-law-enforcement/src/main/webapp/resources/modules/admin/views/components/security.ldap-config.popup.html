@@ -12,11 +12,13 @@
     <div class="modal-body">
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.directoryType' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <select class="form-control" name="directoryType" ng-model="dir.directoryType"
                     ng-options="opt.value as opt.name for opt in directoryTypes" required ng-disabled="isEdit"></select>
         </div>
         <div class="form-group" ng-hide="isEdit">
             <label>{{ 'admin.security.ldapConfig.data.id' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input name="dirId" class="form-control" type="text" ng-model="dir.id" ng-pattern="/^[a-zA-Z0-9.]*$/"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.id' | translate }}"
                     title="{{'admin.security.ldapConfig.data.id.validationMessage' | translate}}" required>
@@ -24,21 +26,25 @@
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.ldapUrl' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.ldapUrl"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.ldapUrl' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.base' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.base"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.base' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.authUserDn' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.authUserDn"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.authUserDn' | translate }}" required>
         </div>
         <div class="form-group" ng-class="{ 'has-error' : errorMessage}" ng-if="!isEdit">
             <label for="newPass">{{ 'admin.security.ldapConfig.data.authUserPassword' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input id="newPass" class="form-control" type="password" ng-model="dir.authUserPassword" class="form-control"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.authUserPassword' | translate }}" name="newPassword"
                     required>
@@ -46,6 +52,7 @@
         </div>
         <div class="form-group" ng-if="!isEdit">
             <label for="confirmNewPass">{{ 'admin.security.ldapConfig.data.confirmAuthUserPassword' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input id="confirmNewPass" class="form-control" type="password" ng-model="confirmNewPassword"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.confirmAuthUserPassword' | translate }}"
                     name="confirmNewPassword" password-check new-password="dir.authUserPassword" confirm-new-password="confirmNewPassword"
@@ -57,56 +64,67 @@
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.userSearchBase' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.userSearchBase"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userSearchBase' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.userSearchFilter' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.userSearchFilter"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userSearchFilter' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.allUsersFilter' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.allUsersFilter"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.allUsersFilter' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.allChangedUsersFilter' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.allChangedUsersFilter"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.allChangedUsersFilter' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.allUsersSortingAttribute' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.allUsersSortingAttribute"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.allUsersSortingAttribute' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.allUsersPageFilter' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.allUsersPageFilter"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.allUsersPageFilter' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.allChangedUsersPageFilter' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.allChangedUsersPageFilter"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.allChangedUsersPageFilter' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.groupSearchBase' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.groupSearchBase"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.groupSearchBase' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.groupSearchFilterForUser' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.groupSearchFilterForUser"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.groupSearchFilterForUser' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.userIdAttributeName' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.userIdAttributeName"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userIdAttributeName' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.userDomain' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.userDomain"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userDomain' | translate }}" required>
         </div>
@@ -127,31 +145,37 @@
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.syncPageSize' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.syncPageSize"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.syncPageSize' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.groupSearchFilter' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.groupSearchFilter"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.groupSearchFilter' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.changedGroupSearchFilter' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.changedGroupSearchFilter"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.changedGroupSearchFilter' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.groupsSortingAttribute' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.groupsSortingAttribute"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.groupsSortingAttribute' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.groupSearchPageFilter' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.groupSearchPageFilter"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.groupSearchPageFilter' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.changedGroupSearchPageFilter' | translate }}</label>
+			<span class="required-asterisk">*</span>
             <input class="form-control" type="text" ng-model="dir.changedGroupSearchPageFilter"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.changedGroupSearchPageFilter' | translate }}" required>
         </div>
