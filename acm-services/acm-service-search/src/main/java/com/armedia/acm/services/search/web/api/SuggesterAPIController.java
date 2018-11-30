@@ -68,8 +68,10 @@ public class SuggesterAPIController
             Authentication authentication) throws MuleException
     {
         String filterQueries = "";
-        filterQueries = Arrays.asList(filter).stream().map(f -> getFacetedSearchService().buildSolrQuery(f))
-                .collect(Collectors.joining(""));
+		if(filter != null){		
+			filterQueries = Arrays.asList(filter).stream().map(f -> getFacetedSearchService().buildSolrQuery(f))
+                .collect(Collectors.joining(""));	
+		}
 
         switch (core)
         {
