@@ -46,6 +46,14 @@ angular.module('reports').factory(
                             var reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + params.reports[params.reportSelected] + "?startDate=" + UtilDateService.goodIsoDate(params.startDate) + "&endDate=" + UtilDateService.goodIsoDate(params.endDate) + "&dateFormat="
                                 + encodeURIComponent(UtilDateService.defaultDateFormat) + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset());
 
+                            if (params.typeSelected) {
+                                reportUrl += "&foiaType=" + params.typeSelected;
+                            }
+
+                            if (params.stateSelected) {
+                                reportUrl += "&status=" + params.stateSelected;
+                            }
+
                             if (xmlReport) {
                                 var xmlReportUri = params.reports[params.reportSelected];
                                 xmlReportUri = xmlReportUri.substring(0, xmlReportUri.indexOf('viewer')) + 'report';
