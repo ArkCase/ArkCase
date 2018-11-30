@@ -91,24 +91,6 @@
                     <label translate> cases.comp.main.description.label </label>
                     <textarea rows=5 ng-model="objectInfo.details" class="input-md form-control" ng-disabled="true"></textarea>
                 </div>
-
-                <div class="col-sm-3">
-                    <label for="scannedDate" translate> cases.comp.main.scannedDate.label </label>
-                    <div>
-                        <div class="input-group">
-                            <input type="text" id="scannedDate" class="form-control" name="scannedDate"
-                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="objectInfo.scannedDate"
-                                   is-open="openedScanned.openedEnd" close-on-date-selection="true" show-button-bar="true"
-                                   on-open-focus="false" close-text="Close" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
-                                   permission-action="disable"/> <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="openedScanned.openedEnd = !openedScanned.openedEnd" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
-                                    permission-action="disable">
-                                <i class="fa fa-calendar"></i>
-                            </button>
-                        </span>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-sm-3">
                     <label for="releasedDate" translate> cases.comp.main.releasedDate.label </label>
                     <div>
@@ -126,7 +108,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-sm-3">
+                <div class="col-sm-3">
                     <label class="control-label" translate>cases.comp.info.category.label</label>
                     <select id="requestCategory" ng-model="objectInfo.requestCategory"
                             ng-options="category.key as category.value for category in requestCategory"
