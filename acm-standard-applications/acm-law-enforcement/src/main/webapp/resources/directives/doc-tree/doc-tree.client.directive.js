@@ -3859,45 +3859,19 @@ angular
                         var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                         if (DocTree.uploadSetting.uploadFileNew) {
 
-                            var regularSizeFile = 52428800; //50 mb file
-                            //dose not seems to subscribe TODO CHECK THE ISSUE
-                            DocTree.scope.$bus.subscribe('upload-file-size-limit-changed', function(data){
-                                regularSizeFile = data.uploadFileSizeLimit;
-                            });
+                            var parentObjectNumber = getParentObjectNumber();
 
+                            var fileDetails = {
+                                files: files,
+                                fileType: fileType,
+                                folderId: folderNode.data.objectId,
+                                originObjectType: folderNode.data.containerObjectType,
+                                originObjectId: folderNode.data.containerObjectId,
+                                parentObjectNumber: parentObjectNumber,
+                                lang: fileLang
+                            };
 
-                            for (i = 0; i< files.length; i++){
-                                if(files[i].size < regularSizeFile){
-                                    var useRegularFileUpload = true;
-                                }
-                            }
-
-                            if (useRegularFileUpload) {
-                                DocTree.Op.uploadFiles(fd, folderNode, names, fileType, fileLang).then(function(data) {
-                                     _.each(data.nodes, function(node) {
-                                         DocTree.markNodeOk(node)
-                                     });
-                                     dfd.resolve(data);
-                                 }, function(error) {
-                                         dfd.reject(error);
-                                     });
-                             }
-                                else {
-
-                                    var parentObjectNumber = getParentObjectNumber();
-
-                                    var fileDetails = {
-                                        files: files,
-                                        fileType: fileType,
-                                        folderId: folderNode.data.objectId,
-                                        originObjectType: folderNode.data.containerObjectType,
-                                        originObjectId: folderNode.data.containerObjectId,
-                                        parentObjectNumber: parentObjectNumber
-                                    };
-
-                                    DocTree.scope.$bus.publish('upload-chunk-file', fileDetails);
-
-                                }
+                            DocTree.scope.$bus.publish('upload-chunk-file', fileDetails);
 
                         } else {
                             var replaceNode = DocTree.uploadSetting.replaceFileNode;

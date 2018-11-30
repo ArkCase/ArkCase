@@ -3,7 +3,7 @@
         <h3 translate>core.progressBar.header</h3>
     </div>
     <div class="modal-body">
-        <div class="row" ng-show="!hideProgressbar" ng-repeat="element in hashMap">
+        <div class="row" ng-repeat="element in hashMap">
             <div class="text-left"><strong>{{ element.objectType }}</strong> / <strong>{{ element.parentObjectNumber }}</strong> / <strong>{{ element.file.name }}</strong></div>
             <div class="col-sm-9">
                 <div class="progress">
@@ -12,7 +12,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3"><button ng-click="onClickHideTheUploadedFile()" ng-show="element.currentProgress >= 100"><i class="fa fa-times"></i></button></div>
+            <div class="col-sm-3"><button ng-click="onClickHideTheUploadedFile(element.uuid)" ng-show="element.currentProgress >= 100"><i class="fa fa-times"></i></button></div>
         </div>
     </div>
     <div class="modal-footer">

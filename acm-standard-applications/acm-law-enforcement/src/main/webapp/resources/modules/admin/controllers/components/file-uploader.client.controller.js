@@ -10,15 +10,38 @@ angular.module('admin').controller('Admin.FileUploaderController',
             saved.uploadFileSizeLimit = $scope.uploadFileSizeLimit;
         });
 
+        ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.SINGLE_CHUNK_FILE_SIZE_LIMIT).then(function(response) {
+            var defaultChunkLimit = 10485760; //10mb
+            var singleChunkFileSizeLimitInBytes = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.SINGLE_CHUNK_FILE_SIZE_LIMIT], defaultChunkLimit);
+            $scope.singleChunkFileSizeLimit = Util.bytes(singleChunkFileSizeLimitInBytes);
+            saved.singleChunkFileSizeLimit = $scope.singleChunkFileSizeLimit;
+        });
+
+
+
         $scope.applyChanges = function() {
-            if (saved.uploadFileSizeLimit != $scope.uploadFileSizeLimit) {
+            if (saved.uploadFileSizeLimit != $scope.uploadFileSizeLimit || saved.singleChunkFileSizeLimit != $scope.singleChunkFileSizeLimit) {
                 $scope.uploadFileSizeLimit = Util.bytes($scope.uploadFileSizeLimit);
                 ApplicationSettingsService.setProperty(ApplicationSettingsService.PROPERTIES.UPLOAD_FILE_SIZE_LIMIT, $scope.uploadFileSizeLimit);
                 saved.uploadFileSizeLimit = $scope.uploadFileSizeLimit;
-                //TODO: event publish from here to the doc-tree controller, so that it knows that the limit has been changed
+
                 $scope.$bus.publish('upload-file-size-limit-changed', {
-                    uploadFileSizeLimit: $scope.uploadFileSizeLimit
+                    newUploadFileSizeLimit: Util.bytes($scope.uploadFileSizeLimit)
                 });
+                $scope.uploadFileSizeLimit = Util.bytes($scope.uploadFileSizeLimit);
+
+
+                $scope.singleChunkFileSizeLimit = Util.bytes($scope.singleChunkFileSizeLimit);
+                ApplicationSettingsService.setProperty(ApplicationSettingsService.PROPERTIES.SINGLE_CHUNK_FILE_SIZE_LIMIT, $scope.singleChunkFileSizeLimit);
+                saved.singleChunkFileSizeLimit = $scope.singleChunkFileSizeLimit;
+
+                //publish updated single chunk size limit in bytes
+                $scope.$bus.publish('singe-chunk-file-size-limit-changed', {
+                    newSingleChunkFileSizeLimit: Util.bytes($scope.singleChunkFileSizeLimit)
+                });
+                $scope.singleChunkFileSizeLimit = Util.bytes($scope.singleChunkFileSizeLimit);
+
+
 
                 bootbox.alert({
                     message: $translate.instant("admin.documentManagement.fileUploader.inform"),
