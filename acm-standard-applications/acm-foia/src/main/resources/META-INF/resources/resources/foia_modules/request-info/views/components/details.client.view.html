@@ -102,22 +102,6 @@
             </div>
             <div class="row">
                 <div class="form-group col-sm-6">
-                    <label class="control-label" for="scannedDate"><span translate> requests.comp.details.scannedDate.label</span> <span
-                            ng-if="requiredFields['scannedDate']" class="required-asterisk">*</span></label>
-                    <div>
-                        <div class="input-group">
-                            <input type="text" id="scannedDate" class="form-control" name="scannedDate"
-                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="requestInfo.scannedDate"
-                                    ng-required="requiredFields['scannedDate']" is-open="openedScanned.openedEnd" close-on-date-selection="true"
-                                    show-button-bar="true" on-open-focus="false" close-text="Close" /> <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="openedScanned.openedEnd = !openedScanned.openedEnd">
-                                <i class="fa fa-calendar"></i>
-                            </button>
-                        </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group col-sm-6">
                     <label class="control-label" for="releasedDate"><span translate> requests.comp.details.releasedDate.label</span> <span
                             ng-if="requiredFields['releasedDate']" class="required-asterisk">*</span></label>
                     <div>

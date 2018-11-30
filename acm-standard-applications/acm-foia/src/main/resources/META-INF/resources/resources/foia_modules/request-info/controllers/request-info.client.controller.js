@@ -257,7 +257,6 @@ angular.module('request-info').controller(
                         $scope.requestInfo = objectInfo;
                         $scope.dateInfo = $scope.dateInfo || {};
                         $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.requestInfo.dueDate);
-                        $scope.requestInfo.scannedDate = UtilDateService.isoToDate(objectInfo.scannedDate);
                         $scope.requestInfo.receivedDate = UtilDateService.isoToDate(objectInfo.receivedDate);
                         $scope.requestInfo.recordSearchDateFrom = UtilDateService.isoToDate(objectInfo.recordSearchDateFrom);
                         $scope.requestInfo.recordSearchDateTo = UtilDateService.isoToDate(objectInfo.recordSearchDateTo);
