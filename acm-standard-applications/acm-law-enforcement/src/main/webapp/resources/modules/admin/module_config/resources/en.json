@@ -888,6 +888,7 @@
             "fileUploader": {
                 "title": "File Uploader Settings",
                 "uploadFileSizeLimit.label": "Upload in chunks over this file size",
+                "singleChunkFileSizeLimit.label": "Single chunk file size",
                 "inform": "Settings will take effect for all new files",
                 "apply.label": "Apply",
                 "dialog" : {

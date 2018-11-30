@@ -43,6 +43,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileChunkService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -215,34 +216,64 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware {
 
     @RequestMapping(value = "/uploadChunks", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
-    public FileChunkDetails uploadChunks(HttpServletRequest request, Authentication authentication) throws Exception {
+    public FileChunkDetails uploadChunks(HttpServletRequest request, Authentication authentication, HttpSession session) throws Exception {
         log.debug("Starting a file upload by user {}", authentication.getName());
 
-        String dirPath = System.getProperty("java.io.tmpdir");
         String fileName = "";
-        try {
-            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
-            MultiValueMap<String, MultipartFile> attachments = multipartHttpServletRequest.getMultiFileMap();
-            if (attachments != null) {
-                for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet()) {
 
-                    final List<MultipartFile> attachmentsList = entry.getValue();
+        if (!Boolean.parseBoolean(request.getParameter("isFileChunk"))) {
+            String parentObjectType = request.getParameter("parentObjectType");
+            String parentObjectIdString = request.getParameter("parentObjectId");
+            Long parentObjectId = null;
+            if (StringUtils.isNotEmpty(parentObjectIdString)) {
+                parentObjectId = Long.parseLong(parentObjectIdString);
+            }
+            String folderIdString = request.getParameter("folderId");
+            Long folderId = null;
+            if (StringUtils.isNotEmpty(folderIdString)) {
+                folderId = Long.parseLong(folderIdString);
+            }
+            String fileType =  request.getParameter("fileType");
+            String fileLang = request.getParameter("fileLang");
 
-                    if (attachmentsList != null && !attachmentsList.isEmpty()) {
+            AcmFolder folder = getParentFolder(parentObjectType, parentObjectId, folderId);
 
-                        for (final MultipartFile attachment : attachmentsList) {
-                            fileName = attachment.getOriginalFilename();
-                            File dir = new File(dirPath);
-                            if (dir.exists()) {
-                                File file = new File(dirPath + "/" + fileName);
-                                attachment.transferTo(file);
+            if (!getArkPermissionEvaluator().hasPermission(authentication, folder.getId(), "FOLDER", "write|group-write")) {
+                throw new AcmAccessControlException(Arrays.asList(""),
+                        "The user {" + authentication.getName() + "} is not allowed to write to folder with id=" + folder.getId());
+            }
+
+            List<EcmFile> files = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, fileLang, folder.getCmisFolderId(), (MultipartHttpServletRequest) request, session);
+            if (files != null && files.size() == 1) {
+                fileName = files.get(0).getFileName();
+            }
+        } else {
+
+            String dirPath = System.getProperty("java.io.tmpdir");
+            try {
+                MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+                MultiValueMap<String, MultipartFile> attachments = multipartHttpServletRequest.getMultiFileMap();
+                if (attachments != null) {
+                    for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet()) {
+
+                        final List<MultipartFile> attachmentsList = entry.getValue();
+
+                        if (attachmentsList != null && !attachmentsList.isEmpty()) {
+
+                            for (final MultipartFile attachment : attachmentsList) {
+                                fileName = attachment.getOriginalFilename();
+                                File dir = new File(dirPath);
+                                if (dir.exists()) {
+                                    File file = new File(dirPath + "/" + fileName);
+                                    attachment.transferTo(file);
+                                }
                             }
                         }
                     }
                 }
+            } catch (Exception e) {
+                log.error("File upload was unsuccessful.", e);
             }
-        } catch (Exception e) {
-            log.error("File upload was unsuccessful.", e);
         }
 
         FileChunkDetails filechunkdetails = new FileChunkDetails();
