@@ -260,6 +260,9 @@ angular.module('request-info').controller(
                         $scope.requestInfo.receivedDate = UtilDateService.isoToDate(objectInfo.receivedDate);
                         $scope.requestInfo.recordSearchDateFrom = UtilDateService.isoToDate(objectInfo.recordSearchDateFrom);
                         $scope.requestInfo.recordSearchDateTo = UtilDateService.isoToDate(objectInfo.recordSearchDateTo);
+                        ObjectLookupService.getRequestCategories().then(function (requestCategories) {
+                            $scope.requestCategories = requestCategories;
+                        });
                         ObjectLookupService.getPayFees().then(function (payFees) {
                             $scope.payFees = payFees;
                             if ($scope.requestInfo.payFee != null && $scope.requestInfo.payFee != "0" && $scope.requestInfo.payFee != '') {
