@@ -1,4 +1,5 @@
 package com.armedia.acm.plugins.businessprocess.model;
 
-public class SystemConfiguration {
+public class SystemConfiguration
+{
 }
