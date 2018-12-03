@@ -40,6 +40,8 @@ public class EnterQueueModel<T, P extends AbstractPipelineContext>
 
     private P pipelineContext;
 
+    private SystemConfiguration systemConfiguration;
+
     private List<String> cannotEnterReasons = new ArrayList<>();
 
     public T getBusinessObject()
@@ -79,4 +81,13 @@ public class EnterQueueModel<T, P extends AbstractPipelineContext>
         cannotEnterReasons.add(reason);
     }
 
+    public SystemConfiguration getSystemConfiguration()
+    {
+        return systemConfiguration;
+    }
+
+    public void setSystemConfiguration(SystemConfiguration systemConfiguration)
+    {
+        this.systemConfiguration = systemConfiguration;
+    }
 }
