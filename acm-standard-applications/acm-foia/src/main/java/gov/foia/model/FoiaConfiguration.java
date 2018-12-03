@@ -27,7 +27,9 @@ package gov.foia.model;
  * #L%
  */
 
-public class FoiaConfiguration
+import com.armedia.acm.plugins.businessprocess.model.SystemConfiguration;
+
+public class FoiaConfiguration extends SystemConfiguration
 {
     private Integer maxDaysInBillingQueue;
     private Integer maxDaysInHoldQueue;
@@ -92,4 +94,5 @@ public class FoiaConfiguration
     public void setNotificationGroupsEnabled(Boolean notificationGroupsEnabled) {
         this.notificationGroupsEnabled = notificationGroupsEnabled;
     }
+
 }
