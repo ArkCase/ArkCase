@@ -44,7 +44,7 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping({"/api/v1/api/labelcheck"})
+@RequestMapping({"/api/v1/plugin/admin/labelcheck"})
 public class MissingLabelCheckControllerAPI
 {
     private Logger log = LoggerFactory.getLogger(getClass());
