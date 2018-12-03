@@ -94,5 +94,4 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setNotificationGroupsEnabled(Boolean notificationGroupsEnabled) {
         this.notificationGroupsEnabled = notificationGroupsEnabled;
     }
-
 }
