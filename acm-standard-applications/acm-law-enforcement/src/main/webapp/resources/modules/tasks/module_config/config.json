@@ -247,7 +247,7 @@
                 ]
             },
             {
-                "type": "p/TASK/docrev",
+                "type": "p/ADHOC/docrev",
                 "label": "tasks.tree.nodeTypes.docReview.label",
                 "icon": "fa fa-search-plus",
                 "components": [
@@ -1505,5 +1505,3 @@
         }
     ]
 }
-
-
