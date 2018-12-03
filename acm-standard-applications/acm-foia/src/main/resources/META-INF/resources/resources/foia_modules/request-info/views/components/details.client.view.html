@@ -120,7 +120,7 @@
                 <div class="form-group col-sm-6">
                     <label class="control-label" translate>cases.comp.info.category.label</label>
                     <select id="requestCategory" ng-model="requestInfo.requestCategory"
-                            ng-options="requestCategory.key as requestCategory.value for requestCategory in requestCategories"
+                            ng-options="requestCategory.key as requestCategory.value | translate for requestCategory in requestCategories"
                             class="form-control input-md" ng-disabled="true">
                     </select>
                 </div>
