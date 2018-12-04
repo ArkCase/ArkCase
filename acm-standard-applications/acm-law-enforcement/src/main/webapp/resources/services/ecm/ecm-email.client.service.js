@@ -194,7 +194,6 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
      * @returns {Object} Object returned by $resource
      */
     Service.sendMentionsEmail = function(emailData) {
-        var failed = "";
         return Util.serviceCall({
             service: Service._sendMentionsEmail,
             data: emailData,
@@ -205,7 +204,7 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
                 }
             },
             onInvalid: function(data) {
-                return failed;
+                return data;
             }
         });
     };

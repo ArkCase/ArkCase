@@ -24,30 +24,16 @@ angular.module('document-repository').controller(
                     $scope.loading = false;
                     var user = {};
 
-                    // ---------------------   mention   ---------------------------------
-                    $scope.emailAddressesName = [];
-                    $scope.usersMentionedName = [];
-
-                    // Obtains a list of all users in ArkCase
-                    MentionsService.getUsers().then(function (users) {
-                        $scope.people = users;
-                    });
-
-                    $scope.getMentionedUsers = function (item) {
-                        $scope.emailAddressesName.push(item.email_lcs);
-                        $scope.usersMentionedName.push('@' + item.name);
-                        return '@' + item.name;
+                    // --------------  mention --------------
+                    $scope.paramsName = {
+                        emailAddresses: [],
+                        usersMentioned: []
                     };
 
-                    $scope.emailAddressesDescription = [];
-                    $scope.usersMentionedDescription = [];
-
-                    $scope.getMentionedUsersDescription = function (item) {
-                        $scope.emailAddressesDescription.push(item.email_lcs);
-                        $scope.usersMentionedDescription.push('@' + item.name);
-                        return '@' + item.name;
+                    $scope.paramsDescription = {
+                        emailAddresses: [],
+                        usersMentioned: []
                     };
-                    // -----------------------  end mention   ----------------------------
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         user = userInfo;
@@ -143,9 +129,9 @@ angular.module('document-repository').controller(
                             } else {
                                 ObjectService.showObject(ObjectService.ObjectTypes.DOC_REPO, data.id);
                             }
-                            MentionsService.sendEmailToMentionedUsers($scope.emailAddressesName, $scope.usersMentionedName,
+                            MentionsService.sendEmailToMentionedUsers($scope.paramsName.emailAddresses, $scope.paramsName.usersMentioned,
                                 ObjectService.ObjectTypes.DOC_REPO, ObjectService.ObjectTypes.DOC_REPO, data.id, data.name);
-                            MentionsService.sendEmailToMentionedUsers($scope.emailAddressesDescription, $scope.usersMentionedDescription,
+                            MentionsService.sendEmailToMentionedUsers($scope.paramsDescription.emailAddresses, $scope.paramsDescription.usersMentioned,
                                 ObjectService.ObjectTypes.DOC_REPO, ObjectService.ObjectTypes.DOC_REPO, data.id, data.description);
                             $scope.onModalClose();
                             $scope.loading = false;

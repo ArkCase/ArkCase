@@ -103,15 +103,18 @@ angular.module('tasks').controller(
                     $scope.minStartDate = new Date();
                     $scope.minDueDate = new Date();
 
+                    // --------------  mention --------------
+                    $scope.params = {
+                        emailAddresses: [],
+                        usersMentioned: []
+                    };
+
                     // ---------------------   mention   ---------------------------------
-                    $scope.emailAddresses = [];
-                    $scope.usersMentioned = [];
                     $scope.emailAddressesSummernote = [];
                     $scope.usersMentionedSummernote = [];
 
                     // Obtains a list of all users in ArkCase
                     MentionsService.getUsers().then(function(users) {
-                        $scope.people = users;
                         $scope.peopleSummernote = [];
                         $scope.peopleEmailsSummernote = [];
                         _.forEach(users, function(user) {
@@ -119,12 +122,6 @@ angular.module('tasks').controller(
                             $scope.peopleEmailsSummernote.push(user.email_lcs);
                         });
                     });
-
-                    $scope.getMentionedUsers = function(item) {
-                        $scope.emailAddresses.push(item.email_lcs);
-                        $scope.usersMentioned.push('@' + item.name);
-                        return '@' + item.name;
-                    };
 
                     $scope.options = {
                         dialogsInBody: true,
@@ -211,7 +208,7 @@ angular.module('tasks').controller(
                     function reviewDocumentTaskSuccessCallback(data) {
                         $scope.saved = false;
                         $scope.loading = false;
-                        MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned, ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
+                        MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned, ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
                         MentionsService.sendEmailToMentionedUsers($scope.emailAddressesSummernote, $scope.usersMentionedSummernote, ObjectService.ObjectTypes.TASK, "DETAILS", data.data.taskId, data.data.details);
                         $scope.onModalClose();
                     }
@@ -219,7 +216,7 @@ angular.module('tasks').controller(
                     function saveNewTaskSuccessCallback(data) {
                         $scope.saved = false;
                         $scope.loading = false;
-                        MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned, ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
+                        MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned, ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
                         MentionsService.sendEmailToMentionedUsers($scope.emailAddressesSummernote, $scope.usersMentionedSummernote, ObjectService.ObjectTypes.TASK, "DETAILS", data.data.taskId, data.data.details);
                         if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ':returnState') {
                             $state.go($scope.modalParams.returnState, {

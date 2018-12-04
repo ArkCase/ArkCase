@@ -27,11 +27,7 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.businessprocess.model.EnterQueueModel;
-import com.armedia.acm.plugins.businessprocess.model.LeaveCurrentQueueModel;
-import com.armedia.acm.plugins.businessprocess.model.NextPossibleQueuesModel;
-import com.armedia.acm.plugins.businessprocess.model.OnEnterQueueModel;
-import com.armedia.acm.plugins.businessprocess.model.OnLeaveQueueModel;
+import com.armedia.acm.plugins.businessprocess.model.*;
 import com.armedia.acm.plugins.businessprocess.service.QueueService;
 import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
@@ -74,6 +70,10 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
     private SaveCaseFileBusinessRule saveCaseFileBusinessRule;
 
     private AcmObjectLockService acmObjectLockService;
+
+    private SystemConfiguration systemConfiguration;
+
+    private SystemConfigurationService systemConfigurationService;
 
     @Override
     @Transactional
@@ -166,6 +166,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         EnterQueueModel<CaseFile, CaseFilePipelineContext> enterModel = new EnterQueueModel<>();
         enterModel.setBusinessObject(caseFile);
         enterModel.setPipelineContext(context);
+        enterModel.setSystemConfiguration(getSystemConfigurationService().readConfiguration());
         enterModel = getEnterQueueBusinessRule().applyRules(enterModel);
 
         return enterModel.getCannotEnterReasons();
@@ -321,4 +322,23 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         this.acmObjectLockService = acmObjectLockService;
     }
 
+    public SystemConfiguration getSystemConfiguration()
+    {
+        return systemConfiguration;
+    }
+
+    public void setSystemConfiguration(SystemConfiguration systemConfiguration)
+    {
+        this.systemConfiguration = systemConfiguration;
+    }
+
+    public SystemConfigurationService getSystemConfigurationService()
+    {
+        return systemConfigurationService;
+    }
+
+    public void setSystemConfigurationService(SystemConfigurationService systemConfigurationService)
+    {
+        this.systemConfigurationService = systemConfigurationService;
+    }
 }

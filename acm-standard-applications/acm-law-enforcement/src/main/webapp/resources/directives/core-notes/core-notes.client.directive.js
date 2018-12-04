@@ -172,21 +172,11 @@ angular.module('directives').directive(
                                 modalScope.note = note || {};
                                 modalScope.isEdit = isEdit || false;
 
-                                // ---------------------   mention   ---------------------------------
-                                scope.emailAddresses = [];
-                                scope.usersMentioned = [];
-
-                                // Obtains a list of all users in ArkCase
-                                MentionsService.getUsers().then(function (users) {
-                                    scope.people = users;
-                                });
-
-                                scope.getMentionedUsers = function (item) {
-                                    scope.emailAddresses.push(item.email_lcs);
-                                    scope.usersMentioned.push('@' + item.name);
-                                    return '@' + item.name;
+                                // --------------  mention --------------
+                                scope.params = {
+                                    emailAddresses: [],
+                                    usersMentioned: []
                                 };
-                                // -----------------------  end mention   ----------------------------
 
                                 var modalInstance = $modal.open({
                                     scope: modalScope,
@@ -218,7 +208,7 @@ angular.module('directives').directive(
                                         else {
                                             noteParentType = note.parentType;
                                         }
-                                        MentionsService.sendEmailToMentionedUsers(scope.emailAddresses, scope.usersMentioned,
+                                        MentionsService.sendEmailToMentionedUsers(scope.params.emailAddresses, scope.params.usersMentioned,
                                             "NOTE", noteParentType, note.parentId, note.note);
                                         scope.retrieveGridData();
                                     }, function() {
