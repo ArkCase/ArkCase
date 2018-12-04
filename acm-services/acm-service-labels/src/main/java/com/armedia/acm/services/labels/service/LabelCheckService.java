@@ -65,7 +65,7 @@ public class LabelCheckService
     {
 
         File[] files = new File(getResourcesLocation()).listFiles();
-        List<String> labelList = labelRetrievalProcess();
+        Set<String> labelList = labelRetrievalProcess();
 
         Set<JSONObject> translationList = new HashSet<>();
         Set<String> checkAnswer = new HashSet<>();
@@ -74,9 +74,6 @@ public class LabelCheckService
         {
             translationList.add(loadResource(file.getAbsolutePath()));
         }
-
-        labelList = labelList.stream().distinct().collect(Collectors.toList());
-        Collections.sort(labelList);
 
         boolean isFound = false;
         for (String label : labelList)
@@ -152,6 +149,8 @@ public class LabelCheckService
             else if (modules[i].equals("cost-tracking"))
             {
                 modules[i] = "costTracking";
+            }else if(modules[i].equals("request-info")){
+                modules[i] = "requests";
             }
         }
 
@@ -162,15 +161,17 @@ public class LabelCheckService
      * retrieval label list from html files and js files
      * @return labelList
      */
-    public List<String> labelRetrievalProcess()
+    public Set<String> labelRetrievalProcess()
     {
 
         String[] modules = modulesGenerate(getModulesLocation());
-        List<File> fileHtmlList = new ArrayList<>();
-        List<File> fileJSList = new ArrayList<>();
-        findAllFile(getModulesLocation(), fileHtmlList, fileJSList);
-        List<String> labelList = jsLabelRetrieve(fileJSList);
+        Set<File> fileHtmlList = new HashSet<>();
+        Set<File> fileJSList = new HashSet<>();
+        Set<File> fileConfigList = new HashSet<>();
+        findAllFile(getModulesLocation(), fileHtmlList, fileJSList, fileConfigList);
+        Set<String> labelList = jsLabelRetrieve(fileJSList);
         labelList.addAll(htmlLabelRetrieve(fileHtmlList, modules));
+        labelList.addAll(configLabelRetrieve(fileConfigList,modules));
         return labelList;
     }
 
@@ -179,14 +180,14 @@ public class LabelCheckService
      * @param fileHtmlList html file list
      * @param  fileJSList js file list
      */
-    public void findAllFile(String path, List<File> fileHtmlList, List<File> fileJSList)
+    private void findAllFile(String path, Set<File> fileHtmlList, Set<File> fileJSList, Set<File> fileConfigList)
     {
         File file = new File(path);
         for (File subFile : file.listFiles())
         {
             if (subFile.isDirectory())
             {
-                findAllFile(subFile.getAbsolutePath(), fileHtmlList, fileJSList);
+                findAllFile(subFile.getAbsolutePath(), fileHtmlList, fileJSList, fileConfigList);
             }
             else
             {
@@ -197,6 +198,9 @@ public class LabelCheckService
                 else if (subFile.getName().endsWith(".js"))
                 {
                     fileJSList.add(subFile);
+                }else if(subFile.getName().equals("config.json"))
+                {
+                    fileConfigList.add(subFile);
                 }
 
             }
@@ -204,11 +208,76 @@ public class LabelCheckService
     }
 
     /**
+     * retrieve from
+     * @param configFileList
+     * @return
+     */
+    private List<String> configLabelRetrieve(Set<File> configFileList, String[] modules){
+        List<String> outputMatches = new ArrayList<>();
+        StringBuilder regexSBinHtml = new StringBuilder();
+        for (String module : modules)
+        {
+            regexSBinHtml = regexSBinHtml.append(module);
+            regexSBinHtml.append("\\.([a-zA-Z0-9\\-\\_]*\\.)*[a-zA-Z0-9\\-\\_]*|");
+        }
+        String regex = regexSBinHtml.subSequence(0, regexSBinHtml.lastIndexOf("|")).toString();
+        for (File file : configFileList)
+        {
+            BufferedReader br = null;
+            try
+            {
+                br = new BufferedReader(new FileReader(file));
+                String line = null;
+                while ((line = br.readLine()) != null)
+                {
+                    if (line.trim().startsWith("\"displayName\"") || line.trim().startsWith("\"cellTemplate\""))
+                    {
+                        Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+                        Matcher matcher = pattern.matcher(line);
+                        while (matcher.find())
+                        {
+                            if(matcher.group()
+                                    .endsWith("main") || matcher.group()
+                                    .endsWith("."))
+                            {
+                                continue;
+                            }
+                            outputMatches.add(matcher.group());
+                        }
+                    }
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                log.warn("Can not find file [{}]", file.getName(), e);
+            }
+            catch (IOException e)
+            {
+                log.warn("IO Exception [{}]", file.getName(), e);
+            }
+            finally
+            {
+                try
+                {
+                    br.close();
+                }
+                catch (IOException e)
+                {
+                    log.warn("IO Exception [{}]", file.getName(), e);
+                }
+            }
+        }
+
+        return outputMatches;
+    }
+
+
+    /**
         Retrieve Label from Html files
      * @param htmlFileList html file list
      * @param modules  modules
      */
-    private List<String> htmlLabelRetrieve(List<File> htmlFileList, String[] modules)
+    private Set<String> htmlLabelRetrieve(Set<File> htmlFileList, String[] modules)
     {
         StringBuffer regexSBinHtml = new StringBuffer();
         regexSBinHtml.append("ui-sref|translateData|\\{dashboard\\.([a-zA-Z0-9\\-\\_]*\\.)*[a-zA-Z0-9\\-\\_]*\\}|");
@@ -219,7 +288,7 @@ public class LabelCheckService
         }
         String regex = regexSBinHtml.subSequence(0, regexSBinHtml.lastIndexOf("|")).toString();
 
-        List<String> outputMatches = new ArrayList<>();
+        Set<String> outputMatches = new HashSet<>();
         for (File file : htmlFileList)
         {
             BufferedReader br = null;
@@ -279,9 +348,9 @@ public class LabelCheckService
      * @param jsFileList Js file list
      * @return label list
      */
-    private List<String> jsLabelRetrieve(List<File> jsFileList)
+    private Set<String> jsLabelRetrieve(Set<File> jsFileList)
     {
-        List<String> outputMatches = new ArrayList<>();
+        Set<String> outputMatches = new HashSet<>();
         String regex = "translate.instant\\(\"([a-zA-Z0-9\\-\\_]*\\.)*[a-zA-Z0-9\\-\\_]*\"\\)|translate.instant\\(\\\'([a-zA-Z0-9\\-\\_]*\\.)*[a-zA-Z0-9\\-\\_]*\\\'\\)";
         for (File file : jsFileList)
         {

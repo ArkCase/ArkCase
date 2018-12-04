@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,7 +55,14 @@ public class MissingLabelCheckControllerAPI
     @ResponseBody
     public List<String> checkMissingLabel(){
         List<String> resultList = labelCheckService.checkLabel();
-        log.info(resultList.toString());
+        Collections.sort(resultList);
+        StringBuffer outputSB = new StringBuffer();
+        for(String output : resultList){
+            outputSB = outputSB.append(output+"\n");
+
+        }
+        log.info("Missing Label: \n" + outputSB.toString());
+
         return resultList;
     }
 
