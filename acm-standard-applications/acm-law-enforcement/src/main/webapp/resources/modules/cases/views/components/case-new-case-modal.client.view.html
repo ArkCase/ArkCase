@@ -8,11 +8,10 @@
             <div class="row well-sm">
                 <div class="row">
                     <div class="col-sm-12 form-group">
-                        <label for="title" translate>cases.comp.newCase.caseTitle</label>
+                        <label translate>cases.comp.newCase.caseTitle</label>
                         <span class="required-asterisk">*</span>
-                        <input mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
-                               mentio-select="getMentionedUsers(item)" id="title" type="text" ng-model="casefile.title" class="input-md form-control"
-                                placeholder="{{ 'cases.comp.newCase.caseTitle.placeholder' | translate }}" required>
+                        <mention-input ng-model="casefile.title" params="params"
+                                placeholder="{{ 'cases.comp.newCase.caseTitle.placeholder' | translate }}"></mention-input>
                     </div>
                 </div>
                 <div class="row">

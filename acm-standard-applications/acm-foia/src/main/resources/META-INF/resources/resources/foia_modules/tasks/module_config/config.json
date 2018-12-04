@@ -801,7 +801,7 @@
         },
         {
             "id": "documentsunderreview",
-            "title": "tasks.comp.docsreview.title",
+            "title": "tasks.comp.documentsunderreview.title",
             "icon": "fa fa-search-plus",
             "enabled": true,
             "configurable": true,

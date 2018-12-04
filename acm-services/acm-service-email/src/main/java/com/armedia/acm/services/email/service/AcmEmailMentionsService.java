@@ -4,7 +4,6 @@ import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;
-import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,20 +27,19 @@ public class AcmEmailMentionsService
     private AcmApplication acmAppConfiguration;
     private String mentionsEmailSubject;
     private String mentionsEmailBodyTemplate;
-    private AcmUser user;
 
-    private String buildEmailSubject(EmailMentionsDTO in)
+    private String buildEmailSubject(EmailMentionsDTO in, String userFullName)
     {
         return String.format(mentionsEmailSubject,
-                user.getFullName(),
+                userFullName,
                 in.getObjectType() + " " + in.getObjectId());
     }
 
-    private EmailBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> buildEmail(EmailMentionsDTO in)
+    private EmailBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> buildEmail(EmailMentionsDTO in, String userFullName)
     {
         EmailBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBuilder = (emailUserData, messageProps) -> {
             messageProps.put("to", emailUserData.getKey());
-            messageProps.put("subject", buildEmailSubject(in));
+            messageProps.put("subject", buildEmailSubject(in, userFullName));
         };
         return emailBuilder;
     }
@@ -48,35 +47,38 @@ public class AcmEmailMentionsService
     private String buildObjectUrl(EmailMentionsDTO in)
     {
         String baseUrl = acmAppConfiguration.getBaseUrl();
-        String objectUrl = acmAppConfiguration.getObjectTypes().stream()
+        String subType = !in.getSubType().isEmpty() ? in.getSubType() : in.getObjectType();
+        Optional<String> objectUrl = acmAppConfiguration.getObjectTypes().stream()
                 .filter(acmObjectType -> acmObjectType.getName().equals(in.getObjectType()))
-                .map(acmObjectType -> acmObjectType.getUrl().get(in.getSubType()))
-                .collect(Collectors.toList()).get(0);
-        return baseUrl + String.format(objectUrl, in.getObjectId());
+                .map(acmObjectType -> acmObjectType.getUrl().get(subType))
+                .collect(Collectors.toList()).stream().findFirst();
+        return objectUrl.isPresent() ? baseUrl + String.format(objectUrl.get(), in.getObjectId()) : baseUrl;
     }
 
-    private EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> buildEmailBody(EmailMentionsDTO in)
+    private EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> buildEmailBody(EmailMentionsDTO in,
+            String userFullName)
     {
         EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBodyBuilder = emailData -> String.format(
                 mentionsEmailBodyTemplate,
                 buildObjectUrl(in),
                 buildObjectUrl(in),
-                buildEmailSubject(in),
+                buildEmailSubject(in, userFullName),
                 in.getTextMentioned());
         return emailBodyBuilder;
     }
 
-    public void sendMentionsEmail(EmailMentionsDTO in) throws AcmEmailServiceException
+    public void sendMentionsEmail(EmailMentionsDTO in, String userFullName) throws AcmEmailServiceException
     {
-        EmailBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBuilder = buildEmail(in);
-        EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBodyBuilder = buildEmailBody(in);
+        EmailBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBuilder = buildEmail(in, userFullName);
+        EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBodyBuilder = buildEmailBody(in, userFullName);
 
         List<String> emailAddresses = in.getEmailAddresses();
         for (String emailAddress : emailAddresses)
         {
             try
             {
-                log.debug("Sending email on address: [{}]]", emailAddress);
+                log.debug("Sending email on address: [{}] because user was mentioned in: [{}] [{}]", emailAddress, in.getObjectType(),
+                        in.getObjectId());
                 List<String> userAccounts = new ArrayList<>();
                 userAccounts.add(emailAddress);
                 AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData = new AbstractMap.SimpleImmutableEntry<>(emailAddress,
@@ -85,7 +87,7 @@ public class AcmEmailMentionsService
             }
             catch (Exception e)
             {
-                log.error("Email with username was not sent to address: [{}]", emailAddress);
+                log.error("Email was not sent to address: [{}]", emailAddress, e);
                 throw new AcmEmailServiceException(
                         "Could not send emails with attachment, among other things check your request body. Exception message is : "
                                 + e.getMessage(),
@@ -112,10 +114,5 @@ public class AcmEmailMentionsService
     public void setMentionsEmailBodyTemplate(String mentionsEmailBodyTemplate)
     {
         this.mentionsEmailBodyTemplate = mentionsEmailBodyTemplate;
-    }
-
-    public void setUser(AcmUser user)
-    {
-        this.user = user;
     }
 }

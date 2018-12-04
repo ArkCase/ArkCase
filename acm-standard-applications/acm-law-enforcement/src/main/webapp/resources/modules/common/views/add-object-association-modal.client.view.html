@@ -38,9 +38,8 @@
         </div>
         <div class="row" ng-show="showDescription">
             <div class="col-sm-12">
-                <label for="types" translate>common.addObjectAssociation.description</label>
-                <textarea mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
-                          mentio-select="getMentionedUsers(item)" id="description" class="form-control" ng-model="description"></textarea>
+                <label translate>common.addObjectAssociation.description</label>
+                <mention-textarea ng-model="description" params="params"></mention-textarea>
             </div>
         </div>
     </form>

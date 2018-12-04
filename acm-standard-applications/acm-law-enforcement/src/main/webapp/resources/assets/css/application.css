@@ -1656,19 +1656,19 @@ a.primary {
 }
 
 .pdfjs .toolbar {
-	z-index: 1048 !important;
+    z-index: 1048 !important;
 }
 
 .pdfjs .findbar, .pdfjs .secondaryToolbar {
-	z-index: 1049 !important;
+    z-index: 1049 !important;
 }
 
 .pdfjs #thumbnailView {
-	width: inherit !important; 
+    width: inherit !important;
 }
 
 .thumbnailSelectionRing {
-	padding: 0px !important;
+    padding: 0px !important;
 }
 
 /*billing item amount field css*/
@@ -1740,6 +1740,53 @@ a.primary {
 
 .popup-move-on-left > .editable + .form-inline:after {
     left: 50%;
+}
+
+.disabledLink {
+    color: #788288 !important;
+    cursor: auto;
+    border-bottom: none !important;
+}
+
+.timesheetModalselectedWeekLabel {
+    text-align: center;
+    padding-top: 15px;
+}
+
+.timesheetModalprevNextWeekButton {
+    background-color: #fcfcfd;
+    border: 1px solid #d2dae1;
+    width: 100%;
+}
+
+.chargeCodeDetailsGrid {
+    padding: 0px 15px;
+}
+
+.timeSheetModalCodeDetailsBorder {
+    border: 1px solid #ccc;
+    border-radius: 9px;
+    padding: 10px 0px 0px 10px;
+    margin-bottom: 7px;
+}
+
+.timeTrackingPanel {
+    padding-right: 0px;
+}
+
+.timeTrackingExpandableRow {
+    padding: 0px;
+}
+
+.newTimeSheetSelectType {
+    padding: 7px 12px;
+    font-size: 14px;
+    margin: 0px 15px;
+}
+
+/* wrap large text in ui grid cell template*/
+.ui-grid-cell-wrap {
+    white-space: normal !important;
 }
 
 .remove-margin-bottom-from-summernote > .panel {

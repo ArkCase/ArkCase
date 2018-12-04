@@ -138,12 +138,15 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
             emailTemplatesService.getEmailReceiverConfiguration().then(function(result) {
                 $scope.emailReceiverConfiguration = result.data;
                 $scope.emailReceiverConfiguration.user = result.data.user.replace('%40', '@');
+                $scope.emailReceiverConfiguration.user_complaint = result.data.user_complaint.replace('%40', '@');
             })
 
             $scope.newEmailReceiverConfiguration = {};
             $scope.save = function() {
                 $scope.newEmailReceiverConfiguration.user = $scope.emailReceiverConfiguration.user.replace('@', '%40');
                 $scope.newEmailReceiverConfiguration.password = $scope.emailReceiverConfiguration.pass;
+                $scope.newEmailReceiverConfiguration.user_complaint = $scope.emailReceiverConfiguration.user_complaint.replace('@', '%40');
+                $scope.newEmailReceiverConfiguration.password_complaint = $scope.emailReceiverConfiguration.pass_complaint;
                 emailTemplatesService.saveEmailReceiverConfiguration($scope.newEmailReceiverConfiguration).then(function(value) {
                     MessageService.succsessAction();
                 }, function(err) {

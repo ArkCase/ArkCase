@@ -81,13 +81,14 @@ angular.module('services').factory('Mentions.Service', [ '$q', 'UtilService', 'L
      * @returns {Object} Promise
      */
     function sendEmailToMentionedUsers(emailAddresses, usersMentioned, objectType, subType, objectId, textMentioned) {
-        if (!Util.isEmpty(emailAddresses)) {
+        emailAddresses = checkIfMentionedUsersStillExist(emailAddresses, usersMentioned, textMentioned);
+        if (!Util.isArrayEmpty(emailAddresses)) {
             var emailData = {};
             emailData.objectType = objectType;
             emailData.subType = subType;
             emailData.objectId = objectId;
             emailData.textMentioned = textMentioned;
-            emailData.emailAddresses = checkIfMentionedUsersStillExist(emailAddresses, usersMentioned, textMentioned);
+            emailData.emailAddresses = emailAddresses;
             EcmEmailService.sendMentionsEmail(emailData);
         }
     }
