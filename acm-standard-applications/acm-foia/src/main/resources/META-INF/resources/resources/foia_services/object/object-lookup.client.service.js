@@ -912,6 +912,23 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     };
 
+
+    /**
+     * @ngdoc method
+     * @name getAnnotationTags
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of all annotationTags
+     *
+     * @returns {Object} An array returned by $resource
+     */
+
+    Service.getAnnotationTags = function() {
+        return Service.getLookupByLookupName('annotationTags');
+
+    };
+
     /**
      * @ngdoc method
      * @name getLookupsDefs

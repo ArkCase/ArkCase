@@ -69,7 +69,7 @@ public class AcmObjectPatternMailFilter
     public boolean accept(Message message) throws MessagingException, IOException
     {
         boolean matchesFilter = false;
-        Pattern pattern = Pattern.compile(String.format("%s %s", objectTypeRegexPattern, objectIdRegexPattern));
+        Pattern pattern = Pattern.compile(String.format("%s", objectIdRegexPattern));
 
         String subject = message.getSubject();
         if (!StringUtils.isEmpty(subject))

@@ -64,12 +64,12 @@ public class SuggesterAPIController
     public String suggest(
             @RequestParam(value = "q") String query,
             @RequestParam(value = "core", defaultValue = "QUICK") String core,
-            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "filter", required = false) String[] filter,
             Authentication authentication) throws MuleException
     {
         String filterQueries = "";
         filterQueries = Arrays.asList(filter).stream().map(f -> getFacetedSearchService().buildSolrQuery(f))
-                .collect(Collectors.joining("&"));
+                .collect(Collectors.joining(""));
 
         switch (core)
         {

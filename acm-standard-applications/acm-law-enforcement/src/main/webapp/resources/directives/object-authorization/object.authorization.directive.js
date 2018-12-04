@@ -102,7 +102,9 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
 
             var _unAuthorize = function(toRemove, data) {
                 angular.forEach(toRemove, function(sel) {
-                    var indexOf = data.selectedAuthorized.indexOf(sel);
+                    var indexOf = data.selectedAuthorized.map(function(obj) {
+                        return obj.key + " " + obj.name;
+                    }).indexOf(sel.key + " " + sel.name);
                     data.selectedAuthorized.splice(indexOf, 1);
                     data.selectedNotAuthorized.push(sel);
                 });
@@ -110,9 +112,11 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
 
             var _authorize = function(toAdd, data) {
                 angular.forEach(toAdd, function(sel) {
-                    var indexOf = scope.data.selectedNotAuthorized.indexOf(sel);
-                    scope.data.selectedNotAuthorized.splice(indexOf, 1);
-                    scope.data.selectedAuthorized.push(sel);
+                    var indexOf = data.selectedNotAuthorized.map(function(obj) {
+                        return obj.key + " " + obj.name;
+                    }).indexOf(sel.key + " " + sel.name);
+                    data.selectedNotAuthorized.splice(indexOf, 1);
+                    data.selectedAuthorized.push(sel);
                 });
             };
 
