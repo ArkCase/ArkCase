@@ -512,6 +512,10 @@
                     "success": "Schedule deleted successfully",
                     "error": "Failed to delete schedule"
                 },
+                "update": {
+                    "success": "Schedule updated successfully",
+                    "error": "Failed to update schedule"
+                },
                 "createScheduleSuccess": "Schedule created successfully",
                 "createScheduleFailure": "Failed to create schedule",
                 "enterFutureDate": "Enter a start time in the future",

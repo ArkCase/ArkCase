@@ -97,8 +97,8 @@
                     <div class="row">
                         <div class="col-lg-4 form-group">
                             <label for="server" translate>
-                                admin.security.emailConfiguration.emailConfigForm.server.label
-                                <span class="required-asterisk">*</span></label>
+                                admin.security.emailConfiguration.emailConfigForm.server.label</label>
+                            <span class="required-asterisk">*</span>
                             <input type="text" name="server"
                                     placeholder="{{'admin.security.emailConfiguration.emailConfigForm.server.placeholder' | translate}}"
                                     ng-model="emailSenderConfigDataModel.host" class="form-control"
@@ -151,8 +151,8 @@
                         <div class="col-lg-4 form-group">
                             <label for="userFrom" translate>
                                 admin.security.emailConfiguration.emailConfigForm.userFrom.label
-                                <span class="required-asterisk">*</span>
                             </label>
+                            <span class="required-asterisk">*</span>
                             <input name="userFrom" type="email" required pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                     placeholder="{{'admin.security.emailConfiguration.emailConfigForm.userFrom.placeholder' | translate}}"
                                     ng-model="emailSenderConfigDataModel.userFrom" class="form-control"
