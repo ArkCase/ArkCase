@@ -1350,6 +1350,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         acmTask.setAssignee(activitiTask.getAssignee());
         acmTask.setCreateDate(activitiTask.getCreateTime());
         acmTask.setOwner(activitiTask.getOwner());
+        acmTask.setContainer(getContainerFolderDao().findByObjectTypeAndIdOrCreate(TaskConstants.OBJECT_TYPE, acmTask.getTaskId(), null,
+                acmTask.getTitle()));
 
         extractProcessVariables(processVariables, acmTask);
 
