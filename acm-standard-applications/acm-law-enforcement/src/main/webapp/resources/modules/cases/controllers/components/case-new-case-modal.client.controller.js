@@ -42,21 +42,11 @@ angular.module('cases').controller(
                         return moduleConfig;
                     });
 
-                    // ---------------------   mention   ---------------------------------
-                    $scope.emailAddresses = [];
-                    $scope.usersMentioned = [];
-
-                    // Obtains a list of all users in ArkCase
-                    MentionsService.getUsers().then(function (users) {
-                        $scope.people = users;
-                    });
-
-                    $scope.getMentionedUsers = function (item) {
-                        $scope.emailAddresses.push(item.email_lcs);
-                        $scope.usersMentioned.push('@' + item.name);
-                        return '@' + item.name;
+                    // --------------  mention --------------
+                    $scope.params = {
+                        emailAddresses: [],
+                        usersMentioned: []
                     };
-                    // -----------------------  end mention   ----------------------------
 
                     if ($scope.isEdit) {
 
@@ -407,7 +397,7 @@ angular.module('cases').controller(
                             $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                             CaseInfoService.saveCaseInfoNewCase(clearNotFilledElements(_.cloneDeep($scope.casefile))).then(function(objectInfo) {
                                 var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.CASE_FILE);
-                                MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned,
+                                MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned,
                                     ObjectService.ObjectTypes.CASE_FILE, ObjectService.ObjectTypes.CASE_FILE, objectInfo.id, objectInfo.title);
                                 var caseCreatedMessage = $translate.instant('{{objectType}} {{caseTitle}} was created.', {
                                     objectType: objectTypeString,
@@ -440,7 +430,7 @@ angular.module('cases').controller(
                                 promiseSaveInfo.then(function(caseInfo) {
                                     $scope.$emit("report-object-updated", caseInfo);
                                     var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.CASE_FILE);
-                                    MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned,
+                                    MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned,
                                         ObjectService.ObjectTypes.CASE_FILE, ObjectService.ObjectTypes.CASE_FILE, caseInfo.id, caseInfo.title);
                                     var caseUpdatedMessage = $translate.instant('{{objectType}} {{caseTitle}} was updated.', {
                                         objectType: objectTypeString,

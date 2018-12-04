@@ -91,21 +91,11 @@ angular.module('people').controller(
                         params.isEdit = isEdit || false;
                         params.isDefault = $scope.isDefault(image);
 
-                        // ---------------------   mention   ---------------------------------
-                        $scope.emailAddresses = [];
-                        $scope.usersMentioned = [];
-
-                        // Obtains a list of all users in ArkCase
-                        MentionsService.getUsers().then(function (users) {
-                            $scope.people = users;
-                        });
-
-                        $scope.getMentionedUsers = function (item) {
-                            $scope.emailAddresses.push(item.email_lcs);
-                            $scope.usersMentioned.push('@' + item.name);
-                            return '@' + item.name;
+                        // --------------  mention --------------
+                        $scope.params = {
+                            emailAddresses: [],
+                            usersMentioned: []
                         };
-                        // -----------------------  end mention   ----------------------------
 
                         var modalInstance = $modal.open({
                             animation: true,
@@ -129,7 +119,7 @@ angular.module('people').controller(
                                     if (data.isDefault) {
                                         $scope.objectInfo.defaultPicture = data.image;
                                     }
-                                    MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned,
+                                    MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned,
                                         ObjectService.ObjectTypes.PERSON, "PICTURE", $scope.objectInfo.id, data.image.description);
                                     MessageService.succsessAction();
                                     $scope.$emit("report-object-updated", $scope.objectInfo);
@@ -149,7 +139,7 @@ angular.module('people').controller(
                                 } else {
                                     PersonPicturesService.insertPersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image.description).then(function(returnResponse) {
                                         var uploadedPictureId = returnResponse.data.fileId;
-                                        MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned,
+                                        MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned,
                                             ObjectService.ObjectTypes.PERSON, "PICTURE", $scope.objectInfo.id, data.image.description);
                                         MessageService.succsessAction();
                                         EcmService.getFile({
