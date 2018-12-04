@@ -27,13 +27,14 @@ angular.module('admin').controller('Admin.ReportsScheduleListController',
                 data: []
             };
 
-                    
+
             $scope.config.$promise.then(function(config) {
                 var scheduleReportConfig = _.find(config.components, {
                     id: 'scheduleReportConfig'
                 });
                 var columnDefs = scheduleReportConfig.columnDefs;
                 gridHelper.addDeleteButton(columnDefs, "grid.appScope.deleteRow(row.entity)");
+                gridHelper.addEditButton(columnDefs, "grid.appScope.editRow(row.entity)");
                 $scope.gridOptions.columnDefs = columnDefs;
                 $scope.gridOptions.paginationPageSizes = scheduleReportConfig.paginationPageSizes;
                 $scope.gridOptions.paginationPageSize = scheduleReportConfig.paginationPageSize;
@@ -70,41 +71,94 @@ angular.module('admin').controller('Admin.ReportsScheduleListController',
                 });
             };
 
-                                        
+            $scope.editRow = function(rowEntity) {
+                var emailAddresses = _.find(rowEntity.jobParams.jobParams, function(row) {
+                    if (row.name == '_SCH_EMAIL_TO') {
+                        return row.value;
+                    }
+                });
+                var startDate = _.find(rowEntity.jobParams.jobParams, function(row) {
+                    if (row.name == 'startDate') {
+                        return row.value;
+                    }
+                });
+                var endDate = _.find(rowEntity.jobParams.jobParams, function(row) {
+                    if (row.name == 'endDate') {
+                        return row.value;
+                    }
+                });
+                var report = {
+                    reportFile: rowEntity.jobName,
+                    reportRecurrence: rowEntity.jobTrigger.uiPassParam,
+                    reportStartDate: moment(rowEntity.jobTrigger.startTime).format(UtilDateService.defaultDateFormat),
+                    reportTime: rowEntity.jobTrigger.startTime,
+                    reportEndDate: rowEntity.jobTrigger.endTime ? moment(rowEntity.jobTrigger.endTime).format(UtilDateService.defaultDateFormat) : "",
+                    filterStartDate: startDate.value,
+                    filterEndDate: endDate.value,
+                    outputFormat: '',
+                    reportEmailAddresses: emailAddresses ? emailAddresses.value : "",
+                    jobId: rowEntity.jobId
+                };
+                $scope.showModal(report, true);
 
-            $scope.showModal = function() {
+            };
 
-                        var modalInstance = $modal.open({
-                            animation: true,
-                            templateUrl: 'modules/admin/views/components/reports.schedule.modal.client.view.html',
-                            controller: 'Admin.ReportsScheduleModalController',
-                            size: 'lg',
-                            backdrop: 'static'
-                        });
-                        modalInstance.result.then(function(data) {
-                            var objectToSubmit = {
-                                jobName: data.reportSchedule.reportFile,
-                                reportFile: data.reportSchedule.reportFile,
-                                uiPassParam: data.reportSchedule.reportRecurrence,
-                                startTime: moment(data.reportSchedule.reportStartDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
-                                endTime: data.reportSchedule.reportEndDate ? moment(data.reportSchedule.reportEndDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ") : "", // schedule end date is optional
-                                outputFileType: data.reportSchedule.outputFormat,
-                                emails: data.reportSchedule.reportEmailAddresses,
-                                filterStartDate: UtilDateService.goodIsoDate(data.reportSchedule.filterStartDate),
-                                filterEndDate: UtilDateService.goodIsoDate(data.reportSchedule.filterEndDate)
-                            };
-                            var jsonToSubmit = JSON.stringify(objectToSubmit);
+            $scope.showModal = function(reportSchedule, isEdit) {
+                var params = {};
+                params.reportSchedule = reportSchedule;
+                params.isEdit = isEdit;
 
-                            ScheduleReportService.scheduleReport(jsonToSubmit).then(function(data) {
-                                $scope.reportEndDate = undefined;
-                                $scope.reportEmailAddresses = '';
-                                MessageService.info($translate.instant("admin.reports.schedule.createScheduleSuccess"));
-                                $scope.$emit('created-report-schedule', data);
-                            }, function(error) {
-                                MessageService.error($translate.instant("admin.reports.schedule.createScheduleFailure"));
-                            });
-                        });
-
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/admin/views/components/reports.schedule.modal.client.view.html',
+                    controller: 'Admin.ReportsScheduleModalController',
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function() {
+                            return params;
+                        }
+                    }
+                });
+                modalInstance.result.then(function(data) {
+                    var objectToSubmit = {
+                        jobName: data.reportSchedule.reportFile,
+                        reportFile: data.reportSchedule.reportFile,
+                        uiPassParam: data.reportSchedule.reportRecurrence,
+                        startTime: moment(data.reportSchedule.reportStartDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                        endTime: data.reportSchedule.reportEndDate ? moment(data.reportSchedule.reportEndDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ") : "", // schedule end date is optional
+                        outputFileType: data.reportSchedule.outputFormat,
+                        emails: data.reportSchedule.reportEmailAddresses,
+                        filterStartDate: UtilDateService.goodIsoDate(data.reportSchedule.filterStartDate),
+                        filterEndDate: UtilDateService.goodIsoDate(data.reportSchedule.filterEndDate)
                     };
+                    var jsonToSubmit = JSON.stringify(objectToSubmit);
+
+                    if (!data.isEdit) {
+                        ScheduleReportService.scheduleReport(jsonToSubmit).then(function(data) {
+                            $scope.reportEndDate = undefined;
+                            $scope.reportEmailAddresses = '';
+                            MessageService.info($translate.instant("admin.reports.schedule.createScheduleSuccess"));
+                            $scope.$emit('created-report-schedule', data);
+                        }, function(error) {
+                            MessageService.error($translate.instant("admin.reports.schedule.createScheduleFailure"));
+                        });
+
+                    } else {
+                        ScheduleReportService.deleteSchedule(data.reportSchedule.jobId).then(function(data) {
+                            gridHelper.deleteRow(data);
+                            ScheduleReportService.scheduleReport(objectToSubmit).then(function(data) {
+                                $scope.$emit('created-report-schedule', data);
+                                MessageService.info($translate.instant("admin.reports.schedule.update.success"));
+                            }, function(error) {
+                                MessageService.error($translate.instant("admin.reports.schedule.update.error"));
+                            })
+                        }, function(errorData) {
+                            MessageService.error($translate.instant("admin.reports.schedule.update.error"));
+                        });
+                    }
+                });
+
+            };
 
         } ]);

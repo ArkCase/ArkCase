@@ -317,7 +317,6 @@ public class ProxyServlet extends HttpServlet
     {
         // Note that I can't simply use URI.java to encode because it will escape pre-existing escaped things.
         StringBuilder outBuf = null;
-        Formatter formatter = null;
         for (int i = 0; i < in.length(); i++)
         {
             char c = in.charAt(i);
@@ -347,13 +346,15 @@ public class ProxyServlet extends HttpServlet
                 {
                     outBuf = new StringBuilder(in.length() + 5 * 3);
                     outBuf.append(in, 0, i);
-                    formatter = new Formatter(outBuf);
                 }
-                // leading %, 0 padded, width 2, capital hex
-                formatter.format("%%%02X", (int) c);// TODO
-                formatter.close();
+                try ( Formatter formatter = new Formatter(outBuf) )
+                {
+                    // leading %, 0 padded, width 2, capital hex
+                    formatter.format("%%%02X", (int) c);
+                }
             }
         }
+
         return outBuf != null ? outBuf : in;
     }
 

@@ -24,12 +24,18 @@ angular.module('request-info').controller(
                 'Admin.CMTemplatesService',
                 '$translate',
                 'Request.InfoService',
+                'Admin.EmailSenderConfigurationService',
+                'DocTreeExt.Email',
                 function($scope, $stateParams, $modal, $q, $timeout, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin,
-                        CorrespondenceService, $translate, RequestInfoService) {
+                        CorrespondenceService, $translate, RequestInfoService, EmailSenderConfigurationService, DocTreeExtEmail) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
                         return userInfo;
+                    });
+
+                    EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(emailData) {
+                        $scope.sendEmailEnabled = emailData.data.allowDocuments;
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
@@ -95,6 +101,12 @@ angular.module('request-info').controller(
 
                     $scope.onClickRefresh = function() {
                         $scope.treeControl.refreshTree();
+                    };
+
+                    $scope.sendEmail = function() {
+                        var nodes = $scope.treeControl.getSelectedNodes();
+                        var DocTree = $scope.treeControl.getDocTreeObject();
+                        DocTreeExtEmail.openModal(DocTree, nodes);
                     };
 
                     RequestInfoService.registerFileUpdateHandler($scope, $scope.objectType, $scope.objectId, $scope.onClickRefresh);

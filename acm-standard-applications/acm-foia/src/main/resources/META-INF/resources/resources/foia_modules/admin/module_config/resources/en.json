@@ -684,7 +684,7 @@
                 }
             },
             "foia.config": {
-                "title": "Foia Configuration",
+                "title": "FOIA Configuration",
                 "header": "Configure FOIA Application",
                 "labels": {
                     "maxDaysBillingQueue": "Max days in Billing queue",
