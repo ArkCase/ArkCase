@@ -119,21 +119,11 @@ angular.module('complaints').controller(
                         $scope.complaintParticipantTypes = complaintParticipantTypes;
                     });
 
-                    // ---------------------   mention   ---------------------------------
-                    $scope.emailAddresses = [];
-                    $scope.usersMentioned = [];
-
-                    // Obtains a list of all users in ArkCase
-                    MentionsService.getUsers().then(function (users) {
-                        $scope.people = users;
-                    });
-
-                    $scope.getMentionedUsers = function (item) {
-                        $scope.emailAddresses.push(item.email_lcs);
-                        $scope.usersMentioned.push('@' + item.name);
-                        return '@' + item.name;
+                    // --------------  mention --------------
+                    $scope.params = {
+                        emailAddresses: [],
+                        usersMentioned: []
                     };
-                    // -----------------------  end mention   ----------------------------
 
                     // ---------------------------            initiator         --------------------------------------
                     var newPersonAssociation = function() {
@@ -426,7 +416,7 @@ angular.module('complaints').controller(
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                         ComplaintInfoService.saveComplaintInfoNewComplaint(clearNotFilledElements(_.cloneDeep($scope.complaint))).then(function(objectInfo) {
                             var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.COMPLAINT);
-                            MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned,
+                            MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned,
                                 ObjectService.ObjectTypes.COMPLAINT, ObjectService.ObjectTypes.COMPLAINT, objectInfo.complaintId, objectInfo.complaintTitle);
                             var complaintCreatedMessage = $translate.instant('{{objectType}} {{complaintTitle}} was created.', {
                                 objectType: objectTypeString,

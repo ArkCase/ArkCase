@@ -29,21 +29,11 @@ angular.module('common').controller('Common.AddObjectAssociationModalController'
                 return type.key == params.type;
             });
 
-            // ---------------------   mention   ---------------------------------
-            $scope.emailAddresses = [];
-            $scope.usersMentioned = [];
-
-            // Obtains a list of all users in ArkCase
-            MentionsService.getUsers().then(function (users) {
-                $scope.people = users;
-            });
-
-            $scope.getMentionedUsers = function (item) {
-                $scope.emailAddresses.push(item.email_lcs);
-                $scope.usersMentioned.push('@' + item.name);
-                return '@' + item.name;
+            // --------------  mention --------------
+            $scope.params = {
+                emailAddresses: [],
+                usersMentioned: []
             };
-            // -----------------------  end mention   ----------------------------
 
             $scope.onClickCancel = function() {
                 $modalInstance.dismiss('Cancel');
@@ -52,8 +42,8 @@ angular.module('common').controller('Common.AddObjectAssociationModalController'
             $scope.onClickOk = function() {
                 var retValue = {
                     solrDocument: $scope.solrDocument,
-                    emailAddresses: $scope.emailAddresses,
-                    usersMentioned: $scope.usersMentioned
+                    emailAddresses: $scope.params.emailAddresses,
+                    usersMentioned: $scope.params.usersMentioned
                 };
                 if ($scope.types && $scope.type) {
                     retValue.type = $scope.type.key;

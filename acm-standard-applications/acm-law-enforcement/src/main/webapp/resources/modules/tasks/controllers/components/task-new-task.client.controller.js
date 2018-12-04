@@ -87,21 +87,11 @@ angular.module('tasks').controller(
                     $scope.minStartDate = new Date();
                     $scope.minDueDate = new Date();
 
-                    // ---------------------   mention   ---------------------------------
-                    $scope.emailAddresses = [];
-                    $scope.usersMentioned = [];
-
-                    // Obtains a list of all users in ArkCase
-                    MentionsService.getUsers().then(function (users) {
-                        $scope.people = users;
-                    });
-
-                    $scope.getMentionedUsers = function (item) {
-                        $scope.emailAddresses.push(item.email_lcs);
-                        $scope.usersMentioned.push('@' + item.name);
-                        return '@' + item.name;
+                    // --------------  mention --------------
+                    $scope.params = {
+                        emailAddresses: [],
+                        usersMentioned: []
                     };
-                    // -----------------------  end mention   ----------------------------
 
                     $scope.onComboAfterSave = function(dateType){
                         if(dateType == "startDate"){
@@ -168,7 +158,7 @@ angular.module('tasks').controller(
                     function reviewDocumentTaskSuccessCallback(data) {
                         $scope.saved = false;
                         $scope.loading = false;
-                        MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned,
+                        MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned,
                             ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
                         $scope.onModalClose();
                     }
@@ -176,7 +166,7 @@ angular.module('tasks').controller(
                     function saveNewTaskSuccessCallback(data) {
                         $scope.saved = false;
                         $scope.loading = false;
-                        MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned,
+                        MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned,
                             ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
                         if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ':returnState') {
                             $state.go($scope.modalParams.returnState, {

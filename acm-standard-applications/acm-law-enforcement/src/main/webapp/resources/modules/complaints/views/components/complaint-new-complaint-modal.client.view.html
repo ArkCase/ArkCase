@@ -13,13 +13,10 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12 form-group">
-                        <label for="complaintTitle" translate>complaints.comp.newComplaint.complaintTitle</label>
+                        <label translate>complaints.comp.newComplaint.complaintTitle</label>
                         <span class="required-asterisk">*</span>
-
-                        <input mentio mentio-typed-text="typedTerm" mentio-items="people | filter:label:typedTerm"
-                               mentio-select="getMentionedUsers(item)" id="complaintTitle" ng-model="complaint.complaintTitle"
-                               class="input-md form-control" type="text" placeholder="{{ 'complaints.comp.newComplaint.complaintTitle.placeholder' | translate }}"
-                               required>
+                        <mention-input ng-model="complaint.complaintTitle" params="params"
+                                placeholder="{{ 'complaints.comp.newComplaint.complaintTitle.placeholder' | translate }}"></mention-input>
                     </div>
                 </div>
                 <div class="row">
