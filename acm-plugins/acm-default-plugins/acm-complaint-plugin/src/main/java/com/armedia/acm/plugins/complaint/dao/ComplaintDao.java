@@ -38,6 +38,8 @@ import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.model.TimePeriod;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,6 +60,8 @@ import java.util.List;
 @Transactional
 public class ComplaintDao extends AcmAbstractDao<Complaint> implements AcmNotificationDao, AcmNameDao
 {
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Complaint save(Complaint toSave)
@@ -122,8 +126,24 @@ public class ComplaintDao extends AcmAbstractDao<Complaint> implements AcmNotifi
         return results;
     }
 
+    public Complaint quietFindByComplaintNumber(String complaintNumber)
+    {
+        Complaint complaint = null;
+        try
+        {
+            complaint = findByComplaintNumber(complaintNumber);
+        }
+        catch (Exception e)
+        {
+            LOG.warn("No complaint has complaint number {}", complaintNumber);
+        }
+
+        return complaint;
+    }
+
     public Complaint findByComplaintNumber(String complaintNumber)
     {
+
         String queryText = "SELECT c FROM Complaint c WHERE c.complaintNumber = :complaintNumber";
 
         TypedQuery<Complaint> findByNumberQuery = getEm().createQuery(queryText, Complaint.class);

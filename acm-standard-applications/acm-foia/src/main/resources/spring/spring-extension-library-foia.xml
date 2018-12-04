@@ -98,7 +98,7 @@
 
         <beans:bean id="foiaConfigurationService" class="gov.foia.service.FoiaConfigurationService" init-method="initBean">
             <beans:property name="propertyFileManager" ref="propertyFileManager"/>
-            <property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/foia.properties"/>
+            <beans:property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/foia.properties"/>
         </beans:bean>
 
         <beans:bean id="ecmFileNewMetadataHandler" class="gov.foia.pipeline.presave.FOIAFileNewMetadataHandler">
@@ -141,6 +141,16 @@
             <beans:property name="targetFileExtension" value="docx"/>
             <beans:property name="template" value="Request Acknowledgement Letter"/>
         </beans:bean>
+
+        <beans:bean id="requestReceivedAcknowledgementDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="New Request"/>
+            <beans:property name="reqAck" value="RECEIVE_ACK"/>
+            <beans:property name="doctype" value="Request Received Acknowledgement Letter"/>
+            <beans:property name="filenameFormat" value="RequestReceivedAcknowledgementLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Received Acknowledgement Letter"/>
+        </beans:bean>
+
 
         <beans:bean id="appealDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
             <beans:property name="type" value="Appeal"/>
@@ -243,6 +253,7 @@
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="notificationGroupEmailSenderService" ref="notificationGroupEmailSenderService"/>
             <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
     </beans:beans>
 </beans:beans>

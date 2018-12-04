@@ -33,18 +33,11 @@ import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.services.email.model.AttachmentsProcessableDTO;
-import com.armedia.acm.services.email.model.EmailBodyBuilder;
-import com.armedia.acm.services.email.model.EmailBuilder;
-import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
-import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
-import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
-import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.services.email.model.*;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -54,15 +47,11 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -332,12 +321,15 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         EcmFile ecmFile = null;
         List<String> fileNames = new ArrayList<String>();
 
-        for (int i = 0; i < in.getFileIds().size(); i++)
+        if(Objects.nonNull(in.getFileIds()) && in.getFileIds().size() > 0)
         {
-            ecmFile = ecmFileService.findById(in.getFileIds().get(i));
-            fileNames.add(ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension());
+            for (int i = 0; i < in.getFileIds().size(); i++)
+            {
+                ecmFile = ecmFileService.findById(in.getFileIds().get(i));
+                fileNames.add(ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension());
+            }
+            in.setFileNames(fileNames);
         }
-        in.setFileNames(fileNames);
 
         SmtpSentEventHyperlink event = new SmtpSentEventHyperlink(in, user.getUserId(),
                 ecmFile != null ? ecmFile.getParentObjectId() : null,

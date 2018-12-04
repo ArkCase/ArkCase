@@ -103,9 +103,10 @@ angular
             'EcmService',
             'Admin.EmailSenderConfigurationService',
             'Helper.LocaleService',
+            'LookupService',
             '$timeout',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout) {
+                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, LookupService, $timeout) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -1230,10 +1231,9 @@ angular
                                     renderer : function(element, node, columnDef, isReadOnly) {
                                         var versionUser = Util.goodValue(node.data.modifier);
                                         if (versionUser) {
-                                            //UserInfoService.getUserInfoByIdQuietly(versionUser).then(function (userInfo) {
-                                            UserInfoService.getUserInfoById(versionUser).then(function(userInfo) {
-                                                $(element).text(Util.goodMapValue(userInfo, "fullName"));
-                                            })
+                                            LookupService.getUserFullName(versionUser).then(function (userName) {
+                                                $(element).text(userName);
+                                            });
                                         }
                                     }
                                 },

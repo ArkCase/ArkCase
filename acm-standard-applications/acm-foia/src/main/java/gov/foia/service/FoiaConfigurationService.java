@@ -1,7 +1,35 @@
 package gov.foia.service;
 
+/*-
+ * #%L
+ * ACM Standard Application: Freedom of Information Act
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.plugins.casefile.service.SystemConfigurationService;
 import gov.foia.model.FoiaConfiguration;
 import gov.foia.model.FoiaConfigurationConstants;
 import org.slf4j.Logger;
@@ -13,7 +41,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FoiaConfigurationService implements ApplicationListener<ConfigurationFileChangedEvent>
+public class FoiaConfigurationService extends SystemConfigurationService implements ApplicationListener<ConfigurationFileChangedEvent>
 {
     private PropertyFileManager propertyFileManager;
     private String propertiesFile;
@@ -41,10 +69,14 @@ public class FoiaConfigurationService implements ApplicationListener<Configurati
         properties.put(FoiaConfigurationConstants.HOLDED_AND_APPEALED_REQUESTS, foiaConfiguration.getHoldedAndAppealedRequestsDueDateUpdateEnabled().toString());
         properties.put(FoiaConfigurationConstants.EXTENSTION_WORKING_DAYS, foiaConfiguration.getRequestExtensionWorkingDays().toString());
         properties.put(FoiaConfigurationConstants.DASHBOARD_BANNER_ENABLED, foiaConfiguration.getDashboardBannerEnabled().toString());
+        properties.put(FoiaConfigurationConstants.RECEIVED_DATE_ENABLED, foiaConfiguration.getReceivedDateEnabled().toString());
+        properties.put(FoiaConfigurationConstants.NOTIFICATION_GROUPS_ENABLED, foiaConfiguration.getNotificationGroupsEnabled().toString());
 
         getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
+        foiaProperties = properties;
     }
 
+    @Override
     public FoiaConfiguration readConfiguration()
     {
         FoiaConfiguration foiaConfiguration = new FoiaConfiguration();
@@ -66,6 +98,12 @@ public class FoiaConfigurationService implements ApplicationListener<Configurati
                     break;
                 case FoiaConfigurationConstants.DASHBOARD_BANNER_ENABLED:
                     foiaConfiguration.setDashboardBannerEnabled(Boolean.valueOf(foiaProperties.get(property)));
+                    break;
+                case FoiaConfigurationConstants.RECEIVED_DATE_ENABLED:
+                    foiaConfiguration.setReceivedDateEnabled(Boolean.valueOf(foiaProperties.get(property)));
+                    break;
+                case FoiaConfigurationConstants.NOTIFICATION_GROUPS_ENABLED:
+                    foiaConfiguration.setNotificationGroupsEnabled(Boolean.valueOf(foiaProperties.get(property)));
             }
         }
 
@@ -91,7 +129,7 @@ public class FoiaConfigurationService implements ApplicationListener<Configurati
     @Override
     public void onApplicationEvent(ConfigurationFileChangedEvent event)
     {
-        if(event.getConfigFile().getAbsolutePath().equals(getPropertiesFile()))
+        if(event.getConfigFile().getName().equals(getPropertiesFile().substring(getPropertiesFile().lastIndexOf("/") + 1)))
         {
             initBean();
         }
