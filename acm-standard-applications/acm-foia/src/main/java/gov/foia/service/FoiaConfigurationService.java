@@ -29,6 +29,7 @@ package gov.foia.service;
 
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.plugins.casefile.service.SystemConfigurationService;
 import gov.foia.model.FoiaConfiguration;
 import gov.foia.model.FoiaConfigurationConstants;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FoiaConfigurationService implements ApplicationListener<ConfigurationFileChangedEvent>
+public class FoiaConfigurationService extends SystemConfigurationService implements ApplicationListener<ConfigurationFileChangedEvent>
 {
     private PropertyFileManager propertyFileManager;
     private String propertiesFile;
@@ -69,10 +70,13 @@ public class FoiaConfigurationService implements ApplicationListener<Configurati
         properties.put(FoiaConfigurationConstants.EXTENSTION_WORKING_DAYS, foiaConfiguration.getRequestExtensionWorkingDays().toString());
         properties.put(FoiaConfigurationConstants.DASHBOARD_BANNER_ENABLED, foiaConfiguration.getDashboardBannerEnabled().toString());
         properties.put(FoiaConfigurationConstants.RECEIVED_DATE_ENABLED, foiaConfiguration.getReceivedDateEnabled().toString());
+        properties.put(FoiaConfigurationConstants.NOTIFICATION_GROUPS_ENABLED, foiaConfiguration.getNotificationGroupsEnabled().toString());
 
         getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
+        foiaProperties = properties;
     }
 
+    @Override
     public FoiaConfiguration readConfiguration()
     {
         FoiaConfiguration foiaConfiguration = new FoiaConfiguration();
@@ -97,6 +101,9 @@ public class FoiaConfigurationService implements ApplicationListener<Configurati
                     break;
                 case FoiaConfigurationConstants.RECEIVED_DATE_ENABLED:
                     foiaConfiguration.setReceivedDateEnabled(Boolean.valueOf(foiaProperties.get(property)));
+                    break;
+                case FoiaConfigurationConstants.NOTIFICATION_GROUPS_ENABLED:
+                    foiaConfiguration.setNotificationGroupsEnabled(Boolean.valueOf(foiaProperties.get(property)));
             }
         }
 
@@ -122,7 +129,7 @@ public class FoiaConfigurationService implements ApplicationListener<Configurati
     @Override
     public void onApplicationEvent(ConfigurationFileChangedEvent event)
     {
-        if(event.getConfigFile().getAbsolutePath().equals(getPropertiesFile()))
+        if(event.getConfigFile().getName().equals(getPropertiesFile().substring(getPropertiesFile().lastIndexOf("/") + 1)))
         {
             initBean();
         }

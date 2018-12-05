@@ -336,7 +336,7 @@ angular.module('complaints').controller(
                         participant.replaceChildrenParticipant = true;
 
                         var modalScope = $scope.$new();
-                        modalScope.participant = participant || {};
+                        modalScope.participant = participant;
                         modalScope.isEdit = false;
                         modalScope.showReplaceChildrenParticipants = true;
                         modalScope.selectedType = participant.selectedType ? participant.selectedType : "";

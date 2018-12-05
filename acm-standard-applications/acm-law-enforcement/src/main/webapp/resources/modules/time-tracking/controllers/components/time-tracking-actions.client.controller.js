@@ -44,7 +44,7 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController',
                 isEdit: true,
                 timesheet: $scope.objectInfo
             };
-            showModal($scope.editParams, true);
+                        showModal($scope.editParams);
         };
 
         function showModal(params) {

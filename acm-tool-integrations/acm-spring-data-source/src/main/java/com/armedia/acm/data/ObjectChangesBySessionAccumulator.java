@@ -40,7 +40,7 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private Map<String, AcmObjectChangelist> changesBySession = Collections.synchronizedMap(new HashMap<String, AcmObjectChangelist>());
+    private Map<String, AcmObjectChangelist> changesBySession = Collections.synchronizedMap(new HashMap<>());
 
     private Map<String, AcmObjectRollbacklist> rollbackChangesBySession = Collections
             .synchronizedMap(new HashMap<String, AcmObjectRollbacklist>());
@@ -68,10 +68,6 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
             if (getChangesBySession() == null)
             {
                 nullPart = "getChangesBySession";
-            }
-            else if (event == null)
-            {
-                nullPart = "event";
             }
             else if (event.getSession() == null)
             {
@@ -121,10 +117,6 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
             {
                 nullPart = "getChangesBySession";
             }
-            else if (event == null)
-            {
-                nullPart = "event";
-            }
             else if (event.getSession() == null)
             {
                 nullPart = "event.getSession";
@@ -173,10 +165,6 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
             if (getChangesBySession() == null)
             {
                 nullPart = "getChangesBySession";
-            }
-            else if (event == null)
-            {
-                nullPart = "event";
             }
             else if (event.getSession() == null)
             {

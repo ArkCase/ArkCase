@@ -90,7 +90,7 @@ public class SubscriptionEventBatchInsertService
             List<String> eventsToBeRemoved = null;
             if (StringUtils.isNotEmpty(eventTypesString))
             {
-                eventTypesString.trim();
+                eventTypesString = eventTypesString.trim();
                 eventsToBeRemoved = Arrays.asList(eventTypesString.split("\\s*,\\s*"));
             }
             Date lastBatchRunDate = getLastBatchRunDate(lastRunDate, dateFormat);

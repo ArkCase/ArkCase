@@ -29,11 +29,13 @@ package com.armedia.acm.correspondence.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -65,7 +67,8 @@ public class GenerateCorrespondenceAPIController
             @RequestParam("parentObjectType") String parentObjectType,
             @RequestParam("parentObjectId") Long parentObjectId,
             @RequestParam("folderId") Long folderId,
-            Authentication authentication) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+            Authentication authentication)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, CorrespondenceMergeFieldVersionException
     {
         log.debug("User '{}' is generating template '{}'", authentication.getName(), templateName);
 

@@ -41,7 +41,7 @@ public interface FOIAConstants
 
     public String REQ = "REQ";
     public String ACK = "ACK";
-    public String RECEIVE_ACK  = "RECEIVE_ACK ";
+    public String RECEIVE_ACK  = "RECEIVE_ACK";
     public String REQ_DELETE = "REQ_DELETE";
     public String DENIAL = "DENIAL";
     public String REQ_EXTENSION = "REQ_EXTENSION";

@@ -31,7 +31,11 @@ import com.armedia.acm.plugins.onlyoffice.exceptions.UnsupportedExtension;
 
 import javax.validation.constraints.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DocumentTypeResolver
 {

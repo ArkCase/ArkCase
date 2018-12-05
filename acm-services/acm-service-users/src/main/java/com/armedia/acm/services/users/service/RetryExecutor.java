@@ -137,6 +137,7 @@ public class RetryExecutor<T>
         }
         catch (InterruptedException e)
         {
+            Thread.currentThread().interrupt();
         }
     }
 

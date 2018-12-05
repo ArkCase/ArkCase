@@ -139,7 +139,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 activeVersionMimeType = metadata.getFileActiveVersionMimeType().split(";")[0];
             }
 
-            if (activeVersionMimeType != null && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
+            if (activeVersionMimeType != null && detectedMetadata != null
+                    && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
                     (getAllTikaMimeTypesForFile(mimeTypesByTika, activeVersionMimeType)
                             .contains(detectedMetadata.getContentType()))))
             {
